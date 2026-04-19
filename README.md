@@ -1,25 +1,23 @@
-# Zynq SDR Course
+# SDR Course / Курс SDR
 
-A bilingual practical course that connects breadboard electronics, signal modeling, SDR hardware, and offline DSP analysis.
+- [Русская версия](README_ru.md)
+- [English version](README_en.md)
 
-## Early course flow
+## Course blocks / Блоки курса
 
-Recommended early learning path:
+1. `blocks/block_01_intro_sdr`
+2. `blocks/block_02_signals_and_sampling`
+3. `blocks/block_03_dsp_basics`
+4. `blocks/block_04_simulink_and_fixed_point`
+5. `blocks/block_05_fpga_hdl_flow`
+6. `blocks/block_06_rf_frontend_and_ad9363`
+7. `blocks/block_07_tx_rx_chains`
+8. `blocks/block_08_modulation_and_synchronization`
+9. `blocks/block_09_recording_and_analysis_tools`
+10. `blocks/block_10_kicad_and_basic_electronics`
+11. `blocks/block_11_integrated_sdr_project`
+12. `blocks/block_12_final_projects`
 
-1. RTL-SDR + HDSDR as a signal viewer
-2. Analog breadboard signal intuition
-3. Digital logic breadboard signal intuition
-4. MATLAB / Simulink waveform modeling
-5. SDR board transmission and observation
-
-## Recording to analysis workflow
-
-A core reusable workflow in the course is:
-
-- observe signal in HDSDR
-- record it
-- analyze it offline in MATLAB / Simulink / Python / C++ / GNU Radio
-
-See:
-- `docs/bridge/recording_to_analysis.en.md`
-- `docs/bridge/recording_to_analysis.ru.md`
+## Included now / Что уже наполнено
+- Full bilingual Block 1 / Полностью наполненный двуязычный блок 1
+- Bilingual scaffolds for the remaining blocks / Двуязычные каркасы остальных блоков

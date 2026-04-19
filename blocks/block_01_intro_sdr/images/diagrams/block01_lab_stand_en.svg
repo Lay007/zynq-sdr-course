@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560">
+<style>
+    .title { font: 700 28px Arial, sans-serif; fill: #1f2937; }
+    .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 18; ry: 18; }
+    .txt { font: 600 22px Arial, sans-serif; fill: #111827; }
+    .small { font: 400 16px Arial, sans-serif; fill: #475569; }
+    .label { font: 600 18px Arial, sans-serif; fill: #2563eb; }
+    .line { stroke: #2563eb; stroke-width: 4; fill: none; }
+    .dash { stroke: #64748b; stroke-width: 3; fill: none; stroke-dasharray: 10 8; }
+</style>
+<text x="40" y="42" class="title">Training setup structure for Lab 1</text>
+<rect class="box" x="70" y="100" width="300" height="160"/>
+<text class="txt" x="120" y="145">SDR board</text>
+<text class="small" x="112" y="174">Zynq7020 + AD9363</text>
+<text class="small" x="118" y="202">test signal generation</text>
+<rect class="box" x="830" y="100" width="250" height="160"/>
+<text class="txt" x="885" y="145">RTL-SDR</text>
+<text class="small" x="874" y="174">external signal reception</text>
+<rect class="box" x="830" y="330" width="250" height="160"/>
+<text class="txt" x="924" y="375">PC</text>
+<text class="small" x="882" y="404">HDSDR / MATLAB / Python</text>
+<text class="small" x="902" y="432">GNU Radio / KiCad</text>
+<path class="line" d="M370 180 C480 180, 560 180, 830 180"/>
+<text x="508" y="160" class="label">option 1: cable / attenuator</text>
+<path class="dash" d="M370 225 C510 285, 690 285, 830 225"/>
+<text x="492" y="312" class="label">option 2: over-the-air link</text>
+<path class="line" d="M955 260 V330"/>
+</svg>

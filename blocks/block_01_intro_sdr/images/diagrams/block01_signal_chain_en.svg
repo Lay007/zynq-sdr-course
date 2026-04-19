@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="280" viewBox="0 0 1400 280">
+<style>
+    .title { font: 700 28px Arial, sans-serif; fill: #1f2937; }
+    .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 18; ry: 18; }
+    .txt { font: 600 20px Arial, sans-serif; fill: #111827; }
+    .small { font: 400 16px Arial, sans-serif; fill: #475569; }
+    .arrow { stroke: #2563eb; stroke-width: 4; fill: none; marker-end: url(#arrowhead); }
+</style>
+<defs>
+  <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+    <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb"/>
+  </marker>
+</defs>
+<text x="40" y="42" class="title">First experiment: complete signal path</text>
+<rect class="box" x="40" y="90" width="180" height="90"/>
+<text class="txt" x="78" y="128">Simulink</text>
+<text class="small" x="64" y="154">model / tone generation</text>
+<rect class="box" x="270" y="90" width="180" height="90"/>
+<text class="txt" x="322" y="128">FPGA / SoC</text>
+<text class="small" x="306" y="154">Zynq7020</text>
+<rect class="box" x="500" y="90" width="180" height="90"/>
+<text class="txt" x="552" y="128">AD9363</text>
+<text class="small" x="520" y="154">RF transmit chain</text>
+<rect class="box" x="730" y="90" width="180" height="90"/>
+<text class="txt" x="782" y="128">RTL-SDR</text>
+<text class="small" x="760" y="154">external reception</text>
+<rect class="box" x="960" y="90" width="180" height="90"/>
+<text class="txt" x="1018" y="128">HDSDR</text>
+<text class="small" x="984" y="154">spectrum / waterfall</text>
+<rect class="box" x="1190" y="90" width="180" height="90"/>
+<text class="txt" x="1234" y="128">IQ file</text>
+<text class="small" x="1218" y="154">recording and analysis</text>
+<path class="arrow" d="M220 135 H270"/>
+<path class="arrow" d="M450 135 H500"/>
+<path class="arrow" d="M680 135 H730"/>
+<path class="arrow" d="M910 135 H960"/>
+<path class="arrow" d="M1140 135 H1190"/>
+</svg>
