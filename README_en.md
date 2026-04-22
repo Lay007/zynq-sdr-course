@@ -48,5 +48,14 @@ Recommended format:
 11. `block_11_integrated_sdr_project` — integrated educational SDR project  
 12. `block_12_final_projects` — final project work
 
+
+## Course website
+
+After GitHub Pages is enabled, the materials will also be available as a website:
+
+- `https://lay007.github.io/zynq-sdr-course/`
+
+The site is built with **MkDocs Material** and deployed through **GitHub Actions**.
+
 ## Current state
 Block 1 is already suitable for publishing in a repository and continuing development. The remaining blocks are provided as strong bilingual scaffolds so they can be filled in one by one in the same style.

@@ -3,6 +3,13 @@
 - [Русская версия](README_ru.md)
 - [English version](README_en.md)
 
+## Course website / Сайт курса
+
+After enabling GitHub Pages, the course site will be available at:
+После включения GitHub Pages сайт курса будет доступен по адресу:
+
+- `https://lay007.github.io/zynq-sdr-course/`
+
 ## Course blocks / Блоки курса
 
 1. `blocks/block_01_intro_sdr`
