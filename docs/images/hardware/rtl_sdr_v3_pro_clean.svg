@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="840" viewBox="0 0 1400 840" role="img" aria-label="RTL-SDR V3 Pro stylized illustration">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#dbe2ea"/>
+      <stop offset="50%" stop-color="#b8c4d1"/>
+      <stop offset="100%" stop-color="#94a3b8"/>
+    </linearGradient>
+    <linearGradient id="dark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#0f172a" flood-opacity="0.18"/>
+    </filter>
+    <style>
+      .title{font:700 34px Arial, Helvetica, sans-serif; fill:#0f172a}
+      .sub{font:400 18px Arial, Helvetica, sans-serif; fill:#475569}
+      .label{font:700 20px Arial, Helvetica, sans-serif; fill:#0f172a}
+      .note{font:400 18px Arial, Helvetica, sans-serif; fill:#334155}
+    </style>
+  </defs>
+  <rect width="1400" height="840" rx="36" fill="url(#bg)"/>
+  <text x="90" y="92" class="title">RTL-SDR V3 Pro</text>
+  <text x="90" y="126" class="sub">Clean hardware illustration for the SDR course materials</text>
+
+  <g transform="translate(190 250) rotate(-10 500 140)" filter="url(#shadow)">
+    <rect x="0" y="0" width="980" height="280" rx="44" fill="url(#metal)" stroke="#94a3b8" stroke-width="6"/>
+    <rect x="38" y="38" width="904" height="204" rx="26" fill="#f8fafc" opacity="0.28"/>
+    <rect x="86" y="72" width="170" height="136" rx="24" fill="url(#dark)"/>
+    <circle cx="138" cy="140" r="18" fill="#38bdf8" opacity="0.85"/>
+    <rect x="288" y="86" width="428" height="28" rx="14" fill="#64748b" opacity="0.85"/>
+    <rect x="288" y="130" width="308" height="22" rx="11" fill="#94a3b8" opacity="0.85"/>
+    <rect x="288" y="166" width="368" height="22" rx="11" fill="#94a3b8" opacity="0.85"/>
+    <rect x="790" y="84" width="112" height="120" rx="20" fill="#cbd5e1" stroke="#64748b" stroke-width="4"/>
+    <rect x="902" y="112" width="48" height="64" rx="8" fill="#0f172a"/>
+    <rect x="-54" y="92" width="58" height="96" rx="12" fill="#0f172a"/>
+    <rect x="-36" y="108" width="22" height="64" rx="6" fill="#475569"/>
+    <text x="490" y="229" text-anchor="middle" class="label" fill="#0f172a">RTL-SDR</text>
+  </g>
+
+  <g transform="translate(910 180)">
+    <rect x="0" y="0" width="360" height="410" rx="28" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+    <text x="34" y="54" class="label">Why this device matters</text>
+    <text x="34" y="98" class="note">• Low-cost external receiver</text>
+    <text x="34" y="138" class="note">• Convenient for first reception labs</text>
+    <text x="34" y="178" class="note">• Spectrum and waterfall observation</text>
+    <text x="34" y="218" class="note">• IQ recording for offline analysis</text>
+    <text x="34" y="258" class="note">• Good fit for the first SDR workflow</text>
+  </g>
+</svg>
