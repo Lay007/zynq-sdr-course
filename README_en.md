@@ -56,11 +56,13 @@ The RTL-SDR dongle is used as an accessible external receiver for the first rece
 
 ### Xilinx Zynq-7020 + ADRV module
 
-![Xilinx Zynq-7020 with ADRV module — angle 1](docs/images/hardware/xilinx_7020_adrv_angle_1.svg)
+![Xilinx Zynq-7020 with ADRV module](docs/images/hardware/xilinx_7020_adrv_angle_1.svg)
 
-![Xilinx Zynq-7020 with ADRV module — angle 2](docs/images/hardware/xilinx_7020_adrv_angle_2.svg)
+This photo shows the actual board-level SDR platform used for the practical hardware-oriented part of the course.
 
-These photos show the actual board-level SDR platform used for the practical hardware-oriented part of the course.
+### SDR stand diagram
+
+![SDR training stand diagram](docs/images/hardware/sdr_stand_diagram.svg)
 
 ## Navigation
 
