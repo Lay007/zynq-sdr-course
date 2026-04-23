@@ -44,6 +44,24 @@ Configured site URL:
 
 - `https://lay007.github.io/zynq-sdr-course/`
 
+## Hardware baseline
+
+The current hands-on setup already includes a simple external receiver and a board-level SDR platform for practical experiments.
+
+### RTL-SDR V3 Pro
+
+![RTL-SDR V3 Pro](docs/images/hardware/rtl_sdr_v3_pro.svg)
+
+The RTL-SDR dongle is used as an accessible external receiver for the first reception, capture, and observation tasks.
+
+### Xilinx Zynq-7020 + ADRV module
+
+![Xilinx Zynq-7020 with ADRV module — angle 1](docs/images/hardware/xilinx_7020_adrv_angle_1.svg)
+
+![Xilinx Zynq-7020 with ADRV module — angle 2](docs/images/hardware/xilinx_7020_adrv_angle_2.svg)
+
+These photos show the actual board-level SDR platform used for the practical hardware-oriented part of the course.
+
 ## Navigation
 
 - [Bilingual landing page](README.md)
