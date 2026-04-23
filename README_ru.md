@@ -44,6 +44,24 @@
 
 - `https://lay007.github.io/zynq-sdr-course/`
 
+## Аппаратная база
+
+Текущая практическая аппаратная база уже включает простой внешний приёмник и SDR-платформу на уровне платы для лабораторных работ и экспериментов.
+
+### RTL-SDR V3 Pro
+
+![RTL-SDR V3 Pro](docs/images/hardware/rtl_sdr_v3_pro.svg)
+
+RTL-SDR используется как доступный внешний приёмник для первых задач по приёму, записи и наблюдению сигнала.
+
+### Плата Xilinx Zynq-7020 + модуль ADRV
+
+![Xilinx Zynq-7020 with ADRV module — angle 1](docs/images/hardware/xilinx_7020_adrv_angle_1.svg)
+
+![Xilinx Zynq-7020 with ADRV module — angle 2](docs/images/hardware/xilinx_7020_adrv_angle_2.svg)
+
+Эти фотографии показывают реальную SDR-платформу на уровне платы, которая используется в практической аппаратно-ориентированной части курса.
+
 ## Навигация
 
 - [Двуязычная landing page](README.md)
