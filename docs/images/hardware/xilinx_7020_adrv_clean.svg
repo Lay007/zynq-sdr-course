@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-label="Xilinx Zynq-7020 and ADRV board stylized illustration">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <linearGradient id="pcb" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#065f46"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="module" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#0f172a" flood-opacity="0.18"/>
+    </filter>
+    <style>
+      .title{font:700 34px Arial, Helvetica, sans-serif; fill:#0f172a}
+      .sub{font:400 18px Arial, Helvetica, sans-serif; fill:#475569}
+      .label{font:700 20px Arial, Helvetica, sans-serif; fill:#f8fafc}
+      .note{font:400 18px Arial, Helvetica, sans-serif; fill:#334155}
+      .chip{font:700 16px Arial, Helvetica, sans-serif; fill:#e2e8f0}
+    </style>
+  </defs>
+  <rect width="1400" height="900" rx="36" fill="url(#bg)"/>
+  <text x="90" y="92" class="title">Xilinx Zynq-7020 + ADRV module</text>
+  <text x="90" y="126" class="sub">Clean hardware illustration for the board-level SDR platform</text>
+
+  <g transform="translate(120 185) rotate(-6 520 250)" filter="url(#shadow)">
+    <rect x="0" y="0" width="1040" height="500" rx="38" fill="url(#pcb)" stroke="#064e3b" stroke-width="8"/>
+    <rect x="120" y="120" width="290" height="190" rx="26" fill="url(#module)" stroke="#94a3b8" stroke-width="4"/>
+    <text x="265" y="220" text-anchor="middle" class="label">ADRV RF module</text>
+    <rect x="490" y="100" width="240" height="220" rx="28" fill="#0f172a" stroke="#64748b" stroke-width="4"/>
+    <text x="610" y="215" text-anchor="middle" class="label">Zynq-7020 SoC</text>
+    <rect x="788" y="128" width="140" height="64" rx="14" fill="#334155"/>
+    <text x="858" y="168" text-anchor="middle" class="chip">DDR</text>
+    <rect x="788" y="212" width="140" height="64" rx="14" fill="#334155"/>
+    <text x="858" y="252" text-anchor="middle" class="chip">Power</text>
+    <rect x="86" y="392" width="220" height="54" rx="12" fill="#d1d5db"/>
+    <rect x="336" y="392" width="220" height="54" rx="12" fill="#d1d5db"/>
+    <rect x="586" y="392" width="220" height="54" rx="12" fill="#d1d5db"/>
+    <rect x="836" y="392" width="118" height="54" rx="12" fill="#d1d5db"/>
+    <circle cx="94" cy="74" r="24" fill="#e5e7eb"/>
+    <circle cx="164" cy="74" r="24" fill="#e5e7eb"/>
+    <circle cx="936" cy="74" r="24" fill="#e5e7eb"/>
+    <circle cx="1006" cy="74" r="24" fill="#e5e7eb"/>
+    <path d="M420 210 C470 210 500 210 490 210" stroke="#a7f3d0" stroke-width="8" fill="none" opacity="0.9"/>
+    <path d="M730 210 C760 210 780 210 788 160" stroke="#86efac" stroke-width="8" fill="none" opacity="0.9"/>
+    <path d="M730 230 C770 230 785 230 788 244" stroke="#86efac" stroke-width="8" fill="none" opacity="0.9"/>
+  </g>
+
+  <g transform="translate(980 190)">
+    <rect x="0" y="0" width="320" height="430" rx="28" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+    <text x="30" y="52" class="title" style="font-size:26px">Platform role</text>
+    <text x="30" y="104" class="note">• Main board-level SDR platform</text>
+    <text x="30" y="146" class="note">• Zynq SoC for control + FPGA logic</text>
+    <text x="30" y="188" class="note">• ADRV RF module for TX/RX path</text>
+    <text x="30" y="230" class="note">• Used for practical signal generation</text>
+    <text x="30" y="272" class="note">• Connects the model to real hardware</text>
+    <text x="30" y="314" class="note">• Foundation of the first hardware labs</text>
+  </g>
+</svg>
