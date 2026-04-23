@@ -50,17 +50,17 @@ The current hands-on setup already includes a simple external receiver and a boa
 
 Текущая практическая аппаратная база уже включает простой внешний приёмник и SDR-платформу на уровне платы для лабораторных работ и экспериментов.
 
-### RTL-SDR V3 Pro / RTL-SDR V3 Pro
+### RTL-SDR V3 Pro
 
-![RTL-SDR V3 Pro](docs/images/hardware/rtl_sdr_v3_pro.svg)
+![RTL-SDR V3 Pro](docs/images/hardware/rtl_sdr_v3_pro_real.png)
 
 The RTL-SDR dongle is used as an accessible external receiver for the first reception, capture, and observation tasks.
 
 RTL-SDR используется как доступный внешний приёмник для первых задач по приёму, записи и наблюдению сигнала.
 
-### Xilinx Zynq-7020 + ADRV module / Плата Xilinx Zynq-7020 + модуль ADRV
+### Xilinx Zynq-7020 + ADR9363
 
-![Xilinx Zynq-7020 with ADRV module](docs/images/hardware/xilinx_7020_adrv_angle_1.svg)
+![Xilinx Zynq-7020 with ADRV module](docs/images/hardware/xilinx_7020_adrv_real.png)
 
 This photo shows the actual board-level SDR platform used for the practical hardware-oriented part of the course.
 
