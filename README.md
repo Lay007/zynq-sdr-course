@@ -60,9 +60,13 @@ RTL-SDR используется как доступный внешний при
 
 ### Xilinx Zynq-7020 + ADRV module / Плата Xilinx Zynq-7020 + модуль ADRV
 
-Photos of the Zynq-7020 board with the ADRV RF module are being added as part of the hardware-oriented expansion of the course.
+![Xilinx Zynq-7020 with ADRV module — angle 1](docs/images/hardware/xilinx_7020_adrv_angle_1.svg)
 
-Фотографии платы Zynq-7020 с RF-модулем ADRV добавляются в рамках усиления аппаратно-ориентированной части курса.
+![Xilinx Zynq-7020 with ADRV module — angle 2](docs/images/hardware/xilinx_7020_adrv_angle_2.svg)
+
+These photos show the actual board-level SDR platform used for the practical hardware-oriented part of the course.
+
+Эти фотографии показывают реальную SDR-платформу на уровне платы, которая используется в практической аппаратно-ориентированной части курса.
 
 ## Course blocks / Блоки курса
 
