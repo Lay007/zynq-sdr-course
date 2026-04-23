@@ -20,37 +20,15 @@ The first block uses:
 
 #### Xilinx Zynq-7020 + ADRV module
 
-![Xilinx Zynq-7020 with ADRV module — angle 1](../../docs/images/hardware/xilinx_7020_adrv_angle_1.svg)
+![Xilinx Zynq-7020 with ADRV module](../../docs/images/hardware/xilinx_7020_adrv_angle_1.svg)
 
-![Xilinx Zynq-7020 with ADRV module — angle 2](../../docs/images/hardware/xilinx_7020_adrv_angle_2.svg)
+This image shows the actual board-level SDR platform used in the first practical SDR experiments of the course.
 
-These images show the actual hardware used in the first practical SDR experiments of the course.
+### SDR stand diagram
 
-### Simplified stand diagram
+![SDR training stand diagram](../../docs/images/hardware/sdr_stand_diagram.svg)
 
-```text
-Simulink / HDL / software control
-              |
-              v
-   Zynq-7020 + ADRV SDR board
-              |
-      RF signal over air
-        or cable link
-              |
-              v
-         RTL-SDR receiver
-              |
-              v
-            HDSDR
-              |
-              v
-           IQ recording
-              |
-              v
-MATLAB / Simulink / Python / C++ / GNU Radio
-```
-
-This simplified diagram shows the main engineering path of the first practical setup: a signal is generated on the Zynq-based SDR platform, observed by RTL-SDR, visualized in HDSDR, recorded as IQ data, and then analyzed in several software environments.
+This diagram shows the main engineering path of the first practical setup: a signal is generated on the Zynq-based SDR platform, observed by RTL-SDR, visualized in HDSDR, recorded as IQ data, and then analyzed in several software environments.
 
 In later stages the course will also use:
 - a solderless breadboard;
