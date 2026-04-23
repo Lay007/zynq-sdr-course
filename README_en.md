@@ -50,15 +50,15 @@ The current hands-on setup already includes a simple external receiver and a boa
 
 ### RTL-SDR V3 Pro
 
-![RTL-SDR V3 Pro](docs/images/hardware/rtl_sdr_v3_pro.svg)
+![RTL-SDR V3 Pro](docs/images/hardware/rtl_sdr_v3_pro_clean.svg)
 
 The RTL-SDR dongle is used as an accessible external receiver for the first reception, capture, and observation tasks.
 
 ### Xilinx Zynq-7020 + ADRV module
 
-![Xilinx Zynq-7020 with ADRV module](docs/images/hardware/xilinx_7020_adrv_angle_1.svg)
+![Xilinx Zynq-7020 with ADRV module](docs/images/hardware/xilinx_7020_adrv_clean.svg)
 
-This photo shows the actual board-level SDR platform used for the practical hardware-oriented part of the course.
+This illustration shows the board-level SDR platform used for the practical hardware-oriented part of the course.
 
 ### SDR stand diagram
 
