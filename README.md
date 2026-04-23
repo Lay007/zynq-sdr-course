@@ -44,6 +44,26 @@ Configured site URL / Настроенный адрес сайта:
 - **The remaining blocks already have structured bilingual scaffolds** / **Остальные блоки уже имеют структурированные двуязычные каркасы**
 - **The repository is ready for iterative course development and site publication** / **Репозиторий готов к поэтапному развитию курса и публикации в виде сайта**
 
+## Hardware baseline / Аппаратная база
+
+The current hands-on setup already includes a simple external receiver and a board-level SDR platform for practical experiments.
+
+Текущая практическая аппаратная база уже включает простой внешний приёмник и SDR-платформу на уровне платы для лабораторных работ и экспериментов.
+
+### RTL-SDR V3 Pro / RTL-SDR V3 Pro
+
+![RTL-SDR V3 Pro](docs/images/hardware/rtl_sdr_v3_pro.svg)
+
+The RTL-SDR dongle is used as an accessible external receiver for the first reception, capture, and observation tasks.
+
+RTL-SDR используется как доступный внешний приёмник для первых задач по приёму, записи и наблюдению сигнала.
+
+### Xilinx Zynq-7020 + ADRV module / Плата Xilinx Zynq-7020 + модуль ADRV
+
+Photos of the Zynq-7020 board with the ADRV RF module are being added as part of the hardware-oriented expansion of the course.
+
+Фотографии платы Zynq-7020 с RF-модулем ADRV добавляются в рамках усиления аппаратно-ориентированной части курса.
+
 ## Course blocks / Блоки курса
 
 1. `blocks/block_01_intro_sdr` — introduction, tools, and first signal reception / введение, инструменты и первый приём сигнала
