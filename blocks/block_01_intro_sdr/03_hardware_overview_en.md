@@ -12,6 +12,20 @@ The first block uses:
 - antennas or a cable link
 - attenuators and adapters when required
 
+### Hardware photos
+
+#### RTL-SDR V3 Pro
+
+![RTL-SDR V3 Pro](../../docs/images/hardware/rtl_sdr_v3_pro.svg)
+
+#### Xilinx Zynq-7020 + ADRV module
+
+![Xilinx Zynq-7020 with ADRV module — angle 1](../../docs/images/hardware/xilinx_7020_adrv_angle_1.svg)
+
+![Xilinx Zynq-7020 with ADRV module — angle 2](../../docs/images/hardware/xilinx_7020_adrv_angle_2.svg)
+
+These images show the actual hardware used in the first practical SDR experiments of the course.
+
 In later stages the course will also use:
 - a solderless breadboard;
 - basic analog components;
