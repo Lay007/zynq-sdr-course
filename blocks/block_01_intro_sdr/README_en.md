@@ -29,6 +29,22 @@ After completing the block, the student should be able to:
 - understand how a Simulink model is related to implementation on hardware;
 - understand why KiCad is part of the course and how it relates to the SDR setup.
 
+## Hardware setup photos
+
+### RTL-SDR V3 Pro
+
+![RTL-SDR V3 Pro](../../docs/images/hardware/rtl_sdr_v3_pro.svg)
+
+The RTL-SDR dongle is used as the external receiver in the first practical lab.
+
+### Xilinx Zynq-7020 + ADRV module
+
+![Xilinx Zynq-7020 with ADRV module — angle 1](../../docs/images/hardware/xilinx_7020_adrv_angle_1.svg)
+
+![Xilinx Zynq-7020 with ADRV module — angle 2](../../docs/images/hardware/xilinx_7020_adrv_angle_2.svg)
+
+These photos show the actual board-level SDR platform used for the hands-on part of Block 1.
+
 ## Equipment
 The block uses:
 
