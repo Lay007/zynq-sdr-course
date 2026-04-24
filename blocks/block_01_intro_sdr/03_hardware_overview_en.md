@@ -24,11 +24,23 @@ The first block uses:
 
 This image shows the actual board-level SDR platform used in the first practical SDR experiments of the course.
 
-### SDR stand diagram
+### SDR stand flow
 
-![SDR training stand diagram](../../docs/images/hardware/sdr_stand_diagram.svg)
+| Step | Block | Role | Output |
+|---:|---|---|---|
+| 1 | **Model & Control** | Simulink / HDL / software setup | Parameters and generated samples |
+| ↓ |  | **configure / generate** |  |
+| 2 | **Zynq-7020 + ADRV** | FPGA / SoC processing and RF TX/RX path | RF signal |
+| ↓ |  | **RF over air or cable** |  |
+| 3 | **RTL-SDR** | External receiver for first signal capture | Received sample stream |
+| ↓ |  | **observe** |  |
+| 4 | **HDSDR** | Spectrum and waterfall visualization | Visible signal and tuned recording setup |
+| ↓ |  | **store** |  |
+| 5 | **IQ Recording** | Captured IQ sample file | IQ dataset |
+| ↓ |  | **analyze** |  |
+| 6 | **Offline Analysis** | MATLAB / Simulink / Python / C++ / GNU Radio | Plots, metrics, reports, conclusions |
 
-This diagram shows the main engineering path of the first practical setup: a signal is generated on the Zynq-based SDR platform, observed by RTL-SDR, visualized in HDSDR, recorded as IQ data, and then analyzed in several software environments.
+**Practical flow:** generate a signal on the Zynq/ADRV platform → receive it with RTL-SDR → observe it in HDSDR → record IQ samples → analyze the recording in multiple software environments.
 
 In later stages the course will also use:
 - a solderless breadboard;
