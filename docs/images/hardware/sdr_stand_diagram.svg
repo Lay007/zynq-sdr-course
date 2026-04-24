@@ -1,92 +1,63 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1400" height="860" viewBox="0 0 1400 860" role="img" aria-label="SDR training stand diagram">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#0b1220"/>
-      <stop offset="100%" stop-color="#121a2b"/>
-    </linearGradient>
-    <linearGradient id="box1" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#1d4ed8"/>
-      <stop offset="100%" stop-color="#2563eb"/>
-    </linearGradient>
-    <linearGradient id="box2" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0f766e"/>
-      <stop offset="100%" stop-color="#14b8a6"/>
-    </linearGradient>
-    <linearGradient id="box3" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#7c3aed"/>
-      <stop offset="100%" stop-color="#8b5cf6"/>
-    </linearGradient>
-    <linearGradient id="box4" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#b45309"/>
-      <stop offset="100%" stop-color="#f59e0b"/>
-    </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.28"/>
-    </filter>
-    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto">
-      <path d="M 0 0 L 12 6 L 0 12 z" fill="#94a3b8"/>
-    </marker>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0b1220"/><stop offset="100%" stop-color="#111827"/></linearGradient>
+    <linearGradient id="model" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1d4ed8"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
+    <linearGradient id="board" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0f766e"/><stop offset="100%" stop-color="#14b8a6"/></linearGradient>
+    <linearGradient id="rx" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient>
+    <linearGradient id="analysis" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#b45309"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000" flood-opacity="0.25"/></filter>
+    <marker id="arrow" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" orient="auto"><path d="M0,0 L12,6 L0,12 Z" fill="#9ca3af"/></marker>
     <style>
-      .title{font:700 34px Arial, Helvetica, sans-serif; fill:#f8fafc}
-      .subtitle{font:400 18px Arial, Helvetica, sans-serif; fill:#cbd5e1}
-      .boxTitle{font:700 28px Arial, Helvetica, sans-serif; fill:#ffffff}
-      .boxText{font:400 19px Arial, Helvetica, sans-serif; fill:#e5eefc}
-      .small{font:400 17px Arial, Helvetica, sans-serif; fill:#cbd5e1}
-      .tag{font:700 17px Arial, Helvetica, sans-serif; fill:#e2e8f0}
-      .arrowLabel{font:700 16px Arial, Helvetica, sans-serif; fill:#cbd5e1}
-      .flowText{font:400 16px Arial, Helvetica, sans-serif; fill:#cbd5e1}
+      .title{font:700 34px Arial,Helvetica,sans-serif;fill:#f8fafc}.subtitle{font:400 18px Arial,Helvetica,sans-serif;fill:#cbd5e1}.boxTitle{font:700 26px Arial,Helvetica,sans-serif;fill:#fff}.boxText{font:400 18px Arial,Helvetica,sans-serif;fill:#e5eefc}.small{font:400 16px Arial,Helvetica,sans-serif;fill:#cbd5e1}.label{font:700 15px Arial,Helvetica,sans-serif;fill:#cbd5e1}.flowTitle{font:700 18px Arial,Helvetica,sans-serif;fill:#e2e8f0}.flowText{font:400 16px Arial,Helvetica,sans-serif;fill:#cbd5e1}
     </style>
   </defs>
+  <rect width="1400" height="860" rx="26" fill="url(#bg)"/>
+  <text x="700" y="62" text-anchor="middle" class="title">SDR Training Stand</text>
+  <text x="700" y="96" text-anchor="middle" class="subtitle">Model → Board SDR → External Receiver → HDSDR → IQ Recording → Offline Analysis</text>
 
-  <rect width="1400" height="860" fill="url(#bg)" rx="24"/>
+  <rect x="80" y="155" width="250" height="150" rx="24" fill="url(#model)" filter="url(#shadow)"/>
+  <text x="205" y="205" text-anchor="middle" class="boxTitle">Model &amp; Control</text>
+  <text x="205" y="242" text-anchor="middle" class="boxText">Simulink / HDL</text>
+  <text x="205" y="272" text-anchor="middle" class="boxText">Software setup</text>
 
-  <text x="700" y="64" text-anchor="middle" class="title">SDR Training Stand</text>
-  <text x="700" y="95" text-anchor="middle" class="subtitle">Model → Board-Level SDR → External Reception → IQ Recording → Analysis</text>
+  <rect x="415" y="135" width="370" height="190" rx="24" fill="url(#board)" filter="url(#shadow)"/>
+  <text x="600" y="192" text-anchor="middle" class="boxTitle">Zynq-7020 + ADRV</text>
+  <text x="600" y="230" text-anchor="middle" class="boxText">Signal generation</text>
+  <text x="600" y="260" text-anchor="middle" class="boxText">FPGA / SoC processing</text>
+  <text x="600" y="290" text-anchor="middle" class="boxText">RF TX / RX path</text>
 
-  <rect x="90" y="160" width="250" height="150" rx="24" fill="url(#box1)" filter="url(#shadow)"/>
-  <text x="215" y="210" text-anchor="middle" class="boxTitle">Model &amp; Control</text>
-  <text x="215" y="246" text-anchor="middle" class="boxText">Simulink / HDL</text>
-  <text x="215" y="276" text-anchor="middle" class="boxText">Software setup</text>
+  <rect x="870" y="155" width="250" height="150" rx="24" fill="url(#rx)" filter="url(#shadow)"/>
+  <text x="995" y="205" text-anchor="middle" class="boxTitle">RTL-SDR</text>
+  <text x="995" y="242" text-anchor="middle" class="boxText">External receiver</text>
+  <text x="995" y="272" text-anchor="middle" class="boxText">First signal capture</text>
 
-  <rect x="420" y="140" width="360" height="190" rx="24" fill="url(#box2)" filter="url(#shadow)"/>
-  <text x="600" y="196" text-anchor="middle" class="boxTitle">Zynq-7020 + ADRV</text>
-  <text x="600" y="234" text-anchor="middle" class="boxText">Signal generation</text>
-  <text x="600" y="264" text-anchor="middle" class="boxText">FPGA / SoC processing</text>
-  <text x="600" y="294" text-anchor="middle" class="boxText">RF TX / RX path</text>
+  <rect x="1080" y="390" width="240" height="120" rx="24" fill="#1e293b" stroke="#475569" stroke-width="2" filter="url(#shadow)"/>
+  <text x="1200" y="438" text-anchor="middle" class="boxTitle">HDSDR</text>
+  <text x="1200" y="472" text-anchor="middle" class="small">Spectrum / waterfall</text>
 
-  <rect x="880" y="160" width="250" height="150" rx="24" fill="url(#box3)" filter="url(#shadow)"/>
-  <text x="1005" y="210" text-anchor="middle" class="boxTitle">RTL-SDR</text>
-  <text x="1005" y="246" text-anchor="middle" class="boxText">External receiver</text>
-  <text x="1005" y="276" text-anchor="middle" class="boxText">First signal capture</text>
+  <rect x="825" y="590" width="300" height="120" rx="24" fill="#1e293b" stroke="#475569" stroke-width="2" filter="url(#shadow)"/>
+  <text x="975" y="638" text-anchor="middle" class="boxTitle">IQ Recording</text>
+  <text x="975" y="672" text-anchor="middle" class="small">Captured sample stream</text>
 
-  <rect x="1080" y="420" width="220" height="120" rx="24" fill="#1e293b" stroke="#475569" stroke-width="2" filter="url(#shadow)"/>
-  <text x="1190" y="468" text-anchor="middle" class="boxTitle" style="font-size:26px">HDSDR</text>
-  <text x="1190" y="501" text-anchor="middle" class="small">Spectrum / waterfall</text>
+  <rect x="350" y="590" width="360" height="145" rx="24" fill="url(#analysis)" filter="url(#shadow)"/>
+  <text x="530" y="640" text-anchor="middle" class="boxTitle">Offline Analysis</text>
+  <text x="530" y="677" text-anchor="middle" class="boxText">MATLAB / Simulink</text>
+  <text x="530" y="706" text-anchor="middle" class="boxText">Python / C++ / GNU Radio</text>
 
-  <rect x="800" y="610" width="290" height="120" rx="24" fill="#1e293b" stroke="#475569" stroke-width="2" filter="url(#shadow)"/>
-  <text x="945" y="658" text-anchor="middle" class="boxTitle" style="font-size:26px">IQ Recording</text>
-  <text x="945" y="691" text-anchor="middle" class="small">Captured sample stream</text>
+  <path d="M330 230 H415" stroke="#9ca3af" stroke-width="6" fill="none" marker-end="url(#arrow)"/>
+  <text x="372" y="210" text-anchor="middle" class="label">configure</text>
+  <path d="M785 230 H870" stroke="#9ca3af" stroke-width="6" fill="none" marker-end="url(#arrow)"/>
+  <text x="828" y="202" text-anchor="middle" class="label">RF signal</text>
+  <text x="828" y="222" text-anchor="middle" class="small">air / cable</text>
+  <path d="M995 305 V390 H1080" stroke="#9ca3af" stroke-width="6" fill="none" marker-end="url(#arrow)"/>
+  <text x="1028" y="356" text-anchor="start" class="label">observe</text>
+  <path d="M1200 510 V650 H1125" stroke="#9ca3af" stroke-width="6" fill="none" marker-end="url(#arrow)"/>
+  <text x="1218" y="590" text-anchor="start" class="label">store</text>
+  <path d="M825 650 H710" stroke="#9ca3af" stroke-width="6" fill="none" marker-end="url(#arrow)"/>
+  <text x="767" y="630" text-anchor="middle" class="label">analyze</text>
 
-  <rect x="330" y="585" width="360" height="145" rx="24" fill="url(#box4)" filter="url(#shadow)"/>
-  <text x="510" y="635" text-anchor="middle" class="boxTitle">Offline Analysis</text>
-  <text x="510" y="672" text-anchor="middle" class="boxText">MATLAB / Simulink</text>
-  <text x="510" y="701" text-anchor="middle" class="boxText">Python / C++ / GNU Radio</text>
-
-  <line x1="340" y1="235" x2="420" y2="235" stroke="#94a3b8" stroke-width="8" marker-end="url(#arrow)"/>
-  <line x1="780" y1="235" x2="880" y2="235" stroke="#94a3b8" stroke-width="8" marker-end="url(#arrow)"/>
-  <line x1="1005" y1="310" x2="1005" y2="420" stroke="#94a3b8" stroke-width="8" marker-end="url(#arrow)"/>
-  <polyline points="1080,480 1150,480 1150,610 1090,610" fill="none" stroke="#94a3b8" stroke-width="8" marker-end="url(#arrow)"/>
-  <line x1="800" y1="670" x2="690" y2="670" stroke="#94a3b8" stroke-width="8" marker-end="url(#arrow)"/>
-
-  <text x="830" y="208" text-anchor="middle" class="arrowLabel">RF signal</text>
-  <text x="830" y="228" text-anchor="middle" class="small">over air or cable</text>
-  <text x="1023" y="370" text-anchor="start" class="arrowLabel">observe</text>
-  <text x="1128" y="595" text-anchor="middle" class="arrowLabel">store</text>
-  <text x="744" y="654" text-anchor="middle" class="arrowLabel">analyze</text>
-
-  <rect x="90" y="390" width="640" height="135" rx="18" fill="#0f172a" stroke="#334155" stroke-width="2"/>
-  <text x="118" y="430" class="tag">Practical flow</text>
-  <text x="118" y="465" class="flowText">Signal generated on the Zynq-based SDR board → received with RTL-SDR</text>
-  <text x="118" y="490" class="flowText">→ observed in HDSDR → stored as IQ → analyzed in multiple tools</text>
-
+  <rect x="80" y="385" width="660" height="135" rx="18" fill="#0f172a" stroke="#334155" stroke-width="2"/>
+  <text x="112" y="428" class="flowTitle">Practical flow</text>
+  <text x="112" y="463" class="flowText">Generate signal on Zynq/ADRV → receive with RTL-SDR → observe in HDSDR</text>
+  <text x="112" y="490" class="flowText">→ record IQ samples → analyze in MATLAB, Simulink, Python, C++ or GNU Radio</text>
 </svg>
