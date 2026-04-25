@@ -16,11 +16,11 @@ The first block uses:
 
 #### RTL-SDR V3 Pro
 
-![RTL-SDR V3 Pro](../../docs/images/hardware/rtl_sdr_v3_pro.svg)
+![RTL-SDR V3 Pro](../../images/hardware/rtl_sdr_v3_pro.svg)
 
 #### Xilinx Zynq-7020 + ADRV module
 
-![Xilinx Zynq-7020 with ADRV module](../../docs/images/hardware/xilinx_7020_adrv_angle_1.svg)
+![Xilinx Zynq-7020 with ADRV module](../../images/hardware/xilinx_7020_adrv_angle_1.svg)
 
 This image shows the actual board-level SDR platform used in the first practical SDR experiments of the course.
 

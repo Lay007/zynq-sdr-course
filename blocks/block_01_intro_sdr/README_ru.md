@@ -57,19 +57,19 @@
 
 ### RTL-SDR V3 Pro
 
-![RTL-SDR V3 Pro](../../docs/images/hardware/rtl_sdr_v3_pro.svg)
+![RTL-SDR V3 Pro](../../images/hardware/rtl_sdr_v3_pro.svg)
 
 RTL-SDR используется как внешний приёмник в первой практической лабораторной работе.
 
 ### Плата Xilinx Zynq-7020 + модуль ADRV
 
-![Xilinx Zynq-7020 with ADRV module](../../docs/images/hardware/xilinx_7020_adrv_angle_1.svg)
+![Xilinx Zynq-7020 with ADRV module](../../images/hardware/xilinx_7020_adrv_angle_1.svg)
 
 Эта фотография показывает реальную SDR-платформу на уровне платы, которая используется в практической части первого блока.
 
 ### Диаграмма SDR-стенда
 
-![SDR training stand diagram](../../docs/images/hardware/sdr_stand_diagram.svg)
+![SDR training stand diagram](../../images/hardware/sdr_stand_diagram.svg)
 
 ## Программный стек блока
 ### Минимальный набор для старта

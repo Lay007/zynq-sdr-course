@@ -33,19 +33,19 @@ After completing the block, the student should be able to:
 
 ### RTL-SDR V3 Pro
 
-![RTL-SDR V3 Pro](../../docs/images/hardware/rtl_sdr_v3_pro.svg)
+![RTL-SDR V3 Pro](../../images/hardware/rtl_sdr_v3_pro.svg)
 
 The RTL-SDR dongle is used as the external receiver in the first practical lab.
 
 ### Xilinx Zynq-7020 + ADRV module
 
-![Xilinx Zynq-7020 with ADRV module](../../docs/images/hardware/xilinx_7020_adrv_angle_1.svg)
+![Xilinx Zynq-7020 with ADRV module](../../images/hardware/xilinx_7020_adrv_angle_1.svg)
 
 This photo shows the actual board-level SDR platform used for the hands-on part of Block 1.
 
 ### SDR stand diagram
 
-![SDR training stand diagram](../../docs/images/hardware/sdr_stand_diagram.svg)
+![SDR training stand diagram](../../images/hardware/sdr_stand_diagram.svg)
 
 ## Equipment
 The block uses:
