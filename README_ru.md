@@ -74,18 +74,18 @@ RTL-SDR используется как доступный внешний при
 
 ## Блоки курса
 
-1. `block_01_intro_sdr` — введение, инструменты и первый приём сигнала  
-2. `block_02_signals_and_sampling` — сигналы, спектр, дискретизация, IQ  
-3. `block_03_dsp_basics` — FFT, фильтрация, окна и базовые DSP-операции  
-4. `block_04_simulink_and_fixed_point` — моделирование, fixed-point и подготовка к железу  
-5. `block_05_fpga_hdl_flow` — маршрут Simulink, HDL, Vivado и SoC  
-6. `block_06_rf_frontend_and_ad9363` — радиотракт, уровни, частоты и AD9363  
-7. `block_07_tx_rx_chains` — тракты передачи и приёма, DUC и DDC  
-8. `block_08_modulation_and_synchronization` — модуляция, демодуляция и синхронизация  
-9. `block_09_recording_and_analysis_tools` — HDSDR, GNU Radio, MATLAB, Python и C++  
-10. `block_10_kicad_and_basic_electronics` — KiCad, макетная плата и вспомогательные узлы  
-11. `block_11_integrated_sdr_project` — интегрированный учебный SDR-проект  
-12. `block_12_final_projects` — итоговые проектные работы
+1. `block-1` — введение, инструменты и первый приём сигнала
+2. `block-2` — сигналы, спектр, дискретизация, IQ
+3. `block-3` — FFT, фильтрация, окна и базовые DSP-операции
+4. `block-4` — моделирование, fixed-point и подготовка к железу
+5. `block-5` — маршрут Simulink, HDL, Vivado и SoC
+6. `block-6` — радиотракт, уровни, частоты и AD9363
+7. `block-7` — тракты передачи и приёма, DUC и DDC
+8. `block-8` — модуляция, демодуляция и синхронизация
+9. `block-9` — HDSDR, GNU Radio, MATLAB, Python и C++
+10. `block-10` — KiCad, макетная плата и вспомогательные узлы
+11. `block-11` — интегрированный учебный SDR-проект
+12. `block-12` — итоговые проектные работы
 
 ## Текущее состояние
 

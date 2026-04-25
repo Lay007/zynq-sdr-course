@@ -1,3 +1,3 @@
 # Интегрированный SDR-проект
 
---8<-- "blocks/block_11_integrated_sdr_project/README_ru.md"
+--8<-- "blocks/block-11/README_ru.md"

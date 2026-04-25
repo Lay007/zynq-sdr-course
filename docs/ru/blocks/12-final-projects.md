@@ -1,3 +1,3 @@
 # Итоговые проекты
 
---8<-- "blocks/block_12_final_projects/README_ru.md"
+--8<-- "blocks/block-12/README_ru.md"

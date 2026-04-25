@@ -1,3 +1,3 @@
 # Маршрут FPGA / HDL
 
---8<-- "blocks/block_05_fpga_hdl_flow/README_ru.md"
+--8<-- "blocks/block-5/README_ru.md"
