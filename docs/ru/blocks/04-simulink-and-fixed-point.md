@@ -1,3 +1,3 @@
 # Simulink и fixed-point
 
---8<-- "blocks/block-4/README_ru.md"
+--8<-- "blocks/block_04_simulink_and_fixed_point/README_ru.md"

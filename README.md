@@ -80,18 +80,18 @@ The current hands-on setup already includes a simple external receiver and a boa
 
 ## Course blocks / Блоки курса
 
-1. `blocks/block-1`
-2. `blocks/block-2`
-3. `blocks/block-3`
-4. `blocks/block-4`
-5. `blocks/block-5`
-6. `blocks/block-6`
-7. `blocks/block-7`
-8. `blocks/block-8`
-9. `blocks/block-9`
-10. `blocks/block-10`
-11. `blocks/block-11`
-12. `blocks/block-12`
+1. `blocks/block_01_intro_sdr`
+2. `blocks/block_02_signals_and_sampling`
+3. `blocks/block_03_dsp_basics`
+4. `blocks/block_04_simulink_and_fixed_point`
+5. `blocks/block_05_fpga_hdl_flow`
+6. `blocks/block_06_rf_frontend_and_ad9363`
+7. `blocks/block_07_tx_rx_chains`
+8. `blocks/block_08_modulation_and_synchronization`
+9. `blocks/block_09_recording_and_analysis_tools`
+10. `blocks/block_01_intro_sdr0`
+11. `blocks/block_01_intro_sdr1`
+12. `blocks/block_01_intro_sdr2`
 
 ## License / Лицензия
 

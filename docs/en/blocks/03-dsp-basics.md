@@ -1,3 +1,3 @@
 # DSP Basics
 
---8<-- "blocks/block-3/README_en.md"
+--8<-- "blocks/block_03_dsp_basics/README_en.md"

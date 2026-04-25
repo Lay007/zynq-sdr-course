@@ -74,18 +74,18 @@ This photo shows the actual board-level SDR platform used for the practical hard
 
 ## Course blocks
 
-1. `block-1` — introduction, tools, and first signal reception
-2. `block-2` — signals, spectrum, sampling, IQ
-3. `block-3` — FFT, filtering, windows, and basic DSP operations
-4. `block-4` — modeling, fixed-point, and preparation for hardware
-5. `block-5` — Simulink, HDL, Vivado, and SoC flow
-6. `block-6` — RF chain, levels, frequencies, and AD9363
-7. `block-7` — transmit and receive chains, DUC, and DDC
-8. `block-8` — modulation, demodulation, and synchronization
-9. `block-9` — HDSDR, GNU Radio, MATLAB, Python, and C++
-10. `block-10` — KiCad, breadboard work, and support circuits
-11. `block-11` — integrated educational SDR project
-12. `block-12` — final project work
+1. `block_01_intro_sdr` — introduction, tools, and first signal reception
+2. `block_02_signals_and_sampling` — signals, spectrum, sampling, IQ
+3. `block_03_dsp_basics` — FFT, filtering, windows, and basic DSP operations
+4. `block_04_simulink_and_fixed_point` — modeling, fixed-point, and preparation for hardware
+5. `block_05_fpga_hdl_flow` — Simulink, HDL, Vivado, and SoC flow
+6. `block_06_rf_frontend_and_ad9363` — RF chain, levels, frequencies, and AD9363
+7. `block_07_tx_rx_chains` — transmit and receive chains, DUC, and DDC
+8. `block_08_modulation_and_synchronization` — modulation, demodulation, and synchronization
+9. `block_09_recording_and_analysis_tools` — HDSDR, GNU Radio, MATLAB, Python, and C++
+10. `block_10_kicad_and_basic_electronics` — KiCad, breadboard work, and support circuits
+11. `block_11_integrated_sdr_project` — integrated educational SDR project
+12. `block_12_final_projects` — final project work
 
 ## Current state
 

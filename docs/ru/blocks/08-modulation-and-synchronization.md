@@ -1,3 +1,3 @@
 # Модуляция и синхронизация
 
---8<-- "blocks/block-8/README_ru.md"
+--8<-- "blocks/block_08_modulation_and_synchronization/README_ru.md"

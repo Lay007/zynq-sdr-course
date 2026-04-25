@@ -1,3 +1,3 @@
 # Introduction to SDR
 
---8<-- "blocks/block-1/README_en.md"
+--8<-- "blocks/block_01_intro_sdr/README_en.md"

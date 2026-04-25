@@ -1,3 +1,3 @@
 # Final Projects
 
---8<-- "blocks/block-12/README_en.md"
+--8<-- "blocks/block_01_intro_sdr2/README_en.md"

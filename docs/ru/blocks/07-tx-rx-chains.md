@@ -1,3 +1,3 @@
 # Тракты TX/RX
 
---8<-- "blocks/block-7/README_ru.md"
+--8<-- "blocks/block_07_tx_rx_chains/README_ru.md"
