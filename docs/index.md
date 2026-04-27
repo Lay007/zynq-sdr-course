@@ -30,18 +30,18 @@ This site is the main course workspace. It connects theory, MATLAB/Simulink mode
 
 ```mermaid
 flowchart TB
-    MODEL["1. Model<br/>MATLAB / Simulink"]
-    FIXED["2. Fixed-point<br/>scaling / quantization"]
-    FPGA["3. FPGA<br/>streaming DSP"]
-    RF["4. RF frontend<br/>AD9363"]
-    CHANNEL["5. Channel<br/>coax / air"]
-    RX["6. Independent RX<br/>RTL-SDR / HDSDR"]
-    IQ["7. IQ capture<br/>WAV / RAW / CI16"]
-    METRICS["8. Metrics<br/>FFT / EVM / BER / SNR"]
+    MODEL["1. Model and reference signal<br/>MATLAB / Simulink, ideal floating-point behavior"]
+    FIXED["2. Fixed-point conversion<br/>word length, scaling, overflow and quantization noise"]
+    FPGA["3. FPGA implementation<br/>streaming DSP blocks, latency, AXI interfaces"]
+    RF["4. RF frontend<br/>AD9363 frequency plan, gain, filters and bandwidth"]
+    CHANNEL["5. Physical channel<br/>coax with attenuation or controlled over-the-air path"]
+    RX["6. Independent receiver<br/>RTL-SDR + HDSDR for external observation"]
+    IQ["7. IQ recording<br/>WAV / RAW / CI16 with documented metadata"]
+    METRICS["8. Engineering metrics<br/>FFT, SNR, EVM, BER and final conclusion"]
 
     MODEL --> FIXED --> FPGA --> RF --> CHANNEL --> RX --> IQ --> METRICS
-    METRICS -. redesign .-> MODEL
-    METRICS -. retune .-> RF
+    METRICS -. redesign algorithm .-> MODEL
+    METRICS -. retune RF parameters .-> RF
 ```
 
 !!! tip "Main idea"
