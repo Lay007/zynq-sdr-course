@@ -143,6 +143,50 @@ This second-level diagram explains what happens inside the board-level part of t
 
 Эта диаграмма второго уровня показывает, что происходит внутри платной части стенда: ARM-часть настраивает эксперимент и радиотракт, а FPGA-часть реализует детерминированную цепочку обработки отсчётов.
 
+### Level 3: SDR TX/RX processing chain / Уровень 3: TX/RX тракт SDR
+
+```mermaid
+flowchart LR
+    %% ===== LIGHT STYLE =====
+    classDef src fill:#E0F2FE,color:#0F172A,stroke:#0284C7,stroke-width:1px;
+    classDef dsp fill:#DCFCE7,color:#0F172A,stroke:#16A34A,stroke-width:1px;
+    classDef sync fill:#FEF3C7,color:#0F172A,stroke:#D97706,stroke-width:1px;
+    classDef rf fill:#FFE4E6,color:#0F172A,stroke:#E11D48,stroke-width:1px;
+    classDef io fill:#EDE9FE,color:#0F172A,stroke:#7C3AED,stroke-width:1px;
+    classDef metric fill:#F1F5F9,color:#0F172A,stroke:#64748B,stroke-width:1px;
+
+    SRC["Signal source<br/>tone / packet / waveform"]:::src
+    MOD["Modulator<br/>BPSK / QPSK / QAM / FSK"]:::dsp
+    RRC_TX["Pulse shaping<br/>RRC / FIR"]:::dsp
+    DUC["DUC<br/>interpolation + digital upconversion"]:::dsp
+    DAC["DAC path<br/>AD9363 TX"]:::rf
+    RF_TX["RF transmit chain<br/>mixer / PA / filters"]:::rf
+    CH["Channel<br/>coax / attenuator / over-the-air"]:::rf
+    RF_RX["RF receive chain<br/>LNA / mixer / filters"]:::rf
+    ADC["ADC path<br/>AD9363 RX or RTL-SDR"]:::rf
+    DDC["DDC<br/>digital downconversion + decimation"]:::dsp
+    AGC["AGC<br/>level control"]:::sync
+    SYNC["Synchronization<br/>CFO / timing / frame"]:::sync
+    RRC_RX["Matched filter<br/>RRC / FIR"]:::dsp
+    DEMOD["Demodulator<br/>symbols / bits"]:::dsp
+    METRICS["Validation<br/>FFT / EVM / BER / SNR"]:::metric
+    IQ["IQ capture points<br/>raw / WAV / CI16"]:::io
+    REPORT["Reports<br/>plots / notebooks / lab results"]:::io
+
+    SRC --> MOD --> RRC_TX --> DUC --> DAC --> RF_TX --> CH --> RF_RX --> ADC --> DDC --> AGC --> SYNC --> RRC_RX --> DEMOD --> METRICS --> REPORT
+
+    DUC -. TX IQ tap .-> IQ
+    ADC -. RX raw IQ tap .-> IQ
+    DDC -. baseband IQ tap .-> IQ
+    IQ -. offline replay .-> DDC
+    METRICS -. model tuning .-> MOD
+    METRICS -. hardware tuning .-> AGC
+```
+
+Level 3 turns the stand into a complete SDR engineering pipeline: signal generation, modulation, pulse shaping, digital up/down conversion, RF transfer, synchronization, demodulation, and objective validation through FFT/EVM/BER/SNR metrics.
+
+Уровень 3 превращает стенд в полный инженерный SDR-конвейер: генерация сигнала, модуляция, формирующая фильтрация, цифровое повышение/понижение частоты, RF-передача, синхронизация, демодуляция и объективная проверка через FFT/EVM/BER/SNR.
+
 ## Course blocks / Блоки курса
 
 1. `blocks/block_01_intro_sdr`
