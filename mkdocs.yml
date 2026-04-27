@@ -52,8 +52,10 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - System:
+      - Model → FPGA → RF → Measurement: model-to-measurement.md
+      - Lab 1: Tone → RF → IQ → Analysis: lab01-tone-rf-iq-analysis.md
   - Demo (IEEE figures): demo.md
-  - Model → FPGA → RF → Measurement: model-to-measurement.md
   - Русский:
       - Обзор курса: ru/index.md
   - English:
