@@ -25,19 +25,25 @@ def savefig(name: str) -> None:
     plt.close()
 
 
+def normalized_spectrum(signal: np.ndarray, fs: float) -> tuple[np.ndarray, np.ndarray]:
+    n = len(signal)
+    window = np.hanning(n)
+    spectrum = np.fft.fftshift(np.fft.fft(signal * window))
+    freqs = np.fft.fftshift(np.fft.fftfreq(n, 1 / fs))
+    mag_db = 20 * np.log10(np.abs(spectrum) / np.max(np.abs(spectrum)) + 1e-12)
+    return freqs, mag_db
+
+
 def generate_tone_fft() -> None:
     fs = 1_000_000.0
     n = 8192
     f0 = 100_000.0
     t = np.arange(n) / fs
-    window = np.hanning(n)
-    signal = np.exp(2j * np.pi * f0 * t) + 0.02 * (
-        np.random.default_rng(1).normal(size=n) + 1j * np.random.default_rng(2).normal(size=n)
-    )
+    rng_i = np.random.default_rng(1)
+    rng_q = np.random.default_rng(2)
+    signal = np.exp(2j * np.pi * f0 * t) + 0.02 * (rng_i.normal(size=n) + 1j * rng_q.normal(size=n))
 
-    spectrum = np.fft.fftshift(np.fft.fft(signal * window))
-    freqs = np.fft.fftshift(np.fft.fftfreq(n, 1 / fs))
-    mag_db = 20 * np.log10(np.abs(spectrum) / np.max(np.abs(spectrum)) + 1e-12)
+    freqs, mag_db = normalized_spectrum(signal, fs)
     peak_freq = freqs[np.argmax(mag_db)] / 1e3
 
     plt.figure()
@@ -54,6 +60,34 @@ def generate_tone_fft() -> None:
     plt.title("Lab 1: Tone FFT Spectrum")
     plt.ylim(-90, 5)
     savefig("lab01_fft.png")
+
+
+def generate_am_fm_spectrum() -> None:
+    fs = 1_000_000.0
+    n = 8192
+    t = np.arange(n) / fs
+    fc = 80_000.0
+    fm = 5_000.0
+    am_index = 0.55
+    freq_dev = 28_000.0
+
+    message = np.sin(2 * np.pi * fm * t)
+    am = (1.0 + am_index * message) * np.cos(2 * np.pi * fc * t)
+    fm_sig = np.cos(2 * np.pi * fc * t + (freq_dev / fm) * np.sin(2 * np.pi * fm * t))
+
+    f_am, s_am = normalized_spectrum(am, fs)
+    f_fm, s_fm = normalized_spectrum(fm_sig, fs)
+
+    plt.figure()
+    plt.plot(f_am / 1e3, s_am, label="AM: carrier + sidebands")
+    plt.plot(f_fm / 1e3, s_fm, label="FM: wider occupied bandwidth")
+    plt.xlabel("Frequency, kHz")
+    plt.ylabel("Normalized magnitude, dB")
+    plt.title("Lab 2: AM vs FM Spectrum")
+    plt.xlim(-170, 170)
+    plt.ylim(-90, 5)
+    plt.legend(loc="upper right", frameon=True)
+    savefig("lab02_am_vs_fm.png")
 
 
 def generate_qpsk_constellation() -> None:
@@ -75,6 +109,34 @@ def generate_qpsk_constellation() -> None:
     plt.axis("equal")
     plt.legend(loc="upper right", frameon=True)
     savefig("lab03_constellation.png")
+
+
+def generate_sync_constellation() -> None:
+    rng = np.random.default_rng(4)
+    n = 1400
+    bits_i = 2 * rng.integers(0, 2, n) - 1
+    bits_q = 2 * rng.integers(0, 2, n) - 1
+    tx = (bits_i + 1j * bits_q) / np.sqrt(2)
+    sample_index = np.arange(n)
+    cfo = 0.018
+    noise = 0.13 * (rng.normal(size=n) + 1j * rng.normal(size=n))
+    before = tx * np.exp(1j * cfo * sample_index) + noise
+    after = before * np.exp(-1j * cfo * sample_index)
+
+    fig, axes = plt.subplots(1, 2, figsize=(7.4, 3.7), sharex=True, sharey=True)
+    axes[0].scatter(before.real, before.imag, s=6, alpha=0.55)
+    axes[0].set_title("Before CFO correction")
+    axes[0].set_xlabel("I")
+    axes[0].set_ylabel("Q")
+    axes[0].axis("equal")
+
+    axes[1].scatter(after.real, after.imag, s=6, alpha=0.55)
+    axes[1].set_title("After CFO correction")
+    axes[1].set_xlabel("I")
+    axes[1].axis("equal")
+
+    fig.suptitle("Lab 4: Synchronization Impact on QPSK Constellation")
+    savefig("lab04_sync_constellation.png")
 
 
 def generate_evm_comparison() -> None:
@@ -110,7 +172,9 @@ def generate_ber_curve() -> None:
 
 def main() -> None:
     generate_tone_fft()
+    generate_am_fm_spectrum()
     generate_qpsk_constellation()
+    generate_sync_constellation()
     generate_evm_comparison()
     generate_ber_curve()
 
