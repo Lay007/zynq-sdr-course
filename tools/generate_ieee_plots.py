@@ -19,10 +19,24 @@ plt.rcParams.update(
 )
 
 
-def savefig(name: str) -> None:
-    plt.tight_layout()
+def savefig(name: str, *, tight: bool = True) -> None:
+    if tight:
+        plt.tight_layout()
     plt.savefig(OUTPUT_DIR / name, bbox_inches="tight")
     plt.close()
+
+
+def add_parameter_box(text: str, loc: tuple[float, float] = (0.02, 0.96)) -> None:
+    ax = plt.gca()
+    ax.text(
+        loc[0],
+        loc[1],
+        text,
+        transform=ax.transAxes,
+        va="top",
+        ha="left",
+        bbox={"boxstyle": "round", "facecolor": "white", "alpha": 0.85, "linewidth": 0.7},
+    )
 
 
 def normalized_spectrum(signal: np.ndarray, fs: float) -> tuple[np.ndarray, np.ndarray]:
@@ -55,6 +69,7 @@ def generate_tone_fft() -> None:
         xytext=(peak_freq + 45, -12),
         arrowprops={"arrowstyle": "->", "linewidth": 0.8},
     )
+    add_parameter_box("Fs = 1.0 MS/s\nNFFT = 8192\nWindow = Hann")
     plt.xlabel("Frequency, kHz")
     plt.ylabel("Normalized magnitude, dB")
     plt.title("Lab 1: Tone FFT Spectrum")
@@ -81,6 +96,7 @@ def generate_am_fm_spectrum() -> None:
     plt.figure()
     plt.plot(f_am / 1e3, s_am, label="AM: carrier + sidebands")
     plt.plot(f_fm / 1e3, s_fm, label="FM: wider occupied bandwidth")
+    add_parameter_box("Fc = 80 kHz\nFm = 5 kHz\nAM index = 0.55\nFM dev = 28 kHz")
     plt.xlabel("Frequency, kHz")
     plt.ylabel("Normalized magnitude, dB")
     plt.title("Lab 2: AM vs FM Spectrum")
@@ -103,10 +119,11 @@ def generate_qpsk_constellation() -> None:
     plt.scatter(rx.real, rx.imag, s=7, alpha=0.65, label="Received symbols")
     ideal = np.array([1 + 1j, 1 - 1j, -1 + 1j, -1 - 1j]) / np.sqrt(2)
     plt.scatter(ideal.real, ideal.imag, s=80, marker="x", linewidths=2, label="Ideal QPSK")
+    add_parameter_box("QPSK\nPhase error = 5 deg\nNoise σ = 0.14")
     plt.xlabel("In-phase component I")
     plt.ylabel("Quadrature component Q")
     plt.title("Lab 3: QPSK Constellation")
-    plt.axis("equal")
+    plt.gca().set_aspect("equal", adjustable="box")
     plt.legend(loc="upper right", frameon=True)
     savefig("lab03_constellation.png")
 
@@ -128,15 +145,20 @@ def generate_sync_constellation() -> None:
     axes[0].set_title("Before CFO correction")
     axes[0].set_xlabel("I")
     axes[0].set_ylabel("Q")
-    axes[0].axis("equal")
+    axes[0].set_aspect("equal", adjustable="box")
 
     axes[1].scatter(after.real, after.imag, s=6, alpha=0.55)
     axes[1].set_title("After CFO correction")
     axes[1].set_xlabel("I")
-    axes[1].axis("equal")
+    axes[1].set_aspect("equal", adjustable="box")
+
+    for ax in axes:
+        ax.set_xlim(-1.4, 1.4)
+        ax.set_ylim(-1.4, 1.4)
 
     fig.suptitle("Lab 4: Synchronization Impact on QPSK Constellation")
-    savefig("lab04_sync_constellation.png")
+    fig.text(0.02, 0.02, "CFO = 0.018 rad/sample, noise σ = 0.13", fontsize=9)
+    savefig("lab04_sync_constellation.png", tight=False)
 
 
 def generate_evm_comparison() -> None:
@@ -145,9 +167,10 @@ def generate_evm_comparison() -> None:
 
     plt.figure()
     bars = plt.bar(cases, evm)
+    add_parameter_box("QPSK impairment sweep\nMetric: RMS EVM", loc=(0.02, 0.92))
     plt.ylabel("EVM, %")
     plt.title("Lab 5: Impairment Impact on EVM")
-    plt.ylim(0, 22)
+    plt.ylim(0, 24)
     plt.xticks(rotation=20, ha="right")
     for bar, value in zip(bars, evm):
         plt.text(bar.get_x() + bar.get_width() / 2, value + 0.6, f"{value:.1f}%", ha="center", va="bottom")
@@ -162,6 +185,7 @@ def generate_ber_curve() -> None:
     plt.figure()
     plt.semilogy(snr_db, ber_before_sync, marker="o", label="Before synchronization")
     plt.semilogy(snr_db, ber_after_sync, marker="s", label="After synchronization")
+    add_parameter_box("QPSK link\nFrame sync enabled\nBER floor = 1e-5", loc=(0.55, 0.93))
     plt.xlabel("SNR, dB")
     plt.ylabel("Bit error rate")
     plt.title("Lab 6: End-to-End BER Performance")
