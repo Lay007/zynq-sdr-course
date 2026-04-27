@@ -56,6 +56,22 @@ This repository is not just a collection of markdown notes. It is structured as 
 
 Этот репозиторий — не просто набор markdown-файлов. Он оформлен как **учебный и инженерный маршрут** от первых понятий SDR до проектной работы, ориентированной на железо.
 
+```mermaid
+flowchart TB
+    THEORY["1. SDR theory / теория<br/>signals, spectra, sampling and RF basics"]
+    MODEL["2. Modeling / моделирование<br/>MATLAB, Simulink and reference waveforms"]
+    FIXED["3. Fixed-point DSP<br/>word length, scaling and quantization effects"]
+    HDL["4. HDL / FPGA implementation<br/>streaming architecture, latency and interfaces"]
+    BOARD["5. SDR board experiment<br/>Zynq-7020, AD9363 and RF configuration"]
+    RX["6. External reception<br/>RTL-SDR, HDSDR and independent observation"]
+    IQ["7. IQ recording<br/>WAV / RAW / CI16 data for reproducible replay"]
+    ANALYSIS["8. Analysis and metrics<br/>FFT, EVM, BER, SNR and engineering conclusions"]
+    CIRCUIT["9. Circuit design layer<br/>front-end thinking, levels, filtering and measurement safety"]
+    PROJECT["10. Final project<br/>hardware-oriented SDR system with documented results"]
+
+    THEORY --> MODEL --> FIXED --> HDL --> BOARD --> RX --> IQ --> ANALYSIS --> CIRCUIT --> PROJECT
+```
+
 It is designed for learners and practitioners who want to move through a coherent chain:
 
 Он рассчитан на тех, кто хочет пройти связную цепочку:
@@ -88,23 +104,16 @@ The current hands-on setup already includes a simple external receiver and a boa
 
 ```mermaid
 flowchart TB
-    classDef model fill:#E0F2FE,color:#0F172A,stroke:#0284C7,stroke-width:1px;
-    classDef fpga fill:#DCFCE7,color:#0F172A,stroke:#16A34A,stroke-width:1px;
-    classDef arm fill:#FEF9C3,color:#0F172A,stroke:#CA8A04,stroke-width:1px;
-    classDef rf fill:#FFE4E6,color:#0F172A,stroke:#E11D48,stroke-width:1px;
-    classDef data fill:#EDE9FE,color:#0F172A,stroke:#7C3AED,stroke-width:1px;
+    MODEL["1. Reference model<br/>MATLAB / Simulink expected waveform"]
+    CFG["2. Experiment configuration<br/>frequency, gain, bandwidth and sample rate"]
+    ZYNQ["3. Zynq-7020 + AD9363<br/>FPGA, ARM control and RF frontend"]
+    PATH["4. RF path<br/>coax + attenuation or controlled over-the-air link"]
+    RX["5. External receiver<br/>RTL-SDR as independent observation instrument"]
+    RECORD["6. Observation and recording<br/>HDSDR spectrum, waterfall and IQ capture"]
+    ANALYSIS["7. Offline analysis<br/>MATLAB, Python, C++ or GNU Radio replay"]
 
-    M["MATLAB / Simulink<br/>Reference model"]:::model
-    CFG["Configuration<br/>frequency / gain / sample rate"]:::arm
-    ZYNQ["Zynq-7020 + AD9363<br/>FPGA / ARM / RF frontend"]:::fpga
-    AIR["RF path<br/>over the air / coax cable"]:::rf
-    RTL["RTL-SDR<br/>external receiver"]:::data
-    HDSDR["HDSDR<br/>spectrum / waterfall / recording"]:::data
-    IQ["IQ recording<br/>WAV / RAW / CI16"]:::data
-    ANALYSIS["Offline analysis<br/>MATLAB / Python / C++ / GNU Radio"]:::model
-
-    M --> CFG --> ZYNQ --> AIR --> RTL --> HDSDR --> IQ --> ANALYSIS
-    ANALYSIS -. model correction .-> M
+    MODEL --> CFG --> ZYNQ --> PATH --> RX --> RECORD --> ANALYSIS
+    ANALYSIS -. model correction .-> MODEL
     ANALYSIS -. parameter tuning .-> CFG
 ```
 
@@ -116,106 +125,42 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    classDef model fill:#E0F2FE,color:#0F172A,stroke:#0284C7,stroke-width:1px;
-    classDef fpga fill:#DCFCE7,color:#0F172A,stroke:#16A34A,stroke-width:1px;
-    classDef arm fill:#FEF9C3,color:#0F172A,stroke:#CA8A04,stroke-width:1px;
-    classDef rf fill:#FFE4E6,color:#0F172A,stroke:#E11D48,stroke-width:1px;
-    classDef data fill:#EDE9FE,color:#0F172A,stroke:#7C3AED,stroke-width:1px;
+    MODEL["Reference model<br/>expected samples and spectra"]
+    CFG["Experiment configuration<br/>RF frequency, gain, bandwidth and data rate"]
 
-    M["MATLAB / Simulink<br/>reference model"]:::model
-    CFG["Experiment configuration<br/>frequency / gain / sample rate"]:::arm
-
-    subgraph Z["Zynq-7020 SoC"]
+    subgraph SOC["Zynq-7020 SoC"]
         direction TB
-
-        subgraph PS["Processing System / ARM"]
-            direction TB
-            SW["Control software<br/>Linux / bare-metal / scripts"]:::arm
-            IIO["IIO / SPI control<br/>AD9363 registers"]:::arm
-            SW --> IIO
-        end
-
-        subgraph PL["Programmable Logic / FPGA"]
-            direction TB
-            DDS["DDS / NCO<br/>tone generation"]:::fpga
-            MIX["Digital mixer<br/>frequency shift"]:::fpga
-            FIR["FIR filter<br/>pulse shaping / LPF"]:::fpga
-            INT["Interpolator<br/>sample-rate adaptation"]:::fpga
-            AXI["AXI-Stream interface"]:::fpga
-            DDS --> MIX --> FIR --> INT --> AXI
-        end
+        PS["Processing System / ARM<br/>control software, scripts and register access"]
+        PL["Programmable Logic / FPGA<br/>deterministic streaming DSP pipeline"]
+        PS --> PL
     end
 
-    AD["AD9363 RF frontend<br/>DAC / mixer / analog filters"]:::rf
-    AIR["RF signal<br/>over the air / coax cable"]:::rf
-    RTL["RTL-SDR receiver"]:::data
-    HDSDR["HDSDR<br/>spectrum / waterfall / recording"]:::data
-    IQ["IQ file<br/>WAV / RAW / CI16"]:::data
-    ANALYSIS["Offline analysis<br/>MATLAB / Python / GNU Radio"]:::model
+    AD["AD9363 RF frontend<br/>DAC, mixer, analog filters and I/Q interface"]
+    LINK["RF link<br/>coax, attenuator or antenna path"]
+    RX["External measurement chain<br/>RTL-SDR, HDSDR, IQ file and offline analysis"]
 
-    M --> DDS
-    CFG --> SW
-    IIO --> AD
-    AXI --> AD
-    AD --> AIR --> RTL --> HDSDR --> IQ --> ANALYSIS
-
-    ANALYSIS -. model correction .-> M
-    ANALYSIS -. parameter tuning .-> CFG
+    MODEL --> PL
+    CFG --> PS
+    PL --> AD --> LINK --> RX
+    RX -. model correction .-> MODEL
+    RX -. parameter tuning .-> CFG
 ```
 
 ## Level 3: SDR TX/RX processing chain / Уровень 3: TX/RX тракт SDR
 
 ```mermaid
 flowchart TB
-    classDef src fill:#E0F2FE,color:#0F172A,stroke:#0284C7,stroke-width:1px;
-    classDef dsp fill:#DCFCE7,color:#0F172A,stroke:#16A34A,stroke-width:1px;
-    classDef sync fill:#FEF3C7,color:#0F172A,stroke:#D97706,stroke-width:1px;
-    classDef rf fill:#FFE4E6,color:#0F172A,stroke:#E11D48,stroke-width:1px;
-    classDef io fill:#EDE9FE,color:#0F172A,stroke:#7C3AED,stroke-width:1px;
-    classDef metric fill:#F1F5F9,color:#0F172A,stroke:#64748B,stroke-width:1px;
+    SRC["1. Source and framing<br/>tone, packet, payload or waveform definition"]
+    MOD["2. Modulation and shaping<br/>BPSK/QPSK/QAM/FSK plus pulse-shaping filters"]
+    TXRF["3. TX path<br/>DUC, DAC, mixer, filters and transmit gain"]
+    CHANNEL["4. Channel<br/>coax, attenuator, antenna path, noise and offsets"]
+    RXRF["5. RX path<br/>LNA, mixer, ADC, DDC and AGC"]
+    SYNC["6. Synchronization and demodulation<br/>CFO, timing, frame sync, matched filter and bits"]
+    VALID["7. Validation and replay<br/>IQ taps, FFT, EVM, BER, reports and notebooks"]
 
-    subgraph TX["TX chain / Передающий тракт"]
-        direction TB
-        SRC["Signal source<br/>tone / packet / waveform"]:::src
-        MOD["Modulator<br/>BPSK / QPSK / QAM / FSK"]:::dsp
-        RRC_TX["Pulse shaping<br/>RRC / FIR"]:::dsp
-        DUC["DUC<br/>interpolation + digital upconversion"]:::dsp
-        DAC["DAC path<br/>AD9363 TX"]:::rf
-        RF_TX["RF transmit chain<br/>mixer / PA / filters"]:::rf
-        SRC --> MOD --> RRC_TX --> DUC --> DAC --> RF_TX
-    end
-
-    CH["Channel<br/>coax / attenuator / over-the-air"]:::rf
-
-    subgraph RX["RX chain / Приёмный тракт"]
-        direction TB
-        RF_RX["RF receive chain<br/>LNA / mixer / filters"]:::rf
-        ADC["ADC path<br/>AD9363 RX or RTL-SDR"]:::rf
-        DDC["DDC<br/>digital downconversion + decimation"]:::dsp
-        AGC["AGC<br/>level control"]:::sync
-        SYNC["Synchronization<br/>CFO / timing / frame"]:::sync
-        RRC_RX["Matched filter<br/>RRC / FIR"]:::dsp
-        DEMOD["Demodulator<br/>symbols / bits"]:::dsp
-        RF_RX --> ADC --> DDC --> AGC --> SYNC --> RRC_RX --> DEMOD
-    end
-
-    subgraph VALIDATION["Validation and replay / Проверка и повторный анализ"]
-        direction TB
-        IQ["IQ capture points<br/>raw / WAV / CI16"]:::io
-        METRICS["Validation metrics<br/>FFT / EVM / BER / SNR"]:::metric
-        REPORT["Reports<br/>plots / notebooks / lab results"]:::io
-        IQ --> METRICS --> REPORT
-    end
-
-    RF_TX --> CH --> RF_RX
-    DEMOD --> METRICS
-
-    DUC -. TX IQ tap .-> IQ
-    ADC -. RX raw IQ tap .-> IQ
-    DDC -. baseband IQ tap .-> IQ
-    IQ -. offline replay .-> DDC
-    METRICS -. model tuning .-> MOD
-    METRICS -. hardware tuning .-> AGC
+    SRC --> MOD --> TXRF --> CHANNEL --> RXRF --> SYNC --> VALID
+    VALID -. model tuning .-> MOD
+    VALID -. hardware tuning .-> RXRF
 ```
 
 ## Course blocks / Блоки курса
