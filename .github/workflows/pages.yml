@@ -1,9 +1,8 @@
 name: Deploy MkDocs to GitHub Pages
 
+# Temporarily disabled while the MkDocs structure is being updated.
+# Re-enable push triggers when the documentation site is ready.
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 permissions:
