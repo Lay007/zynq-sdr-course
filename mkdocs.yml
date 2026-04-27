@@ -45,6 +45,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Demo (IEEE figures): demo.md
+  - Model → FPGA → RF → Measurement: model-to-measurement.md
   - Русский:
       - Обзор курса: ru/index.md
   - English:
