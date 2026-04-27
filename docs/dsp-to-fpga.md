@@ -8,14 +8,14 @@ This page connects modeling with hardware implementation.
 
 ```mermaid
 flowchart LR
-    MODEL["Floating-point model"]
-    FIXED["Fixed-point model"]
-    HDL["HDL design"]
-    FPGA["FPGA implementation"]
-    MEASURE["RF measurement"]
+    MODEL["Floating-point model<br/>reference MATLAB / Simulink behavior"]
+    FIXED["Fixed-point model<br/>scaling, quantization and overflow margins"]
+    HDL["HDL design<br/>pipeline, latency and resource mapping"]
+    FPGA["FPGA implementation<br/>timing closure and real-time constraints"]
+    MEASURE["RF measurement<br/>hardware validation and feedback loop"]
 
     MODEL --> FIXED --> HDL --> FPGA --> MEASURE
-    MEASURE -. refine .-> MODEL
+    MEASURE -. refine algorithm .-> MODEL
 ```
 
 ---
