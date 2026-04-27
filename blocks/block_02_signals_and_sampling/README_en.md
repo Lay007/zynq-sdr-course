@@ -1,64 +1,55 @@
 # Block 2. Signals, Spectrum, Sampling, and I/Q
 
 ## Purpose
-This block builds a solid understanding of continuous and discrete signals, spectrum, aliasing, and complex I/Q representation.
 
-## Why this block matters
-Without it, the student cannot confidently read spectra, choose sampling rates, or understand artifacts in SDR data.
+Block 2 transforms the first received signal from Block 1 into engineering-grade data. The goal is to correctly interpret time-domain signals, spectra, frequency axes and IQ recordings.
 
-## Main topics
-- continuous and discrete signals;
-- frequency-domain view and bandwidth;
-- sampling rate and aliasing;
-- complex envelope and I/Q;
-- relation between tone, spectrum, and recorded data;
-- basic parameter-selection mistakes.
+```mermaid
+flowchart TB
+    SIG["1. Observed signal<br/>tone, bandwidth, amplitude and frequency position"]
+    SAMPLE["2. Sampling process<br/>sample rate Fs, Nyquist zone and aliasing risk"]
+    FFT["3. Spectral analysis<br/>FFT bins, resolution, windowing and leakage"]
+    IQ["4. I/Q representation<br/>complex baseband and signed frequency axis"]
+    META["5. Recording metadata<br/>Fs, Fc, format, I/Q order and gain"]
+    LAB["6. Lab validation<br/>frequency-axis reconstruction and error detection"]
 
-## Practical work
-- comparing spectra at different sampling rates;
-- visualizing aliasing in models and scripts;
-- building I/Q trajectories and basic spectra;
-- matching a model with a recorded signal.
-
-## Tooling for the block
-The main toolset is: MATLAB, Simulink, Python, GNU Radio.
-
-## Expected outputs
-- time-domain and spectrum plots;
-- sampling-parameter table;
-- comparison of aliasing scenarios;
-- block laboratory report.
-
-## Folder structure
-```text
-block_02_signals_and_sampling/
-├── README.md
-├── README_ru.md
-├── README_en.md
-├── CONTENTS_ru.md
-├── CONTENTS_en.md
-├── assets/
-├── images/
-├── kicad/
-├── simulink/
-├── matlab/
-├── python/
-├── cpp/
-├── gnuradio/
-└── reports/
+    SIG --> SAMPLE --> FFT --> IQ --> META --> LAB
 ```
 
-- `assets/` — reference data and helper materials;
-- `images/` — diagrams, screenshots, and photos;
-- `kicad/` — schematics and electrical notes;
-- `simulink/`, `matlab/`, `python/`, `cpp/`, `gnuradio/` — models and analysis tools;
-- `reports/` — reports and report templates.
+## Why this block matters
 
-## Recommended work order
-1. review sampling and spectrum theory.
-2. assemble models and scripts for experiments.
-3. run a set of sampling-rate comparisons.
-4. document conclusions about I/Q and aliasing.
+If sampling rate, center frequency or IQ format are wrong, the spectrum may look correct visually but lead to incorrect engineering conclusions.
 
-## Next step
-After finishing this block, the student should be ready to reuse its results as the starting point for the next stage of the course and the related practical experiment.
+## Learning outcomes
+
+After completing this block, the student can:
+
+- distinguish RF frequency from baseband frequency;
+- build a correct FFT frequency axis;
+- relate sample rate, FFT size and resolution;
+- explain aliasing and mirrored spectrum;
+- detect DC offset and spectral leakage;
+- document IQ recordings for reproducibility.
+
+## Topics
+
+1. Signal in time and frequency domain
+2. Sampling and Nyquist
+3. FFT and frequency axis
+4. I/Q representation and complex baseband
+5. Aliasing and spectral images
+6. IQ metadata discipline
+7. Lab 2.1 — frequency axis reconstruction
+
+## Practical work
+
+The student takes a known tone, builds time and frequency plots, and then intentionally changes Fs/Fc or metadata to observe incorrect interpretations.
+
+## Engineering result
+
+Outputs of the block:
+
+- time-domain waveform;
+- FFT with correct frequency axis;
+- parameter table;
+- short report describing interpretation errors.
