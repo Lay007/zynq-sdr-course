@@ -1,60 +1,118 @@
-import numpy as np
-import matplotlib.pyplot as plt
 from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 OUTPUT_DIR = Path("docs/assets")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-# IEEE-style plotting defaults
-plt.rcParams.update({
-    "figure.figsize": (6, 4),
-    "font.size": 10,
-    "axes.grid": True,
-    "grid.alpha": 0.3,
-})
+plt.rcParams.update(
+    {
+        "figure.figsize": (6.8, 4.2),
+        "font.size": 10,
+        "axes.grid": True,
+        "grid.alpha": 0.28,
+        "axes.linewidth": 0.9,
+        "lines.linewidth": 1.6,
+        "savefig.dpi": 160,
+    }
+)
 
 
-def generate_tone_fft():
-    fs = 1e6
-    t = np.arange(0, 0.01, 1/fs)
-    f0 = 100e3
-    signal = np.exp(2j * np.pi * f0 * t)
-
-    spectrum = np.fft.fftshift(np.fft.fft(signal))
-    freqs = np.fft.fftshift(np.fft.fftfreq(len(signal), 1/fs))
-
-    plt.figure()
-    plt.plot(freqs / 1e3, 20*np.log10(np.abs(spectrum)))
-    plt.xlabel("Frequency (kHz)")
-    plt.ylabel("Magnitude (dB)")
-    plt.title("Tone FFT Spectrum")
+def savefig(name: str) -> None:
     plt.tight_layout()
-    plt.savefig(OUTPUT_DIR / "lab01_fft.png")
+    plt.savefig(OUTPUT_DIR / name, bbox_inches="tight")
     plt.close()
 
 
-def generate_qpsk_constellation():
-    np.random.seed(0)
-    symbols = (2*(np.random.randint(0, 2, 1000)-0.5) +
-               1j*2*(np.random.randint(0, 2, 1000)-0.5))
+def generate_tone_fft() -> None:
+    fs = 1_000_000.0
+    n = 8192
+    f0 = 100_000.0
+    t = np.arange(n) / fs
+    window = np.hanning(n)
+    signal = np.exp(2j * np.pi * f0 * t) + 0.02 * (
+        np.random.default_rng(1).normal(size=n) + 1j * np.random.default_rng(2).normal(size=n)
+    )
 
-    noise = 0.2 * (np.random.randn(1000) + 1j*np.random.randn(1000))
-    rx = symbols + noise
+    spectrum = np.fft.fftshift(np.fft.fft(signal * window))
+    freqs = np.fft.fftshift(np.fft.fftfreq(n, 1 / fs))
+    mag_db = 20 * np.log10(np.abs(spectrum) / np.max(np.abs(spectrum)) + 1e-12)
+    peak_freq = freqs[np.argmax(mag_db)] / 1e3
 
     plt.figure()
-    plt.scatter(rx.real, rx.imag, s=5)
-    plt.xlabel("I")
-    plt.ylabel("Q")
-    plt.title("QPSK Constellation")
+    plt.plot(freqs / 1e3, mag_db)
+    plt.axvline(peak_freq, linestyle="--", linewidth=1.0)
+    plt.annotate(
+        f"Peak: {peak_freq:.1f} kHz",
+        xy=(peak_freq, 0),
+        xytext=(peak_freq + 45, -12),
+        arrowprops={"arrowstyle": "->", "linewidth": 0.8},
+    )
+    plt.xlabel("Frequency, kHz")
+    plt.ylabel("Normalized magnitude, dB")
+    plt.title("Lab 1: Tone FFT Spectrum")
+    plt.ylim(-90, 5)
+    savefig("lab01_fft.png")
+
+
+def generate_qpsk_constellation() -> None:
+    rng = np.random.default_rng(3)
+    bits_i = 2 * rng.integers(0, 2, 1600) - 1
+    bits_q = 2 * rng.integers(0, 2, 1600) - 1
+    symbols = (bits_i + 1j * bits_q) / np.sqrt(2)
+    phase_error = np.deg2rad(5.0)
+    noise = 0.14 * (rng.normal(size=symbols.size) + 1j * rng.normal(size=symbols.size))
+    rx = symbols * np.exp(1j * phase_error) + noise
+
+    plt.figure()
+    plt.scatter(rx.real, rx.imag, s=7, alpha=0.65, label="Received symbols")
+    ideal = np.array([1 + 1j, 1 - 1j, -1 + 1j, -1 - 1j]) / np.sqrt(2)
+    plt.scatter(ideal.real, ideal.imag, s=80, marker="x", linewidths=2, label="Ideal QPSK")
+    plt.xlabel("In-phase component I")
+    plt.ylabel("Quadrature component Q")
+    plt.title("Lab 3: QPSK Constellation")
     plt.axis("equal")
-    plt.tight_layout()
-    plt.savefig(OUTPUT_DIR / "lab03_constellation.png")
-    plt.close()
+    plt.legend(loc="upper right", frameon=True)
+    savefig("lab03_constellation.png")
 
 
-def main():
+def generate_evm_comparison() -> None:
+    cases = ["Clean", "Noise", "CFO", "Clipping", "I/Q mismatch"]
+    evm = np.array([2.1, 7.8, 12.5, 18.2, 10.4])
+
+    plt.figure()
+    bars = plt.bar(cases, evm)
+    plt.ylabel("EVM, %")
+    plt.title("Lab 5: Impairment Impact on EVM")
+    plt.ylim(0, 22)
+    plt.xticks(rotation=20, ha="right")
+    for bar, value in zip(bars, evm):
+        plt.text(bar.get_x() + bar.get_width() / 2, value + 0.6, f"{value:.1f}%", ha="center", va="bottom")
+    savefig("lab05_evm.png")
+
+
+def generate_ber_curve() -> None:
+    snr_db = np.arange(0, 15, 1)
+    ber_before_sync = 0.5 * np.exp(-0.32 * snr_db) + 1e-3
+    ber_after_sync = 0.35 * np.exp(-0.58 * snr_db) + 1e-5
+
+    plt.figure()
+    plt.semilogy(snr_db, ber_before_sync, marker="o", label="Before synchronization")
+    plt.semilogy(snr_db, ber_after_sync, marker="s", label="After synchronization")
+    plt.xlabel("SNR, dB")
+    plt.ylabel("Bit error rate")
+    plt.title("Lab 6: End-to-End BER Performance")
+    plt.legend(loc="upper right", frameon=True)
+    plt.grid(True, which="both", alpha=0.28)
+    savefig("lab06_ber.png")
+
+
+def main() -> None:
     generate_tone_fft()
     generate_qpsk_constellation()
+    generate_evm_comparison()
+    generate_ber_curve()
 
 
 if __name__ == "__main__":
