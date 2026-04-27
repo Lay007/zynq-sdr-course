@@ -55,6 +55,10 @@ nav:
   - System:
       - "Model → FPGA → RF → Measurement": model-to-measurement.md
       - "Lab 1: Tone → RF → IQ → Analysis": lab01-tone-rf-iq-analysis.md
+      - "Lab 2: AM/FM Spectrum": lab02-am-fm-spectrum.md
+      - "Lab 3: QPSK Constellation": lab03-qpsk-constellation.md
+  - "DSP → FPGA Bridge": dsp-to-fpga.md
+  - "Measurement Errors": measurement-errors.md
   - "Demo (IEEE figures)": demo.md
   - Русский:
       - "Обзор курса": ru/index.md
