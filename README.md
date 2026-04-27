@@ -61,7 +61,7 @@ The current hands-on setup already includes a simple external receiver and a boa
 ### SDR stand flow / Поток SDR-стенда
 
 ```mermaid
-flowchart LR
+flowchart TB
     %% ===== LIGHT STYLE =====
     classDef model fill:#E0F2FE,color:#0F172A,stroke:#0284C7,stroke-width:1px;
     classDef fpga fill:#DCFCE7,color:#0F172A,stroke:#16A34A,stroke-width:1px;
@@ -90,7 +90,7 @@ flowchart LR
 ### Level 2: Zynq / FPGA signal path / Уровень 2: тракт Zynq / FPGA
 
 ```mermaid
-flowchart LR
+flowchart TB
     %% ===== LIGHT STYLE =====
     classDef model fill:#E0F2FE,color:#0F172A,stroke:#0284C7,stroke-width:1px;
     classDef fpga fill:#DCFCE7,color:#0F172A,stroke:#16A34A,stroke-width:1px;
@@ -102,21 +102,23 @@ flowchart LR
     CFG["Experiment configuration<br/>frequency / gain / sample rate"]:::arm
 
     subgraph Z["Zynq-7020 SoC"]
-        direction LR
+        direction TB
 
         subgraph PS["Processing System / ARM"]
             direction TB
             SW["Control software<br/>Linux / bare-metal / scripts"]:::arm
             IIO["IIO / SPI control<br/>AD9363 registers"]:::arm
+            SW --> IIO
         end
 
         subgraph PL["Programmable Logic / FPGA"]
-            direction LR
+            direction TB
             DDS["DDS / NCO<br/>tone generation"]:::fpga
             MIX["Digital mixer<br/>frequency shift"]:::fpga
             FIR["FIR filter<br/>pulse shaping / LPF"]:::fpga
             INT["Interpolator<br/>sample-rate adaptation"]:::fpga
             AXI["AXI-Stream interface"]:::fpga
+            DDS --> MIX --> FIR --> INT --> AXI
         end
     end
 
@@ -129,10 +131,8 @@ flowchart LR
 
     M --> DDS
     CFG --> SW
-    SW --> IIO
     IIO --> AD
-
-    DDS --> MIX --> FIR --> INT --> AXI --> AD
+    AXI --> AD
     AD --> AIR --> RTL --> HDSDR --> IQ --> ANALYSIS
 
     ANALYSIS -. model correction .-> M
@@ -146,7 +146,7 @@ This second-level diagram explains what happens inside the board-level part of t
 ### Level 3: SDR TX/RX processing chain / Уровень 3: TX/RX тракт SDR
 
 ```mermaid
-flowchart LR
+flowchart TB
     %% ===== LIGHT STYLE =====
     classDef src fill:#E0F2FE,color:#0F172A,stroke:#0284C7,stroke-width:1px;
     classDef dsp fill:#DCFCE7,color:#0F172A,stroke:#16A34A,stroke-width:1px;
@@ -155,25 +155,41 @@ flowchart LR
     classDef io fill:#EDE9FE,color:#0F172A,stroke:#7C3AED,stroke-width:1px;
     classDef metric fill:#F1F5F9,color:#0F172A,stroke:#64748B,stroke-width:1px;
 
-    SRC["Signal source<br/>tone / packet / waveform"]:::src
-    MOD["Modulator<br/>BPSK / QPSK / QAM / FSK"]:::dsp
-    RRC_TX["Pulse shaping<br/>RRC / FIR"]:::dsp
-    DUC["DUC<br/>interpolation + digital upconversion"]:::dsp
-    DAC["DAC path<br/>AD9363 TX"]:::rf
-    RF_TX["RF transmit chain<br/>mixer / PA / filters"]:::rf
-    CH["Channel<br/>coax / attenuator / over-the-air"]:::rf
-    RF_RX["RF receive chain<br/>LNA / mixer / filters"]:::rf
-    ADC["ADC path<br/>AD9363 RX or RTL-SDR"]:::rf
-    DDC["DDC<br/>digital downconversion + decimation"]:::dsp
-    AGC["AGC<br/>level control"]:::sync
-    SYNC["Synchronization<br/>CFO / timing / frame"]:::sync
-    RRC_RX["Matched filter<br/>RRC / FIR"]:::dsp
-    DEMOD["Demodulator<br/>symbols / bits"]:::dsp
-    METRICS["Validation<br/>FFT / EVM / BER / SNR"]:::metric
-    IQ["IQ capture points<br/>raw / WAV / CI16"]:::io
-    REPORT["Reports<br/>plots / notebooks / lab results"]:::io
+    subgraph TX["TX chain / Передающий тракт"]
+        direction TB
+        SRC["Signal source<br/>tone / packet / waveform"]:::src
+        MOD["Modulator<br/>BPSK / QPSK / QAM / FSK"]:::dsp
+        RRC_TX["Pulse shaping<br/>RRC / FIR"]:::dsp
+        DUC["DUC<br/>interpolation + digital upconversion"]:::dsp
+        DAC["DAC path<br/>AD9363 TX"]:::rf
+        RF_TX["RF transmit chain<br/>mixer / PA / filters"]:::rf
+        SRC --> MOD --> RRC_TX --> DUC --> DAC --> RF_TX
+    end
 
-    SRC --> MOD --> RRC_TX --> DUC --> DAC --> RF_TX --> CH --> RF_RX --> ADC --> DDC --> AGC --> SYNC --> RRC_RX --> DEMOD --> METRICS --> REPORT
+    CH["Channel<br/>coax / attenuator / over-the-air"]:::rf
+
+    subgraph RX["RX chain / Приёмный тракт"]
+        direction TB
+        RF_RX["RF receive chain<br/>LNA / mixer / filters"]:::rf
+        ADC["ADC path<br/>AD9363 RX or RTL-SDR"]:::rf
+        DDC["DDC<br/>digital downconversion + decimation"]:::dsp
+        AGC["AGC<br/>level control"]:::sync
+        SYNC["Synchronization<br/>CFO / timing / frame"]:::sync
+        RRC_RX["Matched filter<br/>RRC / FIR"]:::dsp
+        DEMOD["Demodulator<br/>symbols / bits"]:::dsp
+        RF_RX --> ADC --> DDC --> AGC --> SYNC --> RRC_RX --> DEMOD
+    end
+
+    subgraph VALIDATION["Validation and replay / Проверка и повторный анализ"]
+        direction TB
+        IQ["IQ capture points<br/>raw / WAV / CI16"]:::io
+        METRICS["Validation metrics<br/>FFT / EVM / BER / SNR"]:::metric
+        REPORT["Reports<br/>plots / notebooks / lab results"]:::io
+        IQ --> METRICS --> REPORT
+    end
+
+    RF_TX --> CH --> RF_RX
+    DEMOD --> METRICS
 
     DUC -. TX IQ tap .-> IQ
     ADC -. RX raw IQ tap .-> IQ
