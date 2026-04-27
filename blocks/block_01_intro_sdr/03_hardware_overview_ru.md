@@ -18,13 +18,13 @@
 
 ## 2. RTL-SDR V3 Pro
 
-![RTL-SDR V3 Pro](/zynq-sdr-course/images/hardware/rtl_sdr_v3_pro_real.png)
+![RTL-SDR V3 Pro](../../docs/images/hardware/rtl_sdr_v3_pro_real.png)
 
 RTL-SDR используется как внешний измерительный инструмент для визуализации сигнала.
 
 ## 3. Плата Zynq-7020 + AD9363
 
-![Xilinx Zynq-7020 with ADRV module](/zynq-sdr-course/images/hardware/xilinx_7020_adrv_real.png)
+![Xilinx Zynq-7020 with ADRV module](../../docs/images/hardware/xilinx_7020_adrv_real.png)
 
 Это основная SDR-платформа курса, связывающая цифровую обработку и реальный радиотракт.
 
