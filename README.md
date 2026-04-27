@@ -60,23 +60,88 @@ The current hands-on setup already includes a simple external receiver and a boa
 
 ### SDR stand flow / Поток SDR-стенда
 
-| Step | Block | Role | Output |
-|---:|---|---|---|
-| 1 | **Model & Control** | Simulink / HDL / software setup | Parameters and generated samples |
-| ↓ |  | **configure / generate** |  |
-| 2 | **Zynq-7020 + ADRV** | FPGA / SoC processing and RF TX/RX path | RF signal |
-| ↓ |  | **RF over air or cable** |  |
-| 3 | **RTL-SDR** | External receiver for first signal capture | Received sample stream |
-| ↓ |  | **observe** |  |
-| 4 | **HDSDR** | Spectrum and waterfall visualization | Visible signal and tuned recording setup |
-| ↓ |  | **store** |  |
-| 5 | **IQ Recording** | Captured IQ sample file | IQ dataset |
-| ↓ |  | **analyze** |  |
-| 6 | **Offline Analysis** | MATLAB / Simulink / Python / C++ / GNU Radio | Plots, metrics, reports, conclusions |
+```mermaid
+flowchart LR
+    %% ===== LIGHT STYLE =====
+    classDef model fill:#E0F2FE,color:#0F172A,stroke:#0284C7,stroke-width:1px;
+    classDef fpga fill:#DCFCE7,color:#0F172A,stroke:#16A34A,stroke-width:1px;
+    classDef arm fill:#FEF9C3,color:#0F172A,stroke:#CA8A04,stroke-width:1px;
+    classDef rf fill:#FFE4E6,color:#0F172A,stroke:#E11D48,stroke-width:1px;
+    classDef data fill:#EDE9FE,color:#0F172A,stroke:#7C3AED,stroke-width:1px;
+
+    M["MATLAB / Simulink<br/>Reference model"]:::model
+    CFG["Configuration<br/>frequency / gain / sample rate"]:::arm
+    ZYNQ["Zynq-7020 + AD9363<br/>FPGA / ARM / RF frontend"]:::fpga
+    AIR["RF path<br/>over the air / coax cable"]:::rf
+    RTL["RTL-SDR<br/>external receiver"]:::data
+    HDSDR["HDSDR<br/>spectrum / waterfall / recording"]:::data
+    IQ["IQ recording<br/>WAV / RAW / CI16"]:::data
+    ANALYSIS["Offline analysis<br/>MATLAB / Python / C++ / GNU Radio"]:::model
+
+    M --> CFG --> ZYNQ --> AIR --> RTL --> HDSDR --> IQ --> ANALYSIS
+    ANALYSIS -. model correction .-> M
+    ANALYSIS -. parameter tuning .-> CFG
+```
 
 **Practical flow:** generate a signal on the Zynq/ADRV platform → receive it with RTL-SDR → observe it in HDSDR → record IQ samples → analyze the recording in multiple software environments.
 
 **Практический поток:** сформировать сигнал на платформе Zynq/ADRV → принять его через RTL-SDR → наблюдать в HDSDR → записать IQ-данные → проанализировать запись в нескольких программных средах.
+
+### Level 2: Zynq / FPGA signal path / Уровень 2: тракт Zynq / FPGA
+
+```mermaid
+flowchart LR
+    %% ===== LIGHT STYLE =====
+    classDef model fill:#E0F2FE,color:#0F172A,stroke:#0284C7,stroke-width:1px;
+    classDef fpga fill:#DCFCE7,color:#0F172A,stroke:#16A34A,stroke-width:1px;
+    classDef arm fill:#FEF9C3,color:#0F172A,stroke:#CA8A04,stroke-width:1px;
+    classDef rf fill:#FFE4E6,color:#0F172A,stroke:#E11D48,stroke-width:1px;
+    classDef data fill:#EDE9FE,color:#0F172A,stroke:#7C3AED,stroke-width:1px;
+
+    M["MATLAB / Simulink<br/>reference model"]:::model
+    CFG["Experiment configuration<br/>frequency / gain / sample rate"]:::arm
+
+    subgraph Z["Zynq-7020 SoC"]
+        direction LR
+
+        subgraph PS["Processing System / ARM"]
+            direction TB
+            SW["Control software<br/>Linux / bare-metal / scripts"]:::arm
+            IIO["IIO / SPI control<br/>AD9363 registers"]:::arm
+        end
+
+        subgraph PL["Programmable Logic / FPGA"]
+            direction LR
+            DDS["DDS / NCO<br/>tone generation"]:::fpga
+            MIX["Digital mixer<br/>frequency shift"]:::fpga
+            FIR["FIR filter<br/>pulse shaping / LPF"]:::fpga
+            INT["Interpolator<br/>sample-rate adaptation"]:::fpga
+            AXI["AXI-Stream interface"]:::fpga
+        end
+    end
+
+    AD["AD9363 RF frontend<br/>DAC / mixer / analog filters"]:::rf
+    AIR["RF signal<br/>over the air / coax cable"]:::rf
+    RTL["RTL-SDR receiver"]:::data
+    HDSDR["HDSDR<br/>spectrum / waterfall / recording"]:::data
+    IQ["IQ file<br/>WAV / RAW / CI16"]:::data
+    ANALYSIS["Offline analysis<br/>MATLAB / Python / GNU Radio"]:::model
+
+    M --> DDS
+    CFG --> SW
+    SW --> IIO
+    IIO --> AD
+
+    DDS --> MIX --> FIR --> INT --> AXI --> AD
+    AD --> AIR --> RTL --> HDSDR --> IQ --> ANALYSIS
+
+    ANALYSIS -. model correction .-> M
+    ANALYSIS -. parameter tuning .-> CFG
+```
+
+This second-level diagram explains what happens inside the board-level part of the stand: the ARM side configures the experiment and RF frontend, while the FPGA side implements the deterministic sample-processing chain.
+
+Эта диаграмма второго уровня показывает, что происходит внутри платной части стенда: ARM-часть настраивает эксперимент и радиотракт, а FPGA-часть реализует детерминированную цепочку обработки отсчётов.
 
 ## Course blocks / Блоки курса
 
