@@ -29,15 +29,15 @@ This site is the main course workspace. It connects theory, MATLAB/Simulink mode
 ## Core engineering route
 
 ```mermaid
-flowchart LR
-    MODEL["Model<br/>MATLAB / Simulink"]
-    FIXED["Fixed-point<br/>scaling / quantization"]
-    FPGA["FPGA<br/>streaming DSP"]
-    RF["RF frontend<br/>AD9363"]
-    CHANNEL["Channel<br/>coax / air"]
-    RX["Independent RX<br/>RTL-SDR / HDSDR"]
-    IQ["IQ capture<br/>WAV / RAW / CI16"]
-    METRICS["Metrics<br/>FFT / EVM / BER / SNR"]
+flowchart TB
+    MODEL["1. Model<br/>MATLAB / Simulink"]
+    FIXED["2. Fixed-point<br/>scaling / quantization"]
+    FPGA["3. FPGA<br/>streaming DSP"]
+    RF["4. RF frontend<br/>AD9363"]
+    CHANNEL["5. Channel<br/>coax / air"]
+    RX["6. Independent RX<br/>RTL-SDR / HDSDR"]
+    IQ["7. IQ capture<br/>WAV / RAW / CI16"]
+    METRICS["8. Metrics<br/>FFT / EVM / BER / SNR"]
 
     MODEL --> FIXED --> FPGA --> RF --> CHANNEL --> RX --> IQ --> METRICS
     METRICS -. redesign .-> MODEL
