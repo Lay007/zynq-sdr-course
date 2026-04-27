@@ -3,6 +3,10 @@ name: Generate IEEE Plots
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   generate:
@@ -12,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -20,15 +26,20 @@ jobs:
 
       - name: Install dependencies
         run: |
+          python -m pip install --upgrade pip
           pip install matplotlib numpy
 
       - name: Generate plots
         run: python tools/generate_ieee_plots.py
 
-      - name: Commit results
+      - name: Commit generated plots
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/assets
-          git commit -m "Auto-update IEEE plots" || echo "No changes"
-          git push
+          if git diff --cached --quiet; then
+            echo "No plot changes"
+          else
+            git commit -m "Auto-update IEEE plots"
+            git push
+          fi
