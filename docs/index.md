@@ -1,24 +1,90 @@
+<div class="hero">
+
 # Zynq SDR Course
 
-A bilingual SDR course that turns repository materials into a navigable website.
+**Engineering-level SDR course with FPGA, RF and DSP integration**
 
-## What this site gives you
+A complete path from signal theory → DSP → FPGA → RF → measurement → analysis.
 
-- a clean navigation tree instead of a flat list of Markdown files;
-- bilingual access to the same course structure;
-- GitHub Pages publishing through GitHub Actions;
-- a good foundation for further expansion into a proper documentation portal.
+<div class="hero-actions">
+<a class="hero-button" href="demo/">View Demo</a>
+<a class="hero-button secondary" href="ru/">Русская версия</a>
+<a class="hero-button secondary" href="en/">English version</a>
+</div>
 
-## Quick access
+<div class="badge-line">
+<span class="badge-soft">DSP</span>
+<span class="badge-soft">FPGA</span>
+<span class="badge-soft">RF</span>
+<span class="badge-soft">Zynq</span>
+<span class="badge-soft">AD9363</span>
+</div>
 
+</div>
+
+---
+
+## 🚀 Engineering pipeline
+
+```text
+Model → DSP → FPGA → RF → Measurement → Analysis
+```
+
+---
+
+## 📊 IEEE-style demo figures
+
+<div class="figure-strip">
+
+<img src="assets/lab01_fft.png" />
+<img src="assets/lab02_am_vs_fm.png" />
+<img src="assets/lab03_constellation.png" />
+<img src="assets/lab04_sync_constellation.png" />
+
+</div>
+
+---
+
+## 🧠 Course structure
+
+<div class="card-grid">
+
+<div class="course-card">
+<h3>DSP</h3>
+Signal processing, FFT, modulation, synchronization
+</div>
+
+<div class="course-card">
+<h3>FPGA</h3>
+Zynq, HDL flow, fixed-point implementation
+</div>
+
+<div class="course-card">
+<h3>RF</h3>
+AD9363, front-end, measurements
+</div>
+
+<div class="course-card">
+<h3>System</h3>
+End-to-end SDR chain and validation
+</div>
+
+</div>
+
+---
+
+## 📚 Start exploring
+
+- [Demo (IEEE figures)](demo.md)
 - [Русская версия](ru/index.md)
 - [English version](en/index.md)
 
-## Repository
+---
 
-- GitHub: [Lay007/zynq-sdr-course](https://github.com/Lay007/zynq-sdr-course)
+## ⚙️ Reproducibility
 
-## Notes
+```bash
+bash tools/reproduce_all.sh
+```
 
-This site uses wrapper pages under `docs/` and pulls the actual course content from the repository root via `pymdownx.snippets`.  
-That keeps your current course structure intact and avoids moving existing materials.
+All figures are automatically generated via CI.
