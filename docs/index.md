@@ -2,74 +2,121 @@
 
 # Zynq SDR Course
 
-**From mathematical model to real RF signal — engineering-grade SDR pipeline**
+**Engineering-grade SDR course: from mathematical model to measured RF signal**
 
-A complete path:
-**Model → DSP → FPGA → RF → Measurement → Analysis**
+This site is the main course workspace. It connects theory, MATLAB/Simulink modeling, fixed-point DSP, FPGA implementation, AD9363 RF hardware, RTL-SDR reception, IQ recording and reproducible analysis.
 
 <div class="hero-actions">
-<a class="hero-button" href="model-to-measurement/">Explore pipeline</a>
-<a class="hero-button secondary" href="demo/">View IEEE demo</a>
+<a class="hero-button" href="model-to-measurement/">Start with the system pipeline</a>
+<a class="hero-button secondary" href="demo/">View IEEE-style figures</a>
 <a class="hero-button secondary" href="ru/">Русская версия</a>
+<a class="hero-button secondary" href="en/">English version</a>
 </div>
 
 <div class="badge-line">
-<span class="badge-soft">DSP</span>
-<span class="badge-soft">FPGA</span>
-<span class="badge-soft">RF</span>
-<span class="badge-soft">Measurement</span>
-<span class="badge-soft">Zynq</span>
+<span class="badge-soft">MATLAB / Simulink</span>
+<span class="badge-soft">Fixed-point DSP</span>
+<span class="badge-soft">FPGA / HDL</span>
+<span class="badge-soft">Zynq-7020</span>
+<span class="badge-soft">AD9363</span>
+<span class="badge-soft">RTL-SDR</span>
 </div>
 
 </div>
 
 ---
 
-## 🚀 Engineering pipeline
+## Core engineering route
 
 ```mermaid
 flowchart LR
-    MODEL[Model\nMATLAB / Simulink]
-    DSP[DSP\nmodulation / filtering]
-    FPGA[FPGA\nstream processing]
-    RF[RF frontend\nAD9363]
-    AIR[Channel\nair / coax]
-    RX[Receiver\nRTL-SDR]
-    IQ[IQ data\nWAV / RAW]
-    ANALYSIS[Analysis\nFFT / EVM / BER]
+    MODEL["Model<br/>MATLAB / Simulink"]
+    FIXED["Fixed-point<br/>scaling / quantization"]
+    FPGA["FPGA<br/>streaming DSP"]
+    RF["RF frontend<br/>AD9363"]
+    CHANNEL["Channel<br/>coax / air"]
+    RX["Independent RX<br/>RTL-SDR / HDSDR"]
+    IQ["IQ capture<br/>WAV / RAW / CI16"]
+    METRICS["Metrics<br/>FFT / EVM / BER / SNR"]
 
-    MODEL --> DSP --> FPGA --> RF --> AIR --> RX --> IQ --> ANALYSIS
-    ANALYSIS -. feedback .-> MODEL
+    MODEL --> FIXED --> FPGA --> RF --> CHANNEL --> RX --> IQ --> METRICS
+    METRICS -. redesign .-> MODEL
+    METRICS -. retune .-> RF
 ```
+
+!!! tip "Main idea"
+    The course is not simulation-only. Every important model decision must eventually be connected to a hardware signal and verified through measured data.
 
 ---
 
-## 📊 IEEE-style figures
+## What you will build
 
-<div class="figure-strip">
+<div class="card-grid">
 
-<img src="assets/lab01_fft.png" />
-<img src="assets/lab03_constellation.png" />
-<img src="assets/lab05_evm.png" />
-<img src="assets/lab06_ber.png" />
+<div class="course-card">
+<h3>1. Signal model</h3>
+<p>Reference waveforms, sample-rate planning, modulation, filtering and expected spectra.</p>
+</div>
+
+<div class="course-card">
+<h3>2. Fixed-point DSP</h3>
+<p>Scaling, quantization, coefficient precision, overflow control and hardware-oriented validation.</p>
+</div>
+
+<div class="course-card">
+<h3>3. FPGA signal path</h3>
+<p>DDS/NCO, mixer, FIR, interpolation, AXI-Stream and real-time processing on Zynq.</p>
+</div>
+
+<div class="course-card">
+<h3>4. RF measurement loop</h3>
+<p>AD9363 transmit path, external reception through RTL-SDR, HDSDR observation and IQ recording.</p>
+</div>
 
 </div>
 
 ---
 
-## 🧠 What makes this course different
+## Hardware baseline
 
-- Full chain: **theory → hardware → measurement**
-- Real RF signal, not simulation-only
-- External validation via independent receiver
-- IEEE-style reproducible figures
+<div class="figure-strip">
+
+<img src="images/hardware/rtl_sdr_v3_pro_real.png" alt="RTL-SDR V3 Pro" />
+<img src="images/hardware/xilinx_7020_adrv_real.png" alt="Xilinx Zynq-7020 with AD9363 module" />
+
+</div>
 
 ---
 
-## ⚙️ Reproducibility
+## IEEE-style generated figures
+
+<div class="figure-strip">
+
+<img src="assets/lab01_fft.png" alt="Lab 1 FFT" />
+<img src="assets/lab03_constellation.png" alt="Lab 3 constellation" />
+<img src="assets/lab05_evm.png" alt="Lab 5 EVM" />
+<img src="assets/lab06_ber.png" alt="Lab 6 BER" />
+
+</div>
+
+---
+
+## Learning tracks
+
+| Track | Start here | Engineering output |
+|---|---|---|
+| System view | [Model → FPGA → RF → Measurement](model-to-measurement.md) | End-to-end understanding of the SDR stand |
+| Demo figures | [IEEE-style figures](demo.md) | Reproducible plots and validation examples |
+| Russian course | [Русский обзор](ru/index.md) | RU learning path and block navigation |
+| English course | [English overview](en/index.md) | EN learning path and block navigation |
+
+---
+
+## Reproducibility
 
 ```bash
 bash tools/reproduce_all.sh
+mkdocs serve
 ```
 
-All figures are generated automatically via CI.
+The project is designed so that figures, documentation and the learning path can evolve together through GitHub Actions and MkDocs.
