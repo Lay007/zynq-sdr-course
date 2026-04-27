@@ -2,22 +2,23 @@
 
 # Zynq SDR Course
 
-**Engineering-level SDR course with FPGA, RF and DSP integration**
+**From mathematical model to real RF signal — engineering-grade SDR pipeline**
 
-A complete path from signal theory → DSP → FPGA → RF → measurement → analysis.
+A complete path:
+**Model → DSP → FPGA → RF → Measurement → Analysis**
 
 <div class="hero-actions">
-<a class="hero-button" href="demo/">View Demo</a>
+<a class="hero-button" href="model-to-measurement/">Explore pipeline</a>
+<a class="hero-button secondary" href="demo/">View IEEE demo</a>
 <a class="hero-button secondary" href="ru/">Русская версия</a>
-<a class="hero-button secondary" href="en/">English version</a>
 </div>
 
 <div class="badge-line">
 <span class="badge-soft">DSP</span>
 <span class="badge-soft">FPGA</span>
 <span class="badge-soft">RF</span>
+<span class="badge-soft">Measurement</span>
 <span class="badge-soft">Zynq</span>
-<span class="badge-soft">AD9363</span>
 </div>
 
 </div>
@@ -26,58 +27,42 @@ A complete path from signal theory → DSP → FPGA → RF → measurement → a
 
 ## 🚀 Engineering pipeline
 
-```text
-Model → DSP → FPGA → RF → Measurement → Analysis
+```mermaid
+flowchart LR
+    MODEL[Model\nMATLAB / Simulink]
+    DSP[DSP\nmodulation / filtering]
+    FPGA[FPGA\nstream processing]
+    RF[RF frontend\nAD9363]
+    AIR[Channel\nair / coax]
+    RX[Receiver\nRTL-SDR]
+    IQ[IQ data\nWAV / RAW]
+    ANALYSIS[Analysis\nFFT / EVM / BER]
+
+    MODEL --> DSP --> FPGA --> RF --> AIR --> RX --> IQ --> ANALYSIS
+    ANALYSIS -. feedback .-> MODEL
 ```
 
 ---
 
-## 📊 IEEE-style demo figures
+## 📊 IEEE-style figures
 
 <div class="figure-strip">
 
 <img src="assets/lab01_fft.png" />
-<img src="assets/lab02_am_vs_fm.png" />
 <img src="assets/lab03_constellation.png" />
-<img src="assets/lab04_sync_constellation.png" />
+<img src="assets/lab05_evm.png" />
+<img src="assets/lab06_ber.png" />
 
 </div>
 
 ---
 
-## 🧠 Course structure
+## 🧠 What makes this course different
 
-<div class="card-grid">
-
-<div class="course-card">
-<h3>DSP</h3>
-Signal processing, FFT, modulation, synchronization
-</div>
-
-<div class="course-card">
-<h3>FPGA</h3>
-Zynq, HDL flow, fixed-point implementation
-</div>
-
-<div class="course-card">
-<h3>RF</h3>
-AD9363, front-end, measurements
-</div>
-
-<div class="course-card">
-<h3>System</h3>
-End-to-end SDR chain and validation
-</div>
-
-</div>
-
----
-
-## 📚 Start exploring
-
-- [Demo (IEEE figures)](demo.md)
-- [Русская версия](ru/index.md)
-- [English version](en/index.md)
+- Full chain: **theory → hardware → measurement**
+- Real RF signal, not simulation-only
+- External validation via independent receiver
+- IEEE-style reproducible figures
 
 ---
 
@@ -87,4 +72,4 @@ End-to-end SDR chain and validation
 bash tools/reproduce_all.sh
 ```
 
-All figures are automatically generated via CI.
+All figures are generated automatically via CI.
