@@ -203,6 +203,42 @@ Level 3 turns the stand into a complete SDR engineering pipeline: signal generat
 
 Уровень 3 превращает стенд в полный инженерный SDR-конвейер: генерация сигнала, модуляция, формирующая фильтрация, цифровое повышение/понижение частоты, RF-передача, синхронизация, демодуляция и объективная проверка через FFT/EVM/BER/SNR.
 
+### Lab 1: Tone experiment / Лабораторная 1: тоновый сигнал
+
+The first laboratory work connects a simple model with real RF observation. The goal is to generate a deterministic tone on the Zynq/AD9363 platform, receive it with RTL-SDR, observe the spectral peak in HDSDR, record IQ samples, and then verify the result offline.
+
+Первая лабораторная работа связывает простую модель с реальным RF-наблюдением. Цель — сформировать детерминированный тон на платформе Zynq/AD9363, принять его через RTL-SDR, увидеть спектральный пик в HDSDR, записать IQ-отсчёты и затем проверить результат офлайн.
+
+```mermaid
+flowchart TB
+    %% ===== LIGHT STYLE =====
+    classDef model fill:#E0F2FE,color:#0F172A,stroke:#0284C7,stroke-width:1px;
+    classDef fpga fill:#DCFCE7,color:#0F172A,stroke:#16A34A,stroke-width:1px;
+    classDef rf fill:#FFE4E6,color:#0F172A,stroke:#E11D48,stroke-width:1px;
+    classDef tool fill:#EDE9FE,color:#0F172A,stroke:#7C3AED,stroke-width:1px;
+    classDef result fill:#F1F5F9,color:#0F172A,stroke:#64748B,stroke-width:1px;
+
+    MODEL["1. Reference model<br/>MATLAB / Simulink tone"]:::model
+    PARAMS["2. Experiment parameters<br/>Fc / Fs / tone offset / TX gain"]:::model
+    DDS["3. FPGA DDS / NCO<br/>fixed-point sine generation"]:::fpga
+    TX["4. AD9363 TX path<br/>DAC / mixer / analog filters"]:::rf
+    LINK["5. RF link<br/>coax cable or near-field antenna"]:::rf
+    RTL["6. RTL-SDR receiver<br/>frequency tuning / gain setup"]:::tool
+    HDSDR["7. HDSDR observation<br/>spectrum / waterfall / level check"]:::tool
+    RECORD["8. IQ recording<br/>WAV / RAW / CI16 dataset"]:::tool
+    FFT["9. Offline FFT analysis<br/>peak frequency / amplitude / noise floor"]:::result
+    REPORT["10. Lab report<br/>screenshots / plots / conclusions"]:::result
+
+    MODEL --> PARAMS --> DDS --> TX --> LINK --> RTL --> HDSDR --> RECORD --> FFT --> REPORT
+    FFT -. frequency error .-> PARAMS
+    FFT -. amplitude / clipping check .-> RTL
+    FFT -. model validation .-> MODEL
+```
+
+**Expected result:** the student sees one stable spectral component in HDSDR and confirms the same tone frequency in offline FFT analysis.
+
+**Ожидаемый результат:** студент видит один устойчивый спектральный компонент в HDSDR и подтверждает ту же частоту тона при офлайн-анализе FFT.
+
 ## Course blocks / Блоки курса
 
 1. `blocks/block_01_intro_sdr`
