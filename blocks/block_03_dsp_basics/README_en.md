@@ -1,64 +1,41 @@
 # Block 3. DSP Basics
 
 ## Purpose
-This block introduces FFT, windowing, filtering, and core digital-processing operations required for later modules.
 
-## Why this block matters
-Here the student gains the tools required to interpret spectra, suppress interference, and design elementary digital chains.
+Block 3 moves from signal interpretation to active IQ processing: FFT discipline, windowing, filtering, digital mixing, multirate processing and basic quality metrics.
 
-## Main topics
-- FFT and spectrum interpretation;
-- window functions and spectral leakage;
-- FIR and IIR filters;
-- convolution and system response;
-- decimation and interpolation;
-- numerical tradeoffs in DSP implementation.
+```mermaid
+flowchart TB
+    IQ["1. IQ data input<br/>recorded or synthetic signal with known Fs/Fc"]
+    FFT["2. FFT discipline<br/>frequency axis, windowing, leakage and resolution"]
+    FILTER["3. Filtering<br/>FIR/IIR response, transition band and delay"]
+    MIX["4. Digital mixing<br/>frequency shift, NCO/DDS and complex multiplication"]
+    RATE["5. Multirate DSP<br/>decimation, interpolation, anti-aliasing and anti-imaging"]
+    METRICS["6. Metrics<br/>SNR, noise floor, spur level and engineering conclusion"]
 
-## Practical work
-- comparing windows by sidelobes and resolution;
-- designing simple filters;
-- analyzing filter impact on an IQ recording;
-- building a small multirate processing chain.
-
-## Tooling for the block
-The main toolset is: MATLAB, Python, Simulink, GNU Radio.
-
-## Expected outputs
-- spectra before and after processing;
-- filter parameters;
-- window comparison table;
-- report on DSP tradeoffs.
-
-## Folder structure
-```text
-block_03_dsp_basics/
-├── README.md
-├── README_ru.md
-├── README_en.md
-├── CONTENTS_ru.md
-├── CONTENTS_en.md
-├── assets/
-├── images/
-├── kicad/
-├── simulink/
-├── matlab/
-├── python/
-├── cpp/
-├── gnuradio/
-└── reports/
+    IQ --> FFT --> FILTER --> MIX --> RATE --> METRICS
 ```
 
-- `assets/` — reference data and helper materials;
-- `images/` — diagrams, screenshots, and photos;
-- `kicad/` — schematics and electrical notes;
-- `simulink/`, `matlab/`, `python/`, `cpp/`, `gnuradio/` — models and analysis tools;
-- `reports/` — reports and report templates.
+## Why this block matters
 
-## Recommended work order
-1. study FFT and windows.
-2. design basic filters.
-3. validate multirate operations in models and scripts.
-4. document the processing-method comparison.
+Block 2 teaches how to read a signal. Block 3 teaches how to modify, clean, shift and prepare the signal for FPGA implementation.
 
-## Next step
-After finishing this block, the student should be ready to reuse its results as the starting point for the next stage of the course and the related practical experiment.
+## Main topics
+
+1. FFT, windows and spectral leakage.
+2. FIR/IIR filtering and frequency response.
+3. Digital frequency shift: mixer, NCO, complex multiplication.
+4. Decimation/interpolation and protection against aliasing/images.
+5. SNR, noise floor, spur level and basic quality metrics.
+6. Preparing DSP chains for fixed-point and HDL implementation.
+
+## Labs
+
+- Lab 3.1 — FFT windows and leakage.
+- Lab 3.2 — FIR low-pass filtering of IQ data.
+- Lab 3.3 — Digital mixing and frequency shift.
+- Lab 3.4 — Decimation with anti-aliasing filter.
+
+## Engineering result
+
+After the block, the student can select FFT windows, design simple FIR filters, explain delay and transition bandwidth, shift a signal in complex baseband, perform decimation/interpolation correctly and report DSP results reproducibly.
