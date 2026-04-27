@@ -31,13 +31,16 @@ flowchart TB
 
 ## Темы блока
 
-1. [Сигнал во времени и частоте](01_signal_time_frequency_ru.md)
-2. [Дискретизация и Nyquist](02_sampling_and_nyquist_ru.md)
-3. [FFT и частотная ось](03_frequency_axis_fft_ru.md)
-4. I/Q-представление и complex baseband
-5. Aliasing, images и mirrored spectrum
-6. Метаданные IQ-записей
-7. Lab 2.1 — восстановление частотной оси
+1. Сигнал во времени и частоте.
+2. Дискретизация и Nyquist.
+3. FFT и частотная ось.
+4. I/Q-представление и complex baseband.
+5. Aliasing, images и mirrored spectrum.
+6. Метаданные IQ-записей.
+7. Lab 2.1 — восстановление частотной оси.
+
+!!! note "MkDocs include note"
+    Подробные файлы тем лежат в `blocks/block_02_signals_and_sampling/`. На странице сайта они включаются как единый блок, поэтому внутренние ссылки на исходные файлы намеренно не используются.
 
 ## Практическая часть
 
