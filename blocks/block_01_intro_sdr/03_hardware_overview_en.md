@@ -18,7 +18,7 @@ The first block uses a compact but realistic SDR setup:
 
 ## 2. RTL-SDR V3 Pro
 
-![RTL-SDR V3 Pro](/zynq-sdr-course/images/hardware/rtl_sdr_v3_pro_real.png)
+![RTL-SDR V3 Pro](../../docs/images/hardware/rtl_sdr_v3_pro_real.png)
 
 The RTL-SDR receiver is used as an external observation instrument. It allows students to verify that the transmitted signal exists outside the main SDR board and can be received by an independent device.
 
@@ -31,7 +31,7 @@ The RTL-SDR receiver is used as an external observation instrument. It allows st
 
 ## 3. Xilinx Zynq-7020 + AD9363 board
 
-![Xilinx Zynq-7020 with ADRV module](/zynq-sdr-course/images/hardware/xilinx_7020_adrv_real.png)
+![Xilinx Zynq-7020 with ADRV module](../../docs/images/hardware/xilinx_7020_adrv_real.png)
 
 This is the main board-level SDR platform of the course. It connects digital signal processing with a real RF frontend.
 
