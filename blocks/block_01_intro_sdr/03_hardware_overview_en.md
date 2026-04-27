@@ -1,232 +1,133 @@
 # 03. Hardware Platform of the Course
 
 ## Purpose of the section
-To become familiar with the training SDR setup, understand the role of each device, and prepare for safe execution of the first laboratory work.
 
-## 1. Components of the training setup
-The first block uses:
-- an SDR board based on **Zynq7020 + AD9363**
-- an external **RTL-SDR** receiver
-- a personal computer
-- interconnection cables
-- antennas or a cable link
-- attenuators and adapters when required
+This section introduces the practical SDR stand used in the course and explains how each hardware element contributes to the full engineering chain:
 
-### Hardware photos
+**model → FPGA / RF frontend → external receiver → IQ recording → offline analysis**
 
-#### RTL-SDR V3 Pro
+## 1. Hardware baseline
 
-![RTL-SDR V3 Pro](../../images/hardware/rtl_sdr_v3_pro.svg)
+The first block uses a compact but realistic SDR setup:
 
-#### Xilinx Zynq-7020 + ADRV module
+- **Zynq-7020 + AD9363** SDR board;
+- **RTL-SDR** external receiver;
+- PC for modeling, observation, recording and analysis;
+- cable or over-the-air RF link;
+- attenuators, adapters and matching elements when required.
 
-![Xilinx Zynq-7020 with ADRV module](../../images/hardware/xilinx_7020_adrv_angle_1.svg)
+## 2. RTL-SDR V3 Pro
 
-This image shows the actual board-level SDR platform used in the first practical SDR experiments of the course.
+![RTL-SDR V3 Pro](/zynq-sdr-course/images/hardware/rtl_sdr_v3_pro_real.png)
 
-### SDR stand flow
+The RTL-SDR receiver is used as an external observation instrument. It allows students to verify that the transmitted signal exists outside the main SDR board and can be received by an independent device.
 
-| Step | Block | Role | Output |
-|---:|---|---|---|
-| 1 | **Model & Control** | Simulink / HDL / software setup | Parameters and generated samples |
-| ↓ |  | **configure / generate** |  |
-| 2 | **Zynq-7020 + ADRV** | FPGA / SoC processing and RF TX/RX path | RF signal |
-| ↓ |  | **RF over air or cable** |  |
-| 3 | **RTL-SDR** | External receiver for first signal capture | Received sample stream |
-| ↓ |  | **observe** |  |
-| 4 | **HDSDR** | Spectrum and waterfall visualization | Visible signal and tuned recording setup |
-| ↓ |  | **store** |  |
-| 5 | **IQ Recording** | Captured IQ sample file | IQ dataset |
-| ↓ |  | **analyze** |  |
-| 6 | **Offline Analysis** | MATLAB / Simulink / Python / C++ / GNU Radio | Plots, metrics, reports, conclusions |
+**Role in the course:**
 
-**Practical flow:** generate a signal on the Zynq/ADRV platform → receive it with RTL-SDR → observe it in HDSDR → record IQ samples → analyze the recording in multiple software environments.
+- first signal detection;
+- HDSDR spectrum and waterfall observation;
+- IQ recording for offline analysis;
+- practical demonstration of receiver gain, noise and overload.
 
-In later stages the course will also use:
-- a solderless breadboard;
-- basic analog components;
-- basic digital ICs;
-- helper boards and adapters.
+## 3. Xilinx Zynq-7020 + AD9363 board
 
-## 2. SDR board based on Zynq7020 + AD9363
-### Purpose
-This is the main training hardware platform of the course.
+![Xilinx Zynq-7020 with ADRV module](/zynq-sdr-course/images/hardware/xilinx_7020_adrv_real.png)
 
-It is used for:
-- generation of test signals;
-- building digital processing chains;
-- implementing DSP algorithms;
-- moving from model to real hardware.
+This is the main board-level SDR platform of the course. It connects digital signal processing with a real RF frontend.
 
-## 3. Role of Zynq7020
-**Zynq7020** combines:
-- an ARM processing system;
-- programmable FPGA logic.
+**Zynq-7020 provides:**
 
-### What this gives
-This makes it possible to separate tasks:
+- ARM processing system for control and configuration;
+- FPGA programmable logic for deterministic streaming DSP;
+- a practical bridge between software models and hardware implementation.
 
-#### Processor part
-Suitable for:
-- system control;
-- parameter setup;
-- communication with external software;
-- launching configurations;
-- handling service logic.
+**AD9363 provides:**
 
-#### FPGA part
-Suitable for:
-- stream processing;
-- signal generation;
-- filtering;
-- digital frequency translation;
-- implementing real-time chains.
+- RF transmit and receive chains;
+- DAC/ADC conversion;
+- analog filtering and frequency translation;
+- I/Q stream interface with the digital processing path.
 
-### Why this matters for the course
-From the start the student works not with an abstract “FPGA somewhere inside”, but with a real platform where:
-- a model can be linked to hardware;
-- digital logic produces a physical result;
-- processing appears in a real received signal.
+## 4. SDR stand flow
 
-## 4. Role of AD9363
-**AD9363** is an RF transceiver that provides:
-- reception;
-- transmission;
-- conversion between analog and digital domains;
-- work with I/Q streams.
+```mermaid
+flowchart TB
+    classDef model fill:#E0F2FE,color:#0F172A,stroke:#0284C7,stroke-width:1px;
+    classDef fpga fill:#DCFCE7,color:#0F172A,stroke:#16A34A,stroke-width:1px;
+    classDef rf fill:#FFE4E6,color:#0F172A,stroke:#E11D48,stroke-width:1px;
+    classDef data fill:#EDE9FE,color:#0F172A,stroke:#7C3AED,stroke-width:1px;
 
-### In the learning logic of the block
-AD9363 is the link through which:
-- a digital stream turns into a physical signal;
-- a real signal can be obtained and then analyzed.
+    MODEL["MATLAB / Simulink<br/>reference model"]:::model
+    CFG["Configuration<br/>Fc / Fs / gain / bandwidth"]:::model
+    BOARD["Zynq-7020 + AD9363<br/>FPGA + ARM + RF frontend"]:::fpga
+    LINK["RF link<br/>coax / attenuator / antenna"]:::rf
+    RTL["RTL-SDR<br/>external receiver"]:::data
+    HDSDR["HDSDR<br/>spectrum / waterfall"]:::data
+    IQ["IQ recording<br/>WAV / RAW / CI16"]:::data
+    ANALYSIS["Offline analysis<br/>MATLAB / Python / GNU Radio / C++"]:::model
 
-### What the student needs to understand
-At the first stage there is no need to study all internal modes in detail. It is enough to understand that:
-- there are frequency parameters;
-- there are bandwidth parameters;
-- there are gains and levels;
-- there is a receive and a transmit chain;
-- there is a connection to the digital part of the platform.
+    MODEL --> CFG --> BOARD --> LINK --> RTL --> HDSDR --> IQ --> ANALYSIS
+    ANALYSIS -. parameter tuning .-> CFG
+    ANALYSIS -. model correction .-> MODEL
+```
 
-## 5. RTL-SDR as an external receiver
-RTL-SDR is used in this course as:
-- inexpensive;
-- simple;
-- illustrative;
-- external observation equipment.
+## 5. Connection options
 
-### Why it is needed
-It allows the student to:
-- quickly see the result of the experiment;
-- avoid overcomplicating the first step;
-- verify that the signal really exists;
-- observe spectrum and waterfall;
-- record data for analysis.
-
-### Limitations of RTL-SDR
-It should be understood that RTL-SDR:
-- is not a high-precision measurement receiver;
-- has limited dynamic range;
-- is limited in bandwidth and chain quality;
-- may introduce its own artifacts.
-
-For the first educational lab, however, it is a practical and suitable tool.
-
-## 6. The computer as part of the laboratory setup
-In the course, the computer plays several roles at once:
-- modeling environment;
-- configuration tool;
-- observation tool;
-- recording tool;
-- analysis tool;
-- software development environment.
-
-On one PC the student can:
-- build a model;
-- receive a signal;
-- record IQ;
-- perform MATLAB analysis;
-- open the project in Python or C++;
-- prepare the report.
-
-## 7. Ways to connect the subsystems
-Two basic approaches are possible:
-
-### 1. Over the air
-The signal is transmitted and received via antennas.
+### Over-the-air setup
 
 Advantages:
-- visually intuitive;
-- quick to deploy;
-- fewer requirements for cable hardware.
 
-Disadvantages:
-- influence of the environment;
-- interference;
-- harder to obtain repeatable results;
-- stronger dependence on tuning and levels.
+- intuitive demonstration;
+- quick setup;
+- close to real RF operation.
 
-### 2. Cable connection
-The transmitter and receiver are linked directly through attenuation and adapters.
+Limitations:
+
+- external interference;
+- lower repeatability;
+- stronger dependence on antenna placement and environment.
+
+### Cable setup
 
 Advantages:
-- high repeatability;
-- less influence of the environment;
-- easier execution of the laboratory work.
 
-Disadvantages:
-- careful level control is required;
-- direct connection without understanding permissible power levels is not allowed.
+- repeatable measurements;
+- controlled channel;
+- easier comparison between experiments.
 
-## 8. Importance of level control
-One of the main rules when working with RF equipment is:
-**never connect transmitter and receiver directly without understanding the signal level**.
+Limitations:
 
-It is necessary to consider:
-- allowable input level of the receiver;
-- the need for attenuators;
-- connection type;
-- matching;
-- path losses.
+- attenuation is mandatory;
+- direct uncontrolled TX-to-RX connection is unsafe;
+- input-level limits must be respected.
 
-In Block 1 the emphasis is on careful work and engineering discipline.
+## 6. Signal-level discipline
 
-## 9. What to check before the experiment
-Before the first lab, verify that:
-- the SDR board is connected correctly;
-- power is stable;
-- RTL-SDR is recognized by the computer;
-- the interconnect cables are healthy;
-- the selected link type is correct — over-the-air or cable;
-- the signal level will not overload the receiver;
-- the software for observing the signal is ready.
+Never connect a transmitter directly to a receiver without understanding signal levels.
 
-## 10. Role of the breadboard and components in the course
-Although the first lab is mainly focused on the SDR chain, the course as a whole also includes circuit-design work.
+Always consider:
 
-That is why even in Block 1 it is important to show that, besides the SDR board, the following will also be used:
-- a breadboard;
-- a battery or power supply;
-- resistors, capacitors, transistors;
-- basic digital ICs;
-- simple generators and shaping circuits.
+- maximum safe input level;
+- attenuation;
+- cable losses;
+- receiver gain;
+- clipping and overload symptoms.
 
-This expands the course from pure DSP to full engineering practice.
+## 7. Pre-lab checklist
 
-## 11. Conclusions
-After studying this section, the student should understand:
-- which devices are included in the training setup;
-- why Zynq7020 is used;
-- what role AD9363 plays;
-- why RTL-SDR is needed;
-- why signal levels and connection method matter;
-- how the hardware is connected with future experiments.
+Before starting the first lab, verify that:
 
-## Review questions
-1. Which devices are included in the training setup?
-2. What is the difference between the processor role and the FPGA role in Zynq7020?
-3. Why is AD9363 needed in the system?
-4. Why is RTL-SDR convenient for the first block?
-5. How does an over-the-air connection differ from a cable connection?
-6. Why is signal-level control necessary?
-7. What role does the computer play in the laboratory work?
+- the SDR board is powered correctly;
+- RTL-SDR is recognized by the PC;
+- the selected RF link is safe;
+- HDSDR can display receiver spectrum;
+- IQ recording path is prepared;
+- experiment parameters are documented.
+
+## 8. Engineering takeaway
+
+The hardware stand is intentionally simple at the first stage, but it already contains the complete SDR engineering loop:
+
+**generate → transmit → receive → observe → record → analyze → improve**
+
+This is the foundation for later blocks on modulation, synchronization, fixed-point implementation, FPGA processing and RF measurements.
