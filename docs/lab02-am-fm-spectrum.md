@@ -15,14 +15,14 @@ baseband signal → AM/FM model → RF transmission → spectrum capture → ban
 ## Experiment flow
 
 ```mermaid
-flowchart LR
-    MSG["Message signal<br/>tone / audio / sweep"]
-    MODEL["AM/FM model<br/>MATLAB / Simulink"]
-    TX["Zynq + AD9363<br/>RF transmit"]
-    RX["RTL-SDR / HDSDR<br/>spectrum capture"]
-    IQ["IQ recording"]
-    FFT["Offline FFT<br/>bandwidth / sidebands"]
-    DEC["Engineering decision<br/>modulation index / gain / Fs"]
+flowchart TB
+    MSG["1. Message signal<br/>tone, audio fragment or sweep used as the modulation input"]
+    MODEL["2. AM/FM model<br/>MATLAB / Simulink reference waveform and expected spectrum"]
+    TX["3. RF transmission<br/>Zynq + AD9363 carrier, gain and analog bandwidth settings"]
+    RX["4. External observation<br/>RTL-SDR / HDSDR spectrum, waterfall and level check"]
+    IQ["5. IQ recording<br/>captured samples with documented Fs, Fc and gain metadata"]
+    FFT["6. Offline spectral analysis<br/>FFT, sidebands, bandwidth and leakage checks"]
+    DEC["7. Engineering decision<br/>modulation index, deviation, gain and sample-rate tuning"]
 
     MSG --> MODEL --> TX --> RX --> IQ --> FFT --> DEC
     DEC -. tune modulation index .-> MODEL
