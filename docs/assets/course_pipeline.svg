@@ -1,0 +1,103 @@
+<svg width="1600" height="560" viewBox="0 0 1600 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="560" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#071426"/>
+      <stop offset="0.5" stop-color="#0a203c"/>
+      <stop offset="1" stop-color="#102b4c"/>
+    </linearGradient>
+    <radialGradient id="g1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(260 160) rotate(20) scale(620 310)">
+      <stop stop-color="#1db8ff" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#1db8ff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1260 390) rotate(-25) scale(540 270)">
+      <stop stop-color="#8c6cff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#8c6cff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#78dcff"/>
+    </marker>
+    <style>
+      .title{font:700 36px DejaVu Sans, Arial, sans-serif;fill:#ecfbff}
+      .subtitle{font:400 19px DejaVu Sans, Arial, sans-serif;fill:#b6e3f6}
+      .card{fill:#0f2948;stroke:#62d2ff;stroke-width:2;filter:url(#shadow)}
+      .numBox{fill:#1f749c;fill-opacity:.55;stroke:#78e0ff;stroke-opacity:.65}
+      .num{font:700 12px DejaVu Sans, Arial, sans-serif;fill:#f0fcff;text-anchor:middle}
+      .block{font:700 21px DejaVu Sans, Arial, sans-serif;fill:#f0fbff;text-anchor:middle}
+      .desc{font:400 14px DejaVu Sans, Arial, sans-serif;fill:#b9d9ea;text-anchor:middle}
+      .line{stroke:#78dcff;stroke-width:3;stroke-linecap:round;marker-end:url(#arrow)}
+      .feedback{stroke:#b093ff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#arrow)}
+      .icon{stroke:#7ee4ff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;fill:none}
+      .icon2{stroke:#a987ff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;fill:none}
+      .muted{stroke:#7ee4ff;stroke-opacity:.35;stroke-width:1}
+      .footerStrong{font:700 18px DejaVu Sans, Arial, sans-serif;fill:#effbff}
+      .footer{font:400 18px DejaVu Sans, Arial, sans-serif;fill:#bddff0}
+    </style>
+  </defs>
+
+  <rect width="1600" height="560" fill="url(#bg)"/>
+  <rect width="1600" height="560" fill="url(#g1)"/>
+  <rect width="1600" height="560" fill="url(#g2)"/>
+  <g opacity="0.22">
+    <path d="M0 70H1600M0 120H1600M0 170H1600M0 220H1600M0 270H1600M0 320H1600M0 370H1600M0 420H1600M0 470H1600M0 520H1600" stroke="#70cfff"/>
+    <path d="M50 0V560M100 0V560M150 0V560M200 0V560M250 0V560M300 0V560M350 0V560M400 0V560M450 0V560M500 0V560M550 0V560M600 0V560M650 0V560M700 0V560M750 0V560M800 0V560M850 0V560M900 0V560M950 0V560M1000 0V560M1050 0V560M1100 0V560M1150 0V560M1200 0V560M1250 0V560M1300 0V560M1350 0V560M1400 0V560M1450 0V560M1500 0V560M1550 0V560" stroke="#70cfff"/>
+  </g>
+  <rect x="18" y="18" width="1564" height="524" rx="24" stroke="#5ccfff" stroke-opacity="0.25" stroke-width="2"/>
+
+  <text x="54" y="67" class="title">Zynq SDR Course: Engineering Learning Path</text>
+  <text x="56" y="103" class="subtitle">theory → modeling → fixed-point DSP → HDL/FPGA → RF hardware → measurement → engineering report</text>
+
+  <g transform="translate(56 170)">
+    <g transform="translate(0 0)">
+      <rect class="card" width="178" height="148" rx="18"/>
+      <rect class="numBox" x="12" y="12" width="34" height="26" rx="13"/><text class="num" x="29" y="30">01</text>
+      <path class="icon" d="M45 68 C56 42 66 94 77 68 S98 42 109 68 S130 94 141 68"/><path class="muted" d="M43 68H143"/>
+      <text class="block" x="89" y="108">Signals</text><text class="desc" x="89" y="130">spectra, sampling</text><text class="desc" x="89" y="147">RF basics</text>
+    </g>
+    <g transform="translate(202 0)">
+      <rect class="card" width="178" height="148" rx="18"/>
+      <rect class="numBox" x="12" y="12" width="34" height="26" rx="13"/><text class="num" x="29" y="30">02</text>
+      <path class="icon" d="M50 82H132M50 82V34"/><path class="icon2" d="M56 72 L74 58 L94 62 L112 44 L130 36"/>
+      <text class="block" x="89" y="108">Modeling</text><text class="desc" x="89" y="130">MATLAB / Simulink</text><text class="desc" x="89" y="147">reference signals</text>
+    </g>
+    <g transform="translate(404 0)">
+      <rect class="card" width="178" height="148" rx="18"/>
+      <rect class="numBox" x="12" y="12" width="34" height="26" rx="13"/><text class="num" x="29" y="30">03</text>
+      <text x="50" y="51" style="font:400 15px DejaVu Sans,Arial;fill:#7ee4ff">0 1 1 0</text><text x="50" y="70" style="font:400 15px DejaVu Sans,Arial;fill:#7ee4ff">Q1.15</text><text x="50" y="89" style="font:400 15px DejaVu Sans,Arial;fill:#7ee4ff">1 0 0 1</text>
+      <text class="block" x="89" y="108">Fixed-Point</text><text class="desc" x="89" y="130">word length</text><text class="desc" x="89" y="147">quantization</text>
+    </g>
+    <g transform="translate(606 0)">
+      <rect class="card" width="178" height="148" rx="18"/>
+      <rect class="numBox" x="12" y="12" width="34" height="26" rx="13"/><text class="num" x="29" y="30">04</text>
+      <rect x="60" y="38" width="58" height="48" rx="6" fill="#143c5f" stroke="#7ee4ff" stroke-width="3"/><path class="icon" d="M48 46H60M48 58H60M48 70H60M118 46H130M118 58H130M118 70H130M72 28V38M90 28V38M108 28V38M72 86V96M90 86V96M108 86V96"/>
+      <text class="block" x="89" y="108">HDL / FPGA</text><text class="desc" x="89" y="130">Verilog blocks</text><text class="desc" x="89" y="147">streaming DSP</text>
+    </g>
+    <g transform="translate(808 0)">
+      <rect class="card" width="178" height="148" rx="18"/>
+      <rect class="numBox" x="12" y="12" width="34" height="26" rx="13"/><text class="num" x="29" y="30">05</text>
+      <rect x="48" y="38" width="82" height="48" rx="8" fill="#143c5f" stroke="#7ee4ff" stroke-width="3"/><circle cx="70" cy="62" r="6" fill="#7ee4ff"/><circle cx="106" cy="62" r="6" fill="#a987ff"/><path class="icon" d="M132 62H150"/>
+      <text class="block" x="89" y="108">Zynq / AD9363</text><text class="desc" x="89" y="130">board setup</text><text class="desc" x="89" y="147">RF frontend</text>
+    </g>
+    <g transform="translate(1010 0)">
+      <rect class="card" width="178" height="148" rx="18"/>
+      <rect class="numBox" x="12" y="12" width="34" height="26" rx="13"/><text class="num" x="29" y="30">06</text>
+      <rect x="48" y="40" width="82" height="50" rx="8" fill="#143c5f" stroke="#7ee4ff" stroke-width="3"/><path class="icon2" d="M58 66 C68 45 78 86 89 66 S112 46 123 66"/><circle cx="120" cy="80" r="4" fill="#7ee4ff"/>
+      <text class="block" x="89" y="108">Measurement</text><text class="desc" x="89" y="130">RTL-SDR / HDSDR</text><text class="desc" x="89" y="147">IQ recording</text>
+    </g>
+    <g transform="translate(1212 0)">
+      <rect class="card" width="178" height="148" rx="18"/>
+      <rect class="numBox" x="12" y="12" width="34" height="26" rx="13"/><text class="num" x="29" y="30">07</text>
+      <path class="muted" d="M48 66H130M89 34V94"/><circle cx="68" cy="51" r="4" fill="#7ee4ff"/><circle cx="110" cy="51" r="4" fill="#7ee4ff"/><circle cx="68" cy="82" r="4" fill="#a987ff"/><circle cx="110" cy="82" r="4" fill="#a987ff"/>
+      <text class="block" x="89" y="108">Analysis</text><text class="desc" x="89" y="130">FFT / EVM / BER</text><text class="desc" x="89" y="147">report</text>
+    </g>
+
+    <path class="line" d="M182 74H194"/><path class="line" d="M384 74H396"/><path class="line" d="M586 74H598"/><path class="line" d="M788 74H800"/><path class="line" d="M990 74H1002"/><path class="line" d="M1192 74H1204"/>
+    <path class="feedback" d="M1301 164V218H291V164"/>
+    <text x="314" y="231" style="font:400 15px DejaVu Sans, Arial;fill:#c9c5ff">feedback: measured IQ data improves models, HDL parameters and RF configuration</text>
+  </g>
+
+  <text x="58" y="496" class="footerStrong">Course goal:</text>
+  <text x="170" y="496" class="footer">make SDR visible as a complete engineering system, not as isolated theory or board demos</text>
+</svg>
