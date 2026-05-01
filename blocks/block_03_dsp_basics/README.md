@@ -18,10 +18,29 @@ DSP-цепочка становится инженерной только тог
 
 | Lab | Topic | Main artifact | FPGA/RF connection |
 |---|---|---|---|
-| Lab 3.1 | FFT windows and leakage | spectrum comparison | measurement discipline |
-| Lab 3.2 | FIR low-pass filtering | response + filtered IQ | future FIR RTL block |
-| Lab 3.3 | Digital mixing | spectrum before/after shift | NCO + complex multiplier |
-| Lab 3.4 | Decimation | anti-aliasing validation | rate-change block for FPGA |
+| [Lab 3.1](lab_3_1_fft_windows_and_leakage.md) | FFT windows and leakage | spectrum comparison | measurement discipline |
+| [Lab 3.2](lab_3_2_fir_low_pass_filter.md) | FIR low-pass filtering | response + filtered IQ | future FIR RTL block |
+| [Lab 3.3](lab_3_3_digital_mixing.md) | Digital mixing | spectrum before/after shift | NCO + complex multiplier |
+| [Lab 3.4](lab_3_4_decimation.md) | Decimation | anti-aliasing validation | rate-change block for FPGA |
+
+## Common lab structure / Общая структура лабораторных
+
+Each lab now follows the same engineering format:
+
+Каждая лабораторная теперь имеет единый инженерный формат:
+
+```text
+Goal
+Theory
+Experiment
+Python implementation
+MATLAB implementation
+C++ bridge
+FPGA / Verilog bridge
+Expected plots
+Report checklist
+Engineering conclusion template
+```
 
 ## Engineering outputs / Инженерные результаты
 
