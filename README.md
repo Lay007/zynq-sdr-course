@@ -6,11 +6,53 @@
 [![Pages deploy](https://img.shields.io/badge/pages-deploy%20manual-lightgrey)](.github/workflows/pages.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-A **bilingual engineering course on SDR** that connects signal theory, DSP, fixed-point modeling, FPGA flow, RF front-end understanding, and board-level implementation.
+A **bilingual engineering course on SDR** that connects signal theory, DSP, fixed-point modeling, HDL/FPGA flow, RF front-end understanding, board-level experiments, measurements, and engineering reports.
 
-Это **двуязычный инженерный курс по SDR**, который связывает теорию сигналов, DSP, fixed-point моделирование, FPGA flow, понимание радиотракта и практическую реализацию на плате.
+Это **двуязычный инженерный курс по SDR**, который связывает теорию сигналов, DSP, fixed-point моделирование, HDL/FPGA flow, понимание радиотракта, практическую работу с платой, измерения и инженерные отчёты.
 
-## 🚀 Demo / Демонстрация
+![Zynq SDR Course Pipeline](docs/assets/course_pipeline.svg)
+
+## What this course teaches / Чему учит курс
+
+| Layer | Engineering result |
+|---|---|
+| **Signals and spectra** | sampling, bandwidth, aliasing, modulation basics |
+| **MATLAB / Simulink modeling** | reference waveforms, plots, repeatable experiments |
+| **Fixed-point DSP** | word length, scaling, quantization, implementation error |
+| **HDL / FPGA** | Verilog blocks, streaming DSP, latency, testbenches |
+| **Zynq + AD9363 hardware** | RF configuration, board-level signal generation and capture |
+| **External measurement** | RTL-SDR, HDSDR, IQ recording, independent observation |
+| **Analysis and reports** | FFT, EVM, BER, SNR, engineering conclusions |
+
+## Quick navigation / Быстрая навигация
+
+- [Русская версия / Russian version](README_ru.md)
+- [English version / Английская версия](README_en.md)
+- [IEEE-style guide](docs/ieee_style_guide.md)
+- [GitHub demo notes](docs/demo_readme.md)
+- [Course blocks](#course-blocks--блоки-курса)
+- [Hardware baseline](#hardware-baseline--аппаратная-база)
+- [Generated demo plots](#generated-demo-plots--автоматические-демо-графики)
+
+---
+
+## Why this repository matters / Почему этот репозиторий важен
+
+This repository is not just a collection of markdown notes. It is structured as a **teaching and implementation path** from first SDR concepts to hardware-oriented project work.
+
+Этот репозиторий — не просто набор markdown-файлов. Он оформлен как **учебный и инженерный маршрут** от первых понятий SDR до проектной работы, ориентированной на железо.
+
+The course is designed around a complete engineering chain:
+
+Курс построен вокруг полной инженерной цепочки:
+
+**theory → modeling → fixed-point → HDL / FPGA → SDR board → external reception → IQ recording → analysis → circuit design → final project**
+
+**теория → моделирование → fixed-point → HDL / FPGA → SDR-плата → внешний приём → запись IQ → анализ → схемотехника → итоговый проект**
+
+---
+
+## Generated demo plots / Автоматические демо-графики
 
 Auto-generated IEEE-style plots are produced by GitHub Actions from `tools/generate_ieee_plots.py` and stored in `docs/assets`.
 
@@ -43,48 +85,16 @@ Auto-generated IEEE-style plots are produced by GitHub Actions from `tools/gener
 ### Lab 6 — BER Performance
 ![Lab 6 BER](docs/assets/lab06_ber.png)
 
-## Navigation / Навигация
-
-- [Русская версия / Russian version](README_ru.md)
-- [English version / Английская версия](README_en.md)
-- [IEEE-style guide](docs/ieee_style_guide.md)
-- [GitHub demo notes](docs/demo_readme.md)
-
-## Why this repository matters / Почему этот репозиторий важен
-
-This repository is not just a collection of markdown notes. It is structured as a **teaching and implementation path** from first SDR concepts to hardware-oriented project work.
-
-Этот репозиторий — не просто набор markdown-файлов. Он оформлен как **учебный и инженерный маршрут** от первых понятий SDR до проектной работы, ориентированной на железо.
-
-```mermaid
-flowchart TB
-    THEORY["1. SDR theory / теория<br/>signals, spectra, sampling and RF basics"]
-    MODEL["2. Modeling / моделирование<br/>MATLAB, Simulink and reference waveforms"]
-    FIXED["3. Fixed-point DSP<br/>word length, scaling and quantization effects"]
-    HDL["4. HDL / FPGA implementation<br/>streaming architecture, latency and interfaces"]
-    BOARD["5. SDR board experiment<br/>Zynq-7020, AD9363 and RF configuration"]
-    RX["6. External reception<br/>RTL-SDR, HDSDR and independent observation"]
-    IQ["7. IQ recording<br/>WAV / RAW / CI16 data for reproducible replay"]
-    ANALYSIS["8. Analysis and metrics<br/>FFT, EVM, BER, SNR and engineering conclusions"]
-    CIRCUIT["9. Circuit design layer<br/>front-end thinking, levels, filtering and measurement safety"]
-    PROJECT["10. Final project<br/>hardware-oriented SDR system with documented results"]
-
-    THEORY --> MODEL --> FIXED --> HDL --> BOARD --> RX --> IQ --> ANALYSIS --> CIRCUIT --> PROJECT
-```
-
-It is designed for learners and practitioners who want to move through a coherent chain:
-
-Он рассчитан на тех, кто хочет пройти связную цепочку:
-
-**theory → modeling → fixed-point → HDL / FPGA → SDR board → external reception → IQ recording → analysis → circuit design → final project**
-
-**теория → моделирование → fixed-point → HDL / FPGA → SDR-плата → внешний приём → запись IQ → анализ → схемотехника → итоговый проект**
+---
 
 ## Current state / Текущее состояние
 
 - **Block 1 is populated in bilingual form** / **Блок 1 наполнен в двуязычном формате**
 - **IEEE-style plot generation is automated through GitHub Actions** / **Генерация IEEE-style графиков автоматизирована через GitHub Actions**
 - **MkDocs deployment is temporarily manual** / **Деплой MkDocs временно переведён в ручной режим**
+- **Visual landing pipeline is available** / **Добавлена наглядная карта инженерного маршрута**
+
+---
 
 ## Hardware baseline / Аппаратная база
 
@@ -99,6 +109,8 @@ The current hands-on setup already includes a simple external receiver and a boa
 ### Xilinx Zynq-7020 + ADR9363
 
 ![Xilinx Zynq-7020 with ADRV module](docs/images/hardware/xilinx_7020_adrv_real.png)
+
+---
 
 ## SDR stand flow / Поток SDR-стенда
 
