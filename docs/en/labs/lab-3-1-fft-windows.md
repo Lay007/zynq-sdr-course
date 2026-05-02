@@ -1,0 +1,3 @@
+# Lab 3.1 — FFT Windows and Spectral Leakage
+
+--8<-- "blocks/block_03_dsp_basics/lab_3_1_fft_windows_and_leakage.md"
