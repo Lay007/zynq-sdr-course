@@ -108,7 +108,7 @@ for k in range(n):
     yi[k] = ri_sat
     yq[k] = rq_sat
 
- y_fixed = (yi.astype(np.float64) + 1j*yq.astype(np.float64)) / scale
+y_fixed = (yi.astype(np.float64) + 1j*yq.astype(np.float64)) / scale
 
 err = y_float - y_fixed
 rms_error = np.sqrt(np.mean(np.abs(err)**2))
