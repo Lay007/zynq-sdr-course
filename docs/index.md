@@ -77,6 +77,18 @@ flowchart TB
 
 ---
 
+## Course quality pack
+
+These pages turn the repository into a more complete engineering course workspace:
+
+| Page | Purpose |
+|---|---|
+| [Course quality roadmap](course-quality-roadmap.md) | Defines the target level, checklist and backlog for course completion |
+| [Lab report template](lab-report-template.md) | Gives a repeatable structure for each DSP/RF/FPGA lab report |
+| [IQ recording metadata guide](iq-recording-metadata.md) | Standardizes real-signal captures so measurements can be reproduced |
+
+---
+
 ## Hardware baseline
 
 <div class="figure-strip">
