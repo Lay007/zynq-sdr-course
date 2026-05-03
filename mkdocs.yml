@@ -93,6 +93,9 @@ nav:
           - "Lab 3.2 — FIR low-pass": ru/labs/lab-3-2-fir-low-pass.md
           - "Lab 3.3 — Digital mixing": ru/labs/lab-3-3-digital-mixing.md
           - "Lab 3.4 — Decimation": ru/labs/lab-3-4-decimation.md
+      - "Лаборатории Block 4":
+          - "Lab 4.1 — Fixed-point FIR": ru/labs/lab-4-1-fixed-point-fir.md
+          - "Lab 4.2 — Fixed-point digital mixer": ru/labs/lab-4-2-fixed-point-digital-mixer.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -118,3 +121,6 @@ nav:
           - "Lab 3.2 — FIR low-pass": en/labs/lab-3-2-fir-low-pass.md
           - "Lab 3.3 — Digital mixing": en/labs/lab-3-3-digital-mixing.md
           - "Lab 3.4 — Decimation": en/labs/lab-3-4-decimation.md
+      - "Block 4 labs":
+          - "Lab 4.1 — Fixed-point FIR": en/labs/lab-4-1-fixed-point-fir.md
+          - "Lab 4.2 — Fixed-point digital mixer": en/labs/lab-4-2-fixed-point-digital-mixer.md
