@@ -77,7 +77,9 @@ nav:
           - "01. Введение в SDR": ru/blocks/01-intro.md
           - "02. Сигналы и дискретизация": ru/blocks/02-signals-and-sampling.md
           - "03. Базовые DSP-операции": ru/blocks/03-dsp-basics.md
+          - "03A. DSP engineering notes": ru/blocks/03-dsp-engineering-notes.md
           - "04. Simulink и fixed-point": ru/blocks/04-simulink-and-fixed-point.md
+          - "04A. Fixed-point workflow": ru/blocks/04-fixed-point-workflow.md
           - "05. FPGA / HDL flow": ru/blocks/05-fpga-hdl-flow.md
           - "06. RF frontend и AD9363": ru/blocks/06-rf-frontend-and-ad9363.md
           - "07. TX/RX chains": ru/blocks/07-tx-rx-chains.md
@@ -100,7 +102,9 @@ nav:
           - "01. Intro to SDR": en/blocks/01-intro.md
           - "02. Signals and sampling": en/blocks/02-signals-and-sampling.md
           - "03. DSP basics": en/blocks/03-dsp-basics.md
+          - "03A. DSP engineering notes": en/blocks/03-dsp-engineering-notes.md
           - "04. Simulink and fixed-point": en/blocks/04-simulink-and-fixed-point.md
+          - "04A. Fixed-point workflow": en/blocks/04-fixed-point-workflow.md
           - "05. FPGA / HDL flow": en/blocks/05-fpga-hdl-flow.md
           - "06. RF frontend and AD9363": en/blocks/06-rf-frontend-and-ad9363.md
           - "07. TX/RX chains": en/blocks/07-tx-rx-chains.md
