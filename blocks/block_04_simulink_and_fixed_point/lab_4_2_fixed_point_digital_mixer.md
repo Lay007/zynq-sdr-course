@@ -8,6 +8,41 @@ The lab answers the practical question:
 
 > How many bits are needed in the NCO and complex multiplier to shift an IQ signal without unacceptable spurs or EVM degradation?
 
+## Executable files
+
+| Environment | File | Output |
+|---|---|---|
+| Python | `blocks/block_04_simulink_and_fixed_point/python/lab_4_2_fixed_point_digital_mixer.py` | metrics + PNG figures in `docs/assets` |
+| MATLAB | `blocks/block_04_simulink_and_fixed_point/matlab/lab_4_2_fixed_point_digital_mixer.m` | metrics + PNG figures in `docs/assets` |
+
+Run from the repository root:
+
+```bash
+python blocks/block_04_simulink_and_fixed_point/python/lab_4_2_fixed_point_digital_mixer.py
+```
+
+MATLAB:
+
+```bash
+matlab -batch "run('blocks/block_04_simulink_and_fixed_point/matlab/lab_4_2_fixed_point_digital_mixer.m')"
+```
+
+Generated Python figures:
+
+```text
+docs/assets/lab42_fixed_point_mixer_spectrum.png
+docs/assets/lab42_fixed_point_mixer_error.png
+docs/assets/lab42_nco_frequency_resolution.png
+```
+
+Generated MATLAB figures:
+
+```text
+docs/assets/lab42_fixed_point_mixer_spectrum_matlab.png
+docs/assets/lab42_fixed_point_mixer_error_matlab.png
+docs/assets/lab42_nco_frequency_resolution_matlab.png
+```
+
 ## Engineering context
 
 A digital mixer shifts a complex baseband signal by multiplying it by a complex oscillator:
@@ -61,91 +96,17 @@ y_i = I*cos(phi) - Q*sin(phi)
 y_q = I*sin(phi) + Q*cos(phi)
 ```
 
-## Python reference skeleton
+## Reference implementations
 
-```python
-import numpy as np
+The executable Python and MATLAB scripts implement the same experiment:
 
-rng = np.random.default_rng(11)
-fs = 2.4e6
-n = 32768
-t = np.arange(n) / fs
-
-f0 = 120e3
-fshift = -120e3
-x_float = np.exp(1j * 2*np.pi*f0*t) + 0.01*(rng.standard_normal(n) + 1j*rng.standard_normal(n))
-
-osc_float = np.exp(1j * 2*np.pi*fshift*t)
-y_float = x_float * osc_float
-
-scale = 2**15
-
-def q15(v):
-    return np.clip(np.round(v * scale), -32768, 32767).astype(np.int16)
-
-xi = q15(np.real(x_float))
-xq = q15(np.imag(x_float))
-ci = q15(np.real(osc_float))
-sq = q15(np.imag(osc_float))
-
-yi = np.zeros(n, dtype=np.int16)
-yq = np.zeros(n, dtype=np.int16)
-saturation_count = 0
-
-for k in range(n):
-    # Q1.15 * Q1.15 -> Q2.30
-    acc_i = int(xi[k]) * int(ci[k]) - int(xq[k]) * int(sq[k])
-    acc_q = int(xi[k]) * int(sq[k]) + int(xq[k]) * int(ci[k])
-
-    # round back to Q1.15
-    ri = int(np.round(acc_i / scale))
-    rq = int(np.round(acc_q / scale))
-
-    ri_sat = int(np.clip(ri, -32768, 32767))
-    rq_sat = int(np.clip(rq, -32768, 32767))
-    saturation_count += int(ri != ri_sat) + int(rq != rq_sat)
-
-    yi[k] = ri_sat
-    yq[k] = rq_sat
-
-y_fixed = (yi.astype(np.float64) + 1j*yq.astype(np.float64)) / scale
-
-err = y_float - y_fixed
-rms_error = np.sqrt(np.mean(np.abs(err)**2))
-signal_rms = np.sqrt(np.mean(np.abs(y_float)**2))
-evm_pct = 100 * rms_error / max(signal_rms, 1e-15)
-
-print(f"RMS error: {rms_error:.3e}")
-print(f"EVM: {evm_pct:.3f} %")
-print(f"Saturation count: {saturation_count}")
-```
-
-## MATLAB reference skeleton
-
-```matlab
-rng(11);
-fs = 2.4e6;
-N = 32768;
-t = (0:N-1).' / fs;
-
-f0 = 120e3;
-fshift = -120e3;
-xFloat = exp(1j*2*pi*f0*t) + 0.01*(randn(N,1) + 1j*randn(N,1));
-oscFloat = exp(1j*2*pi*fshift*t);
-yFloat = xFloat .* oscFloat;
-
-xFix = fi(xFloat, 1, 16, 15);
-oscFix = fi(oscFloat, 1, 16, 15);
-yFix = xFix .* oscFix;
-
-err = yFloat - double(yFix);
-rmsError = rms(abs(err));
-signalRms = rms(abs(yFloat));
-evmPct = 100 * rmsError / max(signalRms, eps);
-
-fprintf('RMS error: %.3e\n', rmsError);
-fprintf('EVM: %.3f %%\n', evmPct);
-```
+1. generate a complex IQ tone with additive noise;
+2. generate an NCO/DDS oscillator using a phase accumulator;
+3. run a floating-point mixer;
+4. run an educational Q1.15 fixed-point complex multiplier;
+5. compare floating-point and fixed-point spectra;
+6. compute frequency shift error, RMS error, EVM, spur estimate and saturation count;
+7. save comparison figures.
 
 ## NCO / DDS discussion
 
