@@ -1,0 +1,75 @@
+name: Block 4 Labs
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "blocks/block_04_simulink_and_fixed_point/**"
+      - ".github/workflows/block4_labs.yml"
+  pull_request:
+    paths:
+      - "blocks/block_04_simulink_and_fixed_point/**"
+      - ".github/workflows/block4_labs.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  python-labs:
+    name: Run Python Block 4 labs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy matplotlib
+
+      - name: Run Lab 4.1 fixed-point FIR
+        run: python blocks/block_04_simulink_and_fixed_point/python/lab_4_1_fixed_point_fir.py
+
+      - name: Run Lab 4.2 fixed-point digital mixer
+        run: python blocks/block_04_simulink_and_fixed_point/python/lab_4_2_fixed_point_digital_mixer.py
+
+      - name: Validate generated figures
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected=(
+            docs/assets/lab41_fixed_point_fir_response.png
+            docs/assets/lab41_fixed_point_fir_spectrum.png
+            docs/assets/lab41_fixed_point_fir_error.png
+            docs/assets/lab42_fixed_point_mixer_spectrum.png
+            docs/assets/lab42_fixed_point_mixer_error.png
+            docs/assets/lab42_nco_frequency_resolution.png
+          )
+
+          for file in "${expected[@]}"; do
+            if [[ ! -s "$file" ]]; then
+              echo "Missing or empty generated figure: $file"
+              exit 1
+            fi
+            echo "OK: $file"
+          done
+
+      - name: Upload generated Lab 4 figures
+        uses: actions/upload-artifact@v4
+        with:
+          name: block4-generated-figures
+          path: |
+            docs/assets/lab41_fixed_point_fir_response.png
+            docs/assets/lab41_fixed_point_fir_spectrum.png
+            docs/assets/lab41_fixed_point_fir_error.png
+            docs/assets/lab42_fixed_point_mixer_spectrum.png
+            docs/assets/lab42_fixed_point_mixer_error.png
+            docs/assets/lab42_nco_frequency_resolution.png
+          if-no-files-found: error
