@@ -9,7 +9,7 @@ Install the documentation dependencies:
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install mkdocs mkdocs-material pymdown-extensions
 ```
 
 Build the site strictly:
@@ -42,6 +42,34 @@ docs/assets/lab04_sync_constellation.png
 docs/assets/lab05_evm.png
 docs/assets/lab06_ber.png
 ```
+
+## Block 4 executable labs
+
+Block 4 contains executable fixed-point labs. Install the Python dependencies:
+
+```bash
+python -m pip install numpy matplotlib
+```
+
+Run the labs:
+
+```bash
+python blocks/block_04_simulink_and_fixed_point/python/lab_4_1_fixed_point_fir.py
+python blocks/block_04_simulink_and_fixed_point/python/lab_4_2_fixed_point_digital_mixer.py
+```
+
+Expected generated figures:
+
+```text
+docs/assets/lab41_fixed_point_fir_response.png
+docs/assets/lab41_fixed_point_fir_spectrum.png
+docs/assets/lab41_fixed_point_fir_error.png
+docs/assets/lab42_fixed_point_mixer_spectrum.png
+docs/assets/lab42_fixed_point_mixer_error.png
+docs/assets/lab42_nco_frequency_resolution.png
+```
+
+The GitHub Actions workflow `.github/workflows/block4_labs.yml` runs these Python labs and validates that all expected figures are generated.
 
 ## Recommended lab execution flow
 
@@ -121,6 +149,7 @@ The ideal CI pipeline should contain these jobs:
 |---|---|
 | `docs-build` | Run `mkdocs build --strict` |
 | `plot-generation` | Regenerate IEEE-style figures |
+| `block4-labs` | Run fixed-point Python labs and validate generated figures |
 | `link-check` | Validate internal and external links |
 | `python-labs` | Run Python examples and smoke tests |
 | `cpp-labs` | Build C++ examples with CMake |
