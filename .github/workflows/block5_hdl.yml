@@ -1,0 +1,48 @@
+name: Block 5 HDL
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "blocks/block_05_fpga_hdl_flow/**"
+      - ".github/workflows/block5_hdl.yml"
+  pull_request:
+    paths:
+      - "blocks/block_05_fpga_hdl_flow/**"
+      - ".github/workflows/block5_hdl.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  iverilog-sim:
+    name: Run Icarus Verilog simulations
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Icarus Verilog
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog
+
+      - name: Compile iq_passthrough testbench
+        run: |
+          iverilog -g2012 \
+            -o blocks/block_05_fpga_hdl_flow/tb/tb_iq_passthrough.out \
+            blocks/block_05_fpga_hdl_flow/rtl/iq_passthrough.v \
+            blocks/block_05_fpga_hdl_flow/tb/tb_iq_passthrough.v
+
+      - name: Run iq_passthrough simulation
+        run: |
+          vvp blocks/block_05_fpga_hdl_flow/tb/tb_iq_passthrough.out
+
+      - name: Upload VCD waveform
+        uses: actions/upload-artifact@v4
+        with:
+          name: block5-iq-passthrough-waveform
+          path: tb_iq_passthrough.vcd
+          if-no-files-found: warn
