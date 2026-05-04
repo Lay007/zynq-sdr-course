@@ -81,6 +81,7 @@ nav:
           - "04. Simulink и fixed-point": ru/blocks/04-simulink-and-fixed-point.md
           - "04A. Fixed-point workflow": ru/blocks/04-fixed-point-workflow.md
           - "05. FPGA / HDL flow": ru/blocks/05-fpga-hdl-flow.md
+          - "05A. HDL/FPGA workflow": ru/blocks/05-hdl-fpga-workflow.md
           - "06. RF frontend и AD9363": ru/blocks/06-rf-frontend-and-ad9363.md
           - "07. TX/RX chains": ru/blocks/07-tx-rx-chains.md
           - "08. Modulation and synchronization": ru/blocks/08-modulation-and-synchronization.md
@@ -96,6 +97,9 @@ nav:
       - "Лаборатории Block 4":
           - "Lab 4.1 — Fixed-point FIR": ru/labs/lab-4-1-fixed-point-fir.md
           - "Lab 4.2 — Fixed-point digital mixer": ru/labs/lab-4-2-fixed-point-digital-mixer.md
+      - "Лаборатории Block 5":
+          - "Lab 5.1 — Streaming interface and testbench": ru/labs/lab-5-1-streaming-interface-and-testbench.md
+          - "Lab 5.2 — FIR RTL mapping": ru/labs/lab-5-2-fir-rtl-mapping.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -109,6 +113,7 @@ nav:
           - "04. Simulink and fixed-point": en/blocks/04-simulink-and-fixed-point.md
           - "04A. Fixed-point workflow": en/blocks/04-fixed-point-workflow.md
           - "05. FPGA / HDL flow": en/blocks/05-fpga-hdl-flow.md
+          - "05A. HDL/FPGA workflow": en/blocks/05-hdl-fpga-workflow.md
           - "06. RF frontend and AD9363": en/blocks/06-rf-frontend-and-ad9363.md
           - "07. TX/RX chains": en/blocks/07-tx-rx-chains.md
           - "08. Modulation and synchronization": en/blocks/08-modulation-and-synchronization.md
@@ -124,3 +129,6 @@ nav:
       - "Block 4 labs":
           - "Lab 4.1 — Fixed-point FIR": en/labs/lab-4-1-fixed-point-fir.md
           - "Lab 4.2 — Fixed-point digital mixer": en/labs/lab-4-2-fixed-point-digital-mixer.md
+      - "Block 5 labs":
+          - "Lab 5.1 — Streaming interface and testbench": en/labs/lab-5-1-streaming-interface-and-testbench.md
+          - "Lab 5.2 — FIR RTL mapping": en/labs/lab-5-2-fir-rtl-mapping.md
