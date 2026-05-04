@@ -6,6 +6,34 @@ Define a simple streaming interface for FPGA DSP blocks and write a testbench st
 
 This lab prepares the interface style used later for FIR, mixer, decimator and full SDR processing chains.
 
+## Executable HDL package
+
+| File | Purpose |
+|---|---|
+| `blocks/block_05_fpga_hdl_flow/rtl/iq_passthrough.v` | valid-only IQ streaming pass-through RTL block |
+| `blocks/block_05_fpga_hdl_flow/tb/tb_iq_passthrough.v` | self-checking Verilog testbench |
+| `blocks/block_05_fpga_hdl_flow/tb/iq_passthrough_vectors.txt` | documented input vector format |
+| `blocks/block_05_fpga_hdl_flow/README_lab_5_1_hdl_sim.md` | local simulation instructions |
+
+Run from the repository root:
+
+```bash
+iverilog -g2012 \
+  -o blocks/block_05_fpga_hdl_flow/tb/tb_iq_passthrough.out \
+  blocks/block_05_fpga_hdl_flow/rtl/iq_passthrough.v \
+  blocks/block_05_fpga_hdl_flow/tb/tb_iq_passthrough.v
+
+vvp blocks/block_05_fpga_hdl_flow/tb/tb_iq_passthrough.out
+```
+
+Expected result:
+
+```text
+PASS: iq_passthrough test completed without errors
+```
+
+The GitHub Actions workflow `.github/workflows/block5_hdl.yml` runs this simulation automatically when Block 5 HDL files change.
+
 ## Engineering question
 
 > How do we wrap a fixed-point DSP algorithm into a deterministic clocked hardware block that can be tested sample-by-sample?
@@ -53,6 +81,8 @@ sequenceDiagram
 ```
 
 ## Example pass-through block
+
+The executable implementation is stored in `rtl/iq_passthrough.v`.
 
 ```verilog
 module iq_passthrough #(
