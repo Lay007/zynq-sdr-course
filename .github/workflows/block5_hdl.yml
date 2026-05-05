@@ -60,6 +60,21 @@ jobs:
         run: |
           vvp blocks/block_05_fpga_hdl_flow/tb/tb_fir_iq_4tap.out
 
+      - name: Generate NCO mixer IQ vectors
+        run: |
+          python blocks/block_05_fpga_hdl_flow/python/generate_nco_mixer_iq_vectors.py
+
+      - name: Compile NCO mixer IQ testbench
+        run: |
+          iverilog -g2012 \
+            -o blocks/block_05_fpga_hdl_flow/tb/tb_nco_mixer_iq.out \
+            blocks/block_05_fpga_hdl_flow/rtl/nco_mixer_iq.v \
+            blocks/block_05_fpga_hdl_flow/tb/tb_nco_mixer_iq.v
+
+      - name: Run NCO mixer IQ simulation
+        run: |
+          vvp blocks/block_05_fpga_hdl_flow/tb/tb_nco_mixer_iq.out
+
       - name: Upload VCD waveforms
         uses: actions/upload-artifact@v4
         with:
@@ -67,4 +82,5 @@ jobs:
           path: |
             tb_iq_passthrough.vcd
             tb_fir_iq_4tap.vcd
+            tb_nco_mixer_iq.vcd
           if-no-files-found: warn
