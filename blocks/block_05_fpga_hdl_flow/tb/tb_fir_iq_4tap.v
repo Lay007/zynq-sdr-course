@@ -29,6 +29,10 @@ reg expected_valid [0:NUM_VECTORS-1];
 reg signed [W-1:0] expected_i [0:NUM_VECTORS-1];
 reg signed [W-1:0] expected_q [0:NUM_VECTORS-1];
 
+reg expected_valid_current = 1'b0;
+reg signed [W-1:0] expected_i_current = 0;
+reg signed [W-1:0] expected_q_current = 0;
+
 reg expected_valid_d1 = 1'b0;
 reg signed [W-1:0] expected_i_d1 = 0;
 reg signed [W-1:0] expected_q_d1 = 0;
@@ -114,19 +118,26 @@ initial begin
     $dumpvars(0, tb_fir_iq_4tap);
 
     repeat (3) @(posedge clk);
-    rst <= 1'b0;
+    @(negedge clk);
+    rst = 1'b0;
 
     for (idx = 0; idx < NUM_VECTORS; idx = idx + 1) begin
-        @(posedge clk);
-        in_valid <= vector_valid[idx];
-        in_i <= vector_i[idx];
-        in_q <= vector_q[idx];
+        @(negedge clk);
+        in_valid = vector_valid[idx];
+        in_i = vector_i[idx];
+        in_q = vector_q[idx];
+        expected_valid_current = expected_valid[idx];
+        expected_i_current = expected_i[idx];
+        expected_q_current = expected_q[idx];
     end
 
-    @(posedge clk);
-    in_valid <= 1'b0;
-    in_i <= 0;
-    in_q <= 0;
+    @(negedge clk);
+    in_valid = 1'b0;
+    in_i = 0;
+    in_q = 0;
+    expected_valid_current = 1'b0;
+    expected_i_current = 0;
+    expected_q_current = 0;
 
     repeat (4) @(posedge clk);
 
@@ -158,15 +169,9 @@ always @(posedge clk) begin
             end
         end
 
-        if (idx < NUM_VECTORS) begin
-            expected_valid_d1 <= expected_valid[idx];
-            expected_i_d1 <= expected_i[idx];
-            expected_q_d1 <= expected_q[idx];
-        end else begin
-            expected_valid_d1 <= 1'b0;
-            expected_i_d1 <= 0;
-            expected_q_d1 <= 0;
-        end
+        expected_valid_d1 <= expected_valid_current;
+        expected_i_d1 <= expected_i_current;
+        expected_q_d1 <= expected_q_current;
     end
 end
 
