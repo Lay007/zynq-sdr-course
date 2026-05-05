@@ -100,6 +100,7 @@ nav:
       - "Лаборатории Block 5":
           - "Lab 5.1 — Streaming interface and testbench": ru/labs/lab-5-1-streaming-interface-and-testbench.md
           - "Lab 5.2 — FIR RTL mapping": ru/labs/lab-5-2-fir-rtl-mapping.md
+          - "Lab 5.3 — NCO mixer RTL": ru/labs/lab-5-3-nco-mixer-rtl.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -132,3 +133,4 @@ nav:
       - "Block 5 labs":
           - "Lab 5.1 — Streaming interface and testbench": en/labs/lab-5-1-streaming-interface-and-testbench.md
           - "Lab 5.2 — FIR RTL mapping": en/labs/lab-5-2-fir-rtl-mapping.md
+          - "Lab 5.3 — NCO mixer RTL": en/labs/lab-5-3-nco-mixer-rtl.md
