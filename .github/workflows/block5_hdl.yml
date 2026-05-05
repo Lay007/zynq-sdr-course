@@ -75,6 +75,17 @@ jobs:
         run: |
           vvp blocks/block_05_fpga_hdl_flow/tb/tb_nco_mixer_iq.out
 
+      - name: Compile AXI-Stream IQ passthrough testbench
+        run: |
+          iverilog -g2012 \
+            -o blocks/block_05_fpga_hdl_flow/tb/tb_axis_iq_passthrough.out \
+            blocks/block_05_fpga_hdl_flow/rtl/axis_iq_passthrough.v \
+            blocks/block_05_fpga_hdl_flow/tb/tb_axis_iq_passthrough.v
+
+      - name: Run AXI-Stream IQ passthrough simulation
+        run: |
+          vvp blocks/block_05_fpga_hdl_flow/tb/tb_axis_iq_passthrough.out
+
       - name: Upload VCD waveforms
         uses: actions/upload-artifact@v4
         with:
@@ -83,4 +94,5 @@ jobs:
             tb_iq_passthrough.vcd
             tb_fir_iq_4tap.vcd
             tb_nco_mixer_iq.vcd
+            tb_axis_iq_passthrough.vcd
           if-no-files-found: warn
