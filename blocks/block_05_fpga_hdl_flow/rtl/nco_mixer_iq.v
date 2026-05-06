@@ -28,6 +28,8 @@ module nco_mixer_iq #(
     output reg  signed [W-1:0]  out_q
 );
 
+localparam signed [ACC_W-1:0] ROUND_BIAS = 40'sd1 <<< (SHIFT - 1);
+
 reg [PHASE_W-1:0] phase;
 reg signed [W-1:0] cos_q15;
 reg signed [W-1:0] sin_q15;
@@ -68,6 +70,15 @@ function signed [W-1:0] cos_lut;
     end
 endfunction
 
+function signed [ACC_W-1:0] round_q15;
+    input signed [ACC_W-1:0] value;
+    begin
+        // Keep the expression signed. Without a signed bias, negative values can
+        // be promoted to unsigned and then saturate incorrectly to +32767.
+        round_q15 = (value + ROUND_BIAS) >>> SHIFT;
+    end
+endfunction
+
 function signed [W-1:0] sat_q15;
     input signed [ACC_W-1:0] value;
     begin
@@ -103,8 +114,8 @@ always @(posedge clk) begin
             acc_i = $signed(in_i) * cos_q15 - $signed(in_q) * sin_q15;
             acc_q = $signed(in_i) * sin_q15 + $signed(in_q) * cos_q15;
 
-            rounded_i = (acc_i + ({{(ACC_W-1){1'b0}}, 1'b1} << (SHIFT-1))) >>> SHIFT;
-            rounded_q = (acc_q + ({{(ACC_W-1){1'b0}}, 1'b1} << (SHIFT-1))) >>> SHIFT;
+            rounded_i = round_q15(acc_i);
+            rounded_q = round_q15(acc_q);
 
             out_i <= sat_q15(rounded_i);
             out_q <= sat_q15(rounded_q);
