@@ -107,6 +107,7 @@ nav:
           - "Lab 6.1 — RF frequency plan": ru/labs/lab-6-1-frequency-plan.md
           - "Lab 6.2 — Gain staging and overload": ru/labs/lab-6-2-gain-staging-and-overload.md
           - "Lab 6.3 — AD9363 settings and iio_attr": ru/labs/lab-6-3-ad9363-settings-iio-attr.md
+          - "Lab 6.4 — Synthetic RF capture analysis": ru/labs/lab-6-4-synthetic-rf-capture-analysis.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -146,3 +147,4 @@ nav:
           - "Lab 6.1 — RF frequency plan": en/labs/lab-6-1-frequency-plan.md
           - "Lab 6.2 — Gain staging and overload": en/labs/lab-6-2-gain-staging-and-overload.md
           - "Lab 6.3 — AD9363 settings and iio_attr": en/labs/lab-6-3-ad9363-settings-iio-attr.md
+          - "Lab 6.4 — Synthetic RF capture analysis": en/labs/lab-6-4-synthetic-rf-capture-analysis.md
