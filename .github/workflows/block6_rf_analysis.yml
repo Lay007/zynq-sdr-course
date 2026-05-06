@@ -1,0 +1,67 @@
+name: Block 6 RF Analysis
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "blocks/block_06_rf_frontend_and_ad9363/**"
+      - ".github/workflows/block6_rf_analysis.yml"
+  pull_request:
+    paths:
+      - "blocks/block_06_rf_frontend_and_ad9363/**"
+      - ".github/workflows/block6_rf_analysis.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  synthetic-rf-analysis:
+    name: Run synthetic RF capture analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy matplotlib
+
+      - name: Run Lab 6.4 synthetic RF analysis
+        run: |
+          python blocks/block_06_rf_frontend_and_ad9363/python/lab_6_4_synthetic_rf_capture_analysis.py
+
+      - name: Validate generated artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected=(
+            docs/assets/lab64_synthetic_rf_capture_fft.png
+            docs/assets/lab64_synthetic_rf_capture_time.png
+            docs/assets/lab64_synthetic_rf_capture_metrics.json
+          )
+
+          for file in "${expected[@]}"; do
+            if [[ ! -s "$file" ]]; then
+              echo "Missing or empty generated artifact: $file"
+              exit 1
+            fi
+            echo "OK: $file"
+          done
+
+      - name: Upload generated RF artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: block6-rf-analysis-artifacts
+          path: |
+            docs/assets/lab64_synthetic_rf_capture_fft.png
+            docs/assets/lab64_synthetic_rf_capture_time.png
+            docs/assets/lab64_synthetic_rf_capture_metrics.json
+          if-no-files-found: error
