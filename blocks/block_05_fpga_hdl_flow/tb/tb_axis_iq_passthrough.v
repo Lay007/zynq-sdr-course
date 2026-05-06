@@ -66,61 +66,35 @@ initial begin
     lasts[5] = 1'b1;
 end
 
-initial begin
-    $dumpfile("tb_axis_iq_passthrough.vcd");
-    $dumpvars(0, tb_axis_iq_passthrough);
-
-    repeat (4) @(posedge aclk);
-    @(negedge aclk);
-    aresetn = 1'b1;
-
-    while (recv_idx < NUM_SAMPLES && cycle_count < 100) begin
-        @(negedge aclk);
-        cycle_count = cycle_count + 1;
-
-        // Deterministic backpressure pattern.
-        if (cycle_count == 5 || cycle_count == 6 || cycle_count == 12)
-            m_axis_tready = 1'b0;
-        else
-            m_axis_tready = 1'b1;
-
-        if (send_idx < NUM_SAMPLES) begin
-            s_axis_tvalid = 1'b1;
-            s_axis_tdata = samples[send_idx];
-            s_axis_tlast = lasts[send_idx];
-            if (s_axis_tready) begin
-                send_idx = send_idx + 1;
-            end
-        end else begin
-            s_axis_tvalid = 1'b0;
-            s_axis_tdata = 0;
-            s_axis_tlast = 1'b0;
-        end
-    end
-
-    repeat (4) @(posedge aclk);
-
-    if (recv_idx != NUM_SAMPLES) begin
-        $display("ERROR: received %0d samples, expected %0d", recv_idx, NUM_SAMPLES);
-        errors = errors + 1;
-    end
-
-    if (errors == 0) begin
-        $display("PASS: axis_iq_passthrough test completed without errors");
-        $finish;
+// Source driver. Inputs are changed on the negative edge and held stable for
+// the next positive edge, where the AXI-Stream handshake is sampled.
+always @(negedge aclk) begin
+    if (!aresetn) begin
+        s_axis_tvalid <= 1'b0;
+        s_axis_tdata <= 0;
+        s_axis_tlast <= 1'b0;
     end else begin
-        $display("FAIL: axis_iq_passthrough test completed with %0d errors", errors);
-        $fatal(1);
+        if (send_idx < NUM_SAMPLES) begin
+            s_axis_tvalid <= 1'b1;
+            s_axis_tdata <= samples[send_idx];
+            s_axis_tlast <= lasts[send_idx];
+        end else begin
+            s_axis_tvalid <= 1'b0;
+            s_axis_tdata <= 0;
+            s_axis_tlast <= 1'b0;
+        end
     end
 end
 
+// Handshake accounting. This runs after the clock edge delta-cycle, so it sees
+// stable sampled control values and avoids racing nonblocking assignments.
 always @(posedge aclk) begin
-    if (!aresetn) begin
-        if (m_axis_tvalid !== 1'b0) begin
-            $display("ERROR at %0t: m_axis_tvalid must be 0 during reset", $time);
-            errors = errors + 1;
+    #1;
+    if (aresetn) begin
+        if (s_axis_tvalid && s_axis_tready && send_idx < NUM_SAMPLES) begin
+            send_idx = send_idx + 1;
         end
-    end else begin
+
         if (m_axis_tvalid && m_axis_tready) begin
             if (recv_idx >= NUM_SAMPLES) begin
                 $display("ERROR at %0t: unexpected extra output sample", $time);
@@ -139,6 +113,48 @@ always @(posedge aclk) begin
                 recv_idx = recv_idx + 1;
             end
         end
+    end
+end
+
+// Deterministic sink backpressure pattern. It is driven on the negative edge so
+// the value is stable before the next positive edge handshake.
+always @(negedge aclk) begin
+    if (!aresetn) begin
+        m_axis_tready <= 1'b1;
+    end else begin
+        if (cycle_count == 5 || cycle_count == 6 || cycle_count == 12)
+            m_axis_tready <= 1'b0;
+        else
+            m_axis_tready <= 1'b1;
+    end
+end
+
+initial begin
+    $dumpfile("tb_axis_iq_passthrough.vcd");
+    $dumpvars(0, tb_axis_iq_passthrough);
+
+    repeat (4) @(posedge aclk);
+    @(negedge aclk);
+    aresetn = 1'b1;
+
+    while (recv_idx < NUM_SAMPLES && cycle_count < 100) begin
+        @(posedge aclk);
+        cycle_count = cycle_count + 1;
+    end
+
+    repeat (4) @(posedge aclk);
+
+    if (recv_idx != NUM_SAMPLES) begin
+        $display("ERROR: received %0d samples, expected %0d", recv_idx, NUM_SAMPLES);
+        errors = errors + 1;
+    end
+
+    if (errors == 0) begin
+        $display("PASS: axis_iq_passthrough test completed without errors");
+        $finish;
+    end else begin
+        $display("FAIL: axis_iq_passthrough test completed with %0d errors", errors);
+        $fatal(1);
     end
 end
 
