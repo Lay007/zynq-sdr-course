@@ -35,6 +35,7 @@ localparam signed [CW-1:0] H0 = 16'sd4096;   // 0.125 * 2^15
 localparam signed [CW-1:0] H1 = 16'sd12288;  // 0.375 * 2^15
 localparam signed [CW-1:0] H2 = 16'sd12288;  // 0.375 * 2^15
 localparam signed [CW-1:0] H3 = 16'sd4096;   // 0.125 * 2^15
+localparam signed [ACC_W-1:0] ROUND_BIAS = 40'sd1 <<< (SHIFT - 1);
 
 reg signed [W-1:0] xi0, xi1, xi2, xi3;
 reg signed [W-1:0] xq0, xq1, xq2, xq3;
@@ -43,6 +44,15 @@ reg signed [ACC_W-1:0] acc_i;
 reg signed [ACC_W-1:0] acc_q;
 reg signed [ACC_W-1:0] rounded_i;
 reg signed [ACC_W-1:0] rounded_q;
+
+function signed [ACC_W-1:0] round_q15;
+    input signed [ACC_W-1:0] value;
+    begin
+        // Keep the expression signed. Without a signed bias, negative values can
+        // be promoted to unsigned and then saturate incorrectly to +32767.
+        round_q15 = (value + ROUND_BIAS) >>> SHIFT;
+    end
+endfunction
 
 function signed [W-1:0] sat_q15;
     input signed [ACC_W-1:0] value;
@@ -92,8 +102,8 @@ always @(posedge clk) begin
                   + $signed(xq2) * H3;
 
             // Round half up before returning to Q1.15.
-            rounded_i = (acc_i + ({{(ACC_W-1){1'b0}}, 1'b1} << (SHIFT-1))) >>> SHIFT;
-            rounded_q = (acc_q + ({{(ACC_W-1){1'b0}}, 1'b1} << (SHIFT-1))) >>> SHIFT;
+            rounded_i = round_q15(acc_i);
+            rounded_q = round_q15(acc_q);
 
             out_i <= sat_q15(rounded_i);
             out_q <= sat_q15(rounded_q);
