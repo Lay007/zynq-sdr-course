@@ -106,6 +106,7 @@ nav:
       - "Лаборатории Block 6":
           - "Lab 6.1 — RF frequency plan": ru/labs/lab-6-1-frequency-plan.md
           - "Lab 6.2 — Gain staging and overload": ru/labs/lab-6-2-gain-staging-and-overload.md
+          - "Lab 6.3 — AD9363 settings and iio_attr": ru/labs/lab-6-3-ad9363-settings-iio-attr.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -144,3 +145,4 @@ nav:
       - "Block 6 labs":
           - "Lab 6.1 — RF frequency plan": en/labs/lab-6-1-frequency-plan.md
           - "Lab 6.2 — Gain staging and overload": en/labs/lab-6-2-gain-staging-and-overload.md
+          - "Lab 6.3 — AD9363 settings and iio_attr": en/labs/lab-6-3-ad9363-settings-iio-attr.md
