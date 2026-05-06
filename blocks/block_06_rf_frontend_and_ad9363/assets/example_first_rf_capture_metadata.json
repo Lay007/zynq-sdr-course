@@ -1,0 +1,62 @@
+{
+  "recording_id": "first_rf_tone_915mhz_2p4msps_example",
+  "description": "Example metadata for the first safe RF tone capture in Block 6",
+  "created_utc": "2026-05-06T00:00:00Z",
+  "operator": "student",
+  "course_block": "Block 6 - RF frontend and AD9363",
+  "lab": "Lab 6.1 / Lab 6.2 / Lab 6.3",
+  "hardware": {
+    "tx_board": "Zynq-7020 + AD9363 SDR board",
+    "rx_device": "RTL-SDR or external SDR receiver",
+    "rf_path": "coax + external attenuator",
+    "external_attenuation_db": 40,
+    "cable_description": "short 50-ohm coax cable"
+  },
+  "ad9363_settings": {
+    "iio_context_uri": "ip:192.168.2.1",
+    "phy_device": "ad9361-phy",
+    "tx_lo_frequency_hz": 915000000,
+    "rx_lo_frequency_hz": 915000000,
+    "tx_sample_rate_hz": 2400000,
+    "rx_sample_rate_hz": 2400000,
+    "tx_rf_bandwidth_hz": 2000000,
+    "rx_rf_bandwidth_hz": 2000000,
+    "rx_gain_control_mode": "manual",
+    "rx_hardware_gain_db": 10,
+    "tx_attenuation_or_gain_db": -20
+  },
+  "frequency_plan": {
+    "tx_center_frequency_hz": 915000000,
+    "rx_center_frequency_hz": 915000000,
+    "digital_tone_offset_hz": 100000,
+    "expected_observed_offset_hz": 100000,
+    "nyquist_margin_hz": 1100000
+  },
+  "sampling": {
+    "sample_rate_hz": 2400000,
+    "sample_count": 1048576,
+    "iq_format": "ci16",
+    "endianness": "little",
+    "i_first": true
+  },
+  "signal": {
+    "type": "single_tone",
+    "modulation": "none",
+    "expected_offset_hz": 100000,
+    "nominal_amplitude": "low_level_safe_start"
+  },
+  "processing": {
+    "fft_length": 65536,
+    "window": "hann",
+    "normalization": "amplitude_dbfs",
+    "averaging": "optional"
+  },
+  "safety_and_quality_notes": {
+    "agc_enabled": false,
+    "manual_gain_used": true,
+    "external_attenuator_used": true,
+    "overload_observed": false,
+    "clipping_observed": false,
+    "comments": "Replace values with measured settings before using in a real report."
+  }
+}
