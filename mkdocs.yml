@@ -83,6 +83,7 @@ nav:
           - "05. FPGA / HDL flow": ru/blocks/05-fpga-hdl-flow.md
           - "05A. HDL/FPGA workflow": ru/blocks/05-hdl-fpga-workflow.md
           - "06. RF frontend и AD9363": ru/blocks/06-rf-frontend-and-ad9363.md
+          - "06A. RF frontend workflow": ru/blocks/06-rf-frontend-workflow.md
           - "07. TX/RX chains": ru/blocks/07-tx-rx-chains.md
           - "08. Modulation and synchronization": ru/blocks/08-modulation-and-synchronization.md
           - "09. Recording and analysis tools": ru/blocks/09-recording-and-analysis-tools.md
@@ -102,6 +103,9 @@ nav:
           - "Lab 5.2 — FIR RTL mapping": ru/labs/lab-5-2-fir-rtl-mapping.md
           - "Lab 5.3 — NCO mixer RTL": ru/labs/lab-5-3-nco-mixer-rtl.md
           - "Lab 5.4 — AXI-Stream wrapper": ru/labs/lab-5-4-axis-wrapper.md
+      - "Лаборатории Block 6":
+          - "Lab 6.1 — RF frequency plan": ru/labs/lab-6-1-frequency-plan.md
+          - "Lab 6.2 — Gain staging and overload": ru/labs/lab-6-2-gain-staging-and-overload.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -117,6 +121,7 @@ nav:
           - "05. FPGA / HDL flow": en/blocks/05-fpga-hdl-flow.md
           - "05A. HDL/FPGA workflow": en/blocks/05-hdl-fpga-workflow.md
           - "06. RF frontend and AD9363": en/blocks/06-rf-frontend-and-ad9363.md
+          - "06A. RF frontend workflow": en/blocks/06-rf-frontend-workflow.md
           - "07. TX/RX chains": en/blocks/07-tx-rx-chains.md
           - "08. Modulation and synchronization": en/blocks/08-modulation-and-synchronization.md
           - "09. Recording and analysis tools": en/blocks/09-recording-and-analysis-tools.md
@@ -136,3 +141,6 @@ nav:
           - "Lab 5.2 — FIR RTL mapping": en/labs/lab-5-2-fir-rtl-mapping.md
           - "Lab 5.3 — NCO mixer RTL": en/labs/lab-5-3-nco-mixer-rtl.md
           - "Lab 5.4 — AXI-Stream wrapper": en/labs/lab-5-4-axis-wrapper.md
+      - "Block 6 labs":
+          - "Lab 6.1 — RF frequency plan": en/labs/lab-6-1-frequency-plan.md
+          - "Lab 6.2 — Gain staging and overload": en/labs/lab-6-2-gain-staging-and-overload.md
