@@ -16,8 +16,8 @@ permissions:
   contents: read
 
 jobs:
-  duc-ddc-model:
-    name: Run DUC/DDC frequency translation model
+  tx-rx-models:
+    name: Run TX/RX executable models
     runs-on: ubuntu-latest
 
     steps:
@@ -38,6 +38,10 @@ jobs:
         run: |
           python blocks/block_07_tx_rx_chains/python/lab_7_2_duc_ddc_frequency_translation.py
 
+      - name: Run Lab 7.3 TX/RX loopback metrics model
+        run: |
+          python blocks/block_07_tx_rx_chains/python/lab_7_3_tx_rx_loopback_metrics.py
+
       - name: Validate generated artifacts
         shell: bash
         run: |
@@ -47,6 +51,10 @@ jobs:
             docs/assets/lab72_duc_ddc_rx_spectrum.png
             docs/assets/lab72_duc_ddc_frequency_plan.png
             docs/assets/lab72_duc_ddc_metrics.json
+            docs/assets/lab73_tx_rx_loopback_spectrum.png
+            docs/assets/lab73_tx_constellation.png
+            docs/assets/lab73_rx_constellation_after_ddc.png
+            docs/assets/lab73_tx_rx_loopback_metrics.json
           )
 
           for file in "${expected[@]}"; do
@@ -60,10 +68,14 @@ jobs:
       - name: Upload generated TX/RX artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: block7-duc-ddc-artifacts
+          name: block7-tx-rx-artifacts
           path: |
             docs/assets/lab72_duc_ddc_tx_spectrum.png
             docs/assets/lab72_duc_ddc_rx_spectrum.png
             docs/assets/lab72_duc_ddc_frequency_plan.png
             docs/assets/lab72_duc_ddc_metrics.json
+            docs/assets/lab73_tx_rx_loopback_spectrum.png
+            docs/assets/lab73_tx_constellation.png
+            docs/assets/lab73_rx_constellation_after_ddc.png
+            docs/assets/lab73_tx_rx_loopback_metrics.json
           if-no-files-found: error
