@@ -85,6 +85,7 @@ nav:
           - "06. RF frontend и AD9363": ru/blocks/06-rf-frontend-and-ad9363.md
           - "06A. RF frontend workflow": ru/blocks/06-rf-frontend-workflow.md
           - "07. TX/RX chains": ru/blocks/07-tx-rx-chains.md
+          - "07A. TX/RX chain workflow": ru/blocks/07-tx-rx-chain-workflow.md
           - "08. Modulation and synchronization": ru/blocks/08-modulation-and-synchronization.md
           - "09. Recording and analysis tools": ru/blocks/09-recording-and-analysis-tools.md
           - "10. KiCad and basic electronics": ru/blocks/10-kicad-and-basic-electronics.md
@@ -108,6 +109,9 @@ nav:
           - "Lab 6.2 — Gain staging and overload": ru/labs/lab-6-2-gain-staging-and-overload.md
           - "Lab 6.3 — AD9363 settings and iio_attr": ru/labs/lab-6-3-ad9363-settings-iio-attr.md
           - "Lab 6.4 — Synthetic RF capture analysis": ru/labs/lab-6-4-synthetic-rf-capture-analysis.md
+      - "Лаборатории Block 7":
+          - "Lab 7.1 — TX/RX chain architecture": ru/labs/lab-7-1-tx-rx-chain-architecture.md
+          - "Lab 7.2 — DUC/DDC frequency translation": ru/labs/lab-7-2-duc-ddc-frequency-translation.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -125,6 +129,7 @@ nav:
           - "06. RF frontend and AD9363": en/blocks/06-rf-frontend-and-ad9363.md
           - "06A. RF frontend workflow": en/blocks/06-rf-frontend-workflow.md
           - "07. TX/RX chains": en/blocks/07-tx-rx-chains.md
+          - "07A. TX/RX chain workflow": en/blocks/07-tx-rx-chain-workflow.md
           - "08. Modulation and synchronization": en/blocks/08-modulation-and-synchronization.md
           - "09. Recording and analysis tools": en/blocks/09-recording-and-analysis-tools.md
           - "10. KiCad and basic electronics": en/blocks/10-kicad-and-basic-electronics.md
@@ -148,3 +153,6 @@ nav:
           - "Lab 6.2 — Gain staging and overload": en/labs/lab-6-2-gain-staging-and-overload.md
           - "Lab 6.3 — AD9363 settings and iio_attr": en/labs/lab-6-3-ad9363-settings-iio-attr.md
           - "Lab 6.4 — Synthetic RF capture analysis": en/labs/lab-6-4-synthetic-rf-capture-analysis.md
+      - "Block 7 labs":
+          - "Lab 7.1 — TX/RX chain architecture": en/labs/lab-7-1-tx-rx-chain-architecture.md
+          - "Lab 7.2 — DUC/DDC frequency translation": en/labs/lab-7-2-duc-ddc-frequency-translation.md
