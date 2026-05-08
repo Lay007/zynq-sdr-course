@@ -1,0 +1,69 @@
+name: Block 8 Synchronization
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "blocks/block_08_modulation_and_synchronization/**"
+      - ".github/workflows/block8_sync.yml"
+  pull_request:
+    paths:
+      - "blocks/block_08_modulation_and_synchronization/**"
+      - ".github/workflows/block8_sync.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cfo-estimation:
+    name: Run CFO estimation/correction model
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy matplotlib
+
+      - name: Run Lab 8.1 CFO model
+        run: |
+          python blocks/block_08_modulation_and_synchronization/python/lab_8_1_cfo_estimation_correction.py
+
+      - name: Validate generated artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected=(
+            docs/assets/lab81_cfo_constellation_before.png
+            docs/assets/lab81_cfo_constellation_after.png
+            docs/assets/lab81_cfo_phase_evolution.png
+            docs/assets/lab81_cfo_metrics.json
+          )
+
+          for file in "${expected[@]}"; do
+            if [[ ! -s "$file" ]]; then
+              echo "Missing or empty generated artifact: $file"
+              exit 1
+            fi
+            echo "OK: $file"
+          done
+
+      - name: Upload generated synchronization artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: block8-cfo-artifacts
+          path: |
+            docs/assets/lab81_cfo_constellation_before.png
+            docs/assets/lab81_cfo_constellation_after.png
+            docs/assets/lab81_cfo_phase_evolution.png
+            docs/assets/lab81_cfo_metrics.json
+          if-no-files-found: error
