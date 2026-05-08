@@ -42,6 +42,10 @@ jobs:
         run: |
           python blocks/block_08_modulation_and_synchronization/python/lab_8_2_phase_offset_correction.py
 
+      - name: Run Lab 8.3 timing recovery model
+        run: |
+          python blocks/block_08_modulation_and_synchronization/python/lab_8_3_timing_recovery.py
+
       - name: Validate generated artifacts
         shell: bash
         run: |
@@ -56,6 +60,11 @@ jobs:
             docs/assets/lab82_phase_constellation_after_dd.png
             docs/assets/lab82_phase_evm_comparison.png
             docs/assets/lab82_phase_metrics.json
+            docs/assets/lab83_timing_constellation_wrong_phase.png
+            docs/assets/lab83_timing_constellation_recovered.png
+            docs/assets/lab83_timing_phase_search.png
+            docs/assets/lab83_timing_eye_preview.png
+            docs/assets/lab83_timing_metrics.json
           )
 
           for file in "${expected[@]}"; do
@@ -80,4 +89,9 @@ jobs:
             docs/assets/lab82_phase_constellation_after_dd.png
             docs/assets/lab82_phase_evm_comparison.png
             docs/assets/lab82_phase_metrics.json
+            docs/assets/lab83_timing_constellation_wrong_phase.png
+            docs/assets/lab83_timing_constellation_recovered.png
+            docs/assets/lab83_timing_phase_search.png
+            docs/assets/lab83_timing_eye_preview.png
+            docs/assets/lab83_timing_metrics.json
           if-no-files-found: error
