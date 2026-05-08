@@ -16,8 +16,8 @@ permissions:
   contents: read
 
 jobs:
-  cfo-estimation:
-    name: Run CFO estimation/correction model
+  synchronization-models:
+    name: Run synchronization executable models
     runs-on: ubuntu-latest
 
     steps:
@@ -38,6 +38,10 @@ jobs:
         run: |
           python blocks/block_08_modulation_and_synchronization/python/lab_8_1_cfo_estimation_correction.py
 
+      - name: Run Lab 8.2 phase correction model
+        run: |
+          python blocks/block_08_modulation_and_synchronization/python/lab_8_2_phase_offset_correction.py
+
       - name: Validate generated artifacts
         shell: bash
         run: |
@@ -47,6 +51,11 @@ jobs:
             docs/assets/lab81_cfo_constellation_after.png
             docs/assets/lab81_cfo_phase_evolution.png
             docs/assets/lab81_cfo_metrics.json
+            docs/assets/lab82_phase_constellation_before.png
+            docs/assets/lab82_phase_constellation_after_blind.png
+            docs/assets/lab82_phase_constellation_after_dd.png
+            docs/assets/lab82_phase_evm_comparison.png
+            docs/assets/lab82_phase_metrics.json
           )
 
           for file in "${expected[@]}"; do
@@ -60,10 +69,15 @@ jobs:
       - name: Upload generated synchronization artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: block8-cfo-artifacts
+          name: block8-sync-artifacts
           path: |
             docs/assets/lab81_cfo_constellation_before.png
             docs/assets/lab81_cfo_constellation_after.png
             docs/assets/lab81_cfo_phase_evolution.png
             docs/assets/lab81_cfo_metrics.json
+            docs/assets/lab82_phase_constellation_before.png
+            docs/assets/lab82_phase_constellation_after_blind.png
+            docs/assets/lab82_phase_constellation_after_dd.png
+            docs/assets/lab82_phase_evm_comparison.png
+            docs/assets/lab82_phase_metrics.json
           if-no-files-found: error
