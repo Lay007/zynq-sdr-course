@@ -117,6 +117,7 @@ nav:
       - "Лаборатории Block 8":
           - "Lab 8.1 — CFO estimation and correction": ru/labs/lab-8-1-cfo-estimation-correction.md
           - "Lab 8.2 — Phase offset correction": ru/labs/lab-8-2-phase-offset-correction.md
+          - "Lab 8.3 — Timing recovery": ru/labs/lab-8-3-timing-recovery.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -166,3 +167,4 @@ nav:
       - "Block 8 labs":
           - "Lab 8.1 — CFO estimation and correction": en/labs/lab-8-1-cfo-estimation-correction.md
           - "Lab 8.2 — Phase offset correction": en/labs/lab-8-2-phase-offset-correction.md
+          - "Lab 8.3 — Timing recovery": en/labs/lab-8-3-timing-recovery.md
