@@ -87,6 +87,7 @@ nav:
           - "07. TX/RX chains": ru/blocks/07-tx-rx-chains.md
           - "07A. TX/RX chain workflow": ru/blocks/07-tx-rx-chain-workflow.md
           - "08. Modulation and synchronization": ru/blocks/08-modulation-and-synchronization.md
+          - "08A. Modulation sync workflow": ru/blocks/08-modulation-sync-workflow.md
           - "09. Recording and analysis tools": ru/blocks/09-recording-and-analysis-tools.md
           - "10. KiCad and basic electronics": ru/blocks/10-kicad-and-basic-electronics.md
           - "11. Integrated SDR project": ru/blocks/11-integrated-sdr-project.md
@@ -113,6 +114,8 @@ nav:
           - "Lab 7.1 — TX/RX chain architecture": ru/labs/lab-7-1-tx-rx-chain-architecture.md
           - "Lab 7.2 — DUC/DDC frequency translation": ru/labs/lab-7-2-duc-ddc-frequency-translation.md
           - "Lab 7.3 — TX/RX loopback metrics": ru/labs/lab-7-3-tx-rx-loopback-metrics.md
+      - "Лаборатории Block 8":
+          - "Lab 8.1 — CFO estimation and correction": ru/labs/lab-8-1-cfo-estimation-correction.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -132,6 +135,7 @@ nav:
           - "07. TX/RX chains": en/blocks/07-tx-rx-chains.md
           - "07A. TX/RX chain workflow": en/blocks/07-tx-rx-chain-workflow.md
           - "08. Modulation and synchronization": en/blocks/08-modulation-and-synchronization.md
+          - "08A. Modulation sync workflow": en/blocks/08-modulation-sync-workflow.md
           - "09. Recording and analysis tools": en/blocks/09-recording-and-analysis-tools.md
           - "10. KiCad and basic electronics": en/blocks/10-kicad-and-basic-electronics.md
           - "11. Integrated SDR project": en/blocks/11-integrated-sdr-project.md
@@ -158,3 +162,5 @@ nav:
           - "Lab 7.1 — TX/RX chain architecture": en/labs/lab-7-1-tx-rx-chain-architecture.md
           - "Lab 7.2 — DUC/DDC frequency translation": en/labs/lab-7-2-duc-ddc-frequency-translation.md
           - "Lab 7.3 — TX/RX loopback metrics": en/labs/lab-7-3-tx-rx-loopback-metrics.md
+      - "Block 8 labs":
+          - "Lab 8.1 — CFO estimation and correction": en/labs/lab-8-1-cfo-estimation-correction.md
