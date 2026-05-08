@@ -116,6 +116,7 @@ nav:
           - "Lab 7.3 — TX/RX loopback metrics": ru/labs/lab-7-3-tx-rx-loopback-metrics.md
       - "Лаборатории Block 8":
           - "Lab 8.1 — CFO estimation and correction": ru/labs/lab-8-1-cfo-estimation-correction.md
+          - "Lab 8.2 — Phase offset correction": ru/labs/lab-8-2-phase-offset-correction.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -164,3 +165,4 @@ nav:
           - "Lab 7.3 — TX/RX loopback metrics": en/labs/lab-7-3-tx-rx-loopback-metrics.md
       - "Block 8 labs":
           - "Lab 8.1 — CFO estimation and correction": en/labs/lab-8-1-cfo-estimation-correction.md
+          - "Lab 8.2 — Phase offset correction": en/labs/lab-8-2-phase-offset-correction.md
