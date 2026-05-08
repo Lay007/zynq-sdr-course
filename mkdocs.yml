@@ -118,6 +118,7 @@ nav:
           - "Lab 8.1 — CFO estimation and correction": ru/labs/lab-8-1-cfo-estimation-correction.md
           - "Lab 8.2 — Phase offset correction": ru/labs/lab-8-2-phase-offset-correction.md
           - "Lab 8.3 — Timing recovery": ru/labs/lab-8-3-timing-recovery.md
+          - "Lab 8.4 — End-to-end sync chain": ru/labs/lab-8-4-end-to-end-sync-chain.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -168,3 +169,4 @@ nav:
           - "Lab 8.1 — CFO estimation and correction": en/labs/lab-8-1-cfo-estimation-correction.md
           - "Lab 8.2 — Phase offset correction": en/labs/lab-8-2-phase-offset-correction.md
           - "Lab 8.3 — Timing recovery": en/labs/lab-8-3-timing-recovery.md
+          - "Lab 8.4 — End-to-end sync chain": en/labs/lab-8-4-end-to-end-sync-chain.md
