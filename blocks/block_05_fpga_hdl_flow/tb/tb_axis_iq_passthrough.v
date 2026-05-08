@@ -1,10 +1,16 @@
 // Lab 5.4 — self-checking testbench for axis_iq_passthrough
 //
 // Verifies basic AXI-Stream behaviour:
-// - reset clears output valid
+// - reset clears output valid after a clock edge
 // - tvalid/tready handshake transfers samples
 // - backpressure stalls output without data loss
 // - tlast is preserved
+//
+// Important AXI simulation rule:
+// A transfer at a rising clock edge uses the signal values that are stable
+// before that edge. The DUT updates its registered outputs with nonblocking
+// assignments after the edge. Therefore the output monitor checks m_axis_* on
+// the posedge without a #1 delay.
 
 `timescale 1ns/1ps
 
@@ -34,6 +40,7 @@ integer send_idx = 0;
 integer recv_idx = 0;
 integer errors = 0;
 integer cycle_count = 0;
+integer reset_seen_edges = 0;
 
 axis_iq_passthrough dut (
     .aclk(aclk),
@@ -71,26 +78,44 @@ end
 always @(negedge aclk) begin
     if (!aresetn) begin
         s_axis_tvalid <= 1'b0;
-        s_axis_tdata <= 0;
-        s_axis_tlast <= 1'b0;
+        s_axis_tdata  <= 0;
+        s_axis_tlast  <= 1'b0;
     end else begin
         if (send_idx < NUM_SAMPLES) begin
             s_axis_tvalid <= 1'b1;
-            s_axis_tdata <= samples[send_idx];
-            s_axis_tlast <= lasts[send_idx];
+            s_axis_tdata  <= samples[send_idx];
+            s_axis_tlast  <= lasts[send_idx];
         end else begin
             s_axis_tvalid <= 1'b0;
-            s_axis_tdata <= 0;
-            s_axis_tlast <= 1'b0;
+            s_axis_tdata  <= 0;
+            s_axis_tlast  <= 1'b0;
         end
     end
 end
 
-// Handshake accounting. This runs after the clock edge delta-cycle, so it sees
-// stable sampled control values and avoids racing nonblocking assignments.
+// Deterministic sink backpressure pattern. It is driven on the negative edge so
+// the value is stable before the next positive edge handshake.
+always @(negedge aclk) begin
+    if (!aresetn) begin
+        m_axis_tready <= 1'b1;
+    end else begin
+        if (cycle_count == 5 || cycle_count == 6 || cycle_count == 12)
+            m_axis_tready <= 1'b0;
+        else
+            m_axis_tready <= 1'b1;
+    end
+end
+
+// AXI-Stream monitor and source handshake accounting.
+// No #1 delay here: an AXI transfer at this edge uses pre-edge values.
 always @(posedge aclk) begin
-    #1;
-    if (aresetn) begin
+    if (!aresetn) begin
+        reset_seen_edges = reset_seen_edges + 1;
+        if (reset_seen_edges > 1 && m_axis_tvalid !== 1'b0) begin
+            $display("ERROR at %0t: m_axis_tvalid must be 0 after reset clock edge", $time);
+            errors = errors + 1;
+        end
+    end else begin
         if (s_axis_tvalid && s_axis_tready && send_idx < NUM_SAMPLES) begin
             send_idx = send_idx + 1;
         end
@@ -113,19 +138,6 @@ always @(posedge aclk) begin
                 recv_idx = recv_idx + 1;
             end
         end
-    end
-end
-
-// Deterministic sink backpressure pattern. It is driven on the negative edge so
-// the value is stable before the next positive edge handshake.
-always @(negedge aclk) begin
-    if (!aresetn) begin
-        m_axis_tready <= 1'b1;
-    end else begin
-        if (cycle_count == 5 || cycle_count == 6 || cycle_count == 12)
-            m_axis_tready <= 1'b0;
-        else
-            m_axis_tready <= 1'b1;
     end
 end
 
