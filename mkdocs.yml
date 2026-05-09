@@ -58,6 +58,7 @@ nav:
       - "Lab 2: AM/FM Spectrum": lab02-am-fm-spectrum.md
       - "Lab 3: QPSK Constellation": lab03-qpsk-constellation.md
   - "Course demo dashboard": demo-dashboard.md
+  - "Portfolio view": portfolio-view.md
   - "DSP → FPGA Bridge": dsp-to-fpga.md
   - "Measurement Errors": measurement-errors.md
   - "Course Quality":
@@ -94,6 +95,7 @@ nav:
           - "10. KiCad and basic electronics": ru/blocks/10-kicad-and-basic-electronics.md
           - "10A. Electronics and KiCad workflow": ru/blocks/10-electronics-kicad-workflow.md
           - "11. Integrated SDR project": ru/blocks/11-integrated-sdr-project.md
+          - "11A. Integrated SDR project workflow": ru/blocks/11-integrated-project-workflow.md
           - "12. Final projects": ru/blocks/12-final-projects.md
       - "Лаборатории Block 3":
           - "Lab 3.1 — FFT windows": ru/labs/lab-3-1-fft-windows.md
@@ -130,6 +132,12 @@ nav:
           - "Lab 10.1 — Passive RC filter": ru/labs/lab-10-1-rc-filter.md
           - "Lab 10.2 — Simple attenuator pad": ru/labs/lab-10-2-attenuator-pad.md
           - "Lab 10.3 — RF measurement safety checklist": ru/labs/lab-10-3-rf-measurement-safety-checklist.md
+          - "Lab 10.4 — KiCad schematic mini-project": ru/labs/lab-10-4-kicad-schematic-mini-project.md
+      - "Лаборатории Block 11":
+          - "Lab 11.1 — Project requirements and architecture": ru/labs/lab-11-1-project-requirements-and-architecture.md
+          - "Lab 11.2 — End-to-end simulation package": ru/labs/lab-11-2-end-to-end-simulation-package.md
+          - "Lab 11.3 — FPGA/RF integration checklist": ru/labs/lab-11-3-fpga-rf-integration-checklist.md
+          - "Lab 11.4 — Final measurement report": ru/labs/lab-11-4-final-measurement-report.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -155,6 +163,7 @@ nav:
           - "10. KiCad and basic electronics": en/blocks/10-kicad-and-basic-electronics.md
           - "10A. Electronics and KiCad workflow": en/blocks/10-electronics-kicad-workflow.md
           - "11. Integrated SDR project": en/blocks/11-integrated-sdr-project.md
+          - "11A. Integrated SDR project workflow": en/blocks/11-integrated-project-workflow.md
           - "12. Final projects": en/blocks/12-final-projects.md
       - "Block 3 labs":
           - "Lab 3.1 — FFT windows": en/labs/lab-3-1-fft-windows.md
@@ -191,3 +200,9 @@ nav:
           - "Lab 10.1 — Passive RC filter": en/labs/lab-10-1-rc-filter.md
           - "Lab 10.2 — Simple attenuator pad": en/labs/lab-10-2-attenuator-pad.md
           - "Lab 10.3 — RF measurement safety checklist": en/labs/lab-10-3-rf-measurement-safety-checklist.md
+          - "Lab 10.4 — KiCad schematic mini-project": en/labs/lab-10-4-kicad-schematic-mini-project.md
+      - "Block 11 labs":
+          - "Lab 11.1 — Project requirements and architecture": en/labs/lab-11-1-project-requirements-and-architecture.md
+          - "Lab 11.2 — End-to-end simulation package": en/labs/lab-11-2-end-to-end-simulation-package.md
+          - "Lab 11.3 — FPGA/RF integration checklist": en/labs/lab-11-3-fpga-rf-integration-checklist.md
+          - "Lab 11.4 — Final measurement report": en/labs/lab-11-4-final-measurement-report.md
