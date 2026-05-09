@@ -16,8 +16,8 @@ permissions:
   contents: read
 
 jobs:
-  ci16-analysis:
-    name: Run CI16 IQ recording analysis
+  iq-analysis:
+    name: Run IQ recording analysis labs
     runs-on: ubuntu-latest
 
     steps:
@@ -38,6 +38,10 @@ jobs:
         run: |
           python blocks/block_09_recording_and_analysis_tools/python/lab_9_2_read_ci16_iq_and_analyze.py
 
+      - name: Run Lab 9.3 multi-format IQ reader
+        run: |
+          python blocks/block_09_recording_and_analysis_tools/python/lab_9_3_multi_format_iq_reader.py
+
       - name: Validate generated artifacts
         shell: bash
         run: |
@@ -47,6 +51,10 @@ jobs:
             docs/assets/lab92_ci16_iq_time_preview.png
             docs/assets/lab92_ci16_iq_metrics.json
             blocks/block_09_recording_and_analysis_tools/assets/lab92_synthetic_ci16_tone.ci16
+            docs/assets/lab93_multiformat_iq_metrics.json
+            docs/assets/lab93_multiformat_iq_spectrum_ci16.png
+            docs/assets/lab93_multiformat_iq_spectrum_cu8.png
+            docs/assets/lab93_multiformat_iq_spectrum_cf32.png
           )
 
           for file in "${expected[@]}"; do
@@ -66,4 +74,8 @@ jobs:
             docs/assets/lab92_ci16_iq_time_preview.png
             docs/assets/lab92_ci16_iq_metrics.json
             blocks/block_09_recording_and_analysis_tools/assets/lab92_synthetic_ci16_tone.ci16
+            docs/assets/lab93_multiformat_iq_metrics.json
+            docs/assets/lab93_multiformat_iq_spectrum_ci16.png
+            docs/assets/lab93_multiformat_iq_spectrum_cu8.png
+            docs/assets/lab93_multiformat_iq_spectrum_cf32.png
           if-no-files-found: error
