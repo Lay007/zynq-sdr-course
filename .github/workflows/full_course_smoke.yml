@@ -1,0 +1,107 @@
+name: Full Course Smoke
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "blocks/**"
+      - "docs/**"
+      - "tools/**"
+      - "mkdocs.yml"
+      - ".github/workflows/full_course_smoke.yml"
+  pull_request:
+    paths:
+      - "blocks/**"
+      - "docs/**"
+      - "tools/**"
+      - "mkdocs.yml"
+      - ".github/workflows/full_course_smoke.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Build docs and run representative labs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy matplotlib mkdocs mkdocs-material pymdown-extensions
+
+      - name: Build MkDocs site in strict mode
+        run: |
+          mkdocs build --strict
+
+      - name: Run representative executable labs
+        run: |
+          python tools/run_all_labs.py
+
+      - name: Run Block 5 Verilog smoke tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_iq_passthrough.out \
+            blocks/block_05_fpga_hdl_flow/rtl/iq_passthrough.v \
+            blocks/block_05_fpga_hdl_flow/tb/tb_iq_passthrough.v
+          vvp blocks/block_05_fpga_hdl_flow/tb/tb_iq_passthrough.out
+
+          iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_fir_iq_4tap.out \
+            blocks/block_05_fpga_hdl_flow/rtl/fir_iq_4tap.v \
+            blocks/block_05_fpga_hdl_flow/tb/tb_fir_iq_4tap.v
+          vvp blocks/block_05_fpga_hdl_flow/tb/tb_fir_iq_4tap.out
+
+          iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_nco_mixer_iq.out \
+            blocks/block_05_fpga_hdl_flow/rtl/nco_mixer_iq.v \
+            blocks/block_05_fpga_hdl_flow/tb/tb_nco_mixer_iq.v
+          vvp blocks/block_05_fpga_hdl_flow/tb/tb_nco_mixer_iq.out
+
+          iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_axis_iq_passthrough.out \
+            blocks/block_05_fpga_hdl_flow/rtl/axis_iq_passthrough.v \
+            blocks/block_05_fpga_hdl_flow/tb/tb_axis_iq_passthrough.v
+          vvp blocks/block_05_fpga_hdl_flow/tb/tb_axis_iq_passthrough.out
+
+      - name: Validate summary artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected=(
+            docs/assets/course_reproducibility_summary.json
+            docs/assets/course_reproducibility_summary.md
+          )
+          for file in "${expected[@]}"; do
+            if [[ ! -s "$file" ]]; then
+              echo "Missing or empty summary artifact: $file"
+              exit 1
+            fi
+            echo "OK: $file"
+          done
+
+      - name: Upload smoke artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-course-smoke-artifacts
+          path: |
+            docs/assets/course_reproducibility_summary.json
+            docs/assets/course_reproducibility_summary.md
+            docs/assets/lab64_synthetic_rf_capture_fft.png
+            docs/assets/lab73_tx_rx_loopback_spectrum.png
+            docs/assets/lab84_sync_constellation_final.png
+            docs/assets/lab93_multiformat_iq_metrics.json
+          if-no-files-found: warn
