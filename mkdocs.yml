@@ -57,6 +57,7 @@ nav:
       - "Lab 1: Tone → RF → IQ → Analysis": lab01-tone-rf-iq-analysis.md
       - "Lab 2: AM/FM Spectrum": lab02-am-fm-spectrum.md
       - "Lab 3: QPSK Constellation": lab03-qpsk-constellation.md
+  - "Course demo dashboard": demo-dashboard.md
   - "DSP → FPGA Bridge": dsp-to-fpga.md
   - "Measurement Errors": measurement-errors.md
   - "Course Quality":
