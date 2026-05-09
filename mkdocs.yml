@@ -92,6 +92,7 @@ nav:
           - "09. Recording and analysis tools": ru/blocks/09-recording-and-analysis-tools.md
           - "09A. IQ recording and analysis workflow": ru/blocks/09-recording-analysis-workflow.md
           - "10. KiCad and basic electronics": ru/blocks/10-kicad-and-basic-electronics.md
+          - "10A. Electronics and KiCad workflow": ru/blocks/10-electronics-kicad-workflow.md
           - "11. Integrated SDR project": ru/blocks/11-integrated-sdr-project.md
           - "12. Final projects": ru/blocks/12-final-projects.md
       - "Лаборатории Block 3":
@@ -125,6 +126,10 @@ nav:
           - "Lab 9.1 — IQ file format and metadata": ru/labs/lab-9-1-iq-file-format-and-metadata.md
           - "Lab 9.2 — Read CI16 IQ and analyze spectrum": ru/labs/lab-9-2-read-ci16-iq-and-analyze.md
           - "Lab 9.3 — Multi-format IQ reader": ru/labs/lab-9-3-multi-format-iq-reader.md
+      - "Лаборатории Block 10":
+          - "Lab 10.1 — Passive RC filter": ru/labs/lab-10-1-rc-filter.md
+          - "Lab 10.2 — Simple attenuator pad": ru/labs/lab-10-2-attenuator-pad.md
+          - "Lab 10.3 — RF measurement safety checklist": ru/labs/lab-10-3-rf-measurement-safety-checklist.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -148,6 +153,7 @@ nav:
           - "09. Recording and analysis tools": en/blocks/09-recording-and-analysis-tools.md
           - "09A. IQ recording and analysis workflow": en/blocks/09-recording-analysis-workflow.md
           - "10. KiCad and basic electronics": en/blocks/10-kicad-and-basic-electronics.md
+          - "10A. Electronics and KiCad workflow": en/blocks/10-electronics-kicad-workflow.md
           - "11. Integrated SDR project": en/blocks/11-integrated-sdr-project.md
           - "12. Final projects": en/blocks/12-final-projects.md
       - "Block 3 labs":
@@ -181,3 +187,7 @@ nav:
           - "Lab 9.1 — IQ file format and metadata": en/labs/lab-9-1-iq-file-format-and-metadata.md
           - "Lab 9.2 — Read CI16 IQ and analyze spectrum": en/labs/lab-9-2-read-ci16-iq-and-analyze.md
           - "Lab 9.3 — Multi-format IQ reader": en/labs/lab-9-3-multi-format-iq-reader.md
+      - "Block 10 labs":
+          - "Lab 10.1 — Passive RC filter": en/labs/lab-10-1-rc-filter.md
+          - "Lab 10.2 — Simple attenuator pad": en/labs/lab-10-2-attenuator-pad.md
+          - "Lab 10.3 — RF measurement safety checklist": en/labs/lab-10-3-rf-measurement-safety-checklist.md
