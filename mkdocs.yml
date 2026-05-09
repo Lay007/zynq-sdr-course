@@ -89,6 +89,7 @@ nav:
           - "08. Modulation and synchronization": ru/blocks/08-modulation-and-synchronization.md
           - "08A. Modulation sync workflow": ru/blocks/08-modulation-sync-workflow.md
           - "09. Recording and analysis tools": ru/blocks/09-recording-and-analysis-tools.md
+          - "09A. IQ recording and analysis workflow": ru/blocks/09-recording-analysis-workflow.md
           - "10. KiCad and basic electronics": ru/blocks/10-kicad-and-basic-electronics.md
           - "11. Integrated SDR project": ru/blocks/11-integrated-sdr-project.md
           - "12. Final projects": ru/blocks/12-final-projects.md
@@ -119,6 +120,9 @@ nav:
           - "Lab 8.2 — Phase offset correction": ru/labs/lab-8-2-phase-offset-correction.md
           - "Lab 8.3 — Timing recovery": ru/labs/lab-8-3-timing-recovery.md
           - "Lab 8.4 — End-to-end sync chain": ru/labs/lab-8-4-end-to-end-sync-chain.md
+      - "Лаборатории Block 9":
+          - "Lab 9.1 — IQ file format and metadata": ru/labs/lab-9-1-iq-file-format-and-metadata.md
+          - "Lab 9.2 — Read CI16 IQ and analyze spectrum": ru/labs/lab-9-2-read-ci16-iq-and-analyze.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -140,6 +144,7 @@ nav:
           - "08. Modulation and synchronization": en/blocks/08-modulation-and-synchronization.md
           - "08A. Modulation sync workflow": en/blocks/08-modulation-sync-workflow.md
           - "09. Recording and analysis tools": en/blocks/09-recording-and-analysis-tools.md
+          - "09A. IQ recording and analysis workflow": en/blocks/09-recording-analysis-workflow.md
           - "10. KiCad and basic electronics": en/blocks/10-kicad-and-basic-electronics.md
           - "11. Integrated SDR project": en/blocks/11-integrated-sdr-project.md
           - "12. Final projects": en/blocks/12-final-projects.md
@@ -170,3 +175,6 @@ nav:
           - "Lab 8.2 — Phase offset correction": en/labs/lab-8-2-phase-offset-correction.md
           - "Lab 8.3 — Timing recovery": en/labs/lab-8-3-timing-recovery.md
           - "Lab 8.4 — End-to-end sync chain": en/labs/lab-8-4-end-to-end-sync-chain.md
+      - "Block 9 labs":
+          - "Lab 9.1 — IQ file format and metadata": en/labs/lab-9-1-iq-file-format-and-metadata.md
+          - "Lab 9.2 — Read CI16 IQ and analyze spectrum": en/labs/lab-9-2-read-ci16-iq-and-analyze.md
