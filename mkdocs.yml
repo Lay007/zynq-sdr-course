@@ -124,6 +124,7 @@ nav:
       - "Лаборатории Block 9":
           - "Lab 9.1 — IQ file format and metadata": ru/labs/lab-9-1-iq-file-format-and-metadata.md
           - "Lab 9.2 — Read CI16 IQ and analyze spectrum": ru/labs/lab-9-2-read-ci16-iq-and-analyze.md
+          - "Lab 9.3 — Multi-format IQ reader": ru/labs/lab-9-3-multi-format-iq-reader.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -179,3 +180,4 @@ nav:
       - "Block 9 labs":
           - "Lab 9.1 — IQ file format and metadata": en/labs/lab-9-1-iq-file-format-and-metadata.md
           - "Lab 9.2 — Read CI16 IQ and analyze spectrum": en/labs/lab-9-2-read-ci16-iq-and-analyze.md
+          - "Lab 9.3 — Multi-format IQ reader": en/labs/lab-9-3-multi-format-iq-reader.md
