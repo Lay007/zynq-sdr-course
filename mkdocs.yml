@@ -102,6 +102,7 @@ nav:
           - "11. Integrated SDR project": ru/blocks/11-integrated-sdr-project.md
           - "11A. Integrated SDR project workflow": ru/blocks/11-integrated-project-workflow.md
           - "12. Final projects": ru/blocks/12-final-projects.md
+          - "12A. Final project track": ru/blocks/12-final-project-track.md
       - "Лаборатории Block 3":
           - "Lab 3.1 — FFT windows": ru/labs/lab-3-1-fft-windows.md
           - "Lab 3.2 — FIR low-pass": ru/labs/lab-3-2-fir-low-pass.md
@@ -143,6 +144,11 @@ nav:
           - "Lab 11.2 — End-to-end simulation package": ru/labs/lab-11-2-end-to-end-simulation-package.md
           - "Lab 11.3 — FPGA/RF integration checklist": ru/labs/lab-11-3-fpga-rf-integration-checklist.md
           - "Lab 11.4 — Final measurement report": ru/labs/lab-11-4-final-measurement-report.md
+      - "Проекты Block 12":
+          - "Project 12.1 — QPSK modem final project": ru/labs/project-12-1-qpsk-modem-final-project.md
+          - "Project 12.2 — RF capture analysis final project": ru/labs/project-12-2-rf-capture-analysis-final-project.md
+          - "Project 12.3 — FPGA DSP block final project": ru/labs/project-12-3-fpga-dsp-block-final-project.md
+          - "Project 12.4 — Full SDR measurement report": ru/labs/project-12-4-full-sdr-measurement-report.md
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
@@ -170,6 +176,7 @@ nav:
           - "11. Integrated SDR project": en/blocks/11-integrated-sdr-project.md
           - "11A. Integrated SDR project workflow": en/blocks/11-integrated-project-workflow.md
           - "12. Final projects": en/blocks/12-final-projects.md
+          - "12A. Final project track": en/blocks/12-final-project-track.md
       - "Block 3 labs":
           - "Lab 3.1 — FFT windows": en/labs/lab-3-1-fft-windows.md
           - "Lab 3.2 — FIR low-pass": en/labs/lab-3-2-fir-low-pass.md
@@ -211,3 +218,8 @@ nav:
           - "Lab 11.2 — End-to-end simulation package": en/labs/lab-11-2-end-to-end-simulation-package.md
           - "Lab 11.3 — FPGA/RF integration checklist": en/labs/lab-11-3-fpga-rf-integration-checklist.md
           - "Lab 11.4 — Final measurement report": en/labs/lab-11-4-final-measurement-report.md
+      - "Block 12 projects":
+          - "Project 12.1 — QPSK modem final project": en/labs/project-12-1-qpsk-modem-final-project.md
+          - "Project 12.2 — RF capture analysis final project": en/labs/project-12-2-rf-capture-analysis-final-project.md
+          - "Project 12.3 — FPGA DSP block final project": en/labs/project-12-3-fpga-dsp-block-final-project.md
+          - "Project 12.4 — Full SDR measurement report": en/labs/project-12-4-full-sdr-measurement-report.md
