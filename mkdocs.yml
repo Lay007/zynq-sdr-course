@@ -54,6 +54,7 @@ nav:
   - Home: index.md
   - System:
       - "Model → FPGA → RF → Measurement": model-to-measurement.md
+      - "Hardware experiment roadmap": hardware-experiment-roadmap.md
       - "Lab 1: Tone → RF → IQ → Analysis": lab01-tone-rf-iq-analysis.md
       - "Lab 2: AM/FM Spectrum": lab02-am-fm-spectrum.md
       - "Lab 3: QPSK Constellation": lab03-qpsk-constellation.md
