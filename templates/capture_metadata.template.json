@@ -1,0 +1,37 @@
+{
+  "recording_id": "YYYYMMDD_device_band_signal_samplerate_format",
+  "description": "Short description of the capture",
+  "created_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "sample_rate_hz": 2400000,
+  "center_frequency_hz": 915000000,
+  "iq_format": "ci16",
+  "endianness": "little",
+  "i_first": true,
+  "sample_count": 0,
+  "expected_signal_offset_hz": 0,
+  "receiver": {
+    "device": "AD9363 / RTL-SDR / HDSDR / other",
+    "serial": "optional",
+    "gain_mode": "manual",
+    "gain_db": 0,
+    "rf_bandwidth_hz": 0,
+    "external_attenuation_db": 0
+  },
+  "transmitter": {
+    "device": "optional",
+    "tx_gain_db": 0,
+    "waveform": "tone / qpsk / other"
+  },
+  "processing": {
+    "fft_length": 65536,
+    "window": "hann",
+    "normalization": "dBFS"
+  },
+  "quality_expectations": {
+    "max_clipping_fraction": 0.001,
+    "max_dc_offset": 0.05,
+    "max_frequency_error_hz": 200,
+    "min_snr_db": 20
+  },
+  "license_or_access": "state dataset license or private access conditions"
+}

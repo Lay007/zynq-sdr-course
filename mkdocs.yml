@@ -68,6 +68,7 @@ nav:
       - "Reproducibility guide": reproducibility-guide.md
       - "Lab report template": lab-report-template.md
       - "IQ metadata guide": iq-recording-metadata.md
+      - "Real data policy": real-data-policy.md
   - "Demo (IEEE figures)": demo.md
   - "GitHub demo notes": demo_readme.md
   - "IEEE-style guide": ieee_style_guide.md
