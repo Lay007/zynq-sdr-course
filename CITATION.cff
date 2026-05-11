@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this course, please cite it as below."
+title: "Zynq SDR Course: From DSP Modeling to FPGA, RF Measurement and IQ Analysis"
+type: software
+authors:
+  - family-names: "Lyubko"
+    given-names: "Alexander"
+repository-code: "https://github.com/Lay007/zynq-sdr-course"
+url: "https://lay007.github.io/zynq-sdr-course/"
+license: MIT
+keywords:
+  - software-defined radio
+  - SDR
+  - DSP
+  - FPGA
+  - Zynq
+  - AD9363
+  - Verilog
+  - fixed-point
+  - IQ analysis
+  - RF measurement
+  - digital communications
+abstract: >-
+  A bilingual engineering course that connects signal theory, DSP, fixed-point modeling,
+  HDL/FPGA flow, RF frontend setup, TX/RX chains, synchronization, IQ recording analysis,
+  practical electronics and integrated SDR project reporting.
