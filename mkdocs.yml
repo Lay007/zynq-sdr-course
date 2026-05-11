@@ -66,6 +66,7 @@ nav:
       - "Quality roadmap": course-quality-roadmap.md
       - "Completion matrix": course-completion-matrix.md
       - "Lab index": lab-index.md
+      - "CI matrix": ci-matrix.md
       - "Reproducibility guide": reproducibility-guide.md
       - "Lab report template": lab-report-template.md
       - "IQ metadata guide": iq-recording-metadata.md
