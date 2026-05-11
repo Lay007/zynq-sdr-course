@@ -1,0 +1,5 @@
+numpy
+matplotlib
+mkdocs
+mkdocs-material
+pymdown-extensions
