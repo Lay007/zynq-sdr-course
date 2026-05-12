@@ -1,0 +1,10 @@
+theory
+-> modeling
+-> fixed-point
+-> HDL/FPGA
+-> RF frontend
+-> TX/RX
+-> synchronization
+-> IQ recording
+-> measurement
+-> engineering report
