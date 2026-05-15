@@ -1,0 +1,31 @@
+experiment:
+  id: lab03_qpsk_constellation
+  title: QPSK constellation generation and analysis
+  objective: Demonstrate IQ constellation quality and impairment visibility.
+
+signal:
+  modulation: QPSK
+  expected_outputs:
+    - constellation_plot
+    - evm_estimate
+    - symbol_decision_quality
+
+software:
+  reference_tools:
+    - Python
+    - MATLAB
+
+metrics:
+  - EVM
+  - SNR
+  - decision_agreement
+
+reports:
+  template: docs/lab-report-template.md
+  figures:
+    - docs/assets/lab03_constellation.png
+
+acceptance:
+  - constellation_clusters_are_visible
+  - evm_method_is_documented
+  - generated_plot_is_available
