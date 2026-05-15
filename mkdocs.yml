@@ -57,6 +57,7 @@ nav:
       - "Hardware experiment roadmap": hardware-experiment-roadmap.md
       - "Hardware bring-up checklist": hardware-bringup-checklist.md
       - "SDR measurement report template": sdr-measurement-report-template.md
+      - "Experiment manifests": experiment-manifests.md
       - "Lab 1: Tone → RF → IQ → Analysis": lab01-tone-rf-iq-analysis.md
       - "Lab 2: AM/FM Spectrum": lab02-am-fm-spectrum.md
       - "Lab 3: QPSK Constellation": lab03-qpsk-constellation.md
