@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="460" viewBox="0 0 1500 460" role="img" aria-labelledby="title desc">
+  <title id="title">SDR measurement loop</title>
+  <desc id="desc">End-to-end SDR experiment flow from reference model to measured IQ analysis report.</desc>
+  <defs>
+    <linearGradient id="card" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#eff6ff"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.14"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+    <style>
+      .bg{fill:#f8fafc}.box{fill:url(#card);stroke:#cbd5e1;stroke-width:1.5;filter:url(#shadow)}
+      .title{font-family:Arial,Helvetica,sans-serif;font-size:32px;font-weight:800;fill:#0f172a}
+      .note{font-family:Arial,Helvetica,sans-serif;font-size:16px;fill:#475569}
+      .label{font-family:Arial,Helvetica,sans-serif;font-size:20px;font-weight:700;fill:#0f172a;text-anchor:middle}
+      .sub{font-family:Arial,Helvetica,sans-serif;font-size:13px;fill:#475569;text-anchor:middle}
+      .arrow{stroke:#334155;stroke-width:2.2;fill:none;marker-end:url(#arrow)}
+      .feedback{stroke:#64748b;stroke-width:2;stroke-dasharray:8 6;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1500" height="460" rx="28"/>
+  <text class="title" x="56" y="58">SDR Measurement Loop</text>
+  <text class="note" x="56" y="88">Course-level route: model a signal, transmit it, observe independently, record IQ, analyze and improve the design</text>
+  <g transform="translate(45,150)">
+    <rect class="box" x="0" y="0" width="160" height="110" rx="18"/>
+    <text class="label" x="80" y="39">Reference</text><text class="sub" x="80" y="64">MATLAB / Simulink</text><text class="sub" x="80" y="84">expected waveform</text>
+    <path class="arrow" d="M170 55 L215 55"/>
+    <rect class="box" x="225" y="0" width="160" height="110" rx="18"/>
+    <text class="label" x="305" y="39">Fixed-point</text><text class="sub" x="305" y="64">scaling</text><text class="sub" x="305" y="84">implementation error</text>
+    <path class="arrow" d="M395 55 L440 55"/>
+    <rect class="box" x="450" y="0" width="160" height="110" rx="18"/>
+    <text class="label" x="530" y="39">FPGA</text><text class="sub" x="530" y="64">streaming DSP</text><text class="sub" x="530" y="84">Zynq fabric</text>
+    <path class="arrow" d="M620 55 L665 55"/>
+    <rect class="box" x="675" y="0" width="160" height="110" rx="18"/>
+    <text class="label" x="755" y="39">AD9363</text><text class="sub" x="755" y="64">RF frontend</text><text class="sub" x="755" y="84">frequency / gain</text>
+    <path class="arrow" d="M845 55 L890 55"/>
+    <rect class="box" x="900" y="0" width="160" height="110" rx="18"/>
+    <text class="label" x="980" y="39">RF path</text><text class="sub" x="980" y="64">coax / attenuator</text><text class="sub" x="980" y="84">or controlled OTA</text>
+    <path class="arrow" d="M1070 55 L1115 55"/>
+    <rect class="box" x="1125" y="0" width="160" height="110" rx="18"/>
+    <text class="label" x="1205" y="39">RTL-SDR</text><text class="sub" x="1205" y="64">independent</text><text class="sub" x="1205" y="84">observation</text>
+  </g>
+  <g transform="translate(270,310)">
+    <rect class="box" x="0" y="0" width="190" height="90" rx="18"/>
+    <text class="label" x="95" y="36">IQ capture</text><text class="sub" x="95" y="62">HDSDR / metadata</text>
+    <path class="arrow" d="M200 45 L260 45"/>
+    <rect class="box" x="270" y="0" width="190" height="90" rx="18"/>
+    <text class="label" x="365" y="36">Analysis</text><text class="sub" x="365" y="62">FFT / EVM / BER</text>
+    <path class="arrow" d="M470 45 L530 45"/>
+    <rect class="box" x="540" y="0" width="190" height="90" rx="18"/>
+    <text class="label" x="635" y="36">Report</text><text class="sub" x="635" y="62">engineering conclusion</text>
+  </g>
+  <path class="feedback" d="M905 355 C740 440 250 440 130 265"/>
+  <text class="note" x="60" y="430">Feedback loop: measured IQ results drive model updates, fixed-point decisions and RF retuning.</text>
+</svg>
