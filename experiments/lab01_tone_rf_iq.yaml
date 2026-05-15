@@ -1,0 +1,35 @@
+experiment:
+  id: lab01_tone_rf_iq
+  title: Tone generation, RF observation and IQ analysis
+  objective: Connect a clean reference tone to board-level RF observation and offline IQ analysis.
+
+signal:
+  waveform: single_tone
+  expected_outputs:
+    - fft_peak_frequency
+    - noise_floor_estimate
+    - occupied_bandwidth_check
+
+hardware:
+  transmitter: Zynq-7020_AD9363
+  receiver: RTL-SDR
+  observation_tool: HDSDR
+
+metadata_required:
+  - center_frequency
+  - sample_rate
+  - tx_gain
+  - rx_gain
+  - rf_bandwidth
+  - capture_format
+  - capture_duration
+
+reports:
+  template: docs/sdr-measurement-report-template.md
+  figures:
+    - docs/assets/lab01_fft.png
+
+acceptance:
+  - spectrum_peak_matches_expected_tone
+  - iq_capture_can_be_replayed
+  - measurement_configuration_is_documented
