@@ -1,0 +1,35 @@
+experiment:
+  id: lab08_sync_chain
+  title: End-to-end synchronization chain
+  objective: Evaluate CFO, phase and timing correction impact on receiver quality.
+
+signal:
+  modulation: QPSK
+  impairments:
+    - carrier_frequency_offset
+    - phase_offset
+    - timing_offset
+
+processing_chain:
+  - cfo_estimation
+  - cfo_correction
+  - phase_correction
+  - timing_recovery
+  - evm_ber_estimation
+
+metrics:
+  - EVM_before_after
+  - BER_before_after
+  - constellation_quality
+
+reports:
+  template: docs/lab-report-template.md
+  figures:
+    - docs/assets/lab04_sync_constellation.png
+    - docs/assets/lab05_evm.png
+    - docs/assets/lab06_ber.png
+
+acceptance:
+  - synchronization_improves_constellation
+  - evm_or_ber_improvement_is_visible
+  - assumptions_are_documented
