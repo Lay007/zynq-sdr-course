@@ -26,6 +26,15 @@ This site is the main course workspace. It connects theory, MATLAB/Simulink mode
 
 ---
 
+## SDR measurement loop
+
+![SDR measurement loop](assets/sdr_measurement_loop.svg)
+
+!!! tip "Main idea"
+    The course is not simulation-only. Every important model decision must eventually be connected to a hardware signal and verified through measured data.
+
+---
+
 ## Core engineering route
 
 ```mermaid
@@ -43,9 +52,6 @@ flowchart TB
     METRICS -. redesign algorithm .-> MODEL
     METRICS -. retune RF parameters .-> RF
 ```
-
-!!! tip "Main idea"
-    The course is not simulation-only. Every important model decision must eventually be connected to a hardware signal and verified through measured data.
 
 ---
 
