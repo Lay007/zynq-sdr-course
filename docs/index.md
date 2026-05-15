@@ -91,6 +91,7 @@ These pages turn the repository into a more complete engineering course workspac
 |---|---|
 | [Course quality roadmap](course-quality-roadmap.md) | Defines the target level, checklist and backlog for course completion |
 | [Course readiness matrix](course-readiness-matrix.md) | Tracks whether each block is documented, runnable, plotted and measurable |
+| [Experiment manifests](experiment-manifests.md) | Connects selected labs with reproducible objectives and acceptance criteria |
 | [Hardware bring-up checklist](hardware-bringup-checklist.md) | Gives a repeatable procedure for board, RF path and receiver setup |
 | [SDR measurement report template](sdr-measurement-report-template.md) | Standardizes hardware/RF/IQ lab conclusions |
 | [Lab report template](lab-report-template.md) | Gives a repeatable structure for each DSP/RF/FPGA lab report |
@@ -128,6 +129,7 @@ These pages turn the repository into a more complete engineering course workspac
 |---|---|---|
 | System view | [Model → FPGA → RF → Measurement](model-to-measurement.md) | End-to-end understanding of the SDR stand |
 | Demo figures | [IEEE-style figures](demo.md) | Reproducible plots and validation examples |
+| Experiment manifests | [Manifest-driven labs](experiment-manifests.md) | Reproducible lab objectives and acceptance criteria |
 | Hardware readiness | [Hardware bring-up checklist](hardware-bringup-checklist.md) | Repeatable board and RF setup |
 | Course quality | [Course readiness matrix](course-readiness-matrix.md) | Transparent progress and engineering maturity |
 | Russian course | [Русский обзор](ru/index.md) | RU learning path and block navigation |
