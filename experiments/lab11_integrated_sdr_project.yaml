@@ -1,0 +1,41 @@
+experiment:
+  id: lab11_integrated_sdr_project
+  title: Integrated SDR project validation
+  objective: Combine model, FPGA/RF configuration, IQ recording and engineering reporting into one end-to-end project.
+
+project_scope:
+  required_layers:
+    - reference_model
+    - fixed_point_notes
+    - fpga_or_hdl_component
+    - rf_or_iq_measurement
+    - final_report
+
+engineering_outputs:
+  - system_architecture
+  - measurement_setup
+  - generated_plots
+  - metric_table
+  - limitations
+  - next_iteration_plan
+
+metrics:
+  - SNR
+  - EVM
+  - BER_or_decision_quality
+  - latency_or_processing_budget
+  - reproducibility_status
+
+reports:
+  template: templates/final_project_report.template.md
+  expected_artifacts:
+    - architecture_diagram
+    - measurement_report
+    - reproducibility_notes
+    - source_code_or_script_references
+
+acceptance:
+  - all_required_layers_are_documented
+  - measurement_or_replay_path_is_reproducible
+  - final_conclusion_is_metric_based
+  - assumptions_and_limitations_are_explicit
