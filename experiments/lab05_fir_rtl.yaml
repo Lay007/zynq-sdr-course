@@ -1,0 +1,35 @@
+experiment:
+  id: lab05_fir_rtl
+  title: FIR RTL mapping and streaming testbench
+  objective: Map a software FIR reference into a streaming RTL block and validate the result with deterministic vectors.
+
+signal:
+  block: FIR
+  reference_layer: Python_or_MATLAB
+  implementation_layer: Verilog_RTL
+
+processing_chain:
+  - generate_reference_samples
+  - quantize_coefficients
+  - run_rtl_testbench
+  - compare_output_vectors
+  - document_latency
+
+metrics:
+  - max_absolute_error
+  - rms_error
+  - latency_cycles
+  - pass_fail_status
+
+reports:
+  template: docs/lab-report-template.md
+  expected_artifacts:
+    - rtl_simulation_log
+    - output_vector_comparison
+    - latency_table
+
+acceptance:
+  - rtl_testbench_passes
+  - output_error_is_within_documented_tolerance
+  - fixed_point_scaling_is_explained
+  - latency_is_reported
