@@ -1,0 +1,43 @@
+experiment:
+  id: lab06_rf_frontend
+  title: RF frontend configuration and gain staging
+  objective: Document and validate AD9363 frequency, bandwidth and gain settings for repeatable RF experiments.
+
+hardware:
+  rf_frontend: AD9363
+  board: Zynq-7020
+  observation_receiver: RTL-SDR
+
+configuration:
+  required_fields:
+    - center_frequency
+    - sample_rate
+    - rf_bandwidth
+    - tx_gain
+    - rx_gain
+    - attenuation
+    - clock_source
+
+checks:
+  - frequency_plan_is_documented
+  - gain_staging_avoids_overload
+  - receiver_spectrum_is_visible
+  - metadata_is_recorded
+
+metrics:
+  - observed_peak_frequency
+  - occupied_bandwidth
+  - relative_signal_level
+  - overload_status
+
+reports:
+  template: docs/sdr-measurement-report-template.md
+  expected_artifacts:
+    - spectrum_plot
+    - setup_notes
+    - metadata_file
+
+acceptance:
+  - signal_is_observable_without_overload
+  - configuration_is_reproducible
+  - safety_assumptions_are_documented
