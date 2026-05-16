@@ -1,0 +1,45 @@
+experiment:
+  id: lab09_iq_recording
+  title: IQ recording, metadata and replay analysis
+  objective: Record IQ data with complete metadata and replay it offline for reproducible analysis.
+
+capture:
+  formats:
+    - CI16
+    - CU8
+    - CF32
+  required_metadata:
+    - sample_rate
+    - center_frequency
+    - capture_format
+    - duration
+    - receiver_gain
+    - bandwidth
+    - timestamp
+    - tool_version
+
+processing_chain:
+  - load_iq_file
+  - validate_metadata
+  - compute_fft
+  - estimate_signal_level
+  - export_analysis_summary
+
+metrics:
+  - fft_peak_frequency
+  - noise_floor_estimate
+  - clipping_status
+  - replay_success
+
+reports:
+  template: docs/sdr-measurement-report-template.md
+  expected_artifacts:
+    - metadata_json
+    - fft_plot
+    - replay_summary
+
+acceptance:
+  - iq_file_can_be_reopened
+  - metadata_is_complete
+  - spectrum_can_be_reproduced
+  - capture_limitations_are_documented
