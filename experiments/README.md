@@ -10,7 +10,11 @@ The manifests describe the engineering intent, expected outputs, required metada
 |---|---|
 | `lab01_tone_rf_iq.yaml` | Tone generation, RF observation and IQ analysis |
 | `lab03_qpsk_constellation.yaml` | QPSK constellation generation and EVM/SNR analysis |
+| `lab05_fir_rtl.yaml` | FIR RTL mapping and streaming testbench validation |
+| `lab06_rf_frontend.yaml` | RF frontend configuration and gain staging |
 | `lab08_sync_chain.yaml` | End-to-end synchronization chain with CFO, phase and timing correction |
+| `lab09_iq_recording.yaml` | IQ recording, metadata and replay analysis |
+| `lab11_integrated_sdr_project.yaml` | Integrated SDR project validation |
 
 ## Why manifests matter
 
@@ -34,12 +38,20 @@ read lab page
 -> compare with acceptance criteria
 ```
 
+## Validation
+
+Manifests are checked by:
+
+```bash
+python tools/check_experiment_manifests.py
+```
+
+The GitHub Actions workflow `.github/workflows/experiment-manifests-check.yml` runs this check on push and pull requests.
+
 ## Future manifests
 
 Planned additions:
 
-- Lab 5 FPGA FIR verification;
-- Lab 6 RF frontend configuration;
-- Lab 9 IQ recording and replay;
-- Lab 11 integrated SDR project;
+- Lab 7 TX/RX loopback metrics;
+- Block 10 electronics/RF safety manifests;
 - Block 12 final project manifests.
