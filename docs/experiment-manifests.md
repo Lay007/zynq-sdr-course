@@ -2,7 +2,7 @@
 
 Experiment manifests connect course labs with reproducible engineering evidence.
 
-They are stored in [`../experiments/`](../experiments/) and describe:
+They are stored in the repository-level `experiments/` directory and describe:
 
 - engineering objective;
 - signal configuration;
@@ -14,13 +14,13 @@ They are stored in [`../experiments/`](../experiments/) and describe:
 
 | Lab | Manifest | Engineering output |
 |---|---|---|
-| Lab 1 | [`lab01_tone_rf_iq.yaml`](../experiments/lab01_tone_rf_iq.yaml) | Tone → RF observation → IQ analysis |
-| Lab 3 | [`lab03_qpsk_constellation.yaml`](../experiments/lab03_qpsk_constellation.yaml) | QPSK constellation and EVM/SNR visibility |
-| Lab 5 | [`lab05_fir_rtl.yaml`](../experiments/lab05_fir_rtl.yaml) | FIR RTL mapping and streaming testbench validation |
-| Lab 6 | [`lab06_rf_frontend.yaml`](../experiments/lab06_rf_frontend.yaml) | RF frontend configuration and gain staging |
-| Lab 8 | [`lab08_sync_chain.yaml`](../experiments/lab08_sync_chain.yaml) | CFO/phase/timing correction and BER/EVM comparison |
-| Lab 9 | [`lab09_iq_recording.yaml`](../experiments/lab09_iq_recording.yaml) | IQ recording, metadata and replay analysis |
-| Lab 11 | [`lab11_integrated_sdr_project.yaml`](../experiments/lab11_integrated_sdr_project.yaml) | Integrated SDR project validation |
+| Lab 1 | [lab01_tone_rf_iq.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab01_tone_rf_iq.yaml) | Tone → RF observation → IQ analysis |
+| Lab 3 | [lab03_qpsk_constellation.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab03_qpsk_constellation.yaml) | QPSK constellation and EVM/SNR visibility |
+| Lab 5 | [lab05_fir_rtl.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab05_fir_rtl.yaml) | FIR RTL mapping and streaming testbench validation |
+| Lab 6 | [lab06_rf_frontend.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab06_rf_frontend.yaml) | RF frontend configuration and gain staging |
+| Lab 8 | [lab08_sync_chain.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab08_sync_chain.yaml) | CFO/phase/timing correction and BER/EVM comparison |
+| Lab 9 | [lab09_iq_recording.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab09_iq_recording.yaml) | IQ recording, metadata and replay analysis |
+| Lab 11 | [lab11_integrated_sdr_project.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab11_integrated_sdr_project.yaml) | Integrated SDR project validation |
 
 ## How to use a manifest
 
