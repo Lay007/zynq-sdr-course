@@ -24,6 +24,12 @@ metadata_required:
   - capture_format
   - capture_duration
 
+metrics:
+  - fft_peak_frequency
+  - noise_floor_estimate
+  - occupied_bandwidth
+  - replay_success
+
 reports:
   template: docs/sdr-measurement-report-template.md
   figures:
