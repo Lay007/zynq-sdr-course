@@ -1,0 +1,36 @@
+experiment:
+  id: lab10_rf_safety_kicad
+  title: RF safety and KiCad mini-project
+  objective: Connect basic electronics, RF measurement safety and schematic documentation into a small reproducible lab.
+
+electronics:
+  tasks:
+    - attenuator_or_rc_filter_schematic
+    - safe_signal_level_calculation
+    - measurement_setup_documentation
+
+metadata_required:
+  - component_values
+  - expected_frequency_range
+  - expected_insertion_loss_or_cutoff
+  - measurement_limits
+  - schematic_file
+
+metrics:
+  - calculated_response
+  - measured_or_simulated_response
+  - safety_margin
+  - documentation_completeness
+
+reports:
+  template: docs/lab-report-template.md
+  expected_artifacts:
+    - schematic_screenshot
+    - response_plot
+    - safety_checklist
+
+acceptance:
+  - schematic_is_documented
+  - safety_assumptions_are_explicit
+  - component_values_are_traceable
+  - measurement_limits_are_not_exceeded
