@@ -1,0 +1,45 @@
+experiment:
+  id: lab07_tx_rx_loopback
+  title: TX/RX loopback metrics
+  objective: Validate the transmit/receive chain using a repeatable loopback scenario and quantitative metrics.
+
+signal:
+  waveform: qpsk_or_single_tone
+  expected_outputs:
+    - rx_spectrum
+    - constellation_or_tone_peak
+    - loopback_metric_table
+
+hardware:
+  transmitter: Zynq-7020_AD9363
+  receiver: AD9363_or_RTL-SDR
+  path: coax_or_controlled_rf_path
+
+metadata_required:
+  - center_frequency
+  - sample_rate
+  - tx_gain
+  - rx_gain
+  - attenuation
+  - loopback_path
+  - capture_duration
+
+metrics:
+  - snr_estimate
+  - evm_estimate
+  - frequency_offset
+  - gain_stability
+  - replay_success
+
+reports:
+  template: docs/sdr-measurement-report-template.md
+  expected_artifacts:
+    - rx_spectrum_plot
+    - constellation_or_tone_plot
+    - loopback_summary_table
+
+acceptance:
+  - received_signal_is_detectable
+  - loopback_configuration_is_documented
+  - metrics_are_reported_with_assumptions
+  - next_iteration_is_identified
