@@ -1,0 +1,37 @@
+experiment:
+  id: lab65_rf_impairment_calibration
+  title: RF impairment calibration for DC offset, IQ mismatch and LO leakage
+  objective: Demonstrate measurable improvement of IQ quality metrics after compact calibration stages.
+
+signal:
+  waveform: synthetic_complex_tone_with_impairments
+  expected_outputs:
+    - before_after_constellation
+    - before_after_spectrum
+    - calibration_metrics_json
+
+metadata_required:
+  - sample_rate
+  - tone_offset
+  - impairment_parameters
+  - calibration_stages
+
+metrics:
+  - dc_offset_rms
+  - iq_gain_mismatch_db
+  - iq_cross_correlation
+  - image_rejection_db
+  - lo_leakage_dbfs
+
+reports:
+  template: docs/sdr-measurement-report-template.md
+  figures:
+    - docs/assets/lab65_rf_impairment_spectrum_before_after.png
+    - docs/assets/lab65_rf_impairment_constellation_before_after.png
+  expected_artifacts:
+    - docs/assets/lab65_rf_impairment_calibration_metrics.json
+
+acceptance:
+  - dc_offset_is_reduced_after_calibration
+  - image_rejection_improves_after_calibration
+  - iq_orthogonality_metric_improves
