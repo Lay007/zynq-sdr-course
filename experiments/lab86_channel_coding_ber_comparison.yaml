@@ -1,0 +1,35 @@
+experiment:
+  id: lab86_channel_coding_ber_comparison
+  title: BER comparison for uncoded and coded links with interleaving
+  objective: Compare BER-vs-SNR behavior for multiple coding strategies under burst disturbances.
+
+signal:
+  waveform: bpsk_bitstream_with_awgn_and_burst_noise
+  expected_outputs:
+    - ber_curve_plot
+    - coding_metrics_json
+
+metadata_required:
+  - snr_points
+  - coding_schemes
+  - interleaver_mode
+  - burst_noise_parameters
+
+metrics:
+  - ber_uncoded
+  - ber_convolutional
+  - ber_convolutional_interleaved
+  - ber_ldpc_like
+  - ber_ldpc_like_interleaved
+
+reports:
+  template: docs/lab-report-template.md
+  figures:
+    - docs/assets/lab86_channel_coding_ber.png
+  expected_artifacts:
+    - docs/assets/lab86_channel_coding_metrics.json
+
+acceptance:
+  - all_ber_curves_are_generated_for_defined_snr_points
+  - coding_gain_is_compared_against_uncoded_baseline
+  - interleaving_impact_is_explained
