@@ -2,7 +2,8 @@
 """Check local Markdown asset links used by the MkDocs site.
 
 The checker is intentionally conservative:
-- it scans only `docs/**/*.md` and the root `README.md`;
+- it scans `docs/**/*.md`, `blocks/**/*.md`, `templates/**/*.md`,
+  `experiments/**/*.md` and root-level `*.md` files;
 - it validates image links and explicit file links;
 - it ignores external URLs, anchors, mail links and site-absolute MkDocs URLs;
 - it ignores directory-style MkDocs links such as `demo/` because MkDocs resolves them.
@@ -17,11 +18,14 @@ from urllib.parse import unquote, urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 DOCS = ROOT / "docs"
-README = ROOT / "README.md"
+BLOCKS = ROOT / "blocks"
+TEMPLATES = ROOT / "templates"
+EXPERIMENTS = ROOT / "experiments"
 SITE_PREFIX = "/zynq-sdr-course/"
 
 MARKDOWN_LINK_RE = re.compile(r"(!?)\[[^\]]*\]\(([^)]+)\)")
 HTML_LINK_RE = re.compile(r"(?P<attr>src|href)=\"(?P<link>[^\"]+)\"")
+FENCED_CODE_BLOCK_RE = re.compile(r"```.*?```|~~~.*?~~~", re.DOTALL)
 
 IGNORE_PREFIXES = (
     "http://",
@@ -49,9 +53,11 @@ FILE_SUFFIXES = {
 
 
 def iter_markdown_files() -> list[Path]:
-    files: set[Path] = set(DOCS.rglob("*.md"))
-    if README.exists():
-        files.add(README)
+    files: set[Path] = set()
+    for directory in (DOCS, BLOCKS, TEMPLATES, EXPERIMENTS):
+        if directory.exists():
+            files.update(directory.rglob("*.md"))
+    files.update(path for path in ROOT.glob("*.md") if path.is_file())
     return sorted(files)
 
 
@@ -89,6 +95,7 @@ def normalize_link(raw: str) -> str | None:
 
 def check_file(md_file: Path) -> list[str]:
     text = md_file.read_text(encoding="utf-8")
+    text = FENCED_CODE_BLOCK_RE.sub("", text)
     raw_links: list[str] = []
 
     for match in MARKDOWN_LINK_RE.finditer(text):
