@@ -1,0 +1,40 @@
+experiment:
+  id: lab85_ofdm_mini_link
+  title: OFDM mini link with CP, pilots, synchronization and equalization
+  objective: Validate a compact OFDM chain and quantify synchronization and equalization quality.
+
+signal:
+  waveform: ofdm_qpsk_with_preamble_and_pilots
+  expected_outputs:
+    - sync_metric_plot
+    - equalized_constellation
+    - channel_estimate_plot
+    - ofdm_metrics_json
+
+metadata_required:
+  - fft_size
+  - cyclic_prefix_length
+  - pilot_subcarriers
+  - cfo
+  - snr
+
+metrics:
+  - frame_start_estimate
+  - estimated_cfo_hz
+  - cfo_error_hz
+  - ber
+  - evm_percent
+
+reports:
+  template: docs/lab-report-template.md
+  figures:
+    - docs/assets/lab85_ofdm_sync_metric.png
+    - docs/assets/lab85_ofdm_equalized_constellation.png
+    - docs/assets/lab85_ofdm_channel_estimate.png
+  expected_artifacts:
+    - docs/assets/lab85_ofdm_metrics.json
+
+acceptance:
+  - frame_start_is_estimated_from_preamble_metric
+  - cfo_estimation_error_is_reported
+  - ber_and_evm_are_reported_after_equalization
