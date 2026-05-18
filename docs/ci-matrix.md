@@ -7,9 +7,14 @@ This page documents what each GitHub Actions workflow validates and which artifa
 | Workflow | Trigger focus | Main checks | Main artifacts |
 |---|---|---|---|
 | `full_course_smoke.yml` | broad course changes | MkDocs strict build, representative Python labs, Block 5 HDL smoke | reproducibility summary, selected plots |
+| `block4_labs.yml` | fixed-point lab block | Lab 4.1 and 4.2 executable Python models | fixed-point FIR/mixer figures |
 | `block5_hdl.yml` | HDL/FPGA block | Icarus Verilog compilation and self-checking testbenches | VCD files, PASS/FAIL logs |
+| `block6_rf_analysis.yml` | RF frontend lab block | Lab 6.4 synthetic RF analysis | spectrum/time plots, metrics JSON |
+| `block7_tx_rx.yml` | TX/RX chain block | Lab 7.2 and 7.3 executable models | frequency-plan/spectrum plots, loopback metrics |
 | `block8_sync.yml` | synchronization labs | CFO, phase, timing and end-to-end sync models | constellation plots, EVM/BER metrics |
 | `block9_recording_analysis.yml` | IQ recording labs | CI16 reader and multi-format IQ reader | spectrum plots, metrics JSON, synthetic captures |
+| `docs-assets-check.yml` | markdown asset integrity | local markdown asset links | PASS/FAIL report |
+| `experiment-manifests-check.yml` | manifest consistency | YAML structure and required fields in `experiments/*.yaml` | PASS/FAIL report |
 | `pages.yml` / docs deploy | documentation | MkDocs site build and GitHub Pages deploy | published course site |
 | `generate_ieee_plots.yml` | demo figures | generated IEEE-style plots | `docs/assets/*.png` |
 
@@ -27,8 +32,37 @@ Checks:
 Local equivalent:
 
 ```bash
-make smoke
+python tools/tasks.py smoke
 ```
+
+## Block 4 Labs
+
+Purpose: verify fixed-point executable labs and generated figures.
+
+Checks:
+
+- Lab 4.1 fixed-point FIR model;
+- Lab 4.2 fixed-point digital mixer model;
+- generated-figure existence checks.
+
+## Block 6 RF Analysis
+
+Purpose: verify synthetic RF capture analysis and its metrics artifacts.
+
+Checks:
+
+- Lab 6.4 executable model;
+- generated PNG and JSON artifacts.
+
+## Block 7 TX/RX
+
+Purpose: verify TX/RX chain modeling and loopback metrics generation.
+
+Checks:
+
+- Lab 7.2 DUC/DDC model;
+- Lab 7.3 loopback metrics model;
+- generated PNG and JSON artifacts.
 
 ## Block 5 HDL
 
@@ -93,8 +127,27 @@ Checks:
 Local equivalent:
 
 ```bash
-make docs
+python tools/tasks.py docs
 ```
+
+## Docs Assets Check
+
+Purpose: fail fast on broken local markdown asset links.
+
+Checks:
+
+- run `tools/check_markdown_assets.py`;
+- verify referenced local assets exist.
+
+## Experiment Manifests Check
+
+Purpose: keep experiment manifests machine-checkable and reproducible.
+
+Checks:
+
+- parse every `experiments/*.yaml`;
+- validate required fields and template paths;
+- enforce unique and filename-aligned `experiment.id`.
 
 ## When to add a new workflow
 
