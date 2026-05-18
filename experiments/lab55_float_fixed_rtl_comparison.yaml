@@ -1,0 +1,37 @@
+experiment:
+  id: lab55_float_fixed_rtl_comparison
+  title: Float, fixed-point and RTL FIR comparison
+  objective: Quantify numeric mismatch between float model, fixed-point model and RTL vectors for the same FIR block.
+
+signal:
+  waveform: deterministic_iq_vector_set
+  expected_outputs:
+    - rmse_float_vs_rtl
+    - rmse_fixed_vs_rtl
+    - resource_latency_table
+
+metadata_required:
+  - fixed_point_format
+  - coefficient_set
+  - vector_source
+  - rtl_reference_file
+
+metrics:
+  - rmse_float_vs_rtl
+  - rmse_fixed_vs_rtl
+  - max_abs_float_vs_rtl
+  - max_abs_fixed_vs_rtl
+  - exact_match_fixed_vs_rtl
+
+reports:
+  template: docs/lab-report-template.md
+  figures:
+    - docs/assets/lab55_float_fixed_rtl_error.png
+  expected_artifacts:
+    - docs/assets/lab55_float_fixed_rtl_metrics.json
+    - docs/assets/lab55_float_fixed_rtl_resource_table.md
+
+acceptance:
+  - fixed_point_path_matches_rtl_vectors
+  - floating_reference_stays_within_small_lsb_error
+  - resource_latency_tradeoff_is_documented
