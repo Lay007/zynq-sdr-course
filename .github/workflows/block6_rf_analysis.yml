@@ -5,10 +5,14 @@ on:
     branches: [ main ]
     paths:
       - "blocks/block_06_rf_frontend_and_ad9363/**"
+      - "requirements.txt"
+      - "requirements-dev.txt"
       - ".github/workflows/block6_rf_analysis.yml"
   pull_request:
     paths:
       - "blocks/block_06_rf_frontend_and_ad9363/**"
+      - "requirements.txt"
+      - "requirements-dev.txt"
       - ".github/workflows/block6_rf_analysis.yml"
   workflow_dispatch:
 
@@ -32,7 +36,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install numpy matplotlib
+          pip install -r requirements-dev.txt
 
       - name: Run Lab 6.4 synthetic RF analysis
         run: |

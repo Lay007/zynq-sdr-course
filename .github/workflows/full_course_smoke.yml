@@ -8,6 +8,8 @@ on:
       - "docs/**"
       - "tools/**"
       - "mkdocs.yml"
+      - "requirements.txt"
+      - "requirements-dev.txt"
       - ".github/workflows/full_course_smoke.yml"
   pull_request:
     paths:
@@ -15,6 +17,8 @@ on:
       - "docs/**"
       - "tools/**"
       - "mkdocs.yml"
+      - "requirements.txt"
+      - "requirements-dev.txt"
       - ".github/workflows/full_course_smoke.yml"
   workflow_dispatch:
 
@@ -43,7 +47,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install numpy matplotlib mkdocs mkdocs-material pymdown-extensions
+          pip install -r requirements-dev.txt
 
       - name: Build MkDocs site in strict mode
         run: |

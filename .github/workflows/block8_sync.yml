@@ -5,10 +5,14 @@ on:
     branches: [ main ]
     paths:
       - "blocks/block_08_modulation_and_synchronization/**"
+      - "requirements.txt"
+      - "requirements-dev.txt"
       - ".github/workflows/block8_sync.yml"
   pull_request:
     paths:
       - "blocks/block_08_modulation_and_synchronization/**"
+      - "requirements.txt"
+      - "requirements-dev.txt"
       - ".github/workflows/block8_sync.yml"
   workflow_dispatch:
 
@@ -32,7 +36,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install numpy matplotlib
+          pip install -r requirements-dev.txt
 
       - name: Run Lab 8.1 CFO model
         run: |

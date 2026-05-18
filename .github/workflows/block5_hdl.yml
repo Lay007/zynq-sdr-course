@@ -5,10 +5,14 @@ on:
     branches: [ main ]
     paths:
       - "blocks/block_05_fpga_hdl_flow/**"
+      - "requirements.txt"
+      - "requirements-dev.txt"
       - ".github/workflows/block5_hdl.yml"
   pull_request:
     paths:
       - "blocks/block_05_fpga_hdl_flow/**"
+      - "requirements.txt"
+      - "requirements-dev.txt"
       - ".github/workflows/block5_hdl.yml"
   workflow_dispatch:
 
@@ -28,6 +32,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
 
       - name: Install Icarus Verilog
         run: |

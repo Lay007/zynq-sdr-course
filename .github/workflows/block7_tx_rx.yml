@@ -5,10 +5,14 @@ on:
     branches: [ main ]
     paths:
       - "blocks/block_07_tx_rx_chains/**"
+      - "requirements.txt"
+      - "requirements-dev.txt"
       - ".github/workflows/block7_tx_rx.yml"
   pull_request:
     paths:
       - "blocks/block_07_tx_rx_chains/**"
+      - "requirements.txt"
+      - "requirements-dev.txt"
       - ".github/workflows/block7_tx_rx.yml"
   workflow_dispatch:
 
@@ -32,7 +36,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install numpy matplotlib
+          pip install -r requirements-dev.txt
 
       - name: Run Lab 7.2 DUC/DDC model
         run: |
