@@ -7,21 +7,21 @@ Thank you for improving the Zynq SDR Course. This repository is structured as an
 Run the local smoke path when possible:
 
 ```bash
-python -m pip install -r requirements.txt
-make docs
-make labs
+python tools/tasks.py install
+python tools/tasks.py docs
+python tools/tasks.py labs
 ```
 
 For HDL-related changes, also run:
 
 ```bash
-make hdl
+python tools/tasks.py hdl
 ```
 
 For the full local check:
 
 ```bash
-make smoke
+python tools/tasks.py smoke
 ```
 
 ## Course structure

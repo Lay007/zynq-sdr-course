@@ -21,34 +21,36 @@ A **bilingual engineering course on Software-Defined Radio** that connects signa
 ```bash
 git clone https://github.com/Lay007/zynq-sdr-course.git
 cd zynq-sdr-course
-python -m pip install -r requirements.txt
-make docs
-make labs
+python tools/tasks.py install
+python tools/tasks.py docs
+python tools/tasks.py labs
 ```
 
 For the full local smoke check, install Icarus Verilog (`iverilog`) and run:
 
 ```bash
-make smoke
+python tools/tasks.py smoke
 ```
 
 Для полной локальной проверки установите Icarus Verilog (`iverilog`) и выполните:
 
 ```bash
-make smoke
+python tools/tasks.py smoke
 ```
 
 Useful commands:
 
 | Command | Purpose |
 |---|---|
-| `make install` | install Python dependencies |
-| `make docs` | strict MkDocs build |
-| `make serve` | local MkDocs preview |
-| `make labs` | run representative executable Python labs |
-| `make hdl` | run Block 5 Verilog smoke tests |
-| `make smoke` | run docs + labs + HDL checks |
-| `make clean` | remove generated local build artifacts |
+| `python tools/tasks.py install` | install Python dependencies |
+| `python tools/tasks.py docs` | strict MkDocs build |
+| `python tools/tasks.py serve` | local MkDocs preview |
+| `python tools/tasks.py labs` | run representative executable Python labs |
+| `python tools/tasks.py hdl` | run Block 5 Verilog smoke tests |
+| `python tools/tasks.py smoke` | run docs + labs + HDL checks |
+| `python tools/tasks.py clean` | remove generated local build artifacts |
+
+GNU Make targets remain available as a shorthand for Unix-like environments.
 
 ---
 
