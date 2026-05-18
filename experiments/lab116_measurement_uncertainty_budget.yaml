@@ -1,0 +1,28 @@
+experiment:
+  id: lab116_measurement_uncertainty_budget
+  title: Measurement uncertainty budget for SDR metrics
+  objective: Build and report a defensible uncertainty budget with Type A and Type B contributions.
+
+experiment:
+  id: lab116_measurement_uncertainty_budget
+  title: Measurement uncertainty budget for SDR metrics
+  objective: Build and report a defensible uncertainty budget with Type A and Type B contributions.
+
+metrics:
+  - type_a_standard_uncertainty
+  - combined_standard_uncertainty
+  - expanded_uncertainty_k2
+  - report_interval
+
+reports:
+  template: templates/measurement_uncertainty_budget.template.md
+  figures:
+    - docs/assets/lab116_uncertainty_budget_contributions.png
+  expected_artifacts:
+    - docs/assets/lab116_uncertainty_budget_table.md
+    - docs/assets/lab116_uncertainty_budget_metrics.json
+
+acceptance:
+  - type_a_and_type_b_sources_are_listed
+  - combined_uncertainty_is_computed
+  - expanded_uncertainty_and_interval_are_reported

@@ -226,6 +226,7 @@ templates/capture_metadata.template.json
 templates/lab_report.template.md
 templates/final_project_report.template.md
 templates/rf_safety_checklist.template.md
+templates/measurement_uncertainty_budget.template.md
 ```
 
 ---
