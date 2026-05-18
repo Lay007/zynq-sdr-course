@@ -21,6 +21,13 @@ They are stored in the repository-level `experiments/` directory and describe:
 | Lab 8 | [lab08_sync_chain.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab08_sync_chain.yaml) | CFO/phase/timing correction and BER/EVM comparison |
 | Lab 9 | [lab09_iq_recording.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab09_iq_recording.yaml) | IQ recording, metadata and replay analysis |
 | Lab 11 | [lab11_integrated_sdr_project.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab11_integrated_sdr_project.yaml) | Integrated SDR project validation |
+| Lab 5.5 | [lab55_float_fixed_rtl_comparison.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab55_float_fixed_rtl_comparison.yaml) | Numeric consistency: float vs fixed vs RTL |
+| Lab 6.5 | [lab65_rf_impairment_calibration.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab65_rf_impairment_calibration.yaml) | RF impairment calibration before/after metrics |
+| Lab 7.4 | [lab74_packet_receiver_detection.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab74_packet_receiver_detection.yaml) | Packet detection reliability and timing error |
+| Lab 8.5 | [lab85_ofdm_mini_link.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab85_ofdm_mini_link.yaml) | OFDM sync/equalization BER/EVM validation |
+| Lab 8.6 | [lab86_channel_coding_ber_comparison.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab86_channel_coding_ber_comparison.yaml) | BER-vs-SNR coding and interleaving comparison |
+| Lab 11.5 | [lab115_axi_dma_latency_jitter.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab115_axi_dma_latency_jitter.yaml) | Runtime latency/jitter/throughput model |
+| Lab 11.6 | [lab116_measurement_uncertainty_budget.yaml](https://github.com/Lay007/zynq-sdr-course/blob/main/experiments/lab116_measurement_uncertainty_budget.yaml) | Type A/Type B uncertainty budget reporting |
 
 ## How to use a manifest
 

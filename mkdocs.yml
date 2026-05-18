@@ -75,6 +75,7 @@ nav:
       - "Reproducibility guide": reproducibility-guide.md
       - "Lab report template": lab-report-template.md
       - "IQ metadata guide": iq-recording-metadata.md
+      - "Measurement uncertainty guide": measurement-uncertainty-guide.md
       - "Real data policy": real-data-policy.md
   - "Demo (IEEE figures)": demo.md
   - "GitHub demo notes": demo_readme.md
@@ -120,20 +121,25 @@ nav:
           - "Lab 5.2 — FIR RTL mapping": ru/labs/lab-5-2-fir-rtl-mapping.md
           - "Lab 5.3 — NCO mixer RTL": ru/labs/lab-5-3-nco-mixer-rtl.md
           - "Lab 5.4 — AXI-Stream wrapper": ru/labs/lab-5-4-axis-wrapper.md
+          - "Lab 5.5 — Float vs fixed vs RTL comparison": ru/labs/lab-5-5-float-fixed-rtl-comparison.md
       - "Лаборатории Block 6":
           - "Lab 6.1 — RF frequency plan": ru/labs/lab-6-1-frequency-plan.md
           - "Lab 6.2 — Gain staging and overload": ru/labs/lab-6-2-gain-staging-and-overload.md
           - "Lab 6.3 — AD9363 settings and iio_attr": ru/labs/lab-6-3-ad9363-settings-iio-attr.md
           - "Lab 6.4 — Synthetic RF capture analysis": ru/labs/lab-6-4-synthetic-rf-capture-analysis.md
+          - "Lab 6.5 — RF impairment calibration": ru/labs/lab-6-5-rf-impairment-calibration.md
       - "Лаборатории Block 7":
           - "Lab 7.1 — TX/RX chain architecture": ru/labs/lab-7-1-tx-rx-chain-architecture.md
           - "Lab 7.2 — DUC/DDC frequency translation": ru/labs/lab-7-2-duc-ddc-frequency-translation.md
           - "Lab 7.3 — TX/RX loopback metrics": ru/labs/lab-7-3-tx-rx-loopback-metrics.md
+          - "Lab 7.4 — Packet receiver detection": ru/labs/lab-7-4-packet-receiver-detection.md
       - "Лаборатории Block 8":
           - "Lab 8.1 — CFO estimation and correction": ru/labs/lab-8-1-cfo-estimation-correction.md
           - "Lab 8.2 — Phase offset correction": ru/labs/lab-8-2-phase-offset-correction.md
           - "Lab 8.3 — Timing recovery": ru/labs/lab-8-3-timing-recovery.md
           - "Lab 8.4 — End-to-end sync chain": ru/labs/lab-8-4-end-to-end-sync-chain.md
+          - "Lab 8.5 — OFDM mini link": ru/labs/lab-8-5-ofdm-mini-link.md
+          - "Lab 8.6 — Channel coding BER comparison": ru/labs/lab-8-6-channel-coding-ber-comparison.md
       - "Лаборатории Block 9":
           - "Lab 9.1 — IQ file format and metadata": ru/labs/lab-9-1-iq-file-format-and-metadata.md
           - "Lab 9.2 — Read CI16 IQ and analyze spectrum": ru/labs/lab-9-2-read-ci16-iq-and-analyze.md
@@ -148,6 +154,8 @@ nav:
           - "Lab 11.2 — End-to-end simulation package": ru/labs/lab-11-2-end-to-end-simulation-package.md
           - "Lab 11.3 — FPGA/RF integration checklist": ru/labs/lab-11-3-fpga-rf-integration-checklist.md
           - "Lab 11.4 — Final measurement report": ru/labs/lab-11-4-final-measurement-report.md
+          - "Lab 11.5 — AXI DMA latency and jitter": ru/labs/lab-11-5-axi-dma-latency-jitter.md
+          - "Lab 11.6 — Measurement uncertainty budget": ru/labs/lab-11-6-measurement-uncertainty-budget.md
       - "Проекты Block 12":
           - "Project 12.1 — QPSK modem final project": ru/labs/project-12-1-qpsk-modem-final-project.md
           - "Project 12.2 — RF capture analysis final project": ru/labs/project-12-2-rf-capture-analysis-final-project.md
@@ -194,20 +202,25 @@ nav:
           - "Lab 5.2 — FIR RTL mapping": en/labs/lab-5-2-fir-rtl-mapping.md
           - "Lab 5.3 — NCO mixer RTL": en/labs/lab-5-3-nco-mixer-rtl.md
           - "Lab 5.4 — AXI-Stream wrapper": en/labs/lab-5-4-axis-wrapper.md
+          - "Lab 5.5 — Float vs fixed vs RTL comparison": en/labs/lab-5-5-float-fixed-rtl-comparison.md
       - "Block 6 labs":
           - "Lab 6.1 — RF frequency plan": en/labs/lab-6-1-frequency-plan.md
           - "Lab 6.2 — Gain staging and overload": en/labs/lab-6-2-gain-staging-and-overload.md
           - "Lab 6.3 — AD9363 settings and iio_attr": en/labs/lab-6-3-ad9363-settings-iio-attr.md
           - "Lab 6.4 — Synthetic RF capture analysis": en/labs/lab-6-4-synthetic-rf-capture-analysis.md
+          - "Lab 6.5 — RF impairment calibration": en/labs/lab-6-5-rf-impairment-calibration.md
       - "Block 7 labs":
           - "Lab 7.1 — TX/RX chain architecture": en/labs/lab-7-1-tx-rx-chain-architecture.md
           - "Lab 7.2 — DUC/DDC frequency translation": en/labs/lab-7-2-duc-ddc-frequency-translation.md
           - "Lab 7.3 — TX/RX loopback metrics": en/labs/lab-7-3-tx-rx-loopback-metrics.md
+          - "Lab 7.4 — Packet receiver detection": en/labs/lab-7-4-packet-receiver-detection.md
       - "Block 8 labs":
           - "Lab 8.1 — CFO estimation and correction": en/labs/lab-8-1-cfo-estimation-correction.md
           - "Lab 8.2 — Phase offset correction": en/labs/lab-8-2-phase-offset-correction.md
           - "Lab 8.3 — Timing recovery": en/labs/lab-8-3-timing-recovery.md
           - "Lab 8.4 — End-to-end sync chain": en/labs/lab-8-4-end-to-end-sync-chain.md
+          - "Lab 8.5 — OFDM mini link": en/labs/lab-8-5-ofdm-mini-link.md
+          - "Lab 8.6 — Channel coding BER comparison": en/labs/lab-8-6-channel-coding-ber-comparison.md
       - "Block 9 labs":
           - "Lab 9.1 — IQ file format and metadata": en/labs/lab-9-1-iq-file-format-and-metadata.md
           - "Lab 9.2 — Read CI16 IQ and analyze spectrum": en/labs/lab-9-2-read-ci16-iq-and-analyze.md
@@ -222,6 +235,8 @@ nav:
           - "Lab 11.2 — End-to-end simulation package": en/labs/lab-11-2-end-to-end-simulation-package.md
           - "Lab 11.3 — FPGA/RF integration checklist": en/labs/lab-11-3-fpga-rf-integration-checklist.md
           - "Lab 11.4 — Final measurement report": en/labs/lab-11-4-final-measurement-report.md
+          - "Lab 11.5 — AXI DMA latency and jitter": en/labs/lab-11-5-axi-dma-latency-jitter.md
+          - "Lab 11.6 — Measurement uncertainty budget": en/labs/lab-11-6-measurement-uncertainty-budget.md
       - "Block 12 projects":
           - "Project 12.1 — QPSK modem final project": en/labs/project-12-1-qpsk-modem-final-project.md
           - "Project 12.2 — RF capture analysis final project": en/labs/project-12-2-rf-capture-analysis-final-project.md

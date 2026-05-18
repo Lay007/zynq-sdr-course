@@ -26,17 +26,22 @@ This page provides a compact index of the executable and report-oriented labs in
 | 5.2 | HDL flow | FIR RTL mapping | yes vectors | yes | yes | yes | vector match, saturation, latency |
 | 5.3 | HDL flow | NCO mixer RTL | yes vectors | yes | yes | yes | vector match, complex multiply |
 | 5.4 | HDL flow | AXI-Stream wrapper | no | yes | yes | yes | handshake, backpressure, tlast |
+| 5.5 | HDL flow | Float vs fixed vs RTL comparison | yes | reuse vectors | yes | partial | RMSE/max error, resource-latency table |
 | 6.1 | RF frontend | RF frequency plan | yes/report | no | yes | partial | expected offset, frequency error |
 | 6.2 | RF frontend | Gain staging and overload | yes/report | no | yes | partial | clipping, SNR, SFDR notes |
 | 6.3 | RF frontend | AD9363 settings and iio_attr | no | no | yes | manual | settings table, metadata |
 | 6.4 | RF frontend | Synthetic RF capture analysis | yes | no | yes | yes | FFT, SNR, clipping, metrics JSON |
+| 6.5 | RF frontend | RF impairment calibration | yes | no | yes | partial | DC/IQ/image/LO metrics before/after |
 | 7.1 | TX/RX | TX/RX chain architecture | no | no | yes | manual | architecture, sample-rate plan |
 | 7.2 | TX/RX | DUC/DDC frequency translation | yes | no | yes | yes | spectra, residual frequency error |
 | 7.3 | TX/RX | Loopback metrics | yes | no | yes | yes | constellation, EVM, SNR, BER |
+| 7.4 | TX/RX | Packet receiver detection | yes | no | yes | partial | TP/FP/miss, detection probability, timing error |
 | 8.1 | Synchronization | CFO estimation/correction | yes | no | yes | yes | CFO error, EVM, BER |
 | 8.2 | Synchronization | Phase offset correction | yes | no | yes | yes | phase error, EVM, BER |
 | 8.3 | Synchronization | Timing recovery | yes | no | yes | yes | timing phase, eye preview, EVM/BER |
 | 8.4 | Synchronization | End-to-end sync chain | yes | no | yes | yes | CFO, phase, timing, EVM/BER |
+| 8.5 | Synchronization | OFDM mini link | yes | no | yes | partial | sync metric, CFO estimate, channel estimate, BER/EVM |
+| 8.6 | Synchronization | Channel coding BER comparison | yes | no | yes | partial | BER vs SNR, coding and interleaving gain |
 | 9.1 | IQ recording | IQ file format and metadata | no | no | yes | manual | metadata completeness |
 | 9.2 | IQ recording | CI16 IQ reader and analyzer | yes | no | yes | yes | FFT, peak, SNR, DC, clipping |
 | 9.3 | IQ recording | Multi-format IQ reader | yes | no | yes | yes | CI16/CU8/CF32 spectra, metrics JSON |
@@ -48,11 +53,13 @@ This page provides a compact index of the executable and report-oriented labs in
 | 11.2 | Integrated project | End-to-end simulation package | yes/reuse | no | yes | manual | figures, metrics JSON |
 | 11.3 | Integrated project | FPGA/RF integration checklist | no | yes/reuse | yes | manual | testbench, RF checklist |
 | 11.4 | Integrated project | Final measurement report | no | no | yes | manual | pass/fail table, report |
+| 11.5 | Integrated project | AXI DMA latency and jitter | yes | no | yes | partial | latency trace, histogram, p95/p99, throughput |
+| 11.6 | Integrated project | Measurement uncertainty budget | yes | no | yes | partial | Type A/B contributions, expanded uncertainty |
 
 ## Recommended assessment path
 
-1. Run `make labs`.
-2. Run `make hdl` if Icarus Verilog is installed.
+1. Run `python tools/tasks.py labs`.
+2. Run `python tools/tasks.py hdl` if Icarus Verilog is installed.
 3. Review generated artifacts in `docs/assets`.
 4. Fill the lab report template from `templates/lab_report.template.md`.
 5. Use Block 11 to combine selected results into a final project.

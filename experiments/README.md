@@ -17,6 +17,13 @@ The manifests describe the engineering intent, expected outputs, required metada
 | `lab09_iq_recording.yaml` | IQ recording, metadata and replay analysis |
 | `lab10_rf_safety_kicad.yaml` | RF safety workflow and KiCad mini-project evidence |
 | `lab11_integrated_sdr_project.yaml` | Integrated SDR project validation |
+| `lab55_float_fixed_rtl_comparison.yaml` | Numeric consistency between float, fixed and RTL FIR flows |
+| `lab65_rf_impairment_calibration.yaml` | Calibration of DC offset, IQ mismatch and LO leakage |
+| `lab74_packet_receiver_detection.yaml` | Packet preamble detection reliability metrics |
+| `lab85_ofdm_mini_link.yaml` | OFDM mini link with synchronization and equalization |
+| `lab86_channel_coding_ber_comparison.yaml` | BER-vs-SNR comparison for coding and interleaving |
+| `lab115_axi_dma_latency_jitter.yaml` | AXI DMA runtime latency/jitter model |
+| `lab116_measurement_uncertainty_budget.yaml` | Uncertainty budget and engineering reporting |
 
 ## Why manifests matter
 
