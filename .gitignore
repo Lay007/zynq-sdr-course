@@ -93,3 +93,7 @@ xsim.dir/
 *.pdf.download
 docs_external/
 downloads/
+
+# Local reproducibility summaries
+docs/assets/course_reproducibility_summary.json
+docs/assets/course_reproducibility_summary.md

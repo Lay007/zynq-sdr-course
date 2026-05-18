@@ -19,6 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SUMMARY_JSON = ROOT / "docs" / "assets" / "course_reproducibility_summary.json"
 SUMMARY_MD = ROOT / "docs" / "assets" / "course_reproducibility_summary.md"
+QUICK_LAB_COUNT = 2
 
 
 @dataclass(frozen=True)
@@ -108,18 +109,34 @@ def write_summary(results: list[LabResult]) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run representative executable course labs.")
-    parser.add_argument("--quick", action="store_true", help="Reserved for future smaller smoke subsets; currently runs the representative set.")
+    parser.add_argument(
+        "--quick",
+        action="store_true",
+        help=f"Run a smaller subset ({QUICK_LAB_COUNT} labs) for faster local checks.",
+    )
+    parser.add_argument(
+        "--no-summary",
+        action="store_true",
+        help="Skip writing summary files in docs/assets.",
+    )
     args = parser.parse_args()
-    _ = args.quick
 
-    results = [run_lab(lab) for lab in LABS]
-    write_summary(results)
+    selected_labs = LABS[:QUICK_LAB_COUNT] if args.quick else LABS
+    print(f"Running {len(selected_labs)} of {len(LABS)} configured labs.")
+
+    results = [run_lab(lab) for lab in selected_labs]
+    if not args.no_summary:
+        write_summary(results)
+
     for r in results:
         print(f"{r.name}: {'PASS' if r.passed else 'FAIL'}")
         if r.missing_artifacts:
             print("  Missing:", ", ".join(r.missing_artifacts))
-    print(f"\nSummary JSON: {SUMMARY_JSON}")
-    print(f"Summary Markdown: {SUMMARY_MD}")
+    if args.no_summary:
+        print("\nSummary writing skipped (--no-summary).")
+    else:
+        print(f"\nSummary JSON: {SUMMARY_JSON}")
+        print(f"Summary Markdown: {SUMMARY_MD}")
     return 0 if all(r.passed for r in results) else 1
 
 
