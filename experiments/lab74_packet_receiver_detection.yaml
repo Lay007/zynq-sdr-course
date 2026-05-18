@@ -1,0 +1,39 @@
+experiment:
+  id: lab74_packet_receiver_detection
+  title: Packet receiver frame detection with preamble correlation
+  objective: Measure frame detection reliability using a threshold detector and quantify misses and false alarms.
+
+signal:
+  waveform: burst_qpsk_packets_with_bpsk_preamble
+  expected_outputs:
+    - detection_metric_trace
+    - packet_timeline_plot
+    - detector_metrics_json
+
+metadata_required:
+  - preamble_length
+  - payload_length
+  - threshold
+  - timing_tolerance
+  - agc_mode
+
+metrics:
+  - true_positives
+  - false_positives
+  - misses
+  - detection_probability
+  - false_alarm_rate
+  - timing_error_statistics
+
+reports:
+  template: docs/lab-report-template.md
+  figures:
+    - docs/assets/lab74_packet_detection_metric.png
+    - docs/assets/lab74_packet_detection_timeline.png
+  expected_artifacts:
+    - docs/assets/lab74_packet_receiver_metrics.json
+
+acceptance:
+  - detector_finds_packet_starts_within_tolerance
+  - false_alarm_rate_is_reported
+  - threshold_tradeoff_is_discussed
