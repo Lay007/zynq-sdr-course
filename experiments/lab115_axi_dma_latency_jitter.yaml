@@ -1,0 +1,39 @@
+experiment:
+  id: lab115_axi_dma_latency_jitter
+  title: AXI DMA latency and jitter runtime model
+  objective: Estimate end-to-end latency, jitter and throughput for a simplified Zynq streaming runtime pipeline.
+
+signal:
+  waveform: packetized_iq_stream
+  expected_outputs:
+    - latency_trace_plot
+    - latency_histogram
+    - pipeline_metrics_json
+
+metadata_required:
+  - packet_size_samples
+  - sample_rate
+  - queue_depths
+  - dma_timing_model
+  - fpga_processing_timing_model
+
+metrics:
+  - mean_latency_us
+  - p95_latency_us
+  - p99_latency_us
+  - latency_jitter_std_us
+  - throughput_msample_per_s
+  - drop_ratio
+
+reports:
+  template: docs/sdr-measurement-report-template.md
+  figures:
+    - docs/assets/lab115_axi_dma_latency_trace.png
+    - docs/assets/lab115_axi_dma_latency_histogram.png
+  expected_artifacts:
+    - docs/assets/lab115_axi_dma_latency_metrics.json
+
+acceptance:
+  - latency_distribution_is_reported
+  - throughput_is_reported
+  - queue_depth_tradeoff_is_discussed
