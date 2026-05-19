@@ -56,6 +56,8 @@ nav:
       - "Model → FPGA → RF → Measurement": model-to-measurement.md
       - "Hardware experiment roadmap": hardware-experiment-roadmap.md
       - "Hardware bring-up checklist": hardware-bringup-checklist.md
+      - "RF safety guide": rf-safety.md
+      - "End-to-end SDR demo roadmap": end-to-end-demo.md
       - "SDR measurement report template": sdr-measurement-report-template.md
       - "Experiment manifests": experiment-manifests.md
       - "Lab 1: Tone → RF → IQ → Analysis": lab01-tone-rf-iq-analysis.md
@@ -67,16 +69,20 @@ nav:
   - "DSP → FPGA Bridge": dsp-to-fpga.md
   - "Measurement Errors": measurement-errors.md
   - "Course Quality":
+      - "Course status": status.md
       - "Quality roadmap": course-quality-roadmap.md
       - "Course readiness matrix": course-readiness-matrix.md
       - "Completion matrix": course-completion-matrix.md
       - "Lab index": lab-index.md
       - "CI matrix": ci-matrix.md
       - "Reproducibility guide": reproducibility-guide.md
+      - "Lab contribution guide": contributing-labs.md
       - "Lab report template": lab-report-template.md
       - "IQ metadata guide": iq-recording-metadata.md
+      - "IQ dataset manifest guide": iq-dataset-manifest.md
       - "Measurement uncertainty guide": measurement-uncertainty-guide.md
       - "Real data policy": real-data-policy.md
+      - "SDR / DSP / RF glossary": glossary.md
   - "Demo (IEEE figures)": demo.md
   - "GitHub demo notes": demo_readme.md
   - "IEEE-style guide": ieee_style_guide.md
