@@ -1,0 +1,53 @@
+dataset_id: replace_with_stable_id
+title: Human-readable IQ dataset title
+description: >-
+  Explain what this recording contains, how it was produced,
+  and which course lab or project uses it.
+
+storage: external-url   # repo | git-lfs | external-url | private
+url: https://example.invalid/replace-with-real-dataset-url
+file_name: replace_with_expected_local_filename.ci16
+sha256: replace_with_real_sha256
+
+format: ci16            # ci16 | cu8 | cf32 | wav-iq | other
+endianness: little      # little | big | not-applicable
+sample_rate_hz: 2400000
+center_frequency_hz: 100000000
+bandwidth_hz: 1200000
+duration_s: 2.0
+
+source: rtl-sdr-observation  # synthetic | rtl-sdr-observation | zynq-ad9363-loopback | lab-generator | other
+hardware:
+  receiver: RTL-SDR V3 Pro
+  transmitter: Zynq-7020 + AD9363
+  rf_path: conducted path with attenuation or controlled low-power OTA
+  attenuation_db: 40
+  rx_gain_db: 20
+  tx_gain_db: null
+  notes: replace_with_relevant_hardware_notes
+
+license: course-demo-only
+access: public           # public | restricted | private
+
+analysis_targets:
+  - spectrum estimate
+  - peak frequency detection
+  - noise floor estimate
+  - metadata parser test
+
+expected_results:
+  dominant_frequency_offset_hz: null
+  expected_bandwidth_hz: null
+  expected_modulation: tone
+  expected_snr_db: null
+
+quality_checks:
+  checksum_verified: false
+  clipping_observed: unknown
+  overload_observed: unknown
+  dc_offset_checked: false
+  iq_balance_checked: false
+
+notes:
+  - Verify checksum before analysis.
+  - Do not use this dataset for calibrated absolute power measurements unless calibration data is provided.
