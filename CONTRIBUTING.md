@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for improving the Zynq SDR Course. This repository is structured as an engineering course, so every contribution should improve clarity, reproducibility or measurement value.
+Thank you for improving the Zynq SDR Course. This repository is structured as a bilingual engineering course, so every contribution should improve clarity, reproducibility, safety or measurement value.
 
 ## Before contributing
 
@@ -44,6 +44,12 @@ A new lab should usually include:
 - generated artifacts or expected report artifacts;
 - a report checklist.
 
+Use the detailed lab guide:
+
+```text
+docs/contributing-labs.md
+```
+
 ## Python lab guidelines
 
 Python labs should:
@@ -65,6 +71,36 @@ HDL labs should:
 - run under Icarus Verilog when possible;
 - avoid vendor-only dependencies in baseline labs.
 
+## RF and hardware safety
+
+RF-facing labs must document:
+
+- center frequency and bandwidth;
+- TX/RX gain settings;
+- RF path and attenuation;
+- receiver protection assumptions;
+- overload symptoms and corrective actions;
+- fallback synthetic-data mode when practical.
+
+Use the RF guide:
+
+```text
+docs/rf-safety.md
+```
+
+## IQ datasets
+
+Do not commit large raw IQ captures directly into normal Git history. Use manifests, external links, Git LFS where appropriate and checksums.
+
+Relevant files:
+
+```text
+docs/iq-dataset-manifest.md
+docs/real-data-policy.md
+templates/iq_dataset_manifest.template.yml
+templates/capture_metadata.template.json
+```
+
 ## Documentation guidelines
 
 Documentation should:
@@ -75,15 +111,6 @@ Documentation should:
 - include report checklists;
 - avoid unsupported claims;
 - keep Russian and English navigation consistent.
-
-## Real data policy
-
-Do not commit large raw IQ captures. Use metadata, external links and checksums. See:
-
-```text
-docs/real-data-policy.md
-templates/capture_metadata.template.json
-```
 
 ## Commit style
 
@@ -102,4 +129,5 @@ Add dataset registry entry for AD9363 QPSK loopback
 - [ ] Scripts run from repository root.
 - [ ] Generated artifacts are documented.
 - [ ] Metadata is included for IQ/data workflows.
+- [ ] RF safety notes are present for hardware-facing labs.
 - [ ] Russian and English navigation remain consistent.
