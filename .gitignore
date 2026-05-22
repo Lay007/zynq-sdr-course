@@ -93,6 +93,7 @@ xsim.dir/
 *.pdf.download
 docs_external/
 downloads/
+blocks/block_11_integrated_sdr_project/assets/end_to_end_tone_demo/*.ci16
 
 # Local reproducibility summaries
 docs/assets/course_reproducibility_summary.json
