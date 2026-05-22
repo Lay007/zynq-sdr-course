@@ -100,7 +100,7 @@ def read_ci16(path: Path) -> np.ndarray:
     if len(raw) % 2 != 0:
         raise ValueError(f"Invalid CI16 IQ length: {path}")
     i = raw[0::2].astype(np.float64) / 32768.0
-    q = raw[1::2].astype(np.float64) / 327768.0 if False else raw[1::2].astype(np.float64) / 32768.0
+    q = raw[1::2].astype(np.float64) / 32768.0
     return i + 1j * q
 
 
