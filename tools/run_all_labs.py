@@ -39,6 +39,33 @@ class LabResult:
 
 LABS: list[LabCommand] = [
     LabCommand(
+        "Block 3 / Lab 3.5 FFT complexity and selected-bin trade-off",
+        [sys.executable, "blocks/block_03_dsp_basics/python/lab_3_5_fft_complexity.py"],
+        [
+            "docs/assets/lab35_dft_fft_complexity.png",
+            "docs/assets/lab35_selected_bin_tradeoff.png",
+            "docs/assets/lab35_fft_complexity_metrics.json",
+        ],
+    ),
+    LabCommand(
+        "Block 3 / Lab 3.6 convolution and correlation",
+        [sys.executable, "blocks/block_03_dsp_basics/python/lab_3_6_convolution_correlation.py"],
+        [
+            "docs/assets/lab36_convolution_filtering.png",
+            "docs/assets/lab36_correlation_detection.png",
+            "docs/assets/lab36_correlation_metrics.json",
+        ],
+    ),
+    LabCommand(
+        "Block 3 / Lab 3.7 window trade-offs and weak-signal detection",
+        [sys.executable, "blocks/block_03_dsp_basics/python/lab_3_7_window_tradeoffs.py"],
+        [
+            "docs/assets/lab37_window_tradeoffs.png",
+            "docs/assets/lab37_weak_signal_detection.png",
+            "docs/assets/lab37_window_metrics.json",
+        ],
+    ),
+    LabCommand(
         "Block 6 / Lab 6.4 synthetic RF capture analysis",
         [sys.executable, "blocks/block_06_rf_frontend_and_ad9363/python/lab_6_4_synthetic_rf_capture_analysis.py"],
         [
