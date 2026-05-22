@@ -58,6 +58,7 @@ nav:
       - "Hardware bring-up checklist": hardware-bringup-checklist.md
       - "RF safety guide": rf-safety.md
       - "End-to-end SDR demo roadmap": end-to-end-demo.md
+      - "End-to-end tone demo report": end-to-end-tone-demo-report.md
       - "SDR measurement report template": sdr-measurement-report-template.md
       - "Experiment manifests": experiment-manifests.md
       - "Lab 1: Tone → RF → IQ → Analysis": lab01-tone-rf-iq-analysis.md
