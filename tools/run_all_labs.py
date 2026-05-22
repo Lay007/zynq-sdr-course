@@ -58,6 +58,16 @@ LABS: list[LabCommand] = [
         ],
     ),
     LabCommand(
+        "Block 7 / Lab 7.5 CIC decimator",
+        [sys.executable, "blocks/block_07_tx_rx_chains/python/lab_7_5_cic_decimator.py"],
+        [
+            "docs/assets/lab75_cic_response.png",
+            "docs/assets/lab75_cic_decimation_spectrum.png",
+            "docs/assets/lab75_cic_bit_growth.png",
+            "docs/assets/lab75_cic_metrics.json",
+        ],
+    ),
+    LabCommand(
         "Block 8 / Lab 8.4 end-to-end synchronization chain",
         [sys.executable, "blocks/block_08_modulation_and_synchronization/python/lab_8_4_end_to_end_sync_chain.py"],
         [
