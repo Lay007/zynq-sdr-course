@@ -77,6 +77,17 @@ LABS: list[LabCommand] = [
             "docs/assets/lab93_multiformat_iq_spectrum_cf32.png",
         ],
     ),
+    LabCommand(
+        "Block 11 / End-to-end tone demo",
+        [sys.executable, "blocks/block_11_integrated_sdr_project/python/end_to_end_tone_demo.py"],
+        [
+            "docs/assets/end_to_end_tone_reference_spectrum.png",
+            "docs/assets/end_to_end_tone_capture_spectrum.png",
+            "docs/assets/end_to_end_tone_capture_time.png",
+            "docs/assets/end_to_end_tone_metrics.json",
+            "datasets/manifests/end_to_end_tone_demo_v1.yml",
+        ],
+    ),
 ]
 
 
