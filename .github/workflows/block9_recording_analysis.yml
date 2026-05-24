@@ -70,7 +70,7 @@ jobs:
           done
 
       - name: Upload generated recording-analysis artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: block9-recording-analysis-artifacts
           path: |
