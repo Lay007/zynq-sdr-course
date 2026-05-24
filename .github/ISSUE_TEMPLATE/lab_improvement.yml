@@ -1,0 +1,47 @@
+name: Lab improvement
+description: Propose a new lab or improve an existing DSP/FPGA/SDR lab
+title: "[Lab]: "
+labels: ["lab", "enhancement"]
+body:
+  - type: input
+    id: block
+    attributes:
+      label: Course block
+      placeholder: "blocks/block_05_fpga_hdl_flow"
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: Learning or engineering goal
+      description: What should the lab teach or validate?
+    validations:
+      required: true
+
+  - type: textarea
+    id: procedure
+    attributes:
+      label: Proposed procedure
+      description: Describe the experiment, script, HDL flow, measurement or report path.
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation
+    attributes:
+      label: Acceptance criteria
+      description: How should the lab be checked?
+      placeholder: |
+        - generated plot
+        - metric JSON
+        - self-checking HDL testbench
+        - report checklist
+    validations:
+      required: true
+
+  - type: textarea
+    id: safety
+    attributes:
+      label: RF / hardware / dataset safety notes
+      description: Required for hardware-facing or real-data labs.
