@@ -1,0 +1,40 @@
+name: Course or lab improvement
+description: Propose an improvement for course content, labs, DSP/FPGA flow, or documentation
+title: "Course: "
+labels: [enhancement, documentation]
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Theory
+        - MATLAB/Simulink
+        - Fixed-point DSP
+        - HDL/FPGA
+        - SDR hardware lab
+        - IQ recording and analysis
+        - Documentation/site
+        - CI/tooling
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is unclear, missing, inconsistent, or hard to reproduce?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed improvement
+      description: Describe the concrete change.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation
+      description: How should the change be checked?
+      placeholder: MkDocs strict build, lab checklist, test vector, HDL simulation, screenshot, generated figure
