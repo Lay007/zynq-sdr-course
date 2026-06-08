@@ -7,6 +7,7 @@
 [![Block 8 Sync](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block8_sync.yml/badge.svg)](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block8_sync.yml)
 [![Block 9 Recording](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block9_recording_analysis.yml/badge.svg)](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block9_recording_analysis.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Alexander%20Lyubko%20DSP-blue?logo=linkedin)](https://ru.linkedin.com/in/alexander-lyubko-dsp)
 
 A **bilingual engineering course on Software-Defined Radio** that connects signal theory, DSP, fixed-point modeling, HDL/FPGA flow, RF frontend understanding, TX/RX chains, synchronization, IQ recording, practical electronics and final engineering reports.
 
@@ -64,6 +65,12 @@ GNU Make targets remain available as a shorthand for Unix-like environments.
 | [Model → FPGA → RF → Measurement](docs/model-to-measurement.md) | core system-level route |
 | [Real data policy](docs/real-data-policy.md) | how to store and describe real IQ captures |
 | [Reproducibility guide](docs/reproducibility-guide.md) | how to reproduce generated results |
+
+---
+
+## Maturity Matrix / Матрица зрелости блоков
+
+See detailed block maturity here: [docs/maturity_matrix.md](docs/maturity_matrix.md)
 
 ---
 
@@ -168,11 +175,9 @@ The current hands-on setup includes an external receiver and a board-level SDR p
 Текущая практическая аппаратная база включает внешний приёмник и SDR-платформу на уровне платы для лабораторных работ и экспериментов.
 
 ### RTL-SDR V3 Pro
-
 ![RTL-SDR V3 Pro](docs/images/hardware/rtl_sdr_v3_pro_real.png)
 
 ### Xilinx Zynq-7020 + ADR9363
-
 ![Xilinx Zynq-7020 with ADRV module](docs/images/hardware/xilinx_7020_adrv_real.png)
 
 ---
