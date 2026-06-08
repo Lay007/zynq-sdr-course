@@ -1,0 +1,37 @@
+name: HDL Canonical Vector CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  hdl-canonical:
+    name: Run HDL tests with canonical vectors
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Icarus Verilog
+        run: sudo apt-get install -y iverilog gtkwave
+
+      - name: Verify canonical vectors
+        run: |
+          test -s verification/vectors/block03_canonical.csv
+          test -s verification/vectors/block04_canonical.csv
+          test -s verification/vectors/block05_canonical.csv
+
+      - name: Run HDL testbenches
+        run: |
+          iverilog -o build/tb_fir_iq_4tap.vvp tb/tb_fir_iq_4tap.v
+          vvp build/tb_fir_iq_4tap.vvp
+
+          iverilog -o build/tb_axis_iq_passthrough.vvp tb/tb_axis_iq_passthrough.v
+          vvp build/tb_axis_iq_passthrough.vvp
+
+      - name: Upload HDL CI artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: hdl-canonical-artifacts
+          path: build/
