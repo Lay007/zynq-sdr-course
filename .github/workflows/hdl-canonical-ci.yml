@@ -2,36 +2,65 @@ name: HDL Canonical Vector CI
 
 on:
   push:
+    paths:
+      - "blocks/block_05_fpga_hdl_flow/**"
+      - ".github/workflows/hdl-canonical-ci.yml"
   pull_request:
+    paths:
+      - "blocks/block_05_fpga_hdl_flow/**"
+      - ".github/workflows/hdl-canonical-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   hdl-canonical:
-    name: Run HDL tests with canonical vectors
+    name: Run HDL tests with generated canonical vectors
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
 
       - name: Setup Icarus Verilog
-        run: sudo apt-get install -y iverilog gtkwave
-
-      - name: Verify canonical vectors
         run: |
-          test -s verification/vectors/block03_canonical.csv
-          test -s verification/vectors/block04_canonical.csv
-          test -s verification/vectors/block05_canonical.csv
+          sudo apt-get update
+          sudo apt-get install -y iverilog
+
+      - name: Generate deterministic HDL vectors
+        run: |
+          python blocks/block_05_fpga_hdl_flow/python/generate_fir_iq_4tap_vectors.py
+          python blocks/block_05_fpga_hdl_flow/python/generate_nco_mixer_iq_vectors.py
+          test -s blocks/block_05_fpga_hdl_flow/tb/fir_iq_4tap_input_vectors.txt
+          test -s blocks/block_05_fpga_hdl_flow/tb/fir_iq_4tap_expected_vectors.txt
+          test -s blocks/block_05_fpga_hdl_flow/tb/nco_mixer_iq_input_vectors.txt
+          test -s blocks/block_05_fpga_hdl_flow/tb/nco_mixer_iq_expected_vectors.txt
 
       - name: Run HDL testbenches
         run: |
-          iverilog -o build/tb_fir_iq_4tap.vvp tb/tb_fir_iq_4tap.v
-          vvp build/tb_fir_iq_4tap.vvp
+          iverilog -g2012 \
+            -o blocks/block_05_fpga_hdl_flow/tb/tb_fir_iq_4tap.out \
+            blocks/block_05_fpga_hdl_flow/rtl/fir_iq_4tap.v \
+            blocks/block_05_fpga_hdl_flow/tb/tb_fir_iq_4tap.v
+          vvp blocks/block_05_fpga_hdl_flow/tb/tb_fir_iq_4tap.out
 
-          iverilog -o build/tb_axis_iq_passthrough.vvp tb/tb_axis_iq_passthrough.v
-          vvp build/tb_axis_iq_passthrough.vvp
+          iverilog -g2012 \
+            -o blocks/block_05_fpga_hdl_flow/tb/tb_axis_iq_passthrough.out \
+            blocks/block_05_fpga_hdl_flow/rtl/axis_iq_passthrough.v \
+            blocks/block_05_fpga_hdl_flow/tb/tb_axis_iq_passthrough.v
+          vvp blocks/block_05_fpga_hdl_flow/tb/tb_axis_iq_passthrough.out
 
       - name: Upload HDL CI artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: hdl-canonical-artifacts
-          path: build/
+          path: |
+            blocks/block_05_fpga_hdl_flow/tb/*.out
+            *.vcd
+          if-no-files-found: warn
