@@ -68,6 +68,8 @@ Checks:
 
 Purpose: verify synthesizable/educational Verilog examples and self-checking testbenches.
 
+The HDL smoke flow is documented in [HDL Smoke Verification](./verification/hdl_smoke.md).
+
 Checks:
 
 - `iq_passthrough`;
