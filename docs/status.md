@@ -10,6 +10,7 @@ This page is the top-level engineering status board for the course. It is intent
 | `Executable` | The block has scripts, tests, generated plots, or reproducible checks. |
 | `Draft` | The structure exists, but the block still needs deeper theory, labs, or examples. |
 | `Hardware pending` | The learning path is defined, but board-level validation or real capture data is still needed. |
+| `Portfolio-ready` | The block has documentation, reproducible artifacts and reviewer-friendly evidence. |
 
 ## Block readiness matrix
 
@@ -17,7 +18,7 @@ This page is the top-level engineering status board for the course. It is intent
 |---|---|---|---|---|---|---|---|---|
 | 01 | Intro to SDR | Ready | Ready | Partial | Ready | Partial | Docs | Add a first validated RTL-SDR capture example. |
 | 02 | Signals and sampling | Draft | Draft | Partial | Partial | Not required | Docs | Add executable aliasing and IQ sampling demos. |
-| 03 | DSP basics | Ready | Executable | Python / MATLAB / C++ path | Ready | Not required | Labs | Add more fixed test vectors and reference outputs. |
+| 03 | DSP basics | Ready | Executable | Python / MATLAB / C++ path | Ready | Not required | Labs | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
 | 04 | Simulink and fixed-point | Ready | Executable | Python / MATLAB-style references | Ready | Not required | Labs | Add Simulink screenshots and fixed-point export examples. |
 | 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches | Ready | Hardware pending | HDL CI | Add board-level timing and resource reports. |
 | 06 | RF frontend and AD9363 | Ready | Executable | Analysis scripts | Ready | Hardware pending | Labs | Add validated AD9363 setup and gain table. |
@@ -27,6 +28,26 @@ This page is the top-level engineering status board for the course. It is intent
 | 10 | KiCad and basic electronics | Ready | Draft | Calculators / templates | Partial | Bench pending | Docs | Add measured breadboard photos and KiCad exports. |
 | 11 | Integrated SDR project | Ready | Executable | Simulation package | Ready | Hardware pending | Labs | Add one complete end-to-end hardware project report. |
 | 12 | Final projects | Ready | Draft | Templates | Partial | Depends on project | Docs | Add grading rubric and example final report. |
+
+## CI and local quality gates
+
+| Gate | Purpose | Expected reviewer signal |
+|---|---|---|
+| MkDocs build | Documentation remains buildable | Navigation and links do not silently break. |
+| Full course smoke | Representative labs run from a clean checkout | Generated assets are reproducible. |
+| HDL smoke | Verilog examples compile and simulate | FPGA-facing examples are not only static text. |
+| Block-specific checks | Catch regressions near the edited material | Small failures are easier to locate. |
+
+## Artifact contract for mature labs
+
+Each mature lab should eventually provide:
+
+- a short problem statement;
+- a runnable script, HDL testbench or clearly bounded manual experiment;
+- expected output files under `docs/assets`, `verification`, or a documented report path;
+- a short interpretation section explaining what the figure/table proves;
+- local reproduction commands;
+- a CI or smoke-test hook when practical.
 
 ## Course-level strengths
 
@@ -42,6 +63,24 @@ This page is the top-level engineering status board for the course. It is intent
 3. Add RF safety limits and attenuation assumptions to every hardware-facing lab.
 4. Keep RU/EN pages aligned when adding new labs.
 5. Add final report examples with plots, metadata and measurement uncertainty notes.
+
+## Priority improvements
+
+1. Promote one complete `Model -> FPGA -> RF -> Measurement` demo to portfolio-ready status.
+2. Add a small public/synthetic IQ dataset manifest for recording and replay labs.
+3. Add latency and resource-estimate tables for the simplest HDL blocks.
+4. Add a final-project grading rubric for instructors.
+5. Keep Russian and English navigation synchronized whenever a block is promoted.
+
+## Reviewer path
+
+For a fast review, start with:
+
+1. `README.md` or `README_ru.md` for the course promise.
+2. `docs/model-to-measurement.md` for the end-to-end engineering route.
+3. `docs/lab-index.md` for runnable or report-oriented labs.
+4. `docs/reproducibility-guide.md` for local rebuild instructions.
+5. This status page for readiness and remaining gaps.
 
 ## Definition of done for a new block
 
