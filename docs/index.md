@@ -90,7 +90,12 @@ These pages turn the repository into a more complete engineering course workspac
 | Page | Purpose |
 |---|---|
 | [Course quality roadmap](course-quality-roadmap.md) | Defines the target level, checklist and backlog for course completion |
+| [Course status](status.md) | Gives the short engineering readiness board for the full course |
 | [Course readiness matrix](course-readiness-matrix.md) | Tracks whether each block is documented, runnable, plotted and measurable |
+| [Student path](student-path.md) | Gives the shortest reliable learner route through the material |
+| [Reviewer path](reviewer-path.md) | Gives a fast evidence-oriented repository walkthrough |
+| [Instructor guide](instructor-guide.md) | Explains how to use the repository as a teaching workspace |
+| [Hardware checklist](hardware-checklist.md) | Aggregates hardware readiness, RF safety, metadata and reporting links |
 | [Experiment manifests](experiment-manifests.md) | Connects selected labs with reproducible objectives and acceptance criteria |
 | [Hardware bring-up checklist](hardware-bringup-checklist.md) | Gives a repeatable procedure for board, RF path and receiver setup |
 | [SDR measurement report template](sdr-measurement-report-template.md) | Standardizes hardware/RF/IQ lab conclusions |
@@ -130,7 +135,9 @@ These pages turn the repository into a more complete engineering course workspac
 | System view | [Model → FPGA → RF → Measurement](model-to-measurement.md) | End-to-end understanding of the SDR stand |
 | Demo figures | [IEEE-style figures](demo.md) | Reproducible plots and validation examples |
 | Experiment manifests | [Manifest-driven labs](experiment-manifests.md) | Reproducible lab objectives and acceptance criteria |
-| Hardware readiness | [Hardware bring-up checklist](hardware-bringup-checklist.md) | Repeatable board and RF setup |
+| Hardware readiness | [Hardware checklist](hardware-checklist.md) | One-page route into bring-up, RF safety and measurement discipline |
+| Reviewer route | [Reviewer path](reviewer-path.md) | Fast maturity and evidence evaluation |
+| Instructor route | [Instructor guide](instructor-guide.md) | Classroom-oriented use of the repository |
 | Course quality | [Course readiness matrix](course-readiness-matrix.md) | Transparent progress and engineering maturity |
 | Russian course | [Русский обзор](ru/index.md) | RU learning path and block navigation |
 | English course | [English overview](en/index.md) | EN learning path and block navigation |

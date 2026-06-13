@@ -61,8 +61,13 @@ GNU Make targets remain available as a shorthand for Unix-like environments.
 |---|---|
 | [Course demo dashboard](docs/demo-dashboard.md) | fast visual overview of executable course artifacts |
 | [Visual course map](docs/course-map.md) | complete engineering route from theory to final project |
+| [Course status](docs/status.md) | concise readiness view of blocks, labs, hardware and CI |
+| [Student path](docs/student-path.md) | shortest learner route through the repository |
+| [Reviewer path](docs/reviewer-path.md) | fastest evidence-oriented reviewer walkthrough |
+| [Instructor guide](docs/instructor-guide.md) | how to use the repository as a teaching workspace |
 | [Portfolio view](docs/portfolio-view.md) | what this repository demonstrates professionally |
 | [Model → FPGA → RF → Measurement](docs/model-to-measurement.md) | core system-level route |
+| [Hardware checklist](docs/hardware-checklist.md) | one-page gateway into bring-up, RF safety and reporting discipline |
 | [Real data policy](docs/real-data-policy.md) | how to store and describe real IQ captures |
 | [Reproducibility guide](docs/reproducibility-guide.md) | how to reproduce generated results |
 

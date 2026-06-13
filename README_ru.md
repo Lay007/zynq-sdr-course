@@ -55,7 +55,12 @@ python tools/tasks.py smoke
 |---|---|
 | [Course demo dashboard](docs/demo-dashboard.md) | Быстрый визуальный обзор сгенерированных артефактов курса |
 | [Visual course map](docs/course-map.md) | Полный маршрут от теории до итогового проекта |
+| [Course status](docs/status.md) | Краткая инженерная сводка по готовности блоков, лабораторных и аппаратной части |
+| [Student path](docs/student-path.md) | Самый короткий учебный маршрут по репозиторию |
+| [Reviewer path](docs/reviewer-path.md) | Быстрый маршрут для оценки зрелости и доказательной базы |
+| [Instructor guide](docs/instructor-guide.md) | Как использовать репозиторий как учебное пространство |
 | [Model → FPGA → RF → Measurement](docs/model-to-measurement.md) | Главный системный мост курса: модель, FPGA, радиотракт и измерения |
+| [Hardware checklist](docs/hardware-checklist.md) | Одна страница для входа в bring-up, RF safety и правила отчётности |
 | [Hardware experiment roadmap](docs/hardware-experiment-roadmap.md) | Практический путь от запуска платы до RF-наблюдений |
 | [Lab index](docs/lab-index.md) | Все лабораторные и демонстрационные страницы в одном месте |
 | [Reproducibility guide](docs/reproducibility-guide.md) | Как пересобрать результаты и сгенерированные артефакты |
@@ -144,11 +149,11 @@ SDR-плата на базе Zynq — целевая платформа аппа
 
 ## Рекомендуемые следующие улучшения
 
-1. Добавить верхнеуровневую страницу `docs/status.md` со статусом готовности блоков, лабораторных и аппаратных зависимостей.
-2. Добавить небольшие проверенные IQ demo-файлы через Git LFS или внешние dataset manifest, не раздувая репозиторий крупными записями.
-3. Добавить страницу RF safety с ограничениями по аттенюации, допущениями по мощности и безопасными схемами подключения.
-4. Добавить contributor guide для новых лабораторных в двух языках с обязательными Python/MATLAB/C++/Verilog артефактами.
-5. Добавить один финальный end-to-end demo: генерация тона на плате, RTL-SDR capture, IQ metadata, replay script и итоговый measurement report.
+1. Добавить небольшие проверенные public IQ demo-файлы или dataset manifest, не раздувая репозиторий крупными записями.
+2. Добавить board-level validation package для AD9363/Zynq: частотный план, gain table, измерения и короткий reproducible report.
+3. Добавить measured photos и экспортированные KiCad-артефакты для блока 10, чтобы электроника была не только текстовой.
+4. Связать больше лабораторных с явной таблицей Block → Lab → Artifact → CI check.
+5. Усилить один end-to-end hardware case как главный reviewer demo с фиксированным набором артефактов.
 
 ## Лицензия
 

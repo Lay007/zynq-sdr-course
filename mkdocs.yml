@@ -55,6 +55,7 @@ nav:
   - System:
       - "Model → FPGA → RF → Measurement": model-to-measurement.md
       - "Hardware experiment roadmap": hardware-experiment-roadmap.md
+      - "Hardware checklist": hardware-checklist.md
       - "Hardware bring-up checklist": hardware-bringup-checklist.md
       - "RF safety guide": rf-safety.md
       - "End-to-end SDR demo roadmap": end-to-end-demo.md
@@ -73,6 +74,9 @@ nav:
   - "Measurement Errors": measurement-errors.md
   - "Course Quality":
       - "Course status": status.md
+      - "Student path": student-path.md
+      - "Reviewer path": reviewer-path.md
+      - "Instructor guide": instructor-guide.md
       - "Quality roadmap": course-quality-roadmap.md
       - "Course readiness matrix": course-readiness-matrix.md
       - "Completion matrix": course-completion-matrix.md
