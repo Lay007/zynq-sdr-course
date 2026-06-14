@@ -4,7 +4,7 @@
 The checker is intentionally conservative:
 - it scans `docs/**/*.md`, `blocks/**/*.md`, `templates/**/*.md`,
   `experiments/**/*.md` and root-level `*.md` files;
-- it validates image links and explicit file links;
+- it validates image links, explicit file links, and `--8<--` snippet includes;
 - it ignores external URLs, anchors, mail links and site-absolute MkDocs URLs;
 - it ignores directory-style MkDocs links such as `demo/` because MkDocs resolves them.
 """
@@ -26,6 +26,7 @@ SITE_PREFIX = "/zynq-sdr-course/"
 MARKDOWN_LINK_RE = re.compile(r"(!?)\[[^\]]*\]\(([^)]+)\)")
 HTML_LINK_RE = re.compile(r"(?P<attr>src|href)=\"(?P<link>[^\"]+)\"")
 FENCED_CODE_BLOCK_RE = re.compile(r"```.*?```|~~~.*?~~~", re.DOTALL)
+SNIPPET_INCLUDE_RE = re.compile(r'^\s*--8<--\s+"([^"]+)"\s*$', re.MULTILINE)
 
 IGNORE_PREFIXES = (
     "http://",
@@ -93,6 +94,18 @@ def normalize_link(raw: str) -> str | None:
     return path
 
 
+def normalize_snippet_include(raw: str) -> str | None:
+    path = unquote(raw.strip().strip("'\""))
+    if not path:
+        return None
+
+    parsed = urlparse(path)
+    if parsed.scheme or parsed.netloc:
+        return None
+
+    return path
+
+
 def check_file(md_file: Path) -> list[str]:
     text = md_file.read_text(encoding="utf-8")
     text = FENCED_CODE_BLOCK_RE.sub("", text)
@@ -119,6 +132,21 @@ def check_file(md_file: Path) -> list[str]:
 
         if not target.exists():
             errors.append(f"{md_file.relative_to(ROOT)}: missing local asset: {raw}")
+
+    for raw in SNIPPET_INCLUDE_RE.findall(text):
+        path = normalize_snippet_include(raw)
+        if path is None:
+            continue
+
+        target = (ROOT / path).resolve()
+        try:
+            target.relative_to(ROOT)
+        except ValueError:
+            errors.append(f"{md_file.relative_to(ROOT)}: snippet include escapes repository: {raw}")
+            continue
+
+        if not target.exists():
+            errors.append(f"{md_file.relative_to(ROOT)}: missing snippet include: {raw}")
 
     return errors
 

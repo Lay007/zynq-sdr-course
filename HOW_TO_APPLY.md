@@ -8,8 +8,7 @@
    - `docs/`
 3. Replace the root files with the versions from this archive:
    - `README.md`
-   - `README_ru.md`
-   - `README_en.md`
+   - `README_RU.md`
 4. Commit and push:
 
 ```bash

@@ -149,7 +149,7 @@ def write_summary(results: list[LabResult]) -> None:
     lines.append("| Lab | Result | Missing artifacts |")
     lines.append("|---|---:|---|")
     for r in results:
-        missing = ", ".join(r.missing_artifacts) if r.missing_artifacts else "—"
+        missing = ", ".join(r.missing_artifacts) if r.missing_artifacts else "-"
         lines.append(f"| {r.name} | {'PASS' if r.passed else 'FAIL'} | {missing} |")
     lines.append("")
     SUMMARY_MD.write_text("\n".join(lines), encoding="utf-8")
