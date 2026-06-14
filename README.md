@@ -1,77 +1,89 @@
 # Zynq SDR Course
 
 [![MkDocs](https://img.shields.io/badge/site-MkDocs%20Material-informational)](mkdocs.yml)
+[![Full Course Smoke](https://github.com/Lay007/zynq-sdr-course/actions/workflows/full_course_smoke.yml/badge.svg)](https://github.com/Lay007/zynq-sdr-course/actions/workflows/full_course_smoke.yml)
+[![Block 5 HDL](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block5_hdl.yml/badge.svg)](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block5_hdl.yml)
+[![Block 8 Sync](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block8_sync.yml/badge.svg)](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block8_sync.yml)
+[![Block 9 Recording](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block9_recording_analysis.yml/badge.svg)](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block9_recording_analysis.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Alexander%20Lyubko%20DSP-blue?logo=linkedin)](https://ru.linkedin.com/in/alexander-lyubko-dsp)
 
-> Engineering-oriented SDR course covering DSP, FPGA, RF and measurement workflows.
+> A practical engineering course on Software-Defined Radio with DSP, fixed-point design, FPGA/HDL, Zynq, RF measurements and reproducible reporting.
 
-## Language
+**Russian version:** [README_RU.md](README_RU.md)
 
-🇬🇧 **This README is intentionally English-first.**
-
-🇷🇺 Full Russian documentation is available in:
-
-**README_RU.md**
-
-The Russian version contains the complete course description, explanations and study recommendations.
+![Zynq SDR Course Pipeline](docs/assets/course_pipeline.svg)
 
 ---
 
-## What is this repository?
+## Overview
 
-Zynq SDR Course is a practical learning path that connects:
+`zynq-sdr-course` is a bilingual SDR engineering course built around a complete model-to-measurement workflow:
 
 ```text
-Signal Theory
-    ↓
-DSP Algorithms
-    ↓
-MATLAB / Simulink Models
-    ↓
-Fixed-Point Design
-    ↓
-Verilog / FPGA
-    ↓
-Zynq + AD9363 Hardware
-    ↓
-RF Measurements
-    ↓
-Engineering Reports
+theory -> DSP model -> fixed-point design -> HDL/FPGA -> Zynq/AD9363 -> RF path -> IQ recording -> offline analysis -> engineering report
 ```
 
-Unlike many SDR tutorials, the goal is not only to simulate signals but to build a complete engineering workflow from theory to hardware validation.
+The repository is designed not only as a set of learning notes, but as a reproducible engineering workspace. It combines documentation, executable labs, HDL smoke checks, IQ metadata discipline, measurement templates and final-project structure.
 
 ---
 
-## Main Topics
+## Who is this course for?
 
-- SDR fundamentals
-- Signals and sampling
-- FFT, FIR and DSP basics
-- MATLAB and Simulink workflow
-- Fixed-point implementation
-- FPGA and Verilog design
-- Zynq-7000 architecture
-- AD9363 RF transceiver
-- TX/RX chains
-- Synchronization and carrier recovery
-- IQ recording and analysis
-- RF measurements
-- KiCad and basic electronics
-- Final SDR projects
+This course is useful for:
+
+- students learning DSP, SDR and FPGA design;
+- engineers moving from MATLAB/Python models to hardware-oriented implementation;
+- FPGA developers who want a signal-processing project with real measurement context;
+- instructors building a practical SDR/FPGA lab track;
+- reviewers or recruiters evaluating DSP/FPGA engineering capability.
 
 ---
 
-## Target Hardware
+## What you will learn
 
-- Xilinx Zynq-7020
-- AD9363 / ADRV-based SDR modules
-- RTL-SDR for independent measurements
+| Layer | Engineering outcome |
+|---|---|
+| Signal theory | Sampling, bandwidth, aliasing, IQ representation and modulation basics |
+| DSP modeling | FFT, FIR, windows, digital mixing, decimation and reference plots |
+| Fixed-point design | Scaling, word length, saturation, quantization error and implementation risk |
+| HDL / FPGA | Streaming DSP blocks, Verilog testbenches, latency and RTL/model comparison |
+| Zynq + AD9363 | RF frontend configuration, gain planning and board-level experiment discipline |
+| TX/RX chains | DUC/DDC, loopback metrics, packet detection and measurement flow |
+| Synchronization | CFO, phase/timing recovery, EVM, BER and OFDM mini-link analysis |
+| IQ data engineering | CI16/CU8/CF32 readers, metadata, dataset manifests and replay checks |
+| Measurement reporting | SNR, EVM, BER, uncertainty notes, limitations and final engineering conclusions |
 
 ---
 
-## Quick Start
+## Hardware baseline
+
+The hardware-oriented part of the course is built around:
+
+- **Xilinx Zynq-7020** class boards;
+- **AD9363 / ADRV-compatible RF frontend modules**;
+- **RTL-SDR** as an independent observation receiver;
+- controlled RF paths with attenuation, metadata and safety notes.
+
+The course can still be studied in simulation-only mode, because many labs have synthetic data, reproducible scripts and CI-backed checks.
+
+---
+
+## Repository structure
+
+| Path | Purpose |
+|---|---|
+| `docs/` | MkDocs website pages, course maps, reports, guides and generated assets |
+| `blocks/` | Course block source materials and lab implementations |
+| `tools/` | Build, smoke-test and reproducibility scripts |
+| `templates/` | Lab report, IQ metadata, RF safety and final-project templates |
+| `datasets/` | Dataset manifests and lightweight dataset descriptors |
+| `reports/` | FPGA and measurement report skeletons |
+| `experiments/` | Machine-checkable experiment manifests |
+
+---
+
+## Quick start
 
 ```bash
 git clone https://github.com/Lay007/zynq-sdr-course.git
@@ -81,54 +93,105 @@ python tools/tasks.py docs
 python tools/tasks.py labs
 ```
 
-Full validation:
+Run the broader local smoke check:
 
 ```bash
 python tools/tasks.py smoke
 ```
 
----
+Useful commands:
 
-## Recommended Reading Order
-
-1. Intro to SDR
-2. Signals and Sampling
-3. DSP Basics
-4. Simulink and Fixed-Point
-5. FPGA HDL Flow
-6. RF Frontend and AD9363
-7. TX/RX Chains
-8. Modulation and Synchronization
-9. Recording and Analysis
-10. KiCad and Electronics
-11. Integrated SDR Project
-12. Final Project
+| Command | Purpose |
+|---|---|
+| `python tools/tasks.py install` | Install Python dependencies |
+| `python tools/tasks.py docs` | Build the MkDocs site in strict mode |
+| `python tools/tasks.py serve` | Start a local documentation preview |
+| `python tools/tasks.py labs` | Run representative executable Python labs |
+| `python tools/tasks.py hdl` | Run Block 5 Verilog smoke tests |
+| `python tools/tasks.py smoke` | Run docs + labs + HDL checks |
+| `python tools/tasks.py clean` | Remove generated local artifacts |
 
 ---
 
-## Key Pages
+## Recommended learning path
 
-- `docs/course-map.md`
-- `docs/student-path.md`
-- `docs/reviewer-path.md`
-- `docs/model-to-measurement.md`
-- `docs/status.md`
-- `docs/reproducibility-guide.md`
+1. **Intro to SDR** — tools, signals and first reception concepts.
+2. **Signals and sampling** — spectrum, aliasing, complex baseband and IQ.
+3. **DSP basics** — FFT, FIR, windows, mixing and decimation.
+4. **Fixed-point workflow** — numeric formats, scaling and quantization.
+5. **FPGA / HDL flow** — streaming interfaces, Verilog and testbenches.
+6. **RF frontend** — frequency plans, gain staging and AD9363 settings.
+7. **TX/RX chains** — DUC, DDC, loopback and packet-level metrics.
+8. **Synchronization** — CFO, phase, timing, EVM and BER.
+9. **IQ recording and analysis** — metadata, formats, replay and quality checks.
+10. **Electronics and KiCad** — attenuators, filters and RF safety.
+11. **Integrated SDR project** — model, implementation, capture and report.
+12. **Final projects** — portfolio-ready SDR engineering outcomes.
 
 ---
 
-## Engineering Philosophy
+## Key documentation pages
 
-The course follows the workflow:
+| Page | Why open it |
+|---|---|
+| [Course demo dashboard](docs/demo-dashboard.md) | Fast visual overview of executable course artifacts |
+| [Visual course map](docs/course-map.md) | Complete route from theory to final project |
+| [Student path](docs/student-path.md) | Shortest learner route through the repository |
+| [Reviewer path](docs/reviewer-path.md) | Evidence-oriented review path for quick evaluation |
+| [Instructor guide](docs/instructor-guide.md) | How to use the repository as a teaching workspace |
+| [Model → FPGA → RF → Measurement](docs/model-to-measurement.md) | Core engineering workflow of the course |
+| [Course status](docs/status.md) | Readiness matrix, gaps and next improvements |
+| [Reproducibility guide](docs/reproducibility-guide.md) | How to rebuild results and generated artifacts |
+| [Real data policy](docs/real-data-policy.md) | How to handle IQ data without repository bloat |
+
+---
+
+## Engineering philosophy
+
+The central idea of the course is:
 
 ```text
-Model → Fixed Point → FPGA → RF → Measurement → Report
+Model -> Implementation -> Measurement -> Decision
 ```
 
-Every major topic is expected to produce measurable and reproducible engineering artifacts.
+A result is considered mature only when it is connected to evidence: generated plots, metrics, HDL simulation, dataset metadata, RF safety notes or a reproducible engineering report.
+
+---
+
+## Current maturity focus
+
+The repository already contains:
+
+- bilingual MkDocs documentation;
+- executable DSP and synchronization labs;
+- HDL smoke checks for FPGA-facing examples;
+- IQ recording and analysis workflows;
+- experiment manifests;
+- report templates and final-project structure.
+
+The next major proof points are:
+
+- validated Zynq/AD9363 hardware captures;
+- small public or externally linked IQ demo datasets;
+- Vivado resource/timing reports for Block 5 HDL modules;
+- complete QPSK or tone model-to-measurement final report.
+
+---
+
+## Portfolio value
+
+This repository demonstrates practical competence in:
+
+- DSP algorithm design;
+- fixed-point implementation thinking;
+- FPGA/HDL verification;
+- SDR system architecture;
+- RF measurement discipline;
+- reproducible engineering documentation;
+- CI-assisted educational workflow.
 
 ---
 
 ## License
 
-MIT License
+MIT License. See [LICENSE](LICENSE).
