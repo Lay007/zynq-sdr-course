@@ -20,14 +20,30 @@ This page is the top-level engineering status board for the course. It is intent
 | 02 | Signals and sampling | Draft | Draft | Partial | Partial | Not required | Docs | Add executable aliasing and IQ sampling demos. |
 | 03 | DSP basics | Ready | Executable | Python / MATLAB / C++ path | Ready | Not required | Labs | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
 | 04 | Simulink and fixed-point | Ready | Executable | Python / MATLAB-style references | Ready | Not required | Labs | Add Simulink screenshots and fixed-point export examples. |
-| 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches | Ready | Hardware pending | HDL CI | Fill FPGA resource and timing reports from Vivado. |
-| 06 | RF frontend and AD9363 | Ready | Executable | Analysis scripts | Ready | Hardware pending | Labs | Measure AD9363 gain and overload table. |
+| 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches | Ready | Hardware pending | HDL CI | Fill FPGA resource/timing report templates with Vivado data. |
+| 06 | RF frontend and AD9363 | Ready | Executable | Analysis scripts | Ready | Hardware pending | Labs | Validate AD9363 setup and gain/overload table. |
 | 07 | TX/RX chains | Ready | Executable | DUC/DDC demos | Ready | Hardware pending | Labs | Add RF loopback measurement package. |
 | 08 | Modulation and synchronization | Ready | Executable | Synchronization demos | Ready | Optional | Sync CI | Add impairment sweeps and BER/EVM dashboards. |
-| 09 | Recording and analysis tools | Ready | Executable | IQ readers | Ready | Hardware pending | Recording CI | Replace manifest-only QPSK dataset with validated capture or generated fixture. |
+| 09 | Recording and analysis tools | Ready | Executable | IQ readers | Ready | Hardware pending | Recording CI | Update QPSK dataset manifest with real checksum or synthetic generator. |
 | 10 | KiCad and basic electronics | Ready | Draft | Calculators / templates | Partial | Bench pending | Docs | Add measured breadboard photos and KiCad exports. |
-| 11 | Integrated SDR project | Ready | Executable | Simulation package | Ready | Hardware pending | Labs | Complete the QPSK hardware demo report. |
-| 12 | Final projects | Ready | Draft | Templates + rubric | Partial | Depends on project | Docs | Apply final-project grading rubric to one example report. |
+| 11 | Integrated SDR project | Ready | Executable | Simulation package | Ready | Hardware pending | Labs | Promote QPSK hardware demo to measured report. |
+| 12 | Final projects | Ready | Draft | Templates + rubric | Partial | Depends on project | Docs | Use grading rubric and example report skeleton for first final project. |
+
+## Newly added hardening artifacts
+
+| Artifact | Purpose |
+|---|---|
+| `docs/final-project-grading-rubric.md` | Consistent scoring for Block 12 final projects. |
+| `docs/end-to-end-qpsk-hardware-demo.md` | Flagship QPSK model-to-measurement demo checklist. |
+| `docs/fpga-resource-report-template.md` | FPGA resource, timing, latency and throughput reporting page. |
+| `docs/student-ci-grading-guide.md` | Student branch and CI pass/fail workflow. |
+| `docs/final-project-example-report.md` | Skeleton for a portfolio-ready SDR final report. |
+| `docs/hardware-validation-backlog.md` | Separation of documentation tasks and hardware-only tasks. |
+| `docs/iq-demo-dataset-manifest.md` | Dataset contract for QPSK replay/capture work. |
+| `datasets/demo_qpsk_capture/manifest.yaml` | First manifest-only QPSK dataset package. |
+| `templates/fpga_resource_report.template.md` | Reusable FPGA report template. |
+| `templates/student_assignment.template.md` | Reusable student assignment template. |
+| `reports/fpga/z7020-resource-summary-template.md` | Z7020 resource summary skeleton. |
 
 ## CI and local quality gates
 
@@ -44,19 +60,10 @@ Each mature lab should eventually provide:
 
 - a short problem statement;
 - a runnable script, HDL testbench or clearly bounded manual experiment;
-- expected output files under `docs/assets`, `verification`, or a documented report path;
+- expected output files under `docs/assets`, `verification`, `datasets`, `reports`, or a documented report path;
 - a short interpretation section explaining what the figure/table proves;
 - local reproduction commands;
 - a CI or smoke-test hook when practical.
-
-## Newly added hardening artifacts
-
-- `docs/final-project-grading-rubric.md` defines scoring for Block 12 work.
-- `docs/end-to-end-qpsk-hardware-demo.md` defines the flagship QPSK validation package.
-- `docs/fpga-resource-report-template.md` defines FPGA resource/timing evidence.
-- `docs/student-ci-grading-guide.md` defines branch and CI expectations for student work.
-- `datasets/demo_qpsk_capture/manifest.yaml` reserves the first QPSK dataset contract.
-- `reports/fpga/z7020-resource-summary-template.md` prepares the Z7020 resource summary.
 
 ## Course-level strengths
 
@@ -67,18 +74,18 @@ Each mature lab should eventually provide:
 
 ## Main gaps to close
 
-1. Replace the QPSK manifest-only dataset with a validated capture or generated fixture.
+1. Replace the QPSK manifest-only dataset with a validated small file or external link.
 2. Add board-level measurements for the Zynq/AD9363 path.
-3. Fill Vivado resource/timing reports for the Block 5 HDL blocks.
-4. Add RF safety limits and attenuation assumptions to every hardware-facing lab.
-5. Apply the grading rubric to one completed final project report.
+3. Fill FPGA resource/timing reports with Vivado data.
+4. Keep RU/EN pages aligned when adding new labs.
+5. Turn one QPSK or tone flow into a complete final report with plots and limitations.
 
 ## Priority improvements
 
 1. Promote one complete `Model -> FPGA -> RF -> Measurement` demo to portfolio-ready status.
 2. Add a small public/synthetic IQ dataset manifest for recording and replay labs.
 3. Add latency and resource-estimate tables for the simplest HDL blocks.
-4. Add a final-project grading rubric for instructors.
+4. Use the final-project grading rubric for instructor evaluation.
 5. Keep Russian and English navigation synchronized whenever a block is promoted.
 
 ## Reviewer path
