@@ -20,14 +20,14 @@ This page is the top-level engineering status board for the course. It is intent
 | 02 | Signals and sampling | Draft | Draft | Partial | Partial | Not required | Docs | Add executable aliasing and IQ sampling demos. |
 | 03 | DSP basics | Ready | Executable | Python / MATLAB / C++ path | Ready | Not required | Labs | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
 | 04 | Simulink and fixed-point | Ready | Executable | Python / MATLAB-style references | Ready | Not required | Labs | Add Simulink screenshots and fixed-point export examples. |
-| 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches | Ready | Hardware pending | HDL CI | Add board-level timing and resource reports. |
-| 06 | RF frontend and AD9363 | Ready | Executable | Analysis scripts | Ready | Hardware pending | Labs | Add validated AD9363 setup and gain table. |
+| 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches | Ready | Hardware pending | HDL CI | Fill FPGA resource and timing reports from Vivado. |
+| 06 | RF frontend and AD9363 | Ready | Executable | Analysis scripts | Ready | Hardware pending | Labs | Measure AD9363 gain and overload table. |
 | 07 | TX/RX chains | Ready | Executable | DUC/DDC demos | Ready | Hardware pending | Labs | Add RF loopback measurement package. |
 | 08 | Modulation and synchronization | Ready | Executable | Synchronization demos | Ready | Optional | Sync CI | Add impairment sweeps and BER/EVM dashboards. |
-| 09 | Recording and analysis tools | Ready | Executable | IQ readers | Ready | Hardware pending | Recording CI | Add small public IQ demo manifests. |
+| 09 | Recording and analysis tools | Ready | Executable | IQ readers | Ready | Hardware pending | Recording CI | Replace manifest-only QPSK dataset with validated capture or generated fixture. |
 | 10 | KiCad and basic electronics | Ready | Draft | Calculators / templates | Partial | Bench pending | Docs | Add measured breadboard photos and KiCad exports. |
-| 11 | Integrated SDR project | Ready | Executable | Simulation package | Ready | Hardware pending | Labs | Add one complete end-to-end hardware project report. |
-| 12 | Final projects | Ready | Draft | Templates | Partial | Depends on project | Docs | Add grading rubric and example final report. |
+| 11 | Integrated SDR project | Ready | Executable | Simulation package | Ready | Hardware pending | Labs | Complete the QPSK hardware demo report. |
+| 12 | Final projects | Ready | Draft | Templates + rubric | Partial | Depends on project | Docs | Apply final-project grading rubric to one example report. |
 
 ## CI and local quality gates
 
@@ -49,6 +49,15 @@ Each mature lab should eventually provide:
 - local reproduction commands;
 - a CI or smoke-test hook when practical.
 
+## Newly added hardening artifacts
+
+- `docs/final-project-grading-rubric.md` defines scoring for Block 12 work.
+- `docs/end-to-end-qpsk-hardware-demo.md` defines the flagship QPSK validation package.
+- `docs/fpga-resource-report-template.md` defines FPGA resource/timing evidence.
+- `docs/student-ci-grading-guide.md` defines branch and CI expectations for student work.
+- `datasets/demo_qpsk_capture/manifest.yaml` reserves the first QPSK dataset contract.
+- `reports/fpga/z7020-resource-summary-template.md` prepares the Z7020 resource summary.
+
 ## Course-level strengths
 
 - The repository already connects theory, DSP, fixed-point implementation, HDL, RF, IQ recording, analysis and reporting.
@@ -58,11 +67,11 @@ Each mature lab should eventually provide:
 
 ## Main gaps to close
 
-1. Add at least one small validated IQ dataset or external dataset manifest.
+1. Replace the QPSK manifest-only dataset with a validated capture or generated fixture.
 2. Add board-level measurements for the Zynq/AD9363 path.
-3. Add RF safety limits and attenuation assumptions to every hardware-facing lab.
-4. Keep RU/EN pages aligned when adding new labs.
-5. Add final report examples with plots, metadata and measurement uncertainty notes.
+3. Fill Vivado resource/timing reports for the Block 5 HDL blocks.
+4. Add RF safety limits and attenuation assumptions to every hardware-facing lab.
+5. Apply the grading rubric to one completed final project report.
 
 ## Priority improvements
 
