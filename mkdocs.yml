@@ -54,23 +54,29 @@ nav:
   - Home: index.md
   - System:
       - "Model → FPGA → RF → Measurement": model-to-measurement.md
+      - "Reproducible engineering route": reproducible-engineering-route.md
       - "Hardware experiment roadmap": hardware-experiment-roadmap.md
       - "Hardware checklist": hardware-checklist.md
       - "Hardware bring-up checklist": hardware-bringup-checklist.md
       - "RF safety guide": rf-safety.md
       - "End-to-end SDR demo roadmap": end-to-end-demo.md
       - "End-to-end tone demo report": end-to-end-tone-demo-report.md
+      - "End-to-end QPSK hardware demo": end-to-end-qpsk-hardware-demo.md
       - "SDR measurement report template": sdr-measurement-report-template.md
+      - "HDL smoke verification": verification/hdl_smoke.md
       - "Experiment manifests": experiment-manifests.md
       - "Lab 1: Tone → RF → IQ → Analysis": lab01-tone-rf-iq-analysis.md
       - "Lab 2: AM/FM Spectrum": lab02-am-fm-spectrum.md
       - "Lab 3: QPSK Constellation": lab03-qpsk-constellation.md
   - "Course demo dashboard": demo-dashboard.md
+  - "Demo lab flow": demo-lab-flow.md
   - "Visual course map": course-map.md
   - "Portfolio view": portfolio-view.md
   - "DSP foundation track": dsp-foundation-track.md
   - "DSP → FPGA Bridge": dsp-to-fpga.md
+  - "C++ ↔ MATLAB bridge": cpp_matlab_bridge.md
   - "CIC fixed-point FPGA bridge": cic-fixed-point-fpga-bridge.md
+  - "FPGA streaming principles": fpga-streaming-principles.md
   - "Measurement Errors": measurement-errors.md
   - "Course Quality":
       - "Course status": status.md
@@ -90,6 +96,19 @@ nav:
       - "Measurement uncertainty guide": measurement-uncertainty-guide.md
       - "Real data policy": real-data-policy.md
       - "SDR / DSP / RF glossary": glossary.md
+      - "Block maturity matrix": maturity_matrix.md
+      - "Course quality gates": course-quality-gates.md
+      - "Lab review checklist": lab-review-checklist.md
+      - "Reproducibility checklist": reproducibility-checklist.md
+      - "Student CI grading guide": student-ci-grading-guide.md
+      - "Hardware validation backlog": hardware-validation-backlog.md
+      - "IQ demo dataset manifest": iq-demo-dataset-manifest.md
+      - "FPGA resource report template": fpga-resource-report-template.md
+      - "Final project grading rubric": final-project-grading-rubric.md
+      - "Final project example report": final-project-example-report.md
+      - "Release checklist": release-checklist.md
+      - "Release notes v0.1.0": release-notes-v0.1.0.md
+      - "ADR 0001: AI-assisted engineering workflow": adr/0001-ai-assisted-engineering-workflow.md
   - "Demo (IEEE figures)": demo.md
   - "GitHub demo notes": demo_readme.md
   - "IEEE-style guide": ieee_style_guide.md
@@ -121,6 +140,8 @@ nav:
           - "11A. Integrated SDR project workflow": ru/blocks/11-integrated-project-workflow.md
           - "12. Final projects": ru/blocks/12-final-projects.md
           - "12A. Final project track": ru/blocks/12-final-project-track.md
+      - "Лаборатории Block 1":
+          - "Lab 1.0 — Первое наблюдение эфира через RTL-SDR": ru/labs/lab-1-0-first-rtl-sdr-observation.md
       - "Лаборатории Block 3":
           - "Lab 3.1 — FFT windows": ru/labs/lab-3-1-fft-windows.md
           - "Lab 3.2 — FIR low-pass": ru/labs/lab-3-2-fir-low-pass.md
@@ -206,6 +227,8 @@ nav:
           - "11A. Integrated SDR project workflow": en/blocks/11-integrated-project-workflow.md
           - "12. Final projects": en/blocks/12-final-projects.md
           - "12A. Final project track": en/blocks/12-final-project-track.md
+      - "Block 1 labs":
+          - "Lab 1.0 — First RF Observation with RTL-SDR": en/labs/lab-1-0-first-rtl-sdr-observation.md
       - "Block 3 labs":
           - "Lab 3.1 — FFT windows": en/labs/lab-3-1-fft-windows.md
           - "Lab 3.2 — FIR low-pass": en/labs/lab-3-2-fir-low-pass.md

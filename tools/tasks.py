@@ -13,6 +13,42 @@ ROOT = Path(__file__).resolve().parents[1]
 TB_DIR = ROOT / "blocks" / "block_05_fpga_hdl_flow" / "tb"
 RTL_DIR = ROOT / "blocks" / "block_05_fpga_hdl_flow" / "rtl"
 PY_DIR = ROOT / "blocks" / "block_05_fpga_hdl_flow" / "python"
+DOCS_ASSETS_DIR = ROOT / "docs" / "assets"
+DATASET_MANIFESTS_DIR = ROOT / "datasets" / "manifests"
+
+GENERATED_DOC_ASSET_PATTERNS = (
+    "course_reproducibility_summary.json",
+    "course_reproducibility_summary.md",
+    "lab35_*.png",
+    "lab35_*.json",
+    "lab36_*.png",
+    "lab36_*.json",
+    "lab37_*.png",
+    "lab37_*.json",
+    "lab64_*.png",
+    "lab64_*.json",
+    "lab73_*.png",
+    "lab73_*.json",
+    "lab75_*.png",
+    "lab75_*.json",
+    "lab84_*.png",
+    "lab84_*.json",
+    "lab93_*.png",
+    "lab93_*.json",
+    "end_to_end_tone_*.png",
+    "end_to_end_tone_*.json",
+)
+
+GENERATED_TB_FILENAMES = (
+    "fir_iq_4tap_input_vectors.txt",
+    "fir_iq_4tap_expected_vectors.txt",
+    "nco_mixer_iq_input_vectors.txt",
+    "nco_mixer_iq_expected_vectors.txt",
+)
+
+GENERATED_DATASET_FILENAMES = (
+    "end_to_end_tone_demo_v1.yml",
+)
 
 
 def run(cmd: list[str], *, cwd: Path = ROOT) -> None:
@@ -107,6 +143,25 @@ def task_clean() -> None:
     for pattern in ("*.out", "*.vcd"):
         for artifact in TB_DIR.glob(pattern):
             artifact.unlink()
+
+    for filename in GENERATED_TB_FILENAMES:
+        artifact = TB_DIR / filename
+        if artifact.exists():
+            artifact.unlink()
+
+    if DOCS_ASSETS_DIR.exists():
+        for pattern in GENERATED_DOC_ASSET_PATTERNS:
+            for artifact in DOCS_ASSETS_DIR.glob(pattern):
+                artifact.unlink()
+
+    if DATASET_MANIFESTS_DIR.exists():
+        for filename in GENERATED_DATASET_FILENAMES:
+            artifact = DATASET_MANIFESTS_DIR / filename
+            if artifact.exists():
+                artifact.unlink()
+
+        if not any(DATASET_MANIFESTS_DIR.iterdir()):
+            DATASET_MANIFESTS_DIR.rmdir()
 
     print("Clean completed.")
 

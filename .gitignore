@@ -10,6 +10,7 @@ Thumbs.db
 build/
 build-*/
 out/
+site/
 bin/
 lib/
 obj/
