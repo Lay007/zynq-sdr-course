@@ -92,7 +92,7 @@ Each mature lab should eventually provide:
 
 For a fast review, start with:
 
-1. `README.md` or `README_ru.md` for the course promise.
+1. `README.md` or `README_RU.md` for the course promise.
 2. `docs/model-to-measurement.md` for the end-to-end engineering route.
 3. `docs/lab-index.md` for runnable or report-oriented labs.
 4. `docs/reproducibility-guide.md` for local rebuild instructions.
