@@ -1,0 +1,45 @@
+dataset_id: demo_qpsk_capture
+version: 0.1
+status: manifest-only
+title: Demo QPSK capture or replay dataset
+description: >-
+  Small QPSK IQ dataset contract for replay, constellation analysis,
+  EVM/SNR checks and future Zynq/AD9363 hardware validation.
+storage: external-or-generated
+url: null
+file_name: demo_qpsk_capture.ci16
+sha256: replace_after_capture
+format: ci16
+endianness: little
+sample_rate_hz: 2400000
+center_frequency_hz: null
+bandwidth_hz: 1200000
+duration_s: null
+source: synthetic-or-zynq-ad9363
+hardware:
+  transmitter: Zynq-7020 + AD9363 or synthetic generator
+  receiver: RTL-SDR, AD9363 RX, or offline replay
+  rf_path: conducted path with attenuation or synthetic replay
+  attenuation_db: null
+  tx_gain_db: null
+  rx_gain_db: null
+signal:
+  modulation: QPSK
+  symbol_rate_sps: null
+  pulse_shape: RRC or TBD
+  rolloff: null
+analysis_targets:
+  - constellation plot
+  - EVM estimate
+  - SNR estimate
+  - frequency offset estimate
+  - report-ready metric table
+quality_checks:
+  checksum_verified: false
+  clipping_observed: unknown
+  overload_observed: unknown
+  dc_offset_checked: false
+license: course-demo-only
+notes:
+  - Raw IQ data is intentionally not committed until a validated small file or external link is available.
+  - Update checksum and acquisition fields after real capture.
