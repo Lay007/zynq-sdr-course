@@ -138,6 +138,7 @@ Useful commands:
 | [Visual course map](docs/course-map.md) | Complete route from theory to final project |
 | [Student path](docs/student-path.md) | Shortest learner route through the repository |
 | [Reviewer path](docs/reviewer-path.md) | Evidence-oriented review path for quick evaluation |
+| [Reviewer acceptance checklist](docs/reviewer-checklist.md) | Pass/fail-style checklist for reproducibility, DSP, HDL, RF and final-project evidence |
 | [Instructor guide](docs/instructor-guide.md) | How to use the repository as a teaching workspace |
 | [Model → FPGA → RF → Measurement](docs/model-to-measurement.md) | Core engineering workflow of the course |
 | [Course status](docs/status.md) | Readiness matrix, gaps and next improvements |
