@@ -60,6 +60,7 @@ Typical generated files include:
 
 - `blocks/block_05_fpga_hdl_flow/tb/*_vectors.txt`
 - `blocks/block_05_fpga_hdl_flow/tb/*.out`
+- `blocks/block_05_fpga_hdl_flow/tb/*.vcd`
 - waveform files emitted by the testbenches
 
 These files are build artifacts and should not be edited manually.

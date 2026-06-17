@@ -39,13 +39,13 @@ PASS: iq_passthrough test completed without errors
 The simulation also produces:
 
 ```text
-tb_iq_passthrough.vcd
+blocks/block_05_fpga_hdl_flow/tb/tb_iq_passthrough.vcd
 ```
 
 You can inspect it with GTKWave:
 
 ```bash
-gtkwave tb_iq_passthrough.vcd
+gtkwave blocks/block_05_fpga_hdl_flow/tb/tb_iq_passthrough.vcd
 ```
 
 ## Engineering meaning

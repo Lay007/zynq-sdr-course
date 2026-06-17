@@ -59,7 +59,7 @@ initial begin
 end
 
 initial begin
-    $dumpfile("tb_iq_passthrough.vcd");
+    $dumpfile("blocks/block_05_fpga_hdl_flow/tb/tb_iq_passthrough.vcd");
     $dumpvars(0, tb_iq_passthrough);
 
     repeat (3) @(posedge clk);

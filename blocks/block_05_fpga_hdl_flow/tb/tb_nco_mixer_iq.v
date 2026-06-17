@@ -115,7 +115,7 @@ initial begin
 end
 
 initial begin
-    $dumpfile("tb_nco_mixer_iq.vcd");
+    $dumpfile("blocks/block_05_fpga_hdl_flow/tb/tb_nco_mixer_iq.vcd");
     $dumpvars(0, tb_nco_mixer_iq);
 
     repeat (3) @(posedge clk);

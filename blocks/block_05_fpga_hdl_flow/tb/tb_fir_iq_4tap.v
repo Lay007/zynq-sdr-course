@@ -114,7 +114,7 @@ initial begin
 end
 
 initial begin
-    $dumpfile("tb_fir_iq_4tap.vcd");
+    $dumpfile("blocks/block_05_fpga_hdl_flow/tb/tb_fir_iq_4tap.vcd");
     $dumpvars(0, tb_fir_iq_4tap);
 
     repeat (3) @(posedge clk);

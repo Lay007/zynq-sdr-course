@@ -46,6 +46,11 @@ GENERATED_TB_FILENAMES = (
     "nco_mixer_iq_expected_vectors.txt",
 )
 
+LEGACY_ROOT_TB_PATTERNS = (
+    "tb_*.out",
+    "tb_*.vcd",
+)
+
 GENERATED_DATASET_FILENAMES = (
     "end_to_end_tone_demo_v1.yml",
 )
@@ -142,6 +147,10 @@ def task_clean() -> None:
 
     for pattern in ("*.out", "*.vcd"):
         for artifact in TB_DIR.glob(pattern):
+            artifact.unlink()
+
+    for pattern in LEGACY_ROOT_TB_PATTERNS:
+        for artifact in ROOT.glob(pattern):
             artifact.unlink()
 
     for filename in GENERATED_TB_FILENAMES:

@@ -142,7 +142,7 @@ always @(posedge aclk) begin
 end
 
 initial begin
-    $dumpfile("tb_axis_iq_passthrough.vcd");
+    $dumpfile("blocks/block_05_fpga_hdl_flow/tb/tb_axis_iq_passthrough.vcd");
     $dumpvars(0, tb_axis_iq_passthrough);
 
     repeat (4) @(posedge aclk);
