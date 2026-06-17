@@ -1,0 +1,2 @@
+# This file is automatically written.  Do not modify.
+proc gen_USERPARAMETER_REMOVE_NULL_BEAT_EN_ENABLEMENT {TKEEP_EN } {expr $TKEEP_EN == "true"}
