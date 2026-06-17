@@ -143,6 +143,10 @@ nav:
           - "12A. Final project track": ru/blocks/12-final-project-track.md
       - "Лаборатории Block 1":
           - "Lab 1.0 — Первое наблюдение эфира через RTL-SDR": ru/labs/lab-1-0-first-rtl-sdr-observation.md
+      - "Лаборатории Block 2":
+          - "Lab 2.1 — Частотная ось дискретизации и интерпретация": ru/labs/lab-2-1-sampling-axis-and-interpretation.md
+          - "Lab 2.2 — Aliasing sweep": ru/labs/lab-2-2-aliasing-sweep.md
+          - "Lab 2.3 — Интерпретация I/Q и mirrored spectrum": ru/labs/lab-2-3-iq-interpretation-and-mirroring.md
       - "Лаборатории Block 3":
           - "Lab 3.1 — FFT windows": ru/labs/lab-3-1-fft-windows.md
           - "Lab 3.2 — FIR low-pass": ru/labs/lab-3-2-fir-low-pass.md
@@ -230,6 +234,10 @@ nav:
           - "12A. Final project track": en/blocks/12-final-project-track.md
       - "Block 1 labs":
           - "Lab 1.0 — First RF Observation with RTL-SDR": en/labs/lab-1-0-first-rtl-sdr-observation.md
+      - "Block 2 labs":
+          - "Lab 2.1 — Sampling axis and interpretation": en/labs/lab-2-1-sampling-axis-and-interpretation.md
+          - "Lab 2.2 — Aliasing sweep": en/labs/lab-2-2-aliasing-sweep.md
+          - "Lab 2.3 — I/Q interpretation and mirrored spectrum": en/labs/lab-2-3-iq-interpretation-and-mirroring.md
       - "Block 3 labs":
           - "Lab 3.1 — FFT windows": en/labs/lab-3-1-fft-windows.md
           - "Lab 3.2 — FIR low-pass": en/labs/lab-3-2-fir-low-pass.md
