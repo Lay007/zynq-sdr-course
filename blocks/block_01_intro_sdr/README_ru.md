@@ -136,13 +136,13 @@ flowchart TB
 
 ### RTL-SDR V3 Pro
 
-![RTL-SDR V3 Pro](/zynq-sdr-course/images/hardware/rtl_sdr_v3_pro_real.png)
+![RTL-SDR V3 Pro](https://lay007.github.io/zynq-sdr-course/images/hardware/rtl_sdr_v3_pro_real.png)
 
 RTL-SDR используется как внешний приёмник в первой практической лабораторной работе.
 
 ### Плата Xilinx Zynq-7020 + модуль ADRV
 
-![Xilinx Zynq-7020 with ADRV module](/zynq-sdr-course/images/hardware/xilinx_7020_adrv_real.png)
+![Xilinx Zynq-7020 with ADRV module](https://lay007.github.io/zynq-sdr-course/images/hardware/xilinx_7020_adrv_real.png)
 
 Эта фотография показывает реальную SDR-платформу на уровне платы, которая используется в практической части первого блока.
 

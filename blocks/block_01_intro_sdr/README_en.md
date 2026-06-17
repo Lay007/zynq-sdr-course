@@ -98,13 +98,13 @@ flowchart TB
 
 ### RTL-SDR V3 Pro
 
-![RTL-SDR V3 Pro](/zynq-sdr-course/images/hardware/rtl_sdr_v3_pro_real.png)
+![RTL-SDR V3 Pro](https://lay007.github.io/zynq-sdr-course/images/hardware/rtl_sdr_v3_pro_real.png)
 
 RTL-SDR is used as the external receiver in the first practical labs.
 
 ### Xilinx Zynq-7020 + ADRV module
 
-![Xilinx Zynq-7020 with ADRV module](/zynq-sdr-course/images/hardware/xilinx_7020_adrv_real.png)
+![Xilinx Zynq-7020 with ADRV module](https://lay007.github.io/zynq-sdr-course/images/hardware/xilinx_7020_adrv_real.png)
 
 This photo shows the real SDR platform used in the practical part of the first block.
 
