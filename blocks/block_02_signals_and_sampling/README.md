@@ -24,6 +24,14 @@ A spectrum can look correct and still lead to a wrong conclusion if `Fs`, `Fc`, 
 | Aliasing/leakage notes | prevent wrong spectral interpretation |
 | Short lab report | document assumptions and interpretation errors |
 
+## Lab matrix / Матрица лабораторных
+
+| Lab | Topic | Main artifact | Diagnostic value |
+|---|---|---|---|
+| [Lab 2.1](lab_2_1_sampling_axis_and_interpretation.md) | Sampling axis and interpretation | time preview, FFT-axis comparison, metrics JSON | detect wrong `Fs` assumptions |
+| [Lab 2.2](lab_2_2_aliasing_sweep.md) | Aliasing sweep | alias map, example spectra, metrics JSON | predict spectral folding above Nyquist |
+| [Lab 2.3](lab_2_3_iq_interpretation_and_mirroring.md) | I/Q interpretation and mirroring | complex/swapped/real spectrum comparison | catch I/Q-order and mirrored-spectrum mistakes |
+
 ## Practical path / Практический маршрут
 
 1. Observe a known signal.
@@ -32,6 +40,12 @@ A spectrum can look correct and still lead to a wrong conclusion if `Fs`, `Fc`, 
 4. Interpret I/Q baseband representation.
 5. Document metadata.
 6. Detect deliberate interpretation mistakes.
+
+Run the representative executable subset from the repository root:
+
+```bash
+python tools/run_all_labs.py
+```
 
 ## Languages / Языки
 

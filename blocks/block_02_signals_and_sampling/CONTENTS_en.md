@@ -9,10 +9,18 @@
 6. basic parameter-selection mistakes
 
 ## Practical track
-1. comparing spectra at different sampling rates
-2. visualizing aliasing in models and scripts
-3. building I/Q trajectories and basic spectra
-4. matching a model with a recorded signal
+1. Lab 2.1: comparing correct and incorrect sampling-rate interpretation
+2. Lab 2.2: visualizing aliasing and validating foldback predictions
+3. Lab 2.3: comparing correct I/Q, swapped I/Q and real-only capture
+4. matching a model with a recorded signal and its metadata
+
+## Executable lab map
+
+| Lab | Script | Main outputs |
+|---|---|---|
+| 2.1 | `python/sampling_analysis.py` | time plot, FFT-axis comparison, metrics JSON |
+| 2.2 | `python/aliasing_sweep.py` | alias map, example spectra, metrics JSON |
+| 2.3 | `python/iq_visualization.py` | I/Q time plot, mirrored-spectrum comparison, metrics JSON |
 
 ## Review and discussion questions
 1. Which limitations or tradeoffs are central to this block?
