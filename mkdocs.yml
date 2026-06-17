@@ -82,6 +82,7 @@ nav:
       - "Course status": status.md
       - "Student path": student-path.md
       - "Reviewer path": reviewer-path.md
+      - "Reviewer acceptance checklist": reviewer-checklist.md
       - "Instructor guide": instructor-guide.md
       - "Quality roadmap": course-quality-roadmap.md
       - "Course readiness matrix": course-readiness-matrix.md

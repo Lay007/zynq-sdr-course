@@ -13,7 +13,8 @@ Open these pages in order:
 3. [Model → FPGA → RF → Measurement](model-to-measurement.md)
 4. [Hardware checklist](hardware-checklist.md)
 5. [End-to-end SDR demo roadmap](end-to-end-demo.md)
-6. [Portfolio view](portfolio-view.md)
+6. [Reviewer acceptance checklist](reviewer-checklist.md)
+7. [Portfolio view](portfolio-view.md)
 
 ## What each page proves
 
@@ -24,6 +25,7 @@ Open these pages in order:
 | [Model → FPGA → RF → Measurement](model-to-measurement.md) | the repository has a coherent engineering chain |
 | [Hardware checklist](hardware-checklist.md) | hardware work is treated as a disciplined measurement task |
 | [End-to-end SDR demo roadmap](end-to-end-demo.md) | the project aims for complete model-to-measurement closure |
+| [Reviewer acceptance checklist](reviewer-checklist.md) | pass/fail criteria are stated explicitly instead of being implied |
 | [Portfolio view](portfolio-view.md) | the repository is intentionally positioned as a serious engineering artifact |
 
 ## Fast reviewer verdict
@@ -41,6 +43,7 @@ Open:
 
 1. [Demo dashboard](demo-dashboard.md)
 2. [Course status](status.md)
-3. [Portfolio view](portfolio-view.md)
+3. [Reviewer acceptance checklist](reviewer-checklist.md)
+4. [Portfolio view](portfolio-view.md)
 
 That is the shortest path to evaluate maturity, evidence and presentation quality.

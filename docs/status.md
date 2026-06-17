@@ -96,7 +96,8 @@ For a fast review, start with:
 2. `docs/model-to-measurement.md` for the end-to-end engineering route.
 3. `docs/lab-index.md` for runnable or report-oriented labs.
 4. `docs/reproducibility-guide.md` for local rebuild instructions.
-5. This status page for readiness and remaining gaps.
+5. `docs/reviewer-checklist.md` for pass/fail-style evidence checks.
+6. This status page for readiness and remaining gaps.
 
 ## Definition of done for a new block
 
