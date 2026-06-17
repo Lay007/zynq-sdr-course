@@ -75,6 +75,7 @@
 |---|---|
 | `docs/` | Сайт MkDocs, карты курса, отчёты, руководства и сгенерированные артефакты |
 | `blocks/` | Исходные материалы блоков курса и реализации лабораторных |
+| `hardware/` | Подобранные локальные наборы по платам и стартовые материалы для bring-up |
 | `tools/` | Скрипты сборки, smoke-проверок и воспроизводимости |
 | `templates/` | Шаблоны отчётов, IQ metadata, RF safety и итоговых проектов |
 | `datasets/` | Dataset manifests и описания небольших наборов данных |
@@ -110,6 +111,10 @@ python tools/tasks.py smoke
 | `python tools/tasks.py hdl` | Запустить Verilog smoke-тесты блока 5 |
 | `python tools/tasks.py smoke` | Выполнить проверку docs + labs + HDL |
 | `python tools/tasks.py clean` | Удалить локальные сгенерированные артефакты |
+
+Локальная стартовая аппаратная база:
+
+- [`hardware/7020_ad936x_sdr/README.md`](hardware/7020_ad936x_sdr/README.md) - импортированный стартовый комплект для платы Zynq-7020 + AD936x.
 
 ---
 
