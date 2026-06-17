@@ -144,6 +144,14 @@ def task_hdl() -> None:
     run(["vvp", str(TB_DIR / "tb_axis_iq_passthrough.out")])
 
 
+def task_test() -> None:
+    run([sys.executable, "-m", "pytest", "-q"])
+
+
+def task_lint() -> None:
+    run([sys.executable, "-m", "ruff", "check", "."])
+
+
 def task_smoke() -> None:
     task_docs()
     task_labs()
@@ -202,7 +210,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Run local course tasks.")
     parser.add_argument(
         "task",
-        choices=("install", "docs", "serve", "labs", "hdl", "smoke", "clean"),
+        choices=("install", "docs", "serve", "labs", "hdl", "test", "lint", "smoke", "clean"),
         help="Task to execute.",
     )
     args = parser.parse_args()
@@ -213,6 +221,8 @@ def main() -> int:
         "serve": task_serve,
         "labs": task_labs,
         "hdl": task_hdl,
+        "test": task_test,
+        "lint": task_lint,
         "smoke": task_smoke,
         "clean": task_clean,
     }

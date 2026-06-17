@@ -1,4 +1,4 @@
-.PHONY: install docs serve labs hdl smoke clean
+.PHONY: install docs serve labs hdl test lint smoke clean
 
 PYTHON ?= python
 PIP ?= pip
@@ -17,6 +17,12 @@ labs:
 
 hdl:
 	bash tools/run_block5_hdl_smoke.sh
+
+test:
+	$(PYTHON) -m pytest -q
+
+lint:
+	$(PYTHON) -m ruff check .
 
 smoke: docs labs hdl
 
