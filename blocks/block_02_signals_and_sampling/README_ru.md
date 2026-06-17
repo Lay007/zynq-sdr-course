@@ -51,6 +51,22 @@
 
 В лабораторной части студент берёт известный тестовый сигнал, строит временную форму и FFT, затем проверяет, как меняется интерпретация при неверных `Fs`, `Fc` или I/Q metadata.
 
+## Исполняемые демо
+
+Репрезентативные Python-демо для этого блока:
+
+| Демо | Файл | Основные артефакты |
+|---|---|---|
+| Частотная ось дискретизации и интерпретация | `python/sampling_analysis.py` | `lab21_sampling_time_domain.png`, `lab21_sampling_frequency_axis.png`, `lab21_sampling_metrics.json` |
+| Aliasing sweep | `python/aliasing_sweep.py` | `lab22_aliasing_map.png`, `lab22_aliasing_examples.png`, `lab22_aliasing_metrics.json` |
+| Интерпретация I/Q и mirrored spectrum | `python/iq_visualization.py` | `lab23_iq_components_time.png`, `lab23_iq_interpretation_spectra.png`, `lab23_iq_metrics.json` |
+
+Запуск исполняемого подмножества из корня репозитория:
+
+```bash
+python tools/run_all_labs.py
+```
+
 ## Инженерный результат
 
 На выходе блока должны появиться:
