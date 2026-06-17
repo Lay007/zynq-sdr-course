@@ -75,6 +75,7 @@ The course can still be studied in simulation-only mode, because many labs have 
 |---|---|
 | `docs/` | MkDocs website pages, course maps, reports, guides and generated assets |
 | `blocks/` | Course block source materials and lab implementations |
+| `hardware/` | Curated local board bundles and bring-up starting points |
 | `tools/` | Build, smoke-test and reproducibility scripts |
 | `templates/` | Lab report, IQ metadata, RF safety and final-project templates |
 | `datasets/` | Dataset manifests and lightweight dataset descriptors |
@@ -110,6 +111,10 @@ Useful commands:
 | `python tools/tasks.py hdl` | Run Block 5 Verilog smoke tests |
 | `python tools/tasks.py smoke` | Run docs + labs + HDL checks |
 | `python tools/tasks.py clean` | Remove generated local artifacts |
+
+Curated local board starting point:
+
+- [`hardware/7020_ad936x_sdr/README.md`](hardware/7020_ad936x_sdr/README.md) - imported Zynq-7020 + AD936x board bundle for bring-up work.
 
 ---
 
