@@ -62,7 +62,8 @@ This lab is intentionally compact:
 | EVM dB | `20*log10(EVM_rms)` |
 | SNR estimate | approximately `-EVM_dB` in this simplified model |
 | BER | bit errors divided by compared bits |
-| residual frequency error | final peak after DDC minus expected final frequency |
+| estimated offset before/after DDC | carrier-offset estimate before and after digital downconversion |
+| residual frequency error | estimated residual carrier offset after DDC |
 
 ## Expected plots
 

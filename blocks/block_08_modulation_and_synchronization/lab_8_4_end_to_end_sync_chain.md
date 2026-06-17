@@ -1,4 +1,4 @@
-# Lab 8.4 — End-to-End Synchronization Chain
+# Lab 8.4 - End-to-End Synchronization Chain
 
 ## Goal
 
@@ -50,11 +50,11 @@ flowchart LR
 
 The educational receiver applies synchronization in this order:
 
-1. **Timing phase search** — select the sampling phase with minimum EVM.
-2. **CFO estimation/correction** — estimate residual frequency slope using known reference symbols.
-3. **Phase correction** — remove remaining constant constellation rotation.
-4. **Hard decisions** — convert corrected symbols to bits.
-5. **Metrics** — compute EVM and BER before/after synchronization.
+1. **Timing phase search** - select the sampling phase with the strongest decimated symbol energy.
+2. **CFO estimation/correction** - estimate residual frequency slope using known reference symbols.
+3. **Phase correction** - remove remaining constant constellation rotation.
+4. **Hard decisions** - convert corrected symbols to bits.
+5. **Metrics** - compute EVM and BER before and after synchronization.
 
 ## Impairments in the model
 
@@ -74,14 +74,14 @@ The educational receiver applies synchronization in this order:
 | CFO error | estimated CFO minus true CFO |
 | estimated phase | measured residual phase after CFO correction |
 | EVM raw | error before synchronization |
-| EVM after timing | error after choosing sampling phase |
+| EVM after timing | error after choosing the sampling phase |
 | EVM after CFO | error after frequency correction |
 | EVM final | error after full synchronization |
 | BER raw/final | decision quality before and after the full chain |
 
 ## Why this closes Block 8
 
-Labs 8.1–8.3 isolate individual synchronization problems. Lab 8.4 combines them into a receiver chain:
+Labs 8.1-8.3 isolate individual synchronization problems. Lab 8.4 combines them into a receiver chain:
 
 | Previous lab | Role in Lab 8.4 |
 |---|---|

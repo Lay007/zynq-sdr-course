@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -53,6 +54,14 @@ LEGACY_ROOT_TB_PATTERNS = (
 
 GENERATED_DATASET_FILENAMES = (
     "end_to_end_tone_demo_v1.yml",
+)
+
+GENERATED_CAPTURE_DIRS = (
+    ROOT / "blocks" / "block_09_recording_and_analysis_tools" / "assets" / "lab93_multiformat",
+)
+
+GENERATED_CAPTURE_FILENAMES = (
+    ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_tone_demo" / "end_to_end_tone_demo_v1.ci16",
 )
 
 
@@ -171,6 +180,14 @@ def task_clean() -> None:
 
         if not any(DATASET_MANIFESTS_DIR.iterdir()):
             DATASET_MANIFESTS_DIR.rmdir()
+
+    for directory in GENERATED_CAPTURE_DIRS:
+        if directory.exists():
+            shutil.rmtree(directory)
+
+    for artifact in GENERATED_CAPTURE_FILENAMES:
+        if artifact.exists():
+            artifact.unlink()
 
     print("Clean completed.")
 

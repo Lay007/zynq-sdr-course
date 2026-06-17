@@ -43,8 +43,8 @@ class LoopbackMetrics:
     ber: float
     bit_errors: int
     compared_bits: int
-    rx_peak_before_ddc_hz: float
-    rx_peak_after_ddc_hz: float
+    estimated_offset_before_ddc_hz: float
+    estimated_offset_after_ddc_hz: float
     residual_frequency_error_hz: float
 
 
@@ -89,9 +89,12 @@ def spectrum_db(x: np.ndarray, fs_hz: float) -> tuple[np.ndarray, np.ndarray]:
     return freq, mag_db
 
 
-def estimate_peak_hz(x: np.ndarray, fs_hz: float) -> float:
-    freq, mag_db = spectrum_db(x, fs_hz)
-    return float(freq[int(np.argmax(mag_db))])
+def estimate_qpsk_offset_hz(x: np.ndarray, fs_hz: float) -> float:
+    if len(x) < 2:
+        return 0.0
+    x4 = (x - np.mean(x)) ** 4
+    phase_step = np.angle(np.mean(np.conj(x4[:-1]) * x4[1:]))
+    return float(fs_hz * phase_step / (2.0 * np.pi * 4.0))
 
 
 def compute_metrics(cfg: LoopbackConfig, tx_symbols: np.ndarray, rx_symbols: np.ndarray, bits: np.ndarray, rx_bits: np.ndarray, rx_before_ddc: np.ndarray, rx_after_ddc: np.ndarray) -> LoopbackMetrics:
@@ -112,9 +115,9 @@ def compute_metrics(cfg: LoopbackConfig, tx_symbols: np.ndarray, rx_symbols: np.
     bit_errors = int(np.sum(bits[:compared] != rx_bits[:compared]))
     ber = float(bit_errors / max(compared, 1))
 
-    peak_before = estimate_peak_hz(rx_before_ddc, cfg.sample_rate_hz)
-    peak_after = estimate_peak_hz(rx_after_ddc, cfg.sample_rate_hz)
-    residual_error = peak_after - (cfg.tx_offset_hz + cfg.ddc_shift_hz)
+    estimated_before = estimate_qpsk_offset_hz(rx_before_ddc, cfg.sample_rate_hz)
+    estimated_after = estimate_qpsk_offset_hz(rx_after_ddc, cfg.sample_rate_hz)
+    residual_error = estimated_after - (cfg.tx_offset_hz + cfg.ddc_shift_hz)
 
     return LoopbackMetrics(
         evm_percent=evm_percent,
@@ -123,8 +126,8 @@ def compute_metrics(cfg: LoopbackConfig, tx_symbols: np.ndarray, rx_symbols: np.
         ber=ber,
         bit_errors=bit_errors,
         compared_bits=int(compared),
-        rx_peak_before_ddc_hz=peak_before,
-        rx_peak_after_ddc_hz=peak_after,
+        estimated_offset_before_ddc_hz=estimated_before,
+        estimated_offset_after_ddc_hz=estimated_after,
         residual_frequency_error_hz=float(residual_error),
     )
 
@@ -211,8 +214,8 @@ def main() -> None:
     print(f"Samples per symbol: {cfg.samples_per_symbol}")
     print(f"TX offset: {cfg.tx_offset_hz:.3f} Hz")
     print(f"DDC shift: {cfg.ddc_shift_hz:.3f} Hz")
-    print(f"RX peak before DDC: {metrics.rx_peak_before_ddc_hz:.3f} Hz")
-    print(f"RX peak after DDC: {metrics.rx_peak_after_ddc_hz:.3f} Hz")
+    print(f"Estimated offset before DDC: {metrics.estimated_offset_before_ddc_hz:.3f} Hz")
+    print(f"Estimated offset after DDC: {metrics.estimated_offset_after_ddc_hz:.3f} Hz")
     print(f"Residual frequency error: {metrics.residual_frequency_error_hz:.3f} Hz")
     print(f"EVM: {metrics.evm_percent:.3f} % ({metrics.evm_db:.2f} dB)")
     print(f"SNR estimate: {metrics.snr_estimate_db:.2f} dB")

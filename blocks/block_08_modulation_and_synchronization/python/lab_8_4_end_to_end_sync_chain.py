@@ -113,14 +113,14 @@ def ber(ref_bits: np.ndarray, rx_symbols: np.ndarray) -> tuple[float, int, int]:
     return float(errors / max(compared, 1)), errors, int(compared)
 
 
-def estimate_timing_phase(ref_symbols: np.ndarray, rx_samples: np.ndarray, sps: int) -> tuple[int, list[float]]:
-    evm_by_phase: list[float] = []
+def estimate_timing_phase(rx_samples: np.ndarray, sps: int, symbol_count: int) -> tuple[int, list[float]]:
+    energy_by_phase: list[float] = []
     for phase in range(sps):
-        candidate = sample_symbols(rx_samples, sps, phase, len(ref_symbols))
-        candidate_aligned = scalar_align(ref_symbols, candidate)
-        evm_percent, _ = evm(ref_symbols, candidate_aligned)
-        evm_by_phase.append(evm_percent)
-    return int(np.argmin(evm_by_phase)), evm_by_phase
+        candidate = sample_symbols(rx_samples, sps, phase, symbol_count)
+        trimmed = candidate[1:-1] if len(candidate) > 2 else candidate
+        energy = float(np.mean(np.abs(trimmed) ** 2)) if len(trimmed) else 0.0
+        energy_by_phase.append(energy)
+    return int(np.argmax(energy_by_phase)), energy_by_phase
 
 
 def estimate_cfo_known_symbols(ref: np.ndarray, rx: np.ndarray, symbol_rate_hz: float) -> float:
@@ -169,14 +169,14 @@ def save_stage_bars(path: Path, labels: list[str], values: list[float], ylabel: 
     plt.close()
 
 
-def save_timing_search(path: Path, evm_by_phase: list[float]) -> None:
+def save_timing_search(path: Path, energy_by_phase: list[float]) -> None:
     ASSET_DIR.mkdir(parents=True, exist_ok=True)
-    phases = np.arange(len(evm_by_phase))
+    phases = np.arange(len(energy_by_phase))
     plt.figure(figsize=(7.2, 4.3))
-    plt.plot(phases, evm_by_phase, marker="o")
+    plt.plot(phases, energy_by_phase, marker="o")
     plt.grid(True, alpha=0.35)
     plt.xlabel("Sampling phase, samples")
-    plt.ylabel("EVM, %")
+    plt.ylabel("Mean symbol energy")
     plt.title("Lab 8.4 — Timing search inside full sync chain")
     plt.tight_layout()
     plt.savefig(path, dpi=180)
@@ -204,7 +204,7 @@ def main() -> None:
     evm_raw_percent, _ = evm(tx_symbols, raw_aligned)
     ber_raw, err_raw, compared = ber(bits, raw_aligned)
 
-    best_phase, evm_by_phase = estimate_timing_phase(tx_symbols, rx_samples, cfg.samples_per_symbol)
+    best_phase, energy_by_phase = estimate_timing_phase(rx_samples, cfg.samples_per_symbol, cfg.symbol_count)
     timing_symbols = sample_symbols(rx_samples, cfg.samples_per_symbol, best_phase, cfg.symbol_count)
     timing_aligned = scalar_align(tx_symbols, timing_symbols)
     evm_after_timing_percent, _ = evm(tx_symbols, timing_aligned)
@@ -245,7 +245,7 @@ def main() -> None:
     save_constellation(ASSET_DIR / "lab84_sync_constellation_raw.png", raw_aligned, "Lab 8.4 — Raw constellation")
     save_constellation(ASSET_DIR / "lab84_sync_constellation_after_timing.png", timing_aligned, "Lab 8.4 — After timing selection")
     save_constellation(ASSET_DIR / "lab84_sync_constellation_final.png", final_aligned, "Lab 8.4 — Final synchronized constellation")
-    save_timing_search(ASSET_DIR / "lab84_sync_timing_search.png", evm_by_phase)
+    save_timing_search(ASSET_DIR / "lab84_sync_timing_search.png", energy_by_phase)
     save_stage_bars(
         ASSET_DIR / "lab84_sync_evm_stages.png",
         ["raw", "timing", "CFO", "final"],
@@ -263,7 +263,7 @@ def main() -> None:
 
     metrics_path = ASSET_DIR / "lab84_sync_chain_metrics.json"
     metrics_path.write_text(
-        json.dumps({"config": asdict(cfg), "metrics": asdict(metrics), "evm_by_phase_percent": evm_by_phase}, indent=2),
+        json.dumps({"config": asdict(cfg), "metrics": asdict(metrics), "timing_metric_by_phase": energy_by_phase}, indent=2),
         encoding="utf-8",
     )
 

@@ -12,6 +12,7 @@ import argparse
 import json
 import subprocess
 import sys
+from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
@@ -20,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SUMMARY_JSON = ROOT / "docs" / "assets" / "course_reproducibility_summary.json"
 SUMMARY_MD = ROOT / "docs" / "assets" / "course_reproducibility_summary.md"
 QUICK_LAB_COUNT = 2
+Validator = Callable[[Path], list[str]]
 
 
 @dataclass(frozen=True)
@@ -27,6 +29,7 @@ class LabCommand:
     name: str
     command: list[str]
     expected_artifacts: list[str]
+    validator: Validator | None = None
 
 
 @dataclass(frozen=True)
@@ -35,6 +38,81 @@ class LabResult:
     return_code: int
     passed: bool
     missing_artifacts: list[str]
+    validation_errors: list[str]
+
+
+def load_json(path: Path) -> dict | list:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def validate_lab64(root: Path) -> list[str]:
+    payload = load_json(root / "docs/assets/lab64_synthetic_rf_capture_metrics.json")
+    errors: list[str] = []
+    if abs(payload["frequency_error_hz"]) > 50.0:
+        errors.append(f"frequency_error_hz={payload['frequency_error_hz']:.3f} exceeds 50 Hz")
+    if payload["snr_db"] < 40.0:
+        errors.append(f"snr_db={payload['snr_db']:.2f} below 40 dB")
+    if payload["clipping_count"] != 0:
+        errors.append(f"clipping_count={payload['clipping_count']} is non-zero")
+    if payload["overload_flag"]:
+        errors.append("overload_flag is true")
+    return errors
+
+
+def validate_lab73(root: Path) -> list[str]:
+    metrics = load_json(root / "docs/assets/lab73_tx_rx_loopback_metrics.json")["metrics"]
+    errors: list[str] = []
+    if abs(metrics["residual_frequency_error_hz"]) > 250.0:
+        errors.append(
+            f"residual_frequency_error_hz={metrics['residual_frequency_error_hz']:.3f} exceeds 250 Hz"
+        )
+    if metrics["evm_percent"] > 15.0:
+        errors.append(f"evm_percent={metrics['evm_percent']:.3f} exceeds 15%")
+    if metrics["ber"] > 1e-9:
+        errors.append(f"ber={metrics['ber']:.6e} is non-zero")
+    return errors
+
+
+def validate_lab84(root: Path) -> list[str]:
+    metrics = load_json(root / "docs/assets/lab84_sync_chain_metrics.json")["metrics"]
+    errors: list[str] = []
+    if abs(metrics["cfo_error_hz"]) > 20.0:
+        errors.append(f"cfo_error_hz={metrics['cfo_error_hz']:.3f} exceeds 20 Hz")
+    if abs(metrics["phase_error_rad"]) > 0.2:
+        errors.append(f"phase_error_rad={metrics['phase_error_rad']:.6f} exceeds 0.2 rad")
+    if metrics["evm_final_percent"] > 10.0:
+        errors.append(f"evm_final_percent={metrics['evm_final_percent']:.3f} exceeds 10%")
+    if metrics["ber_final"] > 1e-9:
+        errors.append(f"ber_final={metrics['ber_final']:.6e} is non-zero")
+    if metrics["evm_final_percent"] >= metrics["evm_raw_percent"]:
+        errors.append("final EVM did not improve over raw EVM")
+    return errors
+
+
+def validate_lab93(root: Path) -> list[str]:
+    captures = load_json(root / "docs/assets/lab93_multiformat_iq_metrics.json")["captures"]
+    errors: list[str] = []
+    for capture in captures:
+        fmt = capture["iq_format"]
+        if abs(capture["frequency_error_hz"]) > 100.0:
+            errors.append(f"{fmt}: frequency_error_hz={capture['frequency_error_hz']:.3f} exceeds 100 Hz")
+        if capture["snr_db"] < 50.0:
+            errors.append(f"{fmt}: snr_db={capture['snr_db']:.2f} below 50 dB")
+        if capture["clipping_fraction"] > 0.01:
+            errors.append(f"{fmt}: clipping_fraction={capture['clipping_fraction']:.6f} exceeds 1%")
+    return errors
+
+
+def validate_end_to_end_tone(root: Path) -> list[str]:
+    metrics = load_json(root / "docs/assets/end_to_end_tone_metrics.json")
+    errors: list[str] = []
+    if abs(metrics["frequency_error_hz"]) > 1000.0:
+        errors.append(f"frequency_error_hz={metrics['frequency_error_hz']:.3f} exceeds 1000 Hz")
+    if metrics["estimated_snr_db"] < 50.0:
+        errors.append(f"estimated_snr_db={metrics['estimated_snr_db']:.2f} below 50 dB")
+    if metrics["clipping_fraction"] > 0.001:
+        errors.append(f"clipping_fraction={metrics['clipping_fraction']:.6f} exceeds 0.1%")
+    return errors
 
 
 LABS: list[LabCommand] = [
@@ -73,6 +151,7 @@ LABS: list[LabCommand] = [
             "docs/assets/lab64_synthetic_rf_capture_time.png",
             "docs/assets/lab64_synthetic_rf_capture_metrics.json",
         ],
+        validate_lab64,
     ),
     LabCommand(
         "Block 7 / Lab 7.3 TX/RX loopback metrics",
@@ -83,6 +162,7 @@ LABS: list[LabCommand] = [
             "docs/assets/lab73_rx_constellation_after_ddc.png",
             "docs/assets/lab73_tx_rx_loopback_metrics.json",
         ],
+        validate_lab73,
     ),
     LabCommand(
         "Block 7 / Lab 7.5 CIC decimator",
@@ -103,6 +183,7 @@ LABS: list[LabCommand] = [
             "docs/assets/lab84_sync_constellation_final.png",
             "docs/assets/lab84_sync_chain_metrics.json",
         ],
+        validate_lab84,
     ),
     LabCommand(
         "Block 9 / Lab 9.3 multi-format IQ reader",
@@ -113,6 +194,7 @@ LABS: list[LabCommand] = [
             "docs/assets/lab93_multiformat_iq_spectrum_cu8.png",
             "docs/assets/lab93_multiformat_iq_spectrum_cf32.png",
         ],
+        validate_lab93,
     ),
     LabCommand(
         "Block 11 / End-to-end tone demo",
@@ -124,6 +206,7 @@ LABS: list[LabCommand] = [
             "docs/assets/end_to_end_tone_metrics.json",
             "datasets/manifests/end_to_end_tone_demo_v1.yml",
         ],
+        validate_end_to_end_tone,
     ),
 ]
 
@@ -132,8 +215,9 @@ def run_lab(lab: LabCommand) -> LabResult:
     print(f"\n=== {lab.name} ===")
     completed = subprocess.run(lab.command, cwd=ROOT, text=True)
     missing = [p for p in lab.expected_artifacts if not (ROOT / p).is_file() or (ROOT / p).stat().st_size == 0]
-    passed = completed.returncode == 0 and not missing
-    return LabResult(lab.name, completed.returncode, passed, missing)
+    validation_errors = lab.validator(ROOT) if completed.returncode == 0 and not missing and lab.validator else []
+    passed = completed.returncode == 0 and not missing and not validation_errors
+    return LabResult(lab.name, completed.returncode, passed, missing, validation_errors)
 
 
 def write_summary(results: list[LabResult]) -> None:
@@ -146,11 +230,12 @@ def write_summary(results: list[LabResult]) -> None:
     SUMMARY_JSON.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
     lines = ["# Course reproducibility summary", "", f"Overall result: **{'PASS' if payload['passed'] else 'FAIL'}**", ""]
-    lines.append("| Lab | Result | Missing artifacts |")
-    lines.append("|---|---:|---|")
+    lines.append("| Lab | Result | Missing artifacts | Validation errors |")
+    lines.append("|---|---:|---|---|")
     for r in results:
         missing = ", ".join(r.missing_artifacts) if r.missing_artifacts else "-"
-        lines.append(f"| {r.name} | {'PASS' if r.passed else 'FAIL'} | {missing} |")
+        validation = "; ".join(r.validation_errors) if r.validation_errors else "-"
+        lines.append(f"| {r.name} | {'PASS' if r.passed else 'FAIL'} | {missing} | {validation} |")
     lines.append("")
     SUMMARY_MD.write_text("\n".join(lines), encoding="utf-8")
 
@@ -180,6 +265,8 @@ def main() -> int:
         print(f"{r.name}: {'PASS' if r.passed else 'FAIL'}")
         if r.missing_artifacts:
             print("  Missing:", ", ".join(r.missing_artifacts))
+        if r.validation_errors:
+            print("  Validation:", "; ".join(r.validation_errors))
     if args.no_summary:
         print("\nSummary writing skipped (--no-summary).")
     else:
