@@ -70,10 +70,21 @@ GENERATED_CAPTURE_FILENAMES = (
     ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_tone_demo" / "end_to_end_tone_demo_v1.ci16",
 )
 
+GENERATED_ROOT_DIRS = (
+    ROOT / "site",
+    ROOT / ".pytest_cache",
+    ROOT / ".ruff_cache",
+)
+
 
 def run(cmd: list[str], *, cwd: Path = ROOT) -> None:
     print(f">>> {' '.join(cmd)}")
     subprocess.run(cmd, cwd=cwd, check=True)
+
+
+def remove_tree(path: Path) -> None:
+    if path.exists():
+        shutil.rmtree(path)
 
 
 def task_install() -> None:
@@ -159,14 +170,12 @@ def task_smoke() -> None:
 
 
 def task_clean() -> None:
-    site_dir = ROOT / "site"
-    if site_dir.exists():
-        for path in sorted(site_dir.rglob("*"), reverse=True):
-            if path.is_file() or path.is_symlink():
-                path.unlink()
-            elif path.is_dir():
-                path.rmdir()
-        site_dir.rmdir()
+    for directory in GENERATED_ROOT_DIRS:
+        remove_tree(directory)
+
+    for pycache_dir in ROOT.rglob("__pycache__"):
+        if pycache_dir.is_dir():
+            remove_tree(pycache_dir)
 
     for pattern in ("*.out", "*.vcd"):
         for artifact in TB_DIR.glob(pattern):
