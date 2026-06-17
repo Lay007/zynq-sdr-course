@@ -16,6 +16,9 @@ This page provides a compact index of the executable and report-oriented labs in
 
 | Lab | Block | Topic | Python | Verilog | Report | CI | Main metrics / artifacts |
 |---|---|---|---:|---:|---:|---:|---|
+| 2.1 | Signals and sampling | Sampling axis and interpretation | yes | no | yes | yes | time plot, correct/wrong FFT axis, interpretation error |
+| 2.2 | Signals and sampling | Aliasing sweep | yes | no | yes | yes | alias map, example spectra, alias error |
+| 2.3 | Signals and sampling | I/Q interpretation and mirroring | yes | no | yes | yes | complex vs real spectra, swapped-IQ mirror check |
 | 3.1 | DSP basics | FFT windows and leakage | yes | no | yes | partial | spectra, leakage comparison |
 | 3.2 | DSP basics | FIR low-pass filter | yes | no | yes | partial | FIR response, filtered spectrum |
 | 3.3 | DSP basics | Digital mixing | yes | planned link | yes | partial | spectra before/after mixing |

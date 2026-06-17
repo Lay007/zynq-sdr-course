@@ -20,6 +20,12 @@ DATASET_MANIFESTS_DIR = ROOT / "datasets" / "manifests"
 GENERATED_DOC_ASSET_PATTERNS = (
     "course_reproducibility_summary.json",
     "course_reproducibility_summary.md",
+    "lab21_*.png",
+    "lab21_*.json",
+    "lab22_*.png",
+    "lab22_*.json",
+    "lab23_*.png",
+    "lab23_*.json",
     "lab35_*.png",
     "lab35_*.json",
     "lab36_*.png",

@@ -53,6 +53,22 @@ After completing this block, the student can:
 
 The student takes a known tone, builds time and frequency plots, and then intentionally changes Fs/Fc or metadata to observe incorrect interpretations.
 
+## Executable demos
+
+Representative Python demos for this block:
+
+| Demo | File | Main artifacts |
+|---|---|---|
+| Sampling axis and interpretation | `python/sampling_analysis.py` | `lab21_sampling_time_domain.png`, `lab21_sampling_frequency_axis.png`, `lab21_sampling_metrics.json` |
+| Aliasing sweep | `python/aliasing_sweep.py` | `lab22_aliasing_map.png`, `lab22_aliasing_examples.png`, `lab22_aliasing_metrics.json` |
+| I/Q interpretation and mirroring | `python/iq_visualization.py` | `lab23_iq_components_time.png`, `lab23_iq_interpretation_spectra.png`, `lab23_iq_metrics.json` |
+
+Run the executable subset from the repository root:
+
+```bash
+python tools/run_all_labs.py
+```
+
 ## Engineering result
 
 Outputs of the block:

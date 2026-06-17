@@ -59,6 +59,42 @@ def validate_lab64(root: Path) -> list[str]:
     return errors
 
 
+def validate_lab21(root: Path) -> list[str]:
+    metrics = load_json(root / "docs/assets/lab21_sampling_metrics.json")["metrics"]
+    errors: list[str] = []
+    if abs(metrics["correct_frequency_error_hz"]) > 50.0:
+        errors.append(
+            f"correct_frequency_error_hz={metrics['correct_frequency_error_hz']:.3f} exceeds 50 Hz"
+        )
+    if abs(metrics["wrong_interpretation_error_hz"]) < 20_000.0:
+        errors.append("wrong sampling-rate interpretation did not create a large enough error")
+    if metrics["clipping_fraction"] > 0.001:
+        errors.append(f"clipping_fraction={metrics['clipping_fraction']:.6f} exceeds 0.1%")
+    return errors
+
+
+def validate_lab22(root: Path) -> list[str]:
+    metrics = load_json(root / "docs/assets/lab22_aliasing_metrics.json")["metrics"]
+    errors: list[str] = []
+    if metrics["max_alias_error_hz"] > 50.0:
+        errors.append(f"max_alias_error_hz={metrics['max_alias_error_hz']:.3f} exceeds 50 Hz")
+    if len(metrics["cases"]) < 3:
+        errors.append("fewer than three aliasing example cases were generated")
+    return errors
+
+
+def validate_lab23(root: Path) -> list[str]:
+    metrics = load_json(root / "docs/assets/lab23_iq_metrics.json")["metrics"]
+    errors: list[str] = []
+    if abs(metrics["correct_error_hz"]) > 50.0:
+        errors.append(f"correct_error_hz={metrics['correct_error_hz']:.3f} exceeds 50 Hz")
+    if abs(metrics["swapped_error_hz"]) > 50.0:
+        errors.append(f"swapped_error_hz={metrics['swapped_error_hz']:.3f} exceeds 50 Hz")
+    if abs(metrics["real_mirror_balance_hz"]) > 50.0:
+        errors.append(f"real_mirror_balance_hz={metrics['real_mirror_balance_hz']:.3f} exceeds 50 Hz")
+    return errors
+
+
 def validate_lab73(root: Path) -> list[str]:
     metrics = load_json(root / "docs/assets/lab73_tx_rx_loopback_metrics.json")["metrics"]
     errors: list[str] = []
@@ -142,6 +178,36 @@ LABS: list[LabCommand] = [
             "docs/assets/lab37_weak_signal_detection.png",
             "docs/assets/lab37_window_metrics.json",
         ],
+    ),
+    LabCommand(
+        "Block 2 / Lab 2.1 sampling axis and interpretation checks",
+        [sys.executable, "blocks/block_02_signals_and_sampling/python/sampling_analysis.py"],
+        [
+            "docs/assets/lab21_sampling_time_domain.png",
+            "docs/assets/lab21_sampling_frequency_axis.png",
+            "docs/assets/lab21_sampling_metrics.json",
+        ],
+        validate_lab21,
+    ),
+    LabCommand(
+        "Block 2 / Lab 2.2 aliasing sweep and example spectra",
+        [sys.executable, "blocks/block_02_signals_and_sampling/python/aliasing_sweep.py"],
+        [
+            "docs/assets/lab22_aliasing_map.png",
+            "docs/assets/lab22_aliasing_examples.png",
+            "docs/assets/lab22_aliasing_metrics.json",
+        ],
+        validate_lab22,
+    ),
+    LabCommand(
+        "Block 2 / Lab 2.3 I/Q interpretation and mirrored spectrum checks",
+        [sys.executable, "blocks/block_02_signals_and_sampling/python/iq_visualization.py"],
+        [
+            "docs/assets/lab23_iq_components_time.png",
+            "docs/assets/lab23_iq_interpretation_spectra.png",
+            "docs/assets/lab23_iq_metrics.json",
+        ],
+        validate_lab23,
     ),
     LabCommand(
         "Block 6 / Lab 6.4 synthetic RF capture analysis",

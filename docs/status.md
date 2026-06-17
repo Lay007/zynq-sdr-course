@@ -17,7 +17,7 @@ This page is the top-level engineering status board for the course. It is intent
 | Block | Topic | Theory | Labs | Code / models | Figures | Hardware | CI coverage | Next improvement |
 |---|---|---|---|---|---|---|---|---|
 | 01 | Intro to SDR | Ready | Ready | Partial | Ready | Partial | Docs | Add a first validated RTL-SDR capture example. |
-| 02 | Signals and sampling | Draft | Draft | Partial | Partial | Not required | Docs | Add executable aliasing and IQ sampling demos. |
+| 02 | Signals and sampling | Ready | Executable | Python path | Ready | Not required | Labs | Add MATLAB/C++ translations and a metadata-mistake replay package. |
 | 03 | DSP basics | Ready | Executable | Python / MATLAB / C++ path | Ready | Not required | Labs | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
 | 04 | Simulink and fixed-point | Ready | Executable | Python / MATLAB-style references | Ready | Not required | Labs | Add Simulink screenshots and fixed-point export examples. |
 | 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches | Ready | Hardware pending | HDL CI | Fill FPGA resource/timing report templates with Vivado data. |
