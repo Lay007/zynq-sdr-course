@@ -22,10 +22,10 @@ This file is the board-level FPGA summary for the first Block 5 Vivado OOC evide
 
 | HDL block | LUT | FF | DSP | BRAM | Fmax, MHz | Latency, cycles | Status |
 |---|---:|---:|---:|---:|---:|---:|---|
-| `iq_passthrough` | 1 | 33 | 0 | 0 | N/A | see latency notes | no internal reg-to-reg setup path in OOC timing |
-| `fir_iq_4tap` | 117 | 129 | 4 | 0 | 98.795 | see latency notes | 100 MHz target missed by 0.125 ns WNS |
-| `nco_mixer_iq` | 110 | 37 | 4 | 0 | 92.558 | see latency notes | 100 MHz target missed by 0.807 ns WNS |
-| `axis_iq_passthrough` | 5 | 34 | 0 | 0 | 579.710 | see latency notes | 100 MHz target met with 8.064 ns WNS |
+| `iq_passthrough` | 1 | 33 | 0 | 0 | N/A | 1 | one-cycle valid-only register stage |
+| `fir_iq_4tap` | 117 | 129 | 4 | 0 | 98.795 | 1 | one sample/clock, near 100 MHz but needs small timing margin |
+| `nco_mixer_iq` | 110 | 37 | 4 | 0 | 92.558 | 1 | one sample/clock, compact mixer needs extra timing headroom |
+| `axis_iq_passthrough` | 5 | 34 | 0 | 0 | 579.710 | 1 | one AXIS beat/clock when `tready` stays high |
 
 ## Timing notes
 
@@ -35,5 +35,6 @@ This file is the board-level FPGA summary for the first Block 5 Vivado OOC evide
 
 ## Interpretation
 
-- The two arithmetic blocks are already small on XC7Z020: both `fir_iq_4tap` and `nco_mixer_iq` stay at 4 DSP48E1 slices and 0 BRAM tiles.
-- The passthrough wrappers are effectively control/register shells, which makes them useful baselines for AXI-Stream integration overhead.
+- The two arithmetic blocks are already small on XC7Z020: both `fir_iq_4tap` and `nco_mixer_iq` stay at 4 DSP48E1 slices and 0 BRAM tiles, which is acceptable for educational SDR baseband chains.
+- The passthrough wrappers are effectively control/register shells, which makes them useful baselines for AXI-Stream integration overhead before adding heavier DSP.
+- `fir_iq_4tap` is essentially at the 100 MHz line and `nco_mixer_iq` is slightly below it in this compact form, so a real Zynq streaming design should plan for extra pipeline registers or DSP register usage before scaling the chain.
