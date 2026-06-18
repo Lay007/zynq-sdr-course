@@ -22,14 +22,15 @@ This file is the board-level FPGA summary for the first Block 5 Vivado OOC evide
 
 | HDL block | LUT | FF | DSP | BRAM | Fmax, MHz | Latency, cycles | Status |
 |---|---:|---:|---:|---:|---:|---:|---|
-| `iq_passthrough` | 1 | 33 | 0 | 0 | see timing summary | see latency notes | Vivado OOC synthesized |
-| `fir_iq_4tap` | 117 | 129 | 4 | 0 | see timing summary | see latency notes | Vivado OOC synthesized |
-| `nco_mixer_iq` | 110 | 37 | 4 | 0 | see timing summary | see latency notes | Vivado OOC synthesized |
-| `axis_iq_passthrough` | 5 | 34 | 0 | 0 | see timing summary | see latency notes | Vivado OOC synthesized |
+| `iq_passthrough` | 1 | 33 | 0 | 0 | N/A | see latency notes | no internal reg-to-reg setup path in OOC timing |
+| `fir_iq_4tap` | 117 | 129 | 4 | 0 | 98.795 | see latency notes | 100 MHz target missed by 0.125 ns WNS |
+| `nco_mixer_iq` | 110 | 37 | 4 | 0 | 92.558 | see latency notes | 100 MHz target missed by 0.807 ns WNS |
+| `axis_iq_passthrough` | 5 | 34 | 0 | 0 | 579.710 | see latency notes | 100 MHz target met with 8.064 ns WNS |
 
 ## Timing notes
 
-- Target clock and WNS/TNS details are recorded in the dedicated timing summary.
+- Target clock: `10.000 ns` / `100.000 MHz`, matched to `FPGA0 = 100.000000 MHz` in `ps7_summary.html`.
+- Detailed WNS/TNS/data-path values are recorded in `reports/fpga/block5-timing-summary.md`.
 - These values come from Vivado out-of-context synthesis, not from a placed-and-routed full board design.
 
 ## Interpretation
