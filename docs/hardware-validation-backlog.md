@@ -9,9 +9,14 @@ This page separates documentation work from tasks that require real hardware acc
 | P0 | Validate Zynq/AD9363 tone output | frequency plan, screenshot, IQ metadata, FFT plot |
 | P0 | Validate safe conducted loopback | attenuation value, gain settings, overload check |
 | P1 | Capture QPSK demo IQ | dataset manifest, constellation, EVM/SNR metrics |
-| P1 | Export Vivado resource reports | utilization, timing, latency notes |
 | P2 | Add AD9363 gain table | gain settings, measured clipping/SNR behavior |
 | P2 | Add final hardware report | report page, figures, limitations |
+
+## Priority non-hardware follow-up
+
+| Priority | Task | Evidence to collect |
+|---|---|---|
+| P1 | Promote Block 5 OOC Vivado reports to integrated design reports | placed-and-routed utilization, timing, clocking context |
 
 ## Definition of done
 
@@ -31,11 +36,11 @@ A hardware task is done when it has:
 - Student CI guide.
 - FPGA resource report template.
 - Synthetic replay examples.
+- Routed Vivado implementation reports for the exact board design.
 
 ## Tasks that require hardware
 
 - Real RF output validation.
 - AD9363 gain table.
 - Receiver overload thresholds.
-- Vivado implementation reports for the exact board design.
 - Final measured QPSK or OFDM demo.

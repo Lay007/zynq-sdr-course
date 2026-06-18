@@ -19,7 +19,12 @@ Use the status values below:
 
 | Evidence item | Path | Status | Notes |
 |---|---|---|---|
-| FPGA resource report template | `reports/fpga_resource_report.template.md` | template | fill with Vivado resource and timing data |
+| Block 5 FPGA evidence page | `docs/block5-fpga-evidence.md` | reviewed | nav-visible digest of the current Vivado evidence package |
+| Z7020 OOC FPGA summary | `reports/fpga/z7020-resource-summary-template.md` | synthetic | first curated resource/timing snapshot with board clock provenance |
+| Block 5 utilization summary | `reports/fpga/block5-utilization-summary.md` | synthetic | LUT/FF/DSP/BRAM usage for the four Block 5 HDL examples |
+| Block 5 timing summary | `reports/fpga/block5-timing-summary.md` | synthetic | 100 MHz OOC timing snapshot and limits |
+| Block 5 latency/throughput notes | `reports/fpga/block5-latency-throughput-notes.md` | reviewed | one-cycle behaviour and streaming-rate notes from HDL testbenches |
+| FPGA resource report template | `reports/fpga_resource_report.template.md` | template | use when extending the current package to a new design |
 | Reviewer checklist | `docs/reviewer-checklist.md` | reviewed | general acceptance criteria |
 | Real data policy | `docs/real-data-policy.md` | reviewed | prevents large binary data from bloating Git |
 | Experiment manifests | `experiments/` | synthetic | machine-checkable scenario descriptors |
@@ -52,7 +57,7 @@ Minimum files for one experiment:
 
 The strongest next artifacts are:
 
-1. Resource and timing summary for Block 5 HDL examples.
+1. Routed top-level Vivado timing and utilization for the integrated Zynq design.
 2. A small validated QPSK dataset manifest.
 3. A tone or loopback capture report.
 4. A gain/overload characterization table.

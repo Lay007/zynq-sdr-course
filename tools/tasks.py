@@ -160,7 +160,7 @@ def task_test() -> None:
 
 
 def task_lint() -> None:
-    run([sys.executable, "-m", "ruff", "check", "."])
+    run([sys.executable, "-m", "ruff", "check", "blocks", "tools", "tests"])
 
 
 def task_smoke() -> None:

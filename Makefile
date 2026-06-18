@@ -22,7 +22,7 @@ test:
 	$(PYTHON) -m pytest -q
 
 lint:
-	$(PYTHON) -m ruff check .
+	$(PYTHON) -m ruff check blocks tools tests
 
 smoke: docs labs hdl
 

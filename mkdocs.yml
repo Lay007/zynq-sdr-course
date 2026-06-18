@@ -103,6 +103,8 @@ nav:
       - "Reproducibility checklist": reproducibility-checklist.md
       - "Student CI grading guide": student-ci-grading-guide.md
       - "Hardware validation backlog": hardware-validation-backlog.md
+      - "Hardware evidence index": hardware-evidence-index.md
+      - "Block 5 FPGA evidence": block5-fpga-evidence.md
       - "IQ demo dataset manifest": iq-demo-dataset-manifest.md
       - "FPGA resource report template": fpga-resource-report-template.md
       - "Final project grading rubric": final-project-grading-rubric.md

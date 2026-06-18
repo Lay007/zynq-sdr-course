@@ -178,7 +178,7 @@ python tools/tasks.py smoke
 
 - валидированные аппаратные захваты Zynq/AD9363;
 - небольшие публичные или внешне размещённые IQ demo datasets;
-- Vivado resource/timing reports для HDL-модулей блока 5;
+- routed top-level Vivado implementation reports для интегрированного Zynq-дизайна;
 - полный QPSK или tone model-to-measurement отчёт.
 
 ---

@@ -179,7 +179,7 @@ The next major proof points are:
 
 - validated Zynq/AD9363 hardware captures;
 - small public or externally linked IQ demo datasets;
-- Vivado resource/timing reports for Block 5 HDL modules;
+- routed top-level Vivado implementation reports for the integrated Zynq design;
 - complete QPSK or tone model-to-measurement final report.
 
 ---

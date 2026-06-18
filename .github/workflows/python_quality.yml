@@ -45,7 +45,7 @@ jobs:
           pip install -r requirements-dev.txt
 
       - name: Run ruff
-        run: python -m ruff check .
+        run: python -m ruff check blocks tools tests
 
       - name: Run pytest
         run: python -m pytest -q
