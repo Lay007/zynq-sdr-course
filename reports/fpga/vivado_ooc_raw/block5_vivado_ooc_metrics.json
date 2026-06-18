@@ -1,0 +1,72 @@
+{
+  "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+  "part": "xc7z020clg400-2",
+  "target_clock_period_ns": 10.0,
+  "target_clock_frequency_mhz": 100.0,
+  "modules": {
+    "iq_passthrough": {
+      "lut": 1,
+      "ff": 33,
+      "dsp": 0,
+      "bram_tiles": 0.0,
+      "wns_ns": null,
+      "tns_ns": null,
+      "failing_endpoints": null,
+      "total_endpoints": null,
+      "clock_name": "clk",
+      "clock_period_ns": 10.0,
+      "clock_frequency_mhz": 100.0,
+      "data_path_delay_ns": null,
+      "logic_levels": null,
+      "fmax_est_mhz": null
+    },
+    "fir_iq_4tap": {
+      "lut": 117,
+      "ff": 129,
+      "dsp": 4,
+      "bram_tiles": 0.0,
+      "wns_ns": -0.125,
+      "tns_ns": -1.865,
+      "failing_endpoints": 32,
+      "total_endpoints": 96,
+      "clock_name": "clk",
+      "clock_period_ns": 10.0,
+      "clock_frequency_mhz": 100.0,
+      "data_path_delay_ns": 10.122,
+      "logic_levels": 20,
+      "fmax_est_mhz": 98.795
+    },
+    "nco_mixer_iq": {
+      "lut": 110,
+      "ff": 37,
+      "dsp": 4,
+      "bram_tiles": 0.0,
+      "wns_ns": -0.807,
+      "tns_ns": -11.845,
+      "failing_endpoints": 16,
+      "total_endpoints": 36,
+      "clock_name": "clk",
+      "clock_period_ns": 10.0,
+      "clock_frequency_mhz": 100.0,
+      "data_path_delay_ns": 10.804,
+      "logic_levels": 15,
+      "fmax_est_mhz": 92.558
+    },
+    "axis_iq_passthrough": {
+      "lut": 5,
+      "ff": 34,
+      "dsp": 0,
+      "bram_tiles": 0.0,
+      "wns_ns": 8.064,
+      "tns_ns": 0.0,
+      "failing_endpoints": 0,
+      "total_endpoints": 34,
+      "clock_name": "aclk",
+      "clock_period_ns": 10.0,
+      "clock_frequency_mhz": 100.0,
+      "data_path_delay_ns": 1.725,
+      "logic_levels": 1,
+      "fmax_est_mhz": 579.71
+    }
+  }
+}

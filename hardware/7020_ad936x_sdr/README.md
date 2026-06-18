@@ -35,6 +35,7 @@ The original vendor folder mixes useful board assets with heavy archives, Window
 | [`hdl/adi_fmcomms2_reference/projects/fmcomms2/zc702/zc702.xpr`](hdl/adi_fmcomms2_reference/projects/fmcomms2/zc702/zc702.xpr) | generated Vivado project snapshot |
 | [`ps/ad936x_no_os_reference/AD936X/src/main.c`](ps/ad936x_no_os_reference/AD936X/src/main.c) | main AD936x no-OS application |
 | [`ps/ad936x_no_os_reference/platform/hw/system_top.xsa`](ps/ad936x_no_os_reference/platform/hw/system_top.xsa) | exported hardware platform for Vitis |
+| [`ps/bringup_tests/design_1_wrapper/ps7_summary.html`](ps/bringup_tests/design_1_wrapper/ps7_summary.html) | captured PS7 clock, DDR and peripheral summary used as board clock provenance |
 | [`ps/bringup_tests/DDR_Test/src/test01.c`](ps/bringup_tests/DDR_Test/src/test01.c) | DDR diagnostic and eye-measurement test |
 | [`ps/bringup_tests/EMMC_Test/src/main.c`](ps/bringup_tests/EMMC_Test/src/main.c) | minimal eMMC/FAT read-write test |
 | [`ps/bringup_tests/ETH_FreeRTOS/src/main.c`](ps/bringup_tests/ETH_FreeRTOS/src/main.c) | Ethernet/FreeRTOS TCP server bring-up |
