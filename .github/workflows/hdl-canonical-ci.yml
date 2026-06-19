@@ -50,5 +50,8 @@ jobs:
           name: hdl-canonical-artifacts
           path: |
             blocks/block_05_fpga_hdl_flow/tb/*.out
-            *.vcd
+            blocks/block_05_fpga_hdl_flow/tb/*.vcd
+            blocks/block_05_fpga_hdl_flow/tb/*_vectors.txt
+            blocks/block_05_fpga_hdl_flow/tb/*_bits.txt
+            blocks/block_05_fpga_hdl_flow/tb/*_meta.txt
           if-no-files-found: warn
