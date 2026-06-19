@@ -26,7 +26,7 @@ This page is the top-level engineering status board for the course. It is intent
 | 08 | Modulation and synchronization | Ready | Executable | Synchronization demos | Ready | Optional | Sync CI | Add impairment sweeps and BER/EVM dashboards. |
 | 09 | Recording and analysis tools | Ready | Executable | IQ readers | Ready | Hardware pending | Recording CI | Update QPSK dataset manifest with real checksum or synthetic generator. |
 | 10 | KiCad and basic electronics | Ready | Draft | Calculators / templates | Partial | Bench pending | Docs | Add measured breadboard photos and KiCad exports. |
-| 11 | Integrated SDR project | Ready | Executable | Simulation package + BPSK reference package | Ready | Hardware pending | Labs | Promote the BPSK reference chain to a measured Zynq TX/RX BER report. |
+| 11 | Integrated SDR project | Ready | Executable | Simulation package + BPSK reference package + AXI-Lite bring-up helper | Ready | Hardware pending | Labs | Run the new bring-up helper on the clean image and attach first discovery-burst evidence. |
 | 12 | Final projects | Ready | Draft | Templates + rubric | Partial | Depends on project | Docs | Use grading rubric and example report skeleton for first final project. |
 
 ## Newly added hardening artifacts

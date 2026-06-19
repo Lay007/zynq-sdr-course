@@ -154,6 +154,7 @@ The synthetic package is accepted when:
 | HDL Zynq-ready top-level testbench | `blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_zynq_ber_top.v` |
 | HDL AXI-Lite wrapper | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_zynq_ber_axi_lite.v` |
 | HDL AXI-Lite wrapper testbench | `blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_zynq_ber_axi_lite.v` |
+| PS-side bring-up helper | `blocks/block_11_integrated_sdr_project/python/lab_11_7_axi_lite_bpsk_bringup.py` |
 
 ## Hardware promotion path
 
@@ -172,3 +173,5 @@ For the first hardware handoff, keep the burst short, TX gain at minimum, RX gai
 3. Does the controlled Zynq RX path recover a deterministic frame at all?
 
 This keeps BER on the controlled Zynq RX chain and uses RTL-SDR only as an external observer during the first RF step.
+
+The intended PS-side register sequence is now captured in `lab_11_7_axi_lite_bpsk_bringup.py`, which supports a local mock run plus `mmap`/`devmem` board-side access.

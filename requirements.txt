@@ -4,3 +4,4 @@ mkdocs
 mkdocs-material
 pymdown-extensions
 pyyaml
+paramiko

@@ -47,6 +47,7 @@ GENERATED_DOC_ASSET_PATTERNS = (
     "lab84_*.json",
     "lab93_*.png",
     "lab93_*.json",
+    "lab117_*.json",
     "end_to_end_tone_*.png",
     "end_to_end_tone_*.json",
     "end_to_end_bpsk_reference_*.png",

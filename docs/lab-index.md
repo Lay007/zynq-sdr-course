@@ -65,6 +65,7 @@ This page provides a compact index of the executable and report-oriented labs in
 | 11.4 | Integrated project | Final measurement report | no | no | yes | manual | pass/fail table, report |
 | 11.5 | Integrated project | AXI DMA latency and jitter | yes | no | yes | partial | latency trace, histogram, p95/p99, throughput |
 | 11.6 | Integrated project | Measurement uncertainty budget | yes | no | yes | partial | Type A/B contributions, expanded uncertainty |
+| 11.7 | Integrated project | PS-side AXI-Lite BPSK bring-up | yes | yes/reuse | yes | yes | ID readback, busy/done polling, BER counter JSON |
 
 ## Recommended assessment path
 

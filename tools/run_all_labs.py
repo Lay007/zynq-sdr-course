@@ -179,6 +179,29 @@ def validate_end_to_end_bpsk(root: Path) -> list[str]:
     return errors
 
 
+def validate_lab117(root: Path) -> list[str]:
+    payload = load_json(root / "docs/assets/lab117_axi_lite_bringup_mock.json")
+    result = payload["result"]
+    errors: list[str] = []
+    if result["id_word"] != 0x4250534B:
+        errors.append(f"id_word=0x{result['id_word']:08X} does not match the expected BPSK core ID")
+    if not result["busy_observed"]:
+        errors.append("busy_observed is false")
+    if not result["done_observed"]:
+        errors.append("done_observed is false")
+    if result["received_bits"] != result["frame_bit_count"]:
+        errors.append(
+            f"received_bits={result['received_bits']} does not match frame_bit_count={result['frame_bit_count']}"
+        )
+    if result["total_errors"] != 0:
+        errors.append(f"total_errors={result['total_errors']} is non-zero")
+    if result["payload_errors"] != 0:
+        errors.append(f"payload_errors={result['payload_errors']} is non-zero")
+    if not result["done_cleared"]:
+        errors.append("done_cleared is false")
+    return errors
+
+
 LABS: list[LabCommand] = [
     LabCommand(
         "Block 3 / Lab 3.5 FFT complexity and selected-bin trade-off",
@@ -326,6 +349,25 @@ LABS: list[LabCommand] = [
             "datasets/manifests/end_to_end_bpsk_reference_v1.yml",
         ],
         validate_end_to_end_bpsk,
+    ),
+    LabCommand(
+        "Block 11 / Lab 11.7 AXI-Lite BPSK bring-up helper",
+        [
+            sys.executable,
+            "blocks/block_11_integrated_sdr_project/python/lab_11_7_axi_lite_bpsk_bringup.py",
+            "--backend",
+            "mock",
+            "--max-total-errors",
+            "0",
+            "--max-payload-errors",
+            "0",
+            "--json-out",
+            "docs/assets/lab117_axi_lite_bringup_mock.json",
+        ],
+        [
+            "docs/assets/lab117_axi_lite_bringup_mock.json",
+        ],
+        validate_lab117,
     ),
 ]
 

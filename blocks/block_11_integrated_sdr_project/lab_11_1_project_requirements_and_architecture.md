@@ -47,6 +47,8 @@ The first AD9363 experiment should not be a full measurement campaign. It should
 4. disable AGC for the first observation;
 5. check only burst visibility, overload symptoms and deterministic recovery.
 
+Lab 11.7 provides the minimal PS-side register sequence for that step.
+
 That reduces risk before longer runs, BER sweeps or routed loopback experiments are attempted.
 
 ## Report checklist

@@ -54,7 +54,7 @@ Use the repository in this order:
 1. Verify the AXI-Lite register contract with Lab 5.11 and confirm one `ID` readback plus one simulated burst.
 2. Probe the board with `blocks/block_06_rf_frontend_and_ad9363/python/lab_6_3_probe_iio_context.py`.
 3. Freeze the first RF settings using the Lab 6.3 manual-gain checklist.
-4. Launch one deterministic burst from the PS through the AXI-Lite wrapper.
+4. Launch one deterministic burst from the PS through `blocks/block_11_integrated_sdr_project/python/lab_11_7_axi_lite_bpsk_bringup.py`.
 5. Observe the burst either with the Zynq RX chain or with RTL-SDR as an external monitor.
 
 This separates three concerns cleanly: PS control, AD9363 RF configuration, and waveform visibility.
