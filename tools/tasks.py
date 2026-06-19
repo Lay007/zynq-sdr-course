@@ -64,6 +64,16 @@ GENERATED_TB_FILENAMES = (
     "bpsk_upsampler_8x_expected_vectors.txt",
     "bpsk_rrc_tx_fir_input_vectors.txt",
     "bpsk_rrc_tx_fir_expected_vectors.txt",
+    "bpsk_rx_bit_recovery_input_vectors.txt",
+    "bpsk_rx_bit_recovery_expected_bits.txt",
+    "bpsk_rx_bit_recovery_meta.txt",
+    "bpsk_framed_loopback_input_bits.txt",
+    "bpsk_framed_loopback_expected_bits.txt",
+    "bpsk_framed_loopback_meta.txt",
+)
+
+GENERATED_RTL_FILENAMES = (
+    "bpsk_rrc_tx_fir_taps.mem",
 )
 
 LEGACY_ROOT_TB_PATTERNS = (
@@ -198,6 +208,42 @@ def task_hdl() -> None:
     )
     run(["vvp", str(TB_DIR / "tb_bpsk_rrc_tx_fir.out")])
 
+    run([sys.executable, str(PY_DIR / "generate_bpsk_rx_bit_recovery_vectors.py")])
+    run(
+        [
+            "iverilog",
+            "-g2012",
+            "-o",
+            str(TB_DIR / "tb_bpsk_rx_bit_recovery.out"),
+            str(RTL_DIR / "bpsk_rrc_tx_fir.v"),
+            str(RTL_DIR / "bpsk_rrc_rx_fir.v"),
+            str(RTL_DIR / "bpsk_symbol_timing_sampler.v"),
+            str(RTL_DIR / "bpsk_hard_decision.v"),
+            str(TB_DIR / "tb_bpsk_rx_bit_recovery.v"),
+        ]
+    )
+    run(["vvp", str(TB_DIR / "tb_bpsk_rx_bit_recovery.out")])
+
+    run([sys.executable, str(PY_DIR / "generate_bpsk_framed_loopback_vectors.py")])
+    run(
+        [
+            "iverilog",
+            "-g2012",
+            "-o",
+            str(TB_DIR / "tb_bpsk_framed_loopback.out"),
+            str(RTL_DIR / "bpsk_symbol_mapper.v"),
+            str(RTL_DIR / "bpsk_upsampler_8x.v"),
+            str(RTL_DIR / "bpsk_rrc_tx_fir.v"),
+            str(RTL_DIR / "bpsk_rrc_rx_fir.v"),
+            str(RTL_DIR / "bpsk_symbol_timing_sampler.v"),
+            str(RTL_DIR / "bpsk_hard_decision.v"),
+            str(RTL_DIR / "bpsk_framed_tx_chain.v"),
+            str(RTL_DIR / "bpsk_rx_bit_recovery_chain.v"),
+            str(TB_DIR / "tb_bpsk_framed_loopback.v"),
+        ]
+    )
+    run(["vvp", str(TB_DIR / "tb_bpsk_framed_loopback.out")])
+
     run(
         [
             "iverilog",
@@ -257,6 +303,11 @@ def task_clean() -> None:
 
     for filename in GENERATED_TB_FILENAMES:
         artifact = TB_DIR / filename
+        if artifact.exists():
+            artifact.unlink()
+
+    for filename in GENERATED_RTL_FILENAMES:
+        artifact = RTL_DIR / filename
         if artifact.exists():
             artifact.unlink()
 

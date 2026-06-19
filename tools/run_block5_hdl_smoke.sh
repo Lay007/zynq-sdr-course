@@ -17,6 +17,8 @@ python "blocks/block_11_integrated_sdr_project/python/end_to_end_bpsk_reference.
 python "$PY_DIR/generate_bpsk_symbol_mapper_vectors.py"
 python "$PY_DIR/generate_bpsk_upsampler_8x_vectors.py"
 python "$PY_DIR/generate_bpsk_rrc_tx_fir_vectors.py"
+python "$PY_DIR/generate_bpsk_rx_bit_recovery_vectors.py"
+python "$PY_DIR/generate_bpsk_framed_loopback_vectors.py"
 
 test -s "$TB_DIR/fir_iq_4tap_input_vectors.txt"
 test -s "$TB_DIR/fir_iq_4tap_expected_vectors.txt"
@@ -28,6 +30,12 @@ test -s "$TB_DIR/bpsk_upsampler_8x_input_vectors.txt"
 test -s "$TB_DIR/bpsk_upsampler_8x_expected_vectors.txt"
 test -s "$TB_DIR/bpsk_rrc_tx_fir_input_vectors.txt"
 test -s "$TB_DIR/bpsk_rrc_tx_fir_expected_vectors.txt"
+test -s "$TB_DIR/bpsk_rx_bit_recovery_input_vectors.txt"
+test -s "$TB_DIR/bpsk_rx_bit_recovery_expected_bits.txt"
+test -s "$TB_DIR/bpsk_rx_bit_recovery_meta.txt"
+test -s "$TB_DIR/bpsk_framed_loopback_input_bits.txt"
+test -s "$TB_DIR/bpsk_framed_loopback_expected_bits.txt"
+test -s "$TB_DIR/bpsk_framed_loopback_meta.txt"
 
 iverilog -g2012 -o "$TB_DIR/tb_iq_passthrough.out" \
   "$RTL_DIR/iq_passthrough.v" \
@@ -58,6 +66,26 @@ iverilog -g2012 -o "$TB_DIR/tb_bpsk_rrc_tx_fir.out" \
   "$RTL_DIR/bpsk_rrc_tx_fir.v" \
   "$TB_DIR/tb_bpsk_rrc_tx_fir.v"
 vvp "$TB_DIR/tb_bpsk_rrc_tx_fir.out"
+
+iverilog -g2012 -o "$TB_DIR/tb_bpsk_rx_bit_recovery.out" \
+  "$RTL_DIR/bpsk_rrc_tx_fir.v" \
+  "$RTL_DIR/bpsk_rrc_rx_fir.v" \
+  "$RTL_DIR/bpsk_symbol_timing_sampler.v" \
+  "$RTL_DIR/bpsk_hard_decision.v" \
+  "$TB_DIR/tb_bpsk_rx_bit_recovery.v"
+vvp "$TB_DIR/tb_bpsk_rx_bit_recovery.out"
+
+iverilog -g2012 -o "$TB_DIR/tb_bpsk_framed_loopback.out" \
+  "$RTL_DIR/bpsk_symbol_mapper.v" \
+  "$RTL_DIR/bpsk_upsampler_8x.v" \
+  "$RTL_DIR/bpsk_rrc_tx_fir.v" \
+  "$RTL_DIR/bpsk_rrc_rx_fir.v" \
+  "$RTL_DIR/bpsk_symbol_timing_sampler.v" \
+  "$RTL_DIR/bpsk_hard_decision.v" \
+  "$RTL_DIR/bpsk_framed_tx_chain.v" \
+  "$RTL_DIR/bpsk_rx_bit_recovery_chain.v" \
+  "$TB_DIR/tb_bpsk_framed_loopback.v"
+vvp "$TB_DIR/tb_bpsk_framed_loopback.out"
 
 iverilog -g2012 -o "$TB_DIR/tb_axis_iq_passthrough.out" \
   "$RTL_DIR/axis_iq_passthrough.v" \

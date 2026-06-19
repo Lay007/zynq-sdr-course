@@ -3,7 +3,7 @@
 This page defines the first executable modem route for the course:
 
 ```text
-MATLAB reference -> Simulink fixed-point -> HDL symbol mapper -> HDL 8x upsampler -> HDL RRC TX FIR -> future Zynq TX/RX BER flow
+MATLAB reference -> Simulink fixed-point -> HDL symbol mapper -> HDL 8x upsampler -> HDL RRC TX FIR -> HDL RX matched filter / timing / decisions -> HDL framed TX/RX loopback -> future Zynq TX/RX BER flow
 ```
 
 It is still synthetic, but it already produces the shared files that the Simulink and Verilog stages can consume directly.
@@ -18,6 +18,8 @@ python tools/tasks.py matlab-bpsk
 python blocks/block_05_fpga_hdl_flow/python/generate_bpsk_symbol_mapper_vectors.py
 python blocks/block_05_fpga_hdl_flow/python/generate_bpsk_upsampler_8x_vectors.py
 python blocks/block_05_fpga_hdl_flow/python/generate_bpsk_rrc_tx_fir_vectors.py
+python blocks/block_05_fpga_hdl_flow/python/generate_bpsk_rx_bit_recovery_vectors.py
+python blocks/block_05_fpga_hdl_flow/python/generate_bpsk_framed_loopback_vectors.py
 iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_symbol_mapper.out ^
   blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_mapper.v ^
   blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_symbol_mapper.v
@@ -30,6 +32,24 @@ iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rrc_tx_fir.out ^
   blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir.v ^
   blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rrc_tx_fir.v
 vvp blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rrc_tx_fir.out
+iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rx_bit_recovery.out ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_rx_fir.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_timing_sampler.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_hard_decision.v ^
+  blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rx_bit_recovery.v
+vvp blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rx_bit_recovery.out
+iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_framed_loopback.out ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_mapper.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_upsampler_8x.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_rx_fir.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_timing_sampler.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_hard_decision.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_framed_tx_chain.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_rx_bit_recovery_chain.v ^
+  blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_framed_loopback.v
+vvp blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_framed_loopback.out
 ```
 
 ## Generated artifacts
@@ -68,6 +88,8 @@ The synthetic package is accepted when:
 - the HDL symbol mapper testbench passes against vectors derived from the same frame bits;
 - the HDL 8x upsampler testbench passes against vectors derived from the same symbol package;
 - the HDL RRC TX FIR testbench passes against vectors derived from the same pulse-shaping package;
+- the HDL RX recovery testbench reproduces the deterministic bit stream without errors;
+- the HDL framed TX/RX loopback testbench reproduces the deterministic bit stream through the integrated chain without errors;
 - the manifest and metrics JSON are regenerated with a valid checksum.
 
 ## MATLAB and HDL anchor points
@@ -86,6 +108,15 @@ The synthetic package is accepted when:
 | HDL RRC FIR | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir.v` |
 | HDL RRC vectors | `blocks/block_05_fpga_hdl_flow/python/generate_bpsk_rrc_tx_fir_vectors.py` |
 | HDL RRC testbench | `blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rrc_tx_fir.v` |
+| HDL RX matched filter | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_rx_fir.v` |
+| HDL timing sampler | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_timing_sampler.v` |
+| HDL hard decision | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_hard_decision.v` |
+| HDL RX vectors | `blocks/block_05_fpga_hdl_flow/python/generate_bpsk_rx_bit_recovery_vectors.py` |
+| HDL RX testbench | `blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rx_bit_recovery.v` |
+| HDL framed TX chain | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_framed_tx_chain.v` |
+| HDL RX wrapper | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_rx_bit_recovery_chain.v` |
+| HDL framed loopback vectors | `blocks/block_05_fpga_hdl_flow/python/generate_bpsk_framed_loopback_vectors.py` |
+| HDL framed loopback testbench | `blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_framed_loopback.v` |
 
 ## Hardware promotion path
 
