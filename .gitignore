@@ -31,6 +31,8 @@ compile_commands.json
 __pycache__/
 *.pyc
 *.pyo
+.pytest_cache/
+.ruff_cache/
 .venv/
 venv/
 
@@ -84,8 +86,16 @@ worklib/
 questa_lib/
 xsim.dir/
 *.pb
+*.out
 *.vcd
 *.wlf
+
+# Generated Block 5 HDL smoke vectors
+blocks/block_05_fpga_hdl_flow/tb/*_vectors.txt
+blocks/block_05_fpga_hdl_flow/tb/*_bits.txt
+blocks/block_05_fpga_hdl_flow/tb/*_meta.txt
+blocks/block_05_fpga_hdl_flow/rtl/*_taps.mem
+blocks/block_05_fpga_hdl_flow/rtl/*_bits.mem
 
 # Large data / downloads
 *.iq
@@ -95,6 +105,7 @@ xsim.dir/
 docs_external/
 downloads/
 blocks/block_11_integrated_sdr_project/assets/end_to_end_tone_demo/*.ci16
+blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/*.ci16
 
 # Local reproducibility summaries
 docs/assets/course_reproducibility_summary.json
