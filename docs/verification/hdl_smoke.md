@@ -26,7 +26,8 @@ The runner performs the following steps:
 12. Compile and run `bpsk_rx_bit_recovery` with Icarus Verilog.
 13. Compile and run `bpsk_framed_loopback` with Icarus Verilog.
 14. Compile and run `bpsk_zynq_ber_top` with Icarus Verilog.
-15. Compile and run `axis_iq_passthrough` with Icarus Verilog.
+15. Compile and run `bpsk_zynq_ber_axi_lite` with Icarus Verilog.
+16. Compile and run `axis_iq_passthrough` with Icarus Verilog.
 
 ## Local usage
 

@@ -97,6 +97,18 @@ GENERATED_CAPTURE_FILENAMES = (
     ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_bpsk_reference" / "end_to_end_bpsk_reference_v1_tx_reference.ci16",
 )
 
+GENERATED_PACKAGE_FILENAMES = (
+    ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_bpsk_reference" / "config.json",
+    ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_bpsk_reference" / "handoff_files.json",
+    ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_bpsk_reference" / "manifest.yml",
+    ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_bpsk_reference" / "rrc_taps_float.txt",
+    ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_bpsk_reference" / "rrc_taps_q15.txt",
+    ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_bpsk_reference" / "sample_plan.json",
+    ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_bpsk_reference" / "tx_bits.txt",
+    ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_bpsk_reference" / "tx_symbols_float.txt",
+    ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_bpsk_reference" / "tx_symbols_q15.txt",
+)
+
 GENERATED_ROOT_DIRS = (
     ROOT / "site",
     ROOT / ".pytest_cache",
@@ -272,6 +284,29 @@ def task_hdl() -> None:
             "iverilog",
             "-g2012",
             "-o",
+            str(TB_DIR / "tb_bpsk_zynq_ber_axi_lite.out"),
+            str(RTL_DIR / "bpsk_symbol_mapper.v"),
+            str(RTL_DIR / "bpsk_upsampler_8x.v"),
+            str(RTL_DIR / "bpsk_rrc_tx_fir.v"),
+            str(RTL_DIR / "bpsk_rrc_rx_fir.v"),
+            str(RTL_DIR / "bpsk_symbol_timing_sampler.v"),
+            str(RTL_DIR / "bpsk_hard_decision.v"),
+            str(RTL_DIR / "bpsk_framed_tx_chain.v"),
+            str(RTL_DIR / "bpsk_rx_bit_recovery_chain.v"),
+            str(RTL_DIR / "bpsk_frame_bit_source.v"),
+            str(RTL_DIR / "bpsk_ber_counter.v"),
+            str(RTL_DIR / "bpsk_zynq_ber_top.v"),
+            str(RTL_DIR / "bpsk_zynq_ber_axi_lite.v"),
+            str(TB_DIR / "tb_bpsk_zynq_ber_axi_lite.v"),
+        ]
+    )
+    run(["vvp", str(TB_DIR / "tb_bpsk_zynq_ber_axi_lite.out")])
+
+    run(
+        [
+            "iverilog",
+            "-g2012",
+            "-o",
             str(TB_DIR / "tb_axis_iq_passthrough.out"),
             str(RTL_DIR / "axis_iq_passthrough.v"),
             str(TB_DIR / "tb_axis_iq_passthrough.v"),
@@ -353,6 +388,10 @@ def task_clean() -> None:
             shutil.rmtree(directory)
 
     for artifact in GENERATED_CAPTURE_FILENAMES:
+        if artifact.exists():
+            artifact.unlink()
+
+    for artifact in GENERATED_PACKAGE_FILENAMES:
         if artifact.exists():
             artifact.unlink()
 

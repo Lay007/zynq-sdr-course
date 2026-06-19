@@ -104,6 +104,22 @@ iverilog -g2012 -o "$TB_DIR/tb_bpsk_zynq_ber_top.out" \
   "$TB_DIR/tb_bpsk_zynq_ber_top.v"
 vvp "$TB_DIR/tb_bpsk_zynq_ber_top.out"
 
+iverilog -g2012 -o "$TB_DIR/tb_bpsk_zynq_ber_axi_lite.out" \
+  "$RTL_DIR/bpsk_symbol_mapper.v" \
+  "$RTL_DIR/bpsk_upsampler_8x.v" \
+  "$RTL_DIR/bpsk_rrc_tx_fir.v" \
+  "$RTL_DIR/bpsk_rrc_rx_fir.v" \
+  "$RTL_DIR/bpsk_symbol_timing_sampler.v" \
+  "$RTL_DIR/bpsk_hard_decision.v" \
+  "$RTL_DIR/bpsk_framed_tx_chain.v" \
+  "$RTL_DIR/bpsk_rx_bit_recovery_chain.v" \
+  "$RTL_DIR/bpsk_frame_bit_source.v" \
+  "$RTL_DIR/bpsk_ber_counter.v" \
+  "$RTL_DIR/bpsk_zynq_ber_top.v" \
+  "$RTL_DIR/bpsk_zynq_ber_axi_lite.v" \
+  "$TB_DIR/tb_bpsk_zynq_ber_axi_lite.v"
+vvp "$TB_DIR/tb_bpsk_zynq_ber_axi_lite.out"
+
 iverilog -g2012 -o "$TB_DIR/tb_axis_iq_passthrough.out" \
   "$RTL_DIR/axis_iq_passthrough.v" \
   "$TB_DIR/tb_axis_iq_passthrough.v"
