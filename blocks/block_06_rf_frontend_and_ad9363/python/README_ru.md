@@ -17,8 +17,25 @@
 - `rf_frontend_analysis.py`
 - `gain_plan_sweep.py`
 - `ad9363_visualization.py`
+- `lab_6_3_probe_iio_context.py`
 
 ## Критерии качества
 - файлы должны быть воспроизводимы и понятны без устных комментариев;
 - параметры эксперимента, версии инструментов и ограничения должны быть зафиксированы рядом с материалом;
 - материалы должны помогать студенту дойти до одного из результатов блока: карта уровней тракта, описание настроек AD9363.
+
+## Добавленный host-side probe
+
+В папку добавлен `lab_6_3_probe_iio_context.py` — короткий host-side probe
+для network IIO target, например `ip:192.168.40.1`.
+
+Пример:
+
+```bash
+python blocks/block_06_rf_frontend_and_ad9363/python/lab_6_3_probe_iio_context.py \
+  --uri ip:192.168.40.1 \
+  --json-out docs/assets/lab63_zynq_iio_probe.json
+```
+
+На Windows скрипт сам попытается подхватить `libiio.dll` из стандартной
+установки `IIO Oscilloscope`.

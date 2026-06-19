@@ -62,6 +62,21 @@ Inspect one channel:
 iio_attr -c ad9361-phy voltage0
 ```
 
+## Host-side Python probe
+
+For a reproducible host-side check, the repository also includes:
+
+```bash
+python blocks/block_06_rf_frontend_and_ad9363/python/lab_6_3_probe_iio_context.py \
+  --uri ip:192.168.40.1 \
+  --json-out docs/assets/lab63_zynq_iio_probe.json
+```
+
+The script opens the remote IIO context, enumerates devices and channels, and
+prints a compact AD9361 summary with RX/TX LO, bandwidth, sample rate, and gain
+settings. On Windows it will also try the default `IIO Oscilloscope` install
+path for `libiio.dll`.
+
 ## Common RX parameters
 
 | Purpose | Example command | Notes |
