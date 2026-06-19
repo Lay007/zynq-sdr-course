@@ -3,7 +3,7 @@
 This page defines the first executable modem route for the course:
 
 ```text
-MATLAB reference -> fixed-point export -> HDL symbol mapper -> future Zynq TX/RX BER flow
+MATLAB reference -> Simulink fixed-point -> HDL symbol mapper -> HDL RRC TX FIR -> future Zynq TX/RX BER flow
 ```
 
 It is still synthetic, but it already produces the shared files that the Simulink and Verilog stages can consume directly.
@@ -14,11 +14,17 @@ From the repository root:
 
 ```bash
 python blocks/block_11_integrated_sdr_project/python/end_to_end_bpsk_reference.py
+python tools/tasks.py matlab-bpsk
 python blocks/block_05_fpga_hdl_flow/python/generate_bpsk_symbol_mapper_vectors.py
+python blocks/block_05_fpga_hdl_flow/python/generate_bpsk_rrc_tx_fir_vectors.py
 iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_symbol_mapper.out ^
   blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_mapper.v ^
   blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_symbol_mapper.v
 vvp blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_symbol_mapper.out
+iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rrc_tx_fir.out ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir.v ^
+  blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rrc_tx_fir.v
+vvp blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rrc_tx_fir.out
 ```
 
 ## Generated artifacts
@@ -53,7 +59,9 @@ The synthetic package is accepted when:
 - the script exits with code `0`;
 - `ber_payload` is zero or near zero;
 - the Q1.15 exports are present and non-empty;
+- the Simulink BER curve follows the theoretical BPSK reference closely;
 - the HDL symbol mapper testbench passes against vectors derived from the same frame bits;
+- the HDL RRC TX FIR testbench passes against vectors derived from the same pulse-shaping package;
 - the manifest and metrics JSON are regenerated with a valid checksum.
 
 ## MATLAB and HDL anchor points
@@ -62,9 +70,13 @@ The synthetic package is accepted when:
 |---|---|
 | MATLAB mirror | `blocks/block_11_integrated_sdr_project/matlab/end_to_end_bpsk_reference.m` |
 | Python package generator | `blocks/block_11_integrated_sdr_project/python/end_to_end_bpsk_reference.py` |
+| Simulink runner | `blocks/block_04_simulink_and_fixed_point/matlab/lab_4_4_run_bpsk_simulink_models.m` |
 | HDL mapper | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_mapper.v` |
 | HDL vectors | `blocks/block_05_fpga_hdl_flow/python/generate_bpsk_symbol_mapper_vectors.py` |
 | HDL testbench | `blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_symbol_mapper.v` |
+| HDL RRC FIR | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir.v` |
+| HDL RRC vectors | `blocks/block_05_fpga_hdl_flow/python/generate_bpsk_rrc_tx_fir_vectors.py` |
+| HDL RRC testbench | `blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rrc_tx_fir.v` |
 
 ## Hardware promotion path
 

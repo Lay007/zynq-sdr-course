@@ -162,12 +162,14 @@ nav:
           - "Lab 4.1 — Fixed-point FIR": ru/labs/lab-4-1-fixed-point-fir.md
           - "Lab 4.2 — Fixed-point digital mixer": ru/labs/lab-4-2-fixed-point-digital-mixer.md
           - "Lab 4.3 — BPSK fixed-point chain": ru/labs/lab-4-3-bpsk-fixed-point-chain.md
+          - "Lab 4.4 — BPSK Simulink chain and ideal BER vs SNR": ru/labs/lab-4-4-bpsk-simulink-and-ber.md
       - "Лаборатории Block 5":
           - "Lab 5.1 — Streaming interface and testbench": ru/labs/lab-5-1-streaming-interface-and-testbench.md
           - "Lab 5.2 — FIR RTL mapping": ru/labs/lab-5-2-fir-rtl-mapping.md
           - "Lab 5.3 — NCO mixer RTL": ru/labs/lab-5-3-nco-mixer-rtl.md
           - "Lab 5.4 — AXI-Stream wrapper": ru/labs/lab-5-4-axis-wrapper.md
           - "Lab 5.5 — Float vs fixed vs RTL comparison": ru/labs/lab-5-5-float-fixed-rtl-comparison.md
+          - "Lab 5.6 — BPSK RRC TX FIR RTL": ru/labs/lab-5-6-bpsk-rrc-tx-fir-rtl.md
       - "Лаборатории Block 6":
           - "Lab 6.1 — RF frequency plan": ru/labs/lab-6-1-frequency-plan.md
           - "Lab 6.2 — Gain staging and overload": ru/labs/lab-6-2-gain-staging-and-overload.md
@@ -256,12 +258,14 @@ nav:
           - "Lab 4.1 — Fixed-point FIR": en/labs/lab-4-1-fixed-point-fir.md
           - "Lab 4.2 — Fixed-point digital mixer": en/labs/lab-4-2-fixed-point-digital-mixer.md
           - "Lab 4.3 — BPSK fixed-point chain": en/labs/lab-4-3-bpsk-fixed-point-chain.md
+          - "Lab 4.4 — BPSK Simulink chain and ideal BER vs SNR": en/labs/lab-4-4-bpsk-simulink-and-ber.md
       - "Block 5 labs":
           - "Lab 5.1 — Streaming interface and testbench": en/labs/lab-5-1-streaming-interface-and-testbench.md
           - "Lab 5.2 — FIR RTL mapping": en/labs/lab-5-2-fir-rtl-mapping.md
           - "Lab 5.3 — NCO mixer RTL": en/labs/lab-5-3-nco-mixer-rtl.md
           - "Lab 5.4 — AXI-Stream wrapper": en/labs/lab-5-4-axis-wrapper.md
           - "Lab 5.5 — Float vs fixed vs RTL comparison": en/labs/lab-5-5-float-fixed-rtl-comparison.md
+          - "Lab 5.6 — BPSK RRC TX FIR RTL": en/labs/lab-5-6-bpsk-rrc-tx-fir-rtl.md
       - "Block 6 labs":
           - "Lab 6.1 — RF frequency plan": en/labs/lab-6-1-frequency-plan.md
           - "Lab 6.2 — Gain staging and overload": en/labs/lab-6-2-gain-staging-and-overload.md

@@ -35,6 +35,8 @@ GENERATED_DOC_ASSET_PATTERNS = (
     "lab43_*.png",
     "lab43_*.json",
     "lab43_*.md",
+    "lab44_*.png",
+    "lab44_*.json",
     "lab64_*.png",
     "lab64_*.json",
     "lab73_*.png",
@@ -58,6 +60,8 @@ GENERATED_TB_FILENAMES = (
     "nco_mixer_iq_expected_vectors.txt",
     "bpsk_symbol_mapper_input_vectors.txt",
     "bpsk_symbol_mapper_expected_vectors.txt",
+    "bpsk_rrc_tx_fir_input_vectors.txt",
+    "bpsk_rrc_tx_fir_expected_vectors.txt",
 )
 
 LEGACY_ROOT_TB_PATTERNS = (
@@ -166,6 +170,19 @@ def task_hdl() -> None:
     )
     run(["vvp", str(TB_DIR / "tb_bpsk_symbol_mapper.out")])
 
+    run([sys.executable, str(PY_DIR / "generate_bpsk_rrc_tx_fir_vectors.py")])
+    run(
+        [
+            "iverilog",
+            "-g2012",
+            "-o",
+            str(TB_DIR / "tb_bpsk_rrc_tx_fir.out"),
+            str(RTL_DIR / "bpsk_rrc_tx_fir.v"),
+            str(TB_DIR / "tb_bpsk_rrc_tx_fir.v"),
+        ]
+    )
+    run(["vvp", str(TB_DIR / "tb_bpsk_rrc_tx_fir.out")])
+
     run(
         [
             "iverilog",
@@ -185,6 +202,20 @@ def task_test() -> None:
 
 def task_lint() -> None:
     run([sys.executable, "-m", "ruff", "check", "blocks", "tools", "tests"])
+
+
+def task_matlab_bpsk() -> None:
+    matlab = shutil.which("matlab")
+    if matlab is None:
+        raise FileNotFoundError("matlab was not found on PATH")
+    run(
+        [
+            matlab,
+            "-batch",
+            "lab_4_4_run_bpsk_simulink_models",
+        ],
+        cwd=ROOT / "blocks" / "block_04_simulink_and_fixed_point" / "matlab",
+    )
 
 
 def task_smoke() -> None:
@@ -243,7 +274,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Run local course tasks.")
     parser.add_argument(
         "task",
-        choices=("install", "docs", "serve", "labs", "hdl", "test", "lint", "smoke", "clean"),
+        choices=("install", "docs", "serve", "labs", "hdl", "test", "lint", "matlab-bpsk", "smoke", "clean"),
         help="Task to execute.",
     )
     args = parser.parse_args()
@@ -256,6 +287,7 @@ def main() -> int:
         "hdl": task_hdl,
         "test": task_test,
         "lint": task_lint,
+        "matlab-bpsk": task_matlab_bpsk,
         "smoke": task_smoke,
         "clean": task_clean,
     }
