@@ -17,6 +17,13 @@ Run from the repository root:
 python blocks/block_09_recording_and_analysis_tools/python/lab_9_2_read_ci16_iq_and_analyze.py
 ```
 
+Or analyze a real CI16 dataset manifest:
+
+```bash
+python blocks/block_09_recording_and_analysis_tools/python/lab_9_2_read_ci16_iq_and_analyze.py \
+  --manifest datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454.yaml
+```
+
 Generated artifacts:
 
 ```text
@@ -59,6 +66,11 @@ Replace the synthetic `.ci16` file with a real recording and keep the same metad
 ```text
 real_capture.ci16 + real_capture.metadata.json -> reader -> FFT -> quality checks -> report
 ```
+
+The manifest-driven mode accepts either:
+
+- the original Lab 9.2 metadata JSON format; or
+- a dataset-style YAML manifest with `file_name`, `sample_rate_hz`, `center_frequency_hz`, `endianness` and `i_first`.
 
 ## Report checklist
 
