@@ -3,7 +3,7 @@
 This page defines the first executable modem route for the course:
 
 ```text
-MATLAB reference -> Simulink fixed-point -> HDL symbol mapper -> HDL 8x upsampler -> HDL RRC TX FIR -> HDL RX matched filter / timing / decisions -> HDL framed TX/RX loopback -> future Zynq TX/RX BER flow
+MATLAB reference -> Simulink fixed-point -> HDL symbol mapper -> HDL 8x upsampler -> HDL RRC TX FIR -> HDL RX matched filter / timing / decisions -> HDL framed TX/RX loopback -> HDL Zynq-ready BER top-level -> future routed Zynq TX/RX BER flow
 ```
 
 It is still synthetic, but it already produces the shared files that the Simulink and Verilog stages can consume directly.
@@ -50,6 +50,20 @@ iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_framed_loopback.out 
   blocks/block_05_fpga_hdl_flow/rtl/bpsk_rx_bit_recovery_chain.v ^
   blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_framed_loopback.v
 vvp blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_framed_loopback.out
+iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_zynq_ber_top.out ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_mapper.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_upsampler_8x.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_rx_fir.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_timing_sampler.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_hard_decision.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_framed_tx_chain.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_rx_bit_recovery_chain.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bit_source.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_ber_counter.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_zynq_ber_top.v ^
+  blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_zynq_ber_top.v
+vvp blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_zynq_ber_top.out
 ```
 
 ## Generated artifacts
@@ -90,6 +104,7 @@ The synthetic package is accepted when:
 - the HDL RRC TX FIR testbench passes against vectors derived from the same pulse-shaping package;
 - the HDL RX recovery testbench reproduces the deterministic bit stream without errors;
 - the HDL framed TX/RX loopback testbench reproduces the deterministic bit stream through the integrated chain without errors;
+- the HDL Zynq-ready BER top-level reproduces the deterministic bit stream and exposes start/busy/done plus BER counters without errors;
 - the manifest and metrics JSON are regenerated with a valid checksum.
 
 ## MATLAB and HDL anchor points
@@ -117,6 +132,10 @@ The synthetic package is accepted when:
 | HDL RX wrapper | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_rx_bit_recovery_chain.v` |
 | HDL framed loopback vectors | `blocks/block_05_fpga_hdl_flow/python/generate_bpsk_framed_loopback_vectors.py` |
 | HDL framed loopback testbench | `blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_framed_loopback.v` |
+| HDL frame bit source | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bit_source.v` |
+| HDL BER counter | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_ber_counter.v` |
+| HDL Zynq-ready BER top-level | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_zynq_ber_top.v` |
+| HDL Zynq-ready top-level testbench | `blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_zynq_ber_top.v` |
 
 ## Hardware promotion path
 

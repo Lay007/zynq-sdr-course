@@ -30,6 +30,11 @@ This page provides a compact index of the executable and report-oriented labs in
 | 5.3 | HDL flow | NCO mixer RTL | yes vectors | yes | yes | yes | vector match, complex multiply |
 | 5.4 | HDL flow | AXI-Stream wrapper | no | yes | yes | yes | handshake, backpressure, tlast |
 | 5.5 | HDL flow | Float vs fixed vs RTL comparison | yes | reuse vectors | yes | partial | RMSE/max error, resource-latency table |
+| 5.6 | HDL flow | BPSK RRC TX FIR RTL | yes vectors | yes | yes | yes | pulse-shaped sample match, Q1.15 FIR, coefficient handoff |
+| 5.7 | HDL flow | BPSK 8x symbol upsampler | yes vectors | yes | yes | yes | zero-stuff expansion, symbol/sample bridge |
+| 5.8 | HDL flow | BPSK RX matched filter and bit recovery | yes vectors | yes | yes | yes | deterministic bit recovery, payload BER |
+| 5.9 | HDL flow | BPSK framed TX/RX loopback top-level | yes vectors | yes | yes | yes | framed burst, flush tail, zero-error loopback |
+| 5.10 | HDL flow | Zynq-ready BPSK BER top-level | yes vectors | yes | yes | yes | start/busy/done, BER counters, TX/RX sample seam |
 | 6.1 | RF frontend | RF frequency plan | yes/report | no | yes | partial | expected offset, frequency error |
 | 6.2 | RF frontend | Gain staging and overload | yes/report | no | yes | partial | clipping, SNR, SFDR notes |
 | 6.3 | RF frontend | AD9363 settings and iio_attr | no | no | yes | manual | settings table, metadata |

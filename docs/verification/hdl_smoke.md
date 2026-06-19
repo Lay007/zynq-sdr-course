@@ -14,11 +14,19 @@ The runner performs the following steps:
 
 1. Generate deterministic FIR IQ 4-tap vectors.
 2. Generate deterministic NCO mixer IQ vectors.
-3. Check that the generated vector files are present and non-empty.
-4. Compile and run `iq_passthrough` with Icarus Verilog.
-5. Compile and run `fir_iq_4tap` with Icarus Verilog.
-6. Compile and run `nco_mixer_iq` with Icarus Verilog.
-7. Compile and run `axis_iq_passthrough` with Icarus Verilog.
+3. Regenerate the shared Block 11 BPSK package.
+4. Generate deterministic BPSK mapper, upsampler, TX FIR, RX recovery and framed-loopback vectors.
+5. Check that the generated vector files are present and non-empty.
+6. Compile and run `iq_passthrough` with Icarus Verilog.
+7. Compile and run `fir_iq_4tap` with Icarus Verilog.
+8. Compile and run `nco_mixer_iq` with Icarus Verilog.
+9. Compile and run `bpsk_symbol_mapper` with Icarus Verilog.
+10. Compile and run `bpsk_upsampler_8x` with Icarus Verilog.
+11. Compile and run `bpsk_rrc_tx_fir` with Icarus Verilog.
+12. Compile and run `bpsk_rx_bit_recovery` with Icarus Verilog.
+13. Compile and run `bpsk_framed_loopback` with Icarus Verilog.
+14. Compile and run `bpsk_zynq_ber_top` with Icarus Verilog.
+15. Compile and run `axis_iq_passthrough` with Icarus Verilog.
 
 ## Local usage
 
@@ -59,6 +67,7 @@ This smoke suite is intentionally small. It checks that representative HDL modul
 Typical generated files include:
 
 - `blocks/block_05_fpga_hdl_flow/tb/*_vectors.txt`
+- `blocks/block_05_fpga_hdl_flow/rtl/*.mem`
 - `blocks/block_05_fpga_hdl_flow/tb/*.out`
 - `blocks/block_05_fpga_hdl_flow/tb/*.vcd`
 - waveform files emitted by the testbenches

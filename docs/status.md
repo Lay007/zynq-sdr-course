@@ -20,7 +20,7 @@ This page is the top-level engineering status board for the course. It is intent
 | 02 | Signals and sampling | Ready | Executable | Python path | Ready | Not required | Labs | Add MATLAB/C++ translations and a metadata-mistake replay package. |
 | 03 | DSP basics | Ready | Executable | Python / MATLAB / C++ path | Ready | Not required | Labs | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
 | 04 | Simulink and fixed-point | Ready | Executable | Python / MATLAB references + executable BPSK `.slx` models | Ready | Not required | Labs | Constrain the BPSK Simulink path further for HDL Coder export and integration handoff. |
-| 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches + framed BPSK TX/RX RTL chain + Vivado OOC evidence | Ready | Hardware pending | HDL CI | Promote the framed BPSK chain to a routed Zynq top-level with board I/O, DMA or AD9363 handoff, and implementation evidence. |
+| 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches + Zynq-ready framed BPSK BER top-level + Vivado OOC evidence | Ready | Hardware pending | HDL CI | Wire the deterministic BER top-level to AXI-Lite/AXI-Stream or AD9363 sample I/O and collect routed implementation evidence. |
 | 06 | RF frontend and AD9363 | Ready | Executable | Analysis scripts | Ready | Hardware pending | Labs | Build the AD9361 RX gain/overload table from the clean-image baseline. |
 | 07 | TX/RX chains | Ready | Executable | DUC/DDC demos | Ready | Hardware pending | Labs | Add RF loopback measurement package. |
 | 08 | Modulation and synchronization | Ready | Executable | Synchronization demos | Ready | Optional | Sync CI | Add impairment sweeps and BER/EVM dashboards. |

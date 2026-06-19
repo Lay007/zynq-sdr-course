@@ -36,6 +36,8 @@ test -s "$TB_DIR/bpsk_rx_bit_recovery_meta.txt"
 test -s "$TB_DIR/bpsk_framed_loopback_input_bits.txt"
 test -s "$TB_DIR/bpsk_framed_loopback_expected_bits.txt"
 test -s "$TB_DIR/bpsk_framed_loopback_meta.txt"
+test -s "$RTL_DIR/bpsk_rrc_tx_fir_taps.mem"
+test -s "$RTL_DIR/bpsk_frame_bits.mem"
 
 iverilog -g2012 -o "$TB_DIR/tb_iq_passthrough.out" \
   "$RTL_DIR/iq_passthrough.v" \
@@ -86,6 +88,21 @@ iverilog -g2012 -o "$TB_DIR/tb_bpsk_framed_loopback.out" \
   "$RTL_DIR/bpsk_rx_bit_recovery_chain.v" \
   "$TB_DIR/tb_bpsk_framed_loopback.v"
 vvp "$TB_DIR/tb_bpsk_framed_loopback.out"
+
+iverilog -g2012 -o "$TB_DIR/tb_bpsk_zynq_ber_top.out" \
+  "$RTL_DIR/bpsk_symbol_mapper.v" \
+  "$RTL_DIR/bpsk_upsampler_8x.v" \
+  "$RTL_DIR/bpsk_rrc_tx_fir.v" \
+  "$RTL_DIR/bpsk_rrc_rx_fir.v" \
+  "$RTL_DIR/bpsk_symbol_timing_sampler.v" \
+  "$RTL_DIR/bpsk_hard_decision.v" \
+  "$RTL_DIR/bpsk_framed_tx_chain.v" \
+  "$RTL_DIR/bpsk_rx_bit_recovery_chain.v" \
+  "$RTL_DIR/bpsk_frame_bit_source.v" \
+  "$RTL_DIR/bpsk_ber_counter.v" \
+  "$RTL_DIR/bpsk_zynq_ber_top.v" \
+  "$TB_DIR/tb_bpsk_zynq_ber_top.v"
+vvp "$TB_DIR/tb_bpsk_zynq_ber_top.out"
 
 iverilog -g2012 -o "$TB_DIR/tb_axis_iq_passthrough.out" \
   "$RTL_DIR/axis_iq_passthrough.v" \

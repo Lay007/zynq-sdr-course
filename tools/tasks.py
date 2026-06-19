@@ -74,6 +74,7 @@ GENERATED_TB_FILENAMES = (
 
 GENERATED_RTL_FILENAMES = (
     "bpsk_rrc_tx_fir_taps.mem",
+    "bpsk_frame_bits.mem",
 )
 
 LEGACY_ROOT_TB_PATTERNS = (
@@ -243,6 +244,28 @@ def task_hdl() -> None:
         ]
     )
     run(["vvp", str(TB_DIR / "tb_bpsk_framed_loopback.out")])
+
+    run(
+        [
+            "iverilog",
+            "-g2012",
+            "-o",
+            str(TB_DIR / "tb_bpsk_zynq_ber_top.out"),
+            str(RTL_DIR / "bpsk_symbol_mapper.v"),
+            str(RTL_DIR / "bpsk_upsampler_8x.v"),
+            str(RTL_DIR / "bpsk_rrc_tx_fir.v"),
+            str(RTL_DIR / "bpsk_rrc_rx_fir.v"),
+            str(RTL_DIR / "bpsk_symbol_timing_sampler.v"),
+            str(RTL_DIR / "bpsk_hard_decision.v"),
+            str(RTL_DIR / "bpsk_framed_tx_chain.v"),
+            str(RTL_DIR / "bpsk_rx_bit_recovery_chain.v"),
+            str(RTL_DIR / "bpsk_frame_bit_source.v"),
+            str(RTL_DIR / "bpsk_ber_counter.v"),
+            str(RTL_DIR / "bpsk_zynq_ber_top.v"),
+            str(TB_DIR / "tb_bpsk_zynq_ber_top.v"),
+        ]
+    )
+    run(["vvp", str(TB_DIR / "tb_bpsk_zynq_ber_top.out")])
 
     run(
         [

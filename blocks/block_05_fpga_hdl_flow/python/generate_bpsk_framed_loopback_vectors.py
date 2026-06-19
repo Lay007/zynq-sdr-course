@@ -17,9 +17,11 @@ PACKAGE_GENERATOR = (
     ROOT / "blocks" / "block_11_integrated_sdr_project" / "python" / "end_to_end_bpsk_reference.py"
 )
 TB_DIR = ROOT / "blocks" / "block_05_fpga_hdl_flow" / "tb"
+RTL_DIR = ROOT / "blocks" / "block_05_fpga_hdl_flow" / "rtl"
 POS_LEVEL = 32767
 NEG_LEVEL = -32767
 SHIFT = 15
+MAX_FRAME_BITS = 512
 
 
 def ensure_package() -> None:
@@ -93,6 +95,7 @@ def find_start_offset(matched_i: np.ndarray, tx_bits: np.ndarray, sps: int) -> i
 def main() -> None:
     ensure_package()
     TB_DIR.mkdir(parents=True, exist_ok=True)
+    RTL_DIR.mkdir(parents=True, exist_ok=True)
 
     cfg = json.loads((PACKAGE_DIR / "config.json").read_text(encoding="utf-8"))
     tx_bits = np.loadtxt(PACKAGE_DIR / "tx_bits.txt", dtype=np.int16).reshape(-1)
@@ -124,6 +127,7 @@ def main() -> None:
     input_path = TB_DIR / "bpsk_framed_loopback_input_bits.txt"
     expected_path = TB_DIR / "bpsk_framed_loopback_expected_bits.txt"
     meta_path = TB_DIR / "bpsk_framed_loopback_meta.txt"
+    mem_path = RTL_DIR / "bpsk_frame_bits.mem"
 
     with input_path.open("w", encoding="utf-8") as f:
         f.write("# valid bit last\n")
@@ -140,9 +144,16 @@ def main() -> None:
         f.write("# start_offset sps bit_count preamble_count flush_symbols\n")
         f.write(f"{start_offset} {sps} {tx_bits.size} {preamble_count} {flush_symbols}\n")
 
+    with mem_path.open("w", encoding="utf-8") as f:
+        for bit in tx_bits.tolist():
+            f.write(f"{int(bit):01x}\n")
+        for _ in range(MAX_FRAME_BITS - tx_bits.size):
+            f.write("0\n")
+
     print(f"Wrote {input_path}")
     print(f"Wrote {expected_path}")
     print(f"Wrote {meta_path}")
+    print(f"Wrote {mem_path}")
     print(
         "Recovered bits: "
         f"{tx_bits.size}, start offset: {start_offset}, flush symbols: {flush_symbols}, "

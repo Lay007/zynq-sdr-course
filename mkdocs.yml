@@ -173,6 +173,7 @@ nav:
           - "Lab 5.7 — BPSK 8x symbol upsampler": ru/labs/lab-5-7-bpsk-upsampler-8x.md
           - "Lab 5.8 — BPSK RX matched filter and bit recovery": ru/labs/lab-5-8-bpsk-rx-bit-recovery.md
           - "Lab 5.9 — BPSK framed TX/RX loopback top-level": ru/labs/lab-5-9-bpsk-framed-loopback.md
+          - "Lab 5.10 — Zynq-ready BPSK BER top-level": ru/labs/lab-5-10-bpsk-zynq-ready-top.md
       - "Лаборатории Block 6":
           - "Lab 6.1 — RF frequency plan": ru/labs/lab-6-1-frequency-plan.md
           - "Lab 6.2 — Gain staging and overload": ru/labs/lab-6-2-gain-staging-and-overload.md
@@ -272,6 +273,7 @@ nav:
           - "Lab 5.7 — BPSK 8x symbol upsampler": en/labs/lab-5-7-bpsk-upsampler-8x.md
           - "Lab 5.8 — BPSK RX matched filter and bit recovery": en/labs/lab-5-8-bpsk-rx-bit-recovery.md
           - "Lab 5.9 — BPSK framed TX/RX loopback top-level": en/labs/lab-5-9-bpsk-framed-loopback.md
+          - "Lab 5.10 — Zynq-ready BPSK BER top-level": en/labs/lab-5-10-bpsk-zynq-ready-top.md
       - "Block 6 labs":
           - "Lab 6.1 — RF frequency plan": en/labs/lab-6-1-frequency-plan.md
           - "Lab 6.2 — Gain staging and overload": en/labs/lab-6-2-gain-staging-and-overload.md

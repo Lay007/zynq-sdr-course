@@ -17,6 +17,7 @@ Prepare a checklist for moving from simulation/RTL to a safe RF experiment with 
 | AXI/stream interface verified | prevents sample loss |
 | RF frequency plan written | avoids wrong spectral location |
 | Gain/attenuation selected | protects receiver and improves reproducibility |
+| No-attenuator fallback is explicitly limited | keeps a first OTA trial short, low-power and non-quantitative |
 | Metadata template ready | makes IQ capture usable |
 | FFT sanity check prepared | first validation after capture |
 | Rollback plan defined | safe recovery from bad settings |
@@ -26,6 +27,7 @@ Prepare a checklist for moving from simulation/RTL to a safe RF experiment with 
 - testbench PASS log;
 - fixed-point error summary;
 - RF settings table;
+- antenna spacing and minimum TX gain note for any no-attenuator OTA trial;
 - attenuator/safety checklist;
 - metadata JSON;
 - first FFT screenshot or generated plot.
@@ -36,6 +38,7 @@ Prepare a checklist for moving from simulation/RTL to a safe RF experiment with 
 - [ ] Attach fixed-point scaling table.
 - [ ] State RF settings.
 - [ ] State attenuation and gain.
+- [ ] If no attenuator is available, state that the first OTA trial is discovery-only, short-burst and minimum-power.
 - [ ] Attach capture metadata.
 - [ ] Include first FFT sanity check.
 - [ ] State whether the integration is safe to continue.
