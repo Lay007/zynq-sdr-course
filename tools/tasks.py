@@ -44,6 +44,8 @@ GENERATED_DOC_ASSET_PATTERNS = (
     "lab93_*.json",
     "end_to_end_tone_*.png",
     "end_to_end_tone_*.json",
+    "end_to_end_bpsk_reference_*.png",
+    "end_to_end_bpsk_reference_*.json",
 )
 
 GENERATED_TB_FILENAMES = (
@@ -51,6 +53,8 @@ GENERATED_TB_FILENAMES = (
     "fir_iq_4tap_expected_vectors.txt",
     "nco_mixer_iq_input_vectors.txt",
     "nco_mixer_iq_expected_vectors.txt",
+    "bpsk_symbol_mapper_input_vectors.txt",
+    "bpsk_symbol_mapper_expected_vectors.txt",
 )
 
 LEGACY_ROOT_TB_PATTERNS = (
@@ -60,6 +64,7 @@ LEGACY_ROOT_TB_PATTERNS = (
 
 GENERATED_DATASET_FILENAMES = (
     "end_to_end_tone_demo_v1.yml",
+    "end_to_end_bpsk_reference_v1.yml",
 )
 
 GENERATED_CAPTURE_DIRS = (
@@ -68,6 +73,8 @@ GENERATED_CAPTURE_DIRS = (
 
 GENERATED_CAPTURE_FILENAMES = (
     ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_tone_demo" / "end_to_end_tone_demo_v1.ci16",
+    ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_bpsk_reference" / "end_to_end_bpsk_reference_v1.ci16",
+    ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_bpsk_reference" / "end_to_end_bpsk_reference_v1_tx_reference.ci16",
 )
 
 GENERATED_ROOT_DIRS = (
@@ -141,6 +148,20 @@ def task_hdl() -> None:
         ]
     )
     run(["vvp", str(TB_DIR / "tb_nco_mixer_iq.out")])
+
+    run([sys.executable, str(ROOT / "blocks" / "block_11_integrated_sdr_project" / "python" / "end_to_end_bpsk_reference.py")])
+    run([sys.executable, str(PY_DIR / "generate_bpsk_symbol_mapper_vectors.py")])
+    run(
+        [
+            "iverilog",
+            "-g2012",
+            "-o",
+            str(TB_DIR / "tb_bpsk_symbol_mapper.out"),
+            str(RTL_DIR / "bpsk_symbol_mapper.v"),
+            str(TB_DIR / "tb_bpsk_symbol_mapper.v"),
+        ]
+    )
+    run(["vvp", str(TB_DIR / "tb_bpsk_symbol_mapper.out")])
 
     run(
         [

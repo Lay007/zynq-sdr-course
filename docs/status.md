@@ -20,13 +20,13 @@ This page is the top-level engineering status board for the course. It is intent
 | 02 | Signals and sampling | Ready | Executable | Python path | Ready | Not required | Labs | Add MATLAB/C++ translations and a metadata-mistake replay package. |
 | 03 | DSP basics | Ready | Executable | Python / MATLAB / C++ path | Ready | Not required | Labs | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
 | 04 | Simulink and fixed-point | Ready | Executable | Python / MATLAB-style references | Ready | Not required | Labs | Add Simulink screenshots and fixed-point export examples. |
-| 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches + Vivado OOC evidence | Ready | Hardware pending | HDL CI | Promote OOC Vivado evidence to routed top-level design data. |
+| 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches + Vivado OOC evidence | Ready | Hardware pending | HDL CI | Extend the BPSK symbol mapper into pulse shaping and framed TX/RX RTL. |
 | 06 | RF frontend and AD9363 | Ready | Executable | Analysis scripts | Ready | Hardware pending | Labs | Build the AD9361 RX gain/overload table from the clean-image baseline. |
 | 07 | TX/RX chains | Ready | Executable | DUC/DDC demos | Ready | Hardware pending | Labs | Add RF loopback measurement package. |
 | 08 | Modulation and synchronization | Ready | Executable | Synchronization demos | Ready | Optional | Sync CI | Add impairment sweeps and BER/EVM dashboards. |
 | 09 | Recording and analysis tools | Ready | Executable | IQ readers | Ready | Hardware pending | Recording CI | Update QPSK dataset manifest with real checksum or synthetic generator. |
 | 10 | KiCad and basic electronics | Ready | Draft | Calculators / templates | Partial | Bench pending | Docs | Add measured breadboard photos and KiCad exports. |
-| 11 | Integrated SDR project | Ready | Executable | Simulation package | Ready | Hardware pending | Labs | Promote QPSK hardware demo to measured report. |
+| 11 | Integrated SDR project | Ready | Executable | Simulation package + BPSK reference package | Ready | Hardware pending | Labs | Promote the BPSK reference chain to a measured Zynq TX/RX BER report. |
 | 12 | Final projects | Ready | Draft | Templates + rubric | Partial | Depends on project | Docs | Use grading rubric and example report skeleton for first final project. |
 
 ## Newly added hardening artifacts
@@ -35,6 +35,7 @@ This page is the top-level engineering status board for the course. It is intent
 |---|---|
 | `docs/final-project-grading-rubric.md` | Consistent scoring for Block 12 final projects. |
 | `docs/end-to-end-qpsk-hardware-demo.md` | Flagship QPSK model-to-measurement demo checklist. |
+| `docs/end-to-end-bpsk-reference-report.md` | Executable BPSK route from MATLAB reference to fixed-point and HDL handoff. |
 | `docs/fpga-resource-report-template.md` | FPGA reporting contract and expected fields. |
 | `docs/block5-fpga-evidence.md` | Nav-visible digest of the current Block 5 Vivado evidence package. |
 | `docs/student-ci-grading-guide.md` | Student branch and CI pass/fail workflow. |
