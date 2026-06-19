@@ -13,6 +13,7 @@
 2. experiments with gain and bandwidth
 3. analyzing overload signatures in the spectrum
 4. relating AD9363 settings to the observed signal
+5. capturing a clean-image RX-only baseline and comparing it with RTL-SDR
 
 ## Review and discussion questions
 1. Which limitations or tradeoffs are central to this block?
@@ -23,4 +24,5 @@
 - RF chain level map;
 - AD9363 settings description;
 - screenshots of overload and normal modes;
+- first receive-only clean-image IQ baseline with manifest;
 - RF-stand report.

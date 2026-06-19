@@ -1,0 +1,18 @@
+{
+  "dataset_id": "lab6_6_zynq_rx_fm_103119454",
+  "sample_count_read": 262144,
+  "sample_rate_hz": 2400000.0,
+  "center_frequency_hz": 103119454.0,
+  "duration_s": 0.10922666666666667,
+  "expected_offset_hz": 0.0,
+  "measured_peak_hz": -816174.31640625,
+  "frequency_error_hz": -816174.31640625,
+  "peak_dbfs": -51.48338496593453,
+  "noise_floor_dbfs": -84.3340636289341,
+  "snr_db": 32.85067866299957,
+  "dc_offset_magnitude": 3.3784024285510906e-05,
+  "clipping_fraction": 0.0,
+  "quality_pass": true,
+  "iq_path": "G:\\Programs\\zynq-sdr-course\\datasets\\lab6_6_zynq_rx_observation\\raw\\zynq_rx_fm_103119454Hz.ci16",
+  "manifest_path": "G:\\Programs\\zynq-sdr-course\\datasets\\lab6_6_zynq_rx_observation\\manifest_fm_103119454.yaml"
+}

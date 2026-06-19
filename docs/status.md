@@ -21,7 +21,7 @@ This page is the top-level engineering status board for the course. It is intent
 | 03 | DSP basics | Ready | Executable | Python / MATLAB / C++ path | Ready | Not required | Labs | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
 | 04 | Simulink and fixed-point | Ready | Executable | Python / MATLAB-style references | Ready | Not required | Labs | Add Simulink screenshots and fixed-point export examples. |
 | 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches + Vivado OOC evidence | Ready | Hardware pending | HDL CI | Promote OOC Vivado evidence to routed top-level design data. |
-| 06 | RF frontend and AD9363 | Ready | Executable | Analysis scripts | Ready | Hardware pending | Labs | Capture first clean-image AD9363 RX evidence, then build the gain/overload table. |
+| 06 | RF frontend and AD9363 | Ready | Executable | Analysis scripts | Ready | Hardware pending | Labs | Build the AD9361 RX gain/overload table from the clean-image baseline. |
 | 07 | TX/RX chains | Ready | Executable | DUC/DDC demos | Ready | Hardware pending | Labs | Add RF loopback measurement package. |
 | 08 | Modulation and synchronization | Ready | Executable | Synchronization demos | Ready | Optional | Sync CI | Add impairment sweeps and BER/EVM dashboards. |
 | 09 | Recording and analysis tools | Ready | Executable | IQ readers | Ready | Hardware pending | Recording CI | Update QPSK dataset manifest with real checksum or synthetic generator. |
@@ -43,6 +43,7 @@ This page is the top-level engineering status board for the course. It is intent
 | `docs/iq-demo-dataset-manifest.md` | Dataset contract for QPSK replay/capture work. |
 | `datasets/demo_qpsk_capture/manifest.yaml` | First manifest-only QPSK dataset package. |
 | `hardware/7020_ad936x_sdr/boot/course_clean/autorun.sh` | Clean stock-image management overlay with fixed `eth0`, DHCP, and safe TX defaults. |
+| `datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454.yaml` | First clean-image Zynq RX-only CI16 hardware dataset manifest. |
 | `templates/fpga_resource_report.template.md` | Reusable FPGA report template. |
 | `templates/student_assignment.template.md` | Reusable student assignment template. |
 | `reports/fpga/z7020-resource-summary-template.md` | First Z7020 OOC FPGA resource summary with real numbers. |

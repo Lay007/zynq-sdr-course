@@ -1,0 +1,64 @@
+dataset_id: lab6_6_zynq_rx_fm_103119454
+version: 0.1
+status: git-lfs
+title: Zynq AD9361 RX-only FM observation at 103.119454 MHz
+description: Short receive-only CI16 IQ capture recorded over network IIO from the
+  clean stock Pluto-like image on the Zynq-7020 + AD9361 board. Intended as the first
+  hardware RX baseline for Block 6 and for comparison with the earlier RTL-SDR FM
+  observation.
+storage: git-lfs
+url: null
+file_name: raw/zynq_rx_fm_103119454Hz.ci16
+sha256: 427417C6AD0040C62EAC41815DA399AF4A353B44A9A1CAB7F11D89A40F7A62B1
+format: ci16
+endianness: little
+i_first: true
+sample_rate_hz: 2400000
+center_frequency_hz: 103119454
+bandwidth_hz: 2000000
+duration_s: 0.109227
+analysis_command: python blocks/block_09_recording_and_analysis_tools/python/lab_9_2_read_ci16_iq_and_analyze.py
+  --manifest datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454.yaml
+source: zynq-ad9361-network-iio-passive-observation
+hardware:
+  receiver: Zynq-7020 + AD9361 board
+  software: stock Pluto-like Linux 5.15.0 + libiio network context
+  rf_path: passive OTA receive-only via RX1
+  context_uri: ip:192.168.40.1
+  rf_port_select: A_BALANCED
+  gain_mode: manual
+  rx_gain_db: 50.000000 dB
+signal:
+  type: broadcast_fm_or_fm_band_observation
+  expected_signal_offset_hz: 0
+  note: First Zynq clean-image receive-only FM-band baseline near the earlier RTL-SDR
+    observation.
+capture_state:
+  timestamp_utc: '2026-06-19T09:54:43Z'
+  context_hw_model: FISH Ball PlutoSDR Rev.A (Z7020-AD9361)
+  context_fw_version: 80403-dirty
+  rx_lo_frequency_hz: '103119454'
+  rx0_rssi_db: 64.75 dB
+  rx1_rssi_db: 105.75 dB
+  sample_count: 262144
+analysis_targets:
+- first clean-image AD9361 RX baseline
+- offline CI16 replay through Block 9 tooling
+- receiver-shape comparison against RTL-SDR FM observation
+quality_expectations:
+  max_clipping_fraction: 0.01
+  max_dc_offset: 0.25
+  max_frequency_error_hz: 1000000
+  min_snr_db: -50.0
+quality_checks:
+  checksum_verified: true
+  clipping_observed: analyze_with_lab_9_2
+  overload_observed: analyze_with_lab_9_2
+  dc_offset_checked: analyze_with_lab_9_2
+license: course-demo-only-review-before-publication
+notes:
+- Capture performed with TX LO held in powerdown by the course-clean autorun overlay.
+- This is a receive-only artifact. No conducted TX path was used because no attenuators
+  are currently installed.
+- Absolute amplitude is receiver-dependent; compare spectral shape and occupancy before
+  comparing levels.

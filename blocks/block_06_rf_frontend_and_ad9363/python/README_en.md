@@ -39,3 +39,22 @@ python blocks/block_06_rf_frontend_and_ad9363/python/lab_6_3_probe_iio_context.p
 
 On Windows, the script can auto-discover `libiio.dll` from the default
 `IIO Oscilloscope` install path.
+
+## Included RX-only capture workflow
+
+The folder now also includes:
+
+- `lab_6_6_capture_zynq_rx_only.py` - captures a short CI16 receive-only IQ snapshot from the clean-image Zynq board and writes a manifest;
+- `lab_6_6_compare_receivers.py` - overlays that Zynq capture with the earlier RTL-SDR FM observation.
+
+Example:
+
+```bash
+python blocks/block_06_rf_frontend_and_ad9363/python/lab_6_6_capture_zynq_rx_only.py \
+  --uri ip:192.168.40.1 \
+  --center-frequency-hz 103119454 \
+  --sample-rate-hz 2400000 \
+  --rf-bandwidth-hz 2000000 \
+  --gain-control-mode manual \
+  --rx-hardwaregain-db 50
+```
