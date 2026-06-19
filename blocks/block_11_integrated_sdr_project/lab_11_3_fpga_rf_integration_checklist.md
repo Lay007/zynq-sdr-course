@@ -14,6 +14,7 @@ Prepare a checklist for moving from simulation/RTL to a safe RF experiment with 
 |---|---|
 | RTL testbench passes | avoids debugging hardware with broken logic |
 | Fixed-point scaling documented | prevents clipping and level mismatch |
+| AXI-Lite register map verified | prevents PS-side control mistakes before RF bring-up |
 | AXI/stream interface verified | prevents sample loss |
 | RF frequency plan written | avoids wrong spectral location |
 | Gain/attenuation selected | protects receiver and improves reproducibility |
@@ -26,16 +27,43 @@ Prepare a checklist for moving from simulation/RTL to a safe RF experiment with 
 
 - testbench PASS log;
 - fixed-point error summary;
+- register map and one successful `ID` register readback;
 - RF settings table;
 - antenna spacing and minimum TX gain note for any no-attenuator OTA trial;
 - attenuator/safety checklist;
 - metadata JSON;
 - first FFT screenshot or generated plot.
 
+## First discovery-burst profile
+
+For the first no-attenuator handoff to AD9363, use a deliberately conservative profile:
+
+| Item | First setting |
+|---|---|
+| Burst type | one short deterministic BPSK frame |
+| TX gain | minimum available setting |
+| RX gain | low manual gain |
+| AGC | disabled |
+| RF goal | detect the burst and confirm no overload |
+| Success signal | visible burst at the expected frequency and no obvious clipping/splatter |
+
+## Repository handoff path
+
+Use the repository in this order:
+
+1. Verify the AXI-Lite register contract with Lab 5.11 and confirm one `ID` readback plus one simulated burst.
+2. Probe the board with `blocks/block_06_rf_frontend_and_ad9363/python/lab_6_3_probe_iio_context.py`.
+3. Freeze the first RF settings using the Lab 6.3 manual-gain checklist.
+4. Launch one deterministic burst from the PS through the AXI-Lite wrapper.
+5. Observe the burst either with the Zynq RX chain or with RTL-SDR as an external monitor.
+
+This separates three concerns cleanly: PS control, AD9363 RF configuration, and waveform visibility.
+
 ## Report checklist
 
 - [ ] Attach RTL simulation result.
 - [ ] Attach fixed-point scaling table.
+- [ ] Attach register map or PS control summary.
 - [ ] State RF settings.
 - [ ] State attenuation and gain.
 - [ ] If no attenuator is available, state that the first OTA trial is discovery-only, short-burst and minimum-power.

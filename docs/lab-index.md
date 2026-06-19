@@ -35,6 +35,7 @@ This page provides a compact index of the executable and report-oriented labs in
 | 5.8 | HDL flow | BPSK RX matched filter and bit recovery | yes vectors | yes | yes | yes | deterministic bit recovery, payload BER |
 | 5.9 | HDL flow | BPSK framed TX/RX loopback top-level | yes vectors | yes | yes | yes | framed burst, flush tail, zero-error loopback |
 | 5.10 | HDL flow | Zynq-ready BPSK BER top-level | yes vectors | yes | yes | yes | start/busy/done, BER counters, TX/RX sample seam |
+| 5.11 | HDL flow | AXI-Lite control wrapper for the BPSK BER top-level | yes vectors | yes | yes | yes | register map, start polling, BER readback |
 | 6.1 | RF frontend | RF frequency plan | yes/report | no | yes | partial | expected offset, frequency error |
 | 6.2 | RF frontend | Gain staging and overload | yes/report | no | yes | partial | clipping, SNR, SFDR notes |
 | 6.3 | RF frontend | AD9363 settings and iio_attr | no | no | yes | manual | settings table, metadata |

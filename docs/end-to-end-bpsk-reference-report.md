@@ -3,7 +3,7 @@
 This page defines the first executable modem route for the course:
 
 ```text
-MATLAB reference -> Simulink fixed-point -> HDL symbol mapper -> HDL 8x upsampler -> HDL RRC TX FIR -> HDL RX matched filter / timing / decisions -> HDL framed TX/RX loopback -> HDL Zynq-ready BER top-level -> future routed Zynq TX/RX BER flow
+MATLAB reference -> Simulink fixed-point -> HDL symbol mapper -> HDL 8x upsampler -> HDL RRC TX FIR -> HDL RX matched filter / timing / decisions -> HDL framed TX/RX loopback -> HDL Zynq-ready BER top-level -> HDL AXI-Lite PS wrapper -> AD9363 discovery burst / future routed Zynq TX/RX BER flow
 ```
 
 It is still synthetic, but it already produces the shared files that the Simulink and Verilog stages can consume directly.
@@ -64,6 +64,21 @@ iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_zynq_ber_top.out ^
   blocks/block_05_fpga_hdl_flow/rtl/bpsk_zynq_ber_top.v ^
   blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_zynq_ber_top.v
 vvp blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_zynq_ber_top.out
+iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_zynq_ber_axi_lite.out ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_mapper.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_upsampler_8x.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_rx_fir.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_timing_sampler.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_hard_decision.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_framed_tx_chain.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_rx_bit_recovery_chain.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bit_source.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_ber_counter.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_zynq_ber_top.v ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_zynq_ber_axi_lite.v ^
+  blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_zynq_ber_axi_lite.v
+vvp blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_zynq_ber_axi_lite.out
 ```
 
 ## Generated artifacts
@@ -105,6 +120,7 @@ The synthetic package is accepted when:
 - the HDL RX recovery testbench reproduces the deterministic bit stream without errors;
 - the HDL framed TX/RX loopback testbench reproduces the deterministic bit stream through the integrated chain without errors;
 - the HDL Zynq-ready BER top-level reproduces the deterministic bit stream and exposes start/busy/done plus BER counters without errors;
+- the HDL AXI-Lite wrapper exposes the deterministic BER top-level through a PS-friendly register map and passes register-level simulation without errors;
 - the manifest and metrics JSON are regenerated with a valid checksum.
 
 ## MATLAB and HDL anchor points
@@ -136,15 +152,23 @@ The synthetic package is accepted when:
 | HDL BER counter | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_ber_counter.v` |
 | HDL Zynq-ready BER top-level | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_zynq_ber_top.v` |
 | HDL Zynq-ready top-level testbench | `blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_zynq_ber_top.v` |
+| HDL AXI-Lite wrapper | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_zynq_ber_axi_lite.v` |
+| HDL AXI-Lite wrapper testbench | `blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_zynq_ber_axi_lite.v` |
 
 ## Hardware promotion path
 
 The recommended first measured route is:
 
 ```text
-MATLAB BPSK burst -> Simulink fixed-point export -> Zynq TX -> Zynq RX -> BER
-                                            \
-                                             -> RTL-SDR monitor spectrum
+PS AXI-Lite writes frame/timing registers -> BPSK burst launch -> AD9363 TX -> short OTA or isolated RF path -> AD9363 RX -> BER counters
+                                                                                                          \
+                                                                                                           -> RTL-SDR monitor spectrum
 ```
 
-This keeps BER on the controlled Zynq RX chain and uses RTL-SDR only as an external observer.
+For the first hardware handoff, keep the burst short, TX gain at minimum, RX gain low and manual, and AGC disabled. The first discovery run should answer only three questions:
+
+1. Is the burst visible at the expected frequency?
+2. Is there any overload or obvious wideband splatter?
+3. Does the controlled Zynq RX path recover a deterministic frame at all?
+
+This keeps BER on the controlled Zynq RX chain and uses RTL-SDR only as an external observer during the first RF step.
