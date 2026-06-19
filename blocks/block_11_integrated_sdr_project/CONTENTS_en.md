@@ -13,6 +13,7 @@
 2. documenting interfaces between modules
 3. preparing verification scenarios
 4. running integration tests
+5. building the AD9361 gpreg burst overlay and launching the first discovery burst
 
 ## Review and discussion questions
 1. Which limitations or tradeoffs are central to this block?

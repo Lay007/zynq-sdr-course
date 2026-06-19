@@ -1,0 +1,83 @@
+{
+  "backend": "mock",
+  "base_addr": "0x79040000",
+  "id_word": "0x4250534B",
+  "signature_word": "0x4250534B",
+  "initial_status": "0x00000800",
+  "final_status": "0x00000804",
+  "cleared_status": "0x00000800",
+  "done_cleared": true,
+  "busy_observed": true,
+  "done_observed": true,
+  "poll_reads": 3,
+  "frame_bit_count": 281,
+  "preamble_count": 25,
+  "start_offset": 62,
+  "received_bits": 281,
+  "total_errors": 0,
+  "payload_errors": 0,
+  "ber_total": 0.0,
+  "ber_payload": 0.0,
+  "register_snapshot": {
+    "CORE_VERSION": {
+      "offset": 0,
+      "address": "0x79040000",
+      "value": 262243
+    },
+    "CORE_ID": {
+      "offset": 4,
+      "address": "0x79040004",
+      "value": 1112560459
+    },
+    "SCRATCH": {
+      "offset": 8,
+      "address": "0x79040008",
+      "value": 0
+    },
+    "GP_CONTROL_OUT": {
+      "offset": 1028,
+      "address": "0x79040404",
+      "value": 0
+    },
+    "GP_STATUS_IN": {
+      "offset": 1032,
+      "address": "0x79040408",
+      "value": 2048
+    },
+    "GP_FRAME_BIT_COUNT_OUT": {
+      "offset": 1092,
+      "address": "0x79040444",
+      "value": 281
+    },
+    "GP_RECEIVED_BITS_IN": {
+      "offset": 1096,
+      "address": "0x79040448",
+      "value": 281
+    },
+    "GP_PREAMBLE_COUNT_OUT": {
+      "offset": 1156,
+      "address": "0x79040484",
+      "value": 25
+    },
+    "GP_TOTAL_ERRORS_IN": {
+      "offset": 1160,
+      "address": "0x79040488",
+      "value": 0
+    },
+    "GP_START_OFFSET_OUT": {
+      "offset": 1220,
+      "address": "0x790404C4",
+      "value": 62
+    },
+    "GP_PAYLOAD_ERRORS_IN": {
+      "offset": 1224,
+      "address": "0x790404C8",
+      "value": 0
+    },
+    "GP_SIGNATURE_IN": {
+      "offset": 1288,
+      "address": "0x79040508",
+      "value": 1112560459
+    }
+  }
+}
