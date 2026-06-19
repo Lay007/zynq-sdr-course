@@ -22,6 +22,27 @@ Large IQ recordings are essential for SDR experiments, but they should not be co
 | institutional storage | internal/private experimental data |
 | cloud storage link | temporary collaboration datasets |
 
+## Practical recommendation for this repository
+
+Use this split by default:
+
+| What | Recommended location |
+|---|---|
+| raw real IQ recordings | outside Git, in private/local storage |
+| manifest, checksum, README | inside `datasets/<dataset_id>/` |
+| report-ready plots and metrics JSON | inside `docs/assets/` |
+| tiny synthetic fixtures for tests | inside the repository |
+
+For personal bring-up or lab work, keep the raw file in the SDR tool's recording folder or in a dedicated external directory, then commit only:
+
+- the manifest;
+- SHA256;
+- preview plots;
+- metrics JSON;
+- a short README with replay/analysis commands.
+
+Use `Git LFS` only when the recording is small enough to justify versioning and is legally safe to share.
+
 ## Required sidecar metadata
 
 Every real capture must have a metadata file next to it:

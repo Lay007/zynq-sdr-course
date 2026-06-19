@@ -1,0 +1,4 @@
+datasets/**/*.wav filter=lfs diff=lfs merge=lfs -text
+datasets/**/*.ci16 filter=lfs diff=lfs merge=lfs -text
+datasets/**/*.cu8 filter=lfs diff=lfs merge=lfs -text
+datasets/**/*.cf32 filter=lfs diff=lfs merge=lfs -text

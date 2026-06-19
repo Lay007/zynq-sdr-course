@@ -1,0 +1,47 @@
+dataset_id: lab1_0_rtl_sdr_fm_103119454
+version: 0.1
+status: git-lfs
+title: RTL-SDR FM-band observation at 103.119454 MHz
+description: >-
+  Short passive WAV IQ capture recorded in SDR++ during the first Lab 1.0
+  RTL-SDR bring-up session. Intended for metadata tracking, replay and later
+  offline spectrum checks.
+storage: git-lfs
+url: null
+file_name: raw/baseband_103119454Hz_08-55-55_19-06-2026.wav
+sha256: 2531365538F51239CEE1A75565EE1DC9CA958B0B9DF57A0C3EBB8B5250221E46
+format: wav-iq
+endianness: little
+i_first: true
+sample_rate_hz: 2400000
+center_frequency_hz: 103119454
+bandwidth_hz: 2400000
+duration_s: 5.422
+analysis_command: >-
+  python blocks/block_09_recording_and_analysis_tools/python/lab_9_4_read_wav_iq_and_analyze.py --manifest datasets/lab1_0_rtl_sdr_observation/manifest_fm_103119454.yaml
+source: rtl-sdr-sdrpp-passive-observation
+hardware:
+  receiver: RTL-SDR V3 Pro
+  software: SDR++
+  rf_path: passive OTA receive-only
+  attenuation_db: null
+  gain_mode: manual-or-unknown
+  rx_gain_db: null
+signal:
+  type: broadcast_fm_or_fm_band_observation
+  expected_signal_offset_hz: 0
+  note: Short first-look capture from the FM broadcast survey step.
+analysis_targets:
+  - metadata validation
+  - short replay in SDR++
+  - offline FFT sanity check
+quality_checks:
+  checksum_verified: true
+  clipping_observed: unknown
+  overload_observed: unknown
+  dc_offset_checked: false
+license: course-demo-only-review-before-publication
+notes:
+  - Raw WAV IQ file is stored in this dataset package through Git LFS.
+  - The original source file also remains in the local SDR++ recordings folder.
+  - Created during the same setup session as the screenshots documented in Lab 1.0.

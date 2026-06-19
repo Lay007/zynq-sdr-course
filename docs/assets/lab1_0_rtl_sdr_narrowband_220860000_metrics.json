@@ -1,0 +1,20 @@
+{
+  "dataset_id": "lab1_0_rtl_sdr_narrowband_220860000",
+  "sample_count_read": 12741632,
+  "sample_rate_hz": 2400000.0,
+  "center_frequency_hz": 220860000.0,
+  "duration_s": 5.309013333333334,
+  "measured_peak_hz": 0.0,
+  "expected_offset_hz": 0.0,
+  "frequency_error_hz": 0.0,
+  "peak_dbfs": -46.98245764456693,
+  "noise_floor_dbfs": -86.55865060733275,
+  "snr_db": 39.57619296276582,
+  "dc_offset_magnitude": 0.004375051379232144,
+  "clipping_fraction": 0.0,
+  "channels": 2,
+  "sample_width_bytes": 2,
+  "quality_pass": true,
+  "iq_path": "G:\\Programs\\zynq-sdr-course\\datasets\\lab1_0_rtl_sdr_observation\\raw\\baseband_220860000Hz_09-08-33_19-06-2026.wav",
+  "manifest_path": "G:\\Programs\\zynq-sdr-course\\datasets\\lab1_0_rtl_sdr_observation\\manifest_narrowband_220860000.yaml"
+}

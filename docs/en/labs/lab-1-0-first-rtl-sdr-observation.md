@@ -107,6 +107,36 @@ Fill in the mapping between what the SDR application displays and what will late
 | Weak signal | SNR limitation, AGC and filtering problem |
 | IQ file | Dataset for MATLAB/Python/C++/GNU Radio analysis |
 
+## Real run examples
+
+The figures below were collected from the first `RTL-SDR V3 Pro` and `SDR++` setup session. Together they show three practical states: binding `WinUSB` to the receive interface, tuning `WFM` to a broadcast FM station, and switching the recorder to `Baseband` before an IQ capture.
+
+![Zadig WinUSB setup for RTL-SDR interface 0](../../assets/lab1_0_zadig_winusb_interface0.png)
+
+This is the real `Zadig` screenshot from this session: `Bulk-In, Interface (Interface 0)` is selected, the driver is `WinUSB`, and the receiver reports `USB ID 0BDA:2838:00`. This is the step that cleared the earlier `ProblemCode 28` driver error and brought the receive interface into an operational state.
+
+![SDR++ tuned to 102.3 MHz in WFM mode](../../assets/lab1_0_sdrpp_wfm_102_3mhz.png)
+
+`SDR++` after the initial broadcast-FM setup: `RTL-SDR` as the source, `102.3 MHz`, `2.4 MS/s`, manual gain, and `WFM` mode. This matches the lab's recommended starting point before the first broad spectrum survey.
+
+![SDR++ baseband recording example near 220 MHz](../../assets/lab1_0_sdrpp_baseband_220mhz.png)
+
+The next practical step: the recorder is switched to `Baseband`, and the waterfall already shows an active narrowband signal near `220 MHz`. This is a suitable example state just before a short `5...20 s` IQ recording with sidecar metadata.
+
+### Short recordings saved in this session
+
+These short `WAV IQ` files are now part of the dataset package through `Git LFS`, while the manifests keep the checksums, capture settings, and offline-analysis command.
+
+| Recording | Duration | Frequency | Manifest |
+|---|---:|---:|---|
+| `baseband_103119454Hz_08-55-55_19-06-2026.wav` | `5.422 s` | `103119454 Hz` | `datasets/lab1_0_rtl_sdr_observation/manifest_fm_103119454.yaml` |
+| `baseband_220860000Hz_09-08-33_19-06-2026.wav` | `5.309 s` | `220860000 Hz` | `datasets/lab1_0_rtl_sdr_observation/manifest_narrowband_220860000.yaml` |
+
+Both captures were recorded in `SDR++` at `2.4 MS/s` in a two-channel `WAV IQ` container (`int16 + int16`, little-endian) and can serve as the first real artifacts for Block 9 exercises on IQ file formats and metadata.
+Before pushing to a public remote, review the legal/publication status of the narrowband recording near `220.860 MHz`.
+
+For immediate offline analysis of these files, use `Lab 9.4 — Read WAV IQ and analyze spectrum`: `python blocks/block_09_recording_and_analysis_tools/python/lab_9_4_read_wav_iq_and_analyze.py --manifest <path-to-manifest>`.
+
 ## Report
 
 The minimal report should include:

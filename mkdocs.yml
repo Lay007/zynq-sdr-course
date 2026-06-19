@@ -189,6 +189,7 @@ nav:
           - "Lab 9.1 — IQ file format and metadata": ru/labs/lab-9-1-iq-file-format-and-metadata.md
           - "Lab 9.2 — Read CI16 IQ and analyze spectrum": ru/labs/lab-9-2-read-ci16-iq-and-analyze.md
           - "Lab 9.3 — Multi-format IQ reader": ru/labs/lab-9-3-multi-format-iq-reader.md
+          - "Lab 9.4 — Чтение WAV IQ и офлайн-анализ": ru/labs/lab-9-4-read-wav-iq-and-analyze.md
       - "Лаборатории Block 10":
           - "Lab 10.1 — Passive RC filter": ru/labs/lab-10-1-rc-filter.md
           - "Lab 10.2 — Simple attenuator pad": ru/labs/lab-10-2-attenuator-pad.md
@@ -280,6 +281,7 @@ nav:
           - "Lab 9.1 — IQ file format and metadata": en/labs/lab-9-1-iq-file-format-and-metadata.md
           - "Lab 9.2 — Read CI16 IQ and analyze spectrum": en/labs/lab-9-2-read-ci16-iq-and-analyze.md
           - "Lab 9.3 — Multi-format IQ reader": en/labs/lab-9-3-multi-format-iq-reader.md
+          - "Lab 9.4 — Read WAV IQ and analyze spectrum": en/labs/lab-9-4-read-wav-iq-and-analyze.md
       - "Block 10 labs":
           - "Lab 10.1 — Passive RC filter": en/labs/lab-10-1-rc-filter.md
           - "Lab 10.2 — Simple attenuator pad": en/labs/lab-10-2-attenuator-pad.md

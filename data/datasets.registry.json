@@ -61,6 +61,36 @@
       "analysis_command": "python blocks/block_09_recording_and_analysis_tools/python/lab_9_2_read_ci16_iq_and_analyze.py",
       "intended_labs": ["7.3", "8.4", "9.2", "11.4"],
       "notes": "Planned safe attenuated cable-loopback dataset for final integrated project evidence."
+    },
+    {
+      "id": "lab1_0_rtl_sdr_fm_103119454",
+      "status": "git-lfs",
+      "signal_type": "broadcast_fm_or_fm_band_observation",
+      "hardware_source": "RTL-SDR V3 Pro",
+      "iq_format": "wav-iq",
+      "sample_rate_hz": 2400000,
+      "center_frequency_hz": 103119454,
+      "expected_signal_offset_hz": 0,
+      "external_url": null,
+      "metadata_path": "datasets/lab1_0_rtl_sdr_observation/manifest_fm_103119454.yaml",
+      "analysis_command": "python blocks/block_09_recording_and_analysis_tools/python/lab_9_4_read_wav_iq_and_analyze.py --manifest datasets/lab1_0_rtl_sdr_observation/manifest_fm_103119454.yaml",
+      "intended_labs": ["1.0", "9.1", "9.4"],
+      "notes": "First-session FM-band WAV IQ capture stored in datasets/ via Git LFS."
+    },
+    {
+      "id": "lab1_0_rtl_sdr_narrowband_220860000",
+      "status": "git-lfs",
+      "signal_type": "narrowband_unknown",
+      "hardware_source": "RTL-SDR V3 Pro",
+      "iq_format": "wav-iq",
+      "sample_rate_hz": 2400000,
+      "center_frequency_hz": 220860000,
+      "expected_signal_offset_hz": 0,
+      "external_url": null,
+      "metadata_path": "datasets/lab1_0_rtl_sdr_observation/manifest_narrowband_220860000.yaml",
+      "analysis_command": "python blocks/block_09_recording_and_analysis_tools/python/lab_9_4_read_wav_iq_and_analyze.py --manifest datasets/lab1_0_rtl_sdr_observation/manifest_narrowband_220860000.yaml",
+      "intended_labs": ["1.0", "9.1", "9.4"],
+      "notes": "First-session narrowband WAV IQ capture stored in datasets/ via Git LFS; review legal status before public publication."
     }
   ]
 }
