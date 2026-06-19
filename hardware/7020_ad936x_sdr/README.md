@@ -20,6 +20,7 @@ The original vendor folder mixes useful board assets with heavy archives, Window
 | `boot/course_clean/` | minimal post-boot overlay for the stock SD image: deterministic `eth0`, DHCP, safe TX defaults via `autorun.sh` |
 | `boot/notes/` | vendor boot notes and small screenshots for FAT/EXT/IIO setup |
 | `hdl/adi_fmcomms2_reference/` | curated HDL reference extracted from `AD936X_PL.zip` |
+| `hdl/course_bpsk_fmcomms2_zc702/` | course-specific Vivado overlay that inserts the deterministic BPSK modem into the imported AD9361 baseline |
 | `hdl/test_pl_reference/` | small test PL block-design project extracted from `Test_PL.zip` |
 | `ps/ad936x_no_os_reference/` | AD936x no-OS PS application and exported hardware platform |
 | `ps/bringup_tests/` | DDR, eMMC, Ethernet, LED and USB PS test applications plus the matching exported hardware handoff |
@@ -34,6 +35,7 @@ The original vendor folder mixes useful board assets with heavy archives, Window
 | [`hdl/adi_fmcomms2_reference/projects/common/zc702/zc702_system_bd.tcl`](hdl/adi_fmcomms2_reference/projects/common/zc702/zc702_system_bd.tcl) | common Zynq-7020 board TCL baseline |
 | [`hdl/adi_fmcomms2_reference/projects/scripts/adi_project_xilinx.tcl`](hdl/adi_fmcomms2_reference/projects/scripts/adi_project_xilinx.tcl) | ADI Xilinx project-generation helper |
 | [`hdl/adi_fmcomms2_reference/projects/fmcomms2/zc702/zc702.xpr`](hdl/adi_fmcomms2_reference/projects/fmcomms2/zc702/zc702.xpr) | generated Vivado project snapshot |
+| [`hdl/course_bpsk_fmcomms2_zc702/system_project.tcl`](hdl/course_bpsk_fmcomms2_zc702/system_project.tcl) | clean course build entrypoint for the first BPSK discovery-burst overlay |
 | [`ps/ad936x_no_os_reference/AD936X/src/main.c`](ps/ad936x_no_os_reference/AD936X/src/main.c) | main AD936x no-OS application |
 | [`ps/ad936x_no_os_reference/platform/hw/system_top.xsa`](ps/ad936x_no_os_reference/platform/hw/system_top.xsa) | exported hardware platform for Vitis |
 | [`ps/bringup_tests/design_1_wrapper/ps7_summary.html`](ps/bringup_tests/design_1_wrapper/ps7_summary.html) | captured PS7 clock, DDR and peripheral summary used as board clock provenance |
@@ -50,6 +52,7 @@ The original vendor folder mixes useful board assets with heavy archives, Window
 4. Inspect the AD936x no-OS app in `ps/ad936x_no_os_reference/` and compare its parameters with your board target.
 5. Use `ps/bringup_tests/` for board sanity checks before SDR-specific debugging.
 6. Use the HDL reference under `hdl/adi_fmcomms2_reference/` as the baseline when mapping course HDL work toward a Zynq/AD936x platform.
+7. Use `hdl/course_bpsk_fmcomms2_zc702/` when you need the first clean course-owned modem overlay instead of the untouched vendor baseline.
 
 ## Deliberately omitted
 

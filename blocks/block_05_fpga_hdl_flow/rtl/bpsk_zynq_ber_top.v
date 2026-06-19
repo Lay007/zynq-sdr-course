@@ -13,7 +13,8 @@ module bpsk_zynq_ber_top #(
     parameter integer MAX_FRAME_BITS = 512,
     parameter integer PHASE_W = 3,
     parameter integer FLUSH_SYMBOLS = 16,
-    parameter MEM_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bits.mem"
+    parameter MEM_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bits.mem",
+    parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
 ) (
     input  wire                     clk,
     input  wire                     rst,
@@ -71,7 +72,8 @@ bpsk_framed_tx_chain #(
     .SPS(SPS),
     .PHASE_W(PHASE_W),
     .FLUSH_SYMBOLS(FLUSH_SYMBOLS),
-    .COUNT_W(INDEX_W)
+    .COUNT_W(INDEX_W),
+    .COEF_FILE(COEF_FILE)
 ) tx_chain_i (
     .clk(clk),
     .rst(rst),
@@ -88,7 +90,8 @@ bpsk_framed_tx_chain #(
 bpsk_rx_bit_recovery_chain #(
     .W(W),
     .SPS(SPS),
-    .INDEX_W(INDEX_W)
+    .INDEX_W(INDEX_W),
+    .COEF_FILE(COEF_FILE)
 ) rx_chain_i (
     .clk(clk),
     .rst(rst),

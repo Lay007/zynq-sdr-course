@@ -29,6 +29,7 @@ This is a curated local import, not a claim that the imported tree is the canoni
 | Local destination | Notes |
 |---|---|
 | `boot/course_clean/` | repo-native course overlay added after live board bring-up on `2026-06-19`; not imported from the vendor bundle |
+| `hdl/course_bpsk_fmcomms2_zc702/` | repo-native Vivado overlay added after the import to connect the deterministic Block 5 BPSK modem to the AD9361 reference path |
 
 ## Intentionally excluded
 

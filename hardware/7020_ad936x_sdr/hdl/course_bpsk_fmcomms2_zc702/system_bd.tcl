@@ -1,0 +1,89 @@
+# Course overlay:
+# ZC702 + AD9361 reference path + deterministic BPSK burst core
+#
+# The RX DMA path remains intact for observation/debug. The TX DMA path is
+# intentionally bypassed for the first discovery-burst design so that the
+# course modem core drives the DAC FIFO directly with one reproducible burst.
+
+set script_dir [file normalize [file dirname [info script]]]
+set vendor_dir [file normalize [file join $script_dir "../adi_fmcomms2_reference"]]
+
+source [file join $vendor_dir "projects/common/zc702/zc702_system_bd.tcl"]
+source [file join $vendor_dir "projects/fmcomms2/common/fmcomms2_bd.tcl"]
+
+# PS-visible generic register block for the modem control/status plane.
+ad_ip_instance axi_gpreg axi_gpreg_bpsk
+ad_ip_parameter axi_gpreg_bpsk CONFIG.ID 0x4250534B
+ad_ip_parameter axi_gpreg_bpsk CONFIG.NUM_OF_IO 5
+ad_ip_parameter axi_gpreg_bpsk CONFIG.NUM_OF_CLK_MONS 1
+ad_connect sys_cpu_clk axi_gpreg_bpsk/s_axi_aclk
+ad_connect sys_cpu_resetn axi_gpreg_bpsk/s_axi_aresetn
+ad_connect util_ad9361_divclk/clk_out axi_gpreg_bpsk/d_clk_0
+ad_cpu_interconnect 0x79040000 axi_gpreg_bpsk
+
+# Sample-domain bridge around the deterministic BPSK modem.
+create_bd_cell -type module -reference bpsk_zynq_ber_gpreg_bridge bpsk_zynq_ber_gpreg_bridge_0
+set_property CONFIG.MEM_FILE {bpsk_frame_bits.mem} [get_bd_cells bpsk_zynq_ber_gpreg_bridge_0]
+set_property CONFIG.COEF_FILE {bpsk_rrc_tx_fir_taps.mem} [get_bd_cells bpsk_zynq_ber_gpreg_bridge_0]
+
+ad_connect sys_cpu_clk bpsk_zynq_ber_gpreg_bridge_0/ctrl_clk
+ad_connect sys_cpu_resetn bpsk_zynq_ber_gpreg_bridge_0/ctrl_resetn
+ad_connect util_ad9361_divclk/clk_out bpsk_zynq_ber_gpreg_bridge_0/sample_clk
+ad_connect util_ad9361_divclk_reset/peripheral_aresetn bpsk_zynq_ber_gpreg_bridge_0/sample_resetn
+
+ad_connect axi_gpreg_bpsk/up_gp_out_0 bpsk_zynq_ber_gpreg_bridge_0/gp_ctrl
+ad_connect axi_gpreg_bpsk/up_gp_out_1 bpsk_zynq_ber_gpreg_bridge_0/gp_frame_bit_count
+ad_connect axi_gpreg_bpsk/up_gp_out_2 bpsk_zynq_ber_gpreg_bridge_0/gp_preamble_count
+ad_connect axi_gpreg_bpsk/up_gp_out_3 bpsk_zynq_ber_gpreg_bridge_0/gp_start_offset
+ad_connect bpsk_zynq_ber_gpreg_bridge_0/gp_status axi_gpreg_bpsk/up_gp_in_0
+ad_connect bpsk_zynq_ber_gpreg_bridge_0/gp_received_bits axi_gpreg_bpsk/up_gp_in_1
+ad_connect bpsk_zynq_ber_gpreg_bridge_0/gp_total_errors axi_gpreg_bpsk/up_gp_in_2
+ad_connect bpsk_zynq_ber_gpreg_bridge_0/gp_payload_errors axi_gpreg_bpsk/up_gp_in_3
+ad_connect bpsk_zynq_ber_gpreg_bridge_0/gp_signature axi_gpreg_bpsk/up_gp_in_4
+
+# Feed RX1 I/Q into the modem bridge from the post-clock-crossing ADC FIFO.
+ad_connect util_ad9361_adc_fifo/dout_valid_0 bpsk_zynq_ber_gpreg_bridge_0/rx_valid
+ad_connect util_ad9361_adc_fifo/dout_data_0 bpsk_zynq_ber_gpreg_bridge_0/rx_i
+ad_connect util_ad9361_adc_fifo/dout_data_1 bpsk_zynq_ber_gpreg_bridge_0/rx_q
+
+# Break the standard DMA -> upack -> DAC FIFO wiring for this first course
+# burst design, then drive the DAC FIFO directly from the BPSK bridge.
+ad_disconnect util_ad9361_dac_upack/fifo_rd_en axi_ad9361_dac_fifo/din_valid_0
+ad_disconnect util_ad9361_dac_upack/enable_0 axi_ad9361_dac_fifo/din_enable_0
+ad_disconnect util_ad9361_dac_upack/fifo_rd_valid axi_ad9361_dac_fifo/din_valid_in_0
+ad_disconnect util_ad9361_dac_upack/fifo_rd_data_0 axi_ad9361_dac_fifo/din_data_0
+ad_disconnect util_ad9361_dac_upack/enable_1 axi_ad9361_dac_fifo/din_enable_1
+ad_disconnect util_ad9361_dac_upack/fifo_rd_valid axi_ad9361_dac_fifo/din_valid_in_1
+ad_disconnect util_ad9361_dac_upack/fifo_rd_data_1 axi_ad9361_dac_fifo/din_data_1
+ad_disconnect util_ad9361_dac_upack/enable_2 axi_ad9361_dac_fifo/din_enable_2
+ad_disconnect util_ad9361_dac_upack/fifo_rd_valid axi_ad9361_dac_fifo/din_valid_in_2
+ad_disconnect util_ad9361_dac_upack/fifo_rd_data_2 axi_ad9361_dac_fifo/din_data_2
+ad_disconnect util_ad9361_dac_upack/enable_3 axi_ad9361_dac_fifo/din_enable_3
+ad_disconnect util_ad9361_dac_upack/fifo_rd_valid axi_ad9361_dac_fifo/din_valid_in_3
+ad_disconnect util_ad9361_dac_upack/fifo_rd_data_3 axi_ad9361_dac_fifo/din_data_3
+
+ad_ip_instance xlconstant bpsk_const_one
+ad_ip_parameter bpsk_const_one CONFIG.CONST_WIDTH 1
+ad_ip_parameter bpsk_const_one CONFIG.CONST_VAL 1
+
+ad_ip_instance xlconstant bpsk_const_zero
+ad_ip_parameter bpsk_const_zero CONFIG.CONST_WIDTH 1
+ad_ip_parameter bpsk_const_zero CONFIG.CONST_VAL 0
+
+ad_ip_instance xlconstant bpsk_const_zero16
+ad_ip_parameter bpsk_const_zero16 CONFIG.CONST_WIDTH 16
+ad_ip_parameter bpsk_const_zero16 CONFIG.CONST_VAL 0
+
+ad_connect bpsk_zynq_ber_gpreg_bridge_0/tx_valid axi_ad9361_dac_fifo/din_valid_0
+ad_connect bpsk_const_one/dout axi_ad9361_dac_fifo/din_enable_0
+ad_connect bpsk_zynq_ber_gpreg_bridge_0/tx_valid axi_ad9361_dac_fifo/din_valid_in_0
+ad_connect bpsk_zynq_ber_gpreg_bridge_0/tx_i axi_ad9361_dac_fifo/din_data_0
+ad_connect bpsk_const_one/dout axi_ad9361_dac_fifo/din_enable_1
+ad_connect bpsk_zynq_ber_gpreg_bridge_0/tx_valid axi_ad9361_dac_fifo/din_valid_in_1
+ad_connect bpsk_zynq_ber_gpreg_bridge_0/tx_q axi_ad9361_dac_fifo/din_data_1
+ad_connect bpsk_const_zero/dout axi_ad9361_dac_fifo/din_enable_2
+ad_connect bpsk_const_zero/dout axi_ad9361_dac_fifo/din_valid_in_2
+ad_connect bpsk_const_zero16/dout axi_ad9361_dac_fifo/din_data_2
+ad_connect bpsk_const_zero/dout axi_ad9361_dac_fifo/din_enable_3
+ad_connect bpsk_const_zero/dout axi_ad9361_dac_fifo/din_valid_in_3
+ad_connect bpsk_const_zero16/dout axi_ad9361_dac_fifo/din_data_3

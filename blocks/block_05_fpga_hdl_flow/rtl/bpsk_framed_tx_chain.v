@@ -11,7 +11,8 @@ module bpsk_framed_tx_chain #(
     parameter integer SPS = 8,
     parameter integer PHASE_W = 3,
     parameter integer FLUSH_SYMBOLS = 16,
-    parameter integer COUNT_W = 16
+    parameter integer COUNT_W = 16,
+    parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
 ) (
     input  wire                 clk,
     input  wire                 rst,
@@ -76,7 +77,8 @@ bpsk_upsampler_8x #(
 );
 
 bpsk_rrc_tx_fir #(
-    .W(W)
+    .W(W),
+    .COEF_FILE(COEF_FILE)
 ) tx_fir_i (
     .clk(clk),
     .rst(rst),

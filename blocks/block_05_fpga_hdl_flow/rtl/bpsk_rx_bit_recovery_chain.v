@@ -8,7 +8,8 @@
 module bpsk_rx_bit_recovery_chain #(
     parameter integer W = 16,
     parameter integer SPS = 8,
-    parameter integer INDEX_W = 16
+    parameter integer INDEX_W = 16,
+    parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
 ) (
     input  wire                     clk,
     input  wire                     rst,
@@ -28,7 +29,9 @@ wire sym_valid;
 wire signed [W-1:0] sym_i;
 wire signed [W-1:0] sym_q;
 
-bpsk_rrc_rx_fir matched_filter_i (
+bpsk_rrc_rx_fir #(
+    .COEF_FILE(COEF_FILE)
+) matched_filter_i (
     .clk(clk),
     .rst(rst),
     .in_valid(in_valid),

@@ -14,7 +14,8 @@ module bpsk_zynq_ber_axi_lite #(
     parameter integer FLUSH_SYMBOLS = 16,
     parameter integer AXI_ADDR_W = 6,
     parameter integer AXI_DATA_W = 32,
-    parameter MEM_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bits.mem"
+    parameter MEM_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bits.mem",
+    parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
 ) (
     input  wire                         s_axi_aclk,
     input  wire                         s_axi_aresetn,
@@ -99,7 +100,8 @@ bpsk_zynq_ber_top #(
     .MAX_FRAME_BITS(MAX_FRAME_BITS),
     .PHASE_W(PHASE_W),
     .FLUSH_SYMBOLS(FLUSH_SYMBOLS),
-    .MEM_FILE(MEM_FILE)
+    .MEM_FILE(MEM_FILE),
+    .COEF_FILE(COEF_FILE)
 ) core_i (
     .clk(s_axi_aclk),
     .rst(internal_rst),
