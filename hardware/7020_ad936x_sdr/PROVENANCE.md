@@ -24,6 +24,12 @@ This is a curated local import, not a claim that the imported tree is the canoni
 | `Vivado2021.1/Driver_PL_PS/AD936X_PS.zip` | `ps/ad936x_no_os_reference/` | curated subset: no-OS app sources, platform handoff, FSBL and reference bit/xsa |
 | `Vivado2021.1/Test_interface/Test_PS.zip` | `ps/bringup_tests/` | curated subset: DDR/eMMC/Ethernet/LED/USB test apps and exported hardware handoff |
 
+## Local additions after import
+
+| Local destination | Notes |
+|---|---|
+| `boot/course_clean/` | repo-native course overlay added after live board bring-up on `2026-06-19`; not imported from the vendor bundle |
+
 ## Intentionally excluded
 
 | Excluded material | Reason |

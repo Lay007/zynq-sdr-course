@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# Course clean overlay for the stock Pluto-like image:
+# - deterministic wired management link
+# - host DHCP on eth0
+# - safe receive-first TX defaults
+
+killall avahi-autoipd 2>/dev/null || true
+/sbin/ifconfig eth0 192.168.40.1 netmask 255.255.255.0 up
+
+cat > /etc/udhcpd.conf <<'EOF'
+start 192.168.40.200
+end 192.168.40.220
+interface eth0
+siaddr 192.168.40.1
+opt dns 192.168.40.1
+option subnet 255.255.255.0
+opt router 192.168.40.1
+option domain local
+option lease 86400
+EOF
+
+killall udhcpd 2>/dev/null || true
+/usr/sbin/udhcpd /etc/udhcpd.conf >/tmp/udhcpd_eth0_course.log 2>&1 &
+
+SYSFS_IIO="/sys/bus/iio/devices/iio:device0"
+
+if [ -w "${SYSFS_IIO}/out_altvoltage1_TX_LO_powerdown" ]; then
+    echo 1 > "${SYSFS_IIO}/out_altvoltage1_TX_LO_powerdown"
+fi
+
+if [ -w "${SYSFS_IIO}/out_voltage0_hardwaregain" ]; then
+    echo -89.750000 > "${SYSFS_IIO}/out_voltage0_hardwaregain"
+fi
+
+if [ -w "${SYSFS_IIO}/out_voltage1_hardwaregain" ]; then
+    echo -89.750000 > "${SYSFS_IIO}/out_voltage1_hardwaregain"
+fi

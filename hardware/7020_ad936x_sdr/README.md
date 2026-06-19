@@ -17,6 +17,7 @@ The original vendor folder mixes useful board assets with heavy archives, Window
 |---|---|
 | `docs/` | board PDFs copied from the vendor bundle |
 | `boot/sd_image/` | extracted SD boot files: `BOOT.bin`, `uImage`, `devicetree.dtb`, `uramdisk.image.gz`, `uEnv.txt` |
+| `boot/course_clean/` | minimal post-boot overlay for the stock SD image: deterministic `eth0`, DHCP, safe TX defaults via `autorun.sh` |
 | `boot/notes/` | vendor boot notes and small screenshots for FAT/EXT/IIO setup |
 | `hdl/adi_fmcomms2_reference/` | curated HDL reference extracted from `AD936X_PL.zip` |
 | `hdl/test_pl_reference/` | small test PL block-design project extracted from `Test_PL.zip` |
@@ -45,9 +46,10 @@ The original vendor folder mixes useful board assets with heavy archives, Window
 
 1. Read the board PDFs in `docs/`.
 2. Prepare the SD card using `boot/sd_image/` and the notes in `boot/notes/`.
-3. Inspect the AD936x no-OS app in `ps/ad936x_no_os_reference/` and compare its parameters with your board target.
-4. Use `ps/bringup_tests/` for board sanity checks before SDR-specific debugging.
-5. Use the HDL reference under `hdl/adi_fmcomms2_reference/` as the baseline when mapping course HDL work toward a Zynq/AD936x platform.
+3. If you need the course-clean management profile on the stock Pluto-like image, apply `boot/course_clean/autorun.sh` as `/mnt/jffs2/autorun.sh`.
+4. Inspect the AD936x no-OS app in `ps/ad936x_no_os_reference/` and compare its parameters with your board target.
+5. Use `ps/bringup_tests/` for board sanity checks before SDR-specific debugging.
+6. Use the HDL reference under `hdl/adi_fmcomms2_reference/` as the baseline when mapping course HDL work toward a Zynq/AD936x platform.
 
 ## Deliberately omitted
 
