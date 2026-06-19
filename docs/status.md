@@ -19,7 +19,7 @@ This page is the top-level engineering status board for the course. It is intent
 | 01 | Intro to SDR | Ready | Ready | Partial | Ready | Partial | Docs | Add a first validated RTL-SDR capture example. |
 | 02 | Signals and sampling | Ready | Executable | Python path | Ready | Not required | Labs | Add MATLAB/C++ translations and a metadata-mistake replay package. |
 | 03 | DSP basics | Ready | Executable | Python / MATLAB / C++ path | Ready | Not required | Labs | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
-| 04 | Simulink and fixed-point | Ready | Executable | Python / MATLAB-style references | Ready | Not required | Labs | Add Simulink screenshots and fixed-point export examples. |
+| 04 | Simulink and fixed-point | Ready | Executable | Python / MATLAB references + BPSK handoff bridge | Ready | Not required | Labs | Add the actual Simulink `.slx` model that consumes the shared BPSK handoff files. |
 | 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches + Vivado OOC evidence | Ready | Hardware pending | HDL CI | Extend the BPSK symbol mapper into pulse shaping and framed TX/RX RTL. |
 | 06 | RF frontend and AD9363 | Ready | Executable | Analysis scripts | Ready | Hardware pending | Labs | Build the AD9361 RX gain/overload table from the clean-image baseline. |
 | 07 | TX/RX chains | Ready | Executable | DUC/DDC demos | Ready | Hardware pending | Labs | Add RF loopback measurement package. |

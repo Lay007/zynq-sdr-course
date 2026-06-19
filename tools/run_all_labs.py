@@ -95,6 +95,22 @@ def validate_lab23(root: Path) -> list[str]:
     return errors
 
 
+def validate_lab43(root: Path) -> list[str]:
+    metrics = load_json(root / "docs/assets/lab43_bpsk_fixed_point_metrics.json")
+    errors: list[str] = []
+    if metrics["tx_float_rebuild_rmse_vs_export"] > 1e-4:
+        errors.append(
+            f"tx_float_rebuild_rmse_vs_export={metrics['tx_float_rebuild_rmse_vs_export']:.6e} exceeds 1e-4"
+        )
+    if metrics["tx_fixed_evm_percent"] > 2.0:
+        errors.append(f"tx_fixed_evm_percent={metrics['tx_fixed_evm_percent']:.3f} exceeds 2%")
+    if metrics["rx_fixed_evm_percent"] > 4.0:
+        errors.append(f"rx_fixed_evm_percent={metrics['rx_fixed_evm_percent']:.3f} exceeds 4%")
+    if metrics["ber_payload_fixed"] > 1e-9:
+        errors.append(f"ber_payload_fixed={metrics['ber_payload_fixed']:.6e} is non-zero")
+    return errors
+
+
 def validate_lab73(root: Path) -> list[str]:
     metrics = load_json(root / "docs/assets/lab73_tx_rx_loopback_metrics.json")["metrics"]
     errors: list[str] = []
@@ -230,6 +246,18 @@ LABS: list[LabCommand] = [
             "docs/assets/lab64_synthetic_rf_capture_metrics.json",
         ],
         validate_lab64,
+    ),
+    LabCommand(
+        "Block 4 / Lab 4.3 BPSK fixed-point chain",
+        [sys.executable, "blocks/block_04_simulink_and_fixed_point/python/lab_4_3_bpsk_fixed_point_chain.py"],
+        [
+            "docs/assets/lab43_bpsk_fixed_point_tx_waveform.png",
+            "docs/assets/lab43_bpsk_fixed_point_error.png",
+            "docs/assets/lab43_bpsk_fixed_point_constellation.png",
+            "docs/assets/lab43_bpsk_fixed_point_metrics.json",
+            "docs/assets/lab43_bpsk_fixed_point_format_table.md",
+        ],
+        validate_lab43,
     ),
     LabCommand(
         "Block 7 / Lab 7.3 TX/RX loopback metrics",
