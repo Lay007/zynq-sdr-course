@@ -170,6 +170,7 @@ nav:
           - "Lab 5.4 — AXI-Stream wrapper": ru/labs/lab-5-4-axis-wrapper.md
           - "Lab 5.5 — Float vs fixed vs RTL comparison": ru/labs/lab-5-5-float-fixed-rtl-comparison.md
           - "Lab 5.6 — BPSK RRC TX FIR RTL": ru/labs/lab-5-6-bpsk-rrc-tx-fir-rtl.md
+          - "Lab 5.7 — BPSK 8x symbol upsampler": ru/labs/lab-5-7-bpsk-upsampler-8x.md
       - "Лаборатории Block 6":
           - "Lab 6.1 — RF frequency plan": ru/labs/lab-6-1-frequency-plan.md
           - "Lab 6.2 — Gain staging and overload": ru/labs/lab-6-2-gain-staging-and-overload.md
@@ -266,6 +267,7 @@ nav:
           - "Lab 5.4 — AXI-Stream wrapper": en/labs/lab-5-4-axis-wrapper.md
           - "Lab 5.5 — Float vs fixed vs RTL comparison": en/labs/lab-5-5-float-fixed-rtl-comparison.md
           - "Lab 5.6 — BPSK RRC TX FIR RTL": en/labs/lab-5-6-bpsk-rrc-tx-fir-rtl.md
+          - "Lab 5.7 — BPSK 8x symbol upsampler": en/labs/lab-5-7-bpsk-upsampler-8x.md
       - "Block 6 labs":
           - "Lab 6.1 — RF frequency plan": en/labs/lab-6-1-frequency-plan.md
           - "Lab 6.2 — Gain staging and overload": en/labs/lab-6-2-gain-staging-and-overload.md

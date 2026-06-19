@@ -3,7 +3,7 @@
 This page defines the first executable modem route for the course:
 
 ```text
-MATLAB reference -> Simulink fixed-point -> HDL symbol mapper -> HDL RRC TX FIR -> future Zynq TX/RX BER flow
+MATLAB reference -> Simulink fixed-point -> HDL symbol mapper -> HDL 8x upsampler -> HDL RRC TX FIR -> future Zynq TX/RX BER flow
 ```
 
 It is still synthetic, but it already produces the shared files that the Simulink and Verilog stages can consume directly.
@@ -16,11 +16,16 @@ From the repository root:
 python blocks/block_11_integrated_sdr_project/python/end_to_end_bpsk_reference.py
 python tools/tasks.py matlab-bpsk
 python blocks/block_05_fpga_hdl_flow/python/generate_bpsk_symbol_mapper_vectors.py
+python blocks/block_05_fpga_hdl_flow/python/generate_bpsk_upsampler_8x_vectors.py
 python blocks/block_05_fpga_hdl_flow/python/generate_bpsk_rrc_tx_fir_vectors.py
 iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_symbol_mapper.out ^
   blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_mapper.v ^
   blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_symbol_mapper.v
 vvp blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_symbol_mapper.out
+iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_upsampler_8x.out ^
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_upsampler_8x.v ^
+  blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_upsampler_8x.v
+vvp blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_upsampler_8x.out
 iverilog -g2012 -o blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rrc_tx_fir.out ^
   blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir.v ^
   blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rrc_tx_fir.v
@@ -61,6 +66,7 @@ The synthetic package is accepted when:
 - the Q1.15 exports are present and non-empty;
 - the Simulink BER curve follows the theoretical BPSK reference closely;
 - the HDL symbol mapper testbench passes against vectors derived from the same frame bits;
+- the HDL 8x upsampler testbench passes against vectors derived from the same symbol package;
 - the HDL RRC TX FIR testbench passes against vectors derived from the same pulse-shaping package;
 - the manifest and metrics JSON are regenerated with a valid checksum.
 
@@ -74,6 +80,9 @@ The synthetic package is accepted when:
 | HDL mapper | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_mapper.v` |
 | HDL vectors | `blocks/block_05_fpga_hdl_flow/python/generate_bpsk_symbol_mapper_vectors.py` |
 | HDL testbench | `blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_symbol_mapper.v` |
+| HDL upsampler | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_upsampler_8x.v` |
+| HDL upsampler vectors | `blocks/block_05_fpga_hdl_flow/python/generate_bpsk_upsampler_8x_vectors.py` |
+| HDL upsampler testbench | `blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_upsampler_8x.v` |
 | HDL RRC FIR | `blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir.v` |
 | HDL RRC vectors | `blocks/block_05_fpga_hdl_flow/python/generate_bpsk_rrc_tx_fir_vectors.py` |
 | HDL RRC testbench | `blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rrc_tx_fir.v` |

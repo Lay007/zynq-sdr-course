@@ -15,6 +15,7 @@ python "$PY_DIR/generate_fir_iq_4tap_vectors.py"
 python "$PY_DIR/generate_nco_mixer_iq_vectors.py"
 python "blocks/block_11_integrated_sdr_project/python/end_to_end_bpsk_reference.py"
 python "$PY_DIR/generate_bpsk_symbol_mapper_vectors.py"
+python "$PY_DIR/generate_bpsk_upsampler_8x_vectors.py"
 python "$PY_DIR/generate_bpsk_rrc_tx_fir_vectors.py"
 
 test -s "$TB_DIR/fir_iq_4tap_input_vectors.txt"
@@ -23,6 +24,8 @@ test -s "$TB_DIR/nco_mixer_iq_input_vectors.txt"
 test -s "$TB_DIR/nco_mixer_iq_expected_vectors.txt"
 test -s "$TB_DIR/bpsk_symbol_mapper_input_vectors.txt"
 test -s "$TB_DIR/bpsk_symbol_mapper_expected_vectors.txt"
+test -s "$TB_DIR/bpsk_upsampler_8x_input_vectors.txt"
+test -s "$TB_DIR/bpsk_upsampler_8x_expected_vectors.txt"
 test -s "$TB_DIR/bpsk_rrc_tx_fir_input_vectors.txt"
 test -s "$TB_DIR/bpsk_rrc_tx_fir_expected_vectors.txt"
 
@@ -45,6 +48,11 @@ iverilog -g2012 -o "$TB_DIR/tb_bpsk_symbol_mapper.out" \
   "$RTL_DIR/bpsk_symbol_mapper.v" \
   "$TB_DIR/tb_bpsk_symbol_mapper.v"
 vvp "$TB_DIR/tb_bpsk_symbol_mapper.out"
+
+iverilog -g2012 -o "$TB_DIR/tb_bpsk_upsampler_8x.out" \
+  "$RTL_DIR/bpsk_upsampler_8x.v" \
+  "$TB_DIR/tb_bpsk_upsampler_8x.v"
+vvp "$TB_DIR/tb_bpsk_upsampler_8x.out"
 
 iverilog -g2012 -o "$TB_DIR/tb_bpsk_rrc_tx_fir.out" \
   "$RTL_DIR/bpsk_rrc_tx_fir.v" \

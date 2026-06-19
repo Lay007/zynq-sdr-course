@@ -60,6 +60,8 @@ GENERATED_TB_FILENAMES = (
     "nco_mixer_iq_expected_vectors.txt",
     "bpsk_symbol_mapper_input_vectors.txt",
     "bpsk_symbol_mapper_expected_vectors.txt",
+    "bpsk_upsampler_8x_input_vectors.txt",
+    "bpsk_upsampler_8x_expected_vectors.txt",
     "bpsk_rrc_tx_fir_input_vectors.txt",
     "bpsk_rrc_tx_fir_expected_vectors.txt",
 )
@@ -169,6 +171,19 @@ def task_hdl() -> None:
         ]
     )
     run(["vvp", str(TB_DIR / "tb_bpsk_symbol_mapper.out")])
+
+    run([sys.executable, str(PY_DIR / "generate_bpsk_upsampler_8x_vectors.py")])
+    run(
+        [
+            "iverilog",
+            "-g2012",
+            "-o",
+            str(TB_DIR / "tb_bpsk_upsampler_8x.out"),
+            str(RTL_DIR / "bpsk_upsampler_8x.v"),
+            str(TB_DIR / "tb_bpsk_upsampler_8x.v"),
+        ]
+    )
+    run(["vvp", str(TB_DIR / "tb_bpsk_upsampler_8x.out")])
 
     run([sys.executable, str(PY_DIR / "generate_bpsk_rrc_tx_fir_vectors.py")])
     run(
