@@ -61,6 +61,7 @@ nav:
       - "RF safety guide": rf-safety.md
       - "End-to-end SDR demo roadmap": end-to-end-demo.md
       - "End-to-end tone demo report": end-to-end-tone-demo-report.md
+      - "End-to-end BPSK reference report": end-to-end-bpsk-reference-report.md
       - "End-to-end QPSK hardware demo": end-to-end-qpsk-hardware-demo.md
       - "SDR measurement report template": sdr-measurement-report-template.md
       - "HDL smoke verification": verification/hdl_smoke.md

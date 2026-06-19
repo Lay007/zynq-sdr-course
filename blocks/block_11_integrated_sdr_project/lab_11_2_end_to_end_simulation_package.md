@@ -38,6 +38,25 @@ The final project can reuse existing executable labs:
 - Block 8 end-to-end sync chain;
 - Block 9 IQ analysis.
 
+## Current executable reference
+
+The current recommended package for the first modem route is:
+
+| File | Role |
+|---|---|
+| `blocks/block_11_integrated_sdr_project/python/end_to_end_bpsk_reference.py` | deterministic BPSK package generator |
+| `blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/` | shared handoff for MATLAB, Simulink and HDL |
+| `blocks/block_11_integrated_sdr_project/matlab/end_to_end_bpsk_reference.m` | MATLAB mirror of the package |
+| `blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_mapper.v` | first RTL anchor for the same bit stream |
+
+Run from the repository root:
+
+```bash
+python blocks/block_11_integrated_sdr_project/python/end_to_end_bpsk_reference.py
+```
+
+This package already exports Q1.15 symbols and RRC taps, so it can be used as the bridge into Simulink fixed-point and the first Verilog block.
+
 ## Report checklist
 
 - [ ] Provide a run command.

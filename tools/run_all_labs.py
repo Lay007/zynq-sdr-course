@@ -151,6 +151,18 @@ def validate_end_to_end_tone(root: Path) -> list[str]:
     return errors
 
 
+def validate_end_to_end_bpsk(root: Path) -> list[str]:
+    metrics = load_json(root / "docs/assets/end_to_end_bpsk_reference_metrics.json")
+    errors: list[str] = []
+    if metrics["ber_payload"] > 1e-9:
+        errors.append(f"ber_payload={metrics['ber_payload']:.6e} is non-zero")
+    if metrics["evm_percent"] > 6.0:
+        errors.append(f"evm_percent={metrics['evm_percent']:.3f} exceeds 6%")
+    if metrics["peak_level_dbfs"] > -0.5:
+        errors.append(f"peak_level_dbfs={metrics['peak_level_dbfs']:.3f} is too close to clipping")
+    return errors
+
+
 LABS: list[LabCommand] = [
     LabCommand(
         "Block 3 / Lab 3.5 FFT complexity and selected-bin trade-off",
@@ -273,6 +285,19 @@ LABS: list[LabCommand] = [
             "datasets/manifests/end_to_end_tone_demo_v1.yml",
         ],
         validate_end_to_end_tone,
+    ),
+    LabCommand(
+        "Block 11 / End-to-end BPSK reference package",
+        [sys.executable, "blocks/block_11_integrated_sdr_project/python/end_to_end_bpsk_reference.py"],
+        [
+            "docs/assets/end_to_end_bpsk_reference_tx_spectrum.png",
+            "docs/assets/end_to_end_bpsk_reference_capture_spectrum.png",
+            "docs/assets/end_to_end_bpsk_reference_constellation.png",
+            "docs/assets/end_to_end_bpsk_reference_matched_filter.png",
+            "docs/assets/end_to_end_bpsk_reference_metrics.json",
+            "datasets/manifests/end_to_end_bpsk_reference_v1.yml",
+        ],
+        validate_end_to_end_bpsk,
     ),
 ]
 
