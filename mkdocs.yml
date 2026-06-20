@@ -56,6 +56,7 @@ nav:
       - "Model → FPGA → RF → Measurement": model-to-measurement.md
       - "Reproducible engineering route": reproducible-engineering-route.md
       - "Hardware experiment roadmap": hardware-experiment-roadmap.md
+      - "SDR platform teardown template": sdr-platform-teardown-template.md
       - "Hardware checklist": hardware-checklist.md
       - "Hardware bring-up checklist": hardware-bringup-checklist.md
       - "RF safety guide": rf-safety.md
@@ -132,6 +133,7 @@ nav:
           - "05A. HDL/FPGA workflow": ru/blocks/05-hdl-fpga-workflow.md
           - "06. RF frontend и AD9363": ru/blocks/06-rf-frontend-and-ad9363.md
           - "06A. RF frontend workflow": ru/blocks/06-rf-frontend-workflow.md
+          - "06B. AD936x zero-IF architecture": ru/blocks/06-ad936x-zero-if-architecture.md
           - "07. TX/RX chains": ru/blocks/07-tx-rx-chains.md
           - "07A. TX/RX chain workflow": ru/blocks/07-tx-rx-chain-workflow.md
           - "08. Modulation and synchronization": ru/blocks/08-modulation-and-synchronization.md
@@ -182,6 +184,7 @@ nav:
           - "Lab 6.4 — Synthetic RF capture analysis": ru/labs/lab-6-4-synthetic-rf-capture-analysis.md
           - "Lab 6.5 — RF impairment calibration": ru/labs/lab-6-5-rf-impairment-calibration.md
           - "Lab 6.6 — Zynq RX-only observation on the clean image": ru/labs/lab-6-6-zynq-rx-only-observation.md
+          - "Lab 6.7 — Zero-IF artifacts": ru/labs/lab-6-7-zero-if-artifacts.md
       - "Лаборатории Block 7":
           - "Lab 7.1 — TX/RX chain architecture": ru/labs/lab-7-1-tx-rx-chain-architecture.md
           - "Lab 7.2 — DUC/DDC frequency translation": ru/labs/lab-7-2-duc-ddc-frequency-translation.md
@@ -237,6 +240,7 @@ nav:
           - "05A. HDL/FPGA workflow": en/blocks/05-hdl-fpga-workflow.md
           - "06. RF frontend and AD9363": en/blocks/06-rf-frontend-and-ad9363.md
           - "06A. RF frontend workflow": en/blocks/06-rf-frontend-workflow.md
+          - "06B. AD936x zero-IF architecture": en/blocks/06-ad936x-zero-if-architecture.md
           - "07. TX/RX chains": en/blocks/07-tx-rx-chains.md
           - "07A. TX/RX chain workflow": en/blocks/07-tx-rx-chain-workflow.md
           - "08. Modulation and synchronization": en/blocks/08-modulation-and-synchronization.md
@@ -287,6 +291,7 @@ nav:
           - "Lab 6.4 — Synthetic RF capture analysis": en/labs/lab-6-4-synthetic-rf-capture-analysis.md
           - "Lab 6.5 — RF impairment calibration": en/labs/lab-6-5-rf-impairment-calibration.md
           - "Lab 6.6 — Zynq RX-only observation on the clean image": en/labs/lab-6-6-zynq-rx-only-observation.md
+          - "Lab 6.7 — Zero-IF artifacts": en/labs/lab-6-7-zero-if-artifacts.md
       - "Block 7 labs":
           - "Lab 7.1 — TX/RX chain architecture": en/labs/lab-7-1-tx-rx-chain-architecture.md
           - "Lab 7.2 — DUC/DDC frequency translation": en/labs/lab-7-2-duc-ddc-frequency-translation.md
