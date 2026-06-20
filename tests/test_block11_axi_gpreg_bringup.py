@@ -24,6 +24,7 @@ def make_config(**overrides: int | str | bool | None) -> BringupConfig:
         "frame_bit_count": 281,
         "preamble_count": 25,
         "start_offset": 62,
+        "start_hold_ms": 0,
         "poll_limit": 32,
         "poll_delay_ms": 0,
         "expected_id": DEFAULT_EXPECTED_ID,
