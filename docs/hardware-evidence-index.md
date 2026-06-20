@@ -20,10 +20,15 @@ Use the status values below:
 | Evidence item | Path | Status | Notes |
 |---|---|---|---|
 | Block 5 FPGA evidence page | `docs/block5-fpga-evidence.md` | reviewed | nav-visible digest of the current Vivado evidence package |
+| Block 5 HDL latency contract | `blocks/block_05_fpga_hdl_flow/hdl_latency_contract.md` | reviewed | observable valid/data timing contract for the smoke-tested HDL blocks |
 | Z7020 OOC FPGA summary | `reports/fpga/z7020-resource-summary-template.md` | synthetic | first curated resource/timing snapshot with board clock provenance |
 | Block 5 utilization summary | `reports/fpga/block5-utilization-summary.md` | synthetic | LUT/FF/DSP/BRAM usage for the four Block 5 HDL examples |
 | Block 5 timing summary | `reports/fpga/block5-timing-summary.md` | synthetic | 100 MHz OOC timing snapshot and limits |
 | Block 5 latency/throughput notes | `reports/fpga/block5-latency-throughput-notes.md` | reviewed | one-cycle behaviour and streaming-rate notes from HDL testbenches |
+| Integrated SDR project labs | `docs/ru/labs/lab-11-7-axi-lite-bpsk-bringup.md` and following | synthetic | control-plane and burst-capture workflow now documented for lab execution |
+| Clean-image Zynq RX observation manifest | `datasets/lab6_6_zynq_rx_observation/` | measured | first board-facing RX-only manifest package; keep reports and plots synchronized when new captures are added |
+| QPSK demo dataset manifest | `datasets/demo_qpsk_capture/manifest.yaml` | template | issue #26 should promote this from manifest-only to validated replay evidence |
+| Hardware validation backlog | `docs/hardware-validation-backlog.md` | reviewed | issue-linked closure plan for #25, #26 and #29 |
 | FPGA resource report template | `reports/fpga_resource_report.template.md` | template | use when extending the current package to a new design |
 | Reviewer checklist | `docs/reviewer-checklist.md` | reviewed | general acceptance criteria |
 | Real data policy | `docs/real-data-policy.md` | reviewed | prevents large binary data from bloating Git |
@@ -58,9 +63,9 @@ Minimum files for one experiment:
 The strongest next artifacts are:
 
 1. Routed top-level Vivado timing and utilization for the integrated Zynq design.
-2. A small validated QPSK dataset manifest.
-3. A tone or loopback capture report.
-4. A gain/overload characterization table.
+2. Issue #25: a tone or cabled loopback capture report.
+3. Issue #26: a small validated QPSK dataset package.
+4. Issue #29: an AD9363 gain and large-signal characterization table.
 5. One final project report that connects model, HDL, capture and metrics.
 
 ## Review rule
