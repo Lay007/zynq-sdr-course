@@ -100,6 +100,12 @@ Run the broader local smoke check:
 python tools/tasks.py smoke
 ```
 
+Run a CI-like local preflight before pushing larger changes:
+
+```bash
+python tools/run_local_ci.py
+```
+
 Useful commands:
 
 | Command | Purpose |
@@ -110,6 +116,8 @@ Useful commands:
 | `python tools/tasks.py labs` | Run representative executable Python labs |
 | `python tools/tasks.py hdl` | Run Block 5 Verilog smoke tests |
 | `python tools/tasks.py smoke` | Run docs + labs + HDL checks |
+| `python tools/run_local_ci.py` | Run lint + pytest + docs + labs + canonical HDL smoke |
+| `python tools/run_local_ci.py --quick` | Run lint + pytest + canonical HDL smoke |
 | `python tools/tasks.py clean` | Remove generated local artifacts |
 
 Curated local board starting point:
