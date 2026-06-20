@@ -12,6 +12,7 @@ module bpsk_ber_counter #(
     input  wire                     clk,
     input  wire                     rst,
     input  wire                     start,
+    input  wire                     abort,
     input  wire [INDEX_W-1:0]       frame_bit_count,
     input  wire [INDEX_W-1:0]       preamble_count,
     input  wire                     in_valid,
@@ -48,6 +49,9 @@ always @(posedge clk) begin
             received_bits <= {INDEX_W{1'b0}};
             total_errors <= {INDEX_W{1'b0}};
             payload_errors <= {INDEX_W{1'b0}};
+        end else if (busy && abort) begin
+            busy <= 1'b0;
+            done <= 1'b1;
         end else if (busy && in_valid) begin
             if (in_bit !== frame_bits[received_bits]) begin
                 total_errors <= total_errors + 1'b1;

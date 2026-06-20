@@ -13,6 +13,7 @@ module bpsk_zynq_ber_top #(
     parameter integer MAX_FRAME_BITS = 512,
     parameter integer PHASE_W = 3,
     parameter integer FLUSH_SYMBOLS = 16,
+    parameter integer RX_IDLE_TIMEOUT_CYCLES = 1048576,
     parameter MEM_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bits.mem",
     parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
 ) (
@@ -30,10 +31,13 @@ module bpsk_zynq_ber_top #(
     input  wire                     rx_valid,
     input  wire signed [W-1:0]      rx_i,
     input  wire signed [W-1:0]      rx_q,
+    output reg                      timed_out,
     output wire [INDEX_W-1:0]       received_bits,
     output wire [INDEX_W-1:0]       total_errors,
     output wire [INDEX_W-1:0]       payload_errors
 );
+
+localparam integer RX_IDLE_TIMEOUT_W = (RX_IDLE_TIMEOUT_CYCLES <= 1) ? 1 : $clog2(RX_IDLE_TIMEOUT_CYCLES);
 
 wire frame_start = start && !busy;
 wire src_valid;
@@ -47,6 +51,8 @@ wire recovered_bit;
 wire ber_busy;
 wire ber_done;
 reg ber_complete_latched = 1'b0;
+reg ber_abort = 1'b0;
+reg [RX_IDLE_TIMEOUT_W-1:0] rx_idle_counter = {RX_IDLE_TIMEOUT_W{1'b0}};
 
 assign busy = src_busy || tx_busy || ber_busy;
 
@@ -112,6 +118,7 @@ bpsk_ber_counter #(
     .clk(clk),
     .rst(rst),
     .start(frame_start),
+    .abort(ber_abort),
     .frame_bit_count(frame_bit_count),
     .preamble_count(preamble_count),
     .in_valid(recovered_valid),
@@ -126,12 +133,32 @@ bpsk_ber_counter #(
 always @(posedge clk) begin
     if (rst) begin
         done <= 1'b0;
+        timed_out <= 1'b0;
         ber_complete_latched <= 1'b0;
+        ber_abort <= 1'b0;
+        rx_idle_counter <= {RX_IDLE_TIMEOUT_W{1'b0}};
     end else begin
         done <= 1'b0;
+        timed_out <= 1'b0;
+        ber_abort <= 1'b0;
 
         if (frame_start) begin
             ber_complete_latched <= 1'b0;
+            rx_idle_counter <= {RX_IDLE_TIMEOUT_W{1'b0}};
+        end else if (ber_busy) begin
+            if (recovered_valid) begin
+                rx_idle_counter <= {RX_IDLE_TIMEOUT_W{1'b0}};
+            end else if (RX_IDLE_TIMEOUT_CYCLES <= 1) begin
+                ber_abort <= 1'b1;
+                timed_out <= 1'b1;
+            end else if (rx_idle_counter == RX_IDLE_TIMEOUT_CYCLES - 1) begin
+                ber_abort <= 1'b1;
+                timed_out <= 1'b1;
+            end else begin
+                rx_idle_counter <= rx_idle_counter + 1'b1;
+            end
+        end else begin
+            rx_idle_counter <= {RX_IDLE_TIMEOUT_W{1'b0}};
         end
 
         if (ber_done) begin

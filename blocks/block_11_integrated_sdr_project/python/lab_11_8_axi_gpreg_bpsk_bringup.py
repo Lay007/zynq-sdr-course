@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -23,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_FRAME_BIT_COUNT = 281
 DEFAULT_PREAMBLE_COUNT = 25
 DEFAULT_START_OFFSET = 62
+DEFAULT_START_HOLD_MS = 5
 DEFAULT_POLL_LIMIT = 128
 DEFAULT_POLL_DELAY_MS = 20
 DEFAULT_EXPECTED_ID = 0x4250534B
@@ -48,9 +50,27 @@ class RegisterMap:
     status_start_mask: int = 0x0000_0001
     status_busy_mask: int = 0x0000_0002
     status_done_mask: int = 0x0000_0004
+    status_timeout_mask: int = 0x0000_0008
 
 
 REGS = RegisterMap()
+
+
+class BringupTimeoutError(TimeoutError):
+    """Timeout with the last observed status trace for post-mortem debugging."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        poll_reads: int,
+        last_status: int,
+        status_trace: list[int],
+    ) -> None:
+        super().__init__(message)
+        self.poll_reads = poll_reads
+        self.last_status = last_status
+        self.status_trace = list(status_trace)
 
 
 @dataclass(frozen=True)
@@ -60,6 +80,7 @@ class BringupConfig:
     frame_bit_count: int
     preamble_count: int
     start_offset: int
+    start_hold_ms: int
     poll_limit: int
     poll_delay_ms: int
     expected_id: int
@@ -80,6 +101,8 @@ class BringupResult:
     done_cleared: bool
     busy_observed: bool
     done_observed: bool
+    timed_out_observed: bool
+    completed_by_timeout: bool
     poll_reads: int
     frame_bit_count: int
     preamble_count: int
@@ -238,25 +261,39 @@ def run_bringup(io: RegisterIo, cfg: BringupConfig) -> BringupResult:
     io.write32(REGS.gp_start_offset_out, cfg.start_offset)
     io.write32(REGS.gp_control_out, 0)
     io.write32(REGS.gp_control_out, REGS.start_mask)
+    if cfg.start_hold_ms:
+        time.sleep(cfg.start_hold_ms / 1000.0)
     io.write32(REGS.gp_control_out, 0)
 
     busy_observed = False
     done_observed = False
+    timed_out_observed = False
+    completed_by_timeout = False
     final_status = initial_status
     poll_reads = 0
+    status_trace: list[int] = []
     for poll_reads in range(1, cfg.poll_limit + 1):
         final_status = io.read32(REGS.gp_status_in)
+        status_trace.append(final_status)
         if final_status & REGS.status_busy_mask:
             busy_observed = True
+        if final_status & REGS.status_timeout_mask:
+            timed_out_observed = True
         if final_status & REGS.status_done_mask:
             done_observed = True
+            break
+        if timed_out_observed and (final_status & REGS.status_busy_mask) == 0:
+            completed_by_timeout = True
             break
         if cfg.poll_delay_ms:
             time.sleep(cfg.poll_delay_ms / 1000.0)
 
-    if not done_observed:
-        raise TimeoutError(
-            f"Timed out after {cfg.poll_limit} polls: GP status never asserted done at 0x{cfg.base_addr:08X}."
+    if not done_observed and not completed_by_timeout:
+        raise BringupTimeoutError(
+            f"Timed out after {cfg.poll_limit} polls: GP status never asserted done at 0x{cfg.base_addr:08X}.",
+            poll_reads=cfg.poll_limit,
+            last_status=final_status,
+            status_trace=status_trace,
         )
 
     received_bits = io.read32(REGS.gp_received_bits_in)
@@ -292,6 +329,8 @@ def run_bringup(io: RegisterIo, cfg: BringupConfig) -> BringupResult:
         done_cleared=done_cleared,
         busy_observed=busy_observed,
         done_observed=done_observed,
+        timed_out_observed=timed_out_observed,
+        completed_by_timeout=completed_by_timeout,
         poll_reads=poll_reads,
         frame_bit_count=cfg.frame_bit_count,
         preamble_count=cfg.preamble_count,
@@ -317,6 +356,45 @@ def write_json_report(path: Path, result: BringupResult) -> None:
     path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
+def write_failure_json_report(
+    path: Path,
+    *,
+    io: RegisterIo,
+    cfg: BringupConfig,
+    exc: Exception,
+) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload: dict[str, object] = {
+        "ok": False,
+        "backend": cfg.backend,
+        "base_addr": f"0x{cfg.base_addr:08X}",
+        "frame_bit_count": cfg.frame_bit_count,
+        "preamble_count": cfg.preamble_count,
+        "start_offset": cfg.start_offset,
+        "error_type": type(exc).__name__,
+        "error": str(exc),
+    }
+
+    poll_reads = getattr(exc, "poll_reads", None)
+    if poll_reads is not None:
+        payload["poll_reads"] = int(poll_reads)
+
+    last_status = getattr(exc, "last_status", None)
+    if last_status is not None:
+        payload["last_status"] = f"0x{int(last_status):08X}"
+
+    status_trace = getattr(exc, "status_trace", None)
+    if status_trace is not None:
+        payload["status_trace"] = [f"0x{int(status):08X}" for status in status_trace]
+
+    try:
+        payload["register_snapshot"] = register_snapshot(io, cfg.base_addr)
+    except Exception as snapshot_exc:  # pragma: no cover - best effort only
+        payload["register_snapshot_error"] = str(snapshot_exc)
+
+    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+
+
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--backend", choices=("mock", "mmap", "devmem", "ssh-devmem"), default="mock")
@@ -324,6 +402,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--frame-bit-count", type=int, default=DEFAULT_FRAME_BIT_COUNT)
     parser.add_argument("--preamble-count", type=int, default=DEFAULT_PREAMBLE_COUNT)
     parser.add_argument("--start-offset", type=int, default=DEFAULT_START_OFFSET)
+    parser.add_argument("--start-hold-ms", type=int, default=DEFAULT_START_HOLD_MS)
     parser.add_argument("--poll-limit", type=int, default=DEFAULT_POLL_LIMIT)
     parser.add_argument("--poll-delay-ms", type=int, default=DEFAULT_POLL_DELAY_MS)
     parser.add_argument("--expected-id", type=parse_int, default=DEFAULT_EXPECTED_ID)
@@ -349,6 +428,7 @@ def main() -> None:
         frame_bit_count=args.frame_bit_count,
         preamble_count=args.preamble_count,
         start_offset=args.start_offset,
+        start_hold_ms=args.start_hold_ms,
         poll_limit=args.poll_limit,
         poll_delay_ms=args.poll_delay_ms,
         expected_id=args.expected_id,
@@ -359,6 +439,11 @@ def main() -> None:
     io = build_backend(args)
     try:
         result = run_bringup(io, cfg)
+    except Exception as exc:
+        if args.json_out is not None:
+            write_failure_json_report(args.json_out, io=io, cfg=cfg, exc=exc)
+        print(f"ERROR: {exc}", file=sys.stderr)
+        raise SystemExit(1)
     finally:
         io.close()
 

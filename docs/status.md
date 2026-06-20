@@ -20,13 +20,13 @@ This page is the top-level engineering status board for the course. It is intent
 | 02 | Signals and sampling | Ready | Executable | Python path | Ready | Not required | Labs | Add MATLAB/C++ translations and a metadata-mistake replay package. |
 | 03 | DSP basics | Ready | Executable | Python / MATLAB / C++ path | Ready | Not required | Labs | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
 | 04 | Simulink and fixed-point | Ready | Executable | Python / MATLAB references + executable BPSK `.slx` models | Ready | Not required | Labs | Constrain the BPSK Simulink path further for HDL Coder export and integration handoff. |
-| 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches + AXI-Lite-controlled Zynq-ready BPSK BER top-level + gpreg-based AD9361 overlay scaffolding + Vivado OOC evidence | Ready | Hardware pending | HDL CI | Rebuild the integrated ZC702 + AD9361 bitstream/XSA from the new overlay and attach the first live discovery-burst evidence. |
+| 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches + AXI-Lite-controlled Zynq-ready BPSK BER top-level + gpreg-based AD9361 overlay scaffolding + integrated CLG400 bitstream/XSA + first live gpreg timeout evidence | Ready | Hardware pending | HDL CI | Tune the live RF path until the discovery burst recovers non-zero bits, then capture BER evidence. |
 | 06 | RF frontend and AD9363 | Ready | Executable | Analysis scripts | Ready | Hardware pending | Labs | Build the AD9361 RX gain/overload table from the clean-image baseline. |
 | 07 | TX/RX chains | Ready | Executable | DUC/DDC demos | Ready | Hardware pending | Labs | Add RF loopback measurement package. |
 | 08 | Modulation and synchronization | Ready | Executable | Synchronization demos | Ready | Optional | Sync CI | Add impairment sweeps and BER/EVM dashboards. |
 | 09 | Recording and analysis tools | Ready | Executable | IQ readers | Ready | Hardware pending | Recording CI | Update QPSK dataset manifest with real checksum or synthetic generator. |
 | 10 | KiCad and basic electronics | Ready | Draft | Calculators / templates | Partial | Bench pending | Docs | Add measured breadboard photos and KiCad exports. |
-| 11 | Integrated SDR project | Ready | Executable | Simulation package + BPSK reference package + AXI-Lite helper + gpreg-based AD9361 burst helper | Ready | Hardware pending | Labs | Run the new gpreg helper on the clean image after regenerating the hardware handoff and attach first discovery-burst evidence. |
+| 11 | Integrated SDR project | Ready | Executable | Simulation package + BPSK reference package + AXI-Lite helper + gpreg-based AD9361 burst helper + live `done+timeout` bring-up report | Ready | Hardware pending | Labs | Move from clean control-plane evidence to RF recovery: verify LO/sample-rate alignment, retune gain/start offset, and capture the first non-zero `RECEIVED_BITS`. |
 | 12 | Final projects | Ready | Draft | Templates + rubric | Partial | Depends on project | Docs | Use grading rubric and example report skeleton for first final project. |
 
 ## Newly added hardening artifacts

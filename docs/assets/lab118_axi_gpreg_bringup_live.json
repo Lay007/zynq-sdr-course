@@ -1,21 +1,21 @@
 {
-  "backend": "mock",
+  "backend": "ssh-devmem",
   "base_addr": "0x79040000",
   "id_word": "0x4250534B",
   "signature_word": "0x4250534B",
   "initial_status": "0x00000800",
-  "final_status": "0x00000804",
+  "final_status": "0x0000080C",
   "cleared_status": "0x00000800",
   "done_cleared": true,
-  "busy_observed": true,
+  "busy_observed": false,
   "done_observed": true,
-  "timed_out_observed": false,
+  "timed_out_observed": true,
   "completed_by_timeout": false,
-  "poll_reads": 3,
+  "poll_reads": 1,
   "frame_bit_count": 281,
   "preamble_count": 25,
   "start_offset": 62,
-  "received_bits": 281,
+  "received_bits": 0,
   "total_errors": 0,
   "payload_errors": 0,
   "ber_total": 0.0,
@@ -54,7 +54,7 @@
     "GP_RECEIVED_BITS_IN": {
       "offset": 1096,
       "address": "0x79040448",
-      "value": 281
+      "value": 0
     },
     "GP_PREAMBLE_COUNT_OUT": {
       "offset": 1156,

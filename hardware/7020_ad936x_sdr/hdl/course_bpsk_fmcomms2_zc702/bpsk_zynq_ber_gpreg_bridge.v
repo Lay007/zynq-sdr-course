@@ -30,12 +30,12 @@ module bpsk_zynq_ber_gpreg_bridge #(
     output wire [31:0]              gp_total_errors,
     output wire [31:0]              gp_payload_errors,
     output wire [31:0]              gp_signature,
-    output wire                     tx_valid,
-    output wire signed [W-1:0]      tx_i,
-    output wire signed [W-1:0]      tx_q,
-    input  wire                     rx_valid,
-    input  wire signed [W-1:0]      rx_i,
-    input  wire signed [W-1:0]      rx_q
+    output wire                     burst_out_valid,
+    output wire signed [W-1:0]      burst_out_i,
+    output wire signed [W-1:0]      burst_out_q,
+    input  wire                     capture_in_valid,
+    input  wire signed [W-1:0]      capture_in_i,
+    input  wire signed [W-1:0]      capture_in_q
 );
 
 localparam [31:0] SIGNATURE = 32'h4250534B; // "BPSK"
@@ -43,6 +43,7 @@ localparam [31:0] SIGNATURE = 32'h4250534B; // "BPSK"
 wire sample_rst = ~sample_resetn;
 wire core_busy;
 wire core_done;
+wire core_timed_out;
 wire [INDEX_W-1:0] received_bits;
 wire [INDEX_W-1:0] total_errors;
 wire [INDEX_W-1:0] payload_errors;
@@ -60,7 +61,9 @@ reg [31:0] offset_sync = 32'd0;
 reg [INDEX_W-1:0] frame_bit_count_cfg = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] preamble_count_cfg = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] start_offset_cfg = {INDEX_W{1'b0}};
+reg start_pulse_sample = 1'b0;
 reg done_sticky_sample = 1'b0;
+reg timeout_sticky_sample = 1'b0;
 reg [INDEX_W-1:0] received_bits_sample = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] total_errors_sample = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] payload_errors_sample = {INDEX_W{1'b0}};
@@ -89,18 +92,19 @@ bpsk_zynq_ber_top #(
 ) core_i (
     .clk(sample_clk),
     .rst(sample_rst),
-    .start(start_edge),
+    .start(start_pulse_sample),
     .frame_bit_count(frame_bit_count_cfg),
     .preamble_count(preamble_count_cfg),
     .start_offset(start_offset_cfg),
     .busy(core_busy),
     .done(core_done),
-    .tx_valid(tx_valid),
-    .tx_i(tx_i),
-    .tx_q(tx_q),
-    .rx_valid(rx_valid),
-    .rx_i(rx_i),
-    .rx_q(rx_q),
+    .tx_valid(burst_out_valid),
+    .tx_i(burst_out_i),
+    .tx_q(burst_out_q),
+    .rx_valid(capture_in_valid),
+    .rx_i(capture_in_i),
+    .rx_q(capture_in_q),
+    .timed_out(core_timed_out),
     .received_bits(received_bits),
     .total_errors(total_errors),
     .payload_errors(payload_errors)
@@ -120,7 +124,9 @@ always @(posedge sample_clk) begin
         frame_bit_count_cfg <= {INDEX_W{1'b0}};
         preamble_count_cfg <= {INDEX_W{1'b0}};
         start_offset_cfg <= {INDEX_W{1'b0}};
+        start_pulse_sample <= 1'b0;
         done_sticky_sample <= 1'b0;
+        timeout_sticky_sample <= 1'b0;
         received_bits_sample <= {INDEX_W{1'b0}};
         total_errors_sample <= {INDEX_W{1'b0}};
         payload_errors_sample <= {INDEX_W{1'b0}};
@@ -134,17 +140,25 @@ always @(posedge sample_clk) begin
         preamble_sync <= preamble_meta;
         offset_meta <= gp_start_offset;
         offset_sync <= offset_meta;
+        start_pulse_sample <= 1'b0;
 
         if (start_edge) begin
             frame_bit_count_cfg <= frame_sync[INDEX_W-1:0];
             preamble_count_cfg <= preamble_sync[INDEX_W-1:0];
             start_offset_cfg <= offset_sync[INDEX_W-1:0];
+            start_pulse_sample <= 1'b1;
             done_sticky_sample <= 1'b0;
+            timeout_sticky_sample <= 1'b0;
             received_bits_sample <= {INDEX_W{1'b0}};
             total_errors_sample <= {INDEX_W{1'b0}};
             payload_errors_sample <= {INDEX_W{1'b0}};
         end else if (clear_done_edge) begin
             done_sticky_sample <= 1'b0;
+            timeout_sticky_sample <= 1'b0;
+        end
+
+        if (core_timed_out) begin
+            timeout_sticky_sample <= 1'b1;
         end
 
         if (core_done) begin
@@ -167,7 +181,7 @@ always @(posedge ctrl_clk) begin
         payload_meta_ctrl <= 32'd0;
         payload_sync_ctrl <= 32'd0;
     end else begin
-        status_meta_ctrl <= {16'd0, SPS[7:0], 5'd0, done_sticky_sample, core_busy, control_sync[0]};
+        status_meta_ctrl <= {16'd0, SPS[7:0], 4'd0, timeout_sticky_sample, done_sticky_sample, core_busy, control_sync[0]};
         status_sync_ctrl <= status_meta_ctrl;
         received_meta_ctrl <= {{(32-INDEX_W){1'b0}}, received_bits_sample};
         received_sync_ctrl <= received_meta_ctrl;

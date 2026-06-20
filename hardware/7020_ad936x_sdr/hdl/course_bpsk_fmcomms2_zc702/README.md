@@ -1,14 +1,15 @@
-# Course BPSK FMCOMMS2 Overlay for ZC702
+# Course BPSK FMCOMMS2 Overlay for the CLG400 Zynq SDR
 
-This directory is the course-specific Vivado overlay for the imported AD9361/FMCOMMS2 reference. It keeps the vendor HDL baseline intact and adds one deterministic BPSK burst path suitable for the first over-the-air discovery experiment.
+This directory is the course-specific Vivado overlay for the imported AD9361/FMCOMMS2 reference captured from the working board image. It keeps the vendor HDL baseline intact and adds one deterministic BPSK burst path suitable for the first over-the-air discovery experiment.
 
 ## What this overlay changes
 
-- reuses the imported ZC702 + AD9361 block-design baseline from `../adi_fmcomms2_reference/`;
+- targets the real board part `xc7z020clg400-2`;
+- reuses the imported vendor AD9361 block-design shell from `vendor_system_bd_clg400.tcl`;
 - adds an `axi_gpreg` control/status plane at `0x79040000`;
 - inserts `bpsk_zynq_ber_gpreg_bridge.v`, which clocks the modem from `util_ad9361_divclk/clk_out`;
 - routes `RX1 I/Q` samples from `util_ad9361_adc_fifo` into the BPSK BER core;
-- bypasses the normal TX DMA to drive the DAC FIFO directly from the BPSK burst generator.
+- bypasses the normal TX DMA and removes the unused HP2/DAC-DMA path so the DAC FIFO is driven directly from the BPSK burst generator.
 
 That last point is intentional: this overlay is for the first short discovery burst, not for general IIO TX streaming.
 
@@ -21,7 +22,7 @@ Base address: `0x79040000`
 | `0x000` | `axi_gpreg` version register |
 | `0x004` | `axi_gpreg` ID, configured to `0x4250534B` |
 | `0x404` | GPREG0 output: control word, bit `0` = start edge, bit `1` = clear sticky done |
-| `0x408` | GPREG0 input: status word, bit `0` = synchronized start level, bit `1` = busy, bit `2` = sticky done |
+| `0x408` | GPREG0 input: status word, bit `0` = synchronized start level, bit `1` = busy, bit `2` = sticky done, bit `3` = sticky RX timeout/abort |
 | `0x444` | GPREG1 output: `FRAME_BIT_COUNT` |
 | `0x448` | GPREG1 input: `RECEIVED_BITS` |
 | `0x484` | GPREG2 output: `PREAMBLE_COUNT` |
@@ -41,14 +42,20 @@ python blocks/block_05_fpga_hdl_flow/python/generate_bpsk_framed_loopback_vector
 
 ## Vivado flow
 
-Use Vivado `2021.1`:
+Use Vivado `2021.1` from the repository root:
 
 ```bash
-cd hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702
-vivado -mode batch -source system_project.tcl
+vivado -mode batch -source hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/system_project.tcl
+vivado -mode batch -source hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/build_bitstream.tcl
 ```
 
-The script creates the project under `build/`. After that, continue with bitstream export and XSA handoff in Vivado or Vitis.
+The scripts create the project under `build/` and place the stable handoff artifacts here:
+
+- bitstream: `build/course_bpsk_fmcomms2_zc702.runs/impl_1/system_top.bit`
+- hardware handoff: `course_bpsk_fmcomms2_zc702.sdk/system_top.xsa`
+- timing logs: `timing_synth.log` and `timing_impl.log`
+
+The current clean build closes timing and exports `system_top.xsa` without the earlier `bad_timing` fallback.
 
 ## Intended first RF run
 
@@ -56,4 +63,5 @@ The script creates the project under `build/`. After that, continue with bitstre
 2. Keep RX gain low and manual. Do not enable AGC for the first burst.
 3. Use short frames only.
 4. Confirm both the `axi_gpreg` ID and the bridge signature before transmitting.
-5. Treat this overlay as discovery-only until the first live BER capture is documented.
+5. If RX never reconstructs the full frame, the BER core exits through the sticky timeout bit instead of hanging forever.
+6. Treat this overlay as discovery-only until the first live BER capture is documented.
