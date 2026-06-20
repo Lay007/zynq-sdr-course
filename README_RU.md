@@ -100,6 +100,12 @@ python tools/tasks.py labs
 python tools/tasks.py smoke
 ```
 
+Локальная CI-проверка перед большим push:
+
+```bash
+python tools/run_local_ci.py
+```
+
 Полезные команды:
 
 | Команда | Назначение |
@@ -110,6 +116,8 @@ python tools/tasks.py smoke
 | `python tools/tasks.py labs` | Запустить представительные Python-лабораторные |
 | `python tools/tasks.py hdl` | Запустить Verilog smoke-тесты блока 5 |
 | `python tools/tasks.py smoke` | Выполнить проверку docs + labs + HDL |
+| `python tools/run_local_ci.py` | Выполнить lint + pytest + docs + labs + canonical HDL smoke |
+| `python tools/run_local_ci.py --quick` | Выполнить lint + pytest + canonical HDL smoke |
 | `python tools/tasks.py clean` | Удалить локальные сгенерированные артефакты |
 
 Локальная стартовая аппаратная база:
@@ -199,4 +207,4 @@ python tools/tasks.py smoke
 
 ## Лицензия
 
-MIT License. См. [LICENSE](LICENSE).
+MIT License. См. [LICENSE].
