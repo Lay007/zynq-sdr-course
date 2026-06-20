@@ -45,6 +45,7 @@ jobs:
         run: bash tools/run_block5_hdl_smoke.sh
 
       - name: Upload HDL CI artifacts
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: hdl-canonical-artifacts
