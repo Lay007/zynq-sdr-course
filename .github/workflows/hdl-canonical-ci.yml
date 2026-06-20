@@ -55,4 +55,5 @@ jobs:
             blocks/block_05_fpga_hdl_flow/tb/*_vectors.txt
             blocks/block_05_fpga_hdl_flow/tb/*_bits.txt
             blocks/block_05_fpga_hdl_flow/tb/*_meta.txt
+            blocks/block_05_fpga_hdl_flow/rtl/*.mem
           if-no-files-found: warn
