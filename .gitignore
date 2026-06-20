@@ -107,6 +107,15 @@ downloads/
 blocks/block_11_integrated_sdr_project/assets/end_to_end_tone_demo/*.ci16
 blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/*.ci16
 
+# Local hardware scratch / generated board probes
+NA/
+docs/assets/lab63_zynq_iio_probe_live.json
+
+# Vivado IP packaging artifacts generated during local overlay builds
+hardware/7020_ad936x_sdr/hdl/adi_fmcomms2_reference/library/axi_gpreg/component.xml
+hardware/7020_ad936x_sdr/hdl/adi_fmcomms2_reference/library/axi_gpreg/xgui/
+hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/ip/
+
 # Local reproducibility summaries
 docs/assets/course_reproducibility_summary.json
 docs/assets/course_reproducibility_summary.md
