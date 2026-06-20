@@ -207,4 +207,4 @@ python tools/run_local_ci.py
 
 ## Лицензия
 
-MIT License. См. [LICENSE].
+MIT License. См. [LICENSE](LICENSE).
