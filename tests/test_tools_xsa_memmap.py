@@ -5,6 +5,8 @@ import zipfile
 from io import BytesIO
 from pathlib import Path
 
+import pytest
+
 
 MODULE_DIR = Path(__file__).resolve().parents[1] / "tools"
 if str(MODULE_DIR) not in sys.path:
@@ -42,6 +44,8 @@ def test_read_memranges_from_reference_xsa_contains_ad9361_windows() -> None:
         / "ad936x_no_os_reference"
         / "system_top.xsa"
     )
+    if not export_path.exists():
+        pytest.skip("reference system_top.xsa is a local Vivado export and is not stored in CI checkout")
 
     memranges = read_memranges(export_path)
     by_instance = {entry.instance: entry for entry in memranges}
