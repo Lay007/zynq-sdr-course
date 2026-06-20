@@ -1,6 +1,12 @@
 set script_dir [file normalize [file dirname [info script]]]
 set repo_root [file normalize [file join $script_dir "../../../.."]]
 set vendor_dir [file normalize [file join $script_dir "../adi_fmcomms2_reference"]]
+set axi_gpreg_dir [file normalize [file join $vendor_dir "library/axi_gpreg"]]
+
+# Keep the course overlay on in-project synthesis so Vivado does not reuse a
+# stale cached OOC checkpoint for the custom bridge IP.
+set ADI_USE_OOC_SYNTHESIS 0
+set ADI_USE_INCR_COMP 0
 
 source [file join $vendor_dir "projects/scripts/adi_env.tcl"]
 source [file join $vendor_dir "projects/scripts/adi_board.tcl"]
@@ -18,6 +24,15 @@ set project_root [file normalize [file join $script_dir "build"]]
 set project_system_dir [file join $project_root "${project_name}.srcs/sources_1/bd/system"]
 set xpr_path [file join $project_root "${project_name}.xpr"]
 
+if {![file exists [file join $axi_gpreg_dir "component.xml"]]} {
+  puts "Packaging missing axi_gpreg IP in $axi_gpreg_dir"
+  set original_dir [pwd]
+  cd $axi_gpreg_dir
+  source axi_gpreg_ip.tcl
+  close_project
+  cd $original_dir
+}
+
 set frame_mem [file normalize [file join $repo_root "blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bits.mem"]]
 set coef_mem [file normalize [file join $repo_root "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"]]
 foreach required_file [list $frame_mem $coef_mem] {
@@ -30,13 +45,13 @@ foreach required_file [list $frame_mem $coef_mem] {
   }
 }
 
-file mkdir $project_root
-create_project $project_name $project_root -part xc7z020clg484-1 -force
-
-set board_part [lindex [lsearch -all -inline [get_board_parts] *zc702*] end]
-if {$board_part ne ""} {
-  set_property board_part $board_part [current_project]
+if {[file exists $project_root]} {
+  puts "Removing stale generated project tree at $project_root"
+  file delete -force $project_root
 }
+
+file mkdir $project_root
+create_project $project_name $project_root -part xc7z020clg400-2 -force
 
 set lib_dirs $ad_hdl_dir/library
 if {$ad_hdl_dir ne $ad_ghdl_dir} {
@@ -59,6 +74,8 @@ foreach src [concat \
   $block5_rtl_files \
   [list \
     [file join $script_dir "bpsk_zynq_ber_gpreg_bridge.v"] \
+    [file join $script_dir "bpsk_zynq_ber_bridge_bd.v"] \
+    [file join $vendor_dir "library/common/ad_iobuf.v"] \
     [file join $script_dir "system_top.v"]]] {
   add_files -norecurse -fileset sources_1 $src
 }
@@ -69,10 +86,8 @@ source [file join $script_dir "system_bd.tcl"]
 
 save_bd_design
 validate_bd_design
-set_property synth_checkpoint_mode Hierarchical [get_files "$project_system_dir/system.bd"]
+set_property synth_checkpoint_mode None [get_files "$project_system_dir/system.bd"]
 generate_target {synthesis implementation} [get_files "$project_system_dir/system.bd"]
-export_ip_user_files -of_objects [get_files "$project_system_dir/system.bd"] -no_script -sync -force -quiet
-create_ip_run [get_files "$project_system_dir/system.bd"]
 make_wrapper -files [get_files "$project_system_dir/system.bd"] -top
 import_files -force -norecurse -fileset sources_1 [file join $project_system_dir "hdl/system_wrapper.v"]
 
