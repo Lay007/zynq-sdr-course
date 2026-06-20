@@ -1,0 +1,11 @@
+{
+  "config": "blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/config.json",
+  "tx_bits": "blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/tx_bits.txt",
+  "tx_symbols_float": "blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/tx_symbols_float.txt",
+  "tx_symbols_q15": "blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/tx_symbols_q15.txt",
+  "rrc_taps_float": "blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/rrc_taps_float.txt",
+  "rrc_taps_q15": "blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/rrc_taps_q15.txt",
+  "tx_reference_ci16": "blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/end_to_end_bpsk_reference_v1_tx_reference.ci16",
+  "capture_ci16": "blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/end_to_end_bpsk_reference_v1.ci16",
+  "sample_plan": "blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/sample_plan.json"
+}

@@ -1,0 +1,57 @@
+dataset_id: end_to_end_bpsk_reference_v1
+title: End-to-end BPSK reference package
+description: >-
+  Deterministic synthetic BPSK burst used as the shared handoff between the
+  MATLAB reference model, fixed-point export, HDL symbol mapper and future
+  Zynq TX/RX validation.
+storage: repo-generated
+url: null
+file_name: blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/end_to_end_bpsk_reference_v1.ci16
+sha256: 8b2121ee3fc3946a0064cfd2cc5b5a70eb0813a36937ce82485f91a3f425f113
+format: ci16
+endianness: little
+sample_rate_hz: 1000000
+center_frequency_hz: 915000000
+bandwidth_hz: 168750
+duration_s: 0.003336000
+source: synthetic-bpsk-reference
+hardware:
+  transmitter: future Zynq/AD9363 BPSK path, currently synthetic reference
+  receiver: future Zynq RX BER path, currently synthetic reference receiver
+  monitor_receiver: RTL-SDR spectrum-only monitor in the planned hardware route
+  rf_path: synthetic channel with deterministic timing, CFO, phase and AWGN
+  attenuation_db: 50.0
+  tx_gain_db: -20.0
+  rx_gain_db: 20.0
+signal:
+  modulation: BPSK
+  symbol_rate_sps: 125000
+  pulse_shape: RRC
+  rolloff: 0.350
+  samples_per_symbol: 8
+handoff:
+  config_json: blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/config.json
+  tx_reference_ci16: blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/end_to_end_bpsk_reference_v1_tx_reference.ci16
+  tx_bits_file: blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/tx_bits.txt
+  tx_symbols_q15_file: blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/tx_symbols_q15.txt
+  rrc_taps_q15_file: blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/rrc_taps_q15.txt
+  matlab_reference_script: blocks/block_11_integrated_sdr_project/matlab/end_to_end_bpsk_reference.m
+  rtl_symbol_mapper: blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_mapper.v
+analysis_targets:
+  - matched filter reconstruction
+  - payload BER
+  - constellation after reference synchronization
+  - fixed-point export for Simulink
+  - HDL symbol mapper vector generation
+expected_results:
+  expected_modulation: BPSK
+  expected_receiver: matched filter with known timing/CFO/phase
+  intended_payload_ber: near zero for the synthetic reference case
+quality_checks:
+  checksum_verified: true
+  clipping_observed: false
+  overload_observed: false
+  fixed_point_exports_present: true
+notes:
+  - Use Zynq RX as the main BER receiver path for the first hardware implementation.
+  - Use RTL-SDR as an independent monitor receiver, not as the primary BER reference.

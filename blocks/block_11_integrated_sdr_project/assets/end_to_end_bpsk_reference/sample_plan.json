@@ -1,0 +1,8 @@
+{
+  "matched_filter_sample_start": 450,
+  "samples_per_symbol": 8,
+  "symbol_count": 281,
+  "leading_silence_samples": 384,
+  "timing_offset_samples": 2,
+  "rrc_tap_count": 65
+}

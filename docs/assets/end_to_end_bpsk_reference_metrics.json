@@ -1,0 +1,21 @@
+{
+  "dataset_id": "end_to_end_bpsk_reference_v1",
+  "bit_count": 281,
+  "payload_bit_count": 256,
+  "preamble_bit_count": 25,
+  "sample_rate_hz": 1000000.0,
+  "symbol_rate_hz": 125000.0,
+  "samples_per_symbol": 8,
+  "rrc_tap_count": 65,
+  "timing_offset_samples": 2,
+  "frequency_offset_hz": 650.0,
+  "phase_offset_rad": 0.31,
+  "ber_total": 0.0,
+  "ber_payload": 0.0,
+  "bit_errors_total": 0,
+  "bit_errors_payload": 0,
+  "evm_percent": 2.153698461981555,
+  "peak_level_dbfs": -1.5991111692145026,
+  "rms_level_dbfs": -7.26948612157865,
+  "capture_sha256": "8b2121ee3fc3946a0064cfd2cc5b5a70eb0813a36937ce82485f91a3f425f113"
+}
