@@ -14,6 +14,7 @@
 3. preparing verification scenarios
 4. running integration tests
 5. building the AD9361 gpreg burst overlay and launching the first discovery burst
+6. sweeping RF gain and start offset to recover the first burst bits
 
 ## Review and discussion questions
 1. Which limitations or tradeoffs are central to this block?

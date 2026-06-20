@@ -214,6 +214,7 @@ nav:
           - "Lab 11.6 — Measurement uncertainty budget": ru/labs/lab-11-6-measurement-uncertainty-budget.md
           - "Lab 11.7 — PS-side AXI-Lite BPSK bring-up": ru/labs/lab-11-7-axi-lite-bpsk-bringup.md
           - "Lab 11.8 — AD9361 gpreg BPSK overlay": ru/labs/lab-11-8-axi-gpreg-bpsk-overlay.md
+          - "Lab 11.9 — AD9361 RF discovery sweep": ru/labs/lab-11-9-rf-discovery-sweep.md
       - "Проекты Block 12":
           - "Project 12.1 — QPSK modem final project": ru/labs/project-12-1-qpsk-modem-final-project.md
           - "Project 12.2 — RF capture analysis final project": ru/labs/project-12-2-rf-capture-analysis-final-project.md
@@ -317,6 +318,7 @@ nav:
           - "Lab 11.6 — Measurement uncertainty budget": en/labs/lab-11-6-measurement-uncertainty-budget.md
           - "Lab 11.7 — PS-side AXI-Lite BPSK bring-up": en/labs/lab-11-7-axi-lite-bpsk-bringup.md
           - "Lab 11.8 — AD9361 gpreg BPSK overlay": en/labs/lab-11-8-axi-gpreg-bpsk-overlay.md
+          - "Lab 11.9 — AD9361 RF discovery sweep": en/labs/lab-11-9-rf-discovery-sweep.md
       - "Block 12 projects":
           - "Project 12.1 — QPSK modem final project": en/labs/project-12-1-qpsk-modem-final-project.md
           - "Project 12.2 — RF capture analysis final project": en/labs/project-12-2-rf-capture-analysis-final-project.md
