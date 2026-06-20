@@ -10,6 +10,7 @@ module tb_bpsk_rrc_tx_fir;
 localparam integer W = 16;
 localparam integer MAX_VECTORS = 4096;
 localparam integer CLK_PERIOD_NS = 10;
+localparam integer DUT_LATENCY_CYCLES = 7;
 
 reg clk = 1'b0;
 reg rst = 1'b1;
@@ -33,11 +34,12 @@ reg expected_valid_current = 1'b0;
 reg signed [W-1:0] expected_i_current = '0;
 reg signed [W-1:0] expected_q_current = '0;
 
-reg expected_valid_d1 = 1'b0;
-reg signed [W-1:0] expected_i_d1 = '0;
-reg signed [W-1:0] expected_q_d1 = '0;
+reg expected_valid_pipe [0:DUT_LATENCY_CYCLES-1];
+reg signed [W-1:0] expected_i_pipe [0:DUT_LATENCY_CYCLES-1];
+reg signed [W-1:0] expected_q_pipe [0:DUT_LATENCY_CYCLES-1];
 
 integer idx;
+integer pipe_idx;
 integer errors = 0;
 integer vector_count = 0;
 integer input_fd;
@@ -147,10 +149,10 @@ initial begin
     expected_i_current = '0;
     expected_q_current = '0;
 
-    repeat (4) @(posedge clk);
+    repeat (DUT_LATENCY_CYCLES + 3) @(posedge clk);
 
     if (errors == 0) begin
-        $display("PASS: bpsk_rrc_tx_fir test completed without errors (%0d vectors)", vector_count);
+        $display("PASS: bpsk_rrc_tx_fir test completed without errors (%0d vectors, latency %0d cycles)", vector_count, DUT_LATENCY_CYCLES);
         $finish;
     end else begin
         $display("FAIL: bpsk_rrc_tx_fir test completed with %0d errors", errors);
@@ -160,28 +162,44 @@ end
 
 always @(posedge clk) begin
     if (rst) begin
-        expected_valid_d1 <= 1'b0;
-        expected_i_d1 <= '0;
-        expected_q_d1 <= '0;
+        for (pipe_idx = 0; pipe_idx < DUT_LATENCY_CYCLES; pipe_idx = pipe_idx + 1) begin
+            expected_valid_pipe[pipe_idx] <= 1'b0;
+            expected_i_pipe[pipe_idx] <= '0;
+            expected_q_pipe[pipe_idx] <= '0;
+        end
     end else begin
-        if (out_valid !== expected_valid_d1) begin
-            $display("ERROR at %0t: out_valid=%0b expected=%0b", $time, out_valid, expected_valid_d1);
+        if (out_valid !== expected_valid_pipe[DUT_LATENCY_CYCLES-1]) begin
+            $display(
+                "ERROR at %0t: out_valid=%0b expected=%0b",
+                $time,
+                out_valid,
+                expected_valid_pipe[DUT_LATENCY_CYCLES-1]
+            );
             errors = errors + 1;
         end
 
-        if (expected_valid_d1) begin
-            if (out_i !== expected_i_d1 || out_q !== expected_q_d1) begin
+        if (expected_valid_pipe[DUT_LATENCY_CYCLES-1]) begin
+            if (out_i !== expected_i_pipe[DUT_LATENCY_CYCLES-1] || out_q !== expected_q_pipe[DUT_LATENCY_CYCLES-1]) begin
                 $display(
                     "ERROR at %0t: out=(%0d,%0d) expected=(%0d,%0d)",
-                    $time, out_i, out_q, expected_i_d1, expected_q_d1
+                    $time,
+                    out_i,
+                    out_q,
+                    expected_i_pipe[DUT_LATENCY_CYCLES-1],
+                    expected_q_pipe[DUT_LATENCY_CYCLES-1]
                 );
                 errors = errors + 1;
             end
         end
 
-        expected_valid_d1 <= expected_valid_current;
-        expected_i_d1 <= expected_i_current;
-        expected_q_d1 <= expected_q_current;
+        for (pipe_idx = DUT_LATENCY_CYCLES - 1; pipe_idx > 0; pipe_idx = pipe_idx - 1) begin
+            expected_valid_pipe[pipe_idx] <= expected_valid_pipe[pipe_idx-1];
+            expected_i_pipe[pipe_idx] <= expected_i_pipe[pipe_idx-1];
+            expected_q_pipe[pipe_idx] <= expected_q_pipe[pipe_idx-1];
+        end
+        expected_valid_pipe[0] <= expected_valid_current;
+        expected_i_pipe[0] <= expected_i_current;
+        expected_q_pipe[0] <= expected_q_current;
     end
 end
 
