@@ -1,0 +1,869 @@
+{
+  "timestamp_utc": "2026-06-21T08:24:00.175574+00:00",
+  "iio_readdev_bin": "C:\\Program Files\\IIO Oscilloscope\\bin\\iio_readdev.exe",
+  "board_before": {
+    "model": "FISH Ball PlutoSDR Rev.A (Z7020/AD9361)",
+    "rx_lo_hz": "2400000000",
+    "tx_lo_hz": "2400000000",
+    "rx_sample_rate_hz": "30720000",
+    "tx_sample_rate_hz": "30720000",
+    "rx_gain_mode_ch0": "slow_attack",
+    "rx_gain_mode_ch1": "slow_attack",
+    "rx_gain_db_ch0": "71.000000 dB",
+    "rx_gain_db_ch1": "71.000000 dB",
+    "tx_attenuation_db_ch0": "-89.750000 dB",
+    "tx_attenuation_db_ch1": "-89.750000 dB",
+    "tx_lo_powerdown": "1"
+  },
+  "board_ready": {
+    "model": "FISH Ball PlutoSDR Rev.A (Z7020/AD9361)",
+    "rx_lo_hz": "2400000000",
+    "tx_lo_hz": "2400000000",
+    "rx_sample_rate_hz": "30720000",
+    "tx_sample_rate_hz": "30720000",
+    "rx_gain_mode_ch0": "manual",
+    "rx_gain_mode_ch1": "manual",
+    "rx_gain_db_ch0": "30.000000 dB",
+    "rx_gain_db_ch1": "30.000000 dB",
+    "tx_attenuation_db_ch0": "-60.000000 dB",
+    "tx_attenuation_db_ch1": "-60.000000 dB",
+    "tx_lo_powerdown": "0"
+  },
+  "board_after": {
+    "model": "FISH Ball PlutoSDR Rev.A (Z7020/AD9361)",
+    "rx_lo_hz": "2400000000",
+    "tx_lo_hz": "2400000000",
+    "rx_sample_rate_hz": "30720000",
+    "tx_sample_rate_hz": "30720000",
+    "rx_gain_mode_ch0": "slow_attack",
+    "rx_gain_mode_ch1": "slow_attack",
+    "rx_gain_db_ch0": "71.000000 dB",
+    "rx_gain_db_ch1": "71.000000 dB",
+    "tx_attenuation_db_ch0": "-89.750000 dB",
+    "tx_attenuation_db_ch1": "-89.750000 dB",
+    "tx_lo_powerdown": "1"
+  },
+  "restore_error": "RuntimeError: /sys/bus/iio/devices/iio:device0/in_voltage0_hardwaregain: no diagnostic output; /sys/bus/iio/devices/iio:device0/in_voltage1_hardwaregain: no diagnostic output",
+  "summary": {
+    "standalone_capture_262144": {
+      "capture_stdout_len": 1048576,
+      "capture_stderr": "",
+      "capture_error": null,
+      "burst_ok": null,
+      "burst_error": null,
+      "received_bits": null
+    },
+    "overlap_capture_8192_delay_1ms": {
+      "capture_stdout_len": 32768,
+      "capture_stderr": "",
+      "capture_error": null,
+      "burst_ok": false,
+      "burst_error": "ssh-devmem read at 0x79040004 failed with exit code 135: Bus error",
+      "received_bits": null
+    },
+    "overlap_capture_262144_delay_5ms": {
+      "capture_stdout_len": 1048576,
+      "capture_stderr": "",
+      "capture_error": null,
+      "burst_ok": false,
+      "burst_error": "ssh-devmem read at 0x79040004 failed with exit code 135: Bus error",
+      "received_bits": null
+    }
+  },
+  "scenarios": [
+    {
+      "scenario": {
+        "name": "standalone_capture_262144",
+        "sample_count": 262144,
+        "trigger_delay_ms": null
+      },
+      "capture": {
+        "returncode": 0,
+        "stdout_len": 1048576,
+        "stderr": ""
+      },
+      "capture_error": null,
+      "burst": null,
+      "adc_dma_before": {
+        "VERSION": {
+          "address": "0x7C400000",
+          "value": 263265
+        },
+        "ID": {
+          "address": "0x7C400004",
+          "value": 0
+        },
+        "SCRATCH": {
+          "address": "0x7C400008",
+          "value": 0
+        },
+        "IDENT": {
+          "address": "0x7C40000C",
+          "value": 1145913667
+        },
+        "INTF_DESC": {
+          "address": "0x7C400010",
+          "value": 467715
+        },
+        "COHERENCY": {
+          "address": "0x7C400014",
+          "value": 0
+        },
+        "IRQ_MASK": {
+          "address": "0x7C400080",
+          "value": 0
+        },
+        "IRQ_PENDING": {
+          "address": "0x7C400084",
+          "value": 0
+        },
+        "IRQ_SOURCE": {
+          "address": "0x7C400088",
+          "value": 0
+        },
+        "CTRL": {
+          "address": "0x7C400400",
+          "value": 0
+        },
+        "TRANSFER_ID": {
+          "address": "0x7C400404",
+          "value": 0
+        },
+        "TRANSFER_SUBMIT": {
+          "address": "0x7C400408",
+          "value": 0
+        },
+        "FLAGS": {
+          "address": "0x7C40040C",
+          "value": 6
+        },
+        "DEST_ADDRESS": {
+          "address": "0x7C400410",
+          "value": 805699584
+        },
+        "SRC_ADDRESS": {
+          "address": "0x7C400414",
+          "value": 0
+        },
+        "X_LENGTH": {
+          "address": "0x7C400418",
+          "value": 32767
+        },
+        "Y_LENGTH": {
+          "address": "0x7C40041C",
+          "value": 0
+        },
+        "DEST_STRIDE": {
+          "address": "0x7C400420",
+          "value": 0
+        },
+        "SRC_STRIDE": {
+          "address": "0x7C400424",
+          "value": 0
+        },
+        "TRANSFER_DONE": {
+          "address": "0x7C400428",
+          "value": 0
+        },
+        "DBG_DEST_ADDR": {
+          "address": "0x7C400434",
+          "value": 805699584
+        },
+        "DBG_SRC_ADDR": {
+          "address": "0x7C400438",
+          "value": 0
+        },
+        "DBG_STATUS": {
+          "address": "0x7C40043C",
+          "value": 1793
+        },
+        "DBG_IDS0": {
+          "address": "0x7C400440",
+          "value": 0
+        },
+        "DBG_IDS1": {
+          "address": "0x7C400444",
+          "value": 0
+        }
+      },
+      "adc_dma_after": {
+        "VERSION": {
+          "address": "0x7C400000",
+          "value": 263265
+        },
+        "ID": {
+          "address": "0x7C400004",
+          "value": 0
+        },
+        "SCRATCH": {
+          "address": "0x7C400008",
+          "value": 0
+        },
+        "IDENT": {
+          "address": "0x7C40000C",
+          "value": 1145913667
+        },
+        "INTF_DESC": {
+          "address": "0x7C400010",
+          "value": 467715
+        },
+        "COHERENCY": {
+          "address": "0x7C400014",
+          "value": 0
+        },
+        "IRQ_MASK": {
+          "address": "0x7C400080",
+          "value": 0
+        },
+        "IRQ_PENDING": {
+          "address": "0x7C400084",
+          "value": 0
+        },
+        "IRQ_SOURCE": {
+          "address": "0x7C400088",
+          "value": 0
+        },
+        "CTRL": {
+          "address": "0x7C400400",
+          "value": 0
+        },
+        "TRANSFER_ID": {
+          "address": "0x7C400404",
+          "value": 0
+        },
+        "TRANSFER_SUBMIT": {
+          "address": "0x7C400408",
+          "value": 0
+        },
+        "FLAGS": {
+          "address": "0x7C40040C",
+          "value": 6
+        },
+        "DEST_ADDRESS": {
+          "address": "0x7C400410",
+          "value": 805666816
+        },
+        "SRC_ADDRESS": {
+          "address": "0x7C400414",
+          "value": 0
+        },
+        "X_LENGTH": {
+          "address": "0x7C400418",
+          "value": 32767
+        },
+        "Y_LENGTH": {
+          "address": "0x7C40041C",
+          "value": 0
+        },
+        "DEST_STRIDE": {
+          "address": "0x7C400420",
+          "value": 0
+        },
+        "SRC_STRIDE": {
+          "address": "0x7C400424",
+          "value": 0
+        },
+        "TRANSFER_DONE": {
+          "address": "0x7C400428",
+          "value": 0
+        },
+        "DBG_DEST_ADDR": {
+          "address": "0x7C400434",
+          "value": 805666816
+        },
+        "DBG_SRC_ADDR": {
+          "address": "0x7C400438",
+          "value": 0
+        },
+        "DBG_STATUS": {
+          "address": "0x7C40043C",
+          "value": 1793
+        },
+        "DBG_IDS0": {
+          "address": "0x7C400440",
+          "value": 0
+        },
+        "DBG_IDS1": {
+          "address": "0x7C400444",
+          "value": 0
+        }
+      },
+      "dmesg_tail": [
+        "Run /init as init process",
+        "  with arguments:",
+        "    /init",
+        "  with environment:",
+        "    HOME=/",
+        "    TERM=linux",
+        "file system registered",
+        "using random self ethernet address",
+        "using random host ethernet address",
+        "Mass Storage Function, version: 2009/09/11",
+        "LUN: removable file: (no medium)",
+        "read descriptors",
+        "read strings",
+        "usb0: HOST MAC 00:e0:22:ad:c8:3b",
+        "usb0: MAC 00:05:f7:19:e7:93",
+        "random: dbus-uuidgen: uninitialized urandom read (12 bytes read)",
+        "random: dbus-uuidgen: uninitialized urandom read (8 bytes read)",
+        "random: dbus-daemon: uninitialized urandom read (12 bytes read)",
+        "random: crng init done",
+        "random: 1 urandom warning(s) missed due to ratelimiting",
+        "macb e000b000.ethernet eth0: PHY [e000b000.ethernet-ffffffff:00] driver [RTL8211F Gigabit Ethernet] (irq=POLL)",
+        "macb e000b000.ethernet eth0: configuring for phy/rgmii-id link mode",
+        "macb e000b000.ethernet eth0: Link is Up - 100Mbps/Full - flow control off",
+        "loop7: detected capacity change from 0 to 61440",
+        "8<--- cut here ---",
+        "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6f3b004",
+        "pgd = b648bb2a",
+        "[b6f3b004] *pgd=048bb831, *pte=79040783, *ppte=79040e33",
+        "8<--- cut here ---",
+        "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6fe4004",
+        "pgd = 27bf8568",
+        "[b6fe4004] *pgd=048f8831, *pte=79040783, *ppte=79040e33",
+        "8<--- cut here ---",
+        "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6fd5004",
+        "pgd = b1945e69",
+        "[b6fd5004] *pgd=04846831, *pte=79040783, *ppte=79040e33",
+        "8<--- cut here ---",
+        "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6fc2004",
+        "pgd = fcf9fbbe",
+        "[b6fc2004] *pgd=04ae5831, *pte=79040783, *ppte=79040e33"
+      ]
+    },
+    {
+      "scenario": {
+        "name": "overlap_capture_8192_delay_1ms",
+        "sample_count": 8192,
+        "trigger_delay_ms": 1.0
+      },
+      "capture": {
+        "returncode": 0,
+        "stdout_len": 32768,
+        "stderr": ""
+      },
+      "capture_error": null,
+      "burst": {
+        "ok": false,
+        "error_type": "RuntimeError",
+        "error": "ssh-devmem read at 0x79040004 failed with exit code 135: Bus error",
+        "result": null,
+        "started_utc": "2026-06-21T08:23:50.441194+00:00",
+        "finished_utc": "2026-06-21T08:23:50.517995+00:00"
+      },
+      "adc_dma_before": {
+        "VERSION": {
+          "address": "0x7C400000",
+          "value": 263265
+        },
+        "ID": {
+          "address": "0x7C400004",
+          "value": 0
+        },
+        "SCRATCH": {
+          "address": "0x7C400008",
+          "value": 0
+        },
+        "IDENT": {
+          "address": "0x7C40000C",
+          "value": 1145913667
+        },
+        "INTF_DESC": {
+          "address": "0x7C400010",
+          "value": 467715
+        },
+        "COHERENCY": {
+          "address": "0x7C400014",
+          "value": 0
+        },
+        "IRQ_MASK": {
+          "address": "0x7C400080",
+          "value": 0
+        },
+        "IRQ_PENDING": {
+          "address": "0x7C400084",
+          "value": 0
+        },
+        "IRQ_SOURCE": {
+          "address": "0x7C400088",
+          "value": 0
+        },
+        "CTRL": {
+          "address": "0x7C400400",
+          "value": 0
+        },
+        "TRANSFER_ID": {
+          "address": "0x7C400404",
+          "value": 0
+        },
+        "TRANSFER_SUBMIT": {
+          "address": "0x7C400408",
+          "value": 0
+        },
+        "FLAGS": {
+          "address": "0x7C40040C",
+          "value": 6
+        },
+        "DEST_ADDRESS": {
+          "address": "0x7C400410",
+          "value": 805666816
+        },
+        "SRC_ADDRESS": {
+          "address": "0x7C400414",
+          "value": 0
+        },
+        "X_LENGTH": {
+          "address": "0x7C400418",
+          "value": 32767
+        },
+        "Y_LENGTH": {
+          "address": "0x7C40041C",
+          "value": 0
+        },
+        "DEST_STRIDE": {
+          "address": "0x7C400420",
+          "value": 0
+        },
+        "SRC_STRIDE": {
+          "address": "0x7C400424",
+          "value": 0
+        },
+        "TRANSFER_DONE": {
+          "address": "0x7C400428",
+          "value": 0
+        },
+        "DBG_DEST_ADDR": {
+          "address": "0x7C400434",
+          "value": 805666816
+        },
+        "DBG_SRC_ADDR": {
+          "address": "0x7C400438",
+          "value": 0
+        },
+        "DBG_STATUS": {
+          "address": "0x7C40043C",
+          "value": 1793
+        },
+        "DBG_IDS0": {
+          "address": "0x7C400440",
+          "value": 0
+        },
+        "DBG_IDS1": {
+          "address": "0x7C400444",
+          "value": 0
+        }
+      },
+      "adc_dma_after": {
+        "VERSION": {
+          "address": "0x7C400000",
+          "value": 263265
+        },
+        "ID": {
+          "address": "0x7C400004",
+          "value": 0
+        },
+        "SCRATCH": {
+          "address": "0x7C400008",
+          "value": 0
+        },
+        "IDENT": {
+          "address": "0x7C40000C",
+          "value": 1145913667
+        },
+        "INTF_DESC": {
+          "address": "0x7C400010",
+          "value": 467715
+        },
+        "COHERENCY": {
+          "address": "0x7C400014",
+          "value": 0
+        },
+        "IRQ_MASK": {
+          "address": "0x7C400080",
+          "value": 0
+        },
+        "IRQ_PENDING": {
+          "address": "0x7C400084",
+          "value": 0
+        },
+        "IRQ_SOURCE": {
+          "address": "0x7C400088",
+          "value": 0
+        },
+        "CTRL": {
+          "address": "0x7C400400",
+          "value": 0
+        },
+        "TRANSFER_ID": {
+          "address": "0x7C400404",
+          "value": 0
+        },
+        "TRANSFER_SUBMIT": {
+          "address": "0x7C400408",
+          "value": 0
+        },
+        "FLAGS": {
+          "address": "0x7C40040C",
+          "value": 6
+        },
+        "DEST_ADDRESS": {
+          "address": "0x7C400410",
+          "value": 805699584
+        },
+        "SRC_ADDRESS": {
+          "address": "0x7C400414",
+          "value": 0
+        },
+        "X_LENGTH": {
+          "address": "0x7C400418",
+          "value": 32767
+        },
+        "Y_LENGTH": {
+          "address": "0x7C40041C",
+          "value": 0
+        },
+        "DEST_STRIDE": {
+          "address": "0x7C400420",
+          "value": 0
+        },
+        "SRC_STRIDE": {
+          "address": "0x7C400424",
+          "value": 0
+        },
+        "TRANSFER_DONE": {
+          "address": "0x7C400428",
+          "value": 0
+        },
+        "DBG_DEST_ADDR": {
+          "address": "0x7C400434",
+          "value": 805699584
+        },
+        "DBG_SRC_ADDR": {
+          "address": "0x7C400438",
+          "value": 0
+        },
+        "DBG_STATUS": {
+          "address": "0x7C40043C",
+          "value": 1793
+        },
+        "DBG_IDS0": {
+          "address": "0x7C400440",
+          "value": 0
+        },
+        "DBG_IDS1": {
+          "address": "0x7C400444",
+          "value": 0
+        }
+      },
+      "dmesg_tail": [
+        "    HOME=/",
+        "    TERM=linux",
+        "file system registered",
+        "using random self ethernet address",
+        "using random host ethernet address",
+        "Mass Storage Function, version: 2009/09/11",
+        "LUN: removable file: (no medium)",
+        "read descriptors",
+        "read strings",
+        "usb0: HOST MAC 00:e0:22:ad:c8:3b",
+        "usb0: MAC 00:05:f7:19:e7:93",
+        "random: dbus-uuidgen: uninitialized urandom read (12 bytes read)",
+        "random: dbus-uuidgen: uninitialized urandom read (8 bytes read)",
+        "random: dbus-daemon: uninitialized urandom read (12 bytes read)",
+        "random: crng init done",
+        "random: 1 urandom warning(s) missed due to ratelimiting",
+        "macb e000b000.ethernet eth0: PHY [e000b000.ethernet-ffffffff:00] driver [RTL8211F Gigabit Ethernet] (irq=POLL)",
+        "macb e000b000.ethernet eth0: configuring for phy/rgmii-id link mode",
+        "macb e000b000.ethernet eth0: Link is Up - 100Mbps/Full - flow control off",
+        "loop7: detected capacity change from 0 to 61440",
+        "8<--- cut here ---",
+        "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6f3b004",
+        "pgd = b648bb2a",
+        "[b6f3b004] *pgd=048bb831, *pte=79040783, *ppte=79040e33",
+        "8<--- cut here ---",
+        "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6fe4004",
+        "pgd = 27bf8568",
+        "[b6fe4004] *pgd=048f8831, *pte=79040783, *ppte=79040e33",
+        "8<--- cut here ---",
+        "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6fd5004",
+        "pgd = b1945e69",
+        "[b6fd5004] *pgd=04846831, *pte=79040783, *ppte=79040e33",
+        "8<--- cut here ---",
+        "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6fc2004",
+        "pgd = fcf9fbbe",
+        "[b6fc2004] *pgd=04ae5831, *pte=79040783, *ppte=79040e33",
+        "8<--- cut here ---",
+        "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6fa2004",
+        "pgd = 602f0645",
+        "[b6fa2004] *pgd=0498a831, *pte=79040783, *ppte=79040e33"
+      ]
+    },
+    {
+      "scenario": {
+        "name": "overlap_capture_262144_delay_5ms",
+        "sample_count": 262144,
+        "trigger_delay_ms": 5.0
+      },
+      "capture": {
+        "returncode": 0,
+        "stdout_len": 1048576,
+        "stderr": ""
+      },
+      "capture_error": null,
+      "burst": {
+        "ok": false,
+        "error_type": "RuntimeError",
+        "error": "ssh-devmem read at 0x79040004 failed with exit code 135: Bus error",
+        "result": null,
+        "started_utc": "2026-06-21T08:23:55.649895+00:00",
+        "finished_utc": "2026-06-21T08:23:55.724332+00:00"
+      },
+      "adc_dma_before": {
+        "VERSION": {
+          "address": "0x7C400000",
+          "value": 263265
+        },
+        "ID": {
+          "address": "0x7C400004",
+          "value": 0
+        },
+        "SCRATCH": {
+          "address": "0x7C400008",
+          "value": 0
+        },
+        "IDENT": {
+          "address": "0x7C40000C",
+          "value": 1145913667
+        },
+        "INTF_DESC": {
+          "address": "0x7C400010",
+          "value": 467715
+        },
+        "COHERENCY": {
+          "address": "0x7C400014",
+          "value": 0
+        },
+        "IRQ_MASK": {
+          "address": "0x7C400080",
+          "value": 0
+        },
+        "IRQ_PENDING": {
+          "address": "0x7C400084",
+          "value": 0
+        },
+        "IRQ_SOURCE": {
+          "address": "0x7C400088",
+          "value": 0
+        },
+        "CTRL": {
+          "address": "0x7C400400",
+          "value": 0
+        },
+        "TRANSFER_ID": {
+          "address": "0x7C400404",
+          "value": 0
+        },
+        "TRANSFER_SUBMIT": {
+          "address": "0x7C400408",
+          "value": 0
+        },
+        "FLAGS": {
+          "address": "0x7C40040C",
+          "value": 6
+        },
+        "DEST_ADDRESS": {
+          "address": "0x7C400410",
+          "value": 805699584
+        },
+        "SRC_ADDRESS": {
+          "address": "0x7C400414",
+          "value": 0
+        },
+        "X_LENGTH": {
+          "address": "0x7C400418",
+          "value": 32767
+        },
+        "Y_LENGTH": {
+          "address": "0x7C40041C",
+          "value": 0
+        },
+        "DEST_STRIDE": {
+          "address": "0x7C400420",
+          "value": 0
+        },
+        "SRC_STRIDE": {
+          "address": "0x7C400424",
+          "value": 0
+        },
+        "TRANSFER_DONE": {
+          "address": "0x7C400428",
+          "value": 0
+        },
+        "DBG_DEST_ADDR": {
+          "address": "0x7C400434",
+          "value": 805699584
+        },
+        "DBG_SRC_ADDR": {
+          "address": "0x7C400438",
+          "value": 0
+        },
+        "DBG_STATUS": {
+          "address": "0x7C40043C",
+          "value": 1793
+        },
+        "DBG_IDS0": {
+          "address": "0x7C400440",
+          "value": 0
+        },
+        "DBG_IDS1": {
+          "address": "0x7C400444",
+          "value": 0
+        }
+      },
+      "adc_dma_after": {
+        "VERSION": {
+          "address": "0x7C400000",
+          "value": 263265
+        },
+        "ID": {
+          "address": "0x7C400004",
+          "value": 0
+        },
+        "SCRATCH": {
+          "address": "0x7C400008",
+          "value": 0
+        },
+        "IDENT": {
+          "address": "0x7C40000C",
+          "value": 1145913667
+        },
+        "INTF_DESC": {
+          "address": "0x7C400010",
+          "value": 467715
+        },
+        "COHERENCY": {
+          "address": "0x7C400014",
+          "value": 0
+        },
+        "IRQ_MASK": {
+          "address": "0x7C400080",
+          "value": 0
+        },
+        "IRQ_PENDING": {
+          "address": "0x7C400084",
+          "value": 0
+        },
+        "IRQ_SOURCE": {
+          "address": "0x7C400088",
+          "value": 0
+        },
+        "CTRL": {
+          "address": "0x7C400400",
+          "value": 0
+        },
+        "TRANSFER_ID": {
+          "address": "0x7C400404",
+          "value": 0
+        },
+        "TRANSFER_SUBMIT": {
+          "address": "0x7C400408",
+          "value": 0
+        },
+        "FLAGS": {
+          "address": "0x7C40040C",
+          "value": 6
+        },
+        "DEST_ADDRESS": {
+          "address": "0x7C400410",
+          "value": 805666816
+        },
+        "SRC_ADDRESS": {
+          "address": "0x7C400414",
+          "value": 0
+        },
+        "X_LENGTH": {
+          "address": "0x7C400418",
+          "value": 32767
+        },
+        "Y_LENGTH": {
+          "address": "0x7C40041C",
+          "value": 0
+        },
+        "DEST_STRIDE": {
+          "address": "0x7C400420",
+          "value": 0
+        },
+        "SRC_STRIDE": {
+          "address": "0x7C400424",
+          "value": 0
+        },
+        "TRANSFER_DONE": {
+          "address": "0x7C400428",
+          "value": 0
+        },
+        "DBG_DEST_ADDR": {
+          "address": "0x7C400434",
+          "value": 805666816
+        },
+        "DBG_SRC_ADDR": {
+          "address": "0x7C400438",
+          "value": 0
+        },
+        "DBG_STATUS": {
+          "address": "0x7C40043C",
+          "value": 1793
+        },
+        "DBG_IDS0": {
+          "address": "0x7C400440",
+          "value": 0
+        },
+        "DBG_IDS1": {
+          "address": "0x7C400444",
+          "value": 0
+        }
+      },
+      "dmesg_tail": [
+        "using random host ethernet address",
+        "Mass Storage Function, version: 2009/09/11",
+        "LUN: removable file: (no medium)",
+        "read descriptors",
+        "read strings",
+        "usb0: HOST MAC 00:e0:22:ad:c8:3b",
+        "usb0: MAC 00:05:f7:19:e7:93",
+        "random: dbus-uuidgen: uninitialized urandom read (12 bytes read)",
+        "random: dbus-uuidgen: uninitialized urandom read (8 bytes read)",
+        "random: dbus-daemon: uninitialized urandom read (12 bytes read)",
+        "random: crng init done",
+        "random: 1 urandom warning(s) missed due to ratelimiting",
+        "macb e000b000.ethernet eth0: PHY [e000b000.ethernet-ffffffff:00] driver [RTL8211F Gigabit Ethernet] (irq=POLL)",
+        "macb e000b000.ethernet eth0: configuring for phy/rgmii-id link mode",
+        "macb e000b000.ethernet eth0: Link is Up - 100Mbps/Full - flow control off",
+        "loop7: detected capacity change from 0 to 61440",
+        "8<--- cut here ---",
+        "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6f3b004",
+        "pgd = b648bb2a",
+        "[b6f3b004] *pgd=048bb831, *pte=79040783, *ppte=79040e33",
+        "8<--- cut here ---",
+        "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6fe4004",
+        "pgd = 27bf8568",
+        "[b6fe4004] *pgd=048f8831, *pte=79040783, *ppte=79040e33",
+        "8<--- cut here ---",
+        "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6fd5004",
+        "pgd = b1945e69",
+        "[b6fd5004] *pgd=04846831, *pte=79040783, *ppte=79040e33",
+        "8<--- cut here ---",
+        "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6fc2004",
+        "pgd = fcf9fbbe",
+        "[b6fc2004] *pgd=04ae5831, *pte=79040783, *ppte=79040e33",
+        "8<--- cut here ---",
+        "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6fa2004",
+        "pgd = 602f0645",
+        "[b6fa2004] *pgd=0498a831, *pte=79040783, *ppte=79040e33",
+        "8<--- cut here ---",
+        "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6f59004",
+        "pgd = 8230d84d",
+        "[b6f59004] *pgd=01335831, *pte=79040783, *ppte=79040e33"
+      ]
+    }
+  ]
+}

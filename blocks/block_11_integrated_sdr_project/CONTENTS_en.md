@@ -16,6 +16,7 @@
 5. building the AD9361 gpreg burst overlay and launching the first discovery burst
 6. sweeping RF gain and start offset to recover the first burst bits
 7. capturing a timed RX snapshot around the discovery burst
+8. reproducing contention between host IIO capture and gpreg burst control
 
 ## Review and discussion questions
 1. Which limitations or tradeoffs are central to this block?

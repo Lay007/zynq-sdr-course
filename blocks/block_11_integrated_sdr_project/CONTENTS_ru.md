@@ -16,6 +16,7 @@
 5. сборка gpreg overlay для AD9361 и первый discovery burst
 6. sweep по RX gain и start offset для первых восстановленных битов
 7. timed IIO snapshot вокруг discovery burst и проверка RX buffer refill
+8. probe на contention между host IIO capture и gpreg burst control
 
 ## Контрольные вопросы и обсуждение
 1. Какие ограничения или компромиссы являются ключевыми для темы блока?
