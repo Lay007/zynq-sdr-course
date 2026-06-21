@@ -1,18 +1,40 @@
 # Course BPSK FMCOMMS2 Overlay for the CLG400 Zynq SDR
 
-This directory is the course-specific Vivado overlay for the imported AD9361/FMCOMMS2 reference captured from the working board image. It keeps the vendor HDL baseline intact and adds one deterministic BPSK burst path suitable for the first over-the-air discovery experiment.
+This directory is the course-specific Vivado overlay for the imported AD9361/FMCOMMS2 reference captured from the working board image. It keeps the vendor HDL baseline intact and adds a staged BPSK reintegration path that can be enabled one slice at a time.
 
 ## What this overlay changes
 
 - targets the real board part `xc7z020clg400-2`;
 - reuses the imported vendor AD9361 block-design shell from `vendor_system_bd_clg400.tcl`;
 - adds an `axi_gpreg` control/status plane at `0x79040000`;
-- inserts `bpsk_zynq_ber_gpreg_bridge.v`, which clocks the modem from `util_ad9361_divclk/clk_out`;
+- stages `bpsk_zynq_ber_gpreg_bridge.v`, which clocks the modem from `util_ad9361_divclk/clk_out`;
 - keeps the optional `axi_gpreg` clock-monitor input disabled, because the live overlap probe on `2026-06-21` linked that path to AXI-Lite external-abort failures during concurrent host IIO capture;
-- routes `RX1 I/Q` samples from `util_ad9361_adc_fifo` into the BPSK BER core;
-- keeps the stock DAC DMA and `util_ad9361_dac_upack` transmit path untouched in the current clean-boot bring-up variant, while the course modem still exposes its internal `tx_sample_bus` for the later TX reintegration step.
+- can route `RX1 I/Q` samples from `util_ad9361_adc_fifo` into the BPSK BER core in the intermediate `bridge_rx_only` mode;
+- keeps the stock DAC DMA and `util_ad9361_dac_upack` transmit path untouched in both checked-in non-vendor modes, while the course modem still exposes its internal `tx_sample_bus` for the later TX reintegration step.
 
-That last point is intentional: this overlay is currently the safe `RX/control` baseline used to re-establish clean AD9361 boot and IIO visibility before the deterministic burst waveform is reattached to the live TX path.
+That last point is intentional: this overlay is currently used to re-establish clean AD9361 boot and IIO visibility before the deterministic burst waveform is reattached to the live TX path.
+
+## Overlay modes
+
+`system_bd.tcl` supports three explicit modes:
+
+- `vendor_only`: leave the imported vendor shell untouched;
+- `gpreg_only`: add only the PS-visible `axi_gpreg` window and a signature-safe control-plane baseline;
+- `bridge_rx_only`: keep the vendor DAC/TX path untouched, but reconnect the sample-domain BPSK bridge and the `RX1` sample tap so timeout/status behavior can be revalidated before TX reintegration.
+
+The safe default remains `gpreg_only`. To build the intermediate bridge mode in PowerShell:
+
+```powershell
+$env:COURSE_OVERLAY_MODE = "bridge_rx_only"
+vivado -mode batch -source hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/system_project.tcl
+Remove-Item Env:COURSE_OVERLAY_MODE
+```
+
+That intermediate mode is now Vivado-validated: on `2026-06-21`, it completed
+`system_project.tcl`, `build_bitstream.tcl`, `write_bitstream`, and XSA export
+successfully. It is not yet boot-validated on hardware, because the resulting
+`system.bit.bin` still triggers `ad9361 spi0.0: Calibration TIMEOUT (0x244,
+0x80)` during clean boot.
 
 ## Control-plane contract
 
@@ -64,7 +86,7 @@ The current safe engineering assumption is:
 
 - use this overlay as a boot-time PL image, not as a hot PL reload on top of a live Linux IIO stack;
 - when booting it from the stock Pluto-like SD image, use `../../boot/course_clean/uEnv_course_bpsk_overlay.txt` as the FAT-root `uEnv.txt` so U-Boot removes the stale `/fpga-axi/i2c@41600000` and `/fpga-axi/mwipcore@43c00000` Linux nodes before `bootm`;
-- keep the vendor TX FIFO path untouched in this bring-up phase; treat the current bitstream as a control-plane and RX-observation overlay, not yet as the final burst-TX image;
+- keep the vendor TX FIFO path untouched in this bring-up phase; treat the checked-in non-vendor modes as control-plane / RX-observation overlays, not yet as the final burst-TX image;
 - if you must reload it at runtime for debugging, re-validate both `iio_readdev` and `axi_gpreg` access afterwards before trusting any BER or RF result.
 
 That guidance is based on the live `2026-06-21` probe:
@@ -73,7 +95,7 @@ That guidance is based on the live `2026-06-21` probe:
 - reloading the new PL image through `fpga_manager` while Linux was already running left `gpreg` readable again, but standalone `iio_readdev` capture no longer refilled cleanly;
 - manually booting Linux after a real U-Boot `fpga load` of the course bitstream showed that deleting the DAC DMA path from the PL shell causes a kernel panic in `axi_dmac_probe()`;
 - after restoring the DAC DMA shell and the stale Linux DT fixups, the next remaining live blocker was AD9361 calibration timeout under the TX-override bitstream itself;
-- the current debug step therefore backs the live DAC FIFO path out completely and keeps only the gpreg/RX integration until AD9361 boot is stable again;
+- the current debug step therefore keeps the live DAC FIFO path untouched and uses either `gpreg_only` or the new intermediate `bridge_rx_only` mode until AD9361 boot is stable again;
 - rebuilding even the `vendor_only` shell from the recovered CLG400 sources still left AD9361 stuck in `Calibration TIMEOUT (0x244, 0x80)` during clean boot, so the current known-good PL baseline is the stock `system_top.bit` partition extracted from `../../boot/sd_image/BOOT.bin`;
 - the stock Linux device tree still described the removed `i2c@41600000` and `mwipcore@43c00000` PL nodes, so clean-boot bring-up also needs the U-Boot-side device-tree fixup above;
 - attempting to recover the RX DMA path with Linux `unbind` / `bind` triggered a kernel oops in `dma_channel_rebalance()`.

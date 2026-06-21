@@ -54,10 +54,26 @@
           "Pluto>"
         ]
       }
+    },
+    {
+      "candidate_id": "course_bpsk_fmcomms2_zc702::bridge_rx_only",
+      "size_bytes": 2276928,
+      "md5": "150bc5c0a6e7abeed05f7250c93dcdd2",
+      "validation": {
+        "result": "fail",
+        "failure_mode": "AD9361 calibration timeout during clean boot",
+        "ad9361_initialized": false,
+        "iio_device_count": 1,
+        "notable_dmesg_lines": [
+          "ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)",
+          "ad9361: probe of spi0.0 failed with error -110"
+        ],
+        "note": "This candidate passed Vivado project creation, implementation, bitstream generation, and XSA export before board-level boot validation."
+      }
     }
   ],
   "engineering_conclusion": {
     "boot_reference": "Use the extracted stock BOOT.bin PL partition as the only validated boot-time PL shell.",
-    "next_step": "Reintroduce course RTL incrementally around that exact stock shell, then rerun clean-boot validation before any renewed RF discovery sweep."
+    "next_step": "Recover a source-level handoff that reproduces the stock clean-boot shell before trusting any rebuilt course overlay for renewed RF discovery."
   }
 }

@@ -62,6 +62,9 @@ equivalent to the stock boot-time shell:
 - `AD936X_only_PL.zip::AD936X_only_PL.runs/impl_1/system_top.bit` is worse:
   after U-Boot `fpga load`, the board can no longer read the Linux partition
   and drops to a `Pluto>` prompt with `bad MBR sector signature 0xb23e`.
+- the course-built `bridge_rx_only` candidate also now builds cleanly in Vivado
+  and exports an XSA, but it still fails the same AD9361 clean-boot
+  calibration check as soon as Linux probes `spi0.0`.
 
 Practical consequence: the extracted stock `BOOT.bin` partition is currently
 the only validated boot-time PL reference for the course.

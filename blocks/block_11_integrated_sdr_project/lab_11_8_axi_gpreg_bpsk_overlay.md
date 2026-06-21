@@ -154,13 +154,14 @@ Current checked-in safety baseline:
 
 - the boot-time PL reference is `hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin`;
 - `hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py` passes against that extracted stock image with AD9361 initialized and `4` IIO devices alive;
+- the new `bridge_rx_only` mode now passes Vivado project creation, implementation, bitstream generation, and XSA export;
 - regenerated boot-time candidates from both `AD936X_PL.zip` and `AD936X_only_PL.zip` were rejected and summarized in `docs/assets/lab112_clean_boot_pl_validation.json`.
 
 Interpretation:
 
 - the PS-to-PL gpreg control plane was validated on real hardware at least once in the earlier burst-enabled overlay;
-- the current checked-in HDL intentionally steps back to a smaller boot-safe scope;
-- the immediate next task is not BER tuning but restoring the sample-domain bridge around the exact stock shell, then rerunning this helper under clean boot.
+- the current checked-in HDL now also includes an intermediate `bridge_rx_only` reintegration mode that is validated in Vivado but not yet in clean boot;
+- the immediate next task is not BER tuning but understanding why every rebuilt shell, including `bridge_rx_only`, still trips AD9361 calibration while the extracted stock PL does not.
 
 ## Next gated re-enable order
 
