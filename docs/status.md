@@ -20,13 +20,13 @@ This page is the top-level engineering status board for the course. It is intent
 | 02 | Signals and sampling | Ready | Executable | Python path | Ready | Not required | Labs | Add MATLAB/C++ translations and a metadata-mistake replay package. |
 | 03 | DSP basics | Ready | Executable | Python / MATLAB / C++ path | Ready | Not required | Labs | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
 | 04 | Simulink and fixed-point | Ready | Executable | Python / MATLAB references + executable BPSK `.slx` models | Ready | Not required | Labs | Constrain the BPSK Simulink path further for HDL Coder export and integration handoff. |
-| 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches + AXI-Lite-controlled Zynq-ready BPSK BER top-level + gpreg-based AD9361 overlay scaffolding + integrated CLG400 bitstream/XSA + first live gpreg timeout evidence | Ready | Hardware pending | HDL CI | Tune the live RF path until the discovery burst recovers non-zero bits, then capture BER evidence. |
+| 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches + AXI-Lite-controlled Zynq-ready BPSK BER top-level + gpreg-based AD9361 overlay scaffolding + integrated CLG400 bitstream/XSA + live proof that the rebuilt vendor shell still diverges from the stock BOOT.bin PL image | Ready | Hardware pending | HDL CI | Recover a bit-accurate vendor PL baseline from the shipped boot image, then reintroduce course RTL from that known-good shell. |
 | 06 | RF frontend and AD9363 | Ready | Executable | Analysis scripts | Ready | Hardware pending | Labs | Build the AD9361 RX gain/overload table from the clean-image baseline. |
 | 07 | TX/RX chains | Ready | Executable | DUC/DDC demos | Ready | Hardware pending | Labs | Add RF loopback measurement package. |
 | 08 | Modulation and synchronization | Ready | Executable | Synchronization demos | Ready | Optional | Sync CI | Add impairment sweeps and BER/EVM dashboards. |
 | 09 | Recording and analysis tools | Ready | Executable | IQ readers | Ready | Hardware pending | Recording CI | Update QPSK dataset manifest with real checksum or synthetic generator. |
 | 10 | KiCad and basic electronics | Ready | Draft | Calculators / templates | Partial | Bench pending | Docs | Add measured breadboard photos and KiCad exports. |
-| 11 | Integrated SDR project | Ready | Executable | Simulation package + BPSK reference package + AXI-Lite helper + gpreg-based AD9361 burst helper + live `done+timeout` bring-up report + overlap contention probe | Ready | Hardware pending | Labs | Keep the stock Linux DMA shell compatible during clean-boot overlay loading, then revalidate `iio_readdev` + `axi_gpreg` together before returning to RF recovery and the first non-zero `RECEIVED_BITS`. |
+| 11 | Integrated SDR project | Ready | Executable | Simulation package + BPSK reference package + AXI-Lite helper + gpreg-based AD9361 burst helper + live `done+timeout` bring-up report + overlap contention probe + extracted stock BOOT.bin PL baseline that clean-boots with AD9361 and IIO intact | Ready | Hardware pending | Labs | Preserve the extracted stock PL baseline as the boot reference, then rebuild the first custom handoff around that exact shell before returning to RF recovery and the first non-zero `RECEIVED_BITS`. |
 | 12 | Final projects | Ready | Draft | Templates + rubric | Partial | Depends on project | Docs | Use grading rubric and example report skeleton for first final project. |
 
 ## Newly added hardening artifacts
@@ -44,6 +44,8 @@ This page is the top-level engineering status board for the course. It is intent
 | `docs/iq-demo-dataset-manifest.md` | Dataset contract for QPSK replay/capture work. |
 | `datasets/demo_qpsk_capture/manifest.yaml` | First manifest-only QPSK dataset package. |
 | `hardware/7020_ad936x_sdr/boot/course_clean/autorun.sh` | Clean stock-image management overlay with fixed `eth0`, DHCP, and safe TX defaults. |
+| `hardware/7020_ad936x_sdr/boot/course_clean/uEnv_course_bpsk_overlay.txt` | Boot-time U-Boot overlay that loads the course PL image and removes stale Linux PL nodes before `bootm`. |
+| `hardware/7020_ad936x_sdr/boot/extract_stock_system_top_partition.py` | Reproducible extractor for the known-good `system_top.bit` PL partition embedded in `boot/sd_image/BOOT.bin`. |
 | `datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454.yaml` | First clean-image Zynq RX-only CI16 hardware dataset manifest. |
 | `templates/fpga_resource_report.template.md` | Reusable FPGA report template. |
 | `templates/student_assignment.template.md` | Reusable student assignment template. |

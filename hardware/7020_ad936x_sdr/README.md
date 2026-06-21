@@ -17,7 +17,7 @@ The original vendor folder mixes useful board assets with heavy archives, Window
 |---|---|
 | `docs/` | board PDFs copied from the vendor bundle |
 | `boot/sd_image/` | extracted SD boot files: `BOOT.bin`, `uImage`, `devicetree.dtb`, `uramdisk.image.gz`, `uEnv.txt` |
-| `boot/course_clean/` | minimal post-boot overlay for the stock SD image: deterministic `eth0`, DHCP, safe TX defaults via `autorun.sh` |
+| `boot/course_clean/` | course-owned boot overlay: deterministic `eth0`, DHCP, safe TX defaults via `autorun.sh`, plus a U-Boot `uEnv` override for the clean BPSK PL image |
 | `boot/notes/` | vendor boot notes and small screenshots for FAT/EXT/IIO setup |
 | `hdl/adi_fmcomms2_reference/` | curated HDL reference extracted from `AD936X_PL.zip` |
 | `hdl/course_bpsk_fmcomms2_zc702/` | course-specific Vivado overlay that inserts the deterministic BPSK modem into the imported AD9361 baseline |
@@ -32,6 +32,7 @@ The original vendor folder mixes useful board assets with heavy archives, Window
 | [`docs/7020_936x_SDR.pdf`](docs/7020_936x_SDR.pdf) | board description PDF from the vendor package |
 | [`docs/Fish_Ball_SDR_ru.pdf`](docs/Fish_Ball_SDR_ru.pdf) | Russian board guide PDF |
 | [`boot/notes/pluto_sd_boot_readme.txt`](boot/notes/pluto_sd_boot_readme.txt) | shortest path for SD-card boot |
+| [`boot/extract_stock_system_top_partition.py`](boot/extract_stock_system_top_partition.py) | extracts the known-good PL partition from `boot/sd_image/BOOT.bin` when a rebuilt Vivado bitstream is still being debugged |
 | [`hdl/adi_fmcomms2_reference/projects/common/zc702/zc702_system_bd.tcl`](hdl/adi_fmcomms2_reference/projects/common/zc702/zc702_system_bd.tcl) | common Zynq-7020 board TCL baseline |
 | [`hdl/adi_fmcomms2_reference/projects/scripts/adi_project_xilinx.tcl`](hdl/adi_fmcomms2_reference/projects/scripts/adi_project_xilinx.tcl) | ADI Xilinx project-generation helper |
 | [`hdl/adi_fmcomms2_reference/projects/fmcomms2/zc702/zc702.xpr`](hdl/adi_fmcomms2_reference/projects/fmcomms2/zc702/zc702.xpr) | generated Vivado project snapshot |
@@ -49,10 +50,18 @@ The original vendor folder mixes useful board assets with heavy archives, Window
 1. Read the board PDFs in `docs/`.
 2. Prepare the SD card using `boot/sd_image/` and the notes in `boot/notes/`.
 3. If you need the course-clean management profile on the stock Pluto-like image, apply `boot/course_clean/autorun.sh` as `/mnt/jffs2/autorun.sh`.
-4. Inspect the AD936x no-OS app in `ps/ad936x_no_os_reference/` and compare its parameters with your board target.
-5. Use `ps/bringup_tests/` for board sanity checks before SDR-specific debugging.
-6. Use the HDL reference under `hdl/adi_fmcomms2_reference/` as the baseline when mapping course HDL work toward a Zynq/AD936x platform.
-7. Use `hdl/course_bpsk_fmcomms2_zc702/` when you need the first clean course-owned modem overlay instead of the untouched vendor baseline.
+4. If you need the first clean boot-time BPSK overlay, place the generated `system.bit.bin` on the FAT partition root and copy `boot/course_clean/uEnv_course_bpsk_overlay.txt` there as `uEnv.txt`.
+5. If the rebuilt Vivado `system.bit.bin` still breaks AD9361 calibration, regenerate the known-good stock PL partition instead:
+
+```bash
+python hardware/7020_ad936x_sdr/boot/extract_stock_system_top_partition.py
+```
+
+This emits `hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin`, which was validated on `2026-06-21` as a working `system.bit.bin` payload for the clean boot overlay.
+6. Inspect the AD936x no-OS app in `ps/ad936x_no_os_reference/` and compare its parameters with your board target.
+7. Use `ps/bringup_tests/` for board sanity checks before SDR-specific debugging.
+8. Use the HDL reference under `hdl/adi_fmcomms2_reference/` as the baseline when mapping course HDL work toward a Zynq/AD936x platform.
+9. Use `hdl/course_bpsk_fmcomms2_zc702/` when you need the first clean course-owned modem overlay instead of the untouched vendor baseline.
 
 ## Deliberately omitted
 

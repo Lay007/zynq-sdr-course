@@ -1,0 +1,9 @@
+# Minimal U-Boot environment overlay for the course-owned BPSK PL image.
+# Copy this file to the FAT boot partition root as /uEnv.txt when booting the
+# stock Pluto-like Linux image together with system.bit.bin.
+
+modeboot=sdboot
+course_pl_bitstream=system.bit.bin
+course_load_pl=if test -e mmc 0 /${course_pl_bitstream}; then echo Loading course PL image ${course_pl_bitstream}... && load mmc 0 ${loadbit_addr} ${course_pl_bitstream} && fpga load 0 ${loadbit_addr} ${filesize}; else echo Course PL image ${course_pl_bitstream} not found on the FAT partition.; fi
+course_fixup_pl_dtb=fdt addr ${devicetree_load_address}; if fdt rm /fpga-axi/i2c@41600000; then echo Removed stale /fpga-axi/i2c@41600000 from the Linux device tree.; fi; if fdt rm /fpga-axi/mwipcore@43c00000; then echo Removed stale /fpga-axi/mwipcore@43c00000 from the Linux device tree.; fi
+sdboot=if mmcinfo; then run uenvboot; run course_load_pl; echo Copying Linux from SD to RAM... && load mmc 0 ${fit_load_address} ${kernel_image} && load mmc 0 ${devicetree_load_address} ${devicetree_image} && load mmc 0 ${ramdisk_load_address} ${ramdisk_image} && run course_fixup_pl_dtb && bootm ${fit_load_address} ${ramdisk_load_address} ${devicetree_load_address}; fi
