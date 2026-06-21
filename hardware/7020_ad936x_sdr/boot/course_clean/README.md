@@ -39,6 +39,13 @@ hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin
 That extracted blob was verified as a working replacement for FAT-root
 `system.bit.bin` under this clean boot overlay.
 
+To rerun that check from the host, use:
+
+```bash
+python hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py \
+  --system-bit-bin hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin
+```
+
 ## Expected boot files
 
 Use the stock root boot set from:
