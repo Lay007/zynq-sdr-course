@@ -30,6 +30,7 @@ module bpsk_zynq_ber_gpreg_bridge #(
     output wire [31:0]              gp_total_errors,
     output wire [31:0]              gp_payload_errors,
     output wire [31:0]              gp_signature,
+    output wire                     tx_path_active,
     output wire                     burst_out_valid,
     output wire signed [W-1:0]      burst_out_i,
     output wire signed [W-1:0]      burst_out_q,
@@ -62,6 +63,7 @@ reg [INDEX_W-1:0] frame_bit_count_cfg = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] preamble_count_cfg = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] start_offset_cfg = {INDEX_W{1'b0}};
 reg start_pulse_sample = 1'b0;
+reg tx_path_active_sample = 1'b0;
 reg done_sticky_sample = 1'b0;
 reg timeout_sticky_sample = 1'b0;
 reg [INDEX_W-1:0] received_bits_sample = {INDEX_W{1'b0}};
@@ -125,6 +127,7 @@ always @(posedge sample_clk) begin
         preamble_count_cfg <= {INDEX_W{1'b0}};
         start_offset_cfg <= {INDEX_W{1'b0}};
         start_pulse_sample <= 1'b0;
+        tx_path_active_sample <= 1'b0;
         done_sticky_sample <= 1'b0;
         timeout_sticky_sample <= 1'b0;
         received_bits_sample <= {INDEX_W{1'b0}};
@@ -147,6 +150,7 @@ always @(posedge sample_clk) begin
             preamble_count_cfg <= preamble_sync[INDEX_W-1:0];
             start_offset_cfg <= offset_sync[INDEX_W-1:0];
             start_pulse_sample <= 1'b1;
+            tx_path_active_sample <= 1'b1;
             done_sticky_sample <= 1'b0;
             timeout_sticky_sample <= 1'b0;
             received_bits_sample <= {INDEX_W{1'b0}};
@@ -158,10 +162,12 @@ always @(posedge sample_clk) begin
         end
 
         if (core_timed_out) begin
+            tx_path_active_sample <= 1'b0;
             timeout_sticky_sample <= 1'b1;
         end
 
         if (core_done) begin
+            tx_path_active_sample <= 1'b0;
             done_sticky_sample <= 1'b1;
             received_bits_sample <= received_bits;
             total_errors_sample <= total_errors;
@@ -197,5 +203,6 @@ assign gp_received_bits = received_sync_ctrl;
 assign gp_total_errors = total_sync_ctrl;
 assign gp_payload_errors = payload_sync_ctrl;
 assign gp_signature = SIGNATURE;
+assign tx_path_active = tx_path_active_sample;
 
 endmodule

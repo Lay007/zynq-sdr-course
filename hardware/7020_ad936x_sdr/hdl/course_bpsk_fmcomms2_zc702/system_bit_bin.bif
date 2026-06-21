@@ -1,0 +1,4 @@
+all:
+{
+  build/course_bpsk_fmcomms2_zc702.runs/impl_1/system_top.bit
+}
