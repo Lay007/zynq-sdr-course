@@ -34,6 +34,7 @@ The original vendor folder mixes useful board assets with heavy archives, Window
 | [`boot/notes/pluto_sd_boot_readme.txt`](boot/notes/pluto_sd_boot_readme.txt) | shortest path for SD-card boot |
 | [`boot/extract_stock_system_top_partition.py`](boot/extract_stock_system_top_partition.py) | extracts the known-good PL partition from `boot/sd_image/BOOT.bin` when a rebuilt Vivado bitstream is still being debugged |
 | [`boot/validate_clean_boot_overlay.py`](boot/validate_clean_boot_overlay.py) | uploads a candidate `system.bit.bin`, reboots the board, captures UART, and verifies AD9361/IIO bring-up |
+| [`../../docs/assets/lab112_clean_boot_pl_validation.json`](../../docs/assets/lab112_clean_boot_pl_validation.json) | persistent summary of which candidate boot-time PL images clean-booted successfully and which ones failed |
 | [`hdl/adi_fmcomms2_reference/projects/common/zc702/zc702_system_bd.tcl`](hdl/adi_fmcomms2_reference/projects/common/zc702/zc702_system_bd.tcl) | common Zynq-7020 board TCL baseline |
 | [`hdl/adi_fmcomms2_reference/projects/scripts/adi_project_xilinx.tcl`](hdl/adi_fmcomms2_reference/projects/scripts/adi_project_xilinx.tcl) | ADI Xilinx project-generation helper |
 | [`hdl/adi_fmcomms2_reference/projects/fmcomms2/zc702/zc702.xpr`](hdl/adi_fmcomms2_reference/projects/fmcomms2/zc702/zc702.xpr) | generated Vivado project snapshot |
@@ -67,10 +68,11 @@ python hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py \
 ```
 
 That script uploads the file to the FAT boot partition, reboots the board, captures UART, and checks that AD9361 plus the expected IIO devices come back cleanly.
-7. Inspect the AD936x no-OS app in `ps/ad936x_no_os_reference/` and compare its parameters with your board target.
-8. Use `ps/bringup_tests/` for board sanity checks before SDR-specific debugging.
-9. Use the HDL reference under `hdl/adi_fmcomms2_reference/` as the baseline when mapping course HDL work toward a Zynq/AD936x platform.
-10. Use `hdl/course_bpsk_fmcomms2_zc702/` when you need the first clean course-owned modem overlay instead of the untouched vendor baseline.
+7. Treat the extracted stock PL as the only validated boot-time baseline for now. On `2026-06-21`, both regenerated candidate images from `AD936X_PL.zip` and `AD936X_only_PL.zip` failed clean-boot validation in different ways; see `../../docs/assets/lab112_clean_boot_pl_validation.json` for the persistent summary.
+8. Inspect the AD936x no-OS app in `ps/ad936x_no_os_reference/` and compare its parameters with your board target.
+9. Use `ps/bringup_tests/` for board sanity checks before SDR-specific debugging.
+10. Use the HDL reference under `hdl/adi_fmcomms2_reference/` as the baseline when mapping course HDL work toward a Zynq/AD936x platform.
+11. Use `hdl/course_bpsk_fmcomms2_zc702/` when you need the next course-owned overlay, but revalidate clean boot against the stock baseline before trusting any RF result.
 
 ## Deliberately omitted
 

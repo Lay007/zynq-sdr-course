@@ -109,6 +109,7 @@ blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/*.ci16
 
 # Local hardware scratch / generated board probes
 NA/
+tmp/
 docs/assets/lab63_zynq_iio_probe_live.json
 
 # Vivado IP packaging artifacts generated during local overlay builds

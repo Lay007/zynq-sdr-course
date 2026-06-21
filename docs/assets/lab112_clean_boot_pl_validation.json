@@ -1,0 +1,63 @@
+{
+  "validated_at_utc": "2026-06-21T19:30:00Z",
+  "board_profile": "FISH Ball PlutoSDR Rev.A (Z7020/AD9361)",
+  "boot_overlay": {
+    "fat_root_bitstream_name": "system.bit.bin",
+    "validator": "hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py"
+  },
+  "known_good_baseline": {
+    "candidate_id": "stock_system_top_from_BOOT.bin",
+    "source": "hardware/7020_ad936x_sdr/boot/sd_image/BOOT.bin::system_top.bit",
+    "path": "hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin",
+    "size_bytes": 2430912,
+    "md5": "0da69e4ce2f2c475fd8f5c1ea48f6142",
+    "validation": {
+      "result": "pass",
+      "ad9361_initialized": true,
+      "iio_device_count": 4,
+      "iio_devices": [
+        "iio:device0",
+        "iio:device1",
+        "iio:device2",
+        "iio:device3"
+      ]
+    }
+  },
+  "rejected_candidates": [
+    {
+      "candidate_id": "AD936X_PL.zip::projects/fmcomms2/zc702/zc702.runs/impl_1/system_top.bit",
+      "size_bytes": 2356256,
+      "md5": "c827619ef41fb0ea7c6381a29cc27784",
+      "validation": {
+        "result": "fail",
+        "failure_mode": "AD9361 calibration timeout during clean boot",
+        "ad9361_initialized": false,
+        "iio_device_count": 1,
+        "notable_dmesg_lines": [
+          "ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)",
+          "ad9361: probe of spi0.0 failed with error -110"
+        ]
+      }
+    },
+    {
+      "candidate_id": "AD936X_only_PL.zip::AD936X_only_PL.runs/impl_1/system_top.bit",
+      "size_bytes": 4045568,
+      "md5": "0790785aa8c5018a15f11aa1f018cf48",
+      "validation": {
+        "result": "fail",
+        "failure_mode": "U-Boot can no longer read the Linux partition after fpga load",
+        "ad9361_initialized": false,
+        "iio_device_count": 0,
+        "notable_uart_lines": [
+          "bad MBR sector signature 0xb23e",
+          "** Invalid partition 1 **",
+          "Pluto>"
+        ]
+      }
+    }
+  ],
+  "engineering_conclusion": {
+    "boot_reference": "Use the extracted stock BOOT.bin PL partition as the only validated boot-time PL shell.",
+    "next_step": "Reintroduce course RTL incrementally around that exact stock shell, then rerun clean-boot validation before any renewed RF discovery sweep."
+  }
+}

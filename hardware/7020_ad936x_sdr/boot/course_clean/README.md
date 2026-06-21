@@ -39,12 +39,49 @@ hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin
 That extracted blob was verified as a working replacement for FAT-root
 `system.bit.bin` under this clean boot overlay.
 
+Persistent validation summary:
+
+```text
+docs/assets/lab112_clean_boot_pl_validation.json
+```
+
 To rerun that check from the host, use:
 
 ```bash
 python hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py \
   --system-bit-bin hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin
 ```
+
+## Rejected reconstructed boot shells
+
+The two regenerated vendor candidates checked on `2026-06-21` are not
+equivalent to the stock boot-time shell:
+
+- `AD936X_PL.zip::projects/fmcomms2/zc702/.../system_top.bit` still reaches
+  Linux, but `ad9361 spi0.0` fails with `Calibration TIMEOUT (0x244, 0x80)`;
+- `AD936X_only_PL.zip::AD936X_only_PL.runs/impl_1/system_top.bit` is worse:
+  after U-Boot `fpga load`, the board can no longer read the Linux partition
+  and drops to a `Pluto>` prompt with `bad MBR sector signature 0xb23e`.
+
+Practical consequence: the extracted stock `BOOT.bin` partition is currently
+the only validated boot-time PL reference for the course.
+
+## Manual recovery from a bad `system.bit.bin`
+
+If a test `system.bit.bin` breaks Linux boot after `fpga load`, recover from the
+UART console by interrupting U-Boot before `Loading course PL image
+system.bit.bin...`, then manually booting the stock SD payload:
+
+```text
+load mmc 0 0x2080000 uImage
+load mmc 0 0x2000000 devicetree.dtb
+load mmc 0 0x4000000 uramdisk.image.gz
+run course_fixup_pl_dtb
+bootm 0x2080000 0x4000000 0x2000000
+```
+
+After Linux is back, immediately restore the known-good stock PL file on the
+FAT partition and rerun the validator above.
 
 ## Expected boot files
 
