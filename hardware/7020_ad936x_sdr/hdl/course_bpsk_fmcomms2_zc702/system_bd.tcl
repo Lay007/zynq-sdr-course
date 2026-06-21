@@ -3,9 +3,10 @@
 # core. The base shell comes from the vendor handoff project captured from the
 # board image, then the course-specific modem bridge is layered on top.
 #
-# The RX DMA path remains intact for observation/debug. The TX DMA path is
-# intentionally bypassed for the first discovery-burst design so that the
-# course modem core drives the DAC FIFO directly with one reproducible burst.
+# The RX DMA path remains intact for observation/debug. The TX DMA-side Linux
+# probe contract also remains intact: the course modem overrides only the DAC
+# FIFO write-side sample stream, while the original DAC DMA / upack chain stays
+# instantiated so the stock device tree still matches the PL shell.
 
 set script_dir [file normalize [file dirname [info script]]]
 set vendor_shell_bd [file join $script_dir "vendor_system_bd_clg400.tcl"]
@@ -31,33 +32,13 @@ proc course_disconnect_bd_pin {pin_name} {
   }
 }
 
-proc course_disconnect_bd_intf_pin {pin_name} {
-  set pin [get_bd_intf_pins -quiet $pin_name]
-  if {[llength $pin] == 0} {
-    return
-  }
-
-  foreach net [get_bd_intf_nets -quiet -of_objects $pin] {
-    disconnect_bd_intf_net $net $pin
-  }
-}
-
-proc course_delete_bd_net {net_name} {
-  delete_bd_objs -quiet [get_bd_nets -quiet $net_name]
-}
-
-proc course_delete_bd_intf_net {net_name} {
-  delete_bd_objs -quiet [get_bd_intf_nets -quiet $net_name]
-}
-
 # PS-visible generic register block for the modem control/status plane.
 ad_ip_instance axi_gpreg axi_gpreg_bpsk
 ad_ip_parameter axi_gpreg_bpsk CONFIG.ID 1112560459
 ad_ip_parameter axi_gpreg_bpsk CONFIG.NUM_OF_IO 5
-ad_ip_parameter axi_gpreg_bpsk CONFIG.NUM_OF_CLK_MONS 1
+ad_ip_parameter axi_gpreg_bpsk CONFIG.NUM_OF_CLK_MONS 0
 ad_connect sys_cpu_clk axi_gpreg_bpsk/s_axi_aclk
 ad_connect sys_cpu_resetn axi_gpreg_bpsk/s_axi_aresetn
-ad_connect util_ad9361_divclk/clk_out axi_gpreg_bpsk/d_clk_0
 ad_cpu_interconnect 0x79040000 axi_gpreg_bpsk
 
 # Sample-domain bridge around the deterministic BPSK modem.
@@ -95,15 +76,10 @@ ad_connect util_ad9361_adc_fifo/dout_data_0 bpsk_rx_sample_bus/In1
 ad_connect util_ad9361_adc_fifo/dout_valid_0 bpsk_rx_sample_bus/In2
 ad_connect bpsk_rx_sample_bus/dout bpsk_zynq_ber_gpreg_bridge_0/rx_sample_bus
 
-# Reuse the existing DAC FIFO boundary and inject the deterministic burst on
-# its divided-clock write side instead of driving the raw DAC sample pins.
-course_disconnect_bd_intf_pin axi_ad9361_dac_dma/m_axis
-course_disconnect_bd_intf_pin axi_ad9361_dac_dma/m_src_axi
-course_disconnect_bd_intf_pin axi_ad9361_dac_dma/s_axi
-course_disconnect_bd_intf_pin axi_hp2_interconnect/S00_AXI
-course_disconnect_bd_intf_pin axi_hp2_interconnect/M00_AXI
-course_disconnect_bd_intf_pin sys_ps7/S_AXI_HP2
-course_disconnect_bd_intf_pin util_ad9361_dac_upack/s_axis
+# Reuse the existing DAC FIFO boundary and override only its divided-clock
+# write-side sample inputs. The stock Linux image still probes the DAC DMA and
+# util_upack path, so keep those blocks alive and insert a small mux before the
+# FIFO instead of deleting the TX DMA fabric from the PL shell.
 foreach pin_name {
   axi_ad9361_dac_fifo/din_data_0
   axi_ad9361_dac_fifo/din_data_1
@@ -114,34 +90,9 @@ foreach pin_name {
   axi_ad9361_dac_fifo/din_valid_in_2
   axi_ad9361_dac_fifo/din_valid_in_3
   axi_ad9361_dac_fifo/din_unf
-  sys_concat_intc/In12
 } {
   course_disconnect_bd_pin $pin_name
 }
-delete_bd_objs [get_bd_cells util_ad9361_dac_upack]
-delete_bd_objs [get_bd_cells axi_ad9361_dac_dma]
-delete_bd_objs [get_bd_cells axi_hp2_interconnect]
-foreach net_name {
-  axi_ad9361_dac_dma_irq
-  util_ad9361_dac_upack_fifo_rd_data_0
-  util_ad9361_dac_upack_fifo_rd_data_1
-  util_ad9361_dac_upack_fifo_rd_data_2
-  util_ad9361_dac_upack_fifo_rd_data_3
-  util_ad9361_dac_upack_fifo_rd_underflow
-  util_ad9361_dac_upack_fifo_rd_valid
-} {
-  course_delete_bd_net $net_name
-}
-foreach net_name {
-  axi_ad9361_dac_dma_m_axis
-  axi_ad9361_dac_dma_m_src_axi
-  axi_cpu_interconnect_M08_AXI
-  axi_hp2_interconnect_M00_AXI
-} {
-  course_delete_bd_intf_net $net_name
-}
-ad_connect GND axi_ad9361_dac_fifo/din_unf
-ad_connect GND sys_concat_intc/In12
 
 ad_ip_instance xlconstant bpsk_const_zero16
 ad_ip_parameter bpsk_const_zero16 CONFIG.CONST_WIDTH 16
@@ -165,14 +116,32 @@ ad_ip_parameter bpsk_tx_valid CONFIG.DIN_FROM 32
 ad_ip_parameter bpsk_tx_valid CONFIG.DIN_TO 32
 ad_ip_parameter bpsk_tx_valid CONFIG.DOUT_WIDTH 1
 
+create_bd_cell -type module -reference course_dac_fifo_source_mux bpsk_dac_fifo_mux
+
 ad_connect bpsk_zynq_ber_gpreg_bridge_0/tx_sample_bus bpsk_tx_i/Din
 ad_connect bpsk_zynq_ber_gpreg_bridge_0/tx_sample_bus bpsk_tx_q/Din
 ad_connect bpsk_zynq_ber_gpreg_bridge_0/tx_sample_bus bpsk_tx_valid/Din
-ad_connect bpsk_tx_i/Dout axi_ad9361_dac_fifo/din_data_0
-ad_connect bpsk_tx_q/Dout axi_ad9361_dac_fifo/din_data_1
-ad_connect bpsk_const_zero16/dout axi_ad9361_dac_fifo/din_data_2
-ad_connect bpsk_const_zero16/dout axi_ad9361_dac_fifo/din_data_3
-ad_connect bpsk_tx_valid/Dout axi_ad9361_dac_fifo/din_valid_in_0
-ad_connect bpsk_tx_valid/Dout axi_ad9361_dac_fifo/din_valid_in_1
-ad_connect bpsk_tx_valid/Dout axi_ad9361_dac_fifo/din_valid_in_2
-ad_connect bpsk_tx_valid/Dout axi_ad9361_dac_fifo/din_valid_in_3
+
+ad_connect VCC bpsk_dac_fifo_mux/select_bpsk
+ad_connect util_ad9361_dac_upack/fifo_rd_data_0 bpsk_dac_fifo_mux/vendor_data_0
+ad_connect util_ad9361_dac_upack/fifo_rd_data_1 bpsk_dac_fifo_mux/vendor_data_1
+ad_connect util_ad9361_dac_upack/fifo_rd_data_2 bpsk_dac_fifo_mux/vendor_data_2
+ad_connect util_ad9361_dac_upack/fifo_rd_data_3 bpsk_dac_fifo_mux/vendor_data_3
+ad_connect util_ad9361_dac_upack/fifo_rd_valid bpsk_dac_fifo_mux/vendor_valid
+ad_connect util_ad9361_dac_upack/fifo_rd_underflow bpsk_dac_fifo_mux/vendor_unf
+ad_connect bpsk_tx_i/Dout bpsk_dac_fifo_mux/bpsk_data_0
+ad_connect bpsk_tx_q/Dout bpsk_dac_fifo_mux/bpsk_data_1
+ad_connect bpsk_const_zero16/dout bpsk_dac_fifo_mux/bpsk_data_2
+ad_connect bpsk_const_zero16/dout bpsk_dac_fifo_mux/bpsk_data_3
+ad_connect bpsk_tx_valid/Dout bpsk_dac_fifo_mux/bpsk_valid
+ad_connect GND bpsk_dac_fifo_mux/bpsk_unf
+
+ad_connect bpsk_dac_fifo_mux/fifo_data_0 axi_ad9361_dac_fifo/din_data_0
+ad_connect bpsk_dac_fifo_mux/fifo_data_1 axi_ad9361_dac_fifo/din_data_1
+ad_connect bpsk_dac_fifo_mux/fifo_data_2 axi_ad9361_dac_fifo/din_data_2
+ad_connect bpsk_dac_fifo_mux/fifo_data_3 axi_ad9361_dac_fifo/din_data_3
+ad_connect bpsk_dac_fifo_mux/fifo_valid axi_ad9361_dac_fifo/din_valid_in_0
+ad_connect bpsk_dac_fifo_mux/fifo_valid axi_ad9361_dac_fifo/din_valid_in_1
+ad_connect bpsk_dac_fifo_mux/fifo_valid axi_ad9361_dac_fifo/din_valid_in_2
+ad_connect bpsk_dac_fifo_mux/fifo_valid axi_ad9361_dac_fifo/din_valid_in_3
+ad_connect bpsk_dac_fifo_mux/fifo_unf axi_ad9361_dac_fifo/din_unf

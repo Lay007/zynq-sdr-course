@@ -8,10 +8,11 @@ This directory is the course-specific Vivado overlay for the imported AD9361/FMC
 - reuses the imported vendor AD9361 block-design shell from `vendor_system_bd_clg400.tcl`;
 - adds an `axi_gpreg` control/status plane at `0x79040000`;
 - inserts `bpsk_zynq_ber_gpreg_bridge.v`, which clocks the modem from `util_ad9361_divclk/clk_out`;
+- keeps the optional `axi_gpreg` clock-monitor input disabled, because the live overlap probe on `2026-06-21` linked that path to AXI-Lite external-abort failures during concurrent host IIO capture;
 - routes `RX1 I/Q` samples from `util_ad9361_adc_fifo` into the BPSK BER core;
-- bypasses the normal TX DMA and removes the unused HP2/DAC-DMA path so the DAC FIFO is driven directly from the BPSK burst generator.
+- keeps the stock DAC DMA and `util_ad9361_dac_upack` blocks instantiated for Linux compatibility, but overrides the DAC FIFO write-side samples through a small mux so the deterministic BPSK burst still owns the RF transmit waveform.
 
-That last point is intentional: this overlay is for the first short discovery burst, not for general IIO TX streaming.
+That last point is intentional: this overlay is for the first short discovery burst, not for general IIO TX streaming, but it no longer breaks the Linux expectation that the DAC DMA path exists in hardware.
 
 ## Control-plane contract
 
@@ -56,6 +57,20 @@ The scripts create the project under `build/` and place the stable handoff artif
 - timing logs: `timing_synth.log` and `timing_impl.log`
 
 The current clean build closes timing and exports `system_top.xsa` without the earlier `bad_timing` fallback.
+
+## Runtime loading note
+
+The current safe engineering assumption is:
+
+- use this overlay as a boot-time PL image, not as a hot PL reload on top of a live Linux IIO stack;
+- if you must reload it at runtime for debugging, re-validate both `iio_readdev` and `axi_gpreg` access afterwards before trusting any BER or RF result.
+
+That guidance is based on the live `2026-06-21` probe:
+
+- removing the gpreg clock monitor cleared the earlier `0x79040004` external-abort / `Bus error` symptom;
+- reloading the new PL image through `fpga_manager` while Linux was already running left `gpreg` readable again, but standalone `iio_readdev` capture no longer refilled cleanly;
+- manually booting Linux after a real U-Boot `fpga load` of the course bitstream showed that deleting the DAC DMA path from the PL shell causes a kernel panic in `axi_dmac_probe()`;
+- attempting to recover the RX DMA path with Linux `unbind` / `bind` triggered a kernel oops in `dma_channel_rebalance()`.
 
 ## Intended first RF run
 

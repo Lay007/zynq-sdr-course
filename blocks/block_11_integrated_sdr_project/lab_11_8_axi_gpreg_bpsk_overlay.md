@@ -12,13 +12,14 @@ This lab is the first clean handoff from the executable Block 5 modem toward the
 
 ## Engineering decision
 
-For the first over-the-air discovery burst, the course overlay intentionally bypasses the normal TX DMA path and drives the DAC FIFO directly from the deterministic BPSK burst core.
+For the first over-the-air discovery burst, the course overlay intentionally lets the deterministic BPSK burst core own the DAC FIFO write-side samples.
 
 That tradeoff is deliberate:
 
 - it keeps the control path simple and inspectable;
 - it preserves the RX DMA reference path for observation/debug;
-- it reduces the number of moving parts before the first live burst.
+- it keeps the Linux-visible DAC DMA / `util_ad9361_dac_upack` path instantiated so the stock device tree still probes cleanly;
+- it reduces the number of RF-side moving parts before the first live burst.
 
 General IIO TX streaming can be restored later, after the first live burst and BER evidence are captured.
 
@@ -31,6 +32,7 @@ General IIO TX streaming can be restored later, after the first live burst and B
 | `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/vendor_system_bd_clg400.tcl` | frozen vendor block-design shell extracted from the working board image |
 | `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/build_bitstream.tcl` | deterministic batch build that emits the course bitstream and XSA |
 | `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/bpsk_zynq_ber_gpreg_bridge.v` | clock-domain bridge between `axi_gpreg` and the sample-domain BPSK BER core |
+| `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/course_dac_fifo_source_mux.v` | keeps the stock DAC DMA path present while selecting the deterministic BPSK waveform at the DAC FIFO input |
 | `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/README.md` | build notes, register contract, and first-burst constraints |
 
 ## New software helper

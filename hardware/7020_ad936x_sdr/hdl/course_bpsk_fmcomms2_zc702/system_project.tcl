@@ -73,6 +73,7 @@ set block5_rtl_files [lsort [concat \
 foreach src [concat \
   $block5_rtl_files \
   [list \
+    [file join $script_dir "course_dac_fifo_source_mux.v"] \
     [file join $script_dir "bpsk_zynq_ber_gpreg_bridge.v"] \
     [file join $script_dir "bpsk_zynq_ber_bridge_bd.v"] \
     [file join $vendor_dir "library/common/ad_iobuf.v"] \
