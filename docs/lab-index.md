@@ -66,8 +66,8 @@ This page provides a compact index of the executable and report-oriented labs in
 | 11.5 | Integrated project | AXI DMA latency and jitter | yes | no | yes | partial | latency trace, histogram, p95/p99, throughput |
 | 11.6 | Integrated project | Measurement uncertainty budget | yes | no | yes | partial | Type A/B contributions, expanded uncertainty |
 | 11.7 | Integrated project | PS-side AXI-Lite BPSK bring-up | yes | yes/reuse | yes | yes | ID readback, busy/done polling, BER counter JSON |
-| 11.8 | Integrated project | AD9361 gpreg BPSK overlay | yes | yes/reuse | yes | manual | CLG400 overlay, live gpreg status, first timeout-based hardware evidence |
-| 11.9 | Integrated project | AD9361 RF discovery sweep | yes | yes/reuse | yes | manual | sweep JSON, best `START_OFFSET`, best gain tuple, first non-zero `RECEIVED_BITS` search |
+| 11.8 | Integrated project | AD9361 gpreg BPSK overlay | yes | yes/reuse | yes | manual | CLG400 overlay, gpreg ID/signature evidence, stock-shell clean-boot baseline |
+| 11.9 | Integrated project | AD9361 RF discovery sweep | yes | yes/reuse | yes | manual | gated sweep plan to resume after sample-path reintegration around the stock shell |
 | 11.10 | Integrated project | Timed IIO burst capture | yes | yes/reuse | yes | manual | timed CI16 snapshot, trigger-relative power metrics, RF-vs-digital evidence |
 | 11.11 | Integrated project | IIO vs gpreg contention probe | yes | yes/reuse | yes | manual | standalone-vs-overlap matrix, DMAC snapshots, contention evidence |
 

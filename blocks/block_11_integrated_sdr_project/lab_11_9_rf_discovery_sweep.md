@@ -2,11 +2,25 @@
 
 ## Goal
 
-Move from a single `done + timeout` burst to a reproducible RF search procedure that can discover the first non-zero `RECEIVED_BITS` result on real hardware.
+Prepare the reproducible RF search procedure that should be rerun once the sample-domain burst path is restored around the validated stock boot shell.
 
 ## Engineering question
 
 > If the control plane is already alive, which small set of RF and timing parameters should be swept first to recover the first burst bits?
+
+## Current gate
+
+Do not interpret all-zero `RECEIVED_BITS` from the current checked-in `gpreg_only`
+overlay as an RF result.
+
+Before using this sweep as a meaningful hardware experiment, all of the
+following must be true:
+
+1. the custom boot-time PL image passes `validate_clean_boot_overlay.py` with
+   AD9361 initialized and all expected IIO devices alive;
+2. the `lab_11_8` helper sees a live sample-domain status path again, not only
+   the reduced safety baseline;
+3. RX capture still works after that clean boot.
 
 ## Script
 
@@ -16,7 +30,9 @@ Move from a single `done + timeout` burst to a reproducible RF search procedure 
 
 ## Current sweep strategy
 
-For the first over-the-air search, only vary the parameters that are most likely to block deterministic recovery while still keeping the experiment safe:
+Once the bridge is back, the first over-the-air search should vary only the
+parameters that are most likely to block deterministic recovery while still
+keeping the experiment safe:
 
 1. keep AGC disabled;
 2. keep TX LO enabled and TX attenuation conservative;
@@ -38,6 +54,8 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_9_rf_discovery_sweep
   --tx-attenuations-db -80,-70,-60 \
   --json-out docs/assets/lab119_rf_discovery_sweep_live.json
 ```
+
+Run that sweep only after the three preconditions above are satisfied.
 
 ## Report contract
 

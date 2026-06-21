@@ -2,26 +2,26 @@
 
 ## Goal
 
-Move from the placeholder AXI-Lite bring-up path to the first course-specific AD9361 hardware overlay that has a real control plane and a deterministic burst modem in the sample path:
+Move from the placeholder AXI-Lite bring-up path to the first course-specific AD9361 hardware overlay that preserves a PS-visible control plane while the exact board-matched boot shell is re-established:
 
 ```text
-PS / software -> axi_gpreg @ 0x79040000 -> sample-domain BPSK core -> AD9361 TX/RX path
+PS / software -> axi_gpreg @ 0x79040000 -> staged sample-domain bridge -> AD9361 TX/RX path
 ```
 
 This lab is the first clean handoff from the executable Block 5 modem toward the imported vendor AD9361 shell that matches the real course board (`xc7z020clg400-2`).
 
 ## Engineering decision
 
-For the first over-the-air discovery burst, the course overlay intentionally lets the deterministic BPSK burst core own the DAC FIFO write-side samples.
+As of `2026-06-21`, the checked-in overlay mode is intentionally reduced to `gpreg_only`.
 
-That tradeoff is deliberate:
+That rollback is deliberate:
 
 - it keeps the control path simple and inspectable;
-- it preserves the RX DMA reference path for observation/debug;
-- it keeps the Linux-visible DAC DMA / `util_ad9361_dac_upack` path instantiated so the stock device tree still probes cleanly;
-- it reduces the number of RF-side moving parts before the first live burst.
+- it preserves the Linux-visible RX and TX DMA shell so the stock device tree still probes cleanly;
+- it separates `axi_gpreg` address-map validation from the harder AD9361 clean-boot problem;
+- it avoids treating a rebuilt but not yet boot-safe PL image as a valid RF measurement baseline.
 
-General IIO TX streaming can be restored later, after the first live burst and BER evidence are captured.
+The earlier burst-enabled TX experiments remain useful as historical evidence, but they are not the current safe checked-in baseline. The next gated step is to splice the sample-domain bridge back into the exact stock shell and rerun clean-boot validation before more RF discovery work.
 
 ## New hardware files
 
@@ -31,8 +31,8 @@ General IIO TX streaming can be restored later, after the first live burst and B
 | `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/system_bd.tcl` | sources the imported AD9361 baseline and adds the course overlay |
 | `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/vendor_system_bd_clg400.tcl` | frozen vendor block-design shell extracted from the working board image |
 | `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/build_bitstream.tcl` | deterministic batch build that emits the course bitstream and XSA |
-| `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/bpsk_zynq_ber_gpreg_bridge.v` | clock-domain bridge between `axi_gpreg` and the sample-domain BPSK BER core |
-| `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/course_dac_fifo_source_mux.v` | keeps the stock DAC DMA path present while selecting the deterministic BPSK waveform at the DAC FIFO input |
+| `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/bpsk_zynq_ber_gpreg_bridge.v` | staged clock-domain bridge for the next sample-path reintegration step |
+| `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/course_dac_fifo_source_mux.v` | staged TX-path mux kept for the later DAC reintegration step, not enabled in the current `gpreg_only` mode |
 | `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/README.md` | build notes, register contract, and first-burst constraints |
 
 ## New software helper
@@ -127,15 +127,19 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_8_axi_gpreg_bpsk_bri
 
 ## Current live evidence
 
-The current hardware overlay has already been rebuilt, loaded through Linux `fpga_manager`, and probed from the host over Ethernet.
+There are two evidence layers and they should not be conflated.
 
-Live evidence paths:
+Historical burst-enabled overlay evidence:
+
+The earlier hardware overlay was rebuilt, loaded through Linux `fpga_manager`, and probed from the host over Ethernet.
+
+Historical evidence paths:
 
 - XSA: `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/course_bpsk_fmcomms2_zc702.sdk/system_top.xsa`;
 - bitstream: `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/build/course_bpsk_fmcomms2_zc702.runs/impl_1/system_top.bit`;
 - live helper report: `docs/assets/lab118_axi_gpreg_bringup_live.json`.
 
-Observed live facts on the board:
+Observed historical facts on the board:
 
 - `devmem 0x79040000 32 -> 0x00040063`;
 - `devmem 0x79040004 32 -> 0x4250534B`;
@@ -146,25 +150,29 @@ Observed live facts on the board:
 - `received_bits = 0`;
 - RF setup during the discovery run: TX attenuation `-60 dB`, RX gain manual `20 dB`, AGC disabled.
 
+Current checked-in safety baseline:
+
+- the boot-time PL reference is `hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin`;
+- `hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py` passes against that extracted stock image with AD9361 initialized and `4` IIO devices alive;
+- regenerated boot-time candidates from both `AD936X_PL.zip` and `AD936X_only_PL.zip` were rejected and summarized in `docs/assets/lab112_clean_boot_pl_validation.json`.
+
 Interpretation:
 
-- the PS-to-PL gpreg control plane is alive on real hardware;
-- the bridge signature and address map are correct after runtime loading;
-- the burst no longer hangs forever when RX does not recover the frame;
-- the next task is RF/link tuning, because the current run exits cleanly but still reconstructs zero bits.
+- the PS-to-PL gpreg control plane was validated on real hardware at least once in the earlier burst-enabled overlay;
+- the current checked-in HDL intentionally steps back to a smaller boot-safe scope;
+- the immediate next task is not BER tuning but restoring the sample-domain bridge around the exact stock shell, then rerunning this helper under clean boot.
 
-## First live-burst order
+## Next gated re-enable order
 
-1. Confirm the clean image and board IP before transmitting.
-2. Keep AD9361 TX attenuation at the minimum output power setting available on the board.
-3. Keep RX gain low and manual.
-4. Disable AGC for the first burst.
-5. Read the `axi_gpreg` ID register and the bridge signature before writing the frame parameters.
+1. Confirm that the custom boot-time PL image still passes the clean-boot validator.
+2. Confirm the board IP, `axi_gpreg` ID register, and bridge signature before writing frame parameters.
+3. Re-enable the sample-domain bridge while keeping the Linux-visible DMA shell intact.
+4. Keep AD9361 TX attenuation at the minimum output power setting available on the board.
+5. Keep RX gain low and manual. Do not enable AGC for the first renewed burst.
 6. Launch one short burst only.
-7. Observe `busy` then either `done` or `done after timeout`.
+7. Observe `busy` and then `done` or `done after timeout`.
 8. Read `RECEIVED_BITS`, `TOTAL_ERRORS`, and `PAYLOAD_ERRORS`.
-9. Keep AD9361 TX on the minimum practical power and RX gain low/manual for this first run.
-10. Only then expand toward repeated bursts or BER campaigns.
+9. Only then resume repeated sweeps or BER campaigns.
 
 ## Report checklist
 
@@ -175,12 +183,12 @@ Interpretation:
 - [ ] Show programmed `FRAME_BIT_COUNT`, `PREAMBLE_COUNT`, and `START_OFFSET`.
 - [ ] State whether `busy`, `done`, and `timeout` were observed.
 - [ ] Record `RECEIVED_BITS`, `TOTAL_ERRORS`, and `PAYLOAD_ERRORS`.
-- [ ] List the AD9361 TX attenuation and RX gain used for the first burst.
+- [ ] List the AD9361 TX attenuation and RX gain used for the first renewed burst.
 
 ## Engineering conclusion template
 
 ```text
-The gpreg-based AD9361 BPSK overlay is ready / not ready.
+The gpreg-based AD9361 overlay is ready / not ready as a clean-boot baseline.
 The exported handoff contains / does not contain the expected control window.
-The first discovery burst produced ______ and the next step is ______.
+The next gated reintegration step is ______ and its success criterion is ______.
 ```
