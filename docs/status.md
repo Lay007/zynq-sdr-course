@@ -26,7 +26,7 @@ This page is the top-level engineering status board for the course. It is intent
 | 08 | Modulation and synchronization | Ready | Executable | Synchronization demos | Ready | Optional | Sync CI | Add impairment sweeps and BER/EVM dashboards. |
 | 09 | Recording and analysis tools | Ready | Executable | IQ readers | Ready | Hardware pending | Recording CI | Update QPSK dataset manifest with real checksum or synthetic generator. |
 | 10 | KiCad and basic electronics | Ready | Draft | Calculators / templates | Partial | Bench pending | Docs | Add measured breadboard photos and KiCad exports. |
-| 11 | Integrated SDR project | Ready | Executable | Simulation package + BPSK reference package + AXI-Lite helper + gpreg-based AD9361 burst helper + live `done+timeout` bring-up report | Ready | Hardware pending | Labs | Move from clean control-plane evidence to RF recovery: verify LO/sample-rate alignment, retune gain/start offset, and capture the first non-zero `RECEIVED_BITS`. |
+| 11 | Integrated SDR project | Ready | Executable | Simulation package + BPSK reference package + AXI-Lite helper + gpreg-based AD9361 burst helper + live `done+timeout` bring-up report + overlap contention probe | Ready | Hardware pending | Labs | Keep the stock Linux DMA shell compatible during clean-boot overlay loading, then revalidate `iio_readdev` + `axi_gpreg` together before returning to RF recovery and the first non-zero `RECEIVED_BITS`. |
 | 12 | Final projects | Ready | Draft | Templates + rubric | Partial | Depends on project | Docs | Use grading rubric and example report skeleton for first final project. |
 
 ## Newly added hardening artifacts

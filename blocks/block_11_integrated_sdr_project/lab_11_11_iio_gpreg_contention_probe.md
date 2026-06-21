@@ -62,6 +62,18 @@ Typical outcomes:
 
 Those outcomes point toward an integration or arbitration issue around the live PL design, not toward ordinary RX gain or `START_OFFSET` tuning.
 
+## Current live note
+
+Live follow-up on `2026-06-21` split the problem into two separate layers:
+
+- disabling the `axi_gpreg_bpsk` clock-monitor input removed the earlier overlap-time `Bus error` on `0x79040004`;
+- the same rebuilt overlay still disturbed the Linux RX capture stack when it was hot-loaded through `fpga_manager` on an already running system;
+- after that hot reload, `gpreg` access recovered but standalone `iio_readdev` captures returned refill timeout `Unknown error (110)`;
+- a manual U-Boot `fpga load` of the same bitstream before Linux boot proved that the older “remove DAC DMA from PL” overlay panics the kernel in `axi_dmac_probe()`, so the stock Linux device tree still expects that TX DMA path to exist in hardware;
+- attempting to recover the RX DMA path with Linux platform-driver `unbind` / `bind` caused a kernel oops in `dma_channel_rebalance()`.
+
+Practical consequence: keep the Linux-visible DMA shell compatible first, then re-test boot-time PL loading. Do not use live `fpga_manager` reload plus driver rebinding as the normal course workflow until the board has been revalidated after a clean boot.
+
 ## Engineering conclusion template
 
 ```text
