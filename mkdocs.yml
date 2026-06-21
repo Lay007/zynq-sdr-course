@@ -121,7 +121,8 @@ nav:
       - "Обзор курса": ru/index.md
       - "Структура курса": ru/course-structure.md
       - "Лабораторный трек": ru/lab-track.md
-      - "Media guide": ru/media-guide.md
+      - "Медиа-гайд": ru/media-guide.md
+      - "Статус курса": ru/status.md
       - "Блоки курса":
           - "01. Введение в SDR": ru/blocks/01-intro.md
           - "02. Сигналы и дискретизация": ru/blocks/02-signals-and-sampling.md

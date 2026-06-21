@@ -6,6 +6,7 @@
 - [Структура курса](course-structure.md)
 - [Лабораторный трек](lab-track.md)
 - [Медиа-гайд](media-guide.md)
+- [Статус курса](status.md)
 
 ## Блоки курса
 - [Блок 1. Введение в SDR](blocks/01-intro.md)
