@@ -1,0 +1,135 @@
+{
+  "lhs": {
+    "label": "vendor_reference_xsa",
+    "path": "hardware\\7020_ad936x_sdr\\ps\\ad936x_no_os_reference\\platform\\hw\\system_top.xsa",
+    "entry_count": 14,
+    "embedded_system_top_bit_md5": "7cb06731f08fe834c76f1d928abe5933",
+    "embedded_system_top_bit_size_bytes": 2356360,
+    "module_count": 20,
+    "memrange_count": 5
+  },
+  "rhs": {
+    "label": "vendor_xpr_mio14_15_patch_xsa",
+    "path": "tmp\\vendor_xpr_mio14_15_patch\\zc702\\zc702.sdk\\system_top.xsa",
+    "entry_count": 14,
+    "embedded_system_top_bit_md5": "2cc2c25d73ac69c63687a72f995b39fa",
+    "embedded_system_top_bit_size_bytes": 2356360,
+    "module_count": 20,
+    "memrange_count": 5
+  },
+  "file_entry_diff": {
+    "lhs_only": [],
+    "rhs_only": [],
+    "common_equal": [
+      "ps7_init.c",
+      "ps7_init.h",
+      "ps7_init.html",
+      "ps7_init.tcl",
+      "ps7_init_gpl.c",
+      "ps7_init_gpl.h"
+    ],
+    "common_different": [
+      {
+        "name": "sysdef.xml",
+        "lhs": {
+          "size_bytes": 1523,
+          "md5": "d2ec00fe0f898c0b34a1f065c584451b"
+        },
+        "rhs": {
+          "size_bytes": 1653,
+          "md5": "37ace7ebee3b7cff5e3091cc99f3e7f5"
+        }
+      },
+      {
+        "name": "system.bda",
+        "lhs": {
+          "size_bytes": 6284,
+          "md5": "c143d7fd9856a85ad253e6a42a157931"
+        },
+        "rhs": {
+          "size_bytes": 6284,
+          "md5": "d3bd264675804442b8e4fb0592ab3305"
+        }
+      },
+      {
+        "name": "system.hwh",
+        "lhs": {
+          "size_bytes": 377235,
+          "md5": "2ce4b0850a95663d03dcab524c405624"
+        },
+        "rhs": {
+          "size_bytes": 377235,
+          "md5": "7321e7846ae7873be50e772aaa04ec19"
+        }
+      },
+      {
+        "name": "system_axi_hp1_interconnect_0.hwh",
+        "lhs": {
+          "size_bytes": 383287,
+          "md5": "63a7985967a32c8e82fd19eb774cb53e"
+        },
+        "rhs": {
+          "size_bytes": 383254,
+          "md5": "c764f24d5c3619f91d3aa56ad515eb4f"
+        }
+      },
+      {
+        "name": "system_axi_hp2_interconnect_0.hwh",
+        "lhs": {
+          "size_bytes": 355003,
+          "md5": "edec8c04a68631f7ae7ef1758b7aaeb7"
+        },
+        "rhs": {
+          "size_bytes": 355003,
+          "md5": "d756e9c7b8ba7114473752f5ca955402"
+        }
+      },
+      {
+        "name": "system_top.bit",
+        "lhs": {
+          "size_bytes": 2356360,
+          "md5": "7cb06731f08fe834c76f1d928abe5933"
+        },
+        "rhs": {
+          "size_bytes": 2356360,
+          "md5": "2cc2c25d73ac69c63687a72f995b39fa"
+        }
+      },
+      {
+        "name": "xsa.json",
+        "lhs": {
+          "size_bytes": 2141,
+          "md5": "3f585b945a303cb18d9f2872493871a6"
+        },
+        "rhs": {
+          "size_bytes": 2541,
+          "md5": "63ec887a5418bff2827fd777c54d13ee"
+        }
+      },
+      {
+        "name": "xsa.xml",
+        "lhs": {
+          "size_bytes": 1090,
+          "md5": "2cee2d864a56d4429bec0bc99ce4c670"
+        },
+        "rhs": {
+          "size_bytes": 1184,
+          "md5": "c656090f381a712968b028cf0a58df46"
+        }
+      }
+    ]
+  },
+  "ps7_init_c_identical": true,
+  "ps7_init_tcl_identical": true,
+  "hwh_diff": {
+    "module_diff": {
+      "lhs_only_instances": [],
+      "rhs_only_instances": [],
+      "common_changed": []
+    },
+    "memrange_diff": {
+      "lhs_only": [],
+      "rhs_only": []
+    }
+  }
+}

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Extract the stock PL partition from a Zynq BOOT.bin image.
+"""Extract the stock PL partition payload from a Zynq BOOT.bin image.
 
 The vendor SD image ships a BOOT.bin that already contains the working PL
-partition used by the board during early boot. This helper extracts the raw
-`system_top.bit` partition so it can be reused as a known-good `system.bit.bin`
-baseline when a rebuilt Vivado image is still under investigation.
+partition used by the board during early boot. This helper extracts the
+embedded `system_top.bit` partition payload exactly as it appears in BOOT.bin,
+so it can be reused as a known-good `fpga load` baseline when a rebuilt Vivado
+image is still under investigation.
 """
 
 from __future__ import annotations
@@ -73,7 +74,7 @@ def main() -> int:
         "--output",
         type=Path,
         default=default_output,
-        help=f"Output raw partition file (default: {default_output})",
+        help=f"Output extracted partition payload file (default: {default_output})",
     )
     args = parser.parse_args()
 

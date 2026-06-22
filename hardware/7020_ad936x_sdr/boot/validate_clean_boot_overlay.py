@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Validate the clean boot overlay against a chosen `system.bit.bin` image.
+"""Validate the clean boot overlay against a chosen PL image.
 
 The script automates the exact bring-up loop used during live debugging:
 
 1. mount the FAT boot partition over SSH;
-2. upload a candidate `system.bit.bin`;
+2. upload a candidate PL image plus the matching `uEnv.txt` when needed;
 3. reboot the board and capture UART output;
 4. verify that Linux comes up with AD9361 and IIO devices alive.
 """
@@ -19,7 +19,6 @@ import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from build_system_bit_bin import build_system_bit_bin
 from extract_stock_system_top_partition import find_partition
 
 
@@ -30,8 +29,8 @@ DEFAULT_REFERENCE_SYSTEM_BIT = (
     BUNDLE_ROOT / "ps" / "ad936x_no_os_reference" / "platform" / "hw" / "system_top.bit"
 )
 DEFAULT_STOCK_SYSTEM_BIT_BIN = BUNDLE_ROOT / "stock_system_top_from_BOOT.bin"
+DEFAULT_UENV = BOOT_DIR / "course_clean" / "uEnv_course_bpsk_overlay.txt"
 DEFAULT_UART_LOG = BOOT_DIR / "last_clean_boot_overlay_uart.log"
-DEFAULT_GENERATED_DIR = BOOT_DIR / "_generated"
 DEFAULT_HOST = "192.168.40.1"
 DEFAULT_USER = "root"
 DEFAULT_PASSWORD = "analog"
@@ -39,14 +38,16 @@ DEFAULT_PORT = 22
 DEFAULT_SERIAL_PORT = "COM6"
 DEFAULT_BAUDRATE = 115200
 REMOTE_MOUNT = "/mnt/msd"
-REMOTE_SYSTEM_BIT_BIN = f"{REMOTE_MOUNT}/system.bit.bin"
 
 
 @dataclass(frozen=True)
 class ValidationSummary:
     local_path: str
+    remote_path: str
     local_md5: str
     remote_md5: str
+    uenv_path: str
+    uenv_md5: str
     uart_log_path: str
     ad9361_initialized: bool
     iio_device_count: int
@@ -224,14 +225,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
         "--system-bit-bin",
         type=Path,
         default=DEFAULT_REFERENCE_SYSTEM_BIT,
-        help="Input candidate path: either a boot-time .bit.bin or a raw .bit to be converted first.",
+        help="Input candidate path: raw .bit for the clean-boot overlay, or a prebuilt .bit.bin for fallback experiments.",
     )
     parser.add_argument("--boot-bin", type=Path, default=DEFAULT_BOOT_BIN)
-    parser.add_argument(
-        "--bootgen",
-        type=Path,
-        help="Optional explicit Bootgen executable path used when --system-bit-bin points to a raw .bit file.",
-    )
+    parser.add_argument("--uenv", type=Path, help="Optional uEnv.txt override to copy to the FAT root before reboot.")
+    parser.add_argument("--boot-mount", default=REMOTE_MOUNT)
     parser.add_argument("--ssh-host", default=DEFAULT_HOST)
     parser.add_argument("--ssh-user", default=DEFAULT_USER)
     parser.add_argument("--ssh-password", default=DEFAULT_PASSWORD)
@@ -255,21 +253,28 @@ def main() -> int:
     if not candidate_path.exists():
         raise FileNotFoundError(f"Missing system bitstream candidate: {candidate_path}")
 
-    if candidate_path.suffix.lower() == ".bit":
-        generated_path = DEFAULT_GENERATED_DIR / f"{candidate_path.name}.bin"
-        print(f"Converting raw bitstream to boot-time payload: {candidate_path}")
-        candidate_path = build_system_bit_bin(
-            candidate_path,
-            output_path=generated_path,
-            bootgen_path=args.bootgen,
-        )
-        print(f"Generated boot-time payload: {candidate_path}")
+    candidate_suffix = candidate_path.suffix.lower()
+    remote_name = "system.bit" if candidate_suffix == ".bit" else "system.bit.bin"
+    remote_path = f"{args.boot_mount}/{remote_name}"
+
+    uenv_path = args.uenv
+    if uenv_path is None and candidate_suffix == ".bit":
+        uenv_path = DEFAULT_UENV
+    if uenv_path is not None and not uenv_path.exists():
+        raise FileNotFoundError(f"Missing uEnv override: {uenv_path}")
 
     payload = candidate_path.read_bytes()
     local_md5 = md5_bytes(payload)
     print(f"Local file: {candidate_path}")
+    print(f"Remote file: {remote_path}")
     print(f"Local size: {len(payload)} bytes")
     print(f"Local md5 : {local_md5}")
+    uenv_md5 = ""
+    if uenv_path is not None:
+        uenv_payload = uenv_path.read_bytes()
+        uenv_md5 = md5_bytes(uenv_payload)
+        print(f"uEnv file : {uenv_path}")
+        print(f"uEnv md5  : {uenv_md5}")
 
     session = ParamikoSession(
         host=args.ssh_host,
@@ -281,19 +286,32 @@ def main() -> int:
     try:
         print(run_remote_checked(
             session,
-            f"mkdir -p {REMOTE_MOUNT} && "
-            f"(mountpoint -q {REMOTE_MOUNT} || mount -t vfat /dev/mmcblk0p1 {REMOTE_MOUNT}) && "
-            f"df -h {REMOTE_MOUNT}",
+            f"mkdir -p {args.boot_mount} && "
+            f"(mountpoint -q {args.boot_mount} || mount -t vfat /dev/mmcblk0p1 {args.boot_mount}) && "
+            f"df -h {args.boot_mount}",
             context="mount FAT boot partition",
         ))
-        session.upload_via_cat(REMOTE_SYSTEM_BIT_BIN, payload)
+        session.upload_via_cat(remote_path, payload)
+        if uenv_path is not None:
+            session.upload_via_cat(f"{args.boot_mount}/uEnv.txt", uenv_payload)
         verification = run_remote_checked(
             session,
-            f"sync && md5sum {REMOTE_SYSTEM_BIT_BIN} && ls -l {REMOTE_SYSTEM_BIT_BIN}",
+            f"sync && md5sum {remote_path} && ls -l {remote_path}",
             context="verify uploaded bitstream",
         )
         print(verification)
         remote_md5 = verification.split()[0]
+        remote_uenv_md5 = ""
+        if uenv_path is not None:
+            uenv_verification = run_remote_checked(
+                session,
+                f"md5sum {args.boot_mount}/uEnv.txt && ls -l {args.boot_mount}/uEnv.txt",
+                context="verify uploaded uEnv.txt",
+            )
+            print(uenv_verification)
+            remote_uenv_md5 = uenv_verification.split()[0]
+        else:
+            remote_uenv_md5 = ""
 
         session.reboot()
     finally:
@@ -341,8 +359,11 @@ def main() -> int:
     iio_devices = [line.strip() for line in iio_devices_text.splitlines() if line.strip()]
     summary = ValidationSummary(
         local_path=str(candidate_path),
+        remote_path=remote_path,
         local_md5=local_md5,
         remote_md5=remote_md5,
+        uenv_path=str(uenv_path) if uenv_path is not None else "",
+        uenv_md5=remote_uenv_md5,
         uart_log_path=str(args.uart_log),
         ad9361_initialized="successfully initialized" in dmesg_ad9361,
         iio_device_count=len(iio_devices),

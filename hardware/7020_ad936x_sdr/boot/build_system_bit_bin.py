@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Convert a raw Vivado `.bit` into a boot-time `system.bit.bin` payload."""
+"""Convert a raw Vivado `.bit` into a Bootgen `.bit.bin` payload."""
 
 from __future__ import annotations
 
