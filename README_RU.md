@@ -79,7 +79,7 @@
 | `tools/` | Скрипты сборки, smoke-проверок и воспроизводимости |
 | `templates/` | Шаблоны отчётов, IQ metadata, RF safety и итоговых проектов |
 | `datasets/` | Dataset manifests и описания небольших наборов данных |
-| `reports/` | Шаблоны FPGA и измерительных отчётов |
+| `reports/` | FPGA-отчёты, примеры измерительных отчётов и карта доказательств для ревьюера |
 | `experiments/` | Машинно-проверяемые manifest-файлы экспериментов |
 
 ---
@@ -118,6 +118,7 @@ python tools/run_local_ci.py
 | `python tools/tasks.py smoke` | Выполнить проверку docs + labs + HDL |
 | `python tools/run_local_ci.py` | Выполнить lint + pytest + docs + labs + canonical HDL smoke |
 | `python tools/run_local_ci.py --quick` | Выполнить lint + pytest + canonical HDL smoke |
+| `python tools/check_dataset_manifests.py` | Проверить dataset manifests и SHA256 в Git LFS pointer-файлах |
 | `python tools/tasks.py clean` | Удалить локальные сгенерированные артефакты |
 
 Локальная стартовая аппаратная база:
@@ -151,6 +152,8 @@ python tools/run_local_ci.py
 | [Visual course map](docs/course-map.md) | Полный маршрут от теории до итогового проекта |
 | [Student path](docs/student-path.md) | Самый короткий путь для студента |
 | [Reviewer path](docs/reviewer-path.md) | Маршрут для быстрой оценки зрелости репозитория |
+| [Reviewer acceptance checklist](docs/reviewer-checklist.md) | Pass/fail checklist для воспроизводимости, DSP, HDL, RF и итоговых проектов |
+| [Course evidence map](reports/course-evidence-map.md) | Краткая карта доказанных артефактов, пробелов и следующих действий |
 | [Instructor guide](docs/instructor-guide.md) | Как использовать репозиторий как учебное пространство |
 | [Model → FPGA → RF → Measurement](docs/model-to-measurement.md) | Главный инженерный маршрут курса |
 | [Course status](docs/status.md) | Матрица готовности, пробелы и следующие улучшения |
@@ -179,13 +182,15 @@ python tools/run_local_ci.py
 - исполняемые лабораторные по DSP и синхронизации;
 - HDL smoke-проверки для FPGA-ориентированных примеров;
 - workflow для записи и анализа IQ;
+- реальные пассивные RTL-SDR записи эфира из первой SDR++ bring-up сессии, сохранённые через Git LFS с manifest-файлами;
+- проверка согласованности dataset manifests и Git LFS pointer-файлов;
 - manifest-файлы экспериментов;
 - шаблоны отчётов и структура итогового проекта.
 
 Следующие важные proof points:
 
 - валидированные аппаратные захваты Zynq/AD9363;
-- небольшие публичные или внешне размещённые IQ demo datasets;
+- небольшой publication-cleared QPSK или tone IQ demo dataset;
 - routed top-level Vivado implementation reports для интегрированного Zynq-дизайна;
 - полный QPSK или tone model-to-measurement отчёт.
 
