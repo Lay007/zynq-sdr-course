@@ -161,7 +161,8 @@ Current checked-in safety baseline:
 - the new `bridge_rx_only` mode now passes Vivado project creation, implementation, bitstream generation, and XSA export;
 - the saved vendor `zc702.xpr` snapshot, rebuilt through `hardware/7020_ad936x_sdr/rebuild_vendor_xpr_snapshot_mio_patch.tcl`, still exports an XSA with zero module/memrange/parameter drift against the vendor reference, but its direct raw `system.bit` load still fails AD9361 clean boot with the same calibration timeout;
 - the newer `bridge_txrx_mux` raw-clean-boot candidate now proves that the course-owned overlay really reaches PL and exposes `axi_gpreg` on the board after reboot; see `docs/assets/lab118_axi_gpreg_bringup_cleanboot_raw.json`;
-- the Bootgen-converted `bridge_txrx_mux.bit.bin` candidate is currently rejected by U-Boot `fpga load` with `zynq_validate_bitstream: Bitstream is not validated yet (diff 1700)`, so the later healthy AD9361 state in that path comes from the untouched stock PL shell;
+- the earlier helper-generated `bridge_txrx_mux.bit.bin` candidate was rejected by U-Boot `fpga load` with `zynq_validate_bitstream: Bitstream is not validated yet (diff 1700)`, so the later healthy AD9361 state in that path came from the untouched stock PL shell;
+- after fixing the `.bit -> .bit.bin` conversion to the correct word-swapped payload, the regenerated `bridge_txrx_mux.bit.bin` candidate is now accepted by manual UART `fpga load`, but Linux still falls into the same AD9361 calibration timeout and exposes only `iio:device0`;
 - regenerated boot-time candidates from both `AD936X_PL.zip` and `AD936X_only_PL.zip` were rejected and summarized in `docs/assets/lab112_clean_boot_pl_validation.json`.
 
 Interpretation:

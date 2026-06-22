@@ -103,10 +103,14 @@ equivalent to the stock boot-time shell:
   `bridge_txrx_mux` course overlay both now prove raw `system.bit` direct load
   through U-Boot `fpga loadb`, but they still fail AD9361 clean boot with the
   same calibration timeout once Linux probes `spi0.0`;
-- the Bootgen-converted `bridge_txrx_mux.bit.bin` candidate is rejected even
-  earlier by U-Boot `fpga load` with
+- the earlier helper-generated `bridge_txrx_mux.bit.bin` candidate was rejected
+  by U-Boot `fpga load` with
   `zynq_validate_bitstream: Bitstream is not validated yet (diff 1700)`, so
-  Linux then comes up on the untouched stock PL shell.
+  Linux then came up on the untouched stock PL shell;
+- after fixing `build_system_bit_bin.py` to emit the correct word-swapped
+  `fpga load` payload, the regenerated `bridge_txrx_mux.bit.bin` candidate is
+  now accepted by U-Boot, but Linux still fails later with the same
+  `ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)`.
 
 Practical consequence: the course now has one source-correlated raw proof
 candidate and one externally loaded boot-safe baseline:

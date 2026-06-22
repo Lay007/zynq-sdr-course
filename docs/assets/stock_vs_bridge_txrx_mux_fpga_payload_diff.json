@@ -1,0 +1,33 @@
+{
+  "lhs": {
+    "path": "G:\\Programs\\zynq-sdr-course\\hardware\\7020_ad936x_sdr\\stock_system_top_from_BOOT.bin",
+    "kind": "fpga_load_payload",
+    "size_bytes": 2430912,
+    "md5": "0da69e4ce2f2c475fd8f5c1ea48f6142",
+    "metadata": {}
+  },
+  "rhs": {
+    "path": "G:\\Programs\\zynq-sdr-course\\tmp\\vendor_xpr_course_overlay\\zc702\\zc702.runs\\impl_1\\system_top.bit",
+    "kind": "raw_bit_normalized_to_fpga_load_payload",
+    "size_bytes": 2276856,
+    "md5": "020dd715bc7cdd63ee543749cded5050",
+    "metadata": {
+      "a": "system_top;COMPRESS=TRUE;UserID=0XFFFFFFFF;Version=2021.1",
+      "b": "7z020clg400",
+      "c": "2026/06/22",
+      "d": "15:34:01"
+    }
+  },
+  "identical": false,
+  "common_prefix_bytes": 18596,
+  "common_suffix_bytes": 1616,
+  "compared_prefix_md5_equal": true,
+  "length_delta_bytes": -154056,
+  "first_diff_offset": 18596,
+  "first_diff_word_offset": 4649,
+  "differing_bytes_in_common_prefix": 0,
+  "lhs_diff_window_hex": "0000000000000000000000000120003080100000044001300000000000000000",
+  "rhs_diff_window_hex": "0000000000000000000000000120003090100000044001300000000000000000",
+  "rhs_has_only_trailing_extra_data": false,
+  "lhs_has_only_trailing_extra_data": false
+}

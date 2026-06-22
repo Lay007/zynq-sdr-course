@@ -33,12 +33,16 @@ The original vendor folder mixes useful board assets with heavy archives, Window
 | [`docs/Fish_Ball_SDR_ru.pdf`](docs/Fish_Ball_SDR_ru.pdf) | Russian board guide PDF |
 | [`boot/notes/pluto_sd_boot_readme.txt`](boot/notes/pluto_sd_boot_readme.txt) | shortest path for SD-card boot |
 | [`boot/extract_stock_system_top_partition.py`](boot/extract_stock_system_top_partition.py) | extracts the known-good PL partition from `boot/sd_image/BOOT.bin` when a rebuilt Vivado bitstream is still being debugged |
-| [`boot/build_system_bit_bin.py`](boot/build_system_bit_bin.py) | converts a raw `.bit` into a Bootgen `.bit.bin` payload for runtime Linux loading or for manual U-Boot `fpga load` experiments |
+| [`boot/build_system_bit_bin.py`](boot/build_system_bit_bin.py) | converts a raw Xilinx `.bit` into the word-swapped `.bit.bin` payload accepted by the board's manual U-Boot `fpga load` path |
 | [`boot/validate_clean_boot_overlay.py`](boot/validate_clean_boot_overlay.py) | uploads a candidate raw `system.bit`, syncs the matching `uEnv.txt`, reboots the board, captures UART, and verifies whether AD9361/IIO survive the direct `fpga loadb` path |
 | [`boot/validate_manual_uart_fpga_load.py`](boot/validate_manual_uart_fpga_load.py) | stops autoboot over UART, runs `load mmc` + `fpga load` manually for a `.bit.bin` payload, boots Linux, and verifies whether AD9361/IIO survived the externally loaded partition |
+| [`compare_fpga_payloads.py`](compare_fpga_payloads.py) | normalizes raw `.bit` inputs to the manual `fpga load` payload format and reports first-diff offsets versus stock or course candidates |
 | [`rebuild_vendor_xpr_snapshot_mio_patch.tcl`](rebuild_vendor_xpr_snapshot_mio_patch.tcl) | disposable Vivado flow that patches only `sys_ps7` MIO14/15 on the saved vendor `zc702.xpr` snapshot before synth/impl/export |
 | [`compare_xsa_handoffs.py`](compare_xsa_handoffs.py) | compares two XSA handoffs down to `ps7_init`, `system.hwh` modules, parameter drift, and memranges |
 | [`../../docs/assets/lab112_clean_boot_pl_validation.json`](../../docs/assets/lab112_clean_boot_pl_validation.json) | persistent summary of which candidate boot-time PL images clean-booted successfully and which ones failed |
+| [`../../docs/assets/stock_vs_vendor_reference_fpga_payload_diff.json`](../../docs/assets/stock_vs_vendor_reference_fpga_payload_diff.json) | first-diff report showing where the extracted stock BOOT payload diverges from the source-correlated vendor reference fpga-load payload |
+| [`../../docs/assets/stock_vs_bridge_txrx_mux_fpga_payload_diff.json`](../../docs/assets/stock_vs_bridge_txrx_mux_fpga_payload_diff.json) | first-diff report showing where the extracted stock BOOT payload diverges from the corrected course `bridge_txrx_mux` fpga-load payload |
+| [`../../docs/assets/vendor_reference_vs_vendor_xpr_mio14_15_payload_diff.json`](../../docs/assets/vendor_reference_vs_vendor_xpr_mio14_15_payload_diff.json) | normalized payload diff proving that the MIO14/15-patched editable vendor snapshot matches the source-correlated vendor reference byte-for-byte on the manual `fpga load` path |
 | [`../../docs/assets/vendor_reference_vs_vendor_only_handoff_diff.json`](../../docs/assets/vendor_reference_vs_vendor_only_handoff_diff.json) | source-level diff between the vendor reference XSA and the rebuilt `vendor_only` shell |
 | [`../../docs/assets/vendor_reference_vs_vendor_xpr_snapshot_handoff_diff.json`](../../docs/assets/vendor_reference_vs_vendor_xpr_snapshot_handoff_diff.json) | source-level diff showing the historical unpatched `zc702.xpr` snapshot drift against the vendor reference XSA |
 | [`../../docs/assets/vendor_reference_vs_vendor_xpr_mio14_15_patch_handoff_diff.json`](../../docs/assets/vendor_reference_vs_vendor_xpr_mio14_15_patch_handoff_diff.json) | source-level diff showing that the MIO14/15-patched vendor snapshot rebuild reaches zero structural drift against the vendor reference XSA |
@@ -60,7 +64,7 @@ The original vendor folder mixes useful board assets with heavy archives, Window
 1. Read the board PDFs in `docs/`.
 2. Prepare the SD card using `boot/sd_image/` and the notes in `boot/notes/`.
 3. If you need the course-clean management profile on the stock Pluto-like image, apply `boot/course_clean/autorun.sh` as `/mnt/jffs2/autorun.sh`.
-4. If you need the first clean boot-time BPSK overlay, place the generated raw `system.bit` on the FAT partition root and copy `boot/course_clean/uEnv_course_bpsk_overlay.txt` there as `uEnv.txt`. That U-Boot overlay must use `fpga loadb` for raw `.bit`; trying to feed a Bootgen `system.bit.bin` to the same path leaves the stock `BOOT.bin` PL image in place even though Linux still comes up.
+4. If you need the first clean boot-time BPSK overlay, place the generated raw `system.bit` on the FAT partition root and copy `boot/course_clean/uEnv_course_bpsk_overlay.txt` there as `uEnv.txt`. That U-Boot overlay must use `fpga loadb` for raw `.bit`; trying to feed a manual-`fpga load` `.bit.bin` payload to the same path leaves the stock `BOOT.bin` PL image in place even though Linux still comes up.
 5. If the rebuilt Vivado raw `system.bit` still breaks AD9361 calibration, regenerate the stock BOOT-partition payload instead:
 
 ```bash
@@ -83,7 +87,7 @@ python hardware/7020_ad936x_sdr/boot/validate_manual_uart_fpga_load.py \
 
 That helper uploads the file to the FAT boot partition if needed, stops autoboot over UART, executes `load mmc` plus `fpga load`, boots Linux, and then checks whether AD9361 plus the expected IIO devices came back cleanly.
 8. Treat the standalone `ps/ad936x_no_os_reference/platform/hw/system_top.bit` only as the source-correlated control candidate for the raw-bit path. On `2026-06-22`, it was accepted by raw `fpga loadb` and by manual `.bit.bin` `fpga load`, but both routes still ended with `ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)`. That file still matches both `AD936X_PS.zip::platform/hw/system_top.bit` and `AD936X_PS.zip::AD936X/_ide/bitstream/system_top.bit`.
-9. Rebuild a Bootgen payload reproducibly with:
+9. Rebuild a manual-UART `fpga load` payload reproducibly with:
 
 ```bash
 python hardware/7020_ad936x_sdr/boot/build_system_bit_bin.py \
@@ -97,7 +101,7 @@ python hardware/7020_ad936x_sdr/boot/validate_manual_uart_fpga_load.py \
   --candidate hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit.bin
 ```
 
-10. The current matrix is now sharper: the extracted stock BOOT.bin partition passes manual `fpga load`, the source-correlated vendor-reference `.bit.bin` is accepted but still fails AD9361, and the Bootgen-converted `bridge_txrx_mux.bit.bin` is rejected by U-Boot validation (`diff 1700`) before Linux starts. See `../../docs/assets/lab112_clean_boot_pl_validation.json` for the persistent summary.
+10. The current matrix is now sharper: the extracted stock BOOT.bin partition passes manual `fpga load`, the source-correlated vendor-reference `.bit.bin` is accepted but still fails AD9361, and the corrected word-swapped `bridge_txrx_mux.bit.bin` candidate is now also accepted by U-Boot but still ends with the same AD9361 calibration timeout. The older helper-generated `bridge_txrx_mux.bit.bin` image was rejected earlier by U-Boot validation (`diff 1700`) before Linux started. See `../../docs/assets/lab112_clean_boot_pl_validation.json` for the persistent summary.
 11. The saved vendor `hdl/adi_fmcomms2_reference/projects/fmcomms2/zc702/zc702.xpr` snapshot is still the preferred editable rebuild witness when driven through `rebuild_vendor_xpr_snapshot_mio_patch.tcl`. On `2026-06-22`, that flow patched only `sys_ps7` MIO14/15 directions and exported an XSA with zero module/memrange/parameter drift against the vendor reference handoff, but the resulting raw `system.bit` still reproduced the same AD9361 calibration timeout on the direct `fpga loadb` path.
 12. Run that editable snapshot rebuild with:
 

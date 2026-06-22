@@ -1,0 +1,38 @@
+{
+  "lhs": {
+    "path": "G:\\Programs\\zynq-sdr-course\\hardware\\7020_ad936x_sdr\\ps\\ad936x_no_os_reference\\platform\\hw\\system_top.bit",
+    "kind": "raw_bit_normalized_to_fpga_load_payload",
+    "size_bytes": 2356256,
+    "md5": "c827619ef41fb0ea7c6381a29cc27784",
+    "metadata": {
+      "a": "system_top;COMPRESS=TRUE;UserID=0XFFFFFFFF;Version=2021.1",
+      "b": "7z020clg400",
+      "c": "2024/08/14",
+      "d": "19:34:18"
+    }
+  },
+  "rhs": {
+    "path": "G:\\Programs\\zynq-sdr-course\\tmp\\vendor_xpr_mio14_15_patch\\zc702\\zc702.runs\\impl_1\\system_top.bit",
+    "kind": "raw_bit_normalized_to_fpga_load_payload",
+    "size_bytes": 2356256,
+    "md5": "c827619ef41fb0ea7c6381a29cc27784",
+    "metadata": {
+      "a": "system_top;COMPRESS=TRUE;UserID=0XFFFFFFFF;Version=2021.1",
+      "b": "7z020clg400",
+      "c": "2026/06/22",
+      "d": "08:07:22"
+    }
+  },
+  "identical": true,
+  "common_prefix_bytes": 2356256,
+  "common_suffix_bytes": 0,
+  "compared_prefix_md5_equal": true,
+  "length_delta_bytes": 0,
+  "first_diff_offset": null,
+  "first_diff_word_offset": null,
+  "differing_bytes_in_common_prefix": 0,
+  "lhs_diff_window_hex": "",
+  "rhs_diff_window_hex": "",
+  "rhs_has_only_trailing_extra_data": false,
+  "lhs_has_only_trailing_extra_data": false
+}

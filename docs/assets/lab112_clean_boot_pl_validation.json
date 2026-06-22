@@ -1,5 +1,5 @@
 {
-  "validated_at_utc": "2026-06-22T15:21:48.4628452Z",
+  "validated_at_utc": "2026-06-22T17:35:26.2995125Z",
   "board_profile": "FISH Ball PlutoSDR Rev.A (Z7020/AD9361)",
   "boot_paths": {
     "raw_bit_direct_load": {
@@ -89,7 +89,7 @@
           "ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)",
           "ad9361: probe of spi0.0 failed with error -110"
         ],
-        "note": "This remains the closest editable structural witness because its XSA reaches zero module/memrange/parameter drift against the vendor reference handoff after the MIO14/15 patch, but the raw system.bit still breaks AD9361 clean boot."
+        "note": "This remains the closest editable structural witness because its XSA reaches zero module/memrange/parameter drift against the vendor reference handoff after the MIO14/15 patch, but the raw system.bit still breaks AD9361 clean boot. Its normalized manual-fpga-load payload is now also byte-identical to the source-correlated vendor reference payload; see docs/assets/vendor_reference_vs_vendor_xpr_mio14_15_payload_diff.json."
       }
     },
     {
@@ -186,31 +186,36 @@
     },
     {
       "candidate_id": "course_bpsk_fmcomms2_zc702::bridge_txrx_mux.bit.bin",
-      "source_path": "tmp/vendor_xpr_course_overlay/zc702/zc702.runs/impl_1/bridge_txrx_mux.bit.bin",
-      "md5": "3c02bdcf6ca341df078ff1c32eea416e",
-      "size_bytes": 2282752,
+      "source_path": "tmp/bridge_txrx_mux.wordswap.bit.bin",
+      "md5": "020dd715bc7cdd63ee543749cded5050",
+      "size_bytes": 2276856,
       "validation": {
-        "result": "rejected",
-        "fpga_load_accepted": false,
-        "ad9361_initialized": true,
-        "iio_device_count": 4,
+        "result": "fail",
+        "fpga_load_accepted": true,
+        "ad9361_initialized": false,
+        "iio_device_count": 1,
         "iio_devices": [
-          "iio:device0",
-          "iio:device1",
-          "iio:device2",
-          "iio:device3"
+          "iio:device0"
         ],
         "notable_uart_lines": [
-          "zynq_validate_bitstream: Bitstream is not validated yet (diff 1700)",
-          "fpga - loadable FPGA image support",
-          "Usage:"
+          "2276856 bytes read in 480 ms (4.5 MiB/s)",
+          "fpga load 0 0x100000 ${filesize}",
+          "Pluto>"
         ],
         "notable_dmesg_lines": [
-          "ad9361 spi0.0: ad9361_probe : AD936x Rev 0 successfully initialized",
-          "cf_axi_dds 79024000.cf-ad9361-dds-core-lpc: Analog Devices CF_AXI_DDS_DDS MASTER (9.01.b) at 0x79024000 mapped to 0x(ptrval), probed DDS AD9361",
-          "cf_axi_adc 79020000.cf-ad9361-lpc: ADI AIM (10.03.) at 0x79020000 mapped to 0x(ptrval) probed ADC AD9361 as MASTER"
+          "ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)",
+          "ad9361: probe of spi0.0 failed with error -110"
         ],
-        "note": "U-Boot rejects the Bootgen-converted course overlay before Linux starts, so the later healthy AD9361 state comes from the untouched stock PL shell."
+        "note": "After fixing build_system_bit_bin.py to emit the correct word-swapped fpga-load payload, the course bridge_txrx_mux .bit.bin is now accepted by manual UART fpga load and reaches the same failure mode as the raw path: Linux boots, but AD9361 still times out during calibration.",
+        "legacy_pre_wordswap_result": {
+          "result": "rejected",
+          "notable_uart_lines": [
+            "zynq_validate_bitstream: Bitstream is not validated yet (diff 1700)",
+            "fpga - loadable FPGA image support",
+            "Usage:"
+          ],
+          "note": "This older record came from the previous helper implementation before the .bit to .bit.bin word-swap fix."
+        }
       }
     }
   ],
@@ -224,7 +229,7 @@
     }
   ],
   "engineering_conclusion": {
-    "boot_reference": "There are now two distinct external PL validation paths on this board: raw .bit plus fpga loadb proves arbitrary PL replacement but every successful non-stock raw candidate still breaks AD9361, while manual UART fpga load is the correct path for .bit.bin payloads and currently accepts only two known cases tested here: the stock BOOT.bin partition payload passes cleanly, and the source-correlated vendor reference payload still fails AD9361.",
-    "next_step": "Treat stock_system_top_from_BOOT.bin as the only externally loaded boot-safe baseline for now. The next bring-up task is to explain why the extracted stock partition survives manual fpga load while the source-correlated vendor reference payload does not, then reproduce those acceptance and clean-boot properties in an editable shell before resuming gpreg/BPSK RF discovery."
+    "boot_reference": "There are now two distinct external PL validation paths on this board: raw .bit plus fpga loadb proves arbitrary PL replacement but every successful non-stock raw candidate still breaks AD9361, while manual UART fpga load is the correct path for .bit.bin payloads and now accepts three checked cases: the stock BOOT.bin partition payload passes cleanly, the source-correlated vendor reference payload still fails AD9361, and the corrected word-swapped course bridge_txrx_mux payload also still fails AD9361.",
+    "next_step": "Treat stock_system_top_from_BOOT.bin as the only externally loaded boot-safe baseline for now. The next bring-up task is to explain why the extracted stock partition survives manual fpga load while both the source-correlated vendor reference payload and the course-owned bridge_txrx_mux payload still lose AD9361, then reproduce those clean-boot properties in an editable shell before resuming gpreg/BPSK RF discovery."
   }
 }
