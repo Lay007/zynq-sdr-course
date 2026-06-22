@@ -1,5 +1,5 @@
 {
-  "validated_at_utc": "2026-06-21T19:30:00Z",
+  "validated_at_utc": "2026-06-21T22:50:35.5371672Z",
   "board_profile": "FISH Ball PlutoSDR Rev.A (Z7020/AD9361)",
   "boot_overlay": {
     "fat_root_bitstream_name": "system.bit.bin",
@@ -23,6 +23,33 @@
       ]
     }
   },
+  "additional_known_good_candidates": [
+    {
+      "candidate_id": "ps_ad936x_no_os_reference::system_top.bit",
+      "source_bit_path": "hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit",
+      "source_bit_md5": "7cb06731f08fe834c76f1d928abe5933",
+      "source_bit_size_bytes": 2356360,
+      "generated_system_bit_bin_md5": "dad4d563a6f2f9eda069652f8f8b28bf",
+      "generated_system_bit_bin_size_bytes": 2362144,
+      "validation": {
+        "result": "pass",
+        "ad9361_initialized": true,
+        "iio_device_count": 4,
+        "iio_devices": [
+          "iio:device0",
+          "iio:device1",
+          "iio:device2",
+          "iio:device3"
+        ],
+        "notable_dmesg_lines": [
+          "ad9361 spi0.0: ad9361_probe : AD936x Rev 0 successfully initialized",
+          "cf_axi_dds 79024000.cf-ad9361-dds-core-lpc: Analog Devices CF_AXI_DDS_DDS MASTER (9.01.b) at 0x79024000 mapped to 0x(ptrval), probed DDS AD9361",
+          "cf_axi_adc 79020000.cf-ad9361-lpc: ADI AIM (10.03.) at 0x79020000 mapped to 0x(ptrval) probed ADC AD9361 as MASTER"
+        ],
+        "note": "This candidate was generated with bootgen from the standalone vendor reference bitstream already bundled under ps/ad936x_no_os_reference/platform/hw/system_top.bit. That raw .bit matches both AD936X_PS.zip::platform/hw/system_top.bit and AD936X_PS.zip::AD936X/_ide/bitstream/system_top.bit at MD5 7cb06731f08fe834c76f1d928abe5933, then clean-boot validated both through an explicit raw-.bit invocation and through the no-args default validator path on 2026-06-22."
+      }
+    }
+  ],
   "rejected_candidates": [
     {
       "candidate_id": "AD936X_PL.zip::projects/fmcomms2/zc702/zc702.runs/impl_1/system_top.bit",
@@ -36,7 +63,8 @@
         "notable_dmesg_lines": [
           "ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)",
           "ad9361: probe of spi0.0 failed with error -110"
-        ]
+        ],
+        "note": "Rebuilding the saved vendor zc702.xpr snapshot on 2026-06-22 reproduced the same system.bit.bin MD5, so this failure mode also covers the project-snapshot path."
       }
     },
     {
@@ -70,10 +98,27 @@
         ],
         "note": "This candidate passed Vivado project creation, implementation, bitstream generation, and XSA export before board-level boot validation."
       }
+    },
+    {
+      "candidate_id": "course_bpsk_fmcomms2_zc702::vendor_only",
+      "size_bytes": 2304864,
+      "md5": "bd8246c23264a6908307bf2d6f57c528",
+      "xsa_embedded_bit_md5": "0309375a4c23f8637b829b1af74767a5",
+      "validation": {
+        "result": "fail",
+        "failure_mode": "AD9361 calibration timeout during clean boot",
+        "ad9361_initialized": false,
+        "iio_device_count": 1,
+        "notable_dmesg_lines": [
+          "ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)",
+          "ad9361: probe of spi0.0 failed with error -110"
+        ],
+        "note": "The rebuilt vendor_only shell matched the vendor reference XSA module and memrange counts, but still drifted at the handoff level; see docs/assets/vendor_reference_vs_vendor_only_handoff_diff.json."
+      }
     }
   ],
   "engineering_conclusion": {
-    "boot_reference": "Use the extracted stock BOOT.bin PL partition as the only validated boot-time PL shell.",
-    "next_step": "Recover a source-level handoff that reproduces the stock clean-boot shell before trusting any rebuilt course overlay for renewed RF discovery."
+    "boot_reference": "Prefer the bootgen-converted vendor reference bitstream from ps/ad936x_no_os_reference/platform/hw/system_top.bit when you need a validated source-correlated boot-time PL shell, and keep the extracted BOOT.bin partition as an independent fallback baseline.",
+    "next_step": "Treat the saved vendor zc702.xpr snapshot as the closest surviving rebuild witness, because the normalized pure-Tcl vendor_only recreation still leaves read-only or disabled deltas at sys_ps7.PCW_S_AXI_HP0_FREQMHZ, the DMA protocol fields, and axi_ad9361.SPEED_GRADE before any renewed RF discovery."
   }
 }

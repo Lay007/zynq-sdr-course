@@ -33,8 +33,13 @@ The original vendor folder mixes useful board assets with heavy archives, Window
 | [`docs/Fish_Ball_SDR_ru.pdf`](docs/Fish_Ball_SDR_ru.pdf) | Russian board guide PDF |
 | [`boot/notes/pluto_sd_boot_readme.txt`](boot/notes/pluto_sd_boot_readme.txt) | shortest path for SD-card boot |
 | [`boot/extract_stock_system_top_partition.py`](boot/extract_stock_system_top_partition.py) | extracts the known-good PL partition from `boot/sd_image/BOOT.bin` when a rebuilt Vivado bitstream is still being debugged |
+| [`boot/build_system_bit_bin.py`](boot/build_system_bit_bin.py) | converts a raw `.bit` into the boot-time `system.bit.bin` payload expected by the clean boot overlay |
 | [`boot/validate_clean_boot_overlay.py`](boot/validate_clean_boot_overlay.py) | uploads a candidate `system.bit.bin`, reboots the board, captures UART, and verifies AD9361/IIO bring-up |
+| [`compare_xsa_handoffs.py`](compare_xsa_handoffs.py) | compares two XSA handoffs down to `ps7_init`, `system.hwh` modules, parameter drift, and memranges |
 | [`../../docs/assets/lab112_clean_boot_pl_validation.json`](../../docs/assets/lab112_clean_boot_pl_validation.json) | persistent summary of which candidate boot-time PL images clean-booted successfully and which ones failed |
+| [`../../docs/assets/vendor_reference_vs_vendor_only_handoff_diff.json`](../../docs/assets/vendor_reference_vs_vendor_only_handoff_diff.json) | source-level diff between the vendor reference XSA and the rebuilt `vendor_only` shell |
+| [`../../docs/assets/vendor_reference_vs_vendor_xpr_snapshot_handoff_diff.json`](../../docs/assets/vendor_reference_vs_vendor_xpr_snapshot_handoff_diff.json) | source-level diff showing how close the saved vendor `zc702.xpr` snapshot gets to the vendor reference XSA |
+| [`ps/ad936x_no_os_reference/platform/hw/system_top.bit`](ps/ad936x_no_os_reference/platform/hw/system_top.bit) | standalone vendor reference bitstream that clean-boots once converted to `system.bit.bin` with Bootgen |
 | [`hdl/adi_fmcomms2_reference/projects/common/zc702/zc702_system_bd.tcl`](hdl/adi_fmcomms2_reference/projects/common/zc702/zc702_system_bd.tcl) | common Zynq-7020 board TCL baseline |
 | [`hdl/adi_fmcomms2_reference/projects/scripts/adi_project_xilinx.tcl`](hdl/adi_fmcomms2_reference/projects/scripts/adi_project_xilinx.tcl) | ADI Xilinx project-generation helper |
 | [`hdl/adi_fmcomms2_reference/projects/fmcomms2/zc702/zc702.xpr`](hdl/adi_fmcomms2_reference/projects/fmcomms2/zc702/zc702.xpr) | generated Vivado project snapshot |
@@ -60,7 +65,13 @@ python hardware/7020_ad936x_sdr/boot/extract_stock_system_top_partition.py
 ```
 
 This emits `hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin`, which was validated on `2026-06-21` as a working `system.bit.bin` payload for the clean boot overlay.
-6. To validate a candidate boot-time PL image end-to-end, run:
+6. To validate the preferred no-OS reference baseline end-to-end, run:
+
+```bash
+python hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py
+```
+
+7. To validate a specific candidate boot-time PL image end-to-end, run:
 
 ```bash
 python hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py \
@@ -68,11 +79,33 @@ python hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py \
 ```
 
 That script uploads the file to the FAT boot partition, reboots the board, captures UART, and checks that AD9361 plus the expected IIO devices come back cleanly.
-7. Treat the extracted stock PL as the only validated boot-time baseline for now. On `2026-06-21`, both regenerated candidate images from `AD936X_PL.zip` and `AD936X_only_PL.zip` failed clean-boot validation in different ways; see `../../docs/assets/lab112_clean_boot_pl_validation.json` for the persistent summary.
-8. Inspect the AD936x no-OS app in `ps/ad936x_no_os_reference/` and compare its parameters with your board target.
-9. Use `ps/bringup_tests/` for board sanity checks before SDR-specific debugging.
-10. Use the HDL reference under `hdl/adi_fmcomms2_reference/` as the baseline when mapping course HDL work toward a Zynq/AD936x platform.
-11. Use `hdl/course_bpsk_fmcomms2_zc702/` when you need the next course-owned overlay, but revalidate clean boot against the stock baseline before trusting any RF result.
+8. Treat the standalone `ps/ad936x_no_os_reference/platform/hw/system_top.bit` as the preferred validated source-correlated baseline for now. On `2026-06-22`, converting it to `system.bit.bin` passed the clean-boot validator with AD9361 initialized and all `4` IIO devices alive; the extracted stock BOOT.bin PL remains a second independent known-good fallback. That raw `.bit` also matches both `AD936X_PS.zip::platform/hw/system_top.bit` and `AD936X_PS.zip::AD936X/_ide/bitstream/system_top.bit`.
+8. Rebuild that payload reproducibly with:
+
+```bash
+python hardware/7020_ad936x_sdr/boot/build_system_bit_bin.py \
+  hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit
+```
+
+The validator can now consume that raw `.bit` directly and will generate
+`boot/_generated/system_top.bit.bin` automatically during the check.
+
+10. Both regenerated candidate images from `AD936X_PL.zip` and `AD936X_only_PL.zip` still fail clean-boot validation in different ways, and the rebuilt `vendor_only` shell still fails with the same AD9361 calibration timeout; see `../../docs/assets/lab112_clean_boot_pl_validation.json` for the persistent summary.
+11. The saved vendor `hdl/adi_fmcomms2_reference/projects/fmcomms2/zc702/zc702.xpr` snapshot is the closest surviving rebuild witness. On `2026-06-22`, rebuilding that snapshot reduced the XSA drift to only the `sys_ps7` MIO14/15 direction fields, but its generated `system.bit.bin` payload was still byte-identical to the already rejected `AD936X_PL.zip` candidate.
+12. If you need to debug why a rebuilt source shell still diverges, compare its exported XSA directly against the vendor reference handoff:
+
+```bash
+python hardware/7020_ad936x_sdr/compare_xsa_handoffs.py \
+  hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.xsa \
+  hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/course_bpsk_fmcomms2_zc702.sdk/system_top.xsa \
+  --lhs-label vendor_reference_xsa \
+  --rhs-label candidate_rebuild_xsa
+```
+
+13. Inspect the AD936x no-OS app in `ps/ad936x_no_os_reference/` and compare its parameters with your board target.
+14. Use `ps/bringup_tests/` for board sanity checks before SDR-specific debugging.
+15. Use the HDL reference under `hdl/adi_fmcomms2_reference/` as the baseline when mapping course HDL work toward a Zynq/AD936x platform.
+16. Use `hdl/course_bpsk_fmcomms2_zc702/` when you need the next course-owned overlay, but revalidate clean boot against the no-OS reference or stock fallback baseline before trusting any RF result.
 
 ## Deliberately omitted
 

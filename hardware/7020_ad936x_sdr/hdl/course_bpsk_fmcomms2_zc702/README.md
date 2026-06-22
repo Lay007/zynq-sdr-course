@@ -36,6 +36,42 @@ successfully. It is not yet boot-validated on hardware, because the resulting
 `system.bit.bin` still triggers `ad9361 spi0.0: Calibration TIMEOUT (0x244,
 0x80)` during clean boot.
 
+The same clean-boot failure now also holds for `vendor_only`. That matters:
+the current blocker is no longer "the course bridge broke AD9361", but "the
+reconstructed source shell still differs from the vendor handoff that booted on
+the board image."
+
+The most useful new baseline is now the standalone vendor reference bitstream at
+`../../ps/ad936x_no_os_reference/platform/hw/system_top.bit`. On `2026-06-22`,
+converting that file to `system.bit.bin` with Bootgen passed the clean-boot
+validator with AD9361 initialized and all `4` IIO devices alive. This gives the
+course a validated source-correlated PL shell, not just the raw partition
+extracted from `BOOT.bin`.
+
+`../../compare_xsa_handoffs.py` now captures that drift explicitly. After
+forcing `CONFIG.preset {None}` in the recreated course flow on `2026-06-22`,
+the pure-Tcl `vendor_only` rebuild still matched the vendor reference XSA in
+module count and memrange count, and the `MIO14/15` drift disappeared, but
+four common-IP parameters remained different:
+
+- `sys_ps7`: `PCW_S_AXI_HP0_FREQMHZ`
+- `axi_ad9361_adc_dma`: `DMA_AXI_PROTOCOL_SRC`
+- `axi_ad9361_dac_dma`: `DMA_AXI_PROTOCOL_DEST`
+- `axi_ad9361`: `SPEED_GRADE`
+
+Those four fields are read-only or disabled in the recreated BD flow, so
+reapplying them with `set_property` does not stick. The persistent pure-Tcl
+report lives at
+`../../../../docs/assets/vendor_reference_vs_vendor_only_handoff_diff.json`.
+
+A separate rebuild from the saved vendor
+`../../adi_fmcomms2_reference/projects/fmcomms2/zc702/zc702.xpr` snapshot
+narrows the XSA drift further to only `PCW_MIO_14_DIRECTION` and
+`PCW_MIO_15_DIRECTION`, but still emits the same boot-time `system.bit.bin`
+payload as the already rejected `AD936X_PL.zip` candidate. That snapshot-based
+report lives at
+`../../../../docs/assets/vendor_reference_vs_vendor_xpr_snapshot_handoff_diff.json`.
+
 ## Control-plane contract
 
 Base address: `0x79040000`
@@ -96,7 +132,11 @@ That guidance is based on the live `2026-06-21` probe:
 - manually booting Linux after a real U-Boot `fpga load` of the course bitstream showed that deleting the DAC DMA path from the PL shell causes a kernel panic in `axi_dmac_probe()`;
 - after restoring the DAC DMA shell and the stale Linux DT fixups, the next remaining live blocker was AD9361 calibration timeout under the TX-override bitstream itself;
 - the current debug step therefore keeps the live DAC FIFO path untouched and uses either `gpreg_only` or the new intermediate `bridge_rx_only` mode until AD9361 boot is stable again;
-- rebuilding even the `vendor_only` shell from the recovered CLG400 sources still left AD9361 stuck in `Calibration TIMEOUT (0x244, 0x80)` during clean boot, so the current known-good PL baseline is the stock `system_top.bit` partition extracted from `../../boot/sd_image/BOOT.bin`;
+- rebuilding even the `vendor_only` shell from the recovered CLG400 sources still left AD9361 stuck in `Calibration TIMEOUT (0x244, 0x80)` during clean boot;
+- the standalone vendor reference `../../ps/ad936x_no_os_reference/platform/hw/system_top.bit` now passes clean boot after Bootgen conversion and is the preferred source-correlated PL baseline;
+- the extracted `../../boot/sd_image/BOOT.bin` partition remains a second independent known-good fallback baseline;
+- source-level comparison against `ps/ad936x_no_os_reference/platform/hw/system_top.xsa` shows that the normalized pure-Tcl `vendor_only` flow is now blocked by four read-only or disabled derived parameters rather than missing whole modules;
+- the saved vendor `zc702.xpr` snapshot is the closest surviving source witness, but it still reproduces the already rejected `AD936X_PL.zip` boot payload;
 - the stock Linux device tree still described the removed `i2c@41600000` and `mwipcore@43c00000` PL nodes, so clean-boot bring-up also needs the U-Boot-side device-tree fixup above;
 - attempting to recover the RX DMA path with Linux `unbind` / `bind` triggered a kernel oops in `dma_channel_rebalance()`.
 

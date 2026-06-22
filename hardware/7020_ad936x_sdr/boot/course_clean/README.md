@@ -17,14 +17,27 @@ The overlay keeps only the parts that are useful for course bring-up:
   stock Linux device tree before boot;
 - safe TX defaults for receive-first work when no attenuator is installed yet.
 
-## Known-good PL baseline
+## Known-good PL baselines
 
 On `2026-06-21`, the rebuilt Vivado `system.bit.bin` images from
 `hdl/course_bpsk_fmcomms2_zc702/` still caused
 `ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)` during clean boot.
 
-The validated fallback is the stock PL partition extracted from the vendor
-`BOOT.bin`:
+The validated source-correlated baseline is the standalone vendor reference
+bitstream at `../ps/ad936x_no_os_reference/platform/hw/system_top.bit`. Rebuild
+its boot-time payload with:
+
+```bash
+python hardware/7020_ad936x_sdr/boot/build_system_bit_bin.py \
+  hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit
+```
+
+That produces `<...>/system_top.bit.bin`, which passed the clean-boot
+validator on `2026-06-22` with AD9361 initialized and all `4` IIO devices
+alive.
+
+The second independent fallback is the stock PL partition extracted from the
+vendor `BOOT.bin`:
 
 ```bash
 python hardware/7020_ad936x_sdr/boot/extract_stock_system_top_partition.py
@@ -36,7 +49,7 @@ This writes:
 hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin
 ```
 
-That extracted blob was verified as a working replacement for FAT-root
+That extracted blob was also verified as a working replacement for FAT-root
 `system.bit.bin` under this clean boot overlay.
 
 Persistent validation summary:
@@ -48,8 +61,25 @@ docs/assets/lab112_clean_boot_pl_validation.json
 To rerun that check from the host, use:
 
 ```bash
+python hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py
+```
+
+This now validates the preferred no-OS reference raw `.bit` by default.
+
+To validate the stock fallback explicitly, use:
+
+```bash
 python hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py \
   --system-bit-bin hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin
+```
+
+The validator now also accepts a raw `.bit` directly and will generate the
+boot-time payload under `hardware/7020_ad936x_sdr/boot/_generated/` before
+uploading it. The validated vendor-reference path is therefore:
+
+```bash
+python hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py \
+  --system-bit-bin hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit
 ```
 
 ## Rejected reconstructed boot shells
@@ -66,8 +96,12 @@ equivalent to the stock boot-time shell:
   and exports an XSA, but it still fails the same AD9361 clean-boot
   calibration check as soon as Linux probes `spi0.0`.
 
-Practical consequence: the extracted stock `BOOT.bin` partition is currently
-the only validated boot-time PL reference for the course.
+Practical consequence: the course now has two validated boot-time PL
+references:
+
+- the preferred source-correlated vendor reference `system_top.bit` after
+  Bootgen conversion;
+- the extracted stock `BOOT.bin` partition as an independent fallback.
 
 ## Manual recovery from a bad `system.bit.bin`
 
@@ -130,7 +164,10 @@ hardware/7020_ad936x_sdr/boot/sd_image/
 Then add:
 
 - the course-generated `system.bit.bin` built from `hdl/course_bpsk_fmcomms2_zc702/`;
-- or, while the rebuilt course bitstream is still being debugged, the known-good
+- or, while the rebuilt course bitstream is still being debugged, the preferred
+  `system_top.bit.bin` generated from
+  `hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit`;
+- or the known-good fallback
   `hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin` copied to the FAT
   root as `system.bit.bin`;
 - `hardware/7020_ad936x_sdr/boot/course_clean/uEnv_course_bpsk_overlay.txt`

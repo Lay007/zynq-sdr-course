@@ -19,14 +19,19 @@ import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from build_system_bit_bin import build_system_bit_bin
 from extract_stock_system_top_partition import find_partition
 
 
 BOOT_DIR = Path(__file__).resolve().parent
 BUNDLE_ROOT = BOOT_DIR.parent
 DEFAULT_BOOT_BIN = BOOT_DIR / "sd_image" / "BOOT.bin"
-DEFAULT_SYSTEM_BIT_BIN = BUNDLE_ROOT / "stock_system_top_from_BOOT.bin"
+DEFAULT_REFERENCE_SYSTEM_BIT = (
+    BUNDLE_ROOT / "ps" / "ad936x_no_os_reference" / "platform" / "hw" / "system_top.bit"
+)
+DEFAULT_STOCK_SYSTEM_BIT_BIN = BUNDLE_ROOT / "stock_system_top_from_BOOT.bin"
 DEFAULT_UART_LOG = BOOT_DIR / "last_clean_boot_overlay_uart.log"
+DEFAULT_GENERATED_DIR = BOOT_DIR / "_generated"
 DEFAULT_HOST = "192.168.40.1"
 DEFAULT_USER = "root"
 DEFAULT_PASSWORD = "analog"
@@ -215,8 +220,18 @@ def run_remote_checked(session: ParamikoSession, command: str, *, context: str) 
 
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--system-bit-bin", type=Path, default=DEFAULT_SYSTEM_BIT_BIN)
+    parser.add_argument(
+        "--system-bit-bin",
+        type=Path,
+        default=DEFAULT_REFERENCE_SYSTEM_BIT,
+        help="Input candidate path: either a boot-time .bit.bin or a raw .bit to be converted first.",
+    )
     parser.add_argument("--boot-bin", type=Path, default=DEFAULT_BOOT_BIN)
+    parser.add_argument(
+        "--bootgen",
+        type=Path,
+        help="Optional explicit Bootgen executable path used when --system-bit-bin points to a raw .bit file.",
+    )
     parser.add_argument("--ssh-host", default=DEFAULT_HOST)
     parser.add_argument("--ssh-user", default=DEFAULT_USER)
     parser.add_argument("--ssh-password", default=DEFAULT_PASSWORD)
@@ -234,14 +249,25 @@ def main() -> int:
     parser = build_arg_parser()
     args = parser.parse_args()
 
-    if args.system_bit_bin == DEFAULT_SYSTEM_BIT_BIN:
-        ensure_stock_baseline(args.system_bit_bin, args.boot_bin)
-    if not args.system_bit_bin.exists():
-        raise FileNotFoundError(f"Missing system bitstream candidate: {args.system_bit_bin}")
+    candidate_path = args.system_bit_bin
+    if candidate_path == DEFAULT_STOCK_SYSTEM_BIT_BIN:
+        ensure_stock_baseline(candidate_path, args.boot_bin)
+    if not candidate_path.exists():
+        raise FileNotFoundError(f"Missing system bitstream candidate: {candidate_path}")
 
-    payload = args.system_bit_bin.read_bytes()
+    if candidate_path.suffix.lower() == ".bit":
+        generated_path = DEFAULT_GENERATED_DIR / f"{candidate_path.name}.bin"
+        print(f"Converting raw bitstream to boot-time payload: {candidate_path}")
+        candidate_path = build_system_bit_bin(
+            candidate_path,
+            output_path=generated_path,
+            bootgen_path=args.bootgen,
+        )
+        print(f"Generated boot-time payload: {candidate_path}")
+
+    payload = candidate_path.read_bytes()
     local_md5 = md5_bytes(payload)
-    print(f"Local file: {args.system_bit_bin}")
+    print(f"Local file: {candidate_path}")
     print(f"Local size: {len(payload)} bytes")
     print(f"Local md5 : {local_md5}")
 
@@ -314,7 +340,7 @@ def main() -> int:
 
     iio_devices = [line.strip() for line in iio_devices_text.splitlines() if line.strip()]
     summary = ValidationSummary(
-        local_path=str(args.system_bit_bin),
+        local_path=str(candidate_path),
         local_md5=local_md5,
         remote_md5=remote_md5,
         uart_log_path=str(args.uart_log),

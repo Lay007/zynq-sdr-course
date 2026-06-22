@@ -153,15 +153,21 @@ Observed historical facts on the board:
 Current checked-in safety baseline:
 
 - the boot-time PL reference is `hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin`;
+- the standalone vendor reference `hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit` now also clean-boots after Bootgen conversion to `system.bit.bin`, with AD9361 initialized and `4` IIO devices alive;
 - `hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py` passes against that extracted stock image with AD9361 initialized and `4` IIO devices alive;
+- the rebuilt `vendor_only` shell now also passes Vivado project creation, implementation, bitstream generation, and XSA export, but still fails clean boot with the same AD9361 calibration timeout;
 - the new `bridge_rx_only` mode now passes Vivado project creation, implementation, bitstream generation, and XSA export;
+- the saved vendor `zc702.xpr` snapshot rebuild narrows the XSA drift against the vendor reference to only `sys_ps7` MIO14/15 direction fields, but still regenerates the same rejected `AD936X_PL.zip` boot payload at the `system.bit.bin` level;
 - regenerated boot-time candidates from both `AD936X_PL.zip` and `AD936X_only_PL.zip` were rejected and summarized in `docs/assets/lab112_clean_boot_pl_validation.json`.
 
 Interpretation:
 
 - the PS-to-PL gpreg control plane was validated on real hardware at least once in the earlier burst-enabled overlay;
+- the normalized pure-Tcl `vendor_only` flow now eliminates the earlier `MIO14/15` drift, but it is still blocked by four read-only or disabled derived parameters: `sys_ps7.PCW_S_AXI_HP0_FREQMHZ`, `axi_ad9361_adc_dma.DMA_AXI_PROTOCOL_SRC`, `axi_ad9361_dac_dma.DMA_AXI_PROTOCOL_DEST`, and `axi_ad9361.SPEED_GRADE`; see `docs/assets/vendor_reference_vs_vendor_only_handoff_diff.json`;
+- the saved vendor `zc702.xpr` snapshot is the closest surviving source witness, but it still reproduces the rejected `AD936X_PL.zip` boot payload; see `docs/assets/vendor_reference_vs_vendor_xpr_snapshot_handoff_diff.json`;
 - the current checked-in HDL now also includes an intermediate `bridge_rx_only` reintegration mode that is validated in Vivado but not yet in clean boot;
-- the immediate next task is not BER tuning but understanding why every rebuilt shell, including `bridge_rx_only`, still trips AD9361 calibration while the extracted stock PL does not.
+- the best next reintegration anchor is no longer the anonymous stock partition from `BOOT.bin`, but the validated source-correlated vendor reference bitstream/XSA pair under `ps/ad936x_no_os_reference/platform/hw/`;
+- the immediate next task is not BER tuning but understanding why every rebuilt shell, including `bridge_rx_only`, still trips AD9361 calibration while the validated stock and vendor-reference baselines do not.
 
 ## Next gated re-enable order
 
