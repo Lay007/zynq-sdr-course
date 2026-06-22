@@ -41,12 +41,18 @@ the current blocker is no longer "the course bridge broke AD9361", but "the
 reconstructed source shell still differs from the vendor handoff that booted on
 the board image."
 
-The most useful new baseline is now the standalone vendor reference bitstream at
-`../../ps/ad936x_no_os_reference/platform/hw/system_top.bit`. On `2026-06-22`,
-converting that file to `system.bit.bin` with Bootgen passed the clean-boot
-validator with AD9361 initialized and all `4` IIO devices alive. This gives the
-course a validated source-correlated PL shell, not just the raw partition
-extracted from `BOOT.bin`.
+The most useful source-correlated raw-bit control candidate is still the
+standalone vendor reference bitstream at
+`../../ps/ad936x_no_os_reference/platform/hw/system_top.bit`, because it proves
+that raw `fpga loadb` really reaches PL on this board. It is not a clean-boot
+radio baseline, though: on `2026-06-22`, both the raw `fpga loadb` path and the
+manual `.bit.bin` `fpga load` path still ended with
+`ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)`.
+
+The only externally loaded boot-safe baseline demonstrated so far is the
+extracted `../../boot/sd_image/BOOT.bin` partition payload at
+`../../stock_system_top_from_BOOT.bin`, which survives manual UART `fpga load`
+and returns Linux plus all `4` expected IIO devices.
 
 `../../compare_xsa_handoffs.py` now captures that drift explicitly. After
 forcing `CONFIG.preset {None}` in the recreated course flow on `2026-06-22`,
@@ -65,12 +71,23 @@ report lives at
 `../../../../docs/assets/vendor_reference_vs_vendor_only_handoff_diff.json`.
 
 A separate rebuild from the saved vendor
-`../../adi_fmcomms2_reference/projects/fmcomms2/zc702/zc702.xpr` snapshot
-narrows the XSA drift further to only `PCW_MIO_14_DIRECTION` and
-`PCW_MIO_15_DIRECTION`, but still emits the same boot-time `system.bit.bin`
-payload as the already rejected `AD936X_PL.zip` candidate. That snapshot-based
-report lives at
+`../../adi_fmcomms2_reference/projects/fmcomms2/zc702/zc702.xpr` snapshot is
+now promoted to the preferred editable shell baseline when driven through
+`../../rebuild_vendor_xpr_snapshot_mio_patch.tcl`. On `2026-06-22`, patching
+only `PCW_MIO_14_DIRECTION` and `PCW_MIO_15_DIRECTION` before synth/impl/export
+produced:
+
+- an XSA with zero module/memrange/parameter drift against the vendor
+  reference handoff;
+- a raw `system_top.bit` with a different MD5 from the bundled no-OS reference
+  bit;
+- a raw direct-load result that still reproduces the same AD9361 calibration
+  timeout as the source-correlated vendor reference payload.
+
+The historical unpatched snapshot report still lives at
 `../../../../docs/assets/vendor_reference_vs_vendor_xpr_snapshot_handoff_diff.json`.
+The zero-drift patched report lives at
+`../../../../docs/assets/vendor_reference_vs_vendor_xpr_mio14_15_patch_handoff_diff.json`.
 
 ## Control-plane contract
 
@@ -133,10 +150,10 @@ That guidance is based on the live `2026-06-21` probe:
 - after restoring the DAC DMA shell and the stale Linux DT fixups, the next remaining live blocker was AD9361 calibration timeout under the TX-override bitstream itself;
 - the current debug step therefore keeps the live DAC FIFO path untouched and uses either `gpreg_only` or the new intermediate `bridge_rx_only` mode until AD9361 boot is stable again;
 - rebuilding even the `vendor_only` shell from the recovered CLG400 sources still left AD9361 stuck in `Calibration TIMEOUT (0x244, 0x80)` during clean boot;
-- the standalone vendor reference `../../ps/ad936x_no_os_reference/platform/hw/system_top.bit` now passes clean boot after Bootgen conversion and is the preferred source-correlated PL baseline;
-- the extracted `../../boot/sd_image/BOOT.bin` partition remains a second independent known-good fallback baseline;
+- the standalone vendor reference `../../ps/ad936x_no_os_reference/platform/hw/system_top.bit` remains the preferred source-correlated raw-bit proof candidate, but it still fails AD9361 clean boot both as raw `.bit` and as manual `.bit.bin` `fpga load`;
+- the extracted `../../boot/sd_image/BOOT.bin` partition payload is now the only externally loaded boot-safe baseline demonstrated so far;
 - source-level comparison against `ps/ad936x_no_os_reference/platform/hw/system_top.xsa` shows that the normalized pure-Tcl `vendor_only` flow is now blocked by four read-only or disabled derived parameters rather than missing whole modules;
-- the saved vendor `zc702.xpr` snapshot is the closest surviving source witness, but it still reproduces the already rejected `AD936X_PL.zip` boot payload;
+- the saved vendor `zc702.xpr` snapshot, rebuilt through `../../rebuild_vendor_xpr_snapshot_mio_patch.tcl`, is still the preferred editable structural witness because it matches the vendor reference XSA structurally, but it is not yet a boot-safe RF baseline;
 - the stock Linux device tree still described the removed `i2c@41600000` and `mwipcore@43c00000` PL nodes, so clean-boot bring-up also needs the U-Boot-side device-tree fixup above;
 - attempting to recover the RX DMA path with Linux `unbind` / `bind` triggered a kernel oops in `dma_channel_rebalance()`.
 

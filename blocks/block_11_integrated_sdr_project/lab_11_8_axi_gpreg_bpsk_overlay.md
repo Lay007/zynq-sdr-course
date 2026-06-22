@@ -21,7 +21,7 @@ That rollback is deliberate:
 - it separates `axi_gpreg` address-map validation from the harder AD9361 clean-boot problem;
 - it avoids treating a rebuilt but not yet boot-safe PL image as a valid RF measurement baseline.
 
-The earlier burst-enabled TX experiments remain useful as historical evidence, but they are not the current safe checked-in baseline. The next gated step is to splice the sample-domain bridge back into the exact stock shell and rerun clean-boot validation before more RF discovery work.
+The earlier burst-enabled TX experiments remain useful as historical evidence, but they are not the current safe checked-in baseline. The next gated step is to treat the extracted stock BOOT-partition payload as the only externally loaded boot-safe anchor for now, then explain why the source-correlated editable shells still lose AD9361 before more RF discovery work.
 
 ## New hardware files
 
@@ -31,6 +31,7 @@ The earlier burst-enabled TX experiments remain useful as historical evidence, b
 | `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/system_bd.tcl` | sources the imported AD9361 baseline and adds the course overlay |
 | `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/vendor_system_bd_clg400.tcl` | frozen vendor block-design shell extracted from the working board image |
 | `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/build_bitstream.tcl` | deterministic batch build that emits the course bitstream and XSA |
+| `hardware/7020_ad936x_sdr/rebuild_vendor_xpr_snapshot_mio_patch.tcl` | disposable Vivado flow that rebuilds the saved vendor `zc702.xpr` snapshot after patching only `sys_ps7` MIO14/15 |
 | `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/bpsk_zynq_ber_gpreg_bridge.v` | staged clock-domain bridge for the next sample-path reintegration step |
 | `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/course_dac_fifo_source_mux.v` | staged TX-path mux kept for the later DAC reintegration step, not enabled in the current `gpreg_only` mode |
 | `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/README.md` | build notes, register contract, and first-burst constraints |
@@ -152,26 +153,30 @@ Observed historical facts on the board:
 
 Current checked-in safety baseline:
 
-- the boot-time PL reference is `hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin`;
-- the standalone vendor reference `hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit` now also clean-boots after Bootgen conversion to `system.bit.bin`, with AD9361 initialized and `4` IIO devices alive;
-- `hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py` passes against that extracted stock image with AD9361 initialized and `4` IIO devices alive;
+- the stock-safe recovery path is still `hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin`; under the old `uEnv.txt` `loadb`-on-`.bit.bin` fallback it was not proof of arbitrary external PL replacement, but under the new manual UART `fpga load` path it is now the only externally loaded boot-safe candidate demonstrated so far;
+- the extracted stock BOOT partition is also the only externally loaded PL payload that now passes manual UART `fpga load` with AD9361 still alive; see `docs/assets/lab112_clean_boot_pl_validation.json`;
+- the standalone vendor reference `hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit` remains the source-correlated raw control candidate, but it still fails AD9361 both as raw `fpga loadb` and as manual `.bit.bin` `fpga load`;
+- `hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py` captures the decisive UART evidence for raw `fpga loadb`, while `hardware/7020_ad936x_sdr/boot/validate_manual_uart_fpga_load.py` now covers the manual `.bit.bin` `fpga load` path;
 - the rebuilt `vendor_only` shell now also passes Vivado project creation, implementation, bitstream generation, and XSA export, but still fails clean boot with the same AD9361 calibration timeout;
 - the new `bridge_rx_only` mode now passes Vivado project creation, implementation, bitstream generation, and XSA export;
-- the saved vendor `zc702.xpr` snapshot rebuild narrows the XSA drift against the vendor reference to only `sys_ps7` MIO14/15 direction fields, but still regenerates the same rejected `AD936X_PL.zip` boot payload at the `system.bit.bin` level;
+- the saved vendor `zc702.xpr` snapshot, rebuilt through `hardware/7020_ad936x_sdr/rebuild_vendor_xpr_snapshot_mio_patch.tcl`, still exports an XSA with zero module/memrange/parameter drift against the vendor reference, but its direct raw `system.bit` load still fails AD9361 clean boot with the same calibration timeout;
+- the newer `bridge_txrx_mux` raw-clean-boot candidate now proves that the course-owned overlay really reaches PL and exposes `axi_gpreg` on the board after reboot; see `docs/assets/lab118_axi_gpreg_bringup_cleanboot_raw.json`;
+- the Bootgen-converted `bridge_txrx_mux.bit.bin` candidate is currently rejected by U-Boot `fpga load` with `zynq_validate_bitstream: Bitstream is not validated yet (diff 1700)`, so the later healthy AD9361 state in that path comes from the untouched stock PL shell;
 - regenerated boot-time candidates from both `AD936X_PL.zip` and `AD936X_only_PL.zip` were rejected and summarized in `docs/assets/lab112_clean_boot_pl_validation.json`.
 
 Interpretation:
 
 - the PS-to-PL gpreg control plane was validated on real hardware at least once in the earlier burst-enabled overlay;
+- the same gpreg control plane is now also readable after a direct raw clean boot of the `bridge_txrx_mux` candidate, with both ID and signature equal to `0x4250534B`, `tx_valid_count > 0`, and `rx_valid_count == 0`;
 - the normalized pure-Tcl `vendor_only` flow now eliminates the earlier `MIO14/15` drift, but it is still blocked by four read-only or disabled derived parameters: `sys_ps7.PCW_S_AXI_HP0_FREQMHZ`, `axi_ad9361_adc_dma.DMA_AXI_PROTOCOL_SRC`, `axi_ad9361_dac_dma.DMA_AXI_PROTOCOL_DEST`, and `axi_ad9361.SPEED_GRADE`; see `docs/assets/vendor_reference_vs_vendor_only_handoff_diff.json`;
-- the saved vendor `zc702.xpr` snapshot is the closest surviving source witness, but it still reproduces the rejected `AD936X_PL.zip` boot payload; see `docs/assets/vendor_reference_vs_vendor_xpr_snapshot_handoff_diff.json`;
+- the saved vendor `zc702.xpr` snapshot is still the preferred editable source witness once rebuilt through the MIO14/15 patch flow, but it is not yet a boot-safe RF baseline; see `docs/assets/vendor_reference_vs_vendor_xpr_mio14_15_patch_handoff_diff.json`;
 - the current checked-in HDL now also includes an intermediate `bridge_rx_only` reintegration mode that is validated in Vivado but not yet in clean boot;
-- the best next reintegration anchor is no longer the anonymous stock partition from `BOOT.bin`, but the validated source-correlated vendor reference bitstream/XSA pair under `ps/ad936x_no_os_reference/platform/hw/`;
-- the immediate next task is not BER tuning but understanding why every rebuilt shell, including `bridge_rx_only`, still trips AD9361 calibration while the validated stock and vendor-reference baselines do not.
+- the extracted stock partition from `BOOT.bin` is now the only externally loaded boot-safe reintegration anchor, but it is not yet editable or source-correlated enough for the final course overlay;
+- the immediate next task is to explain why that stock payload survives manual `fpga load` while the source-correlated and course-owned candidates do not, not to assume that zero XSA drift alone makes the patched snapshot boot-safe.
 
 ## Next gated re-enable order
 
-1. Confirm that the custom boot-time PL image still passes the clean-boot validator.
+1. Confirm that the candidate custom boot-time PL image is accepted by the relevant validator path: raw `.bit` through `validate_clean_boot_overlay.py` or `.bit.bin` through `validate_manual_uart_fpga_load.py`.
 2. Confirm the board IP, `axi_gpreg` ID register, and bridge signature before writing frame parameters.
 3. Re-enable the sample-domain bridge while keeping the Linux-visible DMA shell intact.
 4. Keep AD9361 TX attenuation at the minimum output power setting available on the board.

@@ -1,38 +1,29 @@
 {
-  "validated_at_utc": "2026-06-21T22:50:35.5371672Z",
+  "validated_at_utc": "2026-06-22T15:21:48.4628452Z",
   "board_profile": "FISH Ball PlutoSDR Rev.A (Z7020/AD9361)",
-  "boot_overlay": {
-    "fat_root_bitstream_name": "system.bit.bin",
-    "validator": "hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py"
-  },
-  "known_good_baseline": {
-    "candidate_id": "stock_system_top_from_BOOT.bin",
-    "source": "hardware/7020_ad936x_sdr/boot/sd_image/BOOT.bin::system_top.bit",
-    "path": "hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin",
-    "size_bytes": 2430912,
-    "md5": "0da69e4ce2f2c475fd8f5c1ea48f6142",
-    "validation": {
-      "result": "pass",
-      "ad9361_initialized": true,
-      "iio_device_count": 4,
-      "iio_devices": [
-        "iio:device0",
-        "iio:device1",
-        "iio:device2",
-        "iio:device3"
-      ]
+  "boot_paths": {
+    "raw_bit_direct_load": {
+      "method": "U-Boot uEnv override + fpga loadb on FAT-root raw system.bit",
+      "uenv": "hardware/7020_ad936x_sdr/boot/course_clean/uEnv_course_bpsk_overlay.txt",
+      "validator": "hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py",
+      "note": "This is still the strongest proof path for arbitrary raw .bit replacement because U-Boot prints the Xilinx bitstream header fields before Linux starts. On this board, every non-stock raw candidate that actually reached PL also left AD9361 unable to complete calibration."
+    },
+    "manual_uart_fpga_load": {
+      "method": "Stop autoboot on COM6, run load mmc + fpga load manually, then boot Linux with bootm",
+      "validator": "hardware/7020_ad936x_sdr/boot/validate_manual_uart_fpga_load.py",
+      "note": "This is the correct validation path for .bit.bin-style payloads. Unlike the stock recovery uEnv.txt, it does not silently fall back to the BOOT.bin-resident PL image when a candidate is rejected or ignored."
     }
   },
-  "additional_known_good_candidates": [
+  "stock_safe_baselines": [
     {
-      "candidate_id": "ps_ad936x_no_os_reference::system_top.bit",
-      "source_bit_path": "hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit",
-      "source_bit_md5": "7cb06731f08fe834c76f1d928abe5933",
-      "source_bit_size_bytes": 2356360,
-      "generated_system_bit_bin_md5": "dad4d563a6f2f9eda069652f8f8b28bf",
-      "generated_system_bit_bin_size_bytes": 2362144,
-      "validation": {
+      "candidate_id": "stock_system_top_from_BOOT.bin",
+      "source": "hardware/7020_ad936x_sdr/boot/sd_image/BOOT.bin::system_top.bit",
+      "path": "hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin",
+      "size_bytes": 2430912,
+      "md5": "0da69e4ce2f2c475fd8f5c1ea48f6142",
+      "manual_uart_fpga_load_validation": {
         "result": "pass",
+        "fpga_load_accepted": true,
         "ad9361_initialized": true,
         "iio_device_count": 4,
         "iio_devices": [
@@ -46,79 +37,194 @@
           "cf_axi_dds 79024000.cf-ad9361-dds-core-lpc: Analog Devices CF_AXI_DDS_DDS MASTER (9.01.b) at 0x79024000 mapped to 0x(ptrval), probed DDS AD9361",
           "cf_axi_adc 79020000.cf-ad9361-lpc: ADI AIM (10.03.) at 0x79020000 mapped to 0x(ptrval) probed ADC AD9361 as MASTER"
         ],
-        "note": "This candidate was generated with bootgen from the standalone vendor reference bitstream already bundled under ps/ad936x_no_os_reference/platform/hw/system_top.bit. That raw .bit matches both AD936X_PS.zip::platform/hw/system_top.bit and AD936X_PS.zip::AD936X/_ide/bitstream/system_top.bit at MD5 7cb06731f08fe834c76f1d928abe5933, then clean-boot validated both through an explicit raw-.bit invocation and through the no-args default validator path on 2026-06-22."
+        "note": "This is currently the only externally loaded PL payload proven to survive manual U-Boot fpga load and still return Linux plus a healthy AD9361/IIO stack."
       }
     }
   ],
-  "rejected_candidates": [
+  "raw_bit_direct_load_candidates": [
     {
-      "candidate_id": "AD936X_PL.zip::projects/fmcomms2/zc702/zc702.runs/impl_1/system_top.bit",
-      "size_bytes": 2356256,
-      "md5": "c827619ef41fb0ea7c6381a29cc27784",
+      "candidate_id": "ps_ad936x_no_os_reference::system_top.bit",
+      "source_bit_path": "hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit",
+      "source_bit_md5": "7cb06731f08fe834c76f1d928abe5933",
+      "source_bit_size_bytes": 2356360,
       "validation": {
         "result": "fail",
-        "failure_mode": "AD9361 calibration timeout during clean boot",
+        "proof_of_external_load": true,
         "ad9361_initialized": false,
         "iio_device_count": 1,
+        "iio_devices": [
+          "iio:device0"
+        ],
+        "notable_uart_lines": [
+          "Loading course PL image system.bit...",
+          "design filename = \"system_top;COMPRESS=TRUE;UserID=0XFFFFFFFF;Version=2021.1\"",
+          "part number = \"7z020clg400\""
+        ],
         "notable_dmesg_lines": [
           "ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)",
           "ad9361: probe of spi0.0 failed with error -110"
         ],
-        "note": "Rebuilding the saved vendor zc702.xpr snapshot on 2026-06-22 reproduced the same system.bit.bin MD5, so this failure mode also covers the project-snapshot path."
+        "note": "The source-correlated raw vendor reference bitstream definitely reaches PL under fpga loadb, but it does not preserve AD9361 clean boot on this board."
       }
     },
     {
-      "candidate_id": "AD936X_only_PL.zip::AD936X_only_PL.runs/impl_1/system_top.bit",
-      "size_bytes": 4045568,
-      "md5": "0790785aa8c5018a15f11aa1f018cf48",
+      "candidate_id": "vendor_zc702_xpr_mio14_15_patch::system_top.bit",
+      "source_bit_path": "tmp/vendor_xpr_mio14_15_patch/zc702/zc702.runs/impl_1/system_top.bit",
+      "source_bit_md5": "2cc2c25d73ac69c63687a72f995b39fa",
+      "source_bit_size_bytes": 2356360,
       "validation": {
         "result": "fail",
-        "failure_mode": "U-Boot can no longer read the Linux partition after fpga load",
+        "proof_of_external_load": true,
         "ad9361_initialized": false,
-        "iio_device_count": 0,
+        "iio_device_count": 1,
+        "iio_devices": [
+          "iio:device0"
+        ],
         "notable_uart_lines": [
-          "bad MBR sector signature 0xb23e",
-          "** Invalid partition 1 **",
-          "Pluto>"
-        ]
+          "Loading course PL image system.bit...",
+          "design filename = \"system_top;COMPRESS=TRUE;UserID=0XFFFFFFFF;Version=2021.1\"",
+          "part number = \"7z020clg400\""
+        ],
+        "notable_dmesg_lines": [
+          "ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)",
+          "ad9361: probe of spi0.0 failed with error -110"
+        ],
+        "note": "This remains the closest editable structural witness because its XSA reaches zero module/memrange/parameter drift against the vendor reference handoff after the MIO14/15 patch, but the raw system.bit still breaks AD9361 clean boot."
+      }
+    },
+    {
+      "candidate_id": "course_bpsk_fmcomms2_zc702::bridge_txrx_mux",
+      "source_bit_path": "tmp/vendor_xpr_course_overlay/zc702/zc702.runs/impl_1/system_top.bit",
+      "source_bit_md5": "c0bb14344f50e7dfa187bbe86115743c",
+      "source_bit_size_bytes": 2276960,
+      "validation": {
+        "result": "partial",
+        "proof_of_external_load": true,
+        "ad9361_initialized": false,
+        "iio_device_count": 1,
+        "iio_devices": [
+          "iio:device0"
+        ],
+        "notable_uart_lines": [
+          "Loading course PL image system.bit...",
+          "design filename = \"system_top;COMPRESS=TRUE;UserID=0XFFFFFFFF;Version=2021.1\"",
+          "part number = \"7z020clg400\""
+        ],
+        "notable_dmesg_lines": [
+          "ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)",
+          "ad9361: probe of spi0.0 failed with error -110"
+        ],
+        "gpreg_evidence": {
+          "report": "docs/assets/lab118_axi_gpreg_bringup_cleanboot_raw.json",
+          "core_id": "0x4250534B",
+          "signature": "0x4250534B",
+          "final_status": "0x0000080C",
+          "tx_valid_count": 2376,
+          "rx_valid_count": 0,
+          "received_bits": 0
+        },
+        "note": "This is still the strongest proof that the course-owned raw overlay reaches PL and exposes axi_gpreg at 0x79040000, even though AD9361 later times out."
       }
     },
     {
       "candidate_id": "course_bpsk_fmcomms2_zc702::bridge_rx_only",
-      "size_bytes": 2276928,
-      "md5": "150bc5c0a6e7abeed05f7250c93dcdd2",
+      "source_bit_md5": "150bc5c0a6e7abeed05f7250c93dcdd2",
+      "source_bit_size_bytes": 2276928,
       "validation": {
         "result": "fail",
-        "failure_mode": "AD9361 calibration timeout during clean boot",
+        "proof_of_external_load": false,
         "ad9361_initialized": false,
         "iio_device_count": 1,
         "notable_dmesg_lines": [
           "ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)",
           "ad9361: probe of spi0.0 failed with error -110"
         ],
-        "note": "This candidate passed Vivado project creation, implementation, bitstream generation, and XSA export before board-level boot validation."
+        "note": "This earlier bridge_rx_only result remains superseded by the more informative bridge_txrx_mux gpreg proof."
       }
     },
     {
       "candidate_id": "course_bpsk_fmcomms2_zc702::vendor_only",
-      "size_bytes": 2304864,
-      "md5": "bd8246c23264a6908307bf2d6f57c528",
-      "xsa_embedded_bit_md5": "0309375a4c23f8637b829b1af74767a5",
+      "source_bit_md5": "bd8246c23264a6908307bf2d6f57c528",
+      "source_bit_size_bytes": 2304864,
       "validation": {
         "result": "fail",
-        "failure_mode": "AD9361 calibration timeout during clean boot",
+        "proof_of_external_load": false,
         "ad9361_initialized": false,
         "iio_device_count": 1,
         "notable_dmesg_lines": [
           "ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)",
           "ad9361: probe of spi0.0 failed with error -110"
         ],
-        "note": "The rebuilt vendor_only shell matched the vendor reference XSA module and memrange counts, but still drifted at the handoff level; see docs/assets/vendor_reference_vs_vendor_only_handoff_diff.json."
+        "note": "The normalized pure-Tcl vendor_only shell still fails clean boot and remains a source-drift debugging aid rather than a radio-safe baseline."
       }
     }
   ],
+  "manual_uart_fpga_load_candidates": [
+    {
+      "candidate_id": "ps_ad936x_no_os_reference::system_top.bit.bin",
+      "source_path": "hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit.bin",
+      "md5": "c827619ef41fb0ea7c6381a29cc27784",
+      "size_bytes": 2356256,
+      "validation": {
+        "result": "fail",
+        "fpga_load_accepted": true,
+        "ad9361_initialized": false,
+        "iio_device_count": 1,
+        "iio_devices": [
+          "iio:device0"
+        ],
+        "notable_uart_lines": [
+          "fpga load 0 0x100000 ${filesize}",
+          "Pluto>"
+        ],
+        "notable_dmesg_lines": [
+          "ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)",
+          "ad9361: probe of spi0.0 failed with error -110"
+        ],
+        "note": "Switching from raw fpga loadb to manual fpga load does not rescue the vendor reference payload: U-Boot accepts the .bit.bin image, but Linux still loses AD9361 during calibration."
+      }
+    },
+    {
+      "candidate_id": "course_bpsk_fmcomms2_zc702::bridge_txrx_mux.bit.bin",
+      "source_path": "tmp/vendor_xpr_course_overlay/zc702/zc702.runs/impl_1/bridge_txrx_mux.bit.bin",
+      "md5": "3c02bdcf6ca341df078ff1c32eea416e",
+      "size_bytes": 2282752,
+      "validation": {
+        "result": "rejected",
+        "fpga_load_accepted": false,
+        "ad9361_initialized": true,
+        "iio_device_count": 4,
+        "iio_devices": [
+          "iio:device0",
+          "iio:device1",
+          "iio:device2",
+          "iio:device3"
+        ],
+        "notable_uart_lines": [
+          "zynq_validate_bitstream: Bitstream is not validated yet (diff 1700)",
+          "fpga - loadable FPGA image support",
+          "Usage:"
+        ],
+        "notable_dmesg_lines": [
+          "ad9361 spi0.0: ad9361_probe : AD936x Rev 0 successfully initialized",
+          "cf_axi_dds 79024000.cf-ad9361-dds-core-lpc: Analog Devices CF_AXI_DDS_DDS MASTER (9.01.b) at 0x79024000 mapped to 0x(ptrval), probed DDS AD9361",
+          "cf_axi_adc 79020000.cf-ad9361-lpc: ADI AIM (10.03.) at 0x79020000 mapped to 0x(ptrval) probed ADC AD9361 as MASTER"
+        ],
+        "note": "U-Boot rejects the Bootgen-converted course overlay before Linux starts, so the later healthy AD9361 state comes from the untouched stock PL shell."
+      }
+    }
+  ],
+  "rejected_external_materials": [
+    {
+      "candidate_id": "G:/Programs/7020/Work_modem/AD936X_PL/projects/fmcomms2/zc702/system_top.xsa",
+      "timing_clean": true,
+      "embedded_system_top_bit_md5": "5e6405152433bf2bbd2070d884aecefe",
+      "comparison_report": "tmp/work_modem_vs_vendor_reference_xsa.json",
+      "note": "This external material is useful as a historical reference, but it diverges from the vendor reference XSA at axi_ad9361 feature-disable parameters and at multiple PS7 clock/reset settings, so it is not a clean course baseline candidate."
+    }
+  ],
   "engineering_conclusion": {
-    "boot_reference": "Prefer the bootgen-converted vendor reference bitstream from ps/ad936x_no_os_reference/platform/hw/system_top.bit when you need a validated source-correlated boot-time PL shell, and keep the extracted BOOT.bin partition as an independent fallback baseline.",
-    "next_step": "Treat the saved vendor zc702.xpr snapshot as the closest surviving rebuild witness, because the normalized pure-Tcl vendor_only recreation still leaves read-only or disabled deltas at sys_ps7.PCW_S_AXI_HP0_FREQMHZ, the DMA protocol fields, and axi_ad9361.SPEED_GRADE before any renewed RF discovery."
+    "boot_reference": "There are now two distinct external PL validation paths on this board: raw .bit plus fpga loadb proves arbitrary PL replacement but every successful non-stock raw candidate still breaks AD9361, while manual UART fpga load is the correct path for .bit.bin payloads and currently accepts only two known cases tested here: the stock BOOT.bin partition payload passes cleanly, and the source-correlated vendor reference payload still fails AD9361.",
+    "next_step": "Treat stock_system_top_from_BOOT.bin as the only externally loaded boot-safe baseline for now. The next bring-up task is to explain why the extracted stock partition survives manual fpga load while the source-correlated vendor reference payload does not, then reproduce those acceptance and clean-boot properties in an editable shell before resuming gpreg/BPSK RF discovery."
   }
 }

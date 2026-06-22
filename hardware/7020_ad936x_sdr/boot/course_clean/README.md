@@ -12,7 +12,7 @@ The overlay keeps only the parts that are useful for course bring-up:
 
 - deterministic management IP on the wired `eth0` link;
 - DHCP on that management link so the host receives an address automatically;
-- boot-time loading of the course-owned `system.bit.bin` PL image;
+- boot-time loading of the course-owned raw `system.bit` PL image;
 - removal of stale `i2c@41600000` and `mwipcore@43c00000` PL nodes from the
   stock Linux device tree before boot;
 - safe TX defaults for receive-first work when no attenuator is installed yet.
@@ -23,21 +23,25 @@ On `2026-06-21`, the rebuilt Vivado `system.bit.bin` images from
 `hdl/course_bpsk_fmcomms2_zc702/` still caused
 `ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)` during clean boot.
 
-The validated source-correlated baseline is the standalone vendor reference
-bitstream at `../ps/ad936x_no_os_reference/platform/hw/system_top.bit`. Rebuild
-its boot-time payload with:
+There are now two different external PL validation paths and they should not be
+mixed:
 
-```bash
-python hardware/7020_ad936x_sdr/boot/build_system_bit_bin.py \
-  hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit
-```
+- raw `.bit` plus `fpga loadb`: use
+  `../ps/ad936x_no_os_reference/platform/hw/system_top.bit` when you need the
+  strongest proof that U-Boot really replaced the PL shell, because U-Boot
+  prints the Xilinx bitstream header fields (`design filename`, `part number`,
+  `date`, `time`) before Linux starts;
+- manual UART `fpga load` plus `.bit.bin`: use this when you need to validate
+  the BOOT-partition-style payload path that the stock board image actually
+  accepts.
 
-That produces `<...>/system_top.bit.bin`, which passed the clean-boot
-validator on `2026-06-22` with AD9361 initialized and all `4` IIO devices
-alive.
+The raw vendor-reference `.bit` is therefore still useful as a source-correlated
+control candidate, but it is not a boot-safe radio baseline: on `2026-06-22`,
+both the raw `fpga loadb` path and the manual `.bit.bin` `fpga load` path still
+ended with `ad9361 spi0.0: Calibration TIMEOUT (0x244, 0x80)`.
 
-The second independent fallback is the stock PL partition extracted from the
-vendor `BOOT.bin`:
+The only externally loaded boot-safe baseline proven so far is the stock PL
+partition extracted from the vendor `BOOT.bin`:
 
 ```bash
 python hardware/7020_ad936x_sdr/boot/extract_stock_system_top_partition.py
@@ -49,8 +53,8 @@ This writes:
 hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin
 ```
 
-That extracted blob was also verified as a working replacement for FAT-root
-`system.bit.bin` under this clean boot overlay.
+That extracted payload survives manual UART `fpga load` and returns Linux plus
+all `4` expected IIO devices with a healthy AD9361.
 
 Persistent validation summary:
 
@@ -64,22 +68,22 @@ To rerun that check from the host, use:
 python hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py
 ```
 
-This now validates the preferred no-OS reference raw `.bit` by default.
+This validates the raw `.bit` direct-load path through `fpga loadb`.
 
-To validate the stock fallback explicitly, use:
+To validate the stock BOOT-partition payload through the correct manual UART
+`fpga load` path, use:
 
 ```bash
-python hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py \
-  --system-bit-bin hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin
+python hardware/7020_ad936x_sdr/boot/validate_manual_uart_fpga_load.py \
+  --candidate hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin
 ```
 
-The validator now also accepts a raw `.bit` directly and will generate the
-boot-time payload under `hardware/7020_ad936x_sdr/boot/_generated/` before
-uploading it. The validated vendor-reference path is therefore:
+To validate the source-correlated vendor reference through the same manual
+`.bit.bin` path, use:
 
 ```bash
-python hardware/7020_ad936x_sdr/boot/validate_clean_boot_overlay.py \
-  --system-bit-bin hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit
+python hardware/7020_ad936x_sdr/boot/validate_manual_uart_fpga_load.py \
+  --candidate hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit.bin
 ```
 
 ## Rejected reconstructed boot shells
@@ -95,19 +99,32 @@ equivalent to the stock boot-time shell:
 - the course-built `bridge_rx_only` candidate also now builds cleanly in Vivado
   and exports an XSA, but it still fails the same AD9361 clean-boot
   calibration check as soon as Linux probes `spi0.0`.
+- the MIO14/15-patched editable vendor snapshot and the newer
+  `bridge_txrx_mux` course overlay both now prove raw `system.bit` direct load
+  through U-Boot `fpga loadb`, but they still fail AD9361 clean boot with the
+  same calibration timeout once Linux probes `spi0.0`;
+- the Bootgen-converted `bridge_txrx_mux.bit.bin` candidate is rejected even
+  earlier by U-Boot `fpga load` with
+  `zynq_validate_bitstream: Bitstream is not validated yet (diff 1700)`, so
+  Linux then comes up on the untouched stock PL shell.
 
-Practical consequence: the course now has two validated boot-time PL
-references:
+Practical consequence: the course now has one source-correlated raw proof
+candidate and one externally loaded boot-safe baseline:
 
-- the preferred source-correlated vendor reference `system_top.bit` after
-  Bootgen conversion;
-- the extracted stock `BOOT.bin` partition as an independent fallback.
+- the source-correlated vendor reference raw `system_top.bit` for proving that
+  the external raw PL image really replaced the stock shell;
+- the extracted stock `BOOT.bin` partition payload as the only externally
+  loaded boot-safe baseline demonstrated so far.
 
-## Manual recovery from a bad `system.bit.bin`
+The patched vendor snapshot and the course bridge candidates remain the best
+structural/debug shells, but they are not yet AD9361-safe RF baselines.
 
-If a test `system.bit.bin` breaks Linux boot after `fpga load`, recover from the
-UART console by interrupting U-Boot before `Loading course PL image
-system.bit.bin...`, then manually booting the stock SD payload:
+## Manual recovery from a bad `system.bit` or `system.bit.bin`
+
+If a test external PL image breaks Linux boot after `fpga loadb`, recover from
+the UART console by interrupting U-Boot before `Loading course PL image
+system.bit...` or `system.bit.bin...`, then manually booting the stock SD
+payload:
 
 ```text
 load mmc 0 0x2080000 uImage
@@ -138,13 +155,16 @@ Expected files on the FAT partition root:
 
 ## Overlay files
 
-- `uEnv_course_bpsk_overlay.txt` - minimal U-Boot environment override that loads `system.bit.bin` and strips stale PL nodes from the stock device tree before Linux boots
+- `uEnv_course_bpsk_overlay.txt` - minimal U-Boot environment override that loads raw `system.bit` and strips stale PL nodes from the stock device tree before Linux boots
 - `autorun.sh` - persistent post-boot override for the stock Pluto-like image, executed from `/mnt/jffs2/autorun.sh`
 - `rc.user` - compatibility overlay for the older custom rootfs that executes `/cfg/rc.user`
+- `../validate_manual_uart_fpga_load.py` - reproducible helper for the manual `fpga load` path used by `.bit.bin` payload experiments
 
 ## What the overlay changes
 
-1. Loads `system.bit.bin` into PL from U-Boot before Linux starts.
+1. Loads raw `system.bit` into PL from U-Boot before Linux starts, using
+   `fpga loadb` because this board's U-Boot expects a Xilinx `.bit` buffer on
+   the direct PL-load path.
 2. Removes stale `/fpga-axi/i2c@41600000` and `/fpga-axi/mwipcore@43c00000`
    nodes from the stock Linux device tree so the course PL shell matches the
    kernel probe contract.
@@ -163,15 +183,22 @@ hardware/7020_ad936x_sdr/boot/sd_image/
 
 Then add:
 
-- the course-generated `system.bit.bin` built from `hdl/course_bpsk_fmcomms2_zc702/`;
-- or, while the rebuilt course bitstream is still being debugged, the preferred
-  `system_top.bit.bin` generated from
-  `hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit`;
-- or the known-good fallback
-  `hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin` copied to the FAT
-  root as `system.bit.bin`;
+- the course-generated raw `system.bit` built from `hdl/course_bpsk_fmcomms2_zc702/`;
+- or, while the rebuilt course bitstream is still being debugged, the
+  source-correlated raw `system_top.bit` from
+  `hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit`
+  copied to the FAT root as `system.bit`;
 - `hardware/7020_ad936x_sdr/boot/course_clean/uEnv_course_bpsk_overlay.txt`
   copied to the FAT root as `uEnv.txt`.
+
+If U-Boot prints `zynq_validate_bitstream: Bitstream is not validated yet` and
+then falls through to the generic `fpga` usage text while attempting to load a
+`.bit.bin` payload with `fpga load`, Linux may still come up with AD9361/IIO
+alive because the stock PL from `BOOT.bin` is still active. Do not treat that
+as proof that the external course image actually reached the fabric.
+
+If U-Boot prints the Xilinx header fields for `system.bit`, then `fpga loadb`
+has accepted the raw bitstream buffer and the PL image really did load.
 
 ## Recommended persistence path
 
