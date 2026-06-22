@@ -5,11 +5,13 @@ on:
     paths:
       - 'datasets/**'
       - 'tools/check_dataset_manifests.py'
+      - 'tools/generate_demo_qpsk_dataset.py'
       - '.github/workflows/dataset_manifests.yml'
   pull_request:
     paths:
       - 'datasets/**'
       - 'tools/check_dataset_manifests.py'
+      - 'tools/generate_demo_qpsk_dataset.py'
       - '.github/workflows/dataset_manifests.yml'
 
 jobs:
@@ -27,7 +29,13 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: python -m pip install pyyaml
+        run: python -m pip install numpy pyyaml
+
+      - name: Regenerate QPSK metadata
+        run: python tools/generate_demo_qpsk_dataset.py --metadata-only
+
+      - name: Check generated QPSK metadata is committed
+        run: git diff --exit-code -- datasets/demo_qpsk_capture/manifest.yaml datasets/demo_qpsk_capture/metrics.json
 
       - name: Validate dataset manifests
         run: python tools/check_dataset_manifests.py
