@@ -90,6 +90,16 @@ def get_fft_length(manifest: dict[str, Any]) -> int:
     return int(manifest.get("processing", {}).get("fft_length", 65536))
 
 
+def get_peak_search_window_hz(manifest: dict[str, Any]) -> tuple[float, float] | None:
+    analysis = manifest.get("analysis", {})
+    if "peak_search_half_span_hz" not in analysis:
+        return None
+    return (
+        float(analysis.get("peak_search_center_hz", get_expected_offset_hz(manifest))),
+        float(analysis["peak_search_half_span_hz"]),
+    )
+
+
 def get_quality_expectations(manifest: dict[str, Any]) -> dict[str, float]:
     raw = manifest.get("quality_expectations", {})
     return {
@@ -202,7 +212,17 @@ def compute_metrics(
     fft_length = get_fft_length(manifest)
     freq, mag_db = spectrum_db(x, sample_rate_hz, fft_length)
 
-    peak_idx = int(np.argmax(mag_db))
+    peak_search_window = get_peak_search_window_hz(manifest)
+    if peak_search_window is not None:
+        center_hz, half_span_hz = peak_search_window
+        peak_mask = np.abs(freq - center_hz) <= max(half_span_hz, 0.0)
+        if np.any(peak_mask):
+            candidate_indices = np.flatnonzero(peak_mask)
+            peak_idx = int(candidate_indices[int(np.argmax(mag_db[peak_mask]))])
+        else:
+            peak_idx = int(np.argmax(mag_db))
+    else:
+        peak_idx = int(np.argmax(mag_db))
     measured_peak_hz = float(freq[peak_idx])
     peak_dbfs = float(mag_db[peak_idx])
     frequency_error_hz = measured_peak_hz - expected_offset_hz

@@ -58,3 +58,34 @@ def test_read_ci16_restores_complex_samples_and_metrics(tmp_path: Path) -> None:
     assert metrics.sample_count_read == n
     assert metrics.duration_s == pytest.approx(n / sample_rate_hz, abs=1e-6)
     assert metrics.center_frequency_hz == 100_000_000
+
+
+def test_compute_metrics_can_limit_peak_search_to_expected_window(tmp_path: Path) -> None:
+    sample_rate_hz = 1_000_000
+    n = 8192
+    wanted_tone_hz = 120_000.0
+    stronger_spur_hz = 420_000.0
+    t = np.arange(n) / sample_rate_hz
+    x = (
+        0.22 * np.exp(1j * 2.0 * np.pi * wanted_tone_hz * t)
+        + 0.75 * np.exp(1j * 2.0 * np.pi * stronger_spur_hz * t)
+    )
+    iq_path = tmp_path / "windowed_peak_test.ci16"
+    write_ci16(iq_path, x, i_first=True)
+
+    manifest = {
+        "dataset_id": "windowed_peak_test",
+        "format": "ci16",
+        "endianness": "little",
+        "i_first": True,
+        "sample_rate_hz": sample_rate_hz,
+        "center_frequency_hz": 100_000_000,
+        "signal": {"expected_signal_offset_hz": wanted_tone_hz},
+        "processing": {"fft_length": 8192},
+        "analysis": {"peak_search_half_span_hz": 25_000},
+    }
+
+    y = read_ci16(iq_path, manifest)
+    metrics = compute_metrics(y, manifest, iq_path=iq_path, manifest_path=tmp_path / "manifest.yaml")
+
+    assert metrics.measured_peak_hz == pytest.approx(wanted_tone_hz, abs=150.0)
