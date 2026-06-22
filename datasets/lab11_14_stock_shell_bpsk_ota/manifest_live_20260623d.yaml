@@ -1,0 +1,49 @@
+dataset_id: lab11_14_stock_shell_bpsk_ota_live_20260623d
+version: 0.1
+status: review-before-lfs
+title: Stock-shell host-driven AD9361 BPSK OTA fallback capture
+description: Deterministic BPSK burst transmitted and received through the stock AD9361
+  Linux shell. Intended as the first host-driven RF fallback path while the integrated
+  PL BPSK overlay is still blocked on runtime RX bring-up.
+storage: repo-generated
+url: null
+file_name: datasets/lab11_14_stock_shell_bpsk_ota/raw/lab11_14_stock_shell_bpsk_ota_live_20260623d.ci16
+format: ci16
+endianness: little
+i_first: true
+sample_rate_hz: 3840000
+center_frequency_hz: 915000000
+bandwidth_hz: 2000000
+analysis_command: python blocks/block_09_recording_and_analysis_tools/python/lab_9_2_read_ci16_iq_and_analyze.py
+  --iq datasets/lab11_14_stock_shell_bpsk_ota/raw/lab11_14_stock_shell_bpsk_ota_live_20260623d.ci16
+  --sample-rate-hz 3840000
+handoff:
+  tx_reference_ci16: datasets/lab11_14_stock_shell_bpsk_ota/raw/lab11_14_stock_shell_bpsk_ota_live_20260623d_tx_reference.ci16
+  metrics_json: docs/assets/lab114_stock_shell_bpsk_ota_live_20260623d_metrics.json
+hardware:
+  transceiver: Zynq-7020 + AD9361 board
+  software: stock Pluto-like Linux 5.15.0 + host libiio
+  rf_path: short OTA TX1 to RX1 using separate antennas
+  context_uri: ip:192.168.40.1
+  rx_gain_db: 35.000000 dB
+  tx_attenuation_db: -50.000000 dB
+  rx_rf_port_select: A_BALANCED
+  tx_rf_port_select: A
+signal:
+  modulation: BPSK
+  symbol_rate_hz: 240000
+  samples_per_symbol: 16
+  rolloff: 0.35
+  payload_bit_count: 256
+  preamble_bit_count: 25
+quality_checks:
+  frame_detected: true
+  ber_total: 0.0
+  ber_payload: 0.0
+  evm_percent: 54.9801252078159
+notes:
+- This path is a stock-shell RF fallback and does not exercise the PL BPSK overlay.
+- Use conservative TX attenuation first and increase only if the preamble does not
+  lock.
+- For the integrated course route, keep Zynq RX as the primary BER path and RTL-SDR
+  as a monitor receiver.

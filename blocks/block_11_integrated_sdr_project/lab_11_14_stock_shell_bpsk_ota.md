@@ -78,6 +78,45 @@ step. The need for it comes directly from the current bring-up split:
 - therefore the next RF question is best answered on the stock shell first,
   using host-driven BPSK over the proven TX/RX DMA path.
 
-The next live run should happen only after the board is back on a clean stock
-boot, because the last runtime driver-rebind experiment left the current bench
-state requiring a fresh recovery cycle.
+## Live result on 2026-06-23
+
+The first clean-bench stock-shell run is now complete and succeeded with the
+checked-in helper.
+
+Reference run:
+
+```bash
+python blocks/block_11_integrated_sdr_project/python/lab_11_14_stock_shell_bpsk_ota.py \
+  --run-tag live_20260623d
+```
+
+Observed result:
+
+- center frequency `915 MHz`;
+- sample rate `3.84 MS/s`;
+- symbol rate `240 ksym/s`;
+- TX attenuation `-50 dB`;
+- RX manual gain `35 dB`;
+- `BER total = 0`;
+- `BER payload = 0`;
+- `EVM = 54.98 %`.
+
+Artifacts:
+
+- `datasets/lab11_14_stock_shell_bpsk_ota/manifest_live_20260623d.yaml`
+- `docs/assets/lab114_stock_shell_bpsk_ota_live_20260623d_metrics.json`
+- `docs/assets/lab114_stock_shell_bpsk_ota_live_20260623d_spectrum.png`
+- `docs/assets/lab114_stock_shell_bpsk_ota_live_20260623d_constellation.png`
+- `docs/assets/lab114_stock_shell_bpsk_ota_live_20260623d_matched_filter.png`
+
+The helper now also forces a safe post-run TX restore through SSH/sysfs so the
+bench returns to:
+
+- `TX_LO powerdown = 1`;
+- `TX attenuation = -89.75 dB`;
+- stock-shell `sync_start_enable` states unchanged.
+
+Practical consequence: the short OTA `TX1 -> RX1` path is now validated on the
+stock AD9361 shell. The remaining blocker is no longer "can the board radiate
+and receive this BPSK burst?", but specifically "how to recover the same route
+inside the course PL overlay without breaking the runtime RX path?".
