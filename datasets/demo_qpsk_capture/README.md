@@ -20,6 +20,22 @@ This writes:
 | `manifest.yaml` | Dataset contract, checksum and signal parameters |
 | `metrics.json` | Deterministic metrics snapshot |
 
+## Analyze the dataset
+
+Generate the analysis summary and report-ready SVG assets:
+
+```bash
+python tools/analyze_demo_qpsk_dataset.py --generate-if-missing
+```
+
+This produces:
+
+| File | Purpose |
+|---|---|
+| `analysis_summary.json` | Analysis metrics for the synthetic QPSK fixture |
+| `docs/assets/demo_qpsk_constellation.svg` | Constellation preview |
+| `docs/assets/demo_qpsk_spectrum.svg` | Spectrum preview |
+
 ## Validate metadata
 
 ```bash
@@ -43,3 +59,7 @@ The checker validates the manifest fields and verifies that `metrics.json` agree
 ## Why this dataset exists
 
 The real RTL-SDR captures in `datasets/lab1_0_rtl_sdr_observation/` prove that the course starts from real RF observations. This synthetic QPSK dataset serves a different role: it gives a legally clean, deterministic and CI-friendly IQ fixture for replay and analysis labs.
+
+## Report reference
+
+See `reports/demo_qpsk_dataset_analysis.md` for the report-style explanation of the generated analysis assets.
