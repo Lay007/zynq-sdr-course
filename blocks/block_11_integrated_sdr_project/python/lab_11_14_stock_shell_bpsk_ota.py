@@ -8,6 +8,7 @@ import json
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
+import time
 from typing import Any
 
 import matplotlib.pyplot as plt
@@ -34,6 +35,7 @@ from end_to_end_bpsk_reference import (  # noqa: E402
     write_ci16,
 )
 from lab_6_3_probe_iio_context import find_channel, load_iio_module  # noqa: E402
+from lab_11_7_axi_lite_bpsk_bringup import ParamikoCommandRunner  # noqa: E402
 
 
 DATASET_DIR = ROOT / "datasets" / "lab11_14_stock_shell_bpsk_ota"
@@ -56,6 +58,11 @@ DEFAULT_SYNTHETIC_PHASE_OFFSET_RAD = 0.18
 DEFAULT_SYNTHETIC_TIMING_OFFSET_SAMPLES = 5
 DEFAULT_SYNTHETIC_NOISE_RMS = 0.010
 DEFAULT_CANDIDATE_COUNT = 10
+DEFAULT_SSH_HOST = "192.168.40.1"
+DEFAULT_SSH_USER = "root"
+DEFAULT_SSH_PASSWORD = "analog"
+DEFAULT_SSH_PORT = 22
+DEFAULT_SSH_TIMEOUT_S = 10.0
 Q15_SCALE = 32767.0
 
 
@@ -157,6 +164,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--tx-rf-port-select", default="A")
     parser.add_argument("--seed", type=int, default=20260623)
     parser.add_argument("--candidate-count", type=int, default=DEFAULT_CANDIDATE_COUNT)
+    parser.add_argument("--ssh-host", default=DEFAULT_SSH_HOST)
+    parser.add_argument("--ssh-user", default=DEFAULT_SSH_USER)
+    parser.add_argument("--ssh-password", default=DEFAULT_SSH_PASSWORD)
+    parser.add_argument("--ssh-port", type=int, default=DEFAULT_SSH_PORT)
+    parser.add_argument("--ssh-timeout-s", type=float, default=DEFAULT_SSH_TIMEOUT_S)
     parser.add_argument("--synthetic-test", action="store_true")
     parser.add_argument("--synthetic-cfo-hz", type=float, default=DEFAULT_SYNTHETIC_CFO_HZ)
     parser.add_argument("--synthetic-phase-offset-rad", type=float, default=DEFAULT_SYNTHETIC_PHASE_OFFSET_RAD)
@@ -196,6 +208,31 @@ def write_attr_value(channel: Any | None, attr_name: str, value: str | int | flo
     except OSError:
         if strict:
             raise
+
+
+def write_attr_with_readback(
+    channel: Any | None,
+    attr_name: str,
+    value: str | int | float | None,
+    *,
+    strict: bool = True,
+    retries: int = 3,
+    settle_s: float = 0.05,
+) -> None:
+    if channel is None or value is None:
+        return
+    target = str(value)
+    last_value = None
+    for attempt in range(max(retries, 1)):
+        write_attr_value(channel, attr_name, target, strict=strict and attempt == 0)
+        time.sleep(max(settle_s, 0.0))
+        last_value = read_attr_value(channel, attr_name)
+        if last_value == target:
+            return
+    if strict:
+        raise RuntimeError(
+            f"Unable to restore `{attr_name}` to `{target}`; last readback was `{last_value}`."
+        )
 
 
 def snapshot_ad9361_state(phy: Any) -> dict[str, str | None]:
@@ -261,7 +298,7 @@ def restore_ad9361_state(phy: Any, snapshot: dict[str, str | None]) -> None:
         write_attr_value(channel, "sampling_frequency", snapshot[f"{prefix}_sampling_frequency_hz"], strict=False)
         write_attr_value(channel, "rf_bandwidth", snapshot[f"{prefix}_rf_bandwidth_hz"], strict=False)
         write_attr_value(channel, "rf_port_select", snapshot[f"{prefix}_rf_port_select"], strict=False)
-        write_attr_value(channel, "hardwaregain", snapshot[f"{prefix}_hardwaregain_db"], strict=False)
+        write_attr_with_readback(channel, "hardwaregain", snapshot[f"{prefix}_hardwaregain_db"], strict=False)
 
     restore_rx(rx0, "rx0")
     restore_rx(rx1, "rx1")
@@ -692,6 +729,47 @@ def write_manifest(
     manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False, allow_unicode=False), encoding="utf-8")
 
 
+def strip_db_units(value: str | None) -> str | None:
+    if value is None:
+        return None
+    return value.replace(" dB", "").strip()
+
+
+def enforce_safe_tx_restore_over_ssh(snapshot: dict[str, str | None], args: argparse.Namespace) -> None:
+    runner = ParamikoCommandRunner(
+        host=args.ssh_host,
+        user=args.ssh_user,
+        password=args.ssh_password,
+        port=args.ssh_port,
+        key_path=None,
+        timeout_s=args.ssh_timeout_s,
+    )
+    try:
+        commands = [
+            (
+                "/sys/bus/iio/devices/iio:device0/out_voltage0_hardwaregain",
+                strip_db_units(snapshot.get("tx0_hardwaregain_db")),
+            ),
+            (
+                "/sys/bus/iio/devices/iio:device0/out_voltage1_hardwaregain",
+                strip_db_units(snapshot.get("tx1_hardwaregain_db")),
+            ),
+            (
+                "/sys/bus/iio/devices/iio:device0/out_altvoltage1_TX_LO_powerdown",
+                snapshot.get("tx_lo_powerdown"),
+            ),
+        ]
+        for path, value in commands:
+            if value is None:
+                continue
+            rc, stdout, stderr = runner(f"echo '{value}' > {path}")
+            if rc != 0:
+                details = stderr.strip() or stdout.strip() or f"exit code {rc}"
+                raise RuntimeError(f"SSH restore write failed for {path}: {details}")
+    finally:
+        runner.close()
+
+
 def build_output_paths(args: argparse.Namespace) -> dict[str, Path]:
     run_tag = args.run_tag or default_run_tag(bool(args.synthetic_test))
     capture_out = args.capture_out or (DATASET_DIR / "raw" / f"lab11_14_stock_shell_bpsk_ota_{run_tag}.ci16")
@@ -763,8 +841,6 @@ def main() -> int:
             board_after_config = configure_ad9361_bpsk(phy, cfg)
             disable_dds_tones(tx_device)
             tx_buffer = transmit_cyclic_buffer(iio, tx_device, tx_waveform)
-            import time
-
             time.sleep(max(cfg.settle_ms, 0) / 1000.0)
             i_samples, q_samples = capture_rx_iq(iio, rx_device, cfg.capture_sample_count)
         finally:
@@ -775,6 +851,7 @@ def main() -> int:
                     pass
             restore_dds_state(tx_device, dds_before)
             restore_ad9361_state(phy, ad9361_before)
+            enforce_safe_tx_restore_over_ssh(ad9361_before, args)
 
         capture_complex = ci16_to_complex(i_samples, q_samples)
 
