@@ -16,7 +16,7 @@ This page is the top-level engineering status board for the course. It is intent
 
 | Block | Topic | Theory | Labs | Code / models | Figures | Hardware | CI coverage | Next improvement |
 |---|---|---|---|---|---|---|---|---|
-| 01 | Intro to SDR | Ready | Ready | Partial | Ready | Partial | Docs | Add a first validated RTL-SDR capture example. |
+| 01 | Intro to SDR | Ready | Ready | Partial | Ready | Real RTL-SDR captures available | Docs | Add a short learner report example based on the real RTL-SDR Git LFS recordings and review the publication/legal status of the narrowband capture. |
 | 02 | Signals and sampling | Ready | Executable | Python path | Ready | Not required | Labs | Add MATLAB/C++ translations and a metadata-mistake replay package. |
 | 03 | DSP basics | Ready | Executable | Python / MATLAB / C++ path | Ready | Not required | Labs | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
 | 04 | Simulink and fixed-point | Ready | Executable | Python / MATLAB references + executable BPSK `.slx` models | Ready | Not required | Labs | Constrain the BPSK Simulink path further for HDL Coder export and integration handoff. |
@@ -43,6 +43,7 @@ This page is the top-level engineering status board for the course. It is intent
 | `docs/hardware-validation-backlog.md` | Separation of documentation tasks and hardware-only tasks. |
 | `docs/iq-demo-dataset-manifest.md` | Dataset contract for QPSK replay/capture work. |
 | `datasets/demo_qpsk_capture/manifest.yaml` | First manifest-only QPSK dataset package. |
+| `datasets/lab1_0_rtl_sdr_observation/` | Real passive RTL-SDR air captures from the first SDR++ bring-up session, stored as WAV IQ files through Git LFS with manifests, SHA256 checksums, capture settings and replay commands. |
 | `hardware/7020_ad936x_sdr/boot/course_clean/autorun.sh` | Clean stock-image management overlay with fixed `eth0`, DHCP, and safe TX defaults. |
 | `hardware/7020_ad936x_sdr/boot/course_clean/uEnv_course_bpsk_overlay.txt` | Boot-time U-Boot overlay that loads the course PL image and removes stale Linux PL nodes before `bootm`. |
 | `hardware/7020_ad936x_sdr/boot/extract_stock_system_top_partition.py` | Reproducible extractor for the only externally loaded boot-safe `system_top.bit` partition payload currently known: the one embedded in `boot/sd_image/BOOT.bin`. |
@@ -91,6 +92,7 @@ Each mature lab should eventually provide:
 - The documentation site is built with MkDocs and structured for both Russian and English learners.
 - Several blocks are executable and are supported by reproducible scripts, generated assets and CI workflows.
 - The hardware story is clear: Zynq-7020 + AD9363/ADRV is the target SDR platform, and RTL-SDR/HDSDR is the independent observation path.
+- Block 1 already includes real passive RTL-SDR air recordings captured in SDR++ and stored through Git LFS with manifests and reproducibility metadata.
 
 ## Main gaps to close
 
@@ -99,11 +101,12 @@ Each mature lab should eventually provide:
 3. Promote Block 5 OOC FPGA reports to placed-and-routed top-level design data.
 4. Keep RU/EN pages aligned when adding new labs.
 5. Turn one QPSK or tone flow into a complete final report with plots and limitations.
+6. Review the publication/legal status of real off-air captures before treating them as public redistributable course data.
 
 ## Priority improvements
 
 1. Promote one complete `Model -> FPGA -> RF -> Measurement` demo to portfolio-ready status.
-2. Add a small public/synthetic IQ dataset manifest for recording and replay labs.
+2. Add a publication-cleared small QPSK IQ dataset or synthetic generator for recording and replay labs.
 3. Use the current Block 5 reports as the baseline, then add routed timing/resource deltas for the integrated design.
 4. Use the final-project grading rubric for instructor evaluation.
 5. Keep Russian and English navigation synchronized whenever a block is promoted.
