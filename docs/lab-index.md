@@ -55,6 +55,7 @@ This page provides a compact index of the executable and report-oriented labs in
 | 9.1 | IQ recording | IQ file format and metadata | no | no | yes | manual | metadata completeness |
 | 9.2 | IQ recording | CI16 IQ reader and analyzer | yes | no | yes | yes | FFT, peak, SNR, DC, clipping |
 | 9.3 | IQ recording | Multi-format IQ reader | yes | no | yes | yes | CI16/CU8/CF32 spectra, metrics JSON |
+| 9.5 | IQ recording | Synthetic QPSK replay and constellation analysis | yes | no | yes | yes | generated CI16, constellation SVG, spectrum SVG, EVM/CFO JSON |
 | 10.1 | Electronics | Passive RC filter | no | no | yes | manual | cutoff calculation, schematic |
 | 10.2 | Electronics | Attenuator pad | no | no | yes | manual | attenuation, safety notes |
 | 10.3 | Electronics | RF measurement safety checklist | no | no | yes | manual | safety checklist |
