@@ -68,6 +68,29 @@ If the metrics pass the thresholds, then:
 - the constellation has the expected QPSK structure;
 - the analyzer can be used as a baseline smoke test for future real-capture analyzers.
 
+## Impairment bridge to later labs
+
+The ideal synthetic QPSK fixture is useful as a reference. The next learning step is to intentionally add impairments and observe how they appear in the same metrics and plots.
+
+| Impairment | What happens to the signal | What to inspect in the analysis | Related block |
+|---|---|---|---|
+| CFO | the constellation rotates from symbol to symbol | increasing `cfo_estimate_hz`, smeared clusters | Block 8.1 CFO estimation/correction |
+| Phase offset | all QPSK points rotate by a constant angle | rotated constellation while clusters stay compact | Block 8.2 Phase offset correction |
+| Timing offset | samples are taken away from the symbol center | increasing EVM, degraded clusters, eye/symbol error | Block 8.3 Timing recovery |
+| AWGN | points spread around the ideal constellation locations | increasing `evm_rms_percent`, lower SNR estimate | Block 7.3 / Block 8 sync metrics |
+| DC offset | the constellation shifts away from zero | non-zero `mean_i_normalized` and `mean_q_normalized` | Block 6.5 RF impairment calibration |
+| IQ imbalance | the constellation is stretched/skewed and image energy appears | asymmetric clusters and image component in the spectrum | Block 6.5 / Zero-IF artifacts |
+
+Minimal experiment sequence:
+
+1. keep the ideal-QPSK `analysis_summary.json` as the baseline;
+2. add one impairment at a time;
+3. rerun the analyzer;
+4. compare EVM, CFO, mean I/Q, spectrum and constellation;
+5. document which metric exposed the problem first.
+
+This connects Block 9 to the synchronization and RF-calibration parts of the course. The same dataset first acts as a clean reference and then becomes a controlled test signal for compensation algorithms.
+
 ## What to include in the lab report
 
 The lab report should include:
@@ -76,7 +99,8 @@ The lab report should include:
 2. a short excerpt from `analysis_summary.json`;
 3. constellation preview;
 4. spectrum preview;
-5. a short explanation of why a synthetic dataset is useful next to real RF captures.
+5. a short explanation of why a synthetic dataset is useful next to real RF captures;
+6. a baseline-vs-one-impairment table when doing the extended task.
 
 ## CI connection
 
@@ -90,4 +114,4 @@ The CI workflow checks that the dataset is generated, the analyzer runs, output 
 
 ## Next step
 
-After this lab, the course can compare the synthetic QPSK fixture with real IQ recordings and add impairment models: CFO, DC offset, IQ imbalance, AWGN and timing offset.
+After this lab, add a controlled-impairment script for CFO, DC offset, IQ imbalance, AWGN and timing offset. This turns the ideal QPSK fixture into a test bench for synchronization and RF-calibration checks.
