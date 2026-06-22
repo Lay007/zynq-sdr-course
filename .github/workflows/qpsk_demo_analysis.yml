@@ -1,0 +1,60 @@
+name: QPSK Demo Analysis
+
+on:
+  push:
+    paths:
+      - 'datasets/demo_qpsk_capture/**'
+      - 'tools/generate_demo_qpsk_dataset.py'
+      - 'tools/analyze_demo_qpsk_dataset.py'
+      - '.github/workflows/qpsk_demo_analysis.yml'
+  pull_request:
+    paths:
+      - 'datasets/demo_qpsk_capture/**'
+      - 'tools/generate_demo_qpsk_dataset.py'
+      - 'tools/analyze_demo_qpsk_dataset.py'
+      - '.github/workflows/qpsk_demo_analysis.yml'
+
+jobs:
+  qpsk-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: python -m pip install numpy matplotlib pyyaml
+
+      - name: Generate demo dataset
+        run: python tools/generate_demo_qpsk_dataset.py
+
+      - name: Analyze demo dataset
+        run: python tools/analyze_demo_qpsk_dataset.py
+
+      - name: Check analysis outputs exist
+        run: |
+          test -s datasets/demo_qpsk_capture/analysis_summary.json
+          test -s docs/assets/demo_qpsk_constellation.svg
+          test -s docs/assets/demo_qpsk_spectrum.svg
+
+      - name: Check analysis metric thresholds
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(Path('datasets/demo_qpsk_capture/analysis_summary.json').read_text())
+          assert data['dataset_id'] == 'demo_qpsk_capture'
+          assert data['num_samples'] == 16384
+          assert data['num_symbols'] == 2048
+          assert abs(data['sample_rate_hz'] - 2400000) == 0
+          assert data['evm_rms_percent'] < 0.01
+          assert abs(data['cfo_estimate_hz']) < 1.0
+          print('QPSK demo analysis thresholds passed')
+          PY
