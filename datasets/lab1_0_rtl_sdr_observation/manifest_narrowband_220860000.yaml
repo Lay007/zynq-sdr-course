@@ -19,6 +19,11 @@ duration_s: 5.309
 analysis_command: >-
   python blocks/block_09_recording_and_analysis_tools/python/lab_9_4_read_wav_iq_and_analyze.py --manifest datasets/lab1_0_rtl_sdr_observation/manifest_narrowband_220860000.yaml
 source: rtl-sdr-sdrpp-passive-observation
+publication_status: review-required
+content_policy:
+  decoded_content_published: false
+  technical_metadata_only: true
+  redistribution: course-demo-review-required
 hardware:
   receiver: RTL-SDR V3 Pro
   software: SDR++
@@ -45,3 +50,4 @@ notes:
   - The original source file also remains in the local SDR++ recordings folder.
   - Review the RF-legal status of this narrowband capture before publishing to a public remote.
   - Created during the same setup session as the screenshots documented in Lab 1.0.
+  - Treat this as a technical RF-observation artifact; do not publish decoded content.
