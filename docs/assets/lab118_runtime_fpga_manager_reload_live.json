@@ -1,0 +1,714 @@
+{
+  "timestamp_utc": "2026-06-22T21:45:05.362648+00:00",
+  "config": {
+    "ssh_host": "192.168.40.1",
+    "ssh_user": "root",
+    "ssh_port": 22,
+    "ssh_timeout_s": 10.0,
+    "iio_uri": "ip:192.168.40.1",
+    "bit_bin_path": "G:\\Programs\\zynq-sdr-course\\tmp\\bridge_txrx_mux.wordswap.bit.bin",
+    "remote_firmware_name": "course_bpsk_fmcomms2_zc702_runtime.bit.bin",
+    "base_addr": 2030305280,
+    "expected_id": 1112560459,
+    "frame_bit_count": 281,
+    "preamble_count": 25,
+    "start_offset": 62,
+    "start_hold_ms": 5,
+    "poll_limit": 128,
+    "poll_delay_ms": 20,
+    "dmesg_line_count": 60
+  },
+  "local_bit_bin": {
+    "path": "G:\\Programs\\zynq-sdr-course\\tmp\\bridge_txrx_mux.wordswap.bit.bin",
+    "md5": "020dd715bc7cdd63ee543749cded5050",
+    "size_bytes": 2276856
+  },
+  "baseline": {
+    "fpga_manager_state": "operating",
+    "gpreg_error": {
+      "error_type": "RuntimeError",
+      "error": "ssh-devmem read at 0x79040004 failed with exit code 135: Bus error"
+    }
+  },
+  "upload": {
+    "path": "/lib/firmware/course_bpsk_fmcomms2_zc702_runtime.bit.bin",
+    "md5": "020dd715bc7cdd63ee543749cded5050",
+    "size_bytes": 2276856
+  },
+  "reload": {
+    "state": "operating",
+    "dmesg_tail": [
+      "sdhci: Secure Digital Host Controller Interface driver",
+      "sdhci: Copyright(c) Pierre Ossman",
+      "sdhci-pltfm: SDHCI platform and OF driver helper",
+      "ledtrig-cpu: registered to indicate activity on CPUs",
+      "hid: raw HID events driver (C) Jiri Kosina",
+      "usbcore: registered new interface driver usbhid",
+      "usbhid: USB HID core driver",
+      "usbcore: registered new interface driver r8712u",
+      "usbcore: registered new interface driver r8188eu",
+      "mmc0: SDHCI controller on e0100000.mmc [e0100000.mmc] using ADMA",
+      "ad9361 spi0.0: ad9361_probe : enter (ad9361)",
+      "random: fast init done",
+      "mmc0: new high speed SD card at address 21ed",
+      "mmcblk0: mmc0:21ed APPSD 240 MiB ",
+      " mmcblk0: p1",
+      "ad9361 spi0.0: ad9361_probe : AD936x Rev 0 successfully initialized",
+      "cf_axi_dds 79024000.cf-ad9361-dds-core-lpc: Analog Devices CF_AXI_DDS_DDS MASTER (9.01.b) at 0x79024000 mapped to 0x(ptrval), probed DDS AD9361",
+      "fpga_manager fpga0: Xilinx Zynq FPGA Manager registered",
+      "NET: Registered PF_PACKET protocol family",
+      "lib80211: common routines for IEEE802.11 drivers",
+      "lib80211_crypt: registered algorithm 'NULL'",
+      "lib80211_crypt: registered algorithm 'WEP'",
+      "lib80211_crypt: registered algorithm 'CCMP'",
+      "Registering SWP/SWPB emulation handler",
+      "Loading compiled-in X.509 certificates",
+      "cf_axi_adc 79020000.cf-ad9361-lpc: ADI AIM (10.03.\u0000) at 0x79020000 mapped to 0x(ptrval) probed ADC AD9361 as MASTER",
+      "cfg80211: Loading compiled-in X.509 certificates for regulatory database",
+      "cfg80211: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'",
+      "platform regulatory.0: Direct firmware load for regulatory.db failed with error -2",
+      "cfg80211: failed to load regulatory.db",
+      "Freeing unused kernel image (initmem) memory: 1024K",
+      "Run /init as init process",
+      "  with arguments:",
+      "    /init",
+      "  with environment:",
+      "    HOME=/",
+      "    TERM=linux",
+      "file system registered",
+      "using random self ethernet address",
+      "using random host ethernet address",
+      "Mass Storage Function, version: 2009/09/11",
+      "LUN: removable file: (no medium)",
+      "read descriptors",
+      "read strings",
+      "usb0: HOST MAC 00:e0:22:ad:c8:3b",
+      "usb0: MAC 00:05:f7:19:e7:93",
+      "random: dbus-uuidgen: uninitialized urandom read (12 bytes read)",
+      "random: dbus-uuidgen: uninitialized urandom read (8 bytes read)",
+      "random: dbus-daemon: uninitialized urandom read (12 bytes read)",
+      "random: crng init done",
+      "random: 1 urandom warning(s) missed due to ratelimiting",
+      "macb e000b000.ethernet eth0: PHY [e000b000.ethernet-ffffffff:00] driver [RTL8211F Gigabit Ethernet] (irq=POLL)",
+      "macb e000b000.ethernet eth0: configuring for phy/rgmii-id link mode",
+      "macb e000b000.ethernet eth0: Link is Up - 100Mbps/Full - flow control off",
+      "loop7: detected capacity change from 0 to 61440",
+      "8<--- cut here ---",
+      "Unhandled fault: external abort on non-linefetch (0x018) at 0xb6f86004",
+      "pgd = f5571b97",
+      "[b6f86004] *pgd=0478b831, *pte=79040783, *ppte=79040e33",
+      "fpga_manager fpga0: writing course_bpsk_fmcomms2_zc702_runtime.bit.bin to Xilinx Zynq FPGA Manager"
+    ]
+  },
+  "gpreg_after_reload": {
+    "backend": "ssh-devmem",
+    "base_addr": 2030305280,
+    "id_word": 1112560459,
+    "signature_word": 1112560459,
+    "initial_status": 2048,
+    "final_status": 2060,
+    "cleared_status": 2048,
+    "done_cleared": true,
+    "busy_observed": false,
+    "done_observed": true,
+    "timed_out_observed": true,
+    "completed_by_timeout": false,
+    "poll_reads": 1,
+    "frame_bit_count": 281,
+    "preamble_count": 25,
+    "start_offset": 62,
+    "received_bits": 0,
+    "total_errors": 0,
+    "payload_errors": 0,
+    "tx_valid_count": 2376,
+    "rx_valid_count": 0,
+    "ber_total": 0.0,
+    "ber_payload": 0.0,
+    "register_snapshot": {
+      "CORE_VERSION": {
+        "offset": 0,
+        "address": "0x79040000",
+        "value": 262243
+      },
+      "CORE_ID": {
+        "offset": 4,
+        "address": "0x79040004",
+        "value": 1112560459
+      },
+      "SCRATCH": {
+        "offset": 8,
+        "address": "0x79040008",
+        "value": 0
+      },
+      "GP_CONTROL_OUT": {
+        "offset": 1028,
+        "address": "0x79040404",
+        "value": 0
+      },
+      "GP_STATUS_IN": {
+        "offset": 1032,
+        "address": "0x79040408",
+        "value": 2048
+      },
+      "GP_FRAME_BIT_COUNT_OUT": {
+        "offset": 1092,
+        "address": "0x79040444",
+        "value": 281
+      },
+      "GP_RECEIVED_BITS_IN": {
+        "offset": 1096,
+        "address": "0x79040448",
+        "value": 0
+      },
+      "GP_PREAMBLE_COUNT_OUT": {
+        "offset": 1156,
+        "address": "0x79040484",
+        "value": 25
+      },
+      "GP_TOTAL_ERRORS_IN": {
+        "offset": 1160,
+        "address": "0x79040488",
+        "value": 0
+      },
+      "GP_START_OFFSET_OUT": {
+        "offset": 1220,
+        "address": "0x790404C4",
+        "value": 62
+      },
+      "GP_PAYLOAD_ERRORS_IN": {
+        "offset": 1224,
+        "address": "0x790404C8",
+        "value": 0
+      },
+      "GP_SIGNATURE_IN": {
+        "offset": 1288,
+        "address": "0x79040508",
+        "value": 1112560459
+      },
+      "GP_TX_VALID_COUNT_IN": {
+        "offset": 1352,
+        "address": "0x79040548",
+        "value": 2376
+      },
+      "GP_RX_VALID_COUNT_IN": {
+        "offset": 1416,
+        "address": "0x79040588",
+        "value": 0
+      }
+    }
+  },
+  "iio_after_reload": {
+    "uri": "ip:192.168.40.1",
+    "context_name": "network",
+    "context_description": "192.168.40.1 Linux (none) 5.15.0 #7 SMP PREEMPT Sun Nov 3 04:49:37 PST 2024 armv7l",
+    "context_attrs": {
+      "ad9361-phy,model": "ad9361",
+      "ad9361-phy,xo_correction": "40000000",
+      "fw_version": "80403-dirty",
+      "hw_model": "FISH Ball PlutoSDR Rev.A (Z7020-AD9361)",
+      "hw_model_variant": "1",
+      "hw_serial": "",
+      "ip,ip-addr": "192.168.40.1",
+      "local,kernel": "5.15.0",
+      "uri": "ip:192.168.40.1"
+    },
+    "devices": [
+      {
+        "id": "iio:device0",
+        "name": "ad9361-phy",
+        "label": null,
+        "attrs": {
+          "calib_mode": "auto",
+          "calib_mode_available": "auto manual manual_tx_quad tx_quad rf_dc_offs rssi_gain_step",
+          "dcxo_tune_coarse": "<read error: [Errno 19] No such device>",
+          "dcxo_tune_coarse_available": "[0 0 0]",
+          "dcxo_tune_fine": "<read error: [Errno 19] No such device>",
+          "dcxo_tune_fine_available": "[0 0 0]",
+          "ensm_mode": "fdd",
+          "ensm_mode_available": "sleep wait alert fdd pinctrl pinctrl_fdd_indep",
+          "filter_fir_config": "FIR Rx: 0,0 Tx: 0,0",
+          "gain_table_config": "<read error: [Errno 5] Input/output error>",
+          "multichip_sync": "<read error: [Errno 13] Permission denied>",
+          "rssi_gain_step_error": "lna_error: 0 0 0 0\nmixer_error: 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\ngain_step_calib_reg_val: 0 0 0 0 0",
+          "rx_path_rates": "BBPLL:983040000 ADC:245760000 R2:122880000 R1:61440000 RF:30720000 RXSAMP:30720000",
+          "trx_rate_governor": "nominal",
+          "trx_rate_governor_available": "nominal highest_osr",
+          "tx_path_rates": "BBPLL:983040000 DAC:122880000 T2:122880000 T1:61440000 TF:30720000 TXSAMP:30720000",
+          "xo_correction": "40000000",
+          "xo_correction_available": "[39992000 1 40008000]"
+        },
+        "channels": [
+          {
+            "id": "altvoltage0",
+            "name": "RX_LO",
+            "label": null,
+            "output": true,
+            "scan_element": false,
+            "attrs": {
+              "external": "0",
+              "fastlock_load": "0",
+              "fastlock_recall": "<read error: [Errno 22] Invalid argument>",
+              "fastlock_save": "0 166,207,237,38,130,237,199,183,255,78,226,244,64,68,77,226",
+              "fastlock_store": "0",
+              "frequency": "2400000000",
+              "frequency_available": "[70000000 1 6000000000]",
+              "label": "RX_LO",
+              "powerdown": "0"
+            }
+          },
+          {
+            "id": "altvoltage1",
+            "name": "TX_LO",
+            "label": null,
+            "output": true,
+            "scan_element": false,
+            "attrs": {
+              "external": "0",
+              "fastlock_load": "0",
+              "fastlock_recall": "<read error: [Errno 22] Invalid argument>",
+              "fastlock_save": "0 78,127,254,124,253,121,253,125,125,127,255,125,117,125,25,125",
+              "fastlock_store": "0",
+              "frequency": "2400000000",
+              "frequency_available": "[46875001 1 6000000000]",
+              "label": "TX_LO",
+              "powerdown": "1"
+            }
+          },
+          {
+            "id": "out",
+            "name": null,
+            "label": null,
+            "output": false,
+            "scan_element": false,
+            "attrs": {
+              "voltage_filter_fir_en": "0"
+            }
+          },
+          {
+            "id": "temp0",
+            "name": null,
+            "label": null,
+            "output": false,
+            "scan_element": false,
+            "attrs": {
+              "input": "31579"
+            }
+          },
+          {
+            "id": "voltage0",
+            "name": null,
+            "label": null,
+            "output": false,
+            "scan_element": false,
+            "attrs": {
+              "bb_dc_offset_tracking_en": "1",
+              "filter_fir_en": "0",
+              "gain_control_mode": "slow_attack",
+              "gain_control_mode_available": "manual fast_attack slow_attack hybrid",
+              "hardwaregain": "71.000000 dB",
+              "hardwaregain_available": "[-3 1 71]",
+              "quadrature_tracking_en": "1",
+              "rf_bandwidth": "18000000",
+              "rf_bandwidth_available": "[200000 1 56000000]",
+              "rf_dc_offset_tracking_en": "1",
+              "rf_port_select": "A_BALANCED",
+              "rf_port_select_available": "A_BALANCED B_BALANCED C_BALANCED A_N A_P B_N B_P C_N C_P TX_MONITOR1 TX_MONITOR2 TX_MONITOR1_2",
+              "rssi": "112.50 dB",
+              "sampling_frequency": "30720000",
+              "sampling_frequency_available": "[2083333 1 61440000]"
+            }
+          },
+          {
+            "id": "voltage0",
+            "name": null,
+            "label": null,
+            "output": true,
+            "scan_element": false,
+            "attrs": {
+              "filter_fir_en": "0",
+              "hardwaregain": "-89.750000 dB",
+              "hardwaregain_available": "[-89.750000]",
+              "rf_bandwidth": "18000000",
+              "rf_bandwidth_available": "[200000 1 40000000]",
+              "rf_port_select": "A",
+              "rf_port_select_available": "A B",
+              "rssi": "0.00 dB",
+              "sampling_frequency": "30720000",
+              "sampling_frequency_available": "[2083333 1 61440000]"
+            }
+          },
+          {
+            "id": "voltage1",
+            "name": null,
+            "label": null,
+            "output": true,
+            "scan_element": false,
+            "attrs": {
+              "filter_fir_en": "0",
+              "hardwaregain": "-89.750000 dB",
+              "hardwaregain_available": "[-89.750000]",
+              "rf_bandwidth": "18000000",
+              "rf_bandwidth_available": "[200000 1 40000000]",
+              "rf_port_select": "A",
+              "rf_port_select_available": "A B",
+              "rssi": "0.00 dB",
+              "sampling_frequency": "30720000",
+              "sampling_frequency_available": "[2083333 1 61440000]"
+            }
+          },
+          {
+            "id": "voltage1",
+            "name": null,
+            "label": null,
+            "output": false,
+            "scan_element": false,
+            "attrs": {
+              "bb_dc_offset_tracking_en": "1",
+              "filter_fir_en": "0",
+              "gain_control_mode": "slow_attack",
+              "gain_control_mode_available": "manual fast_attack slow_attack hybrid",
+              "hardwaregain": "71.000000 dB",
+              "hardwaregain_available": "[-3 1 71]",
+              "quadrature_tracking_en": "1",
+              "rf_bandwidth": "18000000",
+              "rf_bandwidth_available": "[200000 1 56000000]",
+              "rf_dc_offset_tracking_en": "1",
+              "rf_port_select": "A_BALANCED",
+              "rf_port_select_available": "A_BALANCED B_BALANCED C_BALANCED A_N A_P B_N B_P C_N C_P TX_MONITOR1 TX_MONITOR2 TX_MONITOR1_2",
+              "rssi": "116.50 dB",
+              "sampling_frequency": "30720000",
+              "sampling_frequency_available": "[2083333 1 61440000]"
+            }
+          },
+          {
+            "id": "voltage2",
+            "name": null,
+            "label": null,
+            "output": true,
+            "scan_element": false,
+            "attrs": {
+              "filter_fir_en": "0",
+              "raw": "306",
+              "rf_bandwidth": "18000000",
+              "rf_bandwidth_available": "[200000 1 40000000]",
+              "rf_port_select_available": "A B",
+              "sampling_frequency": "30720000",
+              "sampling_frequency_available": "[2083333 1 61440000]",
+              "scale": "1.000000"
+            }
+          },
+          {
+            "id": "voltage2",
+            "name": null,
+            "label": null,
+            "output": false,
+            "scan_element": false,
+            "attrs": {
+              "bb_dc_offset_tracking_en": "1",
+              "filter_fir_en": "0",
+              "gain_control_mode_available": "manual fast_attack slow_attack hybrid",
+              "offset": "57",
+              "quadrature_tracking_en": "1",
+              "raw": "475",
+              "rf_bandwidth": "18000000",
+              "rf_bandwidth_available": "[200000 1 56000000]",
+              "rf_dc_offset_tracking_en": "1",
+              "rf_port_select_available": "A_BALANCED B_BALANCED C_BALANCED A_N A_P B_N B_P C_N C_P TX_MONITOR1 TX_MONITOR2 TX_MONITOR1_2",
+              "sampling_frequency": "30720000",
+              "sampling_frequency_available": "[2083333 1 61440000]",
+              "scale": "0.305250"
+            }
+          },
+          {
+            "id": "voltage3",
+            "name": null,
+            "label": null,
+            "output": true,
+            "scan_element": false,
+            "attrs": {
+              "filter_fir_en": "0",
+              "raw": "306",
+              "rf_bandwidth": "18000000",
+              "rf_bandwidth_available": "[200000 1 40000000]",
+              "rf_port_select_available": "A B",
+              "sampling_frequency": "30720000",
+              "sampling_frequency_available": "[2083333 1 61440000]",
+              "scale": "1.000000"
+            }
+          }
+        ],
+        "ad9361_summary": {
+          "rx_lo_frequency_hz": "2400000000",
+          "tx_lo_frequency_hz": "2400000000",
+          "rx_rf_bandwidth_hz": "18000000",
+          "tx_rf_bandwidth_hz": "18000000",
+          "rx_sampling_frequency_hz": "30720000",
+          "tx_sampling_frequency_hz": "30720000",
+          "rx_gain_control_mode": "slow_attack",
+          "rx_hardwaregain_db": "71.000000 dB",
+          "tx_hardwaregain_db": "-89.750000 dB",
+          "rx_rf_port_select": "A_BALANCED",
+          "tx_rf_port_select": "A"
+        }
+      },
+      {
+        "id": "iio:device2",
+        "name": "cf-ad9361-dds-core-lpc",
+        "label": null,
+        "attrs": {
+          "sync_start_enable": "disarm",
+          "sync_start_enable_available": "arm"
+        },
+        "channels": [
+          {
+            "id": "altvoltage0",
+            "name": "TX1_I_F1",
+            "label": null,
+            "output": true,
+            "scan_element": false,
+            "attrs": {
+              "frequency": "0",
+              "label": "TX1_I_F1",
+              "phase": "0",
+              "raw": "1",
+              "sampling_frequency": "30720000",
+              "scale": "0.000000"
+            }
+          },
+          {
+            "id": "altvoltage1",
+            "name": "TX1_I_F2",
+            "label": null,
+            "output": true,
+            "scan_element": false,
+            "attrs": {
+              "frequency": "0",
+              "label": "TX1_I_F2",
+              "phase": "0",
+              "raw": "1",
+              "sampling_frequency": "30720000",
+              "scale": "0.000000"
+            }
+          },
+          {
+            "id": "altvoltage2",
+            "name": "TX1_Q_F1",
+            "label": null,
+            "output": true,
+            "scan_element": false,
+            "attrs": {
+              "frequency": "0",
+              "label": "TX1_Q_F1",
+              "phase": "0",
+              "raw": "1",
+              "sampling_frequency": "30720000",
+              "scale": "0.000000"
+            }
+          },
+          {
+            "id": "altvoltage3",
+            "name": "TX1_Q_F2",
+            "label": null,
+            "output": true,
+            "scan_element": false,
+            "attrs": {
+              "frequency": "0",
+              "label": "TX1_Q_F2",
+              "phase": "0",
+              "raw": "1",
+              "sampling_frequency": "30720000",
+              "scale": "0.000000"
+            }
+          },
+          {
+            "id": "altvoltage4",
+            "name": "TX2_I_F1",
+            "label": null,
+            "output": true,
+            "scan_element": false,
+            "attrs": {
+              "frequency": "0",
+              "label": "TX2_I_F1",
+              "phase": "0",
+              "raw": "1",
+              "sampling_frequency": "30720000",
+              "scale": "0.000000"
+            }
+          },
+          {
+            "id": "altvoltage5",
+            "name": "TX2_I_F2",
+            "label": null,
+            "output": true,
+            "scan_element": false,
+            "attrs": {
+              "frequency": "0",
+              "label": "TX2_I_F2",
+              "phase": "0",
+              "raw": "1",
+              "sampling_frequency": "30720000",
+              "scale": "0.000000"
+            }
+          },
+          {
+            "id": "altvoltage6",
+            "name": "TX2_Q_F1",
+            "label": null,
+            "output": true,
+            "scan_element": false,
+            "attrs": {
+              "frequency": "0",
+              "label": "TX2_Q_F1",
+              "phase": "0",
+              "raw": "1",
+              "sampling_frequency": "30720000",
+              "scale": "0.000000"
+            }
+          },
+          {
+            "id": "altvoltage7",
+            "name": "TX2_Q_F2",
+            "label": null,
+            "output": true,
+            "scan_element": false,
+            "attrs": {
+              "frequency": "0",
+              "label": "TX2_Q_F2",
+              "phase": "0",
+              "raw": "1",
+              "sampling_frequency": "30720000",
+              "scale": "0.000000"
+            }
+          },
+          {
+            "id": "voltage0",
+            "name": null,
+            "label": null,
+            "output": true,
+            "scan_element": true,
+            "attrs": {
+              "calibphase": "0.000000",
+              "calibscale": "0.000000",
+              "sampling_frequency": "30720000",
+              "sampling_frequency_available": "30720000 3840000 "
+            }
+          },
+          {
+            "id": "voltage1",
+            "name": null,
+            "label": null,
+            "output": true,
+            "scan_element": true,
+            "attrs": {
+              "calibphase": "0.000000",
+              "calibscale": "0.000000",
+              "sampling_frequency": "30720000",
+              "sampling_frequency_available": "30720000 3840000 "
+            }
+          },
+          {
+            "id": "voltage2",
+            "name": null,
+            "label": null,
+            "output": true,
+            "scan_element": true,
+            "attrs": {
+              "calibphase": "0.000000",
+              "calibscale": "0.000000",
+              "sampling_frequency": "30720000",
+              "sampling_frequency_available": "30720000 3840000 "
+            }
+          },
+          {
+            "id": "voltage3",
+            "name": null,
+            "label": null,
+            "output": true,
+            "scan_element": true,
+            "attrs": {
+              "calibphase": "0.000000",
+              "calibscale": "0.000000",
+              "sampling_frequency": "30720000",
+              "sampling_frequency_available": "30720000 3840000 "
+            }
+          }
+        ]
+      },
+      {
+        "id": "iio:device3",
+        "name": "cf-ad9361-lpc",
+        "label": null,
+        "attrs": {
+          "sync_start_enable": "disarm",
+          "sync_start_enable_available": "arm"
+        },
+        "channels": [
+          {
+            "id": "voltage0",
+            "name": null,
+            "label": null,
+            "output": false,
+            "scan_element": true,
+            "attrs": {
+              "calibbias": "0",
+              "calibphase": "0.000000",
+              "calibscale": "0.000000",
+              "label": "<read error: [Errno 38] Filename too long>",
+              "samples_pps": "<read error: [Errno 19] No such device>",
+              "sampling_frequency": "30720000",
+              "sampling_frequency_available": "30720000 3840000 "
+            }
+          },
+          {
+            "id": "voltage1",
+            "name": null,
+            "label": null,
+            "output": false,
+            "scan_element": true,
+            "attrs": {
+              "calibbias": "0",
+              "calibphase": "0.000000",
+              "calibscale": "0.000000",
+              "label": "<read error: [Errno 38] Filename too long>",
+              "samples_pps": "<read error: [Errno 19] No such device>",
+              "sampling_frequency": "30720000",
+              "sampling_frequency_available": "30720000 3840000 "
+            }
+          },
+          {
+            "id": "voltage2",
+            "name": null,
+            "label": null,
+            "output": false,
+            "scan_element": true,
+            "attrs": {
+              "calibbias": "0",
+              "calibphase": "0.000000",
+              "calibscale": "0.000000",
+              "label": "<read error: [Errno 38] Filename too long>",
+              "samples_pps": "<read error: [Errno 19] No such device>",
+              "sampling_frequency": "30720000",
+              "sampling_frequency_available": "30720000 3840000 "
+            }
+          },
+          {
+            "id": "voltage3",
+            "name": null,
+            "label": null,
+            "output": false,
+            "scan_element": true,
+            "attrs": {
+              "calibbias": "0",
+              "calibphase": "0.000000",
+              "calibscale": "0.000000",
+              "label": "<read error: [Errno 38] Filename too long>",
+              "samples_pps": "<read error: [Errno 19] No such device>",
+              "sampling_frequency": "30720000",
+              "sampling_frequency_available": "30720000 3840000 "
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

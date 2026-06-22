@@ -1,0 +1,1521 @@
+{
+  "timestamp_utc": "2026-06-22T21:36:12.304167+00:00",
+  "config": {
+    "host": "192.168.40.1",
+    "user": "root",
+    "port": 22,
+    "base_addr": 2030305280,
+    "frame_bit_count": 281,
+    "preamble_count": 25,
+    "poll_limit": 128,
+    "poll_delay_ms": 20,
+    "start_hold_ms": 5,
+    "start_offsets": [
+      48,
+      62,
+      74
+    ],
+    "rx_gains_db": [
+      10.0,
+      20.0
+    ],
+    "tx_attenuations_db": [
+      -80.0,
+      -70.0
+    ],
+    "settle_ms": 50
+  },
+  "board_before": {
+    "model": "FISH Ball PlutoSDR Rev.A (Z7020/AD9361)",
+    "rx_lo_hz": "2400000000",
+    "tx_lo_hz": "2400000000",
+    "rx_sample_rate_hz": "30720000",
+    "tx_sample_rate_hz": "30720000",
+    "rx_gain_mode_ch0": "slow_attack",
+    "rx_gain_mode_ch1": "slow_attack",
+    "rx_gain_db_ch0": "71.000000 dB",
+    "rx_gain_db_ch1": "71.000000 dB",
+    "tx_attenuation_db_ch0": "-89.750000 dB",
+    "tx_attenuation_db_ch1": "-89.750000 dB",
+    "tx_lo_powerdown": "1"
+  },
+  "board_after": {
+    "model": "FISH Ball PlutoSDR Rev.A (Z7020/AD9361)",
+    "rx_lo_hz": "2400000000",
+    "tx_lo_hz": "2400000000",
+    "rx_sample_rate_hz": "30720000",
+    "tx_sample_rate_hz": "30720000",
+    "rx_gain_mode_ch0": "manual",
+    "rx_gain_mode_ch1": "manual",
+    "rx_gain_db_ch0": "20.000000 dB",
+    "rx_gain_db_ch1": "20.000000 dB",
+    "tx_attenuation_db_ch0": "-70.000000 dB",
+    "tx_attenuation_db_ch1": "-70.000000 dB",
+    "tx_lo_powerdown": "0"
+  },
+  "summary": {
+    "attempt_count": 12,
+    "successful_attempt_count": 12,
+    "nonzero_received_bits_attempt_count": 0,
+    "timeout_observed_attempt_count": 12,
+    "max_received_bits": 0
+  },
+  "best_attempt": {
+    "start_offset": 48,
+    "rx_gain_db": 10.0,
+    "tx_attenuation_db": -80.0,
+    "ok": true,
+    "error_type": null,
+    "error": null,
+    "score": [
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    "result": {
+      "backend": "ssh-devmem",
+      "base_addr": 2030305280,
+      "id_word": 1112560459,
+      "signature_word": 1112560459,
+      "initial_status": 2048,
+      "final_status": 2060,
+      "cleared_status": 2048,
+      "done_cleared": true,
+      "busy_observed": false,
+      "done_observed": true,
+      "timed_out_observed": true,
+      "completed_by_timeout": false,
+      "poll_reads": 1,
+      "frame_bit_count": 281,
+      "preamble_count": 25,
+      "start_offset": 48,
+      "received_bits": 0,
+      "total_errors": 0,
+      "payload_errors": 0,
+      "tx_valid_count": 2376,
+      "rx_valid_count": 0,
+      "ber_total": 0.0,
+      "ber_payload": 0.0,
+      "register_snapshot": {
+        "CORE_VERSION": {
+          "offset": 0,
+          "address": "0x79040000",
+          "value": 262243
+        },
+        "CORE_ID": {
+          "offset": 4,
+          "address": "0x79040004",
+          "value": 1112560459
+        },
+        "SCRATCH": {
+          "offset": 8,
+          "address": "0x79040008",
+          "value": 0
+        },
+        "GP_CONTROL_OUT": {
+          "offset": 1028,
+          "address": "0x79040404",
+          "value": 0
+        },
+        "GP_STATUS_IN": {
+          "offset": 1032,
+          "address": "0x79040408",
+          "value": 2048
+        },
+        "GP_FRAME_BIT_COUNT_OUT": {
+          "offset": 1092,
+          "address": "0x79040444",
+          "value": 281
+        },
+        "GP_RECEIVED_BITS_IN": {
+          "offset": 1096,
+          "address": "0x79040448",
+          "value": 0
+        },
+        "GP_PREAMBLE_COUNT_OUT": {
+          "offset": 1156,
+          "address": "0x79040484",
+          "value": 25
+        },
+        "GP_TOTAL_ERRORS_IN": {
+          "offset": 1160,
+          "address": "0x79040488",
+          "value": 0
+        },
+        "GP_START_OFFSET_OUT": {
+          "offset": 1220,
+          "address": "0x790404C4",
+          "value": 48
+        },
+        "GP_PAYLOAD_ERRORS_IN": {
+          "offset": 1224,
+          "address": "0x790404C8",
+          "value": 0
+        },
+        "GP_SIGNATURE_IN": {
+          "offset": 1288,
+          "address": "0x79040508",
+          "value": 1112560459
+        },
+        "GP_TX_VALID_COUNT_IN": {
+          "offset": 1352,
+          "address": "0x79040548",
+          "value": 2376
+        },
+        "GP_RX_VALID_COUNT_IN": {
+          "offset": 1416,
+          "address": "0x79040588",
+          "value": 0
+        }
+      }
+    }
+  },
+  "attempts": [
+    {
+      "start_offset": 48,
+      "rx_gain_db": 10.0,
+      "tx_attenuation_db": -80.0,
+      "ok": true,
+      "error_type": null,
+      "error": null,
+      "score": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "backend": "ssh-devmem",
+        "base_addr": 2030305280,
+        "id_word": 1112560459,
+        "signature_word": 1112560459,
+        "initial_status": 2048,
+        "final_status": 2060,
+        "cleared_status": 2048,
+        "done_cleared": true,
+        "busy_observed": false,
+        "done_observed": true,
+        "timed_out_observed": true,
+        "completed_by_timeout": false,
+        "poll_reads": 1,
+        "frame_bit_count": 281,
+        "preamble_count": 25,
+        "start_offset": 48,
+        "received_bits": 0,
+        "total_errors": 0,
+        "payload_errors": 0,
+        "tx_valid_count": 2376,
+        "rx_valid_count": 0,
+        "ber_total": 0.0,
+        "ber_payload": 0.0,
+        "register_snapshot": {
+          "CORE_VERSION": {
+            "offset": 0,
+            "address": "0x79040000",
+            "value": 262243
+          },
+          "CORE_ID": {
+            "offset": 4,
+            "address": "0x79040004",
+            "value": 1112560459
+          },
+          "SCRATCH": {
+            "offset": 8,
+            "address": "0x79040008",
+            "value": 0
+          },
+          "GP_CONTROL_OUT": {
+            "offset": 1028,
+            "address": "0x79040404",
+            "value": 0
+          },
+          "GP_STATUS_IN": {
+            "offset": 1032,
+            "address": "0x79040408",
+            "value": 2048
+          },
+          "GP_FRAME_BIT_COUNT_OUT": {
+            "offset": 1092,
+            "address": "0x79040444",
+            "value": 281
+          },
+          "GP_RECEIVED_BITS_IN": {
+            "offset": 1096,
+            "address": "0x79040448",
+            "value": 0
+          },
+          "GP_PREAMBLE_COUNT_OUT": {
+            "offset": 1156,
+            "address": "0x79040484",
+            "value": 25
+          },
+          "GP_TOTAL_ERRORS_IN": {
+            "offset": 1160,
+            "address": "0x79040488",
+            "value": 0
+          },
+          "GP_START_OFFSET_OUT": {
+            "offset": 1220,
+            "address": "0x790404C4",
+            "value": 48
+          },
+          "GP_PAYLOAD_ERRORS_IN": {
+            "offset": 1224,
+            "address": "0x790404C8",
+            "value": 0
+          },
+          "GP_SIGNATURE_IN": {
+            "offset": 1288,
+            "address": "0x79040508",
+            "value": 1112560459
+          },
+          "GP_TX_VALID_COUNT_IN": {
+            "offset": 1352,
+            "address": "0x79040548",
+            "value": 2376
+          },
+          "GP_RX_VALID_COUNT_IN": {
+            "offset": 1416,
+            "address": "0x79040588",
+            "value": 0
+          }
+        }
+      }
+    },
+    {
+      "start_offset": 62,
+      "rx_gain_db": 10.0,
+      "tx_attenuation_db": -80.0,
+      "ok": true,
+      "error_type": null,
+      "error": null,
+      "score": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "backend": "ssh-devmem",
+        "base_addr": 2030305280,
+        "id_word": 1112560459,
+        "signature_word": 1112560459,
+        "initial_status": 2048,
+        "final_status": 2060,
+        "cleared_status": 2048,
+        "done_cleared": true,
+        "busy_observed": false,
+        "done_observed": true,
+        "timed_out_observed": true,
+        "completed_by_timeout": false,
+        "poll_reads": 1,
+        "frame_bit_count": 281,
+        "preamble_count": 25,
+        "start_offset": 62,
+        "received_bits": 0,
+        "total_errors": 0,
+        "payload_errors": 0,
+        "tx_valid_count": 2376,
+        "rx_valid_count": 0,
+        "ber_total": 0.0,
+        "ber_payload": 0.0,
+        "register_snapshot": {
+          "CORE_VERSION": {
+            "offset": 0,
+            "address": "0x79040000",
+            "value": 262243
+          },
+          "CORE_ID": {
+            "offset": 4,
+            "address": "0x79040004",
+            "value": 1112560459
+          },
+          "SCRATCH": {
+            "offset": 8,
+            "address": "0x79040008",
+            "value": 0
+          },
+          "GP_CONTROL_OUT": {
+            "offset": 1028,
+            "address": "0x79040404",
+            "value": 0
+          },
+          "GP_STATUS_IN": {
+            "offset": 1032,
+            "address": "0x79040408",
+            "value": 2048
+          },
+          "GP_FRAME_BIT_COUNT_OUT": {
+            "offset": 1092,
+            "address": "0x79040444",
+            "value": 281
+          },
+          "GP_RECEIVED_BITS_IN": {
+            "offset": 1096,
+            "address": "0x79040448",
+            "value": 0
+          },
+          "GP_PREAMBLE_COUNT_OUT": {
+            "offset": 1156,
+            "address": "0x79040484",
+            "value": 25
+          },
+          "GP_TOTAL_ERRORS_IN": {
+            "offset": 1160,
+            "address": "0x79040488",
+            "value": 0
+          },
+          "GP_START_OFFSET_OUT": {
+            "offset": 1220,
+            "address": "0x790404C4",
+            "value": 62
+          },
+          "GP_PAYLOAD_ERRORS_IN": {
+            "offset": 1224,
+            "address": "0x790404C8",
+            "value": 0
+          },
+          "GP_SIGNATURE_IN": {
+            "offset": 1288,
+            "address": "0x79040508",
+            "value": 1112560459
+          },
+          "GP_TX_VALID_COUNT_IN": {
+            "offset": 1352,
+            "address": "0x79040548",
+            "value": 2376
+          },
+          "GP_RX_VALID_COUNT_IN": {
+            "offset": 1416,
+            "address": "0x79040588",
+            "value": 0
+          }
+        }
+      }
+    },
+    {
+      "start_offset": 74,
+      "rx_gain_db": 10.0,
+      "tx_attenuation_db": -80.0,
+      "ok": true,
+      "error_type": null,
+      "error": null,
+      "score": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "backend": "ssh-devmem",
+        "base_addr": 2030305280,
+        "id_word": 1112560459,
+        "signature_word": 1112560459,
+        "initial_status": 2048,
+        "final_status": 2060,
+        "cleared_status": 2048,
+        "done_cleared": true,
+        "busy_observed": false,
+        "done_observed": true,
+        "timed_out_observed": true,
+        "completed_by_timeout": false,
+        "poll_reads": 1,
+        "frame_bit_count": 281,
+        "preamble_count": 25,
+        "start_offset": 74,
+        "received_bits": 0,
+        "total_errors": 0,
+        "payload_errors": 0,
+        "tx_valid_count": 2376,
+        "rx_valid_count": 0,
+        "ber_total": 0.0,
+        "ber_payload": 0.0,
+        "register_snapshot": {
+          "CORE_VERSION": {
+            "offset": 0,
+            "address": "0x79040000",
+            "value": 262243
+          },
+          "CORE_ID": {
+            "offset": 4,
+            "address": "0x79040004",
+            "value": 1112560459
+          },
+          "SCRATCH": {
+            "offset": 8,
+            "address": "0x79040008",
+            "value": 0
+          },
+          "GP_CONTROL_OUT": {
+            "offset": 1028,
+            "address": "0x79040404",
+            "value": 0
+          },
+          "GP_STATUS_IN": {
+            "offset": 1032,
+            "address": "0x79040408",
+            "value": 2048
+          },
+          "GP_FRAME_BIT_COUNT_OUT": {
+            "offset": 1092,
+            "address": "0x79040444",
+            "value": 281
+          },
+          "GP_RECEIVED_BITS_IN": {
+            "offset": 1096,
+            "address": "0x79040448",
+            "value": 0
+          },
+          "GP_PREAMBLE_COUNT_OUT": {
+            "offset": 1156,
+            "address": "0x79040484",
+            "value": 25
+          },
+          "GP_TOTAL_ERRORS_IN": {
+            "offset": 1160,
+            "address": "0x79040488",
+            "value": 0
+          },
+          "GP_START_OFFSET_OUT": {
+            "offset": 1220,
+            "address": "0x790404C4",
+            "value": 74
+          },
+          "GP_PAYLOAD_ERRORS_IN": {
+            "offset": 1224,
+            "address": "0x790404C8",
+            "value": 0
+          },
+          "GP_SIGNATURE_IN": {
+            "offset": 1288,
+            "address": "0x79040508",
+            "value": 1112560459
+          },
+          "GP_TX_VALID_COUNT_IN": {
+            "offset": 1352,
+            "address": "0x79040548",
+            "value": 2376
+          },
+          "GP_RX_VALID_COUNT_IN": {
+            "offset": 1416,
+            "address": "0x79040588",
+            "value": 0
+          }
+        }
+      }
+    },
+    {
+      "start_offset": 48,
+      "rx_gain_db": 20.0,
+      "tx_attenuation_db": -80.0,
+      "ok": true,
+      "error_type": null,
+      "error": null,
+      "score": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "backend": "ssh-devmem",
+        "base_addr": 2030305280,
+        "id_word": 1112560459,
+        "signature_word": 1112560459,
+        "initial_status": 2048,
+        "final_status": 2060,
+        "cleared_status": 2048,
+        "done_cleared": true,
+        "busy_observed": false,
+        "done_observed": true,
+        "timed_out_observed": true,
+        "completed_by_timeout": false,
+        "poll_reads": 1,
+        "frame_bit_count": 281,
+        "preamble_count": 25,
+        "start_offset": 48,
+        "received_bits": 0,
+        "total_errors": 0,
+        "payload_errors": 0,
+        "tx_valid_count": 2376,
+        "rx_valid_count": 0,
+        "ber_total": 0.0,
+        "ber_payload": 0.0,
+        "register_snapshot": {
+          "CORE_VERSION": {
+            "offset": 0,
+            "address": "0x79040000",
+            "value": 262243
+          },
+          "CORE_ID": {
+            "offset": 4,
+            "address": "0x79040004",
+            "value": 1112560459
+          },
+          "SCRATCH": {
+            "offset": 8,
+            "address": "0x79040008",
+            "value": 0
+          },
+          "GP_CONTROL_OUT": {
+            "offset": 1028,
+            "address": "0x79040404",
+            "value": 0
+          },
+          "GP_STATUS_IN": {
+            "offset": 1032,
+            "address": "0x79040408",
+            "value": 2048
+          },
+          "GP_FRAME_BIT_COUNT_OUT": {
+            "offset": 1092,
+            "address": "0x79040444",
+            "value": 281
+          },
+          "GP_RECEIVED_BITS_IN": {
+            "offset": 1096,
+            "address": "0x79040448",
+            "value": 0
+          },
+          "GP_PREAMBLE_COUNT_OUT": {
+            "offset": 1156,
+            "address": "0x79040484",
+            "value": 25
+          },
+          "GP_TOTAL_ERRORS_IN": {
+            "offset": 1160,
+            "address": "0x79040488",
+            "value": 0
+          },
+          "GP_START_OFFSET_OUT": {
+            "offset": 1220,
+            "address": "0x790404C4",
+            "value": 48
+          },
+          "GP_PAYLOAD_ERRORS_IN": {
+            "offset": 1224,
+            "address": "0x790404C8",
+            "value": 0
+          },
+          "GP_SIGNATURE_IN": {
+            "offset": 1288,
+            "address": "0x79040508",
+            "value": 1112560459
+          },
+          "GP_TX_VALID_COUNT_IN": {
+            "offset": 1352,
+            "address": "0x79040548",
+            "value": 2376
+          },
+          "GP_RX_VALID_COUNT_IN": {
+            "offset": 1416,
+            "address": "0x79040588",
+            "value": 0
+          }
+        }
+      }
+    },
+    {
+      "start_offset": 62,
+      "rx_gain_db": 20.0,
+      "tx_attenuation_db": -80.0,
+      "ok": true,
+      "error_type": null,
+      "error": null,
+      "score": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "backend": "ssh-devmem",
+        "base_addr": 2030305280,
+        "id_word": 1112560459,
+        "signature_word": 1112560459,
+        "initial_status": 2048,
+        "final_status": 2060,
+        "cleared_status": 2048,
+        "done_cleared": true,
+        "busy_observed": false,
+        "done_observed": true,
+        "timed_out_observed": true,
+        "completed_by_timeout": false,
+        "poll_reads": 1,
+        "frame_bit_count": 281,
+        "preamble_count": 25,
+        "start_offset": 62,
+        "received_bits": 0,
+        "total_errors": 0,
+        "payload_errors": 0,
+        "tx_valid_count": 2376,
+        "rx_valid_count": 0,
+        "ber_total": 0.0,
+        "ber_payload": 0.0,
+        "register_snapshot": {
+          "CORE_VERSION": {
+            "offset": 0,
+            "address": "0x79040000",
+            "value": 262243
+          },
+          "CORE_ID": {
+            "offset": 4,
+            "address": "0x79040004",
+            "value": 1112560459
+          },
+          "SCRATCH": {
+            "offset": 8,
+            "address": "0x79040008",
+            "value": 0
+          },
+          "GP_CONTROL_OUT": {
+            "offset": 1028,
+            "address": "0x79040404",
+            "value": 0
+          },
+          "GP_STATUS_IN": {
+            "offset": 1032,
+            "address": "0x79040408",
+            "value": 2048
+          },
+          "GP_FRAME_BIT_COUNT_OUT": {
+            "offset": 1092,
+            "address": "0x79040444",
+            "value": 281
+          },
+          "GP_RECEIVED_BITS_IN": {
+            "offset": 1096,
+            "address": "0x79040448",
+            "value": 0
+          },
+          "GP_PREAMBLE_COUNT_OUT": {
+            "offset": 1156,
+            "address": "0x79040484",
+            "value": 25
+          },
+          "GP_TOTAL_ERRORS_IN": {
+            "offset": 1160,
+            "address": "0x79040488",
+            "value": 0
+          },
+          "GP_START_OFFSET_OUT": {
+            "offset": 1220,
+            "address": "0x790404C4",
+            "value": 62
+          },
+          "GP_PAYLOAD_ERRORS_IN": {
+            "offset": 1224,
+            "address": "0x790404C8",
+            "value": 0
+          },
+          "GP_SIGNATURE_IN": {
+            "offset": 1288,
+            "address": "0x79040508",
+            "value": 1112560459
+          },
+          "GP_TX_VALID_COUNT_IN": {
+            "offset": 1352,
+            "address": "0x79040548",
+            "value": 2376
+          },
+          "GP_RX_VALID_COUNT_IN": {
+            "offset": 1416,
+            "address": "0x79040588",
+            "value": 0
+          }
+        }
+      }
+    },
+    {
+      "start_offset": 74,
+      "rx_gain_db": 20.0,
+      "tx_attenuation_db": -80.0,
+      "ok": true,
+      "error_type": null,
+      "error": null,
+      "score": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "backend": "ssh-devmem",
+        "base_addr": 2030305280,
+        "id_word": 1112560459,
+        "signature_word": 1112560459,
+        "initial_status": 2048,
+        "final_status": 2060,
+        "cleared_status": 2048,
+        "done_cleared": true,
+        "busy_observed": false,
+        "done_observed": true,
+        "timed_out_observed": true,
+        "completed_by_timeout": false,
+        "poll_reads": 1,
+        "frame_bit_count": 281,
+        "preamble_count": 25,
+        "start_offset": 74,
+        "received_bits": 0,
+        "total_errors": 0,
+        "payload_errors": 0,
+        "tx_valid_count": 2376,
+        "rx_valid_count": 0,
+        "ber_total": 0.0,
+        "ber_payload": 0.0,
+        "register_snapshot": {
+          "CORE_VERSION": {
+            "offset": 0,
+            "address": "0x79040000",
+            "value": 262243
+          },
+          "CORE_ID": {
+            "offset": 4,
+            "address": "0x79040004",
+            "value": 1112560459
+          },
+          "SCRATCH": {
+            "offset": 8,
+            "address": "0x79040008",
+            "value": 0
+          },
+          "GP_CONTROL_OUT": {
+            "offset": 1028,
+            "address": "0x79040404",
+            "value": 0
+          },
+          "GP_STATUS_IN": {
+            "offset": 1032,
+            "address": "0x79040408",
+            "value": 2048
+          },
+          "GP_FRAME_BIT_COUNT_OUT": {
+            "offset": 1092,
+            "address": "0x79040444",
+            "value": 281
+          },
+          "GP_RECEIVED_BITS_IN": {
+            "offset": 1096,
+            "address": "0x79040448",
+            "value": 0
+          },
+          "GP_PREAMBLE_COUNT_OUT": {
+            "offset": 1156,
+            "address": "0x79040484",
+            "value": 25
+          },
+          "GP_TOTAL_ERRORS_IN": {
+            "offset": 1160,
+            "address": "0x79040488",
+            "value": 0
+          },
+          "GP_START_OFFSET_OUT": {
+            "offset": 1220,
+            "address": "0x790404C4",
+            "value": 74
+          },
+          "GP_PAYLOAD_ERRORS_IN": {
+            "offset": 1224,
+            "address": "0x790404C8",
+            "value": 0
+          },
+          "GP_SIGNATURE_IN": {
+            "offset": 1288,
+            "address": "0x79040508",
+            "value": 1112560459
+          },
+          "GP_TX_VALID_COUNT_IN": {
+            "offset": 1352,
+            "address": "0x79040548",
+            "value": 2376
+          },
+          "GP_RX_VALID_COUNT_IN": {
+            "offset": 1416,
+            "address": "0x79040588",
+            "value": 0
+          }
+        }
+      }
+    },
+    {
+      "start_offset": 48,
+      "rx_gain_db": 10.0,
+      "tx_attenuation_db": -70.0,
+      "ok": true,
+      "error_type": null,
+      "error": null,
+      "score": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "backend": "ssh-devmem",
+        "base_addr": 2030305280,
+        "id_word": 1112560459,
+        "signature_word": 1112560459,
+        "initial_status": 2048,
+        "final_status": 2060,
+        "cleared_status": 2048,
+        "done_cleared": true,
+        "busy_observed": false,
+        "done_observed": true,
+        "timed_out_observed": true,
+        "completed_by_timeout": false,
+        "poll_reads": 1,
+        "frame_bit_count": 281,
+        "preamble_count": 25,
+        "start_offset": 48,
+        "received_bits": 0,
+        "total_errors": 0,
+        "payload_errors": 0,
+        "tx_valid_count": 2376,
+        "rx_valid_count": 0,
+        "ber_total": 0.0,
+        "ber_payload": 0.0,
+        "register_snapshot": {
+          "CORE_VERSION": {
+            "offset": 0,
+            "address": "0x79040000",
+            "value": 262243
+          },
+          "CORE_ID": {
+            "offset": 4,
+            "address": "0x79040004",
+            "value": 1112560459
+          },
+          "SCRATCH": {
+            "offset": 8,
+            "address": "0x79040008",
+            "value": 0
+          },
+          "GP_CONTROL_OUT": {
+            "offset": 1028,
+            "address": "0x79040404",
+            "value": 0
+          },
+          "GP_STATUS_IN": {
+            "offset": 1032,
+            "address": "0x79040408",
+            "value": 2048
+          },
+          "GP_FRAME_BIT_COUNT_OUT": {
+            "offset": 1092,
+            "address": "0x79040444",
+            "value": 281
+          },
+          "GP_RECEIVED_BITS_IN": {
+            "offset": 1096,
+            "address": "0x79040448",
+            "value": 0
+          },
+          "GP_PREAMBLE_COUNT_OUT": {
+            "offset": 1156,
+            "address": "0x79040484",
+            "value": 25
+          },
+          "GP_TOTAL_ERRORS_IN": {
+            "offset": 1160,
+            "address": "0x79040488",
+            "value": 0
+          },
+          "GP_START_OFFSET_OUT": {
+            "offset": 1220,
+            "address": "0x790404C4",
+            "value": 48
+          },
+          "GP_PAYLOAD_ERRORS_IN": {
+            "offset": 1224,
+            "address": "0x790404C8",
+            "value": 0
+          },
+          "GP_SIGNATURE_IN": {
+            "offset": 1288,
+            "address": "0x79040508",
+            "value": 1112560459
+          },
+          "GP_TX_VALID_COUNT_IN": {
+            "offset": 1352,
+            "address": "0x79040548",
+            "value": 2376
+          },
+          "GP_RX_VALID_COUNT_IN": {
+            "offset": 1416,
+            "address": "0x79040588",
+            "value": 0
+          }
+        }
+      }
+    },
+    {
+      "start_offset": 62,
+      "rx_gain_db": 10.0,
+      "tx_attenuation_db": -70.0,
+      "ok": true,
+      "error_type": null,
+      "error": null,
+      "score": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "backend": "ssh-devmem",
+        "base_addr": 2030305280,
+        "id_word": 1112560459,
+        "signature_word": 1112560459,
+        "initial_status": 2048,
+        "final_status": 2060,
+        "cleared_status": 2048,
+        "done_cleared": true,
+        "busy_observed": false,
+        "done_observed": true,
+        "timed_out_observed": true,
+        "completed_by_timeout": false,
+        "poll_reads": 1,
+        "frame_bit_count": 281,
+        "preamble_count": 25,
+        "start_offset": 62,
+        "received_bits": 0,
+        "total_errors": 0,
+        "payload_errors": 0,
+        "tx_valid_count": 2376,
+        "rx_valid_count": 0,
+        "ber_total": 0.0,
+        "ber_payload": 0.0,
+        "register_snapshot": {
+          "CORE_VERSION": {
+            "offset": 0,
+            "address": "0x79040000",
+            "value": 262243
+          },
+          "CORE_ID": {
+            "offset": 4,
+            "address": "0x79040004",
+            "value": 1112560459
+          },
+          "SCRATCH": {
+            "offset": 8,
+            "address": "0x79040008",
+            "value": 0
+          },
+          "GP_CONTROL_OUT": {
+            "offset": 1028,
+            "address": "0x79040404",
+            "value": 0
+          },
+          "GP_STATUS_IN": {
+            "offset": 1032,
+            "address": "0x79040408",
+            "value": 2048
+          },
+          "GP_FRAME_BIT_COUNT_OUT": {
+            "offset": 1092,
+            "address": "0x79040444",
+            "value": 281
+          },
+          "GP_RECEIVED_BITS_IN": {
+            "offset": 1096,
+            "address": "0x79040448",
+            "value": 0
+          },
+          "GP_PREAMBLE_COUNT_OUT": {
+            "offset": 1156,
+            "address": "0x79040484",
+            "value": 25
+          },
+          "GP_TOTAL_ERRORS_IN": {
+            "offset": 1160,
+            "address": "0x79040488",
+            "value": 0
+          },
+          "GP_START_OFFSET_OUT": {
+            "offset": 1220,
+            "address": "0x790404C4",
+            "value": 62
+          },
+          "GP_PAYLOAD_ERRORS_IN": {
+            "offset": 1224,
+            "address": "0x790404C8",
+            "value": 0
+          },
+          "GP_SIGNATURE_IN": {
+            "offset": 1288,
+            "address": "0x79040508",
+            "value": 1112560459
+          },
+          "GP_TX_VALID_COUNT_IN": {
+            "offset": 1352,
+            "address": "0x79040548",
+            "value": 2376
+          },
+          "GP_RX_VALID_COUNT_IN": {
+            "offset": 1416,
+            "address": "0x79040588",
+            "value": 0
+          }
+        }
+      }
+    },
+    {
+      "start_offset": 74,
+      "rx_gain_db": 10.0,
+      "tx_attenuation_db": -70.0,
+      "ok": true,
+      "error_type": null,
+      "error": null,
+      "score": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "backend": "ssh-devmem",
+        "base_addr": 2030305280,
+        "id_word": 1112560459,
+        "signature_word": 1112560459,
+        "initial_status": 2048,
+        "final_status": 2060,
+        "cleared_status": 2048,
+        "done_cleared": true,
+        "busy_observed": false,
+        "done_observed": true,
+        "timed_out_observed": true,
+        "completed_by_timeout": false,
+        "poll_reads": 1,
+        "frame_bit_count": 281,
+        "preamble_count": 25,
+        "start_offset": 74,
+        "received_bits": 0,
+        "total_errors": 0,
+        "payload_errors": 0,
+        "tx_valid_count": 2376,
+        "rx_valid_count": 0,
+        "ber_total": 0.0,
+        "ber_payload": 0.0,
+        "register_snapshot": {
+          "CORE_VERSION": {
+            "offset": 0,
+            "address": "0x79040000",
+            "value": 262243
+          },
+          "CORE_ID": {
+            "offset": 4,
+            "address": "0x79040004",
+            "value": 1112560459
+          },
+          "SCRATCH": {
+            "offset": 8,
+            "address": "0x79040008",
+            "value": 0
+          },
+          "GP_CONTROL_OUT": {
+            "offset": 1028,
+            "address": "0x79040404",
+            "value": 0
+          },
+          "GP_STATUS_IN": {
+            "offset": 1032,
+            "address": "0x79040408",
+            "value": 2048
+          },
+          "GP_FRAME_BIT_COUNT_OUT": {
+            "offset": 1092,
+            "address": "0x79040444",
+            "value": 281
+          },
+          "GP_RECEIVED_BITS_IN": {
+            "offset": 1096,
+            "address": "0x79040448",
+            "value": 0
+          },
+          "GP_PREAMBLE_COUNT_OUT": {
+            "offset": 1156,
+            "address": "0x79040484",
+            "value": 25
+          },
+          "GP_TOTAL_ERRORS_IN": {
+            "offset": 1160,
+            "address": "0x79040488",
+            "value": 0
+          },
+          "GP_START_OFFSET_OUT": {
+            "offset": 1220,
+            "address": "0x790404C4",
+            "value": 74
+          },
+          "GP_PAYLOAD_ERRORS_IN": {
+            "offset": 1224,
+            "address": "0x790404C8",
+            "value": 0
+          },
+          "GP_SIGNATURE_IN": {
+            "offset": 1288,
+            "address": "0x79040508",
+            "value": 1112560459
+          },
+          "GP_TX_VALID_COUNT_IN": {
+            "offset": 1352,
+            "address": "0x79040548",
+            "value": 2376
+          },
+          "GP_RX_VALID_COUNT_IN": {
+            "offset": 1416,
+            "address": "0x79040588",
+            "value": 0
+          }
+        }
+      }
+    },
+    {
+      "start_offset": 48,
+      "rx_gain_db": 20.0,
+      "tx_attenuation_db": -70.0,
+      "ok": true,
+      "error_type": null,
+      "error": null,
+      "score": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "backend": "ssh-devmem",
+        "base_addr": 2030305280,
+        "id_word": 1112560459,
+        "signature_word": 1112560459,
+        "initial_status": 2048,
+        "final_status": 2060,
+        "cleared_status": 2048,
+        "done_cleared": true,
+        "busy_observed": false,
+        "done_observed": true,
+        "timed_out_observed": true,
+        "completed_by_timeout": false,
+        "poll_reads": 1,
+        "frame_bit_count": 281,
+        "preamble_count": 25,
+        "start_offset": 48,
+        "received_bits": 0,
+        "total_errors": 0,
+        "payload_errors": 0,
+        "tx_valid_count": 2376,
+        "rx_valid_count": 0,
+        "ber_total": 0.0,
+        "ber_payload": 0.0,
+        "register_snapshot": {
+          "CORE_VERSION": {
+            "offset": 0,
+            "address": "0x79040000",
+            "value": 262243
+          },
+          "CORE_ID": {
+            "offset": 4,
+            "address": "0x79040004",
+            "value": 1112560459
+          },
+          "SCRATCH": {
+            "offset": 8,
+            "address": "0x79040008",
+            "value": 0
+          },
+          "GP_CONTROL_OUT": {
+            "offset": 1028,
+            "address": "0x79040404",
+            "value": 0
+          },
+          "GP_STATUS_IN": {
+            "offset": 1032,
+            "address": "0x79040408",
+            "value": 2048
+          },
+          "GP_FRAME_BIT_COUNT_OUT": {
+            "offset": 1092,
+            "address": "0x79040444",
+            "value": 281
+          },
+          "GP_RECEIVED_BITS_IN": {
+            "offset": 1096,
+            "address": "0x79040448",
+            "value": 0
+          },
+          "GP_PREAMBLE_COUNT_OUT": {
+            "offset": 1156,
+            "address": "0x79040484",
+            "value": 25
+          },
+          "GP_TOTAL_ERRORS_IN": {
+            "offset": 1160,
+            "address": "0x79040488",
+            "value": 0
+          },
+          "GP_START_OFFSET_OUT": {
+            "offset": 1220,
+            "address": "0x790404C4",
+            "value": 48
+          },
+          "GP_PAYLOAD_ERRORS_IN": {
+            "offset": 1224,
+            "address": "0x790404C8",
+            "value": 0
+          },
+          "GP_SIGNATURE_IN": {
+            "offset": 1288,
+            "address": "0x79040508",
+            "value": 1112560459
+          },
+          "GP_TX_VALID_COUNT_IN": {
+            "offset": 1352,
+            "address": "0x79040548",
+            "value": 2376
+          },
+          "GP_RX_VALID_COUNT_IN": {
+            "offset": 1416,
+            "address": "0x79040588",
+            "value": 0
+          }
+        }
+      }
+    },
+    {
+      "start_offset": 62,
+      "rx_gain_db": 20.0,
+      "tx_attenuation_db": -70.0,
+      "ok": true,
+      "error_type": null,
+      "error": null,
+      "score": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "backend": "ssh-devmem",
+        "base_addr": 2030305280,
+        "id_word": 1112560459,
+        "signature_word": 1112560459,
+        "initial_status": 2048,
+        "final_status": 2060,
+        "cleared_status": 2048,
+        "done_cleared": true,
+        "busy_observed": false,
+        "done_observed": true,
+        "timed_out_observed": true,
+        "completed_by_timeout": false,
+        "poll_reads": 1,
+        "frame_bit_count": 281,
+        "preamble_count": 25,
+        "start_offset": 62,
+        "received_bits": 0,
+        "total_errors": 0,
+        "payload_errors": 0,
+        "tx_valid_count": 2376,
+        "rx_valid_count": 0,
+        "ber_total": 0.0,
+        "ber_payload": 0.0,
+        "register_snapshot": {
+          "CORE_VERSION": {
+            "offset": 0,
+            "address": "0x79040000",
+            "value": 262243
+          },
+          "CORE_ID": {
+            "offset": 4,
+            "address": "0x79040004",
+            "value": 1112560459
+          },
+          "SCRATCH": {
+            "offset": 8,
+            "address": "0x79040008",
+            "value": 0
+          },
+          "GP_CONTROL_OUT": {
+            "offset": 1028,
+            "address": "0x79040404",
+            "value": 0
+          },
+          "GP_STATUS_IN": {
+            "offset": 1032,
+            "address": "0x79040408",
+            "value": 2048
+          },
+          "GP_FRAME_BIT_COUNT_OUT": {
+            "offset": 1092,
+            "address": "0x79040444",
+            "value": 281
+          },
+          "GP_RECEIVED_BITS_IN": {
+            "offset": 1096,
+            "address": "0x79040448",
+            "value": 0
+          },
+          "GP_PREAMBLE_COUNT_OUT": {
+            "offset": 1156,
+            "address": "0x79040484",
+            "value": 25
+          },
+          "GP_TOTAL_ERRORS_IN": {
+            "offset": 1160,
+            "address": "0x79040488",
+            "value": 0
+          },
+          "GP_START_OFFSET_OUT": {
+            "offset": 1220,
+            "address": "0x790404C4",
+            "value": 62
+          },
+          "GP_PAYLOAD_ERRORS_IN": {
+            "offset": 1224,
+            "address": "0x790404C8",
+            "value": 0
+          },
+          "GP_SIGNATURE_IN": {
+            "offset": 1288,
+            "address": "0x79040508",
+            "value": 1112560459
+          },
+          "GP_TX_VALID_COUNT_IN": {
+            "offset": 1352,
+            "address": "0x79040548",
+            "value": 2376
+          },
+          "GP_RX_VALID_COUNT_IN": {
+            "offset": 1416,
+            "address": "0x79040588",
+            "value": 0
+          }
+        }
+      }
+    },
+    {
+      "start_offset": 74,
+      "rx_gain_db": 20.0,
+      "tx_attenuation_db": -70.0,
+      "ok": true,
+      "error_type": null,
+      "error": null,
+      "score": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      "result": {
+        "backend": "ssh-devmem",
+        "base_addr": 2030305280,
+        "id_word": 1112560459,
+        "signature_word": 1112560459,
+        "initial_status": 2048,
+        "final_status": 2060,
+        "cleared_status": 2048,
+        "done_cleared": true,
+        "busy_observed": false,
+        "done_observed": true,
+        "timed_out_observed": true,
+        "completed_by_timeout": false,
+        "poll_reads": 1,
+        "frame_bit_count": 281,
+        "preamble_count": 25,
+        "start_offset": 74,
+        "received_bits": 0,
+        "total_errors": 0,
+        "payload_errors": 0,
+        "tx_valid_count": 2376,
+        "rx_valid_count": 0,
+        "ber_total": 0.0,
+        "ber_payload": 0.0,
+        "register_snapshot": {
+          "CORE_VERSION": {
+            "offset": 0,
+            "address": "0x79040000",
+            "value": 262243
+          },
+          "CORE_ID": {
+            "offset": 4,
+            "address": "0x79040004",
+            "value": 1112560459
+          },
+          "SCRATCH": {
+            "offset": 8,
+            "address": "0x79040008",
+            "value": 0
+          },
+          "GP_CONTROL_OUT": {
+            "offset": 1028,
+            "address": "0x79040404",
+            "value": 0
+          },
+          "GP_STATUS_IN": {
+            "offset": 1032,
+            "address": "0x79040408",
+            "value": 2048
+          },
+          "GP_FRAME_BIT_COUNT_OUT": {
+            "offset": 1092,
+            "address": "0x79040444",
+            "value": 281
+          },
+          "GP_RECEIVED_BITS_IN": {
+            "offset": 1096,
+            "address": "0x79040448",
+            "value": 0
+          },
+          "GP_PREAMBLE_COUNT_OUT": {
+            "offset": 1156,
+            "address": "0x79040484",
+            "value": 25
+          },
+          "GP_TOTAL_ERRORS_IN": {
+            "offset": 1160,
+            "address": "0x79040488",
+            "value": 0
+          },
+          "GP_START_OFFSET_OUT": {
+            "offset": 1220,
+            "address": "0x790404C4",
+            "value": 74
+          },
+          "GP_PAYLOAD_ERRORS_IN": {
+            "offset": 1224,
+            "address": "0x790404C8",
+            "value": 0
+          },
+          "GP_SIGNATURE_IN": {
+            "offset": 1288,
+            "address": "0x79040508",
+            "value": 1112560459
+          },
+          "GP_TX_VALID_COUNT_IN": {
+            "offset": 1352,
+            "address": "0x79040548",
+            "value": 2376
+          },
+          "GP_RX_VALID_COUNT_IN": {
+            "offset": 1416,
+            "address": "0x79040588",
+            "value": 0
+          }
+        }
+      }
+    }
+  ]
+}
