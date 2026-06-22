@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -17,9 +18,9 @@ ROOT = Path(__file__).resolve().parents[1]
 DATASETS_DIR = ROOT / "datasets"
 LFS_VERSION = "https://git-lfs.github.com/spec/v1"
 LFS_POINTER_RE = re.compile(
-    r"^version (?P<version>\S+)\n"
-    r"oid sha256:(?P<sha256>[0-9a-fA-F]{64})\n"
-    r"size (?P<size>\d+)\n?$"
+    rb"^version (?P<version>\S+)\n"
+    rb"oid sha256:(?P<sha256>[0-9a-fA-F]{64})\n"
+    rb"size (?P<size>\d+)\n?$"
 )
 SHA256_RE = re.compile(r"[0-9a-fA-F]{64}")
 
@@ -52,15 +53,23 @@ def load_manifest(path: Path) -> dict[str, Any]:
     return data
 
 
-def parse_lfs_pointer(path: Path) -> dict[str, str]:
-    text = path.read_text(encoding="utf-8")
-    match = LFS_POINTER_RE.match(text)
-    if match is None:
-        raise ManifestError(f"{path}: expected a Git LFS pointer file")
-    pointer = match.groupdict()
-    if pointer["version"] != LFS_VERSION:
-        raise ManifestError(f"{path}: unexpected Git LFS pointer version {pointer['version']}")
-    return pointer
+def read_lfs_pointer_or_digest(path: Path) -> tuple[str, int, str]:
+    """Return (sha256, size, source) for a Git LFS pointer or real binary file."""
+
+    payload = path.read_bytes()
+    match = LFS_POINTER_RE.match(payload)
+    if match is not None:
+        pointer = match.groupdict()
+        version = pointer["version"].decode("ascii")
+        if version != LFS_VERSION:
+            raise ManifestError(f"{path}: unexpected Git LFS pointer version {version}")
+        return (
+            pointer["sha256"].decode("ascii"),
+            int(pointer["size"].decode("ascii")),
+            "git-lfs-pointer",
+        )
+
+    return hashlib.sha256(payload).hexdigest(), len(payload), "file-content"
 
 
 def require_fields(path: Path, data: dict[str, Any]) -> None:
@@ -86,14 +95,14 @@ def validate_git_lfs_manifest(path: Path, data: dict[str, Any]) -> None:
     if not data_file.exists():
         raise ManifestError(f"{path}: referenced data file does not exist: {data_file}")
 
-    pointer = parse_lfs_pointer(data_file)
-    if pointer["sha256"].lower() != sha256.lower():
+    actual_sha256, size, source = read_lfs_pointer_or_digest(data_file)
+    if actual_sha256.lower() != sha256.lower():
         raise ManifestError(
-            f"{path}: manifest sha256 does not match LFS pointer "
-            f"({sha256} != {pointer['sha256']})"
+            f"{path}: manifest sha256 does not match {source} "
+            f"({sha256} != {actual_sha256})"
         )
-    if int(pointer["size"]) <= 0:
-        raise ManifestError(f"{path}: LFS pointer size must be positive")
+    if size <= 0:
+        raise ManifestError(f"{path}: referenced data size must be positive")
 
 
 def validate_generated_local_manifest(path: Path, data: dict[str, Any]) -> None:
@@ -115,10 +124,6 @@ def validate_generated_local_manifest(path: Path, data: dict[str, Any]) -> None:
 
     data_file = path.parent / str(data.get("file_name", ""))
     if data_file.exists():
-        # Local generated files are allowed but should normally remain uncommitted.
-        # If present, validate the checksum to catch stale regenerated data.
-        import hashlib
-
         digest = hashlib.sha256(data_file.read_bytes()).hexdigest()
         if digest.lower() != sha256.lower():
             raise ManifestError(f"{path}: generated local file sha256 does not match manifest")
@@ -159,9 +164,9 @@ def main() -> int:
         try:
             validate_manifest(manifest)
             print(f"OK  {manifest.relative_to(ROOT)}")
-        except ManifestError as exc:
+        except (ManifestError, OSError, json.JSONDecodeError, yaml.YAMLError) as exc:
             errors.append(str(exc))
-            print(f"ERR {exc}")
+            print(f"ERR {manifest.relative_to(ROOT)}: {exc}")
 
     if errors:
         print(f"\nDataset manifest validation failed: {len(errors)} error(s).", file=sys.stderr)
