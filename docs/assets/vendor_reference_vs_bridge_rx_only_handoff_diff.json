@@ -1,0 +1,240 @@
+{
+  "lhs": {
+    "label": "vendor_reference_xsa",
+    "path": "hardware\\7020_ad936x_sdr\\ps\\ad936x_no_os_reference\\platform\\hw\\system_top.xsa",
+    "entry_count": 14,
+    "embedded_system_top_bit_md5": "7cb06731f08fe834c76f1d928abe5933",
+    "embedded_system_top_bit_size_bytes": 2356360,
+    "module_count": 20,
+    "memrange_count": 5
+  },
+  "rhs": {
+    "label": "bridge_rx_only_xsa",
+    "path": "hardware\\7020_ad936x_sdr\\hdl\\course_bpsk_fmcomms2_zc702\\course_bpsk_fmcomms2_zc702.sdk\\system_top.xsa",
+    "entry_count": 12,
+    "embedded_system_top_bit_md5": "3ea6b39e0c5cee6e5049355cc84df9b1",
+    "embedded_system_top_bit_size_bytes": 2277040,
+    "module_count": 25,
+    "memrange_count": 6
+  },
+  "file_entry_diff": {
+    "lhs_only": [
+      "system_axi_hp1_interconnect_0.hwh",
+      "system_axi_hp2_interconnect_0.hwh"
+    ],
+    "rhs_only": [],
+    "common_equal": [
+      "ps7_init.c",
+      "ps7_init.h",
+      "ps7_init.html",
+      "ps7_init.tcl",
+      "ps7_init_gpl.c",
+      "ps7_init_gpl.h"
+    ],
+    "common_different": [
+      {
+        "name": "sysdef.xml",
+        "lhs": {
+          "size_bytes": 1523,
+          "md5": "d2ec00fe0f898c0b34a1f065c584451b"
+        },
+        "rhs": {
+          "size_bytes": 1225,
+          "md5": "a21c8a69fed50807557b00a1f239fe4c"
+        }
+      },
+      {
+        "name": "system.bda",
+        "lhs": {
+          "size_bytes": 6284,
+          "md5": "c143d7fd9856a85ad253e6a42a157931"
+        },
+        "rhs": {
+          "size_bytes": 7088,
+          "md5": "c69cd2812a8288d81441f318e60f894b"
+        }
+      },
+      {
+        "name": "system.hwh",
+        "lhs": {
+          "size_bytes": 377235,
+          "md5": "2ce4b0850a95663d03dcab524c405624"
+        },
+        "rhs": {
+          "size_bytes": 417095,
+          "md5": "10b140815a1a318c065cab0d065fac5e"
+        }
+      },
+      {
+        "name": "system_top.bit",
+        "lhs": {
+          "size_bytes": 2356360,
+          "md5": "7cb06731f08fe834c76f1d928abe5933"
+        },
+        "rhs": {
+          "size_bytes": 2277040,
+          "md5": "3ea6b39e0c5cee6e5049355cc84df9b1"
+        }
+      },
+      {
+        "name": "xsa.json",
+        "lhs": {
+          "size_bytes": 2141,
+          "md5": "3f585b945a303cb18d9f2872493871a6"
+        },
+        "rhs": {
+          "size_bytes": 2541,
+          "md5": "428b19da4f8ce8c1714fb4876995c72b"
+        }
+      },
+      {
+        "name": "xsa.xml",
+        "lhs": {
+          "size_bytes": 1090,
+          "md5": "2cee2d864a56d4429bec0bc99ce4c670"
+        },
+        "rhs": {
+          "size_bytes": 1184,
+          "md5": "61a719a336ade73223d93b34cb9a0c3e"
+        }
+      }
+    ]
+  },
+  "ps7_init_c_identical": true,
+  "ps7_init_tcl_identical": true,
+  "hwh_diff": {
+    "module_diff": {
+      "lhs_only_instances": [],
+      "rhs_only_instances": [
+        "axi_gpreg_bpsk",
+        "bpsk_bridge_bd",
+        "bpsk_const_signature32",
+        "bpsk_const_zero32",
+        "bpsk_rx_sample_concat"
+      ],
+      "common_changed": [
+        {
+          "instance": "axi_ad9361",
+          "identity": {
+            "lhs_modtype": "axi_ad9361",
+            "rhs_modtype": "axi_ad9361",
+            "lhs_vlnv": "analog.com:user:axi_ad9361:1.0",
+            "rhs_vlnv": "analog.com:user:axi_ad9361:1.0"
+          },
+          "parameter_diff": {
+            "lhs_only": {},
+            "rhs_only": {},
+            "changed": {
+              "SPEED_GRADE": {
+                "lhs": "10",
+                "rhs": "20"
+              }
+            }
+          }
+        },
+        {
+          "instance": "axi_ad9361_adc_dma",
+          "identity": {
+            "lhs_modtype": "axi_dmac",
+            "rhs_modtype": "axi_dmac",
+            "lhs_vlnv": "analog.com:user:axi_dmac:1.0",
+            "rhs_vlnv": "analog.com:user:axi_dmac:1.0"
+          },
+          "parameter_diff": {
+            "lhs_only": {},
+            "rhs_only": {},
+            "changed": {
+              "DMA_AXI_PROTOCOL_SRC": {
+                "lhs": "0",
+                "rhs": "1"
+              }
+            }
+          }
+        },
+        {
+          "instance": "axi_ad9361_dac_dma",
+          "identity": {
+            "lhs_modtype": "axi_dmac",
+            "rhs_modtype": "axi_dmac",
+            "lhs_vlnv": "analog.com:user:axi_dmac:1.0",
+            "rhs_vlnv": "analog.com:user:axi_dmac:1.0"
+          },
+          "parameter_diff": {
+            "lhs_only": {},
+            "rhs_only": {},
+            "changed": {
+              "DMA_AXI_PROTOCOL_DEST": {
+                "lhs": "0",
+                "rhs": "1"
+              }
+            }
+          }
+        },
+        {
+          "instance": "axi_cpu_interconnect",
+          "identity": {
+            "lhs_modtype": "axi_interconnect",
+            "rhs_modtype": "axi_interconnect",
+            "lhs_vlnv": "xilinx.com:ip:axi_interconnect:2.1",
+            "rhs_vlnv": "xilinx.com:ip:axi_interconnect:2.1"
+          },
+          "parameter_diff": {
+            "lhs_only": {},
+            "rhs_only": {},
+            "changed": {
+              "NUM_MI": {
+                "lhs": "9",
+                "rhs": "10"
+              }
+            }
+          }
+        },
+        {
+          "instance": "sys_ps7",
+          "identity": {
+            "lhs_modtype": "processing_system7",
+            "rhs_modtype": "processing_system7",
+            "lhs_vlnv": "xilinx.com:ip:processing_system7:5.5",
+            "rhs_vlnv": "xilinx.com:ip:processing_system7:5.5"
+          },
+          "parameter_diff": {
+            "lhs_only": {},
+            "rhs_only": {},
+            "changed": {
+              "PCW_MIO_14_DIRECTION": {
+                "lhs": "in",
+                "rhs": "inout"
+              },
+              "PCW_MIO_15_DIRECTION": {
+                "lhs": "out",
+                "rhs": "inout"
+              },
+              "PCW_S_AXI_HP0_FREQMHZ": {
+                "lhs": "100",
+                "rhs": "10"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "memrange_diff": {
+      "lhs_only": [],
+      "rhs_only": [
+        {
+          "ADDRESSBLOCK": "axi_lite",
+          "BASENAME": "C_BASEADDR",
+          "BASEVALUE": "0x79040000",
+          "HIGHNAME": "C_HIGHADDR",
+          "HIGHVALUE": "0x7904FFFF",
+          "INSTANCE": "axi_gpreg_bpsk",
+          "IS_DATA": "TRUE",
+          "IS_INSTRUCTION": "TRUE",
+          "MASTERBUSINTERFACE": "M_AXI_GP0",
+          "MEMTYPE": "REGISTER",
+          "SLAVEBUSINTERFACE": "s_axi"
+        }
+      ]
+    }
+  }
+}

@@ -17,6 +17,17 @@ if {[info exists ::env(COURSE_OVERLAY_MODE)]} {
 
 source $vendor_shell_bd
 
+# The recovered CLG400 Tcl shell is close to the working vendor snapshot, but
+# the generated script carried a preset that forces the PS MIO14/15 directions
+# back to Vivado defaults during project recreation. Drop that preset and keep
+# the explicit MIO directions before any overlay mode branches so XSA
+# comparisons stay focused on the remaining true deltas.
+set_property -dict [list \
+  CONFIG.preset {None} \
+  CONFIG.PCW_MIO_14_DIRECTION {in} \
+  CONFIG.PCW_MIO_15_DIRECTION {out} \
+] [get_bd_cells sys_ps7]
+
 # The vendor shell already instantiates the PS-side AXI-Lite interconnect.
 # Seed the ADI helper with the existing MI count so the course overlay extends
 # that fabric instead of attempting to recreate it from scratch.
