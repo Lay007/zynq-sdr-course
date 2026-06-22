@@ -1,0 +1,1 @@
+--8<-- "blocks/block_11_integrated_sdr_project/lab_11_13_stock_vs_runtime_rx_compare.md"

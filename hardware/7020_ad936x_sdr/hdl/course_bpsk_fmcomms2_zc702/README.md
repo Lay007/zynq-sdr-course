@@ -142,10 +142,12 @@ The current safe engineering assumption is:
 - keep the vendor TX FIFO path untouched in this bring-up phase; treat the checked-in non-vendor modes as control-plane / RX-observation overlays, not yet as the final burst-TX image;
 - if you must reload it at runtime for debugging, re-validate both `iio_readdev` and `axi_gpreg` access afterwards before trusting any BER or RF result.
 
-That guidance is based on the live `2026-06-21` probe:
+That guidance is based on the live `2026-06-21` to `2026-06-23` probes:
 
 - removing the gpreg clock monitor cleared the earlier `0x79040004` external-abort / `Bus error` symptom;
 - reloading the new PL image through `fpga_manager` while Linux was already running left `gpreg` readable again, but standalone `iio_readdev` capture no longer refilled cleanly;
+- a stricter stock-vs-runtime comparison on `2026-06-23` then proved that a fresh stock shell still supports both direct host `libiio Buffer.refill()` capture and short `iio_readdev` capture before any reload;
+- that same comparison also proved that the runtime hot load breaks both host RX capture paths afterwards while `axi_gpreg` still answers and `rx_valid_count` stays at zero;
 - manually booting Linux after a real U-Boot `fpga load` of the course bitstream showed that deleting the DAC DMA path from the PL shell causes a kernel panic in `axi_dmac_probe()`;
 - after restoring the DAC DMA shell and the stale Linux DT fixups, the next remaining live blocker was AD9361 calibration timeout under the TX-override bitstream itself;
 - the current debug step therefore keeps the live DAC FIFO path untouched and uses either `gpreg_only` or the new intermediate `bridge_rx_only` mode until AD9361 boot is stable again;

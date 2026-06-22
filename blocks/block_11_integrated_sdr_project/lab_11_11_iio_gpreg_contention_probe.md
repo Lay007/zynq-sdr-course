@@ -72,7 +72,21 @@ Live follow-up on `2026-06-21` split the problem into two separate layers:
 - a manual U-Boot `fpga load` of the same bitstream before Linux boot proved that the older “remove DAC DMA from PL” overlay panics the kernel in `axi_dmac_probe()`, so the stock Linux device tree still expects that TX DMA path to exist in hardware;
 - attempting to recover the RX DMA path with Linux platform-driver `unbind` / `bind` caused a kernel oops in `dma_channel_rebalance()`.
 
-Practical consequence: keep the Linux-visible DMA shell compatible first, then re-test boot-time PL loading. Do not use live `fpga_manager` reload plus driver rebinding as the normal course workflow until the board has been revalidated after a clean boot.
+Second live follow-up on `2026-06-23` narrowed the failure mode further:
+
+- the corrected word-swapped `bridge_txrx_mux` payload was hot-loaded again from the stock-shell baseline through `fpga_manager`;
+- the host still saw the three-device IIO context (`ad9361-phy`, `cf-ad9361-dds-core-lpc`, `cf-ad9361-lpc`) after the reload;
+- `axi_gpreg` also became readable again and the burst helper repeated the known `done + timeout`, `tx_valid_count = 2376`, `rx_valid_count = 0`, `received_bits = 0` result;
+- however, a short timed `iio_readdev` capture still returned refill timeout `Unknown error (110)` with zero samples;
+- a compact safe-power RF sweep over multiple `START_OFFSET`, RX-gain, and TX-attenuation combinations still produced no RX-side activity.
+
+Third live follow-up on `2026-06-23` removed the last remaining stock-shell ambiguity:
+
+- the dedicated comparison helper `blocks/block_11_integrated_sdr_project/python/lab_11_13_stock_vs_runtime_rx_compare.py` verified that a fresh stock shell still supports both a direct host `libiio Buffer.refill()` capture and a short `iio_readdev` capture before any overlay reload;
+- the same helper then hot-loaded the corrected payload through `fpga_manager`, confirmed `axi_gpreg` readback again, and reproduced the same runtime failure on both host RX paths: `libiio` failed with `OSError: [Errno 110] host unreachable` and `iio_readdev` failed with refill timeout `Unknown error (110)`;
+- the same comparison also showed `cf-ad9361-dds-core-lpc` changing from `sync_start_enable = arm` on the stock shell to `sync_start_enable = disarm` after the runtime reload.
+
+Practical consequence: the blocker is now narrower than "runtime reload breaks everything". The stock shell baseline is healthy, the current runtime image keeps `fpga_manager`, `axi_gpreg`, and basic IIO enumeration alive, but the RX DMA / refill path still does not deliver usable samples and the bridge still sees no RX-valid traffic. Do not use live `fpga_manager` reload plus driver rebinding as the normal course workflow until the board has been revalidated after a clean boot.
 
 ## Engineering conclusion template
 

@@ -41,6 +41,8 @@ The earlier burst-enabled TX experiments remain useful as historical evidence, b
 | File | Purpose |
 |---|---|
 | `blocks/block_11_integrated_sdr_project/python/lab_11_8_axi_gpreg_bpsk_bringup.py` | programs the gpreg control words, launches one burst, polls `busy/done/timeout`, and reads BER counters |
+| `blocks/block_11_integrated_sdr_project/python/lab_11_12_runtime_fpga_manager_reload.py` | uploads a checked `.bit.bin` payload over SSH, hot-loads it through Linux `fpga_manager`, then re-probes `axi_gpreg` and the host-visible IIO context |
+| `blocks/block_11_integrated_sdr_project/python/lab_11_13_stock_vs_runtime_rx_compare.py` | proves on one live board run that stock-shell RX capture still works before reload, then repeats the same checks after runtime hot-load and records the breakage |
 
 ## Register contract
 
@@ -151,6 +153,44 @@ Observed historical facts on the board:
 - `received_bits = 0`;
 - RF setup during the discovery run: TX attenuation `-60 dB`, RX gain manual `20 dB`, AGC disabled.
 
+Runtime revalidation on `2026-06-23`:
+
+The corrected word-swapped `bridge_txrx_mux` payload was reloaded again through
+Linux `fpga_manager` from the stock-shell baseline, this time using the new
+runtime helper:
+
+- helper: `blocks/block_11_integrated_sdr_project/python/lab_11_12_runtime_fpga_manager_reload.py`;
+- runtime reload report: `docs/assets/lab118_runtime_fpga_manager_reload_live.json`;
+- post-reload gpreg report: `docs/assets/lab118_axi_gpreg_bringup_runtime_20260623.json`;
+- post-reload burst-capture report: `docs/assets/lab110_iio_burst_capture_runtime_20260623.json`;
+- post-reload compact RF sweep: `docs/assets/lab119_rf_discovery_sweep_runtime_20260623.json`.
+
+Observed runtime facts on the board:
+
+- baseline stock shell still returned a `Bus error` when reading `0x79040004`, so `axi_gpreg` was absent before the hot load;
+- `fpga_manager` accepted `bridge_txrx_mux.wordswap.bit.bin` and remained in `operating` state;
+- after the reload, `devmem 0x79040004 32 -> 0x4250534B` and `devmem 0x79040508 32 -> 0x4250534B` again;
+- the gpreg burst helper still returned `final_status = 0x0000080C`, `tx_valid_count = 2376`, `rx_valid_count = 0`, and `received_bits = 0`;
+- unlike the earlier broken live state, the host-side IIO context still enumerated `ad9361-phy`, `cf-ad9361-dds-core-lpc`, and `cf-ad9361-lpc` after the runtime reload;
+- however, a short timed `iio_readdev` capture still returned refill timeout `Unknown error (110)` and produced zero samples;
+- the compact safe-power RF sweep over `START_OFFSET = 48, 62, 74`, `RX gain = 10/20 dB`, and `TX attenuation = -80/-70 dB` kept the same result on every attempt: `received_bits = 0`, `tx_valid_count = 2376`, `rx_valid_count = 0`.
+
+Stock-versus-runtime comparison on `2026-06-23`:
+
+The dedicated comparison helper then ran one more stricter A/B check on the
+same board:
+
+- helper: `blocks/block_11_integrated_sdr_project/python/lab_11_13_stock_vs_runtime_rx_compare.py`;
+- live comparison report: `docs/assets/lab113_stock_vs_runtime_rx_compare_live.json`.
+
+Observed comparison facts on the board:
+
+- before any hot load, the stock shell still supported both a direct host-side `libiio Buffer.refill()` capture and a short `iio_readdev` capture;
+- in the live comparison, stock `libiio` returned `16384` complex samples and stock `iio_readdev` returned `65536` bytes with empty stderr;
+- after the corrected runtime hot load, `axi_gpreg` remained readable and again reported `final_status = 0x0000080C`, `tx_valid_count = 2376`, `rx_valid_count = 0`, and `received_bits = 0`;
+- after that same reload, direct host `libiio` failed with `OSError: [Errno 110] host unreachable`, while `iio_readdev` again failed with refill timeout `Unknown error (110)`;
+- the same A/B report also showed `cf-ad9361-dds-core-lpc` changing from `sync_start_enable = arm` on the stock shell to `sync_start_enable = disarm` after the runtime reload.
+
 Current checked-in safety baseline:
 
 - the stock-safe recovery path is still `hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin`; under the old `uEnv.txt` `loadb`-on-`.bit.bin` fallback it was not proof of arbitrary external PL replacement, but under the new manual UART `fpga load` path it is now the only externally loaded boot-safe candidate demonstrated so far;
@@ -169,11 +209,14 @@ Interpretation:
 
 - the PS-to-PL gpreg control plane was validated on real hardware at least once in the earlier burst-enabled overlay;
 - the same gpreg control plane is now also readable after a direct raw clean boot of the `bridge_txrx_mux` candidate, with both ID and signature equal to `0x4250534B`, `tx_valid_count > 0`, and `rx_valid_count == 0`;
+- the corrected runtime `fpga_manager` reload now reproduces the same gpreg readback from the stock Linux shell without losing basic IIO device enumeration, so the blocker is no longer "the board cannot see the overlay at all";
+- the stock-versus-runtime comparison now proves that the stock Linux shell still supports both host RX capture paths before any reload, while the runtime hot load breaks both of them even though `axi_gpreg` stays visible;
+- the live blocker has therefore narrowed specifically to the runtime RX side: post-reload host capture cannot refill, while the bridge still sees no `rx_valid_count` activity and therefore no received bits;
 - the normalized pure-Tcl `vendor_only` flow now eliminates the earlier `MIO14/15` drift, but it is still blocked by four read-only or disabled derived parameters: `sys_ps7.PCW_S_AXI_HP0_FREQMHZ`, `axi_ad9361_adc_dma.DMA_AXI_PROTOCOL_SRC`, `axi_ad9361_dac_dma.DMA_AXI_PROTOCOL_DEST`, and `axi_ad9361.SPEED_GRADE`; see `docs/assets/vendor_reference_vs_vendor_only_handoff_diff.json`;
 - the saved vendor `zc702.xpr` snapshot is still the preferred editable source witness once rebuilt through the MIO14/15 patch flow, but it is not yet a boot-safe RF baseline; see `docs/assets/vendor_reference_vs_vendor_xpr_mio14_15_patch_handoff_diff.json`;
 - the current checked-in HDL now also includes an intermediate `bridge_rx_only` reintegration mode that is validated in Vivado but not yet in clean boot;
 - the extracted stock partition from `BOOT.bin` is now the only externally loaded boot-safe reintegration anchor, but it is not yet editable or source-correlated enough for the final course overlay;
-- the immediate next task is to explain why that stock payload survives manual `fpga load` while the source-correlated and course-owned candidates do not, not to assume that zero XSA drift alone makes the patched snapshot boot-safe.
+- the immediate next task is to explain why the runtime bridge still starves the RX side after a successful hot load, while continuing the separate boot-safe-shell investigation for the editable clean-boot path.
 
 ## Next gated re-enable order
 
