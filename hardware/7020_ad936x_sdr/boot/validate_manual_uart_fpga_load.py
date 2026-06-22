@@ -13,6 +13,7 @@ This helper is for `.bit.bin` payloads that must be tested with:
 from __future__ import annotations
 
 import argparse
+import shlex
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -26,7 +27,9 @@ from validate_clean_boot_overlay import (
     DEFAULT_USER,
     REMOTE_MOUNT,
     ParamikoSession,
+    ensure_remote_free_bytes,
     md5_bytes,
+    remote_file_size_or_zero,
     run_remote_checked,
     wait_for_port_state,
 )
@@ -191,16 +194,26 @@ def upload_candidate(
         timeout_s=timeout_s,
     )
     try:
+        quoted_mount = shlex.quote(boot_mount)
         run_remote_checked(
             session,
-            f"mkdir -p {boot_mount} && "
-            f"(mountpoint -q {boot_mount} || mount -t vfat /dev/mmcblk0p1 {boot_mount})",
+            f"mkdir -p {quoted_mount} && "
+            f"(mountpoint -q {quoted_mount} || mount -t vfat /dev/mmcblk0p1 {quoted_mount})",
             context="mount FAT boot partition",
         )
-        session.upload_via_cat(remote_path, payload)
+        additional_bytes = max(
+            0,
+            len(payload) - remote_file_size_or_zero(session, remote_path),
+        )
+        ensure_remote_free_bytes(
+            session,
+            boot_mount=boot_mount,
+            required_bytes=additional_bytes,
+        )
+        session.upload_bytes(remote_path, payload)
         verification = run_remote_checked(
             session,
-            f"sync && md5sum {remote_path} && ls -l {remote_path}",
+            f"sync && md5sum {shlex.quote(remote_path)} && ls -l {shlex.quote(remote_path)}",
             context="verify uploaded candidate",
         )
     finally:

@@ -1,19 +1,15 @@
 #!/usr/bin/env python3
-"""Convert a raw Vivado `.bit` into a Bootgen `.bit.bin` payload."""
+"""Convert a Xilinx `.bit` into the word-swapped `.bit.bin` payload used by `fpga load`."""
 
 from __future__ import annotations
 
 import argparse
 import hashlib
-import shutil
-import subprocess
 from pathlib import Path
 
 
-WINDOWS_BOOTGEN_GLOBS = [
-    Path(f"{drive}:/Xilinx/Vivado").glob("*/bin/bootgen.bat")
-    for drive in ("C", "D", "E", "F", "G")
-]
+TRAILING_NOOP_WORD = bytes.fromhex("00000020")
+TRAILING_NOOP_COUNT = 4
 
 
 def md5_file(path: Path) -> str:
@@ -24,44 +20,99 @@ def md5_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def find_bootgen(explicit: Path | None) -> Path:
-    if explicit:
-        if not explicit.exists():
-            raise FileNotFoundError(f"Bootgen not found: {explicit}")
-        return explicit
-
-    for candidate in ("bootgen", "bootgen.bat"):
-        resolved = shutil.which(candidate)
-        if resolved:
-            return Path(resolved)
-
-    discovered: list[Path] = []
-    for pattern in WINDOWS_BOOTGEN_GLOBS:
-        discovered.extend(sorted(pattern))
-    if discovered:
-        return discovered[-1]
-
-    raise FileNotFoundError(
-        "Could not locate Bootgen. Pass --bootgen or add bootgen to PATH."
-    )
-
-
 def default_output_path(bit_path: Path) -> Path:
     return Path(f"{bit_path}.bin")
 
 
-def write_bif(bit_path: Path, bif_path: Path) -> None:
-    bif_path.write_text(
-        "all:\n{\n  \"" + bit_path.resolve().as_posix() + "\"\n}\n",
-        encoding="ascii",
-    )
+def read_be16(payload: bytes, offset: int) -> tuple[int, int]:
+    end = offset + 2
+    if end > len(payload):
+        raise ValueError("Unexpected end of .bit file while reading 16-bit field.")
+    return int.from_bytes(payload[offset:end], "big"), end
+
+
+def read_be32(payload: bytes, offset: int) -> tuple[int, int]:
+    end = offset + 4
+    if end > len(payload):
+        raise ValueError("Unexpected end of .bit file while reading 32-bit field.")
+    return int.from_bytes(payload[offset:end], "big"), end
+
+
+def parse_xilinx_bit(bit_payload: bytes) -> tuple[dict[str, str], bytes]:
+    cursor = 0
+    magic_len, cursor = read_be16(bit_payload, cursor)
+    magic_end = cursor + magic_len
+    if magic_end > len(bit_payload):
+        raise ValueError("Unexpected end of .bit file while reading header magic.")
+    cursor = magic_end
+
+    sentinel, cursor = read_be16(bit_payload, cursor)
+    if sentinel != 0x0001:
+        raise ValueError(f"Unexpected .bit header sentinel: 0x{sentinel:04X}")
+
+    metadata: dict[str, str] = {}
+    while cursor < len(bit_payload):
+        tag_byte = bit_payload[cursor : cursor + 1]
+        if not tag_byte:
+            break
+        cursor += 1
+        tag = tag_byte.decode("ascii", errors="strict")
+
+        if tag == "e":
+            payload_len, cursor = read_be32(bit_payload, cursor)
+            payload_end = cursor + payload_len
+            if payload_end > len(bit_payload):
+                raise ValueError(
+                    "Unexpected end of .bit file while reading bitstream payload."
+                )
+            return metadata, bit_payload[cursor:payload_end]
+
+        value_len, cursor = read_be16(bit_payload, cursor)
+        value_end = cursor + value_len
+        if value_end > len(bit_payload):
+            raise ValueError(
+                f"Unexpected end of .bit file while reading tag '{tag}'."
+            )
+        metadata[tag] = (
+            bit_payload[cursor:value_end].rstrip(b"\x00").decode(
+                "ascii",
+                errors="replace",
+            )
+        )
+        cursor = value_end
+
+    raise ValueError("The .bit file does not contain an 'e' configuration payload tag.")
+
+
+def word_swap_bitstream(payload: bytes) -> bytes:
+    if len(payload) % 4 != 0:
+        raise ValueError(
+            "The extracted bitstream payload length is not a multiple of 32 bits."
+        )
+
+    swapped = bytearray(len(payload))
+    for index in range(0, len(payload), 4):
+        swapped[index : index + 4] = payload[index : index + 4][::-1]
+    return bytes(swapped)
+
+
+def convert_bit_to_fpga_load_payload(
+    bit_payload: bytes,
+    *,
+    append_trailing_noops: bool = True,
+) -> tuple[dict[str, str], bytes]:
+    metadata, raw_payload = parse_xilinx_bit(bit_payload)
+    converted = bytearray(word_swap_bitstream(raw_payload))
+    if append_trailing_noops:
+        converted.extend(TRAILING_NOOP_WORD * TRAILING_NOOP_COUNT)
+    return metadata, bytes(converted)
 
 
 def build_system_bit_bin(
     bit_path: Path,
     *,
     output_path: Path | None = None,
-    bootgen_path: Path | None = None,
+    append_trailing_noops: bool = True,
 ) -> Path:
     bit_path = bit_path.resolve()
     if not bit_path.exists():
@@ -71,28 +122,12 @@ def build_system_bit_bin(
 
     output_path = (output_path or default_output_path(bit_path)).resolve()
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    bootgen = find_bootgen(bootgen_path)
-    bif_path = output_path.with_suffix(output_path.suffix + ".bif")
-    write_bif(bit_path, bif_path)
 
-    try:
-        subprocess.run(
-            [
-                str(bootgen),
-                "-arch",
-                "zynq",
-                "-image",
-                str(bif_path),
-                "-o",
-                str(output_path),
-                "-w",
-                "on",
-            ],
-            check=True,
-        )
-    finally:
-        bif_path.unlink(missing_ok=True)
-
+    _metadata, converted = convert_bit_to_fpga_load_payload(
+        bit_path.read_bytes(),
+        append_trailing_noops=append_trailing_noops,
+    )
+    output_path.write_bytes(converted)
     return output_path
 
 
@@ -105,9 +140,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
         help="Output .bit.bin path; defaults to <bit_path>.bin",
     )
     parser.add_argument(
-        "--bootgen",
-        type=Path,
-        help="Optional explicit Bootgen executable path",
+        "--no-trailing-noops",
+        action="store_true",
+        help="Do not append the four trailing 0x20000000 NOOP words.",
     )
     return parser
 
@@ -117,16 +152,22 @@ def main() -> int:
     args = parser.parse_args()
 
     bit_path = args.bit_path.resolve()
-    output_path = build_system_bit_bin(
-        bit_path,
-        output_path=args.output,
-        bootgen_path=args.bootgen,
+    metadata, converted = convert_bit_to_fpga_load_payload(
+        bit_path.read_bytes(),
+        append_trailing_noops=not args.no_trailing_noops,
     )
+    output_path = (args.output or default_output_path(bit_path)).resolve()
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_bytes(converted)
 
     print(f"Input : {bit_path}")
     print(f"Output: {output_path}")
     print(f"Size  : {output_path.stat().st_size} bytes")
     print(f"MD5   : {md5_file(output_path)}")
+    if metadata:
+        print("Tags  :")
+        for key in sorted(metadata):
+            print(f"  {key}: {metadata[key]}")
     return 0
 
 

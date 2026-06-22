@@ -109,9 +109,23 @@ class ParamikoSession:
                 break
         return returncode, stdout_text, stderr_text
 
-    def upload_via_cat(self, remote_path: str, payload: bytes) -> None:
+    def upload_bytes(self, remote_path: str, payload: bytes) -> None:
+        try:
+            sftp = self.client.open_sftp()
+        except Exception:
+            self._upload_via_cat(remote_path, payload)
+            return
+
+        try:
+            with sftp.file(remote_path, "wb") as handle:
+                handle.write(payload)
+                handle.flush()
+        finally:
+            sftp.close()
+
+    def _upload_via_cat(self, remote_path: str, payload: bytes) -> None:
         stdin, stdout, stderr = self.client.exec_command(
-            f"sh -c 'cat > {remote_path}'",
+            f"sh -c 'cat > {shlex.quote(remote_path)}'",
             timeout=300,
         )
         chunk_size = 32768
@@ -128,7 +142,8 @@ class ParamikoSession:
         returncode = stdout.channel.recv_exit_status()
         if returncode != 0:
             raise RuntimeError(
-                f"Upload failed with rc={returncode}: {stderr_text.strip() or stdout_text.strip() or 'no diagnostic output'}"
+                f"Upload failed with rc={returncode}: "
+                f"{stderr_text.strip() or stdout_text.strip() or 'no diagnostic output'}"
             )
 
     def reboot(self) -> None:
@@ -143,6 +158,17 @@ class ParamikoSession:
 
 def md5_bytes(payload: bytes) -> str:
     return hashlib.md5(payload).hexdigest()
+
+
+def parse_df_available_bytes(df_output: str) -> int:
+    lines = [line.strip() for line in df_output.splitlines() if line.strip()]
+    if len(lines) < 2:
+        raise ValueError(f"Unexpected df output: {df_output!r}")
+
+    fields = lines[-1].split()
+    if len(fields) < 4:
+        raise ValueError(f"Unexpected df data row: {lines[-1]!r}")
+    return int(fields[3]) * 1024
 
 
 def ensure_stock_baseline(path: Path, boot_bin_path: Path) -> None:
@@ -219,6 +245,37 @@ def run_remote_checked(session: ParamikoSession, command: str, *, context: str) 
     return stdout_text.strip()
 
 
+def ensure_remote_free_bytes(
+    session: ParamikoSession,
+    *,
+    boot_mount: str,
+    required_bytes: int,
+) -> int:
+    quoted_mount = shlex.quote(boot_mount)
+    df_output = run_remote_checked(
+        session,
+        f"df -Pk {quoted_mount}",
+        context="check FAT free space",
+    )
+    available_bytes = parse_df_available_bytes(df_output)
+    if available_bytes < required_bytes:
+        raise RuntimeError(
+            f"Not enough space on {boot_mount}: need {required_bytes} bytes, "
+            f"have {available_bytes} bytes free."
+        )
+    return available_bytes
+
+
+def remote_file_size_or_zero(session: ParamikoSession, remote_path: str) -> int:
+    quoted_path = shlex.quote(remote_path)
+    size_text = run_remote_checked(
+        session,
+        f"if [ -f {quoted_path} ]; then wc -c < {quoted_path}; else echo 0; fi",
+        context="read existing remote file size",
+    )
+    return int(size_text.strip() or "0")
+
+
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -284,19 +341,39 @@ def main() -> int:
         timeout_s=args.ssh_timeout_s,
     )
     try:
+        quoted_mount = shlex.quote(args.boot_mount)
         print(run_remote_checked(
             session,
-            f"mkdir -p {args.boot_mount} && "
-            f"(mountpoint -q {args.boot_mount} || mount -t vfat /dev/mmcblk0p1 {args.boot_mount}) && "
-            f"df -h {args.boot_mount}",
+            f"mkdir -p {quoted_mount} && "
+            f"(mountpoint -q {quoted_mount} || mount -t vfat /dev/mmcblk0p1 {quoted_mount}) && "
+            f"df -h {quoted_mount}",
             context="mount FAT boot partition",
         ))
-        session.upload_via_cat(remote_path, payload)
+        required_bytes = max(
+            0,
+            len(payload) - remote_file_size_or_zero(session, remote_path),
+        )
         if uenv_path is not None:
-            session.upload_via_cat(f"{args.boot_mount}/uEnv.txt", uenv_payload)
+            required_bytes += max(
+                0,
+                len(uenv_payload)
+                - remote_file_size_or_zero(session, f"{args.boot_mount}/uEnv.txt"),
+            )
+        available_bytes = ensure_remote_free_bytes(
+            session,
+            boot_mount=args.boot_mount,
+            required_bytes=required_bytes,
+        )
+        print(
+            "Remote free bytes before upload: "
+            f"{available_bytes} (additional bytes required: {required_bytes})"
+        )
+        session.upload_bytes(remote_path, payload)
+        if uenv_path is not None:
+            session.upload_bytes(f"{args.boot_mount}/uEnv.txt", uenv_payload)
         verification = run_remote_checked(
             session,
-            f"sync && md5sum {remote_path} && ls -l {remote_path}",
+            f"sync && md5sum {shlex.quote(remote_path)} && ls -l {shlex.quote(remote_path)}",
             context="verify uploaded bitstream",
         )
         print(verification)
@@ -305,7 +382,8 @@ def main() -> int:
         if uenv_path is not None:
             uenv_verification = run_remote_checked(
                 session,
-                f"md5sum {args.boot_mount}/uEnv.txt && ls -l {args.boot_mount}/uEnv.txt",
+                f"md5sum {shlex.quote(f'{args.boot_mount}/uEnv.txt')} && "
+                f"ls -l {shlex.quote(f'{args.boot_mount}/uEnv.txt')}",
                 context="verify uploaded uEnv.txt",
             )
             print(uenv_verification)
