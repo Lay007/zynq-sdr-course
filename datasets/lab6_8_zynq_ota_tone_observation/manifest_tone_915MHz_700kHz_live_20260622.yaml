@@ -1,0 +1,77 @@
+dataset_id: lab6_8_zynq_ota_tone_915MHz_700kHz_live_20260622
+version: 0.1
+status: git-lfs
+title: Zynq AD9361 stock-shell OTA DDS tone observation at 915 MHz / 700 kHz (live
+  2026-06-22)
+description: Short OTA self-observation CI16 IQ capture recorded on the stock Pluto-like
+  Zynq-7020 + AD9361 shell. The board transmits a DDS-generated single tone from TX1
+  with conservative power, receives it on RX1 through separate antennas over a short
+  air path, and stores the result for offline Block 9 analysis.
+storage: git-lfs
+url: null
+file_name: raw/zynq_ota_tone_915MHz_700kHz_live_20260622.ci16
+sha256: 1D0F3E9E8C94B417F45ADCA4A2AD77CA9CAD3CFD72D316959F884810777A5070
+format: ci16
+endianness: little
+i_first: true
+sample_rate_hz: 3840000
+center_frequency_hz: 915000000
+bandwidth_hz: 2000000
+duration_s: 0.068267
+analysis_command: python blocks/block_09_recording_and_analysis_tools/python/lab_9_2_read_ci16_iq_and_analyze.py
+  --manifest datasets/lab6_8_zynq_ota_tone_observation/manifest_tone_915MHz_700kHz_live_20260622.yaml
+processing:
+  fft_length: 65536
+analysis:
+  peak_search_center_hz: 700000
+  peak_search_half_span_hz: 50000
+  note: Restrict the peak search to the expected tone neighborhood so full-band edge
+    spurs do not mask the wanted tone.
+source: zynq-ad9361-network-iio-ota-dds-tone
+hardware:
+  transceiver: Zynq-7020 + AD9361 board
+  software: stock Pluto-like Linux 5.15.0 + libiio network context
+  rf_path: short OTA self-observation via separate TX1 and RX1 antennas
+  context_uri: ip:192.168.40.1
+  rx_rf_port_select: A_BALANCED
+  tx_rf_port_select: A
+  rx_gain_mode: manual
+  rx_gain_db: 30.000000 dB
+  tx_attenuation_db: -40.000000 dB
+signal:
+  type: single_tone_dds_rf_tx_rx
+  expected_signal_offset_hz: 700000
+  dds_scale: 0.25
+  note: TX1_I_F1 / TX1_Q_F1 enabled with 90 degree quadrature phasing.
+capture_state:
+  timestamp_utc: '2026-06-22T20:41:21Z'
+  context_hw_model: FISH Ball PlutoSDR Rev.A (Z7020-AD9361)
+  context_fw_version: 80403-dirty
+  rx_lo_frequency_hz: '915000000'
+  tx_lo_frequency_hz: '915000000'
+  rx0_rssi_db: 86.75 dB
+  rx1_rssi_db: 86.75 dB
+  sample_count: 262144
+analysis_targets:
+- first stock-shell OTA DDS tone proof on the Zynq AD9361 platform
+- offline CI16 replay through Block 9 tooling
+- frequency-plan validation before BPSK over-the-air bring-up
+quality_expectations:
+  max_clipping_fraction: 0.01
+  max_dc_offset: 0.25
+  max_frequency_error_hz: 25000
+  min_snr_db: 10.0
+quality_checks:
+  checksum_verified: true
+  clipping_observed: analyze_with_lab_9_2
+  overload_observed: analyze_with_lab_9_2
+  dc_offset_checked: analyze_with_lab_9_2
+  tone_peak_window_checked: analyze_with_lab_9_2
+license: course-demo-only-review-before-publication
+notes:
+- Capture performed with AGC disabled and a short over-the-air path between TX1 and
+  RX1 antennas.
+- 'This dataset uses the lowest tested radiated setting that made the expected tone
+  the dominant spectral line: TX attenuation -40 dB and RX gain 30 dB.'
+- Lower-power attempts such as TX -60 dB / RX 20 dB still showed the tone near the
+  expected offset, but full-band edge spurs remained stronger than the wanted tone.

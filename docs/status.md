@@ -21,7 +21,7 @@ This page is the top-level engineering status board for the course. It is intent
 | 03 | DSP basics | Ready | Executable | Python / MATLAB / C++ path | Ready | Not required | Labs | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
 | 04 | Simulink and fixed-point | Ready | Executable | Python / MATLAB references + executable BPSK `.slx` models | Ready | Not required | Labs | Constrain the BPSK Simulink path further for HDL Coder export and integration handoff. |
 | 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches + AXI-Lite-controlled Zynq-ready BPSK BER top-level + gpreg-based AD9361 overlay scaffolding + integrated CLG400 bitstream/XSA + live proof that only the extracted `BOOT.bin::system_top.bit` partition currently survives external `fpga load`, while the source-correlated no-OS reference payload still times out AD9361 and the saved vendor `zc702.xpr` snapshot remains a zero-drift editable XSA baseline rather than a boot-safe RF shell | Ready | Hardware pending | HDL CI | Explain why the stock partition survives external load, then reproduce those properties in an editable shell before grafting the course overlay there. |
-| 06 | RF frontend and AD9363 | Ready | Executable | Analysis scripts | Ready | Hardware pending | Labs | Build the AD9361 RX gain/overload table from the clean-image baseline. |
+| 06 | RF frontend and AD9363 | Ready | Executable | Analysis scripts + measured RX-only and OTA-tone captures | Ready | Hardware pending | Labs | Use the measured RX-only FM and OTA-tone baselines to build the AD9361 RX gain/overload table, then validate a safe cabled loopback. |
 | 07 | TX/RX chains | Ready | Executable | DUC/DDC demos | Ready | Hardware pending | Labs | Add RF loopback measurement package. |
 | 08 | Modulation and synchronization | Ready | Executable | Synchronization demos | Ready | Optional | Sync CI | Add impairment sweeps and BER/EVM dashboards. |
 | 09 | Recording and analysis tools | Ready | Executable | IQ readers | Ready | Hardware pending | Recording CI | Update QPSK dataset manifest with real checksum or synthetic generator. |
@@ -63,6 +63,9 @@ This page is the top-level engineering status board for the course. It is intent
 | `docs/assets/vendor_reference_vs_vendor_xpr_snapshot_handoff_diff.json` | Persistent diff showing the historical unpatched `zc702.xpr` snapshot drift against the vendor reference XSA at `sys_ps7` MIO14/15 direction fields. |
 | `docs/assets/vendor_reference_vs_vendor_xpr_mio14_15_patch_handoff_diff.json` | Persistent diff showing that the MIO14/15-patched vendor `zc702.xpr` snapshot rebuild reaches zero module/memrange/parameter drift against the vendor reference XSA. |
 | `datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454.yaml` | First clean-image Zynq RX-only CI16 hardware dataset manifest. |
+| `datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454_live_20260622.yaml` | Repeated live clean-image Zynq RX-only FM manifest captured on 2026-06-22, with fresh FFT/time plots and a Zynq-vs-RTL overlay. |
+| `blocks/block_06_rf_frontend_and_ad9363/python/lab_6_8_capture_zynq_ota_tone.py` | Reproducible stock-shell OTA DDS tone capture helper for the first host-driven TX-to-RX RF proof on the Zynq AD9361 platform. |
+| `datasets/lab6_8_zynq_ota_tone_observation/manifest_tone_915MHz_700kHz_live_20260622.yaml` | First measured stock-shell OTA tone dataset manifest with checksum, conservative TX/RX settings and manifest-guided peak-search window for offline analysis. |
 | `templates/fpga_resource_report.template.md` | Reusable FPGA report template. |
 | `templates/student_assignment.template.md` | Reusable student assignment template. |
 | `reports/fpga/z7020-resource-summary-template.md` | First Z7020 OOC FPGA resource summary with real numbers. |
@@ -101,7 +104,7 @@ Each mature lab should eventually provide:
 ## Main gaps to close
 
 1. Replace the QPSK manifest-only dataset with a validated small file or external link.
-2. Add board-level measurements for the Zynq/AD9363 path.
+2. Extend the first board-level Zynq/AD9363 measurements into a fuller gain/loopback package.
 3. Promote Block 5 OOC FPGA reports to placed-and-routed top-level design data.
 4. Keep RU/EN pages aligned when adding new labs.
 5. Turn one QPSK or tone flow into a complete final report with plots and limitations.

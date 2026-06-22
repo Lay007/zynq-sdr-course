@@ -186,6 +186,7 @@ nav:
           - "Lab 6.5 — RF impairment calibration": ru/labs/lab-6-5-rf-impairment-calibration.md
           - "Lab 6.6 — Zynq RX-only observation on the clean image": ru/labs/lab-6-6-zynq-rx-only-observation.md
           - "Lab 6.7 — Zero-IF artifacts": ru/labs/lab-6-7-zero-if-artifacts.md
+          - "Lab 6.8 — Zynq stock-shell OTA DDS tone observation": ru/labs/lab-6-8-zynq-ota-tone-observation.md
       - "Лаборатории Block 7":
           - "Lab 7.1 — TX/RX chain architecture": ru/labs/lab-7-1-tx-rx-chain-architecture.md
           - "Lab 7.2 — DUC/DDC frequency translation": ru/labs/lab-7-2-duc-ddc-frequency-translation.md
@@ -295,6 +296,7 @@ nav:
           - "Lab 6.5 — RF impairment calibration": en/labs/lab-6-5-rf-impairment-calibration.md
           - "Lab 6.6 — Zynq RX-only observation on the clean image": en/labs/lab-6-6-zynq-rx-only-observation.md
           - "Lab 6.7 — Zero-IF artifacts": en/labs/lab-6-7-zero-if-artifacts.md
+          - "Lab 6.8 — Zynq stock-shell OTA DDS tone observation": en/labs/lab-6-8-zynq-ota-tone-observation.md
       - "Block 7 labs":
           - "Lab 7.1 — TX/RX chain architecture": en/labs/lab-7-1-tx-rx-chain-architecture.md
           - "Lab 7.2 — DUC/DDC frequency translation": en/labs/lab-7-2-duc-ddc-frequency-translation.md

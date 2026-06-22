@@ -34,6 +34,7 @@ That makes `RX-only` the correct next hardware step. It validates:
 | `blocks/block_06_rf_frontend_and_ad9363/python/lab_6_6_capture_zynq_rx_only.py` | configure RX, capture CI16 IQ, write manifest |
 | `blocks/block_06_rf_frontend_and_ad9363/python/lab_6_6_compare_receivers.py` | overlay Zynq and RTL-SDR FM spectra |
 | `datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454.yaml` | first curated clean-image RX dataset |
+| `datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454_live_20260622.yaml` | repeated live RX-only dataset captured on 2026-06-22 |
 
 ## Live capture command
 
@@ -95,6 +96,27 @@ This writes:
 docs/assets/lab66_lab6_6_zynq_rx_fm_103119454_vs_lab1_0_rtl_sdr_fm_103119454_spectrum.png
 docs/assets/lab66_lab6_6_zynq_rx_fm_103119454_vs_lab1_0_rtl_sdr_fm_103119454_metrics.json
 ```
+
+## Latest measured rerun
+
+The repository also keeps a repeated live rerun captured on `2026-06-22`:
+
+```text
+datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454_live_20260622.yaml
+docs/assets/lab92_lab6_6_zynq_rx_fm_103119454_live_20260622_spectrum.png
+docs/assets/lab92_lab6_6_zynq_rx_fm_103119454_live_20260622_time_preview.png
+docs/assets/lab6_6_zynq_rx_fm_103119454_live_20260622_metrics.json
+docs/assets/lab66_lab6_6_zynq_rx_fm_103119454_live_20260622_vs_lab1_0_rtl_sdr_fm_103119454_spectrum.png
+docs/assets/lab66_lab6_6_zynq_rx_fm_103119454_live_20260622_vs_lab1_0_rtl_sdr_fm_103119454_metrics.json
+```
+
+That rerun used:
+
+- `103.119454 MHz` center frequency;
+- `2.4 MS/s` sample rate;
+- `2.0 MHz` RF bandwidth;
+- manual `45 dB` RX gain;
+- passive `RX-only` OTA reception.
 
 ## What should be recorded
 

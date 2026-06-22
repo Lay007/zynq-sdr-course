@@ -1,0 +1,18 @@
+{
+  "dataset_id": "lab6_8_zynq_ota_tone_915MHz_700kHz_live_20260622",
+  "sample_count_read": 262144,
+  "sample_rate_hz": 3840000.0,
+  "center_frequency_hz": 915000000.0,
+  "duration_s": 0.06826666666666667,
+  "expected_offset_hz": 700000.0,
+  "measured_peak_hz": 700019.53125,
+  "frequency_error_hz": 19.53125,
+  "peak_dbfs": -89.64984729706708,
+  "noise_floor_dbfs": -128.96738372104608,
+  "snr_db": 39.31753642397899,
+  "dc_offset_magnitude": 1.6828872690802148e-06,
+  "clipping_fraction": 0.0,
+  "quality_pass": true,
+  "iq_path": "G:\\Programs\\zynq-sdr-course\\datasets\\lab6_8_zynq_ota_tone_observation\\raw\\zynq_ota_tone_915MHz_700kHz_live_20260622.ci16",
+  "manifest_path": "G:\\Programs\\zynq-sdr-course\\datasets\\lab6_8_zynq_ota_tone_observation\\manifest_tone_915MHz_700kHz_live_20260622.yaml"
+}

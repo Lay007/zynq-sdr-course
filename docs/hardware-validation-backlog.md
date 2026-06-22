@@ -6,7 +6,6 @@ This page separates documentation work from tasks that require real hardware acc
 
 | Priority | Issue | Task | Evidence to collect |
 |---|---:|---|---|
-| P0 | #25 | Validate Zynq/AD9363 tone and IQ capture | frequency plan, screenshot, IQ metadata, FFT plot |
 | P0 | #25 | Validate safe cabled loopback | attenuation value, gain settings, signal-level check |
 | P1 | #26 | Capture QPSK demo IQ | dataset manifest, constellation, EVM/SNR metrics |
 | P2 | #29 | Add AD9363 gain table | gain settings, measured clipping/SNR behavior |
@@ -24,7 +23,7 @@ This page separates documentation work from tasks that require real hardware acc
 
 | Issue | Done when |
 |---:|---|
-| #25 | A tone or cabled loopback run has a frequency plan, AD9363 settings, attenuation notes, capture metadata, FFT plot and short conclusion. |
+| #25 | The tone-and-IQ-capture portion is closed by Lab 6.8. The remaining loopback portion is done when a safe cabled run has attenuation value, gain settings, capture metadata, FFT plot and short conclusion. |
 | #26 | A small QPSK IQ dataset has a manifest, checksum or external immutable link, replay command, constellation plot and EVM/SNR summary. |
 | #29 | The AD9363 gain table records settings, input path, clipping behavior, safe starting values and measurement limitations. |
 
@@ -50,7 +49,7 @@ A hardware task is done when it has:
 
 ## Tasks that require hardware
 
-- Real board-level tone and IQ capture validation.
+- Safe cabled loopback validation after the OTA tone baseline.
 - AD9363 gain table.
 - Receiver large-signal checks.
 - Final measured QPSK or OFDM demo.

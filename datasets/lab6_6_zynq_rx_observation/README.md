@@ -11,6 +11,7 @@ capture parameters and replay command.
 | File | Role |
 |---|---|
 | `manifest_fm_103119454.yaml` | Curated FM-band receive-only manifest |
+| `manifest_fm_103119454_live_20260622.yaml` | Repeated live FM-band receive-only manifest captured on 2026-06-22 |
 | `raw/*.ci16` | Short interleaved signed-int16 I/Q recording stored through Git LFS |
 
 ## Offline analysis
@@ -20,6 +21,13 @@ Run from the repository root:
 ```bash
 python blocks/block_09_recording_and_analysis_tools/python/lab_9_2_read_ci16_iq_and_analyze.py \
   --manifest datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454.yaml
+```
+
+For the repeated live rerun:
+
+```bash
+python blocks/block_09_recording_and_analysis_tools/python/lab_9_2_read_ci16_iq_and_analyze.py \
+  --manifest datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454_live_20260622.yaml
 ```
 
 For the cross-receiver overlay:

@@ -21,7 +21,7 @@
 | 03 | Базовые DSP-операции | Ready | Executable | Python / MATLAB / C++ path | Ready | Not required | Labs | Добавить демонстрацию порога прямой свертки против FFT и больше эталонных результатов. |
 | 04 | Simulink и fixed-point | Ready | Executable | Python / MATLAB references + executable BPSK `.slx` models | Ready | Not required | Labs | Сильнее ограничить BPSK-маршрут в Simulink под экспорт в HDL Coder и handoff в интеграцию. |
 | 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches + AXI-Lite-controlled Zynq-ready BPSK BER top-level + gpreg-based AD9361 overlay scaffolding + integrated CLG400 bitstream/XSA + живое доказательство того, что при внешнем `fpga load` clean-boot сейчас проходит только извлеченный partition payload `BOOT.bin::system_top.bit`, тогда как source-correlated no-OS reference payload все еще уводит AD9361 в timeout, а сохраненный snapshot `zc702.xpr` остается zero-drift editable XSA baseline, но не boot-safe RF shell | Ready | Hardware pending | HDL CI | Понять, почему stock partition переживает внешний load, и воспроизвести эти свойства в editable shell, прежде чем насаживать туда course overlay. |
-| 06 | RF frontend и AD9363 | Ready | Executable | Analysis scripts | Ready | Hardware pending | Labs | Собрать таблицу усиления/перегруза AD9361 RX на базе clean-image baseline. |
+| 06 | RF frontend и AD9363 | Ready | Executable | Analysis scripts + measured RX-only and OTA-tone captures | Ready | Hardware pending | Labs | Использовать measured RX-only FM и OTA-tone baseline для таблицы усиления/перегруза AD9361 RX, затем проверить безопасный cabled loopback. |
 | 07 | TX/RX тракты | Ready | Executable | DUC/DDC demos | Ready | Hardware pending | Labs | Добавить пакет измерений RF loopback. |
 | 08 | Модуляция и синхронизация | Ready | Executable | Synchronization demos | Ready | Optional | Sync CI | Добавить sweeps по искажениям и дашборды BER/EVM. |
 | 09 | Инструменты записи и анализа | Ready | Executable | IQ readers | Ready | Hardware pending | Recording CI | Обновить manifest датасета QPSK реальной checksum или синтетическим генератором. |
@@ -62,6 +62,9 @@
 | `docs/assets/vendor_reference_vs_vendor_xpr_snapshot_handoff_diff.json` | Постоянный diff-отчет, показывающий исторический drift непатченного snapshot `zc702.xpr` относительно vendor reference XSA только по полям направления `sys_ps7` MIO14/15. |
 | `docs/assets/vendor_reference_vs_vendor_xpr_mio14_15_patch_handoff_diff.json` | Постоянный diff-отчет, показывающий, что rebuild сохраненного vendor snapshot `zc702.xpr` после патча MIO14/15 достигает нулевого drift по module/memrange/parameter относительно vendor reference XSA. |
 | `datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454.yaml` | Первый аппаратный manifest CI16 для clean-image Zynq RX-only наблюдения. |
+| `datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454_live_20260622.yaml` | Повторный live manifest clean-image Zynq RX-only FM, снятый 2026-06-22, с новыми FFT/time plot и overlay `Zynq vs RTL`. |
+| `blocks/block_06_rf_frontend_and_ad9363/python/lab_6_8_capture_zynq_ota_tone.py` | Воспроизводимый helper для stock-shell OTA DDS tone capture и первого host-driven TX-to-RX RF proof на Zynq AD9361. |
+| `datasets/lab6_8_zynq_ota_tone_observation/manifest_tone_915MHz_700kHz_live_20260622.yaml` | Первый measured manifest stock-shell OTA tone-датасета с checksum, консервативными TX/RX настройками и окном поиска тона для офлайн-анализа. |
 | `templates/fpga_resource_report.template.md` | Переиспользуемый шаблон FPGA-отчета. |
 | `templates/student_assignment.template.md` | Переиспользуемый шаблон студенческого задания. |
 | `reports/fpga/z7020-resource-summary-template.md` | Первый вне-контекста-top-level FPGA summary для Z7020 с реальными числами. |
@@ -99,7 +102,7 @@
 ## Главные пробелы, которые нужно закрыть
 
 1. Заменить manifest-only QPSK-датасет на маленький подтвержденный файл или внешнюю ссылку.
-2. Добавить измерения на реальной плате для тракта Zynq/AD9363.
+2. Расширить первые измерения на реальной плате для тракта Zynq/AD9363 до полного gain/loopback package.
 3. Повысить Block 5 OOC FPGA-отчеты до данных по top-level placed-and-routed дизайну.
 4. Держать RU/EN страницы синхронными при добавлении новых лабораторных.
 5. Довести один QPSK- или tone-сценарий до полного финального отчета с графиками и ограничениями.

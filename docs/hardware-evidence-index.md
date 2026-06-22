@@ -27,6 +27,7 @@ Use the status values below:
 | Block 5 latency/throughput notes | `reports/fpga/block5-latency-throughput-notes.md` | reviewed | one-cycle behaviour and streaming-rate notes from HDL testbenches |
 | Integrated SDR project labs | `docs/ru/labs/lab-11-7-axi-lite-bpsk-bringup.md` and following | synthetic | control-plane and burst-capture workflow now documented for lab execution |
 | Clean-image Zynq RX observation manifest | `datasets/lab6_6_zynq_rx_observation/` | measured | first board-facing RX-only manifest package; keep reports and plots synchronized when new captures are added |
+| Stock-shell Zynq OTA tone observation | `datasets/lab6_8_zynq_ota_tone_observation/` | reviewed | measured `915 MHz / 700 kHz` tone package with manifest, FFT plot, metrics JSON and conservative TX/RX settings |
 | QPSK demo dataset manifest | `datasets/demo_qpsk_capture/manifest.yaml` | template | issue #26 should promote this from manifest-only to validated replay evidence |
 | Hardware validation backlog | `docs/hardware-validation-backlog.md` | reviewed | issue-linked closure plan for #25, #26 and #29 |
 | FPGA resource report template | `reports/fpga_resource_report.template.md` | template | use when extending the current package to a new design |
@@ -63,7 +64,7 @@ Minimum files for one experiment:
 The strongest next artifacts are:
 
 1. Routed top-level Vivado timing and utilization for the integrated Zynq design.
-2. Issue #25: a tone or cabled loopback capture report.
+2. Issue #25 remainder: a safe cabled loopback capture report with attenuation notes.
 3. Issue #26: a small validated QPSK dataset package.
 4. Issue #29: an AD9363 gain and large-signal characterization table.
 5. One final project report that connects model, HDL, capture and metrics.
