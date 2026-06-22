@@ -18,6 +18,11 @@ This folder is intended for reproducible processing scripts, measurement automat
 - `system_test_sweep.py`
 - `architecture_visualization.py`
 
+## Current notable helpers
+- `lab_11_12_runtime_fpga_manager_reload.py`: hot-loads a checked `.bit.bin` payload and re-probes `axi_gpreg` plus IIO visibility.
+- `lab_11_13_stock_vs_runtime_rx_compare.py`: proves the stock-shell RX baseline first, then shows what breaks after the runtime overlay reload.
+- `lab_11_14_stock_shell_bpsk_ota.py`: uses the stock AD9361 Linux shell as a host-driven OTA BPSK fallback while the PL overlay RX path is still blocked.
+
 ## Quality criteria
 - files should be reproducible and understandable without oral explanation;
 - experiment parameters, tool versions, and limits should be documented next to the material;
