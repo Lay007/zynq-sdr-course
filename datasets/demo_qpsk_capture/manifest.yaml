@@ -1,33 +1,38 @@
 dataset_id: demo_qpsk_capture
-version: 0.1
-status: manifest-only
-title: Demo QPSK capture or replay dataset
+version: 0.2
+status: generated-local
+title: Deterministic synthetic QPSK CI16 replay dataset
 description: >-
-  Small QPSK IQ dataset contract for replay, constellation analysis,
-  EVM/SNR checks and future Zynq/AD9363 hardware validation.
-storage: external-or-generated
+  Small deterministic QPSK IQ dataset for replay, constellation analysis,
+  EVM/SNR checks and CI-safe recording-tool validation.
+storage: generated-local
 url: null
 file_name: demo_qpsk_capture.ci16
-sha256: replace_after_capture
+sha256: d8a4cb8bc3e609a9143936bd923e906f930ea77b72a35eb2d9b48887a25be3b3
 format: ci16
 endianness: little
+i_first: true
 sample_rate_hz: 2400000
 center_frequency_hz: null
-bandwidth_hz: 1200000
-duration_s: null
-source: synthetic-or-zynq-ad9363
+bandwidth_hz: 600000
+duration_s: 0.006826667
+source: deterministic-synthetic-generator
+generator: tools/generate_demo_qpsk_dataset.py
+publication_status: synthetic-public
 hardware:
-  transmitter: Zynq-7020 + AD9363 or synthetic generator
-  receiver: RTL-SDR, AD9363 RX, or offline replay
-  rf_path: conducted path with attenuation or synthetic replay
+  transmitter: synthetic generator
+  receiver: offline replay
+  rf_path: none
   attenuation_db: null
   tx_gain_db: null
   rx_gain_db: null
 signal:
   modulation: QPSK
-  symbol_rate_sps: null
-  pulse_shape: RRC or TBD
+  symbol_rate_sps: 300000
+  samples_per_symbol: 8
+  pulse_shape: rectangular
   rolloff: null
+  constellation: Gray-like quadrant mapping, normalized before CI16 scaling
 analysis_targets:
   - constellation plot
   - EVM estimate
@@ -35,11 +40,13 @@ analysis_targets:
   - frequency offset estimate
   - report-ready metric table
 quality_checks:
-  checksum_verified: false
-  clipping_observed: unknown
-  overload_observed: unknown
-  dc_offset_checked: false
-license: course-demo-only
+  checksum_verified: true
+  clipping_observed: false
+  overload_observed: false
+  dc_offset_checked: true
+license: MIT-compatible synthetic course fixture
 notes:
-  - Raw IQ data is intentionally not committed until a validated small file or external link is available.
-  - Update checksum and acquisition fields after real capture.
+  - Generated data is synthetic and contains no off-air content.
+  - The CI16 file is intentionally generated locally rather than committed as raw binary.
+  - Run python tools/generate_demo_qpsk_dataset.py to refresh the file and metrics.
+  - Expected generated file size is 65536 bytes.
