@@ -9,7 +9,6 @@ import json
 from pathlib import Path
 
 import numpy as np
-import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -53,66 +52,60 @@ def write_ci16(path: Path, samples: np.ndarray) -> str:
 
 
 def write_manifest(sha256: str, duration_s: float) -> None:
-    manifest = {
-        "dataset_id": "demo_qpsk_capture",
-        "version": 0.2,
-        "status": "generated",
-        "title": "Deterministic synthetic QPSK CI16 replay dataset",
-        "description": (
-            "Small deterministic QPSK IQ dataset for replay, constellation analysis, "
-            "EVM/SNR checks and CI-safe recording-tool validation."
-        ),
-        "storage": "generated-local",
-        "url": None,
-        "file_name": DATA_FILE.name,
-        "sha256": sha256,
-        "format": "ci16",
-        "endianness": "little",
-        "i_first": True,
-        "sample_rate_hz": SAMPLE_RATE_HZ,
-        "center_frequency_hz": None,
-        "bandwidth_hz": 600_000,
-        "duration_s": round(duration_s, 9),
-        "source": "deterministic-synthetic-generator",
-        "generator": "tools/generate_demo_qpsk_dataset.py",
-        "publication_status": "synthetic-public",
-        "hardware": {
-            "transmitter": "synthetic generator",
-            "receiver": "offline replay",
-            "rf_path": "none",
-            "attenuation_db": None,
-            "tx_gain_db": None,
-            "rx_gain_db": None,
-        },
-        "signal": {
-            "modulation": "QPSK",
-            "symbol_rate_sps": SYMBOL_RATE_SPS,
-            "samples_per_symbol": SAMPLES_PER_SYMBOL,
-            "pulse_shape": "rectangular",
-            "rolloff": None,
-            "constellation": "Gray-like quadrant mapping, normalized before CI16 scaling",
-        },
-        "analysis_targets": [
-            "constellation plot",
-            "EVM estimate",
-            "SNR estimate",
-            "frequency offset estimate",
-            "report-ready metric table",
-        ],
-        "quality_checks": {
-            "checksum_verified": True,
-            "clipping_observed": False,
-            "overload_observed": False,
-            "dc_offset_checked": True,
-        },
-        "license": "MIT-compatible synthetic course fixture",
-        "notes": [
-            "Generated data is synthetic and contains no off-air content.",
-            "The CI16 file is intentionally generated locally rather than committed as raw binary.",
-            "Run python tools/generate_demo_qpsk_dataset.py to refresh the file and metrics.",
-        ],
-    }
-    MANIFEST_FILE.write_text(yaml.safe_dump(manifest, sort_keys=False), encoding="utf-8")
+    manifest_text = f"""dataset_id: demo_qpsk_capture
+version: 0.2
+status: generated-local
+title: Deterministic synthetic QPSK CI16 replay dataset
+description: >-
+  Small deterministic QPSK IQ dataset for replay, constellation analysis,
+  EVM/SNR checks and CI-safe recording-tool validation.
+storage: generated-local
+url: null
+file_name: demo_qpsk_capture.ci16
+sha256: {sha256}
+format: ci16
+endianness: little
+i_first: true
+sample_rate_hz: {SAMPLE_RATE_HZ}
+center_frequency_hz: null
+bandwidth_hz: 600000
+duration_s: {duration_s:.9f}
+source: deterministic-synthetic-generator
+generator: tools/generate_demo_qpsk_dataset.py
+publication_status: synthetic-public
+hardware:
+  transmitter: synthetic generator
+  receiver: offline replay
+  rf_path: none
+  attenuation_db: null
+  tx_gain_db: null
+  rx_gain_db: null
+signal:
+  modulation: QPSK
+  symbol_rate_sps: {SYMBOL_RATE_SPS}
+  samples_per_symbol: {SAMPLES_PER_SYMBOL}
+  pulse_shape: rectangular
+  rolloff: null
+  constellation: Gray-like quadrant mapping, normalized before CI16 scaling
+analysis_targets:
+  - constellation plot
+  - EVM estimate
+  - SNR estimate
+  - frequency offset estimate
+  - report-ready metric table
+quality_checks:
+  checksum_verified: true
+  clipping_observed: false
+  overload_observed: false
+  dc_offset_checked: true
+license: MIT-compatible synthetic course fixture
+notes:
+  - Generated data is synthetic and contains no off-air content.
+  - The CI16 file is intentionally generated locally rather than committed as raw binary.
+  - Run python tools/generate_demo_qpsk_dataset.py to refresh the file and metrics.
+  - Expected generated file size is 65536 bytes.
+"""
+    MANIFEST_FILE.write_text(manifest_text, encoding="utf-8")
 
 
 def write_metrics(samples: np.ndarray, sha256: str) -> None:
