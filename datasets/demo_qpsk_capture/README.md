@@ -1,26 +1,45 @@
 # Demo QPSK Capture Dataset
 
-This folder defines a small dataset package for QPSK replay and future hardware validation.
+This folder defines a small deterministic synthetic QPSK dataset for replay, constellation analysis and CI-safe IQ-processing checks.
 
-The raw IQ file is intentionally not committed yet. The first version is a manifest contract that can be used with synthetic replay data or with a future validated capture from the Zynq/AD9363 stand.
+The raw `demo_qpsk_capture.ci16` file is intentionally not committed. It is generated locally from a deterministic seed so the dataset remains reproducible without adding binary payload to the repository.
 
-## Intended use
+## Generate the dataset
 
-- QPSK constellation analysis.
-- EVM and SNR computation.
-- Dataset manifest validation.
-- Final project report evidence.
+Run from the repository root:
 
-## Files
+```bash
+python tools/generate_demo_qpsk_dataset.py
+```
 
-| File | Role |
+This writes:
+
+| File | Purpose |
 |---|---|
-| `manifest.yaml` | Stable dataset description and expected analysis targets |
+| `demo_qpsk_capture.ci16` | Generated interleaved CI16 IQ samples, I first, little-endian |
+| `manifest.yaml` | Dataset contract, checksum and signal parameters |
+| `metrics.json` | Deterministic metrics snapshot |
 
-## Next steps
+## Validate metadata
 
-1. Generate or capture a short QPSK IQ file.
-2. Compute SHA256.
-3. Update `manifest.yaml`.
-4. Add preview plots under `docs/assets` or this folder.
-5. Link the dataset from a final report page.
+```bash
+python tools/check_dataset_manifests.py
+```
+
+The checker validates the manifest fields and verifies that `metrics.json` agrees with the manifest SHA256. If the raw CI16 file is present locally, the checker also verifies its checksum.
+
+## Signal parameters
+
+| Parameter | Value |
+|---|---:|
+| Modulation | QPSK |
+| Sample rate | 2.4 MS/s |
+| Symbol rate | 300 ksym/s |
+| Samples per symbol | 8 |
+| Symbols | 2048 |
+| Samples | 16384 |
+| CI16 payload size | 65536 bytes |
+
+## Why this dataset exists
+
+The real RTL-SDR captures in `datasets/lab1_0_rtl_sdr_observation/` prove that the course starts from real RF observations. This synthetic QPSK dataset serves a different role: it gives a legally clean, deterministic and CI-friendly IQ fixture for replay and analysis labs.
