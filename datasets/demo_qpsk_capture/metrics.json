@@ -1,0 +1,16 @@
+{
+  "dataset_id": "demo_qpsk_capture",
+  "sample_rate_hz": 2400000,
+  "symbol_rate_sps": 300000,
+  "samples_per_symbol": 8,
+  "num_symbols": 2048,
+  "num_samples": 16384,
+  "duration_s": 0.006826666666666667,
+  "ci16_amplitude": 12000,
+  "mean_i": 0.02140655182301998,
+  "mean_q": 0.0034526700619608164,
+  "rms_normalized": 0.9999999403953552,
+  "peak_normalized": 0.9999999403953552,
+  "sha256": "d8a4cb8bc3e609a9143936bd923e906f930ea77b72a35eb2d9b48887a25be3b3",
+  "synthetic": true
+}
