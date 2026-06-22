@@ -1,0 +1,33 @@
+name: Dataset Manifest Checks
+
+on:
+  push:
+    paths:
+      - 'datasets/**'
+      - 'tools/check_dataset_manifests.py'
+      - '.github/workflows/dataset_manifests.yml'
+  pull_request:
+    paths:
+      - 'datasets/**'
+      - 'tools/check_dataset_manifests.py'
+      - '.github/workflows/dataset_manifests.yml'
+
+jobs:
+  dataset-manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: python -m pip install pyyaml
+
+      - name: Validate dataset manifests
+        run: python tools/check_dataset_manifests.py
