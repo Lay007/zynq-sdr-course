@@ -45,6 +45,8 @@ class RegisterMap:
     gp_start_offset_out: int = 0x4C4
     gp_payload_errors_in: int = 0x4C8
     gp_signature_in: int = 0x508
+    gp_tx_valid_count_in: int = 0x548
+    gp_rx_valid_count_in: int = 0x588
     start_mask: int = 0x0000_0001
     clear_done_mask: int = 0x0000_0002
     status_start_mask: int = 0x0000_0001
@@ -110,6 +112,8 @@ class BringupResult:
     received_bits: int
     total_errors: int
     payload_errors: int
+    tx_valid_count: int
+    rx_valid_count: int
     ber_total: float
     ber_payload: float
     register_snapshot: dict[str, dict[str, int | str]]
@@ -129,6 +133,8 @@ def register_snapshot(io: RegisterIo, base_addr: int) -> dict[str, dict[str, int
         ("GP_START_OFFSET_OUT", REGS.gp_start_offset_out),
         ("GP_PAYLOAD_ERRORS_IN", REGS.gp_payload_errors_in),
         ("GP_SIGNATURE_IN", REGS.gp_signature_in),
+        ("GP_TX_VALID_COUNT_IN", REGS.gp_tx_valid_count_in),
+        ("GP_RX_VALID_COUNT_IN", REGS.gp_rx_valid_count_in),
     )
     snapshot: dict[str, dict[str, int | str]] = {}
     for name, offset in items:
@@ -170,6 +176,8 @@ class MockRegisterIo:
             REGS.gp_start_offset_out: 0,
             REGS.gp_payload_errors_in: 0,
             REGS.gp_signature_in: DEFAULT_EXPECTED_ID,
+            REGS.gp_tx_valid_count_in: 0,
+            REGS.gp_rx_valid_count_in: 0,
         }
 
     def _compose_status(self) -> int:
@@ -214,6 +222,8 @@ class MockRegisterIo:
             self.regs[REGS.gp_received_bits_in] = 0
             self.regs[REGS.gp_total_errors_in] = 0
             self.regs[REGS.gp_payload_errors_in] = 0
+            self.regs[REGS.gp_tx_valid_count_in] = self.regs[REGS.gp_frame_bit_count_out] * 8
+            self.regs[REGS.gp_rx_valid_count_in] = self.regs[REGS.gp_frame_bit_count_out] * 8
         if (value & REGS.clear_done_mask) and not (previous & REGS.clear_done_mask):
             self._done = False
 
@@ -299,6 +309,8 @@ def run_bringup(io: RegisterIo, cfg: BringupConfig) -> BringupResult:
     received_bits = io.read32(REGS.gp_received_bits_in)
     total_errors = io.read32(REGS.gp_total_errors_in)
     payload_errors = io.read32(REGS.gp_payload_errors_in)
+    tx_valid_count = io.read32(REGS.gp_tx_valid_count_in)
+    rx_valid_count = io.read32(REGS.gp_rx_valid_count_in)
 
     if cfg.max_total_errors is not None and total_errors > cfg.max_total_errors:
         raise RuntimeError(
@@ -338,6 +350,8 @@ def run_bringup(io: RegisterIo, cfg: BringupConfig) -> BringupResult:
         received_bits=received_bits,
         total_errors=total_errors,
         payload_errors=payload_errors,
+        tx_valid_count=tx_valid_count,
+        rx_valid_count=rx_valid_count,
         ber_total=total_errors / max(cfg.frame_bit_count, 1),
         ber_payload=payload_errors / payload_bit_count,
         register_snapshot=register_snapshot(io, cfg.base_addr),

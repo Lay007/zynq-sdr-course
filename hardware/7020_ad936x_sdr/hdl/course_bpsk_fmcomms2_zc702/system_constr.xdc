@@ -63,11 +63,5 @@ set_property -dict {PACKAGE_PIN V17 IOSTANDARD LVCMOS25} [get_ports spi_miso]
 
 create_clock -period 4.000 -name rx_clk [get_ports rx_clk_in_p]
 
-# The PS AXI-Lite domain and the AD9361 sample-clock family communicate only
-# through explicit CDC logic/FIFOs in the vendor shell and the course bridge.
-set_clock_groups -asynchronous \
-  -group [get_clocks clk_fpga_0] \
-  -group [get_clocks -include_generated_clocks rx_clk]
-
 set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets i_system_wrapper/system_i/axi_ad9361/inst/i_dev_if/i_clk/clk_ibuf_s]
 set_property BITSTREAM.GENERAL.COMPRESS TRUE [current_design]

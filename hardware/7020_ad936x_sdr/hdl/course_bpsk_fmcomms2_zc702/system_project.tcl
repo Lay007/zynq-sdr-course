@@ -80,7 +80,10 @@ foreach src [concat \
     [file join $script_dir "system_top.v"]]] {
   add_files -norecurse -fileset sources_1 $src
 }
-add_files -norecurse -fileset constrs_1 [file join $script_dir "system_constr.xdc"]
+foreach xdc_src [list \
+  [file join $script_dir "system_constr.xdc"]] {
+  add_files -norecurse -fileset constrs_1 $xdc_src
+}
 
 create_bd_design "system"
 source [file join $script_dir "system_bd.tcl"]
@@ -94,6 +97,9 @@ import_files -force -norecurse -fileset sources_1 [file join $project_system_dir
 
 set_property top system_top [current_fileset]
 update_compile_order -fileset sources_1
+set_property STEPS.OPT_DESIGN.TCL.PRE \
+  [file join $script_dir "course_overlay_timing.xdc"] \
+  [get_runs impl_1]
 
 puts "Project created at: $project_root"
 puts "Next build step:"

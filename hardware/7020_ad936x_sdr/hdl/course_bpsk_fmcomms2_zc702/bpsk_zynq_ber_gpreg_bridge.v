@@ -30,6 +30,8 @@ module bpsk_zynq_ber_gpreg_bridge #(
     output wire [31:0]              gp_total_errors,
     output wire [31:0]              gp_payload_errors,
     output wire [31:0]              gp_signature,
+    output wire [31:0]              gp_tx_valid_count,
+    output wire [31:0]              gp_rx_valid_count,
     output wire                     tx_path_active,
     output wire                     burst_out_valid,
     output wire signed [W-1:0]      burst_out_i,
@@ -49,15 +51,15 @@ wire [INDEX_W-1:0] received_bits;
 wire [INDEX_W-1:0] total_errors;
 wire [INDEX_W-1:0] payload_errors;
 
-reg [31:0] control_meta = 32'd0;
-reg [31:0] control_sync = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] control_meta = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] control_sync = 32'd0;
 reg [31:0] control_sync_d = 32'd0;
-reg [31:0] frame_meta = 32'd0;
-reg [31:0] frame_sync = 32'd0;
-reg [31:0] preamble_meta = 32'd0;
-reg [31:0] preamble_sync = 32'd0;
-reg [31:0] offset_meta = 32'd0;
-reg [31:0] offset_sync = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] frame_meta = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] frame_sync = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] preamble_meta = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] preamble_sync = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] offset_meta = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] offset_sync = 32'd0;
 
 reg [INDEX_W-1:0] frame_bit_count_cfg = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] preamble_count_cfg = {INDEX_W{1'b0}};
@@ -69,15 +71,21 @@ reg timeout_sticky_sample = 1'b0;
 reg [INDEX_W-1:0] received_bits_sample = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] total_errors_sample = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] payload_errors_sample = {INDEX_W{1'b0}};
+reg [31:0] tx_valid_count_sample = 32'd0;
+reg [31:0] rx_valid_count_sample = 32'd0;
 
-reg [31:0] status_meta_ctrl = 32'd0;
-reg [31:0] status_sync_ctrl = 32'd0;
-reg [31:0] received_meta_ctrl = 32'd0;
-reg [31:0] received_sync_ctrl = 32'd0;
-reg [31:0] total_meta_ctrl = 32'd0;
-reg [31:0] total_sync_ctrl = 32'd0;
-reg [31:0] payload_meta_ctrl = 32'd0;
-reg [31:0] payload_sync_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] status_meta_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] status_sync_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] received_meta_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] received_sync_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] total_meta_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] total_sync_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] payload_meta_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] payload_sync_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] tx_valid_meta_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] tx_valid_sync_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] rx_valid_meta_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] rx_valid_sync_ctrl = 32'd0;
 
 wire start_edge = control_sync[0] && !control_sync_d[0];
 wire clear_done_edge = control_sync[1] && !control_sync_d[1];
@@ -133,6 +141,8 @@ always @(posedge sample_clk) begin
         received_bits_sample <= {INDEX_W{1'b0}};
         total_errors_sample <= {INDEX_W{1'b0}};
         payload_errors_sample <= {INDEX_W{1'b0}};
+        tx_valid_count_sample <= 32'd0;
+        rx_valid_count_sample <= 32'd0;
     end else begin
         control_meta <= gp_ctrl;
         control_sync <= control_meta;
@@ -156,9 +166,19 @@ always @(posedge sample_clk) begin
             received_bits_sample <= {INDEX_W{1'b0}};
             total_errors_sample <= {INDEX_W{1'b0}};
             payload_errors_sample <= {INDEX_W{1'b0}};
+            tx_valid_count_sample <= 32'd0;
+            rx_valid_count_sample <= 32'd0;
         end else if (clear_done_edge) begin
             done_sticky_sample <= 1'b0;
             timeout_sticky_sample <= 1'b0;
+        end
+
+        if (tx_path_active_sample && burst_out_valid) begin
+            tx_valid_count_sample <= tx_valid_count_sample + 1'b1;
+        end
+
+        if (tx_path_active_sample && capture_in_valid) begin
+            rx_valid_count_sample <= rx_valid_count_sample + 1'b1;
         end
 
         if (core_timed_out) begin
@@ -195,6 +215,10 @@ always @(posedge ctrl_clk) begin
         total_sync_ctrl <= total_meta_ctrl;
         payload_meta_ctrl <= {{(32-INDEX_W){1'b0}}, payload_errors_sample};
         payload_sync_ctrl <= payload_meta_ctrl;
+        tx_valid_meta_ctrl <= tx_valid_count_sample;
+        tx_valid_sync_ctrl <= tx_valid_meta_ctrl;
+        rx_valid_meta_ctrl <= rx_valid_count_sample;
+        rx_valid_sync_ctrl <= rx_valid_meta_ctrl;
     end
 end
 
@@ -203,6 +227,8 @@ assign gp_received_bits = received_sync_ctrl;
 assign gp_total_errors = total_sync_ctrl;
 assign gp_payload_errors = payload_sync_ctrl;
 assign gp_signature = SIGNATURE;
+assign gp_tx_valid_count = tx_valid_sync_ctrl;
+assign gp_rx_valid_count = rx_valid_sync_ctrl;
 assign tx_path_active = tx_path_active_sample;
 
 endmodule
