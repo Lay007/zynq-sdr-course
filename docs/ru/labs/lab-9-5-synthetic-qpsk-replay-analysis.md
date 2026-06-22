@@ -68,6 +68,29 @@ python tools/analyze_demo_qpsk_dataset.py --generate-if-missing
 - constellation имеет ожидаемую структуру QPSK;
 - analyzer может быть использован как базовый smoke test для будущих real-capture анализаторов.
 
+## Impairment-мост к следующим лабораторным
+
+Идеальный synthetic QPSK удобен как эталон. Следующий учебный шаг — намеренно внести искажения и посмотреть, как они проявляются в тех же метриках и графиках.
+
+| Impairment | Что происходит с сигналом | Что смотреть в анализе | Связанный блок |
+|---|---|---|---|
+| CFO | constellation начинает вращаться от символа к символу | рост `cfo_estimate_hz`, смазывание кластеров | Block 8.1 CFO estimation/correction |
+| Phase offset | все QPSK-точки поворачиваются на постоянный угол | constellation повернута, но кластеры остаются компактными | Block 8.2 Phase offset correction |
+| Timing offset | выборка попадает не в центр символа | рост EVM, ухудшение кластеров, eye/символьная ошибка | Block 8.3 Timing recovery |
+| AWGN | точки расплываются вокруг идеальных положений | рост `evm_rms_percent`, падение SNR estimate | Block 7.3 / Block 8 sync metrics |
+| DC offset | constellation сдвигается от центра | ненулевые `mean_i_normalized` и `mean_q_normalized` | Block 6.5 RF impairment calibration |
+| IQ imbalance | constellation растягивается/наклоняется, появляется image | асимметрия кластеров и image-компонента в спектре | Block 6.5 / Zero-IF artifacts |
+
+Минимальная последовательность эксперимента:
+
+1. сохранить baseline `analysis_summary.json` для идеального QPSK;
+2. внести один impairment за раз;
+3. повторить анализатор;
+4. сравнить EVM, CFO, mean I/Q, spectrum и constellation;
+5. записать, какая метрика первой показала проблему.
+
+Такой подход связывает Block 9 с последующими темами синхронизации и RF-калибровки: один и тот же dataset становится сначала эталоном, затем controlled test signal для проверки алгоритмов компенсации.
+
 ## Что включить в отчёт
 
 В отчёт по лабораторной добавить:
@@ -76,7 +99,8 @@ python tools/analyze_demo_qpsk_dataset.py --generate-if-missing
 2. фрагмент `analysis_summary.json`;
 3. constellation preview;
 4. spectrum preview;
-5. короткий вывод: почему synthetic dataset полезен рядом с real RF captures.
+5. короткий вывод: почему synthetic dataset полезен рядом с real RF captures;
+6. таблицу baseline vs один выбранный impairment, если выполняется расширенное задание.
 
 ## CI-связь
 
@@ -90,4 +114,4 @@ CI проверяет, что dataset генерируется, анализат
 
 ## Следующий шаг
 
-После этой лабораторной можно переходить к сравнению synthetic QPSK с реальными IQ-записями и к добавлению impairment-моделей: CFO, DC offset, IQ imbalance, AWGN и timing offset.
+После этой лабораторной можно добавить отдельный скрипт controlled impairments: CFO, DC offset, IQ imbalance, AWGN и timing offset. Это превратит идеальный QPSK fixture в тестовый стенд для проверки синхронизации и RF-калибровки.
