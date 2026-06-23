@@ -47,6 +47,7 @@ class RegisterMap:
     gp_signature_in: int = 0x508
     gp_tx_valid_count_in: int = 0x548
     gp_rx_valid_count_in: int = 0x588
+    gp_capture_debug_in: int = 0x5C8
     start_mask: int = 0x0000_0001
     clear_done_mask: int = 0x0000_0002
     status_start_mask: int = 0x0000_0001
@@ -114,9 +115,33 @@ class BringupResult:
     payload_errors: int
     tx_valid_count: int
     rx_valid_count: int
+    capture_debug_word: int | None
+    capture_debug: dict[str, int | bool] | None
+    capture_debug_error: dict[str, str] | None
     ber_total: float
     ber_payload: float
     register_snapshot: dict[str, dict[str, int | str]]
+
+
+def decode_capture_debug(word: int) -> dict[str, int | bool]:
+    word &= 0xFFFF_FFFF
+    return {
+        "capture_valid_seen_any": bool((word >> 31) & 0x1),
+        "capture_nonzero_seen_any": bool((word >> 30) & 0x1),
+        "capture_valid_while_active_seen_any": bool((word >> 29) & 0x1),
+        "capture_valid_count_lsb15": (word >> 14) & 0x7FFF,
+        "capture_peak_abs_max_q14": word & 0x3FFF,
+    }
+
+
+def read_optional_capture_debug(io: RegisterIo) -> tuple[int | None, dict[str, str] | None]:
+    try:
+        return io.read32(REGS.gp_capture_debug_in), None
+    except Exception as exc:
+        return None, {
+            "error_type": type(exc).__name__,
+            "error": str(exc),
+        }
 
 
 def register_snapshot(io: RegisterIo, base_addr: int) -> dict[str, dict[str, int | str]]:
@@ -143,6 +168,17 @@ def register_snapshot(io: RegisterIo, base_addr: int) -> dict[str, dict[str, int
             "address": f"0x{base_addr + offset:08X}",
             "value": io.read32(offset),
         }
+    capture_debug_word, capture_debug_error = read_optional_capture_debug(io)
+    capture_entry: dict[str, int | str] = {
+        "offset": REGS.gp_capture_debug_in,
+        "address": f"0x{base_addr + REGS.gp_capture_debug_in:08X}",
+    }
+    if capture_debug_word is not None:
+        capture_entry["value"] = capture_debug_word
+    if capture_debug_error is not None:
+        capture_entry["error_type"] = capture_debug_error["error_type"]
+        capture_entry["error"] = capture_debug_error["error"]
+    snapshot["GP_CAPTURE_DEBUG_IN"] = capture_entry
     return snapshot
 
 
@@ -178,6 +214,7 @@ class MockRegisterIo:
             REGS.gp_signature_in: DEFAULT_EXPECTED_ID,
             REGS.gp_tx_valid_count_in: 0,
             REGS.gp_rx_valid_count_in: 0,
+            REGS.gp_capture_debug_in: 0,
         }
 
     def _compose_status(self) -> int:
@@ -311,6 +348,12 @@ def run_bringup(io: RegisterIo, cfg: BringupConfig) -> BringupResult:
     payload_errors = io.read32(REGS.gp_payload_errors_in)
     tx_valid_count = io.read32(REGS.gp_tx_valid_count_in)
     rx_valid_count = io.read32(REGS.gp_rx_valid_count_in)
+    capture_debug_word, capture_debug_error = read_optional_capture_debug(io)
+    capture_debug = (
+        decode_capture_debug(capture_debug_word)
+        if capture_debug_word is not None
+        else None
+    )
 
     if cfg.max_total_errors is not None and total_errors > cfg.max_total_errors:
         raise RuntimeError(
@@ -352,6 +395,9 @@ def run_bringup(io: RegisterIo, cfg: BringupConfig) -> BringupResult:
         payload_errors=payload_errors,
         tx_valid_count=tx_valid_count,
         rx_valid_count=rx_valid_count,
+        capture_debug_word=capture_debug_word,
+        capture_debug=capture_debug,
+        capture_debug_error=capture_debug_error,
         ber_total=total_errors / max(cfg.frame_bit_count, 1),
         ber_payload=payload_errors / payload_bit_count,
         register_snapshot=register_snapshot(io, cfg.base_addr),

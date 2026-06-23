@@ -52,7 +52,7 @@ proc course_bpsk_apply_overlay {overlay_mode} {
   # PS-visible generic register block for the modem control/status plane.
   ad_ip_instance axi_gpreg axi_gpreg_bpsk
   ad_ip_parameter axi_gpreg_bpsk CONFIG.ID 1112560459
-  ad_ip_parameter axi_gpreg_bpsk CONFIG.NUM_OF_IO 7
+  ad_ip_parameter axi_gpreg_bpsk CONFIG.NUM_OF_IO 8
   ad_ip_parameter axi_gpreg_bpsk CONFIG.NUM_OF_CLK_MONS 0
   ad_connect sys_cpu_clk axi_gpreg_bpsk/s_axi_aclk
   ad_connect sys_cpu_resetn axi_gpreg_bpsk/s_axi_aresetn
@@ -75,6 +75,9 @@ proc course_bpsk_apply_overlay {overlay_mode} {
     ad_connect bpsk_const_zero32/dout axi_gpreg_bpsk/up_gp_in_2
     ad_connect bpsk_const_zero32/dout axi_gpreg_bpsk/up_gp_in_3
     ad_connect bpsk_const_signature32/dout axi_gpreg_bpsk/up_gp_in_4
+    ad_connect bpsk_const_zero32/dout axi_gpreg_bpsk/up_gp_in_5
+    ad_connect bpsk_const_zero32/dout axi_gpreg_bpsk/up_gp_in_6
+    ad_connect bpsk_const_zero32/dout axi_gpreg_bpsk/up_gp_in_7
     return
   }
 
@@ -98,6 +101,7 @@ proc course_bpsk_apply_overlay {overlay_mode} {
   ad_connect bpsk_bridge_bd/gp_signature axi_gpreg_bpsk/up_gp_in_4
   ad_connect bpsk_bridge_bd/gp_tx_valid_count axi_gpreg_bpsk/up_gp_in_5
   ad_connect bpsk_bridge_bd/gp_rx_valid_count axi_gpreg_bpsk/up_gp_in_6
+  ad_connect bpsk_bridge_bd/gp_capture_debug axi_gpreg_bpsk/up_gp_in_7
 
   set bpsk_rx_sample_concat [create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 bpsk_rx_sample_concat]
   set_property -dict [list \

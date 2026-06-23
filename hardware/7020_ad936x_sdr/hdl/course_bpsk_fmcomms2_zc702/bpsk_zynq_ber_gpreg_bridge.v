@@ -32,6 +32,7 @@ module bpsk_zynq_ber_gpreg_bridge #(
     output wire [31:0]              gp_signature,
     output wire [31:0]              gp_tx_valid_count,
     output wire [31:0]              gp_rx_valid_count,
+    output wire [31:0]              gp_capture_debug,
     output wire                     tx_path_active,
     output wire                     burst_out_valid,
     output wire signed [W-1:0]      burst_out_i,
@@ -73,6 +74,11 @@ reg [INDEX_W-1:0] total_errors_sample = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] payload_errors_sample = {INDEX_W{1'b0}};
 reg [31:0] tx_valid_count_sample = 32'd0;
 reg [31:0] rx_valid_count_sample = 32'd0;
+reg capture_valid_seen_any_sample = 1'b0;
+reg capture_nonzero_seen_any_sample = 1'b0;
+reg capture_valid_while_active_seen_any_sample = 1'b0;
+reg [14:0] capture_valid_count_lsb_sample = 15'd0;
+reg [13:0] capture_peak_abs_sample = 14'd0;
 
 (* ASYNC_REG = "TRUE" *) reg [31:0] status_meta_ctrl = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] status_sync_ctrl = 32'd0;
@@ -86,9 +92,29 @@ reg [31:0] rx_valid_count_sample = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] tx_valid_sync_ctrl = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] rx_valid_meta_ctrl = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] rx_valid_sync_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] capture_debug_meta_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] capture_debug_sync_ctrl = 32'd0;
 
 wire start_edge = control_sync[0] && !control_sync_d[0];
 wire clear_done_edge = control_sync[1] && !control_sync_d[1];
+wire capture_sample_nonzero = (capture_in_i != {W{1'b0}}) || (capture_in_q != {W{1'b0}});
+
+function [W:0] abs_wide;
+    input signed [W-1:0] value;
+    begin
+        if (value[W-1]) begin
+            abs_wide = {1'b0, (~value + {{(W-1){1'b0}}, 1'b1})};
+        end else begin
+            abs_wide = {1'b0, value};
+        end
+    end
+endfunction
+
+wire [W:0] capture_abs_i = abs_wide(capture_in_i);
+wire [W:0] capture_abs_q = abs_wide(capture_in_q);
+wire [W:0] capture_abs_max = (capture_abs_i >= capture_abs_q) ? capture_abs_i : capture_abs_q;
+wire [13:0] capture_peak_abs_saturated =
+    (capture_abs_max > 17'd16383) ? 14'h3FFF : capture_abs_max[13:0];
 
 bpsk_zynq_ber_top #(
     .W(W),
@@ -143,6 +169,11 @@ always @(posedge sample_clk) begin
         payload_errors_sample <= {INDEX_W{1'b0}};
         tx_valid_count_sample <= 32'd0;
         rx_valid_count_sample <= 32'd0;
+        capture_valid_seen_any_sample <= 1'b0;
+        capture_nonzero_seen_any_sample <= 1'b0;
+        capture_valid_while_active_seen_any_sample <= 1'b0;
+        capture_valid_count_lsb_sample <= 15'd0;
+        capture_peak_abs_sample <= 14'd0;
     end else begin
         control_meta <= gp_ctrl;
         control_sync <= control_meta;
@@ -168,6 +199,11 @@ always @(posedge sample_clk) begin
             payload_errors_sample <= {INDEX_W{1'b0}};
             tx_valid_count_sample <= 32'd0;
             rx_valid_count_sample <= 32'd0;
+            capture_valid_seen_any_sample <= 1'b0;
+            capture_nonzero_seen_any_sample <= 1'b0;
+            capture_valid_while_active_seen_any_sample <= 1'b0;
+            capture_valid_count_lsb_sample <= 15'd0;
+            capture_peak_abs_sample <= 14'd0;
         end else if (clear_done_edge) begin
             done_sticky_sample <= 1'b0;
             timeout_sticky_sample <= 1'b0;
@@ -179,6 +215,22 @@ always @(posedge sample_clk) begin
 
         if (tx_path_active_sample && capture_in_valid) begin
             rx_valid_count_sample <= rx_valid_count_sample + 1'b1;
+        end
+
+        if (capture_in_valid) begin
+            capture_valid_seen_any_sample <= 1'b1;
+            if (capture_valid_count_lsb_sample != 15'h7FFF) begin
+                capture_valid_count_lsb_sample <= capture_valid_count_lsb_sample + 1'b1;
+            end
+            if (capture_sample_nonzero) begin
+                capture_nonzero_seen_any_sample <= 1'b1;
+            end
+            if (tx_path_active_sample) begin
+                capture_valid_while_active_seen_any_sample <= 1'b1;
+            end
+            if (capture_peak_abs_sample < capture_peak_abs_saturated) begin
+                capture_peak_abs_sample <= capture_peak_abs_saturated;
+            end
         end
 
         if (core_timed_out) begin
@@ -219,6 +271,14 @@ always @(posedge ctrl_clk) begin
         tx_valid_sync_ctrl <= tx_valid_meta_ctrl;
         rx_valid_meta_ctrl <= rx_valid_count_sample;
         rx_valid_sync_ctrl <= rx_valid_meta_ctrl;
+        capture_debug_meta_ctrl <= {
+            capture_valid_seen_any_sample,
+            capture_nonzero_seen_any_sample,
+            capture_valid_while_active_seen_any_sample,
+            capture_valid_count_lsb_sample,
+            capture_peak_abs_sample
+        };
+        capture_debug_sync_ctrl <= capture_debug_meta_ctrl;
     end
 end
 
@@ -229,6 +289,7 @@ assign gp_payload_errors = payload_sync_ctrl;
 assign gp_signature = SIGNATURE;
 assign gp_tx_valid_count = tx_valid_sync_ctrl;
 assign gp_rx_valid_count = rx_valid_sync_ctrl;
+assign gp_capture_debug = capture_debug_sync_ctrl;
 assign tx_path_active = tx_path_active_sample;
 
 endmodule

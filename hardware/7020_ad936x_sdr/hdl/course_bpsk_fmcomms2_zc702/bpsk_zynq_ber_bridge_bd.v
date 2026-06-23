@@ -32,6 +32,7 @@ module bpsk_zynq_ber_bridge_bd #(
     output wire [31:0]              gp_signature,
     output wire [31:0]              gp_tx_valid_count,
     output wire [31:0]              gp_rx_valid_count,
+    output wire [31:0]              gp_capture_debug,
     output wire                     tx_path_active,
     output wire [(2*W):0]           tx_sample_bus,
     input  wire [(2*W):0]           rx_sample_bus
@@ -74,6 +75,7 @@ bpsk_zynq_ber_gpreg_bridge #(
     .gp_signature(gp_signature),
     .gp_tx_valid_count(gp_tx_valid_count),
     .gp_rx_valid_count(gp_rx_valid_count),
+    .gp_capture_debug(gp_capture_debug),
     .tx_path_active(tx_path_active),
     .burst_out_valid(tx_valid),
     .burst_out_i(tx_i),
