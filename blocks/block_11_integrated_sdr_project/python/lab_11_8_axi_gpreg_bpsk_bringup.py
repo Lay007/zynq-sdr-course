@@ -29,6 +29,19 @@ DEFAULT_POLL_LIMIT = 128
 DEFAULT_POLL_DELAY_MS = 20
 DEFAULT_EXPECTED_ID = 0x4250534B
 DEFAULT_BASE_ADDR = 0x79040000
+DEFAULT_RX_DECISION_MODE = "i"
+
+
+RX_DECISION_MODE_MAP: dict[str, int] = {
+    "i": 0,
+    "neg-i": 1,
+    "neg_i": 1,
+    "-i": 1,
+    "q": 2,
+    "neg-q": 3,
+    "neg_q": 3,
+    "-q": 3,
+}
 
 
 @dataclass(frozen=True)
@@ -50,6 +63,8 @@ class RegisterMap:
     gp_capture_debug_in: int = 0x5C8
     start_mask: int = 0x0000_0001
     clear_done_mask: int = 0x0000_0002
+    decision_mode_shift: int = 2
+    decision_mode_mask: int = 0x0000_000C
     status_start_mask: int = 0x0000_0001
     status_busy_mask: int = 0x0000_0002
     status_done_mask: int = 0x0000_0004
@@ -83,6 +98,7 @@ class BringupConfig:
     frame_bit_count: int
     preamble_count: int
     start_offset: int
+    rx_decision_mode: int
     start_hold_ms: int
     poll_limit: int
     poll_delay_ms: int
@@ -110,6 +126,8 @@ class BringupResult:
     frame_bit_count: int
     preamble_count: int
     start_offset: int
+    rx_decision_mode: int
+    rx_decision_mode_name: str
     received_bits: int
     total_errors: int
     payload_errors: int
@@ -124,6 +142,9 @@ class BringupResult:
     capture_debug_word: int | None
     capture_debug: dict[str, int | bool] | None
     capture_debug_error: dict[str, str] | None
+    rx_decision_debug_word: int | None
+    rx_decision_debug: dict[str, int | bool] | None
+    rx_decision_debug_error: dict[str, str] | None
     ber_total: float
     ber_payload: float
     register_snapshot: dict[str, dict[str, int | str]]
@@ -135,7 +156,9 @@ def decode_capture_debug(word: int) -> dict[str, int | bool]:
         "capture_valid_seen_any": bool((word >> 31) & 0x1),
         "capture_nonzero_seen_any": bool((word >> 30) & 0x1),
         "capture_valid_while_active_seen_any": bool((word >> 29) & 0x1),
-        "capture_valid_count_lsb15": (word >> 14) & 0x7FFF,
+        "capture_i_negative_seen_any": bool((word >> 28) & 0x1),
+        "capture_q_negative_seen_any": bool((word >> 27) & 0x1),
+        "capture_valid_count_lsb13": (word >> 14) & 0x1FFF,
         "capture_peak_abs_max_q14": word & 0x3FFF,
     }
 
@@ -150,6 +173,38 @@ def decode_adc_input_debug(word: int) -> dict[str, int | bool]:
         "adc_input_clk_counter_lsb16": (word >> 12) & 0xFFFF,
         "adc_input_valid_count_lsb12": word & 0x0FFF,
     }
+
+
+def decode_rx_decision_debug(word: int) -> dict[str, int | bool]:
+    word &= 0xFFFF_FFFF
+    return {
+        "recovered_valid_seen_any": bool((word >> 31) & 0x1),
+        "recovered_one_seen_any": bool((word >> 30) & 0x1),
+        "decision_negative_seen_any": bool((word >> 29) & 0x1),
+        "decision_nonzero_seen_any": bool((word >> 28) & 0x1),
+        "recovered_valid_count_lsb8": (word >> 20) & 0xFF,
+        "recovered_one_count_lsb8": (word >> 12) & 0xFF,
+        "tx_valid_count_lsb12": word & 0x0FFF,
+    }
+
+
+def parse_rx_decision_mode(value: str) -> int:
+    key = value.strip().lower()
+    if key not in RX_DECISION_MODE_MAP:
+        valid = ", ".join(sorted({"i", "neg-i", "q", "neg-q"}))
+        raise argparse.ArgumentTypeError(f"Unsupported rx decision mode `{value}`. Expected one of: {valid}.")
+    return RX_DECISION_MODE_MAP[key]
+
+
+def rx_decision_mode_name(mode: int) -> str:
+    normalized = int(mode) & 0x3
+    names = {
+        0: "i",
+        1: "neg-i",
+        2: "q",
+        3: "neg-q",
+    }
+    return names[normalized]
 
 
 def read_optional_register(io: RegisterIo, offset: int) -> tuple[int | None, dict[str, str] | None]:
@@ -323,14 +378,15 @@ def run_bringup(io: RegisterIo, cfg: BringupConfig) -> BringupResult:
         )
 
     initial_status = io.read32(REGS.gp_status_in)
+    decision_mode_word = (cfg.rx_decision_mode & 0x3) << REGS.decision_mode_shift
     io.write32(REGS.gp_frame_bit_count_out, cfg.frame_bit_count)
     io.write32(REGS.gp_preamble_count_out, cfg.preamble_count)
     io.write32(REGS.gp_start_offset_out, cfg.start_offset)
-    io.write32(REGS.gp_control_out, 0)
-    io.write32(REGS.gp_control_out, REGS.start_mask)
+    io.write32(REGS.gp_control_out, decision_mode_word)
+    io.write32(REGS.gp_control_out, decision_mode_word | REGS.start_mask)
     if cfg.start_hold_ms:
         time.sleep(cfg.start_hold_ms / 1000.0)
-    io.write32(REGS.gp_control_out, 0)
+    io.write32(REGS.gp_control_out, decision_mode_word)
 
     busy_observed = False
     done_observed = False
@@ -367,10 +423,13 @@ def run_bringup(io: RegisterIo, cfg: BringupConfig) -> BringupResult:
     error_counts_word = io.read32(REGS.gp_error_counts_in)
     total_errors = (error_counts_word >> 16) & 0xFFFF
     payload_errors = error_counts_word & 0xFFFF
-    tx_valid_count = io.read32(REGS.gp_tx_valid_count_in)
+    tx_valid_count_word = io.read32(REGS.gp_tx_valid_count_in)
+    tx_valid_count = tx_valid_count_word & 0x0FFF
     rx_valid_count = io.read32(REGS.gp_rx_valid_count_in)
     adc_input_debug_word, adc_input_debug_error = read_optional_register(io, REGS.gp_adc_input_debug_in)
     capture_debug_word, capture_debug_error = read_optional_register(io, REGS.gp_capture_debug_in)
+    rx_decision_debug_word = tx_valid_count_word
+    rx_decision_debug_error = None
     adc_input_debug = (
         decode_adc_input_debug(adc_input_debug_word)
         if adc_input_debug_word is not None
@@ -379,6 +438,11 @@ def run_bringup(io: RegisterIo, cfg: BringupConfig) -> BringupResult:
     capture_debug = (
         decode_capture_debug(capture_debug_word)
         if capture_debug_word is not None
+        else None
+    )
+    rx_decision_debug = (
+        decode_rx_decision_debug(rx_decision_debug_word)
+        if rx_decision_debug_word is not None
         else None
     )
 
@@ -394,8 +458,8 @@ def run_bringup(io: RegisterIo, cfg: BringupConfig) -> BringupResult:
     cleared_status = final_status
     done_cleared = False
     if cfg.clear_done:
-        io.write32(REGS.gp_control_out, REGS.clear_done_mask)
-        io.write32(REGS.gp_control_out, 0)
+        io.write32(REGS.gp_control_out, decision_mode_word | REGS.clear_done_mask)
+        io.write32(REGS.gp_control_out, decision_mode_word)
         cleared_status = io.read32(REGS.gp_status_in)
         done_cleared = (cleared_status & REGS.status_done_mask) == 0
 
@@ -417,6 +481,8 @@ def run_bringup(io: RegisterIo, cfg: BringupConfig) -> BringupResult:
         frame_bit_count=cfg.frame_bit_count,
         preamble_count=cfg.preamble_count,
         start_offset=cfg.start_offset,
+        rx_decision_mode=(cfg.rx_decision_mode & 0x3),
+        rx_decision_mode_name=rx_decision_mode_name(cfg.rx_decision_mode),
         received_bits=received_bits,
         total_errors=total_errors,
         payload_errors=payload_errors,
@@ -431,6 +497,9 @@ def run_bringup(io: RegisterIo, cfg: BringupConfig) -> BringupResult:
         capture_debug_word=capture_debug_word,
         capture_debug=capture_debug,
         capture_debug_error=capture_debug_error,
+        rx_decision_debug_word=rx_decision_debug_word,
+        rx_decision_debug=rx_decision_debug,
+        rx_decision_debug_error=rx_decision_debug_error,
         ber_total=total_errors / max(cfg.frame_bit_count, 1),
         ber_payload=payload_errors / payload_bit_count,
         register_snapshot=register_snapshot(io, cfg.base_addr),
@@ -495,6 +564,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--frame-bit-count", type=int, default=DEFAULT_FRAME_BIT_COUNT)
     parser.add_argument("--preamble-count", type=int, default=DEFAULT_PREAMBLE_COUNT)
     parser.add_argument("--start-offset", type=int, default=DEFAULT_START_OFFSET)
+    parser.add_argument("--rx-decision-mode", type=parse_rx_decision_mode, default=parse_rx_decision_mode(DEFAULT_RX_DECISION_MODE))
     parser.add_argument("--start-hold-ms", type=int, default=DEFAULT_START_HOLD_MS)
     parser.add_argument("--poll-limit", type=int, default=DEFAULT_POLL_LIMIT)
     parser.add_argument("--poll-delay-ms", type=int, default=DEFAULT_POLL_DELAY_MS)
@@ -521,6 +591,7 @@ def main() -> None:
         frame_bit_count=args.frame_bit_count,
         preamble_count=args.preamble_count,
         start_offset=args.start_offset,
+        rx_decision_mode=args.rx_decision_mode,
         start_hold_ms=args.start_hold_ms,
         poll_limit=args.poll_limit,
         poll_delay_ms=args.poll_delay_ms,

@@ -45,6 +45,7 @@ from lab_11_14_stock_shell_bpsk_ota import (
     snapshot_dds_state,
     transmit_cyclic_buffer,
 )
+from runtime_rx_common import force_rx_common_ctrl_request
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -106,6 +107,7 @@ class RuntimeBridgeRxHostTxProbeConfig:
     frame_bit_count: int
     preamble_count: int
     start_offset: int
+    rx_decision_mode: int
     start_hold_ms: int
     poll_limit: int
     poll_delay_ms: int
@@ -120,6 +122,8 @@ class RuntimeBridgeRxHostTxProbeConfig:
     tx_settle_ms: int
     rx_rf_port_select: str
     tx_rf_port_select: str
+    rx_common_reinit: bool
+    rx_common_ctrl_value: int
     reboot_after: bool
     reboot_timeout_s: float
     dmesg_line_count: int
@@ -229,6 +233,7 @@ def attempt_runtime_bringup(io: SshDevMemRegisterIo, cfg: RuntimeBridgeRxHostTxP
         frame_bit_count=cfg.frame_bit_count,
         preamble_count=cfg.preamble_count,
         start_offset=cfg.start_offset,
+        rx_decision_mode=cfg.rx_decision_mode,
         start_hold_ms=cfg.start_hold_ms,
         poll_limit=cfg.poll_limit,
         poll_delay_ms=cfg.poll_delay_ms,
@@ -280,6 +285,8 @@ def build_summary(payload: dict[str, Any]) -> dict[str, Any]:
     host_tx_adc_input_debug = ((host_tx.get("result") or {}).get("adc_input_debug")) if host_tx.get("ok") else None
     idle_capture_debug = ((idle.get("result") or {}).get("capture_debug")) if idle.get("ok") else None
     host_tx_capture_debug = ((host_tx.get("result") or {}).get("capture_debug")) if host_tx.get("ok") else None
+    idle_rx_decision_debug = ((idle.get("result") or {}).get("rx_decision_debug")) if idle.get("ok") else None
+    host_tx_rx_decision_debug = ((host_tx.get("result") or {}).get("rx_decision_debug")) if host_tx.get("ok") else None
     adc_input_clk_counter_advanced: bool | None = None
 
     if isinstance(idle_adc_input_debug, dict) and isinstance(host_tx_adc_input_debug, dict):
@@ -308,7 +315,7 @@ def build_summary(payload: dict[str, Any]) -> dict[str, Any]:
     elif (
         isinstance(host_tx_capture_debug, dict)
         and bool(host_tx_capture_debug.get("capture_valid_seen_any"))
-        and int(host_tx_capture_debug.get("capture_valid_count_lsb15", 0)) > 0
+        and int(host_tx_capture_debug.get("capture_valid_count_lsb13", 0)) > 0
     ):
         conclusion = (
             "`bridge_rx_only` sees raw capture-valid activity on the RX tap, but the gated "
@@ -366,6 +373,8 @@ def build_summary(payload: dict[str, Any]) -> dict[str, Any]:
         "adc_input_clk_counter_advanced": adc_input_clk_counter_advanced,
         "idle_capture_debug": idle_capture_debug,
         "host_tx_capture_debug": host_tx_capture_debug,
+        "idle_rx_decision_debug": idle_rx_decision_debug,
+        "host_tx_rx_decision_debug": host_tx_rx_decision_debug,
         "conclusion": conclusion,
     }
 
@@ -387,6 +396,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--frame-bit-count", type=int, default=DEFAULT_FRAME_BIT_COUNT)
     parser.add_argument("--preamble-count", type=int, default=DEFAULT_PREAMBLE_COUNT)
     parser.add_argument("--start-offset", type=int, default=DEFAULT_START_OFFSET)
+    parser.add_argument("--rx-decision-mode", type=parse_int, default=0)
     parser.add_argument("--start-hold-ms", type=int, default=DEFAULT_START_HOLD_MS)
     parser.add_argument("--poll-limit", type=int, default=DEFAULT_POLL_LIMIT)
     parser.add_argument("--poll-delay-ms", type=int, default=DEFAULT_POLL_DELAY_MS)
@@ -400,6 +410,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--rx-rf-port-select", default="A_BALANCED")
     parser.add_argument("--tx-rf-port-select", default="A")
     parser.add_argument("--dmesg-line-count", type=int, default=DEFAULT_DMESG_LINE_COUNT)
+    parser.add_argument("--rx-common-reinit", action="store_true")
+    parser.add_argument("--rx-common-ctrl-value", type=parse_int, default=0x00000003)
     parser.add_argument("--reboot-after", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--reboot-timeout-s", type=float, default=DEFAULT_REBOOT_TIMEOUT_S)
     parser.add_argument("--run-tag", default=None)
@@ -450,6 +462,7 @@ def main() -> None:
         frame_bit_count=args.frame_bit_count,
         preamble_count=args.preamble_count,
         start_offset=args.start_offset,
+        rx_decision_mode=args.rx_decision_mode & 0x3,
         start_hold_ms=args.start_hold_ms,
         poll_limit=args.poll_limit,
         poll_delay_ms=args.poll_delay_ms,
@@ -464,6 +477,8 @@ def main() -> None:
         tx_settle_ms=args.tx_settle_ms,
         rx_rf_port_select=waveform_cfg.rx_rf_port_select,
         tx_rf_port_select=waveform_cfg.tx_rf_port_select,
+        rx_common_reinit=bool(args.rx_common_reinit),
+        rx_common_ctrl_value=args.rx_common_ctrl_value,
         reboot_after=bool(args.reboot_after),
         reboot_timeout_s=args.reboot_timeout_s,
         dmesg_line_count=args.dmesg_line_count,
@@ -508,6 +523,7 @@ def main() -> None:
         "baseline": {},
         "reload": {},
         "post_reload": {},
+        "rx_common_reinit": None,
         "idle_bringup": None,
         "host_tx_stage": None,
         "host_tx_bringup": None,
@@ -577,6 +593,12 @@ def main() -> None:
                 lambda: register_snapshot(io, args.gpreg_base_addr),
             ),
         }
+
+        if cfg.rx_common_reinit:
+            payload["rx_common_reinit"] = force_rx_common_ctrl_request(
+                runner,
+                value=cfg.rx_common_ctrl_value,
+            )
 
         payload["idle_bringup"] = attempt_runtime_bringup(io, cfg)
 

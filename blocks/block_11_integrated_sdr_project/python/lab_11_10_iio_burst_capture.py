@@ -241,6 +241,7 @@ def capture_with_trigger(
         frame_bit_count=cfg.frame_bit_count,
         preamble_count=cfg.preamble_count,
         start_offset=cfg.start_offset,
+        rx_decision_mode=0,
         start_hold_ms=cfg.start_hold_ms,
         poll_limit=cfg.poll_limit,
         poll_delay_ms=cfg.poll_delay_ms,

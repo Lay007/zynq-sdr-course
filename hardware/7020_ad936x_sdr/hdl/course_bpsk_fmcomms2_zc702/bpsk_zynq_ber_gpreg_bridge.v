@@ -57,6 +57,10 @@ wire core_timed_out;
 wire [INDEX_W-1:0] received_bits;
 wire [INDEX_W-1:0] total_errors;
 wire [INDEX_W-1:0] payload_errors;
+wire recovered_valid_debug;
+wire recovered_bit_debug;
+wire symbol_valid_debug;
+wire signed [W-1:0] symbol_i_debug;
 
 (* ASYNC_REG = "TRUE" *) reg [31:0] control_meta = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] control_sync = 32'd0;
@@ -88,8 +92,17 @@ reg [15:0] adc_input_clk_counter_sample = 16'd0;
 reg capture_valid_seen_any_sample = 1'b0;
 reg capture_nonzero_seen_any_sample = 1'b0;
 reg capture_valid_while_active_seen_any_sample = 1'b0;
-reg [14:0] capture_valid_count_lsb_sample = 15'd0;
+reg capture_i_negative_seen_any_sample = 1'b0;
+reg capture_q_negative_seen_any_sample = 1'b0;
+reg [12:0] capture_valid_count_lsb_sample = 13'd0;
 reg [13:0] capture_peak_abs_sample = 14'd0;
+reg recovered_valid_seen_any_sample = 1'b0;
+reg recovered_one_seen_any_sample = 1'b0;
+reg decision_negative_seen_any_sample = 1'b0;
+reg decision_nonzero_seen_any_sample = 1'b0;
+reg [8:0] recovered_valid_count_lsb_sample = 9'd0;
+reg [8:0] recovered_one_count_lsb_sample = 9'd0;
+reg [9:0] decision_negative_count_lsb_sample = 10'd0;
 
 (* ASYNC_REG = "TRUE" *) reg [31:0] status_meta_ctrl = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] status_sync_ctrl = 32'd0;
@@ -112,8 +125,20 @@ reg [13:0] capture_peak_abs_sample = 14'd0;
 
 wire start_edge = control_sync[0] && !control_sync_d[0];
 wire clear_done_edge = control_sync[1] && !control_sync_d[1];
+wire [1:0] rx_decision_mode = control_sync[3:2];
 wire adc_input_sample_nonzero = (adc_input_i != {W{1'b0}}) || (adc_input_q != {W{1'b0}});
 wire capture_sample_nonzero = (capture_in_i != {W{1'b0}}) || (capture_in_q != {W{1'b0}});
+
+function signed [W-1:0] ad9361_offset_binary12_to_signed16;
+    input [W-1:0] value;
+    reg [11:0] twos_complement_12;
+    begin
+        // The ADI RX channel leaves ad_datafmt disabled by default, so the
+        // fabric tap carries raw 12-bit offset-binary samples in the low bits.
+        twos_complement_12 = {~value[11], value[10:0]};
+        ad9361_offset_binary12_to_signed16 = {{(W-12){twos_complement_12[11]}}, twos_complement_12};
+    end
+endfunction
 
 function [W:0] abs_wide;
     input signed [W-1:0] value;
@@ -134,6 +159,8 @@ wire [13:0] capture_peak_abs_saturated =
 wire [W:0] adc_input_abs_i = abs_wide(adc_input_i);
 wire [W:0] adc_input_abs_q = abs_wide(adc_input_q);
 wire [W:0] adc_input_abs_max = (adc_input_abs_i >= adc_input_abs_q) ? adc_input_abs_i : adc_input_abs_q;
+wire signed [W-1:0] capture_in_i_fmt = ad9361_offset_binary12_to_signed16(capture_in_i);
+wire signed [W-1:0] capture_in_q_fmt = ad9361_offset_binary12_to_signed16(capture_in_q);
 
 bpsk_zynq_ber_top #(
     .W(W),
@@ -157,12 +184,17 @@ bpsk_zynq_ber_top #(
     .tx_i(burst_out_i),
     .tx_q(burst_out_q),
     .rx_valid(capture_in_valid),
-    .rx_i(capture_in_i),
-    .rx_q(capture_in_q),
+    .rx_i(capture_in_i_fmt),
+    .rx_q(capture_in_q_fmt),
+    .rx_decision_mode(rx_decision_mode),
     .timed_out(core_timed_out),
     .received_bits(received_bits),
     .total_errors(total_errors),
-    .payload_errors(payload_errors)
+    .payload_errors(payload_errors),
+    .debug_recovered_valid(recovered_valid_debug),
+    .debug_recovered_bit(recovered_bit_debug),
+    .debug_symbol_valid(symbol_valid_debug),
+    .debug_symbol_i(symbol_i_debug)
 );
 
 always @(posedge adc_input_clk) begin
@@ -215,8 +247,17 @@ always @(posedge sample_clk) begin
         capture_valid_seen_any_sample <= 1'b0;
         capture_nonzero_seen_any_sample <= 1'b0;
         capture_valid_while_active_seen_any_sample <= 1'b0;
-        capture_valid_count_lsb_sample <= 15'd0;
+        capture_i_negative_seen_any_sample <= 1'b0;
+        capture_q_negative_seen_any_sample <= 1'b0;
+        capture_valid_count_lsb_sample <= 13'd0;
         capture_peak_abs_sample <= 14'd0;
+        recovered_valid_seen_any_sample <= 1'b0;
+        recovered_one_seen_any_sample <= 1'b0;
+        decision_negative_seen_any_sample <= 1'b0;
+        decision_nonzero_seen_any_sample <= 1'b0;
+        recovered_valid_count_lsb_sample <= 9'd0;
+        recovered_one_count_lsb_sample <= 9'd0;
+        decision_negative_count_lsb_sample <= 10'd0;
     end else begin
         control_meta <= gp_ctrl;
         control_sync <= control_meta;
@@ -245,8 +286,17 @@ always @(posedge sample_clk) begin
             capture_valid_seen_any_sample <= 1'b0;
             capture_nonzero_seen_any_sample <= 1'b0;
             capture_valid_while_active_seen_any_sample <= 1'b0;
-            capture_valid_count_lsb_sample <= 15'd0;
+            capture_i_negative_seen_any_sample <= 1'b0;
+            capture_q_negative_seen_any_sample <= 1'b0;
+            capture_valid_count_lsb_sample <= 13'd0;
             capture_peak_abs_sample <= 14'd0;
+            recovered_valid_seen_any_sample <= 1'b0;
+            recovered_one_seen_any_sample <= 1'b0;
+            decision_negative_seen_any_sample <= 1'b0;
+            decision_nonzero_seen_any_sample <= 1'b0;
+            recovered_valid_count_lsb_sample <= 9'd0;
+            recovered_one_count_lsb_sample <= 9'd0;
+            decision_negative_count_lsb_sample <= 10'd0;
         end else if (clear_done_edge) begin
             done_sticky_sample <= 1'b0;
             timeout_sticky_sample <= 1'b0;
@@ -262,17 +312,48 @@ always @(posedge sample_clk) begin
 
         if (capture_in_valid) begin
             capture_valid_seen_any_sample <= 1'b1;
-            if (capture_valid_count_lsb_sample != 15'h7FFF) begin
+            if (capture_valid_count_lsb_sample != 13'h1FFF) begin
                 capture_valid_count_lsb_sample <= capture_valid_count_lsb_sample + 1'b1;
             end
             if (capture_sample_nonzero) begin
                 capture_nonzero_seen_any_sample <= 1'b1;
+            end
+            if (capture_in_i < 0) begin
+                capture_i_negative_seen_any_sample <= 1'b1;
+            end
+            if (capture_in_q < 0) begin
+                capture_q_negative_seen_any_sample <= 1'b1;
             end
             if (tx_path_active_sample) begin
                 capture_valid_while_active_seen_any_sample <= 1'b1;
             end
             if (capture_peak_abs_sample < capture_peak_abs_saturated) begin
                 capture_peak_abs_sample <= capture_peak_abs_saturated;
+            end
+        end
+
+        if (recovered_valid_debug) begin
+            recovered_valid_seen_any_sample <= 1'b1;
+            if (recovered_valid_count_lsb_sample != 9'h1FF) begin
+                recovered_valid_count_lsb_sample <= recovered_valid_count_lsb_sample + 1'b1;
+            end
+            if (recovered_bit_debug) begin
+                recovered_one_seen_any_sample <= 1'b1;
+                if (recovered_one_count_lsb_sample != 9'h1FF) begin
+                    recovered_one_count_lsb_sample <= recovered_one_count_lsb_sample + 1'b1;
+                end
+            end
+        end
+
+        if (symbol_valid_debug) begin
+            if (symbol_i_debug != {W{1'b0}}) begin
+                decision_nonzero_seen_any_sample <= 1'b1;
+            end
+            if (symbol_i_debug < 0) begin
+                decision_negative_seen_any_sample <= 1'b1;
+                if (decision_negative_count_lsb_sample != 10'h3FF) begin
+                    decision_negative_count_lsb_sample <= decision_negative_count_lsb_sample + 1'b1;
+                end
             end
         end
 
@@ -321,8 +402,6 @@ always @(posedge ctrl_clk) begin
             {{(16-INDEX_W){1'b0}}, payload_errors_sample}
         };
         error_counts_sync_ctrl <= error_counts_meta_ctrl;
-        tx_valid_meta_ctrl <= tx_valid_count_sample;
-        tx_valid_sync_ctrl <= tx_valid_meta_ctrl;
         rx_valid_meta_ctrl <= rx_valid_count_sample;
         rx_valid_sync_ctrl <= rx_valid_meta_ctrl;
         adc_input_debug_meta_ctrl <= {
@@ -340,10 +419,22 @@ always @(posedge ctrl_clk) begin
             capture_valid_seen_any_sample,
             capture_nonzero_seen_any_sample,
             capture_valid_while_active_seen_any_sample,
+            capture_i_negative_seen_any_sample,
+            capture_q_negative_seen_any_sample,
             capture_valid_count_lsb_sample,
             capture_peak_abs_sample
         };
         capture_debug_sync_ctrl <= capture_debug_meta_ctrl;
+        tx_valid_meta_ctrl <= {
+            recovered_valid_seen_any_sample,
+            recovered_one_seen_any_sample,
+            decision_negative_seen_any_sample,
+            decision_nonzero_seen_any_sample,
+            recovered_valid_count_lsb_sample[7:0],
+            recovered_one_count_lsb_sample[7:0],
+            tx_valid_count_sample[11:0]
+        };
+        tx_valid_sync_ctrl <= tx_valid_meta_ctrl;
     end
 end
 

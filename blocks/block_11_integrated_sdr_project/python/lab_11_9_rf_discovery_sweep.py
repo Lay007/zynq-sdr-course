@@ -154,6 +154,7 @@ def run_attempt(io: SshDevMemRegisterIo, cfg: SweepConfig, *, start_offset: int)
         frame_bit_count=cfg.frame_bit_count,
         preamble_count=cfg.preamble_count,
         start_offset=start_offset,
+        rx_decision_mode=0,
         start_hold_ms=cfg.start_hold_ms,
         poll_limit=cfg.poll_limit,
         poll_delay_ms=cfg.poll_delay_ms,

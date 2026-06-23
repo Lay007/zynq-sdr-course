@@ -193,6 +193,7 @@ def run_overlap_capture(
             frame_bit_count=frame_bit_count,
             preamble_count=preamble_count,
             start_offset=start_offset,
+            rx_decision_mode=0,
             start_hold_ms=start_hold_ms,
             poll_limit=poll_limit,
             poll_delay_ms=poll_delay_ms,

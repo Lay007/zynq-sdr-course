@@ -44,6 +44,9 @@ The earlier burst-enabled TX experiments remain useful as historical evidence, b
 | `blocks/block_11_integrated_sdr_project/python/lab_11_12_runtime_fpga_manager_reload.py` | uploads a checked `.bit.bin` payload over SSH, hot-loads it through Linux `fpga_manager`, then re-probes `axi_gpreg` and the host-visible IIO context |
 | `blocks/block_11_integrated_sdr_project/python/lab_11_13_stock_vs_runtime_rx_compare.py` | proves on one live board run that stock-shell RX capture still works before reload, then repeats the same checks after runtime hot-load and records the breakage |
 | `blocks/block_11_integrated_sdr_project/python/lab_11_15_runtime_bridge_rx_host_tx_probe.py` | hot-loads the intermediate `bridge_rx_only` overlay, runs one idle gpreg witness, then repeats the same witness while stock host TX transmits the shared BPSK burst, now also decoding the optional raw RX-tap `CAPTURE_DEBUG` word |
+| `blocks/block_11_integrated_sdr_project/python/runtime_rx_common.py` | shared helper that reads and restores the stock RX common control request after the runtime overlay reload |
+| `blocks/block_11_integrated_sdr_project/python/lab_11_16_runtime_rx_common_reinit_probe.py` | proves what the manual RX common re-init changes and what it still does not fix on the host capture path |
+| `blocks/block_11_integrated_sdr_project/python/lab_11_17_runtime_rx_common_reinit_start_offset_sweep.py` | sweeps `start_offset` after the runtime RX common re-init while stock host TX drives the shared BPSK burst |
 
 ## Register contract
 
@@ -53,7 +56,7 @@ Base address: `0x79040000`
 |---|---|
 | `0x000` | `axi_gpreg` version register |
 | `0x004` | `axi_gpreg` ID register, expected `0x4250534B` |
-| `0x404` | GPREG0 output: control word, bit `0` = start edge, bit `1` = clear sticky done |
+| `0x404` | GPREG0 output: control word, bit `0` = start edge, bit `1` = clear sticky done, bits `3:2` = RX decision mode (`I`, `-I`, `Q`, `-Q`) |
 | `0x408` | GPREG0 input: status word, bit `0` = synchronized start level, bit `1` = busy, bit `2` = sticky done, bit `3` = sticky RX timeout/abort |
 | `0x444` | GPREG1 output: `FRAME_BIT_COUNT` |
 | `0x448` | GPREG1 input: `RECEIVED_BITS` |
@@ -62,16 +65,29 @@ Base address: `0x79040000`
 | `0x4C4` | GPREG3 output: `START_OFFSET` |
 | `0x4C8` | GPREG3 input: `PAYLOAD_ERRORS` |
 | `0x508` | GPREG4 input: bridge signature, expected `0x4250534B` |
-| `0x548` | GPREG5 input: bridge-side `TX_VALID_COUNT` |
+| `0x548` | GPREG5 input: packed `TX_VALID_COUNT` plus RX decision-sign debug |
 | `0x588` | GPREG6 input: bridge-side `RX_VALID_COUNT` |
 | `0x5C8` | GPREG7 input: packed raw RX-tap `CAPTURE_DEBUG` word |
+
+`GPREG5` now packs one extra runtime witness alongside the low 12 bits of
+`TX_VALID_COUNT`:
+
+- bits `11:0`: `tx_valid_count_lsb12`;
+- bits `19:12`: low 8 bits of the recovered-bit `1` count;
+- bits `27:20`: low 8 bits of the recovered-bit valid count;
+- bit `28`: any non-zero hard-decision input sample seen;
+- bit `29`: any negative hard-decision input sample seen;
+- bit `30`: any recovered bit `1` seen;
+- bit `31`: any recovered-bit valid pulse seen.
 
 `CAPTURE_DEBUG` packs one compact runtime witness word:
 
 - bit `31`: any raw `capture_in_valid` pulse seen;
 - bit `30`: any non-zero raw `RX1 I/Q` sample seen;
 - bit `29`: any raw `capture_in_valid` pulse seen while the BER core was active;
-- bits `28:14`: low 15 bits of the raw `capture_in_valid` pulse count;
+- bit `28`: any raw `RX1 I` sample seen negative at the bridge tap;
+- bit `27`: any raw `RX1 Q` sample seen negative at the bridge tap;
+- bits `26:14`: low 13 bits of the raw `capture_in_valid` pulse count;
 - bits `13:0`: peak absolute raw `RX1` sample magnitude in unsigned Q14 units.
 
 ## Build prerequisites
@@ -224,6 +240,47 @@ Observed `bridge_rx_only` facts on the board:
 - the refined report conclusion is therefore stronger than the original `...bridge_rx_only_b.json` witness: after the runtime hot load, the bridge does not merely miss BER frames, it sees no raw RX-tap activity at all;
 - the helper rebooted the board afterwards and confirmed a safe return to the stock shell baseline.
 
+Runtime RX common re-init breakthrough on `2026-06-23`:
+
+The next live step checked whether the runtime hot load left the AD9361 RX common
+block in a different control state than the stock shell and whether forcing the
+stock request bits back in would revive the live receive path.
+
+- helper: `blocks/block_11_integrated_sdr_project/python/lab_11_16_runtime_rx_common_reinit_probe.py`;
+- helper: `blocks/block_11_integrated_sdr_project/python/lab_11_17_runtime_rx_common_reinit_start_offset_sweep.py`;
+- helper: `blocks/block_11_integrated_sdr_project/python/lab_11_18_runtime_rx_common_reinit_fresh_session_sweep.py`;
+- live re-init probe: `docs/assets/lab116_runtime_rx_common_reinit_probe_live_20260623.json`;
+- live host-TX witness after re-init: `docs/assets/lab116_runtime_rx_common_reinit_host_tx_probe_live_20260623.json`;
+- live start-offset sweep after re-init: `docs/assets/lab117_runtime_rx_common_reinit_start_offset_sweep_live_20260623.json`.
+- live fresh-session single-point decision-debug proof: `docs/assets/lab119_runtime_rx_decision_debug_single_point_live_20260623.json`;
+- partial wide fresh-session start-offset sweep: `docs/assets/lab118_runtime_rx_common_reinit_fresh_session_start_offset_wide_live_20260623.json`.
+
+Observed post-reinit facts on the board:
+
+- right after the runtime hot load, the RX common request register fell back to `rx_common_ctrl_req = 0x00000000`, and the corresponding `rx_common_clk_count` / `rx_common_status` readbacks were both zero;
+- restoring the stock request word `0x79020040 <- 0x00000003` revived non-zero RX clock/status activity immediately, with `rx_common_clk_count = 0x00013AE5` and `rx_common_status = 0x00000005`;
+- the same re-init also cleared the raw input-side reset witness: `adc_input_reset_asserted_current` dropped to `false`, and both the input-side and RX-tap debug words became non-zero again;
+- despite that fabric-side recovery, the dedicated A/B helper still reproduced the same host-side failures after the hot load: direct `libiio Buffer.refill()` still raised `OSError: [Errno 110] host unreachable`, and `iio_readdev` still failed with `Unable to refill buffer: Unknown error (110)`;
+- the reinit-assisted host-TX witness then proved that the runtime overlay was no longer starved at the sample tap: `rx_valid_count` became non-zero, the raw `CAPTURE_DEBUG` word showed valid/non-zero activity, and the bridge could again observe the RX stream during stock host TX;
+- the first checked-in `start_offset` sweep after that re-init found a real full-frame receive window on the first post-TX attempt: `start_offset = 32` completed `281` received bits with `144` total errors and `136` payload errors, while later attempts in the same TX session fell back to timeout-like behavior.
+- a wider fresh-session sweep then removed simple `start_offset` blame from the shortlist: offsets from `0` through `576` kept the same `281 / 144 / 136` result, with identical `rx_valid_count = 2982` and `capture_peak_abs_max_q14 = 4095`;
+- the new packed decision-sign witness finally made the failure mode explicit on a full-frame receive: the recovered-bit path asserted valid pulses, the hard-decision input was non-zero, but it never went negative and never produced a recovered `1`, so the live BER counters were effectively comparing the expected frame against an all-zero recovered bit stream.
+
+Offset-binary root cause and post-fix live retune on `2026-06-23`:
+
+- the stricter raw-sign witness `docs/assets/lab120_runtime_capture_sign_single_point_live_20260623.json` then showed that the raw bridge tap itself never went negative even though `capture_peak_abs_max_q14 = 4095`, which ruled out a dead RX path and pointed to a sample-format mismatch instead;
+- inspecting the imported ADI HDL (`ad_datafmt.v` and `up_adc_channel.v`) explained why: with the default RX data-format controls left at zero, the `axi_ad9361` receive path exposes raw 12-bit offset-binary samples rather than signed two's-complement samples at the bridge tap;
+- the bridge now corrects those low 12 bits locally before feeding `bpsk_zynq_ber_top`, while `CAPTURE_DEBUG` intentionally still reports the raw unformatted tap so the source-level explanation remains auditable;
+- the immediate live post-fix proof `docs/assets/lab121_runtime_offset_binary_fix_single_point_live_20260623.json` showed that the old all-zero-stream failure is really gone: `decision_negative_seen_any = true` and `recovered_one_seen_any = true` now appear on hardware;
+- the remaining BER is still high, but now tunable rather than collapsed: `docs/assets/lab122_runtime_offset_binary_fix_phase_sweep_live_20260623.json` improved the best point to `281 / 129 / 120` at `start_offset = 34`, `docs/assets/lab123_runtime_offset_binary_fix_tx_phase_sweep_live_20260623.json` showed only a modest extra gain from TX phase, and `docs/assets/lab124_runtime_offset_binary_fix_gain_sweep_live_20260623.json` reached the current best live runtime point `281 / 127 / 114` at `start_offset = 34`, `tx_phase = 315 deg`, `rx_gain = 5 dB`.
+
+Self-timed `bridge_txrx_mux` follow-up on `2026-06-23`:
+
+- the new runtime helper `blocks/block_11_integrated_sdr_project/python/lab_11_19_runtime_bridge_txrx_self_timed_bringup.py` removes the asynchronous host-side cyclic TX dependency and instead hot-loads `bridge_txrx_mux`, restores `rx_common`, configures AD9361, and launches the burst from the PL side through the same `start` control word;
+- the first self-timed single-point proof `docs/assets/lab125_runtime_bridge_txrx_self_timed_single_point_live_20260623.json` showed that this path now completes a full `281`-bit frame with no timeout, which closes the earlier "missing-frame because TX is asynchronous" concern well enough to continue debugging BER on the deterministic path itself;
+- the residual BER is still not low, so the next lightweight experiment added control-plane-selectable RX decision modes through GPREG0 bits `3:2`;
+- the exploratory mode sweep `docs/assets/lab126_runtime_bridge_txrx_self_timed_mode_sweep_live_20260623.json` suggests that `neg-i` is better than the default `i` on the self-timed path, while the follow-up clean rerun `docs/assets/lab126_runtime_bridge_txrx_self_timed_neg_i_single_point_live_20260623.json` shows that the path still reaches a full frame but remains session-sensitive.
+
 Current checked-in safety baseline:
 
 - the stock-safe recovery path is still `hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin`; under the old `uEnv.txt` `loadb`-on-`.bit.bin` fallback it was not proof of arbitrary external PL replacement, but under the new manual UART `fpga load` path it is now the only externally loaded boot-safe candidate demonstrated so far;
@@ -245,12 +302,16 @@ Interpretation:
 - the corrected runtime `fpga_manager` reload now reproduces the same gpreg readback from the stock Linux shell without losing basic IIO device enumeration, so the blocker is no longer "the board cannot see the overlay at all";
 - the stock-versus-runtime comparison now proves that the stock Linux shell still supports both host RX capture paths before any reload, while the runtime hot load breaks both of them even though `axi_gpreg` stays visible;
 - the refined `bridge_rx_only` runtime witness now adds a stronger negative result: even when the stock vendor TX path transmits the shared BPSK burst successfully, the bridge still sees `rx_valid_count = 0` and the raw RX-tap `CAPTURE_DEBUG` word remains all zeros;
-- the live blocker has therefore narrowed specifically to the runtime RX side upstream of the BER counters: post-reload host capture cannot refill, while the bridge sees neither `rx_valid_count` activity nor any raw `capture_in_valid` / non-zero `RX1` sample evidence;
+- the runtime RX common re-init result is stronger than the earlier negative witness: the fabric-side RX path can now be revived after the hot load, but the host libiio/DMAC capture path still remains broken;
+- the first post-reinit `start_offset` sweep shows that the runtime BPSK receive path is now alive enough to complete a full `281`-bit receive attempt, so the blocker is no longer dead RX plumbing;
+- the offset-binary explanation closes that specific bug: the receive chain is no longer stuck with unsigned raw AD9361 samples, and negative decisions / recovered `1` bits now appear on hardware;
+- the new self-timed `bridge_txrx_mux` result removes the earlier "host-side cyclic TX is the whole problem" explanation: full frames are now reproducible without timeout on the PL-owned TX/RX path, but BER still depends on decision polarity and drifts across sessions;
+- the next blocker is therefore a narrower receive-side problem: stabilize the deterministic self-timed path, then decide whether the right next step is a slightly richer phase/axis correction stage or a true preamble/frame detector in the FPGA receive path;
 - the normalized pure-Tcl `vendor_only` flow now eliminates the earlier `MIO14/15` drift, but it is still blocked by four read-only or disabled derived parameters: `sys_ps7.PCW_S_AXI_HP0_FREQMHZ`, `axi_ad9361_adc_dma.DMA_AXI_PROTOCOL_SRC`, `axi_ad9361_dac_dma.DMA_AXI_PROTOCOL_DEST`, and `axi_ad9361.SPEED_GRADE`; see `docs/assets/vendor_reference_vs_vendor_only_handoff_diff.json`;
 - the saved vendor `zc702.xpr` snapshot is still the preferred editable source witness once rebuilt through the MIO14/15 patch flow, but it is not yet a boot-safe RF baseline; see `docs/assets/vendor_reference_vs_vendor_xpr_mio14_15_patch_handoff_diff.json`;
 - the current checked-in HDL now also includes an intermediate `bridge_rx_only` reintegration mode that is validated in Vivado but not yet in clean boot;
 - the extracted stock partition from `BOOT.bin` is now the only externally loaded boot-safe reintegration anchor, but it is not yet editable or source-correlated enough for the final course overlay;
-- the immediate next task is to explain why the runtime bridge still starves the RX side after a successful hot load, while continuing the separate boot-safe-shell investigation for the editable clean-boot path.
+- the immediate next task is to remove the remaining asynchronous-frame ambiguity from the runtime BER path, then continue retuning timing / phase with the sample-format bug already closed, while separately continuing the boot-safe-shell investigation for the editable clean-boot path.
 
 ## Next gated re-enable order
 

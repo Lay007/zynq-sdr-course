@@ -235,6 +235,14 @@ def write_attr_with_readback(
         )
 
 
+def format_attr_number(value: float, *, digits: int = 2) -> str:
+    text = f"{value:.{digits}f}"
+    text = text.rstrip("0").rstrip(".")
+    if "." not in text:
+        text += ".0"
+    return text
+
+
 def snapshot_ad9361_state(phy: Any) -> dict[str, str | None]:
     rx_lo = find_channel(phy, "altvoltage0", output=True)
     tx_lo = find_channel(phy, "altvoltage1", output=True)
@@ -358,13 +366,13 @@ def configure_ad9361_bpsk(phy: Any, cfg: WaveformConfig) -> dict[str, str | None
         write_attr_value(channel, "sampling_frequency", cfg.sample_rate_hz)
         write_attr_value(channel, "rf_bandwidth", cfg.rf_bandwidth_hz)
         write_attr_value(channel, "gain_control_mode", "manual")
-        write_attr_value(channel, "hardwaregain", f"{cfg.rx_gain_db:.1f}")
+        write_attr_value(channel, "hardwaregain", format_attr_number(cfg.rx_gain_db, digits=2))
         write_attr_value(channel, "rf_port_select", cfg.rx_rf_port_select)
 
     for channel in (tx0, tx1):
         write_attr_value(channel, "sampling_frequency", cfg.sample_rate_hz)
         write_attr_value(channel, "rf_bandwidth", cfg.rf_bandwidth_hz)
-        write_attr_value(channel, "hardwaregain", f"{cfg.tx_attenuation_db:.1f}")
+        write_attr_value(channel, "hardwaregain", format_attr_number(cfg.tx_attenuation_db, digits=2))
         write_attr_value(channel, "rf_port_select", cfg.tx_rf_port_select)
 
     return snapshot_ad9361_state(phy)

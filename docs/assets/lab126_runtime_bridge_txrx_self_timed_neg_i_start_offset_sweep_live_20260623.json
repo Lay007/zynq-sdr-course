@@ -1,0 +1,123 @@
+{
+  "generated_from": "lab126 self-timed neg-i start-offset sweep",
+  "best": {
+    "path": "assets/lab126_runtime_bridge_txrx_self_timed_neg_i_start_offset_56_live_20260623.json",
+    "received_bits": 281,
+    "total_errors": 138,
+    "payload_errors": 126,
+    "ber_total": 0.49110320284697506,
+    "ber_payload": 0.4921875,
+    "rx_valid_count": 2982,
+    "tx_valid_count": 2376,
+    "rx_decision_mode": 1,
+    "rx_decision_mode_name": "neg-i",
+    "start_offset": 56
+  },
+  "results": [
+    {
+      "path": "assets/lab126_runtime_bridge_txrx_self_timed_neg_i_start_offset_56_live_20260623.json",
+      "received_bits": 281,
+      "total_errors": 138,
+      "payload_errors": 126,
+      "ber_total": 0.49110320284697506,
+      "ber_payload": 0.4921875,
+      "rx_valid_count": 2982,
+      "tx_valid_count": 2376,
+      "rx_decision_mode": 1,
+      "rx_decision_mode_name": "neg-i",
+      "start_offset": 56
+    },
+    {
+      "path": "assets/lab126_runtime_bridge_txrx_self_timed_neg_i_start_offset_61_live_20260623.json",
+      "received_bits": 281,
+      "total_errors": 143,
+      "payload_errors": 132,
+      "ber_total": 0.5088967971530249,
+      "ber_payload": 0.515625,
+      "rx_valid_count": 2982,
+      "tx_valid_count": 2376,
+      "rx_decision_mode": 1,
+      "rx_decision_mode_name": "neg-i",
+      "start_offset": 61
+    },
+    {
+      "path": "assets/lab126_runtime_bridge_txrx_self_timed_neg_i_start_offset_62_live_20260623.json",
+      "received_bits": 281,
+      "total_errors": 148,
+      "payload_errors": 133,
+      "ber_total": 0.5266903914590747,
+      "ber_payload": 0.51953125,
+      "rx_valid_count": 2982,
+      "tx_valid_count": 2376,
+      "rx_decision_mode": 1,
+      "rx_decision_mode_name": "neg-i",
+      "start_offset": 62
+    },
+    {
+      "path": "assets/lab126_runtime_bridge_txrx_self_timed_neg_i_start_offset_59_live_20260623.json",
+      "received_bits": 281,
+      "total_errors": 150,
+      "payload_errors": 134,
+      "ber_total": 0.5338078291814946,
+      "ber_payload": 0.5234375,
+      "rx_valid_count": 2982,
+      "tx_valid_count": 2376,
+      "rx_decision_mode": 1,
+      "rx_decision_mode_name": "neg-i",
+      "start_offset": 59
+    },
+    {
+      "path": "assets/lab126_runtime_bridge_txrx_self_timed_neg_i_start_offset_58_live_20260623.json",
+      "received_bits": 281,
+      "total_errors": 145,
+      "payload_errors": 137,
+      "ber_total": 0.5160142348754448,
+      "ber_payload": 0.53515625,
+      "rx_valid_count": 2982,
+      "tx_valid_count": 2376,
+      "rx_decision_mode": 1,
+      "rx_decision_mode_name": "neg-i",
+      "start_offset": 58
+    },
+    {
+      "path": "assets/lab126_runtime_bridge_txrx_self_timed_neg_i_start_offset_60_live_20260623.json",
+      "received_bits": 281,
+      "total_errors": 151,
+      "payload_errors": 138,
+      "ber_total": 0.5373665480427047,
+      "ber_payload": 0.5390625,
+      "rx_valid_count": 2982,
+      "tx_valid_count": 2376,
+      "rx_decision_mode": 1,
+      "rx_decision_mode_name": "neg-i",
+      "start_offset": 60
+    },
+    {
+      "path": "assets/lab126_runtime_bridge_txrx_self_timed_neg_i_start_offset_63_live_20260623.json",
+      "received_bits": 281,
+      "total_errors": 152,
+      "payload_errors": 140,
+      "ber_total": 0.5409252669039146,
+      "ber_payload": 0.546875,
+      "rx_valid_count": 2982,
+      "tx_valid_count": 2376,
+      "rx_decision_mode": 1,
+      "rx_decision_mode_name": "neg-i",
+      "start_offset": 63
+    },
+    {
+      "path": "assets/lab126_runtime_bridge_txrx_self_timed_neg_i_start_offset_57_live_20260623.json",
+      "received_bits": 281,
+      "total_errors": 155,
+      "payload_errors": 145,
+      "ber_total": 0.5516014234875445,
+      "ber_payload": 0.56640625,
+      "rx_valid_count": 2982,
+      "tx_valid_count": 2376,
+      "rx_decision_mode": 1,
+      "rx_decision_mode_name": "neg-i",
+      "start_offset": 57
+    }
+  ],
+  "conclusion": "With the exploratory `neg-i` decision mode enabled, the self-timed bridge_txrx_mux path still reaches a full frame at every tested start_offset, but BER remains highly session-sensitive."
+}

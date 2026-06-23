@@ -1,0 +1,76 @@
+{
+  "generated_from": "lab126 self-timed decision-axis mode sweep",
+  "best": {
+    "path": "assets/lab126_runtime_bridge_txrx_self_timed_mode_neg_i_live_20260623.json",
+    "received_bits": 281,
+    "total_errors": 122,
+    "payload_errors": 116,
+    "ber_total": 0.43416370106761565,
+    "ber_payload": 0.453125,
+    "rx_valid_count": 2982,
+    "tx_valid_count": 2376,
+    "rx_decision_mode": 1,
+    "rx_decision_mode_name": "neg-i",
+    "start_offset": 60,
+    "mode_key": "neg_i"
+  },
+  "results": [
+    {
+      "path": "assets/lab126_runtime_bridge_txrx_self_timed_mode_neg_i_live_20260623.json",
+      "received_bits": 281,
+      "total_errors": 122,
+      "payload_errors": 116,
+      "ber_total": 0.43416370106761565,
+      "ber_payload": 0.453125,
+      "rx_valid_count": 2982,
+      "tx_valid_count": 2376,
+      "rx_decision_mode": 1,
+      "rx_decision_mode_name": "neg-i",
+      "start_offset": 60,
+      "mode_key": "neg_i"
+    },
+    {
+      "path": "assets/lab126_runtime_bridge_txrx_self_timed_mode_q_live_20260623.json",
+      "received_bits": 281,
+      "total_errors": 131,
+      "payload_errors": 117,
+      "ber_total": 0.46619217081850534,
+      "ber_payload": 0.45703125,
+      "rx_valid_count": 2982,
+      "tx_valid_count": 2376,
+      "rx_decision_mode": 2,
+      "rx_decision_mode_name": "q",
+      "start_offset": 60,
+      "mode_key": "q"
+    },
+    {
+      "path": "assets/lab126_runtime_bridge_txrx_self_timed_mode_i_live_20260623.json",
+      "received_bits": 281,
+      "total_errors": 131,
+      "payload_errors": 118,
+      "ber_total": 0.46619217081850534,
+      "ber_payload": 0.4609375,
+      "rx_valid_count": 2982,
+      "tx_valid_count": 2376,
+      "rx_decision_mode": 0,
+      "rx_decision_mode_name": "i",
+      "start_offset": 60,
+      "mode_key": "i"
+    },
+    {
+      "path": "assets/lab126_runtime_bridge_txrx_self_timed_mode_neg_q_live_20260623.json",
+      "received_bits": 281,
+      "total_errors": 147,
+      "payload_errors": 139,
+      "ber_total": 0.5231316725978647,
+      "ber_payload": 0.54296875,
+      "rx_valid_count": 2982,
+      "tx_valid_count": 2376,
+      "rx_decision_mode": 3,
+      "rx_decision_mode_name": "neg-q",
+      "start_offset": 60,
+      "mode_key": "neg_q"
+    }
+  ],
+  "conclusion": "Exploratory in-session sweep suggests `neg-i` is the best of the four simple decision-axis choices on the self-timed bridge_txrx_mux path."
+}

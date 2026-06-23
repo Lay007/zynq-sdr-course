@@ -285,6 +285,7 @@ def main() -> None:
             frame_bit_count=args.frame_bit_count,
             preamble_count=args.preamble_count,
             start_offset=args.start_offset,
+            rx_decision_mode=0,
             start_hold_ms=args.start_hold_ms,
             poll_limit=args.poll_limit,
             poll_delay_ms=args.poll_delay_ms,

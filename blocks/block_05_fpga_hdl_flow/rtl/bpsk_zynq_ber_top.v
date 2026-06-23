@@ -31,10 +31,15 @@ module bpsk_zynq_ber_top #(
     input  wire                     rx_valid,
     input  wire signed [W-1:0]      rx_i,
     input  wire signed [W-1:0]      rx_q,
+    input  wire [1:0]               rx_decision_mode,
     output reg                      timed_out,
     output wire [INDEX_W-1:0]       received_bits,
     output wire [INDEX_W-1:0]       total_errors,
-    output wire [INDEX_W-1:0]       payload_errors
+    output wire [INDEX_W-1:0]       payload_errors,
+    output wire                     debug_recovered_valid,
+    output wire                     debug_recovered_bit,
+    output wire                     debug_symbol_valid,
+    output wire signed [W-1:0]      debug_symbol_i
 );
 
 localparam integer RX_IDLE_TIMEOUT_W = (RX_IDLE_TIMEOUT_CYCLES <= 1) ? 1 : $clog2(RX_IDLE_TIMEOUT_CYCLES);
@@ -104,10 +109,13 @@ bpsk_rx_bit_recovery_chain #(
     .in_valid(rx_valid),
     .in_i(rx_i),
     .in_q(rx_q),
+    .decision_mode(rx_decision_mode),
     .start_offset(start_offset),
     .symbol_count(frame_bit_count),
     .out_valid(recovered_valid),
-    .out_bit(recovered_bit)
+    .out_bit(recovered_bit),
+    .debug_symbol_valid(debug_symbol_valid),
+    .debug_symbol_i(debug_symbol_i)
 );
 
 bpsk_ber_counter #(
@@ -171,5 +179,8 @@ always @(posedge clk) begin
         end
     end
 end
+
+assign debug_recovered_valid = recovered_valid;
+assign debug_recovered_bit = recovered_bit;
 
 endmodule
