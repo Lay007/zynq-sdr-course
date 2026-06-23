@@ -276,13 +276,34 @@ def build_summary(payload: dict[str, Any]) -> dict[str, Any]:
     host_tx_rx_valid = result_value(host_tx, "rx_valid_count")
     host_tx_tx_valid = result_value(host_tx, "tx_valid_count")
     host_tx_received = result_value(host_tx, "received_bits")
+    idle_adc_input_debug = ((idle.get("result") or {}).get("adc_input_debug")) if idle.get("ok") else None
+    host_tx_adc_input_debug = ((host_tx.get("result") or {}).get("adc_input_debug")) if host_tx.get("ok") else None
     idle_capture_debug = ((idle.get("result") or {}).get("capture_debug")) if idle.get("ok") else None
     host_tx_capture_debug = ((host_tx.get("result") or {}).get("capture_debug")) if host_tx.get("ok") else None
+    adc_input_clk_counter_advanced: bool | None = None
+
+    if isinstance(idle_adc_input_debug, dict) and isinstance(host_tx_adc_input_debug, dict):
+        idle_counter = idle_adc_input_debug.get("adc_input_clk_counter_lsb16")
+        host_counter = host_tx_adc_input_debug.get("adc_input_clk_counter_lsb16")
+        if isinstance(idle_counter, int) and isinstance(host_counter, int):
+            adc_input_clk_counter_advanced = ((host_counter - idle_counter) & 0xFFFF) != 0
 
     if host_tx_rx_valid is not None and host_tx_rx_valid > 0:
         conclusion = (
             "`bridge_rx_only` sees non-zero RX-valid traffic during host-driven stock TX, "
             "so the runtime overlay can still observe the RX sample tap in this mode."
+        )
+    elif (
+        isinstance(host_tx_adc_input_debug, dict)
+        and bool(host_tx_adc_input_debug.get("adc_input_valid_seen_any"))
+        and not (
+            isinstance(host_tx_capture_debug, dict)
+            and bool(host_tx_capture_debug.get("capture_valid_seen_any"))
+        )
+    ):
+        conclusion = (
+            "The runtime overlay still sees raw `axi_ad9361` RX-valid activity before "
+            "`util_ad9361_adc_fifo`, but that activity never reaches the FIFO output tap."
         )
     elif (
         isinstance(host_tx_capture_debug, dict)
@@ -297,6 +318,29 @@ def build_summary(payload: dict[str, Any]) -> dict[str, Any]:
         conclusion = (
             "`bridge_rx_only` already sees RX-valid traffic without external host TX, "
             "so the RX-valid path itself is alive after runtime reload."
+        )
+    elif (
+        isinstance(host_tx_adc_input_debug, dict)
+        and bool(host_tx_adc_input_debug.get("adc_input_reset_asserted_current"))
+    ):
+        conclusion = (
+            "The raw `axi_ad9361` RX input-side debug still reports reset asserted after "
+            "runtime reload, so the blocker sits before the FIFO output domain."
+        )
+    elif adc_input_clk_counter_advanced is False:
+        conclusion = (
+            "The raw `axi_ad9361` RX input-side heartbeat did not advance between the idle "
+            "and host-TX probes, pointing to an input-clock or persistent-reset problem."
+        )
+    elif (
+        adc_input_clk_counter_advanced
+        and isinstance(host_tx_adc_input_debug, dict)
+        and not bool(host_tx_adc_input_debug.get("adc_input_valid_seen_any"))
+    ):
+        conclusion = (
+            "The raw `axi_ad9361` RX input-side heartbeat is alive after runtime reload, "
+            "but it never asserts `adc_valid_i0`, so the starvation starts upstream of "
+            "`util_ad9361_adc_fifo`."
         )
     elif (
         isinstance(host_tx_capture_debug, dict)
@@ -317,6 +361,9 @@ def build_summary(payload: dict[str, Any]) -> dict[str, Any]:
         "host_tx_rx_valid_count": host_tx_rx_valid,
         "host_tx_tx_valid_count": host_tx_tx_valid,
         "host_tx_received_bits": host_tx_received,
+        "idle_adc_input_debug": idle_adc_input_debug,
+        "host_tx_adc_input_debug": host_tx_adc_input_debug,
+        "adc_input_clk_counter_advanced": adc_input_clk_counter_advanced,
         "idle_capture_debug": idle_capture_debug,
         "host_tx_capture_debug": host_tx_capture_debug,
         "conclusion": conclusion,

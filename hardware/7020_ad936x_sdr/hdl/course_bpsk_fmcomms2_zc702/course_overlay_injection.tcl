@@ -86,6 +86,12 @@ proc course_bpsk_apply_overlay {overlay_mode} {
   set bpsk_bridge_bd [create_bd_cell -type module -reference bpsk_zynq_ber_bridge_bd bpsk_bridge_bd]
   ad_connect sys_cpu_clk bpsk_bridge_bd/ctrl_clk
   ad_connect sys_cpu_resetn bpsk_bridge_bd/ctrl_resetn
+  ad_connect axi_ad9361/l_clk bpsk_bridge_bd/adc_input_clk
+  ad_connect axi_ad9361/rst bpsk_bridge_bd/adc_input_reset
+  ad_connect axi_ad9361/adc_enable_i0 bpsk_bridge_bd/adc_input_enable
+  ad_connect axi_ad9361/adc_data_i0 bpsk_bridge_bd/adc_input_i
+  ad_connect axi_ad9361/adc_data_q0 bpsk_bridge_bd/adc_input_q
+  ad_connect axi_ad9361/adc_valid_i0 bpsk_bridge_bd/adc_input_valid
   ad_connect util_ad9361_divclk/clk_out bpsk_bridge_bd/sample_clk
   ad_connect util_ad9361_divclk_reset/peripheral_aresetn bpsk_bridge_bd/sample_resetn
 
@@ -97,7 +103,7 @@ proc course_bpsk_apply_overlay {overlay_mode} {
   ad_connect bpsk_bridge_bd/gp_status axi_gpreg_bpsk/up_gp_in_0
   ad_connect bpsk_bridge_bd/gp_received_bits axi_gpreg_bpsk/up_gp_in_1
   ad_connect bpsk_bridge_bd/gp_total_errors axi_gpreg_bpsk/up_gp_in_2
-  ad_connect bpsk_bridge_bd/gp_payload_errors axi_gpreg_bpsk/up_gp_in_3
+  ad_connect bpsk_bridge_bd/gp_adc_input_debug axi_gpreg_bpsk/up_gp_in_3
   ad_connect bpsk_bridge_bd/gp_signature axi_gpreg_bpsk/up_gp_in_4
   ad_connect bpsk_bridge_bd/gp_tx_valid_count axi_gpreg_bpsk/up_gp_in_5
   ad_connect bpsk_bridge_bd/gp_rx_valid_count axi_gpreg_bpsk/up_gp_in_6

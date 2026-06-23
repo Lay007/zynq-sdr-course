@@ -19,6 +19,12 @@ module bpsk_zynq_ber_gpreg_bridge #(
 ) (
     input  wire                     ctrl_clk,
     input  wire                     ctrl_resetn,
+    input  wire                     adc_input_clk,
+    input  wire                     adc_input_reset,
+    input  wire                     adc_input_enable,
+    input  wire                     adc_input_valid,
+    input  wire signed [W-1:0]      adc_input_i,
+    input  wire signed [W-1:0]      adc_input_q,
     input  wire                     sample_clk,
     input  wire                     sample_resetn,
     input  wire [31:0]              gp_ctrl,
@@ -28,10 +34,10 @@ module bpsk_zynq_ber_gpreg_bridge #(
     output wire [31:0]              gp_status,
     output wire [31:0]              gp_received_bits,
     output wire [31:0]              gp_total_errors,
-    output wire [31:0]              gp_payload_errors,
     output wire [31:0]              gp_signature,
     output wire [31:0]              gp_tx_valid_count,
     output wire [31:0]              gp_rx_valid_count,
+    output wire [31:0]              gp_adc_input_debug,
     output wire [31:0]              gp_capture_debug,
     output wire                     tx_path_active,
     output wire                     burst_out_valid,
@@ -74,6 +80,11 @@ reg [INDEX_W-1:0] total_errors_sample = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] payload_errors_sample = {INDEX_W{1'b0}};
 reg [31:0] tx_valid_count_sample = 32'd0;
 reg [31:0] rx_valid_count_sample = 32'd0;
+reg adc_input_valid_seen_any_sample = 1'b0;
+reg adc_input_nonzero_seen_any_sample = 1'b0;
+reg adc_input_enable_seen_any_sample = 1'b0;
+reg [14:0] adc_input_valid_count_lsb_sample = 15'd0;
+reg [15:0] adc_input_clk_counter_sample = 16'd0;
 reg capture_valid_seen_any_sample = 1'b0;
 reg capture_nonzero_seen_any_sample = 1'b0;
 reg capture_valid_while_active_seen_any_sample = 1'b0;
@@ -84,19 +95,24 @@ reg [13:0] capture_peak_abs_sample = 14'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] status_sync_ctrl = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] received_meta_ctrl = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] received_sync_ctrl = 32'd0;
-(* ASYNC_REG = "TRUE" *) reg [31:0] total_meta_ctrl = 32'd0;
-(* ASYNC_REG = "TRUE" *) reg [31:0] total_sync_ctrl = 32'd0;
-(* ASYNC_REG = "TRUE" *) reg [31:0] payload_meta_ctrl = 32'd0;
-(* ASYNC_REG = "TRUE" *) reg [31:0] payload_sync_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] error_counts_meta_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] error_counts_sync_ctrl = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] tx_valid_meta_ctrl = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] tx_valid_sync_ctrl = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] rx_valid_meta_ctrl = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] rx_valid_sync_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [14:0] adc_input_debug_meta_ctrl = 15'd0;
+(* ASYNC_REG = "TRUE" *) reg [14:0] adc_input_debug_sync_ctrl = 15'd0;
+(* ASYNC_REG = "TRUE" *) reg [15:0] adc_input_counter_meta_ctrl = 16'd0;
+(* ASYNC_REG = "TRUE" *) reg [15:0] adc_input_counter_sync_ctrl = 16'd0;
+(* ASYNC_REG = "TRUE" *) reg adc_input_reset_meta_ctrl = 1'b0;
+(* ASYNC_REG = "TRUE" *) reg adc_input_reset_sync_ctrl = 1'b0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] capture_debug_meta_ctrl = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] capture_debug_sync_ctrl = 32'd0;
 
 wire start_edge = control_sync[0] && !control_sync_d[0];
 wire clear_done_edge = control_sync[1] && !control_sync_d[1];
+wire adc_input_sample_nonzero = (adc_input_i != {W{1'b0}}) || (adc_input_q != {W{1'b0}});
 wire capture_sample_nonzero = (capture_in_i != {W{1'b0}}) || (capture_in_q != {W{1'b0}});
 
 function [W:0] abs_wide;
@@ -115,6 +131,9 @@ wire [W:0] capture_abs_q = abs_wide(capture_in_q);
 wire [W:0] capture_abs_max = (capture_abs_i >= capture_abs_q) ? capture_abs_i : capture_abs_q;
 wire [13:0] capture_peak_abs_saturated =
     (capture_abs_max > 17'd16383) ? 14'h3FFF : capture_abs_max[13:0];
+wire [W:0] adc_input_abs_i = abs_wide(adc_input_i);
+wire [W:0] adc_input_abs_q = abs_wide(adc_input_q);
+wire [W:0] adc_input_abs_max = (adc_input_abs_i >= adc_input_abs_q) ? adc_input_abs_i : adc_input_abs_q;
 
 bpsk_zynq_ber_top #(
     .W(W),
@@ -145,6 +164,30 @@ bpsk_zynq_ber_top #(
     .total_errors(total_errors),
     .payload_errors(payload_errors)
 );
+
+always @(posedge adc_input_clk) begin
+    if (adc_input_reset) begin
+        adc_input_valid_seen_any_sample <= 1'b0;
+        adc_input_nonzero_seen_any_sample <= 1'b0;
+        adc_input_enable_seen_any_sample <= 1'b0;
+        adc_input_valid_count_lsb_sample <= 15'd0;
+        adc_input_clk_counter_sample <= 16'd0;
+    end else begin
+        adc_input_clk_counter_sample <= adc_input_clk_counter_sample + 1'b1;
+        if (adc_input_enable) begin
+            adc_input_enable_seen_any_sample <= 1'b1;
+        end
+        if (adc_input_valid) begin
+            adc_input_valid_seen_any_sample <= 1'b1;
+            if (adc_input_valid_count_lsb_sample != 15'h7FFF) begin
+                adc_input_valid_count_lsb_sample <= adc_input_valid_count_lsb_sample + 1'b1;
+            end
+            if (adc_input_sample_nonzero) begin
+                adc_input_nonzero_seen_any_sample <= 1'b1;
+            end
+        end
+    end
+end
 
 always @(posedge sample_clk) begin
     if (!sample_resetn) begin
@@ -254,23 +297,45 @@ always @(posedge ctrl_clk) begin
         status_sync_ctrl <= 32'd0;
         received_meta_ctrl <= 32'd0;
         received_sync_ctrl <= 32'd0;
-        total_meta_ctrl <= 32'd0;
-        total_sync_ctrl <= 32'd0;
-        payload_meta_ctrl <= 32'd0;
-        payload_sync_ctrl <= 32'd0;
+        error_counts_meta_ctrl <= 32'd0;
+        error_counts_sync_ctrl <= 32'd0;
+        tx_valid_meta_ctrl <= 32'd0;
+        tx_valid_sync_ctrl <= 32'd0;
+        rx_valid_meta_ctrl <= 32'd0;
+        rx_valid_sync_ctrl <= 32'd0;
+        adc_input_debug_meta_ctrl <= 15'd0;
+        adc_input_debug_sync_ctrl <= 15'd0;
+        adc_input_counter_meta_ctrl <= 16'd0;
+        adc_input_counter_sync_ctrl <= 16'd0;
+        adc_input_reset_meta_ctrl <= 1'b0;
+        adc_input_reset_sync_ctrl <= 1'b0;
+        capture_debug_meta_ctrl <= 32'd0;
+        capture_debug_sync_ctrl <= 32'd0;
     end else begin
         status_meta_ctrl <= {16'd0, SPS[7:0], 4'd0, timeout_sticky_sample, done_sticky_sample, core_busy, control_sync[0]};
         status_sync_ctrl <= status_meta_ctrl;
         received_meta_ctrl <= {{(32-INDEX_W){1'b0}}, received_bits_sample};
         received_sync_ctrl <= received_meta_ctrl;
-        total_meta_ctrl <= {{(32-INDEX_W){1'b0}}, total_errors_sample};
-        total_sync_ctrl <= total_meta_ctrl;
-        payload_meta_ctrl <= {{(32-INDEX_W){1'b0}}, payload_errors_sample};
-        payload_sync_ctrl <= payload_meta_ctrl;
+        error_counts_meta_ctrl <= {
+            {{(16-INDEX_W){1'b0}}, total_errors_sample},
+            {{(16-INDEX_W){1'b0}}, payload_errors_sample}
+        };
+        error_counts_sync_ctrl <= error_counts_meta_ctrl;
         tx_valid_meta_ctrl <= tx_valid_count_sample;
         tx_valid_sync_ctrl <= tx_valid_meta_ctrl;
         rx_valid_meta_ctrl <= rx_valid_count_sample;
         rx_valid_sync_ctrl <= rx_valid_meta_ctrl;
+        adc_input_debug_meta_ctrl <= {
+            adc_input_valid_seen_any_sample,
+            adc_input_nonzero_seen_any_sample,
+            adc_input_enable_seen_any_sample,
+            adc_input_valid_count_lsb_sample[11:0]
+        };
+        adc_input_debug_sync_ctrl <= adc_input_debug_meta_ctrl;
+        adc_input_counter_meta_ctrl <= adc_input_clk_counter_sample;
+        adc_input_counter_sync_ctrl <= adc_input_counter_meta_ctrl;
+        adc_input_reset_meta_ctrl <= adc_input_reset;
+        adc_input_reset_sync_ctrl <= adc_input_reset_meta_ctrl;
         capture_debug_meta_ctrl <= {
             capture_valid_seen_any_sample,
             capture_nonzero_seen_any_sample,
@@ -284,11 +349,18 @@ end
 
 assign gp_status = status_sync_ctrl;
 assign gp_received_bits = received_sync_ctrl;
-assign gp_total_errors = total_sync_ctrl;
-assign gp_payload_errors = payload_sync_ctrl;
+assign gp_total_errors = error_counts_sync_ctrl;
 assign gp_signature = SIGNATURE;
 assign gp_tx_valid_count = tx_valid_sync_ctrl;
 assign gp_rx_valid_count = rx_valid_sync_ctrl;
+assign gp_adc_input_debug = {
+    adc_input_debug_sync_ctrl[14],
+    adc_input_debug_sync_ctrl[13],
+    adc_input_debug_sync_ctrl[12],
+    adc_input_reset_sync_ctrl,
+    adc_input_counter_sync_ctrl,
+    adc_input_debug_sync_ctrl[11:0]
+};
 assign gp_capture_debug = capture_debug_sync_ctrl;
 assign tx_path_active = tx_path_active_sample;
 

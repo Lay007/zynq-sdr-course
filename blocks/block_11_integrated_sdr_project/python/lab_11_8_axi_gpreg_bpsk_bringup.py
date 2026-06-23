@@ -41,9 +41,9 @@ class RegisterMap:
     gp_frame_bit_count_out: int = 0x444
     gp_received_bits_in: int = 0x448
     gp_preamble_count_out: int = 0x484
-    gp_total_errors_in: int = 0x488
+    gp_error_counts_in: int = 0x488
     gp_start_offset_out: int = 0x4C4
-    gp_payload_errors_in: int = 0x4C8
+    gp_adc_input_debug_in: int = 0x4C8
     gp_signature_in: int = 0x508
     gp_tx_valid_count_in: int = 0x548
     gp_rx_valid_count_in: int = 0x588
@@ -115,6 +115,12 @@ class BringupResult:
     payload_errors: int
     tx_valid_count: int
     rx_valid_count: int
+    adc_input_debug_word: int | None
+    adc_input_debug: dict[str, int | bool] | None
+    adc_input_debug_error: dict[str, str] | None
+    adc_input_state_word: int | None
+    adc_input_state: dict[str, int | bool] | None
+    adc_input_state_error: dict[str, str] | None
     capture_debug_word: int | None
     capture_debug: dict[str, int | bool] | None
     capture_debug_error: dict[str, str] | None
@@ -134,9 +140,21 @@ def decode_capture_debug(word: int) -> dict[str, int | bool]:
     }
 
 
-def read_optional_capture_debug(io: RegisterIo) -> tuple[int | None, dict[str, str] | None]:
+def decode_adc_input_debug(word: int) -> dict[str, int | bool]:
+    word &= 0xFFFF_FFFF
+    return {
+        "adc_input_valid_seen_any": bool((word >> 31) & 0x1),
+        "adc_input_nonzero_seen_any": bool((word >> 30) & 0x1),
+        "adc_input_enable_seen_any": bool((word >> 29) & 0x1),
+        "adc_input_reset_asserted_current": bool((word >> 28) & 0x1),
+        "adc_input_clk_counter_lsb16": (word >> 12) & 0xFFFF,
+        "adc_input_valid_count_lsb12": word & 0x0FFF,
+    }
+
+
+def read_optional_register(io: RegisterIo, offset: int) -> tuple[int | None, dict[str, str] | None]:
     try:
-        return io.read32(REGS.gp_capture_debug_in), None
+        return io.read32(offset), None
     except Exception as exc:
         return None, {
             "error_type": type(exc).__name__,
@@ -154,9 +172,9 @@ def register_snapshot(io: RegisterIo, base_addr: int) -> dict[str, dict[str, int
         ("GP_FRAME_BIT_COUNT_OUT", REGS.gp_frame_bit_count_out),
         ("GP_RECEIVED_BITS_IN", REGS.gp_received_bits_in),
         ("GP_PREAMBLE_COUNT_OUT", REGS.gp_preamble_count_out),
-        ("GP_TOTAL_ERRORS_IN", REGS.gp_total_errors_in),
+        ("GP_ERROR_COUNTS_IN", REGS.gp_error_counts_in),
         ("GP_START_OFFSET_OUT", REGS.gp_start_offset_out),
-        ("GP_PAYLOAD_ERRORS_IN", REGS.gp_payload_errors_in),
+        ("GP_ADC_INPUT_DEBUG_IN", REGS.gp_adc_input_debug_in),
         ("GP_SIGNATURE_IN", REGS.gp_signature_in),
         ("GP_TX_VALID_COUNT_IN", REGS.gp_tx_valid_count_in),
         ("GP_RX_VALID_COUNT_IN", REGS.gp_rx_valid_count_in),
@@ -168,17 +186,19 @@ def register_snapshot(io: RegisterIo, base_addr: int) -> dict[str, dict[str, int
             "address": f"0x{base_addr + offset:08X}",
             "value": io.read32(offset),
         }
-    capture_debug_word, capture_debug_error = read_optional_capture_debug(io)
-    capture_entry: dict[str, int | str] = {
-        "offset": REGS.gp_capture_debug_in,
-        "address": f"0x{base_addr + REGS.gp_capture_debug_in:08X}",
-    }
-    if capture_debug_word is not None:
-        capture_entry["value"] = capture_debug_word
-    if capture_debug_error is not None:
-        capture_entry["error_type"] = capture_debug_error["error_type"]
-        capture_entry["error"] = capture_debug_error["error"]
-    snapshot["GP_CAPTURE_DEBUG_IN"] = capture_entry
+    optional_items = (("GP_CAPTURE_DEBUG_IN", REGS.gp_capture_debug_in),)
+    for name, offset in optional_items:
+        value, error = read_optional_register(io, offset)
+        entry: dict[str, int | str] = {
+            "offset": offset,
+            "address": f"0x{base_addr + offset:08X}",
+        }
+        if value is not None:
+            entry["value"] = value
+        if error is not None:
+            entry["error_type"] = error["error_type"]
+            entry["error"] = error["error"]
+        snapshot[name] = entry
     return snapshot
 
 
@@ -208,9 +228,9 @@ class MockRegisterIo:
             REGS.gp_frame_bit_count_out: 0,
             REGS.gp_received_bits_in: 0,
             REGS.gp_preamble_count_out: 0,
-            REGS.gp_total_errors_in: 0,
+            REGS.gp_error_counts_in: 0,
             REGS.gp_start_offset_out: 0,
-            REGS.gp_payload_errors_in: 0,
+            REGS.gp_adc_input_debug_in: 0,
             REGS.gp_signature_in: DEFAULT_EXPECTED_ID,
             REGS.gp_tx_valid_count_in: 0,
             REGS.gp_rx_valid_count_in: 0,
@@ -231,8 +251,9 @@ class MockRegisterIo:
         self._busy = False
         self._done = True
         self.regs[REGS.gp_received_bits_in] = self.regs[REGS.gp_frame_bit_count_out]
-        self.regs[REGS.gp_total_errors_in] = self._total_errors
-        self.regs[REGS.gp_payload_errors_in] = self._payload_errors
+        self.regs[REGS.gp_error_counts_in] = (
+            ((self._total_errors & 0xFFFF) << 16) | (self._payload_errors & 0xFFFF)
+        )
 
     def read32(self, offset: int) -> int:
         if offset == REGS.gp_status_in and self._busy:
@@ -257,8 +278,7 @@ class MockRegisterIo:
             self._done = False
             self._busy_reads_remaining = self._busy_reads_before_done
             self.regs[REGS.gp_received_bits_in] = 0
-            self.regs[REGS.gp_total_errors_in] = 0
-            self.regs[REGS.gp_payload_errors_in] = 0
+            self.regs[REGS.gp_error_counts_in] = 0
             self.regs[REGS.gp_tx_valid_count_in] = self.regs[REGS.gp_frame_bit_count_out] * 8
             self.regs[REGS.gp_rx_valid_count_in] = self.regs[REGS.gp_frame_bit_count_out] * 8
         if (value & REGS.clear_done_mask) and not (previous & REGS.clear_done_mask):
@@ -344,11 +364,18 @@ def run_bringup(io: RegisterIo, cfg: BringupConfig) -> BringupResult:
         )
 
     received_bits = io.read32(REGS.gp_received_bits_in)
-    total_errors = io.read32(REGS.gp_total_errors_in)
-    payload_errors = io.read32(REGS.gp_payload_errors_in)
+    error_counts_word = io.read32(REGS.gp_error_counts_in)
+    total_errors = (error_counts_word >> 16) & 0xFFFF
+    payload_errors = error_counts_word & 0xFFFF
     tx_valid_count = io.read32(REGS.gp_tx_valid_count_in)
     rx_valid_count = io.read32(REGS.gp_rx_valid_count_in)
-    capture_debug_word, capture_debug_error = read_optional_capture_debug(io)
+    adc_input_debug_word, adc_input_debug_error = read_optional_register(io, REGS.gp_adc_input_debug_in)
+    capture_debug_word, capture_debug_error = read_optional_register(io, REGS.gp_capture_debug_in)
+    adc_input_debug = (
+        decode_adc_input_debug(adc_input_debug_word)
+        if adc_input_debug_word is not None
+        else None
+    )
     capture_debug = (
         decode_capture_debug(capture_debug_word)
         if capture_debug_word is not None
@@ -395,6 +422,12 @@ def run_bringup(io: RegisterIo, cfg: BringupConfig) -> BringupResult:
         payload_errors=payload_errors,
         tx_valid_count=tx_valid_count,
         rx_valid_count=rx_valid_count,
+        adc_input_debug_word=adc_input_debug_word,
+        adc_input_debug=adc_input_debug,
+        adc_input_debug_error=adc_input_debug_error,
+        adc_input_state_word=None,
+        adc_input_state=None,
+        adc_input_state_error=None,
         capture_debug_word=capture_debug_word,
         capture_debug=capture_debug,
         capture_debug_error=capture_debug_error,
