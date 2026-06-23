@@ -106,6 +106,19 @@ Base address: `0x79040000`
 | `0x4C4` | GPREG3 output: `START_OFFSET` |
 | `0x4C8` | GPREG3 input: `PAYLOAD_ERRORS` |
 | `0x508` | GPREG4 input: bridge signature word `0x4250534B` |
+| `0x548` | GPREG5 input: `TX_VALID_COUNT` observed by the bridge sample clock |
+| `0x588` | GPREG6 input: `RX_VALID_COUNT` observed by the bridge sample clock |
+| `0x5C8` | GPREG7 input: packed `CAPTURE_DEBUG` word from the raw RX tap |
+
+`CAPTURE_DEBUG` is intentionally compact so it survives the same control-plane
+path as the BER counters:
+
+- bit `31`: at least one raw `capture_in_valid` pulse was seen;
+- bit `30`: at least one non-zero raw `RX1 I/Q` sample was seen;
+- bit `29`: a raw `capture_in_valid` pulse was seen while the BER core was
+  active;
+- bits `28:14`: low 15 bits of the raw `capture_in_valid` pulse count;
+- bits `13:0`: peak absolute `RX1` sample magnitude in unsigned Q14 units.
 
 ## Build prerequisites
 
@@ -148,6 +161,7 @@ That guidance is based on the live `2026-06-21` to `2026-06-23` probes:
 - reloading the new PL image through `fpga_manager` while Linux was already running left `gpreg` readable again, but standalone `iio_readdev` capture no longer refilled cleanly;
 - a stricter stock-vs-runtime comparison on `2026-06-23` then proved that a fresh stock shell still supports both direct host `libiio Buffer.refill()` capture and short `iio_readdev` capture before any reload;
 - that same comparison also proved that the runtime hot load breaks both host RX capture paths afterwards while `axi_gpreg` still answers and `rx_valid_count` stays at zero;
+- the refined `bridge_rx_only` runtime witness on `2026-06-23` then added a raw RX-tap proof: even during host-driven stock TX, `gp_capture_debug` stayed `0`, so the bridge saw no `capture_in_valid` pulses, no non-zero `RX1` samples, and no measurable RX peak at all after the hot reload;
 - manually booting Linux after a real U-Boot `fpga load` of the course bitstream showed that deleting the DAC DMA path from the PL shell causes a kernel panic in `axi_dmac_probe()`;
 - after restoring the DAC DMA shell and the stale Linux DT fixups, the next remaining live blocker was AD9361 calibration timeout under the TX-override bitstream itself;
 - the current debug step therefore keeps the live DAC FIFO path untouched and uses either `gpreg_only` or the new intermediate `bridge_rx_only` mode until AD9361 boot is stable again;

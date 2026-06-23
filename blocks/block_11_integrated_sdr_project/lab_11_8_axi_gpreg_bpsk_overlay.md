@@ -43,6 +43,7 @@ The earlier burst-enabled TX experiments remain useful as historical evidence, b
 | `blocks/block_11_integrated_sdr_project/python/lab_11_8_axi_gpreg_bpsk_bringup.py` | programs the gpreg control words, launches one burst, polls `busy/done/timeout`, and reads BER counters |
 | `blocks/block_11_integrated_sdr_project/python/lab_11_12_runtime_fpga_manager_reload.py` | uploads a checked `.bit.bin` payload over SSH, hot-loads it through Linux `fpga_manager`, then re-probes `axi_gpreg` and the host-visible IIO context |
 | `blocks/block_11_integrated_sdr_project/python/lab_11_13_stock_vs_runtime_rx_compare.py` | proves on one live board run that stock-shell RX capture still works before reload, then repeats the same checks after runtime hot-load and records the breakage |
+| `blocks/block_11_integrated_sdr_project/python/lab_11_15_runtime_bridge_rx_host_tx_probe.py` | hot-loads the intermediate `bridge_rx_only` overlay, runs one idle gpreg witness, then repeats the same witness while stock host TX transmits the shared BPSK burst, now also decoding the optional raw RX-tap `CAPTURE_DEBUG` word |
 
 ## Register contract
 
@@ -61,6 +62,17 @@ Base address: `0x79040000`
 | `0x4C4` | GPREG3 output: `START_OFFSET` |
 | `0x4C8` | GPREG3 input: `PAYLOAD_ERRORS` |
 | `0x508` | GPREG4 input: bridge signature, expected `0x4250534B` |
+| `0x548` | GPREG5 input: bridge-side `TX_VALID_COUNT` |
+| `0x588` | GPREG6 input: bridge-side `RX_VALID_COUNT` |
+| `0x5C8` | GPREG7 input: packed raw RX-tap `CAPTURE_DEBUG` word |
+
+`CAPTURE_DEBUG` packs one compact runtime witness word:
+
+- bit `31`: any raw `capture_in_valid` pulse seen;
+- bit `30`: any non-zero raw `RX1 I/Q` sample seen;
+- bit `29`: any raw `capture_in_valid` pulse seen while the BER core was active;
+- bits `28:14`: low 15 bits of the raw `capture_in_valid` pulse count;
+- bits `13:0`: peak absolute raw `RX1` sample magnitude in unsigned Q14 units.
 
 ## Build prerequisites
 
@@ -191,6 +203,27 @@ Observed comparison facts on the board:
 - after that same reload, direct host `libiio` failed with `OSError: [Errno 110] host unreachable`, while `iio_readdev` again failed with refill timeout `Unknown error (110)`;
 - the same A/B report also showed `cf-ad9361-dds-core-lpc` changing from `sync_start_enable = arm` on the stock shell to `sync_start_enable = disarm` after the runtime reload.
 
+Intermediate `bridge_rx_only` runtime witness on `2026-06-23`:
+
+The next live runtime step moved from `bridge_txrx_mux` to the narrower
+intermediate `bridge_rx_only` overlay so the vendor TX path stayed untouched
+while the bridge reattached only to the RX sample tap.
+
+- helper: `blocks/block_11_integrated_sdr_project/python/lab_11_15_runtime_bridge_rx_host_tx_probe.py`;
+- earlier live witness report: `docs/assets/lab115_runtime_bridge_rx_host_tx_probe_live_20260623_bridge_rx_only_b.json`;
+- refined live witness report: `docs/assets/lab115_runtime_bridge_rx_host_tx_probe_live_20260623_bridge_rx_only_debug_a.json`.
+
+Observed `bridge_rx_only` facts on the board:
+
+- the rebuilt `bridge_rx_only` raw `system_top.bit` was converted to the correct word-swapped runtime payload and accepted by Linux `fpga_manager`;
+- after the hot load, the board still exposed `ad9361-phy`, `cf-ad9361-dds-core-lpc`, and `cf-ad9361-lpc`, with `axi_gpreg` again readable at `0x79040000`;
+- the first idle gpreg witness still returned `tx_valid_count = 2376`, `rx_valid_count = 0`, and `received_bits = 0`;
+- the helper then reconfigured stock AD9361 TX/RX for the shared deterministic BPSK burst at `915 MHz`, `3.84 MS/s`, `480 ksym/s`, `TX -50 dB`, `RX +35 dB`;
+- even with that live host-driven stock TX burst active, the second witness still returned `tx_valid_count = 2376`, `rx_valid_count = 0`, and `received_bits = 0`;
+- the refined `CAPTURE_DEBUG` witness then made the RX starvation more specific: both the idle probe and the host-TX probe read back `capture_debug_word = 0`, with `capture_valid_seen_any = false`, `capture_nonzero_seen_any = false`, `capture_valid_count_lsb15 = 0`, and `capture_peak_abs_max_q14 = 0`;
+- the refined report conclusion is therefore stronger than the original `...bridge_rx_only_b.json` witness: after the runtime hot load, the bridge does not merely miss BER frames, it sees no raw RX-tap activity at all;
+- the helper rebooted the board afterwards and confirmed a safe return to the stock shell baseline.
+
 Current checked-in safety baseline:
 
 - the stock-safe recovery path is still `hardware/7020_ad936x_sdr/stock_system_top_from_BOOT.bin`; under the old `uEnv.txt` `loadb`-on-`.bit.bin` fallback it was not proof of arbitrary external PL replacement, but under the new manual UART `fpga load` path it is now the only externally loaded boot-safe candidate demonstrated so far;
@@ -211,7 +244,8 @@ Interpretation:
 - the same gpreg control plane is now also readable after a direct raw clean boot of the `bridge_txrx_mux` candidate, with both ID and signature equal to `0x4250534B`, `tx_valid_count > 0`, and `rx_valid_count == 0`;
 - the corrected runtime `fpga_manager` reload now reproduces the same gpreg readback from the stock Linux shell without losing basic IIO device enumeration, so the blocker is no longer "the board cannot see the overlay at all";
 - the stock-versus-runtime comparison now proves that the stock Linux shell still supports both host RX capture paths before any reload, while the runtime hot load breaks both of them even though `axi_gpreg` stays visible;
-- the live blocker has therefore narrowed specifically to the runtime RX side: post-reload host capture cannot refill, while the bridge still sees no `rx_valid_count` activity and therefore no received bits;
+- the refined `bridge_rx_only` runtime witness now adds a stronger negative result: even when the stock vendor TX path transmits the shared BPSK burst successfully, the bridge still sees `rx_valid_count = 0` and the raw RX-tap `CAPTURE_DEBUG` word remains all zeros;
+- the live blocker has therefore narrowed specifically to the runtime RX side upstream of the BER counters: post-reload host capture cannot refill, while the bridge sees neither `rx_valid_count` activity nor any raw `capture_in_valid` / non-zero `RX1` sample evidence;
 - the normalized pure-Tcl `vendor_only` flow now eliminates the earlier `MIO14/15` drift, but it is still blocked by four read-only or disabled derived parameters: `sys_ps7.PCW_S_AXI_HP0_FREQMHZ`, `axi_ad9361_adc_dma.DMA_AXI_PROTOCOL_SRC`, `axi_ad9361_dac_dma.DMA_AXI_PROTOCOL_DEST`, and `axi_ad9361.SPEED_GRADE`; see `docs/assets/vendor_reference_vs_vendor_only_handoff_diff.json`;
 - the saved vendor `zc702.xpr` snapshot is still the preferred editable source witness once rebuilt through the MIO14/15 patch flow, but it is not yet a boot-safe RF baseline; see `docs/assets/vendor_reference_vs_vendor_xpr_mio14_15_patch_handoff_diff.json`;
 - the current checked-in HDL now also includes an intermediate `bridge_rx_only` reintegration mode that is validated in Vivado but not yet in clean boot;

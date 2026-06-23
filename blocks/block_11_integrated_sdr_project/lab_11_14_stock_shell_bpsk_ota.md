@@ -5,6 +5,19 @@
 Provide a practical RF fallback path while the integrated PL BPSK overlay is
 still blocked on the runtime RX refill / `rx_valid_count` problem.
 
+## Plain-language decoding
+
+- `stock-shell`: the board's normal vendor Linux + PL baseline after a regular
+  boot, before any course overlay is hot-loaded at runtime.
+- `OTA` (`over the air`): transmission through antennas in free space, not
+  through a coax loopback cable.
+- `BPSK` (`binary phase-shift keying`): a two-state digital modulation where
+  each symbol carries one bit.
+- `fallback`: a temporary but practical route used while the main PL modem path
+  is still blocked.
+- `evidence`: a saved manifest, metrics JSON, or plot that proves what really
+  happened on the bench.
+
 This lab does **not** use the course PL modem. Instead, it uses the clean stock
 AD9361 Linux shell and host-side `libiio` buffers to:
 
