@@ -69,6 +69,7 @@ class RtlWavBerMetrics:
     iq_path: str
     manifest_path: str | None
     reference_metrics_json: str | None
+    reference_config_json: str | None
     capture_sample_rate_hz: float
     analysis_sample_rate_hz: float
     capture_center_frequency_hz: float
@@ -94,6 +95,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--iq-path", type=Path, default=None)
     parser.add_argument("--out-dir", type=Path, default=DOC_ASSET_DIR)
     parser.add_argument("--reference-metrics-json", type=Path, default=None)
+    parser.add_argument("--reference-config-json", type=Path, default=None)
     parser.add_argument("--expected-signal-offset-hz", type=float, default=None)
     parser.add_argument("--skip-samples", type=int, default=0)
     parser.add_argument("--max-samples", type=int, default=4_000_000)
@@ -155,6 +157,10 @@ def load_reference_metrics(reference_path: Path) -> dict[str, Any]:
     return json.loads(reference_path.read_text(encoding="utf-8"))
 
 
+def load_reference_config(reference_path: Path) -> dict[str, Any]:
+    return json.loads(reference_path.read_text(encoding="utf-8"))
+
+
 def reference_metrics_path_from_manifest(manifest: dict[str, Any], manifest_path: Path | None) -> Path | None:
     analysis = manifest.get("analysis", {})
     for key in ("reference_metrics_json", "reference_metrics_path"):
@@ -164,11 +170,28 @@ def reference_metrics_path_from_manifest(manifest: dict[str, Any], manifest_path
     return None
 
 
-def build_waveform_config(manifest: dict[str, Any], args: argparse.Namespace, manifest_path: Path | None) -> tuple[WaveformConfig, Path | None]:
+def reference_config_path_from_manifest(manifest: dict[str, Any], manifest_path: Path | None) -> Path | None:
+    analysis = manifest.get("analysis", {})
+    for key in ("reference_config_json", "reference_config_path"):
+        candidate = resolve_path_hint(analysis.get(key), manifest_path=manifest_path)
+        if candidate is not None:
+            return candidate
+    return None
+
+
+def build_waveform_config(
+    manifest: dict[str, Any],
+    args: argparse.Namespace,
+    manifest_path: Path | None,
+) -> tuple[WaveformConfig, Path | None, Path | None]:
     reference_metrics_json = args.reference_metrics_json
     if reference_metrics_json is None:
         reference_metrics_json = reference_metrics_path_from_manifest(manifest, manifest_path)
-    if reference_metrics_json is None and DEFAULT_REFERENCE_METRICS_JSON.exists():
+
+    reference_config_json = args.reference_config_json
+    if reference_config_json is None:
+        reference_config_json = reference_config_path_from_manifest(manifest, manifest_path)
+    if reference_metrics_json is None and reference_config_json is None and DEFAULT_REFERENCE_METRICS_JSON.exists():
         reference_metrics_json = DEFAULT_REFERENCE_METRICS_JSON
 
     cfg_data: dict[str, Any] = {}
@@ -176,8 +199,31 @@ def build_waveform_config(manifest: dict[str, Any], args: argparse.Namespace, ma
         metrics = load_reference_metrics(reference_metrics_json)
         cfg_data = dict(metrics.get("waveform_config", {}))
 
+    if reference_config_json is not None and reference_config_json.exists():
+        raw_reference_cfg = load_reference_config(reference_config_json)
+        allowed_keys = set(WaveformConfig.__dataclass_fields__.keys())
+        aliases = {
+            "attenuation_db": "tx_attenuation_db",
+        }
+        filtered_reference_cfg: dict[str, Any] = {}
+        for key, value in raw_reference_cfg.items():
+            normalized_key = aliases.get(key, key)
+            if normalized_key in allowed_keys:
+                filtered_reference_cfg[normalized_key] = value
+        cfg_data.update(filtered_reference_cfg)
+
+    analysis = manifest.get("analysis", {})
     signal = manifest.get("signal", {})
     hardware = manifest.get("hardware", {})
+    reference_sample_rate_hz = analysis.get("reference_sample_rate_hz")
+    if reference_sample_rate_hz is None:
+        reference_sample_rate_hz = signal.get("reference_sample_rate_hz")
+    if reference_sample_rate_hz is None:
+        symbol_rate_hz_hint = signal.get("symbol_rate_hz")
+        sps_hint = signal.get("samples_per_symbol")
+        if symbol_rate_hz_hint is not None and sps_hint is not None:
+            reference_sample_rate_hz = int(symbol_rate_hz_hint) * int(sps_hint)
+
     cfg_data.update(
         {
             "center_frequency_hz": int(
@@ -186,7 +232,7 @@ def build_waveform_config(manifest: dict[str, Any], args: argparse.Namespace, ma
                     manifest.get("center_frequency_hz", cfg_data.get("center_frequency_hz", DEFAULT_CENTER_FREQUENCY_HZ)),
                 )
             ),
-            "sample_rate_hz": int(cfg_data.get("sample_rate_hz", DEFAULT_SAMPLE_RATE_HZ)),
+            "sample_rate_hz": int(reference_sample_rate_hz or cfg_data.get("sample_rate_hz", DEFAULT_SAMPLE_RATE_HZ)),
             "symbol_rate_hz": int(signal.get("symbol_rate_hz", cfg_data.get("symbol_rate_hz", DEFAULT_SYMBOL_RATE_HZ))),
             "samples_per_symbol": int(
                 signal.get("samples_per_symbol", cfg_data.get("samples_per_symbol", DEFAULT_SAMPLES_PER_SYMBOL))
@@ -226,7 +272,11 @@ def build_waveform_config(manifest: dict[str, Any], args: argparse.Namespace, ma
             f"Reference waveform config is inconsistent: sample_rate_hz={sample_rate_hz}, "
             f"symbol_rate_hz*samples_per_symbol={expected_rate_hz}."
         )
-    return WaveformConfig(**cfg_data), (reference_metrics_json.resolve() if reference_metrics_json is not None else None)
+    return (
+        WaveformConfig(**cfg_data),
+        (reference_metrics_json.resolve() if reference_metrics_json is not None else None),
+        (reference_config_json.resolve() if reference_config_json is not None else None),
+    )
 
 
 def get_expected_signal_offset_hz(manifest: dict[str, Any], args: argparse.Namespace) -> float:
@@ -561,7 +611,7 @@ def main() -> int:
     iq_path = resolve_iq_path(manifest, manifest_path, args.iq_path)
     dataset_id = str(manifest.get("dataset_id", iq_path.stem or "rtl_sdr_ota_bpsk_capture"))
     output_prefix_token = output_prefix(dataset_id, args.run_tag)
-    cfg, reference_metrics_json = build_waveform_config(manifest, args, manifest_path)
+    cfg, reference_metrics_json, reference_config_json = build_waveform_config(manifest, args, manifest_path)
     expected_signal_offset_hz = get_expected_signal_offset_hz(manifest, args)
     x, wav_info = read_wav_iq(
         iq_path,
@@ -610,6 +660,7 @@ def main() -> int:
         iq_path=str(iq_path),
         manifest_path=str(manifest_path) if manifest_path is not None else None,
         reference_metrics_json=str(reference_metrics_json) if reference_metrics_json is not None else None,
+        reference_config_json=str(reference_config_json) if reference_config_json is not None else None,
         capture_sample_rate_hz=wav_info.sample_rate_hz,
         analysis_sample_rate_hz=float(cfg.sample_rate_hz),
         capture_center_frequency_hz=float(manifest.get("center_frequency_hz", cfg.center_frequency_hz)),
@@ -659,6 +710,7 @@ def main() -> int:
     print(f"IQ file: {iq_path}")
     print(f"Dataset ID: {dataset_id}")
     print(f"Reference metrics JSON: {reference_metrics_json if reference_metrics_json is not None else 'none'}")
+    print(f"Reference config JSON: {reference_config_json if reference_config_json is not None else 'none'}")
     print(f"Capture sample rate: {wav_info.sample_rate_hz:.0f} Hz")
     print(f"Analysis sample rate: {cfg.sample_rate_hz} Hz")
     print(f"Expected signal offset: {expected_signal_offset_hz:.3f} Hz")
