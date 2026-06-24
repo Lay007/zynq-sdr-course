@@ -1,0 +1,19 @@
+{
+  "timestamp_utc": "2026-06-24T05:53:42.496513+00:00",
+  "dataset_id": "lab11_20_rtl_sdr_ota_bpsk_live_20260624a",
+  "rtl_device_index": 0,
+  "rtl_device_name": "Generic RTL2832U OEM",
+  "rtl_sample_rate_hz": 2400000,
+  "rtl_capture_duration_s": 1.6,
+  "rtl_tuner_gain_db10": 200,
+  "center_frequency_hz": 915000000,
+  "tx_attenuation_db": -45.0,
+  "zynq_waveform_sample_rate_hz": 3840000,
+  "bytes_captured": 7680000,
+  "wav_path": "G:\\Programs\\zynq-sdr-course\\tmp\\lab1121_rtl_sdr_monitor_live_20260624a.wav",
+  "manifest_path": "G:\\Programs\\zynq-sdr-course\\datasets\\lab11_20_rtl_sdr_ota_bpsk\\manifest_live_20260624a.yaml",
+  "raw_u8_mean": 127.39593385416667,
+  "raw_u8_std": 1.7563508801986947,
+  "raw_u8_min": 120,
+  "raw_u8_max": 136
+}

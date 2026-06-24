@@ -23,6 +23,7 @@ This folder is intended for reproducible processing scripts, measurement automat
 - `lab_11_13_stock_vs_runtime_rx_compare.py`: proves the stock-shell RX baseline first, then shows what breaks after the runtime overlay reload.
 - `lab_11_14_stock_shell_bpsk_ota.py`: uses the stock AD9361 Linux shell as a host-driven OTA BPSK fallback while the PL overlay RX path is still blocked.
 - `lab_11_20_read_rtl_wav_ota_bpsk_ber.py`: reads a stereo RTL-SDR/SDR++ WAV IQ capture, searches the residual carrier offset, resamples to the reference BPSK rate when needed, and reports BER/EVM against the deterministic Lab 11.14 waveform.
+- `lab_11_21_capture_rtl_sdr_monitor_wav.py`: keys the stock-shell AD9361 BPSK TX path on ZynqSDR, captures a fresh monitor WAV IQ through RTL-SDR, and writes a manifest that can be fed directly into `lab_11_20_read_rtl_wav_ota_bpsk_ber.py`.
 
 ## Quality criteria
 - files should be reproducible and understandable without oral explanation;

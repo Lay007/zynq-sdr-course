@@ -1,0 +1,35 @@
+dataset_id: lab11_20_rtl_sdr_ota_bpsk_live_20260624a
+title: RTL-SDR monitor capture for stock-shell ZynqSDR OTA BPSK
+description: Fresh local RTL-SDR stereo WAV IQ capture recorded while the stock-shell
+  AD9361 helper transmitted the deterministic Lab 11.14 BPSK waveform over the air.
+storage: local-workstation
+url: null
+local_path_hint_windows: G:\Programs\zynq-sdr-course\tmp\lab1121_rtl_sdr_monitor_live_20260624a.wav
+format: wav
+i_first: true
+sample_rate_hz: 2400000
+center_frequency_hz: 915000000
+analysis_command: python blocks/block_11_integrated_sdr_project/python/lab_11_20_read_rtl_wav_ota_bpsk_ber.py
+  --manifest datasets/lab11_20_rtl_sdr_ota_bpsk/manifest_live_20260624a.yaml
+analysis:
+  reference_metrics_json: docs/assets/lab114_stock_shell_bpsk_ota_live_20260623d_metrics.json
+  capture_report_json: docs/assets/lab1121_rtl_sdr_monitor_live_20260624a.json
+hardware:
+  transmitter: Zynq-7020 + AD9361 board, stock-shell host-driven BPSK TX
+  monitor_receiver: RTL-SDR V3 Pro
+  context_uri: ip:192.168.40.1
+  tx_attenuation_db: -45.0
+  rtl_tuner_gain_db10: 200
+  rtl_auto_gain: false
+signal:
+  modulation: BPSK
+  symbol_rate_hz: 240000
+  samples_per_symbol: 16
+  rolloff: 0.35
+  payload_bit_count: 256
+  expected_signal_offset_hz: 0.0
+notes:
+- This capture is intended for offline BER validation through the RTL-SDR monitor
+  path.
+- The deterministic payload matches the Lab 11.14 stock-shell reference when seed=20260623.
+- Keep the local WAV outside Git or move it into Git LFS before sharing the raw recording.
