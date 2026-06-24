@@ -25,6 +25,7 @@
 - `lab_11_20_read_rtl_wav_ota_bpsk_ber.py`: читает стерео WAV IQ из RTL-SDR/SDR++, ищет остаточное частотное смещение, при необходимости пересэмплирует запись к эталонной BPSK-частоте и считает BER/EVM либо относительно stock-shell волны Lab 11.14, либо относительно общего runtime-пакета `end_to_end_bpsk_reference`.
 - `lab_11_21_capture_rtl_sdr_monitor_wav.py`: включает на ZynqSDR stock-shell BPSK TX path, записывает свежий monitor WAV IQ через RTL-SDR и сразу пишет manifest, который можно напрямую подать в `lab_11_20_read_rtl_wav_ota_bpsk_ber.py`.
 - `lab_11_22_capture_runtime_pl_rtl_monitor_wav.py`: hot-load'ит runtime overlay `bridge_txrx_mux`, настраивает AD9361, пишет свежий RTL-SDR monitor WAV вокруг повторных PL-owned BPSK start pulse и формирует manifest для офлайн BER-replay уже по runtime/PL path.
+- `lab_11_23_runtime_pl_rtl_monitor_sweep.py`: запускает focused sweep по внешнему runtime/PL monitor-path вокруг уже живой точки, ранжирует наборы параметров по офлайн RTL-SDR BER и умеет отдельно rerun'ить лучшую точку как каноническое evidence.
 
 ## Критерии качества
 - файлы должны быть воспроизводимы и понятны без устных комментариев;
