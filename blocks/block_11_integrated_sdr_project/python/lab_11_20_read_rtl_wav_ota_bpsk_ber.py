@@ -73,6 +73,9 @@ class RtlWavBerMetrics:
     capture_sample_rate_hz: float
     analysis_sample_rate_hz: float
     capture_center_frequency_hz: float
+    raw_peak_level_dbfs: float
+    raw_rms_level_dbfs: float
+    raw_clipping_fraction: float
     expected_signal_offset_hz: float
     coarse_frequency_candidates_hz: list[float]
     selected_coarse_frequency_hz: float
@@ -620,6 +623,11 @@ def main() -> int:
         max_samples=args.max_samples,
     )
     x = (x - np.mean(x)).astype(np.complex64)
+    raw_peak_level_dbfs = float(20.0 * np.log10(max(np.max(np.abs(x)), 1e-15)))
+    raw_rms_level_dbfs = float(20.0 * np.log10(max(np.sqrt(np.mean(np.abs(x) ** 2)), 1e-15)))
+    raw_clipping_fraction = float(
+        np.mean((np.abs(np.real(x)) > 0.999) | (np.abs(np.imag(x)) > 0.999))
+    )
 
     analysis_capture, analysis_window_start, detection_payload, coarse_candidates = analyze_capture(
         x,
@@ -664,6 +672,9 @@ def main() -> int:
         capture_sample_rate_hz=wav_info.sample_rate_hz,
         analysis_sample_rate_hz=float(cfg.sample_rate_hz),
         capture_center_frequency_hz=float(manifest.get("center_frequency_hz", cfg.center_frequency_hz)),
+        raw_peak_level_dbfs=raw_peak_level_dbfs,
+        raw_rms_level_dbfs=raw_rms_level_dbfs,
+        raw_clipping_fraction=raw_clipping_fraction,
         expected_signal_offset_hz=expected_signal_offset_hz,
         coarse_frequency_candidates_hz=[float(value) for value in coarse_candidates],
         selected_coarse_frequency_hz=float(detection_payload["coarse_frequency_hz"]),
@@ -681,9 +692,16 @@ def main() -> int:
     )
 
     metrics_path = save_metrics_json(metrics, output_prefix_token, out_dir)
+    raw_spectrum_path = out_dir / f"{output_prefix_token}_raw_capture_spectrum.png"
     spectrum_path = out_dir / f"{output_prefix_token}_baseband_spectrum.png"
     constellation_path = out_dir / f"{output_prefix_token}_constellation.png"
     matched_filter_path = out_dir / f"{output_prefix_token}_matched_filter.png"
+    save_spectrum(
+        raw_spectrum_path,
+        x,
+        wav_info.sample_rate_hz,
+        "RTL-SDR OTA BPSK capture - raw capture spectrum",
+    )
     save_spectrum(
         spectrum_path,
         analysis_capture,
@@ -726,10 +744,14 @@ def main() -> int:
     print(f"Bit errors total: {detection.bit_errors_total}")
     print(f"Bit errors payload: {detection.bit_errors_payload}")
     print(f"EVM: {detection.evm_percent:.3f} %")
+    print(f"Raw peak level: {raw_peak_level_dbfs:.2f} dBFS")
+    print(f"Raw RMS level: {raw_rms_level_dbfs:.2f} dBFS")
+    print(f"Raw clipping fraction: {raw_clipping_fraction:.6e}")
     print(f"Peak level: {peak_level_dbfs:.2f} dBFS")
     print(f"RMS level: {rms_level_dbfs:.2f} dBFS")
     print(f"Clipping fraction: {clipping_fraction:.6e}")
     print(f"Metrics JSON: {repo_relative_or_str(metrics_path)}")
+    print(f"Raw spectrum plot: {repo_relative_or_str(raw_spectrum_path)}")
     print(f"Spectrum plot: {repo_relative_or_str(spectrum_path)}")
     print(f"Constellation plot: {repo_relative_or_str(constellation_path)}")
     print(f"Matched-filter plot: {repo_relative_or_str(matched_filter_path)}")
