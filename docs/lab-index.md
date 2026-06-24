@@ -16,6 +16,8 @@ This page provides a compact index of the executable and report-oriented labs in
 
 | Lab | Block | Topic | Python | Verilog | Report | CI | Main metrics / artifacts |
 |---|---|---|---:|---:|---:|---:|---|
+| 1.0 | Intro to SDR | First RF observation with RTL-SDR | no | no | yes | manual | spectrum screenshot, receiver settings, short WAV IQ capture, metadata |
+| 1.1 | Intro to SDR | Controlled Zynq DDS tone via RTL-SDR | yes | no | yes | manual | WAV IQ tone capture, measured peak, frequency error, SNR |
 | 2.1 | Signals and sampling | Sampling axis and interpretation | yes | no | yes | yes | time plot, correct/wrong FFT axis, interpretation error |
 | 2.2 | Signals and sampling | Aliasing sweep | yes | no | yes | yes | alias map, example spectra, alias error |
 | 2.3 | Signals and sampling | I/Q interpretation and mirroring | yes | no | yes | yes | complex vs real spectra, swapped-IQ mirror check |

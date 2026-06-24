@@ -149,6 +149,7 @@ nav:
           - "12A. Final project track": ru/blocks/12-final-project-track.md
       - "Лаборатории Block 1":
           - "Lab 1.0 — Первое наблюдение эфира через RTL-SDR": ru/labs/lab-1-0-first-rtl-sdr-observation.md
+          - "Lab 1.1 — Управляемый DDS-тон Zynq с приемом на RTL-SDR": ru/labs/lab-1-1-controlled-zynq-tone-rtl-sdr.md
       - "Лаборатории Block 2":
           - "Lab 2.1 — Частотная ось дискретизации и интерпретация": ru/labs/lab-2-1-sampling-axis-and-interpretation.md
           - "Lab 2.2 — Aliasing sweep": ru/labs/lab-2-2-aliasing-sweep.md
@@ -259,6 +260,7 @@ nav:
           - "12A. Final project track": en/blocks/12-final-project-track.md
       - "Block 1 labs":
           - "Lab 1.0 — First RF Observation with RTL-SDR": en/labs/lab-1-0-first-rtl-sdr-observation.md
+          - "Lab 1.1 — Controlled Zynq DDS Tone with RTL-SDR": en/labs/lab-1-1-controlled-zynq-tone-rtl-sdr.md
       - "Block 2 labs":
           - "Lab 2.1 — Sampling axis and interpretation": en/labs/lab-2-1-sampling-axis-and-interpretation.md
           - "Lab 2.2 — Aliasing sweep": en/labs/lab-2-2-aliasing-sweep.md

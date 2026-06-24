@@ -163,7 +163,7 @@ comment: first RF observation lab
 
 Эта работа подготавливает следующие темы курса:
 
-- Lab 1 — управляемый тон: Zynq7020 + AD9363 → RTL-SDR → IQ-анализ;
+- Lab 1.1 — управляемый DDS-тон Zynq: Zynq7020 + AD9363 → RTL-SDR → WAV IQ → офлайн-анализ спектра;
 - Block 2 — дискретизация, спектр, aliasing и выбор sample rate;
 - Block 3 — FFT, окна, FIR, digital mixing и decimation;
 - Block 5 — перенос DSP-блоков в RTL;
