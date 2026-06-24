@@ -1,7 +1,8 @@
 // Lab 5.11 - self-checking AXI-Lite wrapper testbench
 //
 // Programs the deterministic BPSK BER top-level through AXI-Lite registers,
-// loops TX samples back into RX samples, and verifies the register contract.
+// loops a delayed sign-inverted TX sample stream back into RX, and verifies
+// the register contract.
 
 `timescale 1ns/1ps
 
@@ -12,6 +13,7 @@ localparam integer INDEX_W = 16;
 localparam integer AXI_ADDR_W = 6;
 localparam integer AXI_DATA_W = 32;
 localparam integer FLUSH_SYMBOLS = 16;
+localparam integer LOOPBACK_SAMPLE_DELAY = 24;
 localparam integer CLK_PERIOD_NS = 10;
 localparam integer MAX_POLL_READS = 65536;
 localparam [AXI_ADDR_W-1:0] REG_CONTROL_STATUS = 6'h00;
@@ -46,6 +48,9 @@ reg s_axi_rready = 1'b0;
 wire tx_valid;
 wire signed [W-1:0] tx_i;
 wire signed [W-1:0] tx_q;
+wire delayed_rx_valid;
+wire signed [W-1:0] delayed_rx_i;
+wire signed [W-1:0] delayed_rx_q;
 
 integer wait_reads;
 integer meta_fd;
@@ -55,6 +60,7 @@ integer tmp_sps;
 integer tmp_expected_bits;
 integer tmp_preamble_count;
 integer tmp_flush_symbols;
+integer delay_idx;
 reg [1023:0] line;
 reg [AXI_DATA_W-1:0] readback_word = {AXI_DATA_W{1'b0}};
 reg [INDEX_W-1:0] frame_bit_count_cfg = {INDEX_W{1'b0}};
@@ -63,6 +69,9 @@ reg [INDEX_W-1:0] start_offset_cfg = {INDEX_W{1'b0}};
 reg saw_busy = 1'b0;
 reg saw_tx_valid = 1'b0;
 reg done_seen = 1'b0;
+reg [LOOPBACK_SAMPLE_DELAY-1:0] rx_valid_pipe = {LOOPBACK_SAMPLE_DELAY{1'b0}};
+reg signed [W-1:0] rx_i_pipe [0:LOOPBACK_SAMPLE_DELAY-1];
+reg signed [W-1:0] rx_q_pipe [0:LOOPBACK_SAMPLE_DELAY-1];
 
 bpsk_zynq_ber_axi_lite #(
     .W(W),
@@ -96,12 +105,16 @@ bpsk_zynq_ber_axi_lite #(
     .tx_valid(tx_valid),
     .tx_i(tx_i),
     .tx_q(tx_q),
-    .rx_valid(tx_valid),
-    .rx_i(tx_i),
-    .rx_q(tx_q)
+    .rx_valid(delayed_rx_valid),
+    .rx_i(-delayed_rx_i),
+    .rx_q(delayed_rx_q)
 );
 
 always #(CLK_PERIOD_NS/2) clk = ~clk;
+
+assign delayed_rx_valid = rx_valid_pipe[LOOPBACK_SAMPLE_DELAY-1];
+assign delayed_rx_i = rx_i_pipe[LOOPBACK_SAMPLE_DELAY-1];
+assign delayed_rx_q = rx_q_pipe[LOOPBACK_SAMPLE_DELAY-1];
 
 task read_meta;
     input [1023:0] meta_path;
@@ -142,6 +155,25 @@ task read_meta;
         $fclose(meta_fd);
     end
 endtask
+
+always @(posedge clk) begin
+    if (!aresetn) begin
+        rx_valid_pipe <= {LOOPBACK_SAMPLE_DELAY{1'b0}};
+        for (delay_idx = 0; delay_idx < LOOPBACK_SAMPLE_DELAY; delay_idx = delay_idx + 1) begin
+            rx_i_pipe[delay_idx] <= {W{1'b0}};
+            rx_q_pipe[delay_idx] <= {W{1'b0}};
+        end
+    end else begin
+        rx_valid_pipe[0] <= tx_valid;
+        rx_i_pipe[0] <= tx_i;
+        rx_q_pipe[0] <= tx_q;
+        for (delay_idx = 1; delay_idx < LOOPBACK_SAMPLE_DELAY; delay_idx = delay_idx + 1) begin
+            rx_valid_pipe[delay_idx] <= rx_valid_pipe[delay_idx - 1];
+            rx_i_pipe[delay_idx] <= rx_i_pipe[delay_idx - 1];
+            rx_q_pipe[delay_idx] <= rx_q_pipe[delay_idx - 1];
+        end
+    end
+end
 
 task axi_write;
     input [AXI_ADDR_W-1:0] addr;

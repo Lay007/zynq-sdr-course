@@ -88,10 +88,13 @@ bpsk_rx_bit_recovery_chain #(
     .in_valid(tx_valid),
     .in_i(tx_i),
     .in_q(tx_q),
+    .decision_mode(2'b00),
     .start_offset(start_offset_cfg),
     .symbol_count(symbol_count_cfg),
     .out_valid(rx_valid),
-    .out_bit(rx_bit)
+    .out_bit(rx_bit),
+    .debug_symbol_valid(),
+    .debug_symbol_i()
 );
 
 always #(CLK_PERIOD_NS/2) clk = ~clk;

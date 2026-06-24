@@ -117,9 +117,15 @@ bpsk_zynq_ber_top #(
     .rx_valid(rx_valid),
     .rx_i(rx_i),
     .rx_q(rx_q),
+    .rx_decision_mode(2'b00),
+    .timed_out(),
     .received_bits(received_bits),
     .total_errors(total_errors),
-    .payload_errors(payload_errors)
+    .payload_errors(payload_errors),
+    .debug_recovered_valid(),
+    .debug_recovered_bit(),
+    .debug_symbol_valid(),
+    .debug_symbol_i()
 );
 
 always @(*) begin
