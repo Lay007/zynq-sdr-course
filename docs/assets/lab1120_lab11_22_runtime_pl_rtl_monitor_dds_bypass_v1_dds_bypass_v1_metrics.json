@@ -1,0 +1,42 @@
+{
+  "dataset_id": "lab11_22_runtime_pl_rtl_monitor_dds_bypass_v1",
+  "iq_path": "G:\\Programs\\zynq-sdr-course\\tmp\\lab1122_runtime_pl_rtl_monitor_dds_bypass_v1.wav",
+  "manifest_path": "G:\\Programs\\zynq-sdr-course\\datasets\\lab11_22_runtime_pl_rtl_monitor\\manifest_dds_bypass_v1.yaml",
+  "reference_metrics_json": null,
+  "reference_config_json": "G:\\Programs\\zynq-sdr-course\\blocks\\block_11_integrated_sdr_project\\assets\\end_to_end_bpsk_reference\\config.json",
+  "capture_sample_rate_hz": 2400000.0,
+  "analysis_sample_rate_hz": 3840000.0,
+  "capture_center_frequency_hz": 915000000.0,
+  "raw_peak_level_dbfs": -32.40642547607422,
+  "raw_rms_level_dbfs": -43.90520477294922,
+  "raw_clipping_fraction": 0.0,
+  "expected_signal_offset_hz": 0.0,
+  "coarse_frequency_candidates_hz": [
+    0.0,
+    -588821.4111328125,
+    62246.7041015625,
+    711401.3671875
+  ],
+  "selected_coarse_frequency_hz": 62246.7041015625,
+  "selected_fine_frequency_hz": -2100.0,
+  "total_frequency_shift_hz": 60146.7041015625,
+  "processed_input_samples": 4000000,
+  "processed_analysis_samples": 262144,
+  "analysis_window_start_sample": 4575099,
+  "analysis_window_samples": 262144,
+  "duration_s_read": 1.6666666666666667,
+  "peak_level_dbfs": -34.098655700683594,
+  "rms_level_dbfs": -45.467105865478516,
+  "clipping_fraction": 0.0,
+  "detection": {
+    "matched_filter_start_sample": 105420,
+    "sample_phase": 4,
+    "symbol_index": 13177,
+    "correlation_abs": 0.12286224992515503,
+    "bit_errors_total": 96,
+    "bit_errors_payload": 92,
+    "ber_total": 0.3416370106761566,
+    "ber_payload": 0.359375,
+    "evm_percent": 518.265753071004
+  }
+}
