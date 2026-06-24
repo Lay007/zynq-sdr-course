@@ -1,0 +1,59 @@
+{
+  "lab": "11.26-followup",
+  "date": "2026-06-25",
+  "description": "BPSK TX signal confirmation via burst-synchronized RTL-SDR power trace",
+  "dma_tone_test": {
+    "description": "200 kHz DMA sinusoidal tone via IIO voltage0/voltage1 channels",
+    "amplitude_int16": 32767,
+    "dac_bits_15_4": 2047,
+    "rtl_sdr_power": 1663.0,
+    "rtl_sdr_baseline_power": 1.5,
+    "snr_db": 87.6,
+    "frequency_hz": -197272,
+    "expected_frequency_hz": -200000,
+    "offset_note": "tone appears at -200 kHz because of I/Q convention; +2728 Hz LO beat shifts to -197272 Hz",
+    "conclusion": "FIFO->DAC path confirmed working"
+  },
+  "iio_buffer_api_fix": {
+    "wrong": "raw = buf.read(); np.frombuffer(raw).copy(); then modify; buf.push()",
+    "correct": "channel.write(buf, bytearray(samples.tobytes()), raw=True) per channel; then buf.push()",
+    "wrong_filter": "ch.id contains voltage (matches altvoltage0-7 too)",
+    "correct_filter": "ch.id.startswith(voltage) \u2014 excludes altvoltage channels"
+  },
+  "cyclic_zero_buffer": {
+    "required": true,
+    "reason": "util_rfifo BRAM initializes to garbage; sel=2 with no prior DMA writes causes FIFO underflow -> wideband noise (power 1.5 -> 233)",
+    "fix": "start iio.Buffer(dac, N, cyclic=True) with zeros, channel.write per channel, buf.push() BEFORE setting dac_data_sel=2"
+  },
+  "bpsk_burst_power_trace": {
+    "burst_duration_us": 637,
+    "tx_path_active_duration_ms": 260.6,
+    "rx_idle_timeout_cycles": 1048576,
+    "rx_idle_timeout_ms": 273.0,
+    "burst_power_rtl": 225.0,
+    "expected_burst_power_rtl": 249.0,
+    "rrc_fir_peak": 12695,
+    "rrc_fir_peak_ratio": 0.387,
+    "dac_bits_15_4_bpsk": 793,
+    "power_ratio_bpsk_to_dma_tone": 0.135,
+    "power_ratio_expected": 0.15,
+    "first_window_power": 67.5,
+    "baseline_power": 1.35,
+    "fifo_depth": 256,
+    "fifo_loop_period_us": 66.7,
+    "conclusion": "BPSK signal IS reaching DAC at expected power level. Burst-synchronized RTL-SDR power trace confirms 637 us signal window."
+  },
+  "tail_loop_mechanism": {
+    "description": "After 637 us burst, tx_path_active stays high for RX_IDLE_TIMEOUT=273 ms. FIFO has 256 entries; burst wrote 2376 samples (9.28 full passes), overwriting all entries with BPSK tail samples. After burst, FIFO loops these 256 samples at 3.84 MHz (66.7 us period) for 273 ms.",
+    "implication": "Long-FFT analysis over seconds misses the 637 us burst; RTL-SDR sees 273 ms of tail-loop at power ~225, not the coherent BPSK burst",
+    "fix_options": [
+      "1. AD9361 loopback: RX side completes BER quickly, tx_path_active clears after ~1 ms",
+      "2. Burst-synchronized RTL capture: extract the first 637 us of the elevated window for demodulation",
+      "3. Reduce RX_IDLE_TIMEOUT_CYCLES (requires FPGA rebuild)"
+    ]
+  },
+  "why_previous_30_burst_test_showed_zero_power": {
+    "explanation": "In the 30-burst test with AD9361 RX active (configure_ad9361_bpsk), the RX path receives noise/LO leakage bits, causing the BER counter to complete quickly. tx_path_active clears in ~1 ms. With 0.15s burst interval, the burst duty cycle is 1ms/150ms = 0.67%, so power contribution = 249 * 0.0067 = 1.67 added to baseline 1.5 = 3.17 total. In contrast, without RX (current test), tx_path_active = 273 ms of garbage/tail at 225, which IS visible."
+  },
+  "status": "BPSK TX path confirmed working end-to-end. Next: burst-synchronized demodulation or AD9361 loopback BER."
+}

@@ -162,6 +162,108 @@ After a successful run, record the following metrics in
 
 ---
 
+---
+
+## Follow-up diagnosis (2026-06-25) / Дополнительная диагностика
+
+### FIFO→DAC data path verification
+
+After applying the DDS-bypass fix, the next diagnostic confirmed the full FIFO→DAC
+data path using a DMA sinusoidal tone:
+
+**DMA tone test** (`voltage0/voltage1`, 200 kHz at full scale ±32767):
+
+```python
+# Correct IIO buffer write API (must use channel.write, not buf.read/modify):
+voltage_chs = [ch for ch in dac.channels if ch.output and ch.id.startswith('voltage')]
+buf = iio.Buffer(dac, N_BUF, cyclic=True)
+payloads = [tone_i, tone_q, zero, zero]
+for ch, samples in zip(voltage_chs, payloads):
+    ch.write(buf, bytearray(samples.tobytes()), raw=True)
+buf.push()
+# Then set dac_data_sel=2 via devmem
+```
+
+Result: 200 kHz tone visible at **87.6 dB above RTL-SDR noise floor**, power=1663
+(vs baseline 1.5). FIFO→DAC path confirmed.
+
+**Critical API bug found:** `'voltage' in ch.id` also matches `altvoltage0..7` (DDS
+control channels). Must use `ch.id.startswith('voltage')` to select only the four
+sample data channels `voltage0..3`.
+
+**Frequency inversion:** Tone appears at −197 kHz (not +200 kHz) — this is expected.
+The −200 kHz convention plus the +2.7 kHz AD9361/RTL LO beat gives −197.27 kHz.
+
+### Cyclic zero DMA buffer requirement
+
+Setting `dac_data_sel=2` with no prior DMA data causes `util_rfifo` BRAM to output
+initialization garbage → wideband noise (RTL power: 1.5 → 233, ×155 increase).
+
+Fix: push a cyclic zero IIO buffer **before** setting `dac_data_sel=2`:
+
+```python
+zero = np.zeros(N_BUF, dtype='<i2')
+buf = iio.Buffer(dac, N_BUF, cyclic=True)
+for ch in voltage_chs:
+    ch.write(buf, bytearray(zero.tobytes()), raw=True)
+buf.push()
+set_dac_sel(2)  # now safe — FIFO filled with zeros, power stays at 1.5
+```
+
+### BPSK burst confirmed reaching DAC
+
+Burst-synchronized RTL-SDR power trace (100 μs windows):
+
+```text
+Baseline (sel=2, zero DMA): power = 1.35
+Burst window (637 μs):       power = 67..225  (rising edge + burst)
+Post-burst tail-loop:         power = 225..232 (273 ms)
+Expected burst power:         ~249  (RRC FIR peak 12695/32767 = 38.7% -> bits[15:4]=793 DAC units)
+```
+
+**Conclusion:** BPSK signal IS reaching the DAC at the expected power level.
+
+### RX idle timeout mechanism (explains long-window FFT miss)
+
+`RX_IDLE_TIMEOUT_CYCLES = 1 048 576` in `bpsk_zynq_ber_top.v`. At 3.84 MHz sample
+clock this is **273 ms**. `tx_path_active` stays HIGH from burst start until either:
+
+1. BER counter receives all 306 bits (loopback/OTA with AD9361 RX active → ~1 ms)
+2. OR RX idle timeout fires (no AD9361 RX data → 273 ms)
+
+During the 273 ms window after the 637 μs burst, `bpsk_valid=0` but
+`select_bpsk=1`. The `util_rfifo` FIFO (256 entries, 2^8) was overwritten 9× during
+the burst; the last 256 BPSK tail samples cycle at 66.7 μs period for 273 ms.
+
+**Why long-FFT analysis missed the signal:**
+
+- With AD9361 RX active: tx_path_active ≈ 1 ms, so burst duty cycle = 1/150 = 0.7%
+  → time-averaged RTL power increases from 1.5 to ~3.2 (indistinguishable)
+- BPSK spread across 480 kHz bandwidth: in a per-bin FFT the signal is −65 dB below
+  its total power → below the RTL noise floor per bin
+
+**Correct detection method:** burst-synchronized power trace (100 μs windows) shows
+clear 260 ms elevated window ≈ 273 ms RX timeout. The first 637 μs is the real BPSK
+signal; the remainder is tail-loop artifact.
+
+### `din_enable_X` architecture clarification
+
+A previous hypothesis that `upack/fifo_rd_enable → axi_ad9361_dac_fifo/din_enable_X`
+was blocking BPSK writes is incorrect. In `util_rfifo.v`:
+
+- `din_enable_X` is an **OUTPUT** from the FIFO (backpressure to upack)
+- `din_valid_in_X` is the **INPUT** write enable (driven by mux `fifo_valid`)
+- For `M_MEM_RATIO=1`: `din_wr = din_valid_in_0` (write gate, not din_enable_X)
+
+The TCL overlay correctly disconnects and reconnects `din_valid_in_0..3` via the mux.
+`din_enable_X` is not disconnected (it stays as backpressure signal to upack).
+
+### Evidence
+
+`docs/assets/lab1126_bpsk_dac_path_confirmed_20260625.json`
+
+---
+
 ## Related labs / Связанные лабораторные работы
 
 - [Lab 11.19](lab_11_19_runtime_bridge_txrx_self_timed_bringup.md) — Runtime self-timed bring-up (DDS bypass now included)

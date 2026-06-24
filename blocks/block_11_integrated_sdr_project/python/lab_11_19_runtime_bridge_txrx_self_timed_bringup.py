@@ -392,6 +392,12 @@ def main() -> int:
         if phy is None:
             raise RuntimeError("Expected `ad9361-phy` after runtime reload.")
 
+        phy_snapshot = snapshot_ad9361_state(phy)
+        payload["phy_before"] = phy_snapshot
+        payload["phy_after_config"] = configure_ad9361_bpsk(phy, waveform_cfg)
+
+        # disable_dds_tones must run AFTER configure_ad9361_bpsk: changing sampling_frequency
+        # causes the cf_axi_dds driver to re-initialise, re-enabling DDS-only mode.
         dds = next((device for device in context.devices if device.name == "cf-ad9361-dds-core-lpc"), None)
         if dds is not None:
             disable_dds_tones(dds)
@@ -399,9 +405,6 @@ def main() -> int:
         else:
             payload["disable_dds_tones"] = {"status": "device_not_found"}
 
-        phy_snapshot = snapshot_ad9361_state(phy)
-        payload["phy_before"] = phy_snapshot
-        payload["phy_after_config"] = configure_ad9361_bpsk(phy, waveform_cfg)
         payload["bringup"] = attempt_runtime_bringup(io, probe_cfg)
     finally:
         try:
