@@ -1,0 +1,103 @@
+{
+  "generated_from": "2026-06-24 runtime bridge_txrx_mux self-timed bring-up",
+  "timing_clean_rebuild": {
+    "bitstream_path": "hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/build/course_bpsk_fmcomms2_zc702.runs/impl_1/system_top.bit",
+    "runtime_payload_path": "tmp/bridge_txrx_mux.wordswap.bit.bin",
+    "runtime_payload_md5": "d1e8e6e8ee5eaf6f1508a1d7dca53ce0",
+    "timing_impl_wns_ns": 0.176,
+    "timing_impl_tns_ns": 0.0,
+    "timing_status": "met"
+  },
+  "strict_lock_failure": {
+    "path": "assets/lab125_runtime_bridge_txrx_self_timed_neg_i_rx0_live_20260624.json",
+    "mode": "neg-i",
+    "start_offset": 60,
+    "received_bits": 0,
+    "timed_out_observed": true,
+    "rx_valid_count": 1050820,
+    "conclusion": "A strict full-preamble lock is still too rigid for the live self-timed OTA path even though recovered bits are present."
+  },
+  "coarse_prefix_acquisition": {
+    "lock_preamble_bits": 4,
+    "conclusion": "A short acquisition prefix restores near-full and full-frame runtime reception on the timing-clean overlay."
+  },
+  "neg_i_offset_sweep": [
+    {
+      "path": "assets/lab125_runtime_bridge_txrx_self_timed_neg_i_offset58_live_20260624.json",
+      "mode": "neg-i",
+      "start_offset": 58,
+      "received_bits": 269,
+      "total_errors": 125,
+      "payload_errors": 120
+    },
+    {
+      "path": "assets/lab125_runtime_bridge_txrx_self_timed_neg_i_offset59_live_20260624.json",
+      "mode": "neg-i",
+      "start_offset": 59,
+      "received_bits": 280,
+      "total_errors": 152,
+      "payload_errors": 144
+    },
+    {
+      "path": "assets/lab125_runtime_bridge_txrx_self_timed_neg_i_offset60_live_20260624.json",
+      "mode": "neg-i",
+      "start_offset": 60,
+      "received_bits": 279,
+      "total_errors": 144,
+      "payload_errors": 135
+    },
+    {
+      "path": "assets/lab125_runtime_bridge_txrx_self_timed_neg_i_offset61_live_20260624.json",
+      "mode": "neg-i",
+      "start_offset": 61,
+      "received_bits": 249,
+      "total_errors": 113,
+      "payload_errors": 102
+    },
+    {
+      "path": "assets/lab125_runtime_bridge_txrx_self_timed_neg_i_offset62_live_20260624.json",
+      "mode": "neg-i",
+      "start_offset": 62,
+      "received_bits": 280,
+      "total_errors": 137,
+      "payload_errors": 130
+    }
+  ],
+  "best_full_frame_mode": {
+    "path": "assets/lab125_runtime_bridge_txrx_self_timed_neg_q_offset59_live_20260624.json",
+    "mode": "neg-q",
+    "start_offset": 59,
+    "received_bits": 281,
+    "total_errors": 141,
+    "payload_errors": 132,
+    "ber_total": 0.501779359430605,
+    "ber_payload": 0.515625
+  },
+  "neg_q_confirmation_sweep": [
+    {
+      "path": "assets/lab125_runtime_bridge_txrx_self_timed_neg_q_offset58_live_20260624.json",
+      "mode": "neg-q",
+      "start_offset": 58,
+      "received_bits": 281,
+      "total_errors": 148,
+      "payload_errors": 138
+    },
+    {
+      "path": "assets/lab125_runtime_bridge_txrx_self_timed_neg_q_offset59_live_20260624.json",
+      "mode": "neg-q",
+      "start_offset": 59,
+      "received_bits": 281,
+      "total_errors": 141,
+      "payload_errors": 132
+    },
+    {
+      "path": "assets/lab125_runtime_bridge_txrx_self_timed_neg_q_offset60_live_20260624.json",
+      "mode": "neg-q",
+      "start_offset": 60,
+      "received_bits": 281,
+      "total_errors": 144,
+      "payload_errors": 137
+    }
+  ],
+  "next_step": "Keep the coarse timing-clean runtime point as the new live baseline, then replace the short exact prefix with a more selective but still timing-safe phase/frame acquisition stage to drive BER down."
+}
