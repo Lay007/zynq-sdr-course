@@ -1,0 +1,33 @@
+dataset_id: lab11_20_rtl_sdr_ota_bpsk_capture_example
+title: RTL-SDR monitor capture for ZynqSDR OTA BPSK BER analysis
+description: >-
+  Example manifest for a local SDR++ stereo WAV IQ capture of the stock-shell
+  or runtime ZynqSDR BPSK transmitter. Update local_path_hint_windows and, if
+  needed, expected_signal_offset_hz before running the analyzer.
+storage: local-workstation
+url: null
+local_path_hint_windows: G:\Recordings\lab11_20_rtl_sdr_ota_bpsk_capture.wav
+format: wav
+i_first: true
+sample_rate_hz: 4000000
+center_frequency_hz: 915000000
+analysis_command: >-
+  python blocks/block_11_integrated_sdr_project/python/lab_11_20_read_rtl_wav_ota_bpsk_ber.py
+  --manifest datasets/lab11_20_rtl_sdr_ota_bpsk/manifest_template.yaml
+analysis:
+  reference_metrics_json: docs/assets/lab114_stock_shell_bpsk_ota_live_20260623d_metrics.json
+signal:
+  modulation: BPSK
+  symbol_rate_hz: 240000
+  samples_per_symbol: 16
+  rolloff: 0.35
+  payload_bit_count: 256
+  expected_signal_offset_hz: 0.0
+processing:
+  recommended_skip_samples: 0
+  recommended_max_samples: 4000000
+  recommended_analysis_window_samples: 262144
+notes:
+  - Tune the RTL-SDR LO close to the ZynqSDR TX center frequency and record baseband WAV IQ in SDR++.
+  - Keep TX attenuation conservative and RX gain fixed on the Zynq side for the first OTA monitor captures.
+  - If the burst lands away from DC, set expected_signal_offset_hz or let the analyzer search across the band.

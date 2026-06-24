@@ -22,6 +22,7 @@
 - `lab_11_12_runtime_fpga_manager_reload.py`: hot-load'ит проверенный `.bit.bin` payload и заново проверяет `axi_gpreg` вместе с видимостью IIO.
 - `lab_11_13_stock_vs_runtime_rx_compare.py`: сначала доказывает исправность stock-shell RX baseline, а затем показывает, что именно ломается после runtime overlay reload.
 - `lab_11_14_stock_shell_bpsk_ota.py`: использует stock AD9361 Linux shell как host-driven OTA BPSK fallback, пока PL overlay RX path все еще заблокирован.
+- `lab_11_20_read_rtl_wav_ota_bpsk_ber.py`: читает стерео WAV IQ из RTL-SDR/SDR++, ищет остаточное частотное смещение, при необходимости пересэмплирует запись к эталонной BPSK-частоте и считает BER/EVM относительно детерминированной волны Lab 11.14.
 
 ## Критерии качества
 - файлы должны быть воспроизводимы и понятны без устных комментариев;
