@@ -21,6 +21,7 @@ from lab_11_12_runtime_fpga_manager_reload import (
 from lab_11_13_stock_vs_runtime_rx_compare import probe_iio_context_summary, try_reboot_to_stock
 from lab_11_14_stock_shell_bpsk_ota import (
     configure_ad9361_bpsk,
+    disable_dds_tones,
     enforce_safe_tx_restore_over_ssh,
     load_iio_module,
     restore_ad9361_state,
@@ -61,6 +62,14 @@ from lab_11_8_axi_gpreg_bpsk_bringup import (
     SshDevMemRegisterIo,
     parse_rx_decision_mode,
 )
+from lab_11_24_capture_dds_tone_rtl_monitor_wav import (
+    DEFAULT_ADC_DEVICE_NAME,
+    DEFAULT_ADC_DRIVER_NAME,
+    DEFAULT_DDS_DEVICE_NAME,
+    DEFAULT_DDS_DRIVER_NAME,
+    rebind_platform_driver,
+    write_runtime_dds_ratecntrl,
+)
 from runtime_rx_common import force_rx_common_ctrl_request
 
 
@@ -97,6 +106,9 @@ class SelfTimedBringupConfig:
     rx_rf_port_select: str
     tx_rf_port_select: str
     rx_common_ctrl_value: int
+    rebind_runtime_dds_driver: bool
+    rebind_runtime_adc_driver: bool
+    runtime_dds_ratecntrl: int | None
     reboot_after: bool
     reboot_timeout_s: float
 
@@ -141,6 +153,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--rx-rf-port-select", default="A_BALANCED")
     parser.add_argument("--tx-rf-port-select", default="A")
     parser.add_argument("--rx-common-ctrl-value", type=parse_int, default=0x00000003)
+    parser.add_argument("--rebind-runtime-dds-driver", action="store_true")
+    parser.add_argument("--rebind-runtime-adc-driver", action="store_true")
+    parser.add_argument("--runtime-dds-ratecntrl", type=parse_int, default=None)
     parser.add_argument("--reboot-after", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--reboot-timeout-s", type=float, default=DEFAULT_REBOOT_TIMEOUT_S)
     parser.add_argument("--run-tag", default=None)
@@ -230,6 +245,9 @@ def main() -> int:
         rx_rf_port_select=args.rx_rf_port_select,
         tx_rf_port_select=args.tx_rf_port_select,
         rx_common_ctrl_value=args.rx_common_ctrl_value,
+        rebind_runtime_dds_driver=bool(args.rebind_runtime_dds_driver),
+        rebind_runtime_adc_driver=bool(args.rebind_runtime_adc_driver),
+        runtime_dds_ratecntrl=args.runtime_dds_ratecntrl,
         reboot_after=bool(args.reboot_after),
         reboot_timeout_s=args.reboot_timeout_s,
     )
@@ -311,6 +329,10 @@ def main() -> int:
         "gpreg_after_reload": None,
         "post_reload_context": None,
         "rx_common_reinit": None,
+        "rebind_runtime_dds": None,
+        "rebind_runtime_adc": None,
+        "runtime_dds_ratecntrl_write": None,
+        "disable_dds_tones": None,
         "phy_before": None,
         "phy_after_config": None,
         "bringup": None,
@@ -346,11 +368,36 @@ def main() -> int:
             value=cfg.rx_common_ctrl_value,
         )
 
+        if cfg.rebind_runtime_dds_driver:
+            payload["rebind_runtime_dds"] = rebind_platform_driver(
+                runner,
+                driver_name=DEFAULT_DDS_DRIVER_NAME,
+                device_name=DEFAULT_DDS_DEVICE_NAME,
+            )
+        if cfg.rebind_runtime_adc_driver:
+            payload["rebind_runtime_adc"] = rebind_platform_driver(
+                runner,
+                driver_name=DEFAULT_ADC_DRIVER_NAME,
+                device_name=DEFAULT_ADC_DEVICE_NAME,
+            )
+        if cfg.runtime_dds_ratecntrl is not None:
+            payload["runtime_dds_ratecntrl_write"] = write_runtime_dds_ratecntrl(
+                runner,
+                cfg.runtime_dds_ratecntrl,
+            )
+
         iio = load_iio_module()
         context = iio.Context(cfg.iio_uri)
         phy = next((device for device in context.devices if device.name == "ad9361-phy"), None)
         if phy is None:
             raise RuntimeError("Expected `ad9361-phy` after runtime reload.")
+
+        dds = next((device for device in context.devices if device.name == "cf-ad9361-dds-core-lpc"), None)
+        if dds is not None:
+            disable_dds_tones(dds)
+            payload["disable_dds_tones"] = {"status": "ok", "device": "cf-ad9361-dds-core-lpc"}
+        else:
+            payload["disable_dds_tones"] = {"status": "device_not_found"}
 
         phy_snapshot = snapshot_ad9361_state(phy)
         payload["phy_before"] = phy_snapshot

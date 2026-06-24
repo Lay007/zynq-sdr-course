@@ -107,7 +107,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--candidate-count", type=int, default=DEFAULT_CANDIDATE_COUNT)
     parser.add_argument("--coarse-search-span-hz", type=float, default=None)
     parser.add_argument("--fine-search-hz", type=float, default=12_000.0)
-    parser.add_argument("--fine-step-hz", type=float, default=1_000.0)
+    parser.add_argument("--fine-step-hz", type=float, default=100.0)
     parser.add_argument("--run-tag", default=None)
     return parser.parse_args()
 

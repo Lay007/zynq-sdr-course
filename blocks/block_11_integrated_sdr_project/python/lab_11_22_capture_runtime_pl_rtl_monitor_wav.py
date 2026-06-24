@@ -33,6 +33,7 @@ from lab_11_12_runtime_fpga_manager_reload import (  # noqa: E402
 from lab_11_13_stock_vs_runtime_rx_compare import probe_iio_context_summary, try_reboot_to_stock  # noqa: E402
 from lab_11_14_stock_shell_bpsk_ota import (  # noqa: E402
     configure_ad9361_bpsk,
+    disable_dds_tones,
     enforce_safe_tx_restore_over_ssh,
     load_iio_module,
     repo_relative_or_str,
@@ -535,6 +536,7 @@ def main() -> int:
         "runtime_dds_driver_rebind": None,
         "runtime_adc_driver_rebind": None,
         "runtime_dds_ratecntrl_write": None,
+        "disable_dds_tones": None,
         "phy_before": None,
         "phy_after_config": None,
         "runtime_attempts": [],
@@ -593,6 +595,13 @@ def main() -> int:
         phy = next((device for device in context.devices if device.name == "ad9361-phy"), None)
         if phy is None:
             raise RuntimeError("Expected `ad9361-phy` after runtime reload.")
+
+        dds = next((device for device in context.devices if device.name == "cf-ad9361-dds-core-lpc"), None)
+        if dds is not None:
+            disable_dds_tones(dds)
+            payload["disable_dds_tones"] = {"status": "ok", "device": "cf-ad9361-dds-core-lpc"}
+        else:
+            payload["disable_dds_tones"] = {"status": "device_not_found"}
 
         phy_snapshot = snapshot_ad9361_state(phy)
         payload["phy_before"] = phy_snapshot
