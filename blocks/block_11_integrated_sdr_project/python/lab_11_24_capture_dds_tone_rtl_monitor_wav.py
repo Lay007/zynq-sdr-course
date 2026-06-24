@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lab 11.22 - Capture RTL-SDR monitor WAV during runtime/PL BPSK bring-up."""
+"""Lab 11.24 - Capture RTL-SDR monitor WAV during stock/runtime DDS-tone TX."""
 
 from __future__ import annotations
 
@@ -20,25 +20,22 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[3]
 BLOCK11_PYTHON_DIR = ROOT / "blocks" / "block_11_integrated_sdr_project" / "python"
+BLOCK06_PYTHON_DIR = ROOT / "blocks" / "block_06_rf_frontend_and_ad9363" / "python"
 if str(BLOCK11_PYTHON_DIR) not in sys.path:
     sys.path.insert(0, str(BLOCK11_PYTHON_DIR))
+if str(BLOCK06_PYTHON_DIR) not in sys.path:
+    sys.path.insert(0, str(BLOCK06_PYTHON_DIR))
 
 from lab_11_12_runtime_fpga_manager_reload import (  # noqa: E402
     md5_bytes,
     probe_gpreg_id,
     read_remote_file_info,
+    run_remote,
     trigger_fpga_manager_reload,
     upload_bytes_via_ssh_cat,
 )
 from lab_11_13_stock_vs_runtime_rx_compare import probe_iio_context_summary, try_reboot_to_stock  # noqa: E402
-from lab_11_14_stock_shell_bpsk_ota import (  # noqa: E402
-    configure_ad9361_bpsk,
-    enforce_safe_tx_restore_over_ssh,
-    load_iio_module,
-    repo_relative_or_str,
-    restore_ad9361_state,
-    snapshot_ad9361_state,
-)
+from lab_11_14_stock_shell_bpsk_ota import enforce_safe_tx_restore_over_ssh, repo_relative_or_str  # noqa: E402
 from lab_11_15_runtime_bridge_rx_host_tx_probe import (  # noqa: E402
     DEFAULT_BASE_ADDR,
     DEFAULT_CENTER_FREQUENCY_HZ,
@@ -56,7 +53,6 @@ from lab_11_15_runtime_bridge_rx_host_tx_probe import (  # noqa: E402
     DEFAULT_SETTLE_MS,
     DEFAULT_START_HOLD_MS,
     DEFAULT_TIMEOUT_S,
-    DEFAULT_TX_REFERENCE_PATH,
     DEFAULT_USER,
     RuntimeBridgeRxHostTxProbeConfig,
     attempt_runtime_bringup,
@@ -73,14 +69,6 @@ from lab_11_21_capture_rtl_sdr_monitor_wav import (  # noqa: E402
     load_rtlsdr_library,
     write_wav_iq,
 )
-from lab_11_24_capture_dds_tone_rtl_monitor_wav import (  # noqa: E402
-    DEFAULT_ADC_DEVICE_NAME,
-    DEFAULT_ADC_DRIVER_NAME,
-    DEFAULT_DDS_DEVICE_NAME,
-    DEFAULT_DDS_DRIVER_NAME,
-    rebind_platform_driver,
-    write_runtime_dds_ratecntrl,
-)
 from lab_11_7_axi_lite_bpsk_bringup import ParamikoCommandRunner, parse_int  # noqa: E402
 from lab_11_8_axi_gpreg_bpsk_bringup import (  # noqa: E402
     DEFAULT_RX_DECISION_MODE,
@@ -88,25 +76,42 @@ from lab_11_8_axi_gpreg_bpsk_bringup import (  # noqa: E402
     parse_rx_decision_mode,
     rx_decision_mode_name,
 )
-from runtime_rx_common import force_rx_common_ctrl_request  # noqa: E402
+from lab_6_3_probe_iio_context import load_iio_module  # noqa: E402
+from lab_6_8_capture_zynq_ota_tone import (  # noqa: E402
+    configure_ad9361_tone_capture,
+    configure_dds_tone,
+    restore_ad9361_state,
+    restore_dds_state,
+    snapshot_ad9361_state,
+    snapshot_dds_state,
+)
+from runtime_rx_common import force_rx_common_ctrl_request, read_remote_devmem32, write_remote_devmem32  # noqa: E402
 
 
 DOC_ASSET_DIR = ROOT / "docs" / "assets"
 TMP_DIR = ROOT / "tmp"
-DATASET_DIR = ROOT / "datasets" / "lab11_22_runtime_pl_rtl_monitor"
+DATASET_DIR = ROOT / "datasets" / "lab11_24_dds_tone_rtl_monitor"
 REFERENCE_CONFIG_JSON = (
     ROOT / "blocks" / "block_11_integrated_sdr_project" / "assets" / "end_to_end_bpsk_reference" / "config.json"
 )
-DEFAULT_RUN_TAG_STEM = "lab1122_runtime_pl_rtl_monitor"
-DEFAULT_START_OFFSET = 59
-DEFAULT_RUNTIME_RX_GAIN_DB = 5.0
-DEFAULT_RUNTIME_TX_ATTENUATION_DB = -50.0
+DEFAULT_RUNTIME_BIT_BIN_PATH = ROOT / "tmp" / "bridge_txrx_mux.wordswap.bit.bin"
+DEFAULT_RUN_TAG_STEM = "lab1124_dds_tone_rtl_monitor"
+DEFAULT_TONE_OFFSET_HZ = 200_000
+DEFAULT_TONE_SCALE = 0.25
+DEFAULT_RX_GAIN_DB = 10.0
+DEFAULT_TX_ATTENUATION_DB = -45.0
 DEFAULT_RUNTIME_REBOOT_TIMEOUT_S = 120.0
 DEFAULT_CAPTURE_PREROLL_S = 0.25
-DEFAULT_CAPTURE_POSTROLL_S = 0.50
+DEFAULT_CAPTURE_POSTROLL_S = 0.25
 DEFAULT_RUNTIME_REPEAT_COUNT = 3
 DEFAULT_RUNTIME_REPEAT_GAP_MS = 100
-DEFAULT_RUNTIME_BIT_BIN_PATH = ROOT / "tmp" / "bridge_txrx_mux.wordswap.bit.bin"
+DEFAULT_START_OFFSET = 60
+DEFAULT_DDS_CORE_BASE_ADDR = 0x79024000
+DEFAULT_DDS_DEVICE_NAME = "79024000.cf-ad9361-dds-core-lpc"
+DEFAULT_ADC_DEVICE_NAME = "79020000.cf-ad9361-lpc"
+DEFAULT_DDS_DRIVER_NAME = "cf_axi_dds"
+DEFAULT_ADC_DRIVER_NAME = "cf_axi_adc"
+DEFAULT_DDS_RATECNTRL_OFFSET = 0x04C
 
 
 def iso_now() -> str:
@@ -119,29 +124,41 @@ def default_run_tag() -> str:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--mode", choices=("stock", "runtime"), default="stock")
+    parser.add_argument("--bridge-bursts", action="store_true")
+    parser.add_argument("--dds-sync-start-enable", default=None)
+    parser.add_argument("--allow-missing-gpreg", action="store_true")
+    parser.add_argument("--rebind-runtime-dds-driver", action="store_true")
+    parser.add_argument("--rebind-runtime-adc-driver", action="store_true")
+    parser.add_argument("--runtime-dds-ratecntrl", type=parse_int, default=None)
+    parser.add_argument("--iio-uri", "--uri", dest="iio_uri", default=DEFAULT_IIO_URI)
+    parser.add_argument("--center-frequency-hz", type=int, default=DEFAULT_CENTER_FREQUENCY_HZ)
+    parser.add_argument("--sample-rate-hz", type=int, default=3_840_000)
+    parser.add_argument("--rf-bandwidth-hz", type=int, default=DEFAULT_RF_BANDWIDTH_HZ)
+    parser.add_argument("--tone-offset-hz", type=int, default=DEFAULT_TONE_OFFSET_HZ)
+    parser.add_argument("--tone-scale", type=float, default=DEFAULT_TONE_SCALE)
+    parser.add_argument("--rx-gain-db", "--rx-hardwaregain-db", dest="rx_hardwaregain_db", type=float, default=DEFAULT_RX_GAIN_DB)
+    parser.add_argument(
+        "--tx-attenuation-db",
+        "--tx-hardwaregain-db",
+        dest="tx_hardwaregain_db",
+        type=float,
+        default=DEFAULT_TX_ATTENUATION_DB,
+    )
+    parser.add_argument("--settle-ms", type=int, default=DEFAULT_SETTLE_MS)
+    parser.add_argument("--rx-rf-port-select", default="A_BALANCED")
+    parser.add_argument("--tx-rf-port-select", default="A")
     parser.add_argument("--ssh-host", default=DEFAULT_HOST)
     parser.add_argument("--ssh-user", default=DEFAULT_USER)
     parser.add_argument("--ssh-password", default=DEFAULT_PASSWORD)
     parser.add_argument("--ssh-port", type=int, default=DEFAULT_PORT)
     parser.add_argument("--ssh-timeout-s", type=float, default=DEFAULT_TIMEOUT_S)
-    parser.add_argument("--iio-uri", default=DEFAULT_IIO_URI)
     parser.add_argument("--bit-bin-path", type=Path, default=DEFAULT_RUNTIME_BIT_BIN_PATH)
     parser.add_argument("--remote-firmware-name", default=DEFAULT_REMOTE_FIRMWARE_NAME)
-    parser.add_argument("--rebind-runtime-dds-driver", action="store_true")
-    parser.add_argument("--rebind-runtime-adc-driver", action="store_true")
-    parser.add_argument("--runtime-dds-ratecntrl", type=parse_int, default=None)
     parser.add_argument("--gpreg-base-addr", type=parse_int, default=DEFAULT_BASE_ADDR)
     parser.add_argument("--expected-id", type=parse_int, default=DEFAULT_EXPECTED_ID)
     parser.add_argument("--frame-bit-count", type=int, default=DEFAULT_FRAME_BIT_COUNT)
     parser.add_argument("--preamble-count", type=int, default=DEFAULT_PREAMBLE_COUNT)
-    parser.add_argument("--center-frequency-hz", type=int, default=DEFAULT_CENTER_FREQUENCY_HZ)
-    parser.add_argument("--sample-rate-hz", type=int, default=3_840_000)
-    parser.add_argument("--rf-bandwidth-hz", type=int, default=DEFAULT_RF_BANDWIDTH_HZ)
-    parser.add_argument("--tx-attenuation-db", type=float, default=DEFAULT_RUNTIME_TX_ATTENUATION_DB)
-    parser.add_argument("--rx-gain-db", type=float, default=DEFAULT_RUNTIME_RX_GAIN_DB)
-    parser.add_argument("--settle-ms", type=int, default=DEFAULT_SETTLE_MS)
-    parser.add_argument("--rx-rf-port-select", default="A_BALANCED")
-    parser.add_argument("--tx-rf-port-select", default="A")
     parser.add_argument("--start-offset", type=int, default=DEFAULT_START_OFFSET)
     parser.add_argument(
         "--rx-decision-mode",
@@ -156,7 +173,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--runtime-repeat-gap-ms", type=int, default=DEFAULT_RUNTIME_REPEAT_GAP_MS)
     parser.add_argument("--rtl-device-index", type=int, default=0)
     parser.add_argument("--rtl-sample-rate-hz", type=int, default=DEFAULT_RTL_SAMPLE_RATE_HZ)
-    parser.add_argument("--rtl-max-capture-duration-s", type=float, default=DEFAULT_RTL_CAPTURE_DURATION_S * 8.0)
+    parser.add_argument("--rtl-capture-duration-s", type=float, default=DEFAULT_RTL_CAPTURE_DURATION_S)
     parser.add_argument("--rtl-tuner-gain-db10", type=int, default=DEFAULT_RTL_TUNER_GAIN_DB10)
     parser.add_argument("--rtl-auto-gain", action="store_true")
     parser.add_argument("--rtl-sync-block-bytes", type=int, default=DEFAULT_RTL_SYNC_BLOCK_BYTES)
@@ -168,8 +185,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--run-tag", default=None)
     parser.add_argument("--wav-out", type=Path, default=None)
     parser.add_argument("--manifest-out", type=Path, default=None)
-    parser.add_argument("--capture-report-out", type=Path, default=None)
-    parser.add_argument("--runtime-json-out", type=Path, default=None)
+    parser.add_argument("--report-out", type=Path, default=None)
     return parser.parse_args()
 
 
@@ -177,14 +193,12 @@ def build_output_paths(args: argparse.Namespace) -> dict[str, Path]:
     run_tag = args.run_tag or default_run_tag()
     wav_out = args.wav_out or (TMP_DIR / f"{DEFAULT_RUN_TAG_STEM}_{run_tag}.wav")
     manifest_out = args.manifest_out or (DATASET_DIR / f"manifest_{run_tag}.yaml")
-    capture_report_out = args.capture_report_out or (DOC_ASSET_DIR / f"{DEFAULT_RUN_TAG_STEM}_{run_tag}.json")
-    runtime_json_out = args.runtime_json_out or (DOC_ASSET_DIR / f"lab1122_runtime_bridge_txrx_self_timed_{run_tag}.json")
+    report_out = args.report_out or (DOC_ASSET_DIR / f"{DEFAULT_RUN_TAG_STEM}_{run_tag}.json")
     return {
         "run_tag": Path(run_tag),
         "wav_out": wav_out.resolve(),
         "manifest_out": manifest_out.resolve(),
-        "capture_report_out": capture_report_out.resolve(),
-        "runtime_json_out": runtime_json_out.resolve(),
+        "report_out": report_out.resolve(),
     }
 
 
@@ -208,7 +222,7 @@ def capture_rtlsdr_unsigned_iq(
     rtl_dev = ctypes.c_void_p()
     raw_parts: list[np.ndarray] = []
     bytes_captured = 0
-    max_bytes = int(args.rtl_sample_rate_hz * args.rtl_max_capture_duration_s * 2)
+    max_bytes = int(args.rtl_sample_rate_hz * args.rtl_capture_duration_s * 2)
 
     try:
         rc = rtl.rtlsdr_open(ctypes.byref(rtl_dev), args.rtl_device_index)
@@ -260,6 +274,162 @@ def capture_rtlsdr_unsigned_iq(
         started_event.set()
 
 
+def read_device_attr_value(device: Any | None, attr_name: str) -> str | None:
+    if device is None:
+        return None
+    attr = getattr(device, "attrs", {}).get(attr_name)
+    if attr is None:
+        return None
+    try:
+        return str(attr.value)
+    except OSError:
+        return None
+
+
+def write_device_attr_value(
+    device: Any | None,
+    attr_name: str,
+    value: str | int | float | None,
+    *,
+    strict: bool = True,
+) -> None:
+    if device is None or value is None:
+        return
+    attr = getattr(device, "attrs", {}).get(attr_name)
+    if attr is None:
+        return
+    try:
+        attr.value = str(value)
+    except OSError:
+        if strict:
+            raise
+
+
+def snapshot_device_attrs(device: Any | None) -> dict[str, str | None]:
+    return {
+        "sync_start_enable": read_device_attr_value(device, "sync_start_enable"),
+        "sync_start_enable_available": read_device_attr_value(device, "sync_start_enable_available"),
+        "waiting_for_supplier": read_device_attr_value(device, "waiting_for_supplier"),
+    }
+
+
+def maybe_apply_dds_sync_start_enable(dds: Any | None, requested_state: str | None) -> None:
+    if requested_state is None:
+        return
+    write_device_attr_value(dds, "sync_start_enable", requested_state, strict=False)
+
+
+def dds_core_scale_offset(channel: int) -> int:
+    return 0x400 + ((channel >> 1) * 0x40) + ((channel & 0x1) * 0x8)
+
+
+def dds_core_init_incr_offset(channel: int) -> int:
+    return dds_core_scale_offset(channel) + 0x4
+
+
+def dds_core_chan_cntrl_6_offset(channel: int) -> int:
+    return 0x414 + (channel * 0x40)
+
+
+def dds_core_chan_cntrl_7_offset(channel: int) -> int:
+    return 0x418 + (channel * 0x40)
+
+
+def dds_core_chan_cntrl_8_offset(channel: int) -> int:
+    return 0x41C + (channel * 0x40)
+
+
+def build_dds_core_register_items() -> tuple[tuple[str, int], ...]:
+    items: list[tuple[str, int]] = [
+        ("REG_RSTN", 0x040),
+        ("REG_SYNC_CONTROL", 0x044),
+        ("REG_RATECNTRL", 0x04C),
+        ("REG_CLK_FREQ", 0x054),
+        ("REG_CLK_RATIO", 0x058),
+        ("REG_STATUS", 0x05C),
+    ]
+    for channel in range(4):
+        items.extend(
+            [
+                (f"CH{channel}_DDS_SCALE", dds_core_scale_offset(channel)),
+                (f"CH{channel}_DDS_INIT_INCR", dds_core_init_incr_offset(channel)),
+                (f"CH{channel}_CHAN_CNTRL_6", dds_core_chan_cntrl_6_offset(channel)),
+                (f"CH{channel}_CHAN_CNTRL_7", dds_core_chan_cntrl_7_offset(channel)),
+                (f"CH{channel}_CHAN_CNTRL_8", dds_core_chan_cntrl_8_offset(channel)),
+            ]
+        )
+    return tuple(items)
+
+
+DDS_CORE_REGISTER_ITEMS = build_dds_core_register_items()
+
+
+def snapshot_axi_registers(
+    runner: Any,
+    *,
+    base_addr: int,
+    items: tuple[tuple[str, int], ...],
+) -> dict[str, dict[str, str]]:
+    snapshot: dict[str, dict[str, str]] = {}
+    for name, offset in items:
+        address = base_addr + offset
+        entry = {
+            "offset": f"0x{offset:04X}",
+            "address": f"0x{address:08X}",
+        }
+        try:
+            entry["value"] = f"0x{read_remote_devmem32(runner, address):08X}"
+        except Exception as exc:
+            entry["error_type"] = type(exc).__name__
+            entry["error"] = str(exc)
+        snapshot[name] = entry
+    return snapshot
+
+
+def snapshot_dds_core_registers(runner: Any) -> dict[str, dict[str, str]]:
+    return snapshot_axi_registers(
+        runner,
+        base_addr=DEFAULT_DDS_CORE_BASE_ADDR,
+        items=DDS_CORE_REGISTER_ITEMS,
+    )
+
+
+def rebind_platform_driver(
+    runner: Any,
+    *,
+    driver_name: str,
+    device_name: str,
+    dmesg_line_count: int = 20,
+) -> dict[str, Any]:
+    unbind_cmd = f"sh -lc 'echo {device_name} > /sys/bus/platform/drivers/{driver_name}/unbind'"
+    bind_cmd = f"sh -lc 'echo {device_name} > /sys/bus/platform/drivers/{driver_name}/bind'"
+    run_remote(runner, unbind_cmd, context=f"unbind {driver_name}/{device_name}")
+    run_remote(runner, bind_cmd, context=f"bind {driver_name}/{device_name}")
+    dmesg_tail = run_remote(
+        runner,
+        f"dmesg | tail -n {int(dmesg_line_count)}",
+        context=f"dmesg tail after {driver_name} rebind",
+    ).splitlines()
+    return {
+        "driver_name": driver_name,
+        "device_name": device_name,
+        "dmesg_tail": dmesg_tail,
+    }
+
+
+def write_runtime_dds_ratecntrl(runner: Any, value: int) -> dict[str, str]:
+    address = DEFAULT_DDS_CORE_BASE_ADDR + DEFAULT_DDS_RATECNTRL_OFFSET
+    before = read_remote_devmem32(runner, address)
+    write_remote_devmem32(runner, address, value)
+    after = read_remote_devmem32(runner, address)
+    return {
+        "address": f"0x{address:08X}",
+        "before": f"0x{before:08X}",
+        "write_value": f"0x{value & 0xFFFFFFFF:08X}",
+        "after": f"0x{after:08X}",
+    }
+
+
 def build_runtime_probe_config(args: argparse.Namespace, waveform_cfg: Any) -> RuntimeBridgeRxHostTxProbeConfig:
     return RuntimeBridgeRxHostTxProbeConfig(
         ssh_host=args.ssh_host,
@@ -269,7 +439,7 @@ def build_runtime_probe_config(args: argparse.Namespace, waveform_cfg: Any) -> R
         iio_uri=args.iio_uri,
         raw_bit_path="",
         bit_bin_path=str(args.bit_bin_path.resolve()),
-        tx_reference_path=str(DEFAULT_TX_REFERENCE_PATH),
+        tx_reference_path="",
         remote_firmware_name=args.remote_firmware_name,
         gpreg_base_addr=args.gpreg_base_addr,
         expected_id=args.expected_id,
@@ -316,7 +486,7 @@ def build_attempt_summary(attempts: list[dict[str, Any]], frame_bit_count: int) 
         return {
             "attempt_count": 0,
             "any_ok": False,
-            "conclusion": "No runtime bring-up attempts were executed during the RTL-SDR capture window.",
+            "conclusion": "DDS-only witness capture without runtime bridge start pulses.",
         }
 
     best_index = max(range(len(attempts)), key=lambda idx: attempt_rank_key(attempts[idx]))
@@ -326,7 +496,7 @@ def build_attempt_summary(attempts: list[dict[str, Any]], frame_bit_count: int) 
             "attempt_count": len(attempts),
             "any_ok": False,
             "best_attempt_index": best_index,
-            "conclusion": "All runtime bring-up attempts failed before a valid GPREG result was reported.",
+            "conclusion": "All runtime bridge attempts failed before a valid GPREG result was reported.",
         }
 
     result = best_attempt.get("result") or {}
@@ -334,11 +504,11 @@ def build_attempt_summary(attempts: list[dict[str, Any]], frame_bit_count: int) 
     total_errors = int(result.get("total_errors") or 0)
     payload_errors = int(result.get("payload_errors") or 0)
     if received_bits == frame_bit_count and total_errors == 0 and payload_errors == 0:
-        conclusion = "The runtime/PL BPSK path reached a full zero-error frame during the external monitor capture."
+        conclusion = "Runtime bridge pulses completed a full zero-error frame during the tone witness capture."
     elif received_bits == frame_bit_count:
-        conclusion = "The runtime/PL BPSK path reached a full frame during the external monitor capture."
+        conclusion = "Runtime bridge pulses completed a full frame during the tone witness capture."
     else:
-        conclusion = "The runtime/PL BPSK path emitted a partial frame during the external monitor capture."
+        conclusion = "Runtime bridge pulses emitted only a partial frame during the tone witness capture."
     return {
         "attempt_count": len(attempts),
         "any_ok": True,
@@ -358,19 +528,21 @@ def write_manifest(
     manifest_path: Path,
     dataset_id: str,
     wav_path: Path,
-    runtime_json_out: Path,
-    capture_report_out: Path,
-    waveform_cfg: Any,
+    report_path: Path,
     args: argparse.Namespace,
 ) -> None:
+    title_mode = "runtime bridge_txrx_mux" if args.mode == "runtime" else "stock-shell"
+    description = (
+        "Fresh local RTL-SDR stereo WAV IQ capture recorded while the board transmitted a DDS-generated complex tone. "
+        "The file is intended for offline WAV-IQ spectrum analysis through Block 9."
+    )
+    if args.bridge_bursts:
+        description += " Runtime bridge start pulses were asserted during the capture to witness DAC-mux behavior."
+
     manifest = {
         "dataset_id": dataset_id,
-        "title": "RTL-SDR monitor capture for runtime bridge_txrx_mux OTA BPSK",
-        "description": (
-            "Fresh local RTL-SDR stereo WAV IQ capture recorded after the runtime bridge_txrx_mux "
-            "overlay had already been loaded and AD9361 configured, with the capture window centered "
-            "on repeated PL-owned start pulses."
-        ),
+        "title": f"RTL-SDR monitor capture for {title_mode} DDS tone",
+        "description": description,
         "storage": "local-workstation",
         "url": None,
         "local_path_hint_windows": str(wav_path),
@@ -379,42 +551,54 @@ def write_manifest(
         "sample_rate_hz": args.rtl_sample_rate_hz,
         "center_frequency_hz": args.center_frequency_hz,
         "analysis_command": (
-            "python blocks/block_11_integrated_sdr_project/python/lab_11_20_read_rtl_wav_ota_bpsk_ber.py "
+            "python blocks/block_09_recording_and_analysis_tools/python/lab_9_4_read_wav_iq_and_analyze.py "
             f"--manifest {repo_relative_or_str(manifest_path)}"
         ),
+        "processing": {
+            "fft_length": 65536,
+        },
         "analysis": {
-            "reference_config_json": repo_relative_or_str(REFERENCE_CONFIG_JSON),
-            "reference_sample_rate_hz": waveform_cfg.sample_rate_hz,
-            "runtime_bringup_json": repo_relative_or_str(runtime_json_out),
-            "capture_report_json": repo_relative_or_str(capture_report_out),
+            "capture_report_json": repo_relative_or_str(report_path),
+            "peak_search_center_hz": int(args.tone_offset_hz),
+            "peak_search_half_span_hz": 50_000,
         },
         "hardware": {
-            "transmitter": "Zynq-7020 + AD9361 board, runtime bridge_txrx_mux PL-owned BPSK TX path",
+            "transmitter": f"Zynq-7020 + AD9361 board, {title_mode} DDS tone TX",
             "monitor_receiver": "RTL-SDR V3 Pro",
             "context_uri": args.iio_uri,
-            "tx_attenuation_db": args.tx_attenuation_db,
-            "rx_gain_db": args.rx_gain_db,
-            "start_offset": args.start_offset,
-            "rx_decision_mode": rx_decision_mode_name(args.rx_decision_mode),
+            "tx_attenuation_db": args.tx_hardwaregain_db,
+            "rx_gain_db": args.rx_hardwaregain_db,
             "rtl_tuner_gain_db10": args.rtl_tuner_gain_db10,
             "rtl_auto_gain": bool(args.rtl_auto_gain),
         },
         "signal": {
-            "modulation": "BPSK",
-            "symbol_rate_hz": waveform_cfg.symbol_rate_hz,
-            "samples_per_symbol": waveform_cfg.samples_per_symbol,
-            "rolloff": waveform_cfg.rolloff,
-            "payload_bit_count": waveform_cfg.payload_bit_count,
-            "reference_sample_rate_hz": waveform_cfg.sample_rate_hz,
-            "expected_signal_offset_hz": 0.0,
+            "type": "single_tone_dds_rf_tx",
+            "expected_signal_offset_hz": int(args.tone_offset_hz),
+            "dds_scale": float(args.tone_scale),
+            "bridge_bursts": bool(args.bridge_bursts),
+            "bridge_repeat_count": int(args.runtime_repeat_count if args.bridge_bursts else 0),
+        },
+        "quality_expectations": {
+            "max_clipping_fraction": 0.01,
+            "max_dc_offset": 0.25,
+            "max_frequency_error_hz": 50_000,
+            "min_snr_db": 8.0,
         },
         "notes": [
-            "This capture is intended for offline BER validation through the external RTL-SDR monitor path.",
-            "The runtime bridge_txrx_mux overlay uses the shared end_to_end_bpsk_reference bit package with seed=20260619 and samples_per_symbol=8.",
-            f"The PL start pulse was repeated {max(args.runtime_repeat_count, 1)} times to improve external-monitor observability.",
+            "This capture is intended for offline tone validation through the RTL-SDR monitor path.",
+            "The external WAV path is directly compatible with the Block 9 WAV-IQ analyzer.",
             "Keep the local WAV outside Git or move it into Git LFS before sharing the raw recording.",
         ],
     }
+    if args.mode == "runtime":
+        manifest["notes"].append(
+            "The runtime witness hot-loads bridge_txrx_mux before configuring AD9361 and DDS."
+        )
+    if args.bridge_bursts:
+        manifest["notes"].append(
+            "Bridge start pulses were issued during the capture to observe how the DAC mux behaves under PL-owned TX activation."
+        )
+
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
     manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False, allow_unicode=False), encoding="utf-8")
 
@@ -450,26 +634,14 @@ def maybe_reboot_to_stock(args: argparse.Namespace) -> dict[str, Any] | None:
 
 def main() -> int:
     args = parse_args()
-    outputs = build_output_paths(args)
-    dataset_id = f"lab11_22_runtime_pl_rtl_monitor_{outputs['run_tag'].name}"
-    bit_bin_path = args.bit_bin_path.resolve()
-    if not bit_bin_path.exists():
-        raise SystemExit(f"Missing runtime payload: {bit_bin_path}")
+    if args.bridge_bursts and args.mode != "runtime":
+        raise SystemExit("--bridge-bursts is only supported in --mode runtime.")
 
-    reference_cfg = load_reference_config()
-    waveform_cfg = make_waveform_config(
-        reference_cfg=reference_cfg,
-        center_frequency_hz=args.center_frequency_hz,
-        sample_rate_hz=args.sample_rate_hz,
-        rf_bandwidth_hz=args.rf_bandwidth_hz,
-        tx_attenuation_db=args.tx_attenuation_db,
-        rx_gain_db=args.rx_gain_db,
-        settle_ms=args.settle_ms,
-        rx_rf_port_select=args.rx_rf_port_select,
-        tx_rf_port_select=args.tx_rf_port_select,
-    )
-    probe_cfg = build_runtime_probe_config(args, waveform_cfg)
-    bit_payload = bit_bin_path.read_bytes()
+    outputs = build_output_paths(args)
+    dataset_id = f"lab11_24_dds_tone_rtl_monitor_{outputs['run_tag'].name}"
+    bit_bin_path = args.bit_bin_path.resolve()
+    if args.mode == "runtime" and not bit_bin_path.exists():
+        raise SystemExit(f"Missing runtime payload: {bit_bin_path}")
 
     runner = ParamikoCommandRunner(
         host=args.ssh_host,
@@ -487,44 +659,40 @@ def main() -> int:
     iio = None
     context = None
     phy = None
+    dds = None
     phy_snapshot: dict[str, str | None] = {}
+    dds_snapshot: dict[str, dict[str, str | None]] = {}
+    dds_device_snapshot: dict[str, str | None] = {}
 
     payload: dict[str, Any] = {
         "timestamp_utc": iso_now(),
         "run_tag": outputs["run_tag"].name,
         "dataset_id": dataset_id,
+        "mode": args.mode,
         "config": {
-            "ssh_host": args.ssh_host,
-            "ssh_user": args.ssh_user,
-            "ssh_port": args.ssh_port,
             "iio_uri": args.iio_uri,
-            "bit_bin_path": str(bit_bin_path),
-            "remote_firmware_name": args.remote_firmware_name,
-            "rebind_runtime_dds_driver": bool(args.rebind_runtime_dds_driver),
-            "rebind_runtime_adc_driver": bool(args.rebind_runtime_adc_driver),
-            "runtime_dds_ratecntrl": args.runtime_dds_ratecntrl,
-            "gpreg_base_addr": f"0x{args.gpreg_base_addr:08X}",
-            "expected_id": f"0x{args.expected_id:08X}",
-            "frame_bit_count": args.frame_bit_count,
-            "preamble_count": args.preamble_count,
-            "start_offset": args.start_offset,
-            "rx_decision_mode": rx_decision_mode_name(args.rx_decision_mode),
-            "runtime_repeat_count": args.runtime_repeat_count,
-            "runtime_repeat_gap_ms": args.runtime_repeat_gap_ms,
             "center_frequency_hz": args.center_frequency_hz,
             "sample_rate_hz": args.sample_rate_hz,
             "rf_bandwidth_hz": args.rf_bandwidth_hz,
-            "tx_attenuation_db": args.tx_attenuation_db,
-            "rx_gain_db": args.rx_gain_db,
+            "tone_offset_hz": args.tone_offset_hz,
+            "tone_scale": args.tone_scale,
+            "rx_gain_db": args.rx_hardwaregain_db,
+            "tx_attenuation_db": args.tx_hardwaregain_db,
+            "bridge_bursts": bool(args.bridge_bursts),
+            "allow_missing_gpreg": bool(args.allow_missing_gpreg),
+            "start_offset": args.start_offset,
+            "runtime_repeat_count": args.runtime_repeat_count,
+            "runtime_repeat_gap_ms": args.runtime_repeat_gap_ms,
             "rtl_sample_rate_hz": args.rtl_sample_rate_hz,
+            "rtl_capture_duration_s": args.rtl_capture_duration_s,
             "rtl_tuner_gain_db10": args.rtl_tuner_gain_db10,
             "rtl_auto_gain": bool(args.rtl_auto_gain),
-        },
-        "waveform_config": asdict(waveform_cfg),
-        "bitstream": {
-            "path": str(bit_bin_path),
-            "size_bytes": len(bit_payload),
-            "md5": md5_bytes(bit_payload),
+            "dds_sync_start_enable": args.dds_sync_start_enable,
+            "rebind_runtime_dds_driver": bool(args.rebind_runtime_dds_driver),
+            "rebind_runtime_adc_driver": bool(args.rebind_runtime_adc_driver),
+            "runtime_dds_ratecntrl": args.runtime_dds_ratecntrl,
+            "bit_bin_path": str(bit_bin_path) if args.mode == "runtime" else None,
+            "remote_firmware_name": args.remote_firmware_name if args.mode == "runtime" else None,
         },
         "stock_context_before": None,
         "upload": None,
@@ -537,6 +705,12 @@ def main() -> int:
         "runtime_dds_ratecntrl_write": None,
         "phy_before": None,
         "phy_after_config": None,
+        "dds_before": None,
+        "dds_device_before": None,
+        "dds_core_regs_before_config": None,
+        "dds_after_config": None,
+        "dds_device_after_config": None,
+        "dds_core_regs_after_config": None,
         "runtime_attempts": [],
         "summary": None,
         "rtl_capture": None,
@@ -549,54 +723,76 @@ def main() -> int:
 
     fatal_error: Exception | None = None
     try:
-        payload["stock_context_before"] = safe_probe(
-            "probe_iio_context_before",
-            lambda: probe_iio_context_summary(args.iio_uri),
-        )
-
-        remote_path = f"/lib/firmware/{args.remote_firmware_name}"
-        upload_bytes_via_ssh_cat(runner, payload=bit_payload, remote_path=remote_path)
-        payload["upload"] = read_remote_file_info(runner, remote_path)
-        payload["reload"] = trigger_fpga_manager_reload(
-            runner,
-            remote_firmware_name=args.remote_firmware_name,
-        )
-        payload["gpreg_after_reload"] = probe_gpreg_id(io)
-        payload["post_reload_context"] = safe_probe(
-            "probe_iio_context_after_reload",
-            lambda: probe_iio_context_summary(args.iio_uri),
-        )
-        payload["rx_common_reinit"] = force_rx_common_ctrl_request(
-            runner,
-            value=args.rx_common_ctrl_value,
-        )
-        if args.rebind_runtime_dds_driver:
-            payload["runtime_dds_driver_rebind"] = rebind_platform_driver(
-                runner,
-                driver_name=DEFAULT_DDS_DRIVER_NAME,
-                device_name=DEFAULT_DDS_DEVICE_NAME,
+        if args.mode == "runtime":
+            bit_payload = bit_bin_path.read_bytes()
+            payload["stock_context_before"] = safe_probe(
+                "probe_iio_context_before",
+                lambda: probe_iio_context_summary(args.iio_uri),
             )
-        if args.rebind_runtime_adc_driver:
-            payload["runtime_adc_driver_rebind"] = rebind_platform_driver(
+            remote_path = f"/lib/firmware/{args.remote_firmware_name}"
+            upload_bytes_via_ssh_cat(runner, payload=bit_payload, remote_path=remote_path)
+            payload["upload"] = read_remote_file_info(runner, remote_path)
+            payload["reload"] = trigger_fpga_manager_reload(
                 runner,
-                driver_name=DEFAULT_ADC_DRIVER_NAME,
-                device_name=DEFAULT_ADC_DEVICE_NAME,
+                remote_firmware_name=args.remote_firmware_name,
             )
-        if args.runtime_dds_ratecntrl is not None:
-            payload["runtime_dds_ratecntrl_write"] = write_runtime_dds_ratecntrl(
+            try:
+                payload["gpreg_after_reload"] = probe_gpreg_id(io)
+            except Exception as exc:
+                payload["gpreg_after_reload"] = {
+                    "ok": False,
+                    "error_type": type(exc).__name__,
+                    "error": str(exc),
+                }
+                if not args.allow_missing_gpreg:
+                    raise
+            payload["post_reload_context"] = safe_probe(
+                "probe_iio_context_after_reload",
+                lambda: probe_iio_context_summary(args.iio_uri),
+            )
+            payload["rx_common_reinit"] = force_rx_common_ctrl_request(
                 runner,
-                args.runtime_dds_ratecntrl,
+                value=args.rx_common_ctrl_value,
             )
+            if args.rebind_runtime_dds_driver:
+                payload["runtime_dds_driver_rebind"] = rebind_platform_driver(
+                    runner,
+                    driver_name=DEFAULT_DDS_DRIVER_NAME,
+                    device_name=DEFAULT_DDS_DEVICE_NAME,
+                )
+            if args.rebind_runtime_adc_driver:
+                payload["runtime_adc_driver_rebind"] = rebind_platform_driver(
+                    runner,
+                    driver_name=DEFAULT_ADC_DRIVER_NAME,
+                    device_name=DEFAULT_ADC_DEVICE_NAME,
+                )
+            if args.runtime_dds_ratecntrl is not None:
+                payload["runtime_dds_ratecntrl_write"] = write_runtime_dds_ratecntrl(
+                    runner,
+                    args.runtime_dds_ratecntrl,
+                )
 
         iio = load_iio_module()
         context = iio.Context(args.iio_uri)
         phy = next((device for device in context.devices if device.name == "ad9361-phy"), None)
-        if phy is None:
-            raise RuntimeError("Expected `ad9361-phy` after runtime reload.")
+        dds = next((device for device in context.devices if device.name == "cf-ad9361-dds-core-lpc"), None)
+        if phy is None or dds is None:
+            raise RuntimeError("Expected ad9361-phy and cf-ad9361-dds-core-lpc in the remote context.")
 
         phy_snapshot = snapshot_ad9361_state(phy)
+        dds_snapshot = snapshot_dds_state(dds)
+        dds_device_snapshot = snapshot_device_attrs(dds)
         payload["phy_before"] = phy_snapshot
-        payload["phy_after_config"] = configure_ad9361_bpsk(phy, waveform_cfg)
+        payload["dds_before"] = dds_snapshot
+        payload["dds_device_before"] = dds_device_snapshot
+        payload["dds_core_regs_before_config"] = snapshot_dds_core_registers(runner)
+        payload["phy_after_config"] = configure_ad9361_tone_capture(phy, args)
+        maybe_apply_dds_sync_start_enable(dds, args.dds_sync_start_enable)
+        configure_dds_tone(dds, args)
+        payload["dds_after_config"] = snapshot_dds_state(dds)
+        maybe_apply_dds_sync_start_enable(dds, args.dds_sync_start_enable)
+        payload["dds_device_after_config"] = snapshot_device_attrs(dds)
+        payload["dds_core_regs_after_config"] = snapshot_dds_core_registers(runner)
 
         capture_thread = threading.Thread(
             target=capture_rtlsdr_unsigned_iq,
@@ -614,14 +810,28 @@ def main() -> int:
             raise RuntimeError(capture_box["error"])
 
         time.sleep(max(args.capture_preroll_s, 0.0))
-        attempt_count = max(args.runtime_repeat_count, 1)
-        for attempt_index in range(attempt_count):
-            payload["runtime_attempts"].append(attempt_runtime_bringup(io, probe_cfg))
-            if attempt_index + 1 < attempt_count and args.runtime_repeat_gap_ms > 0:
-                time.sleep(args.runtime_repeat_gap_ms / 1000.0)
+        if args.bridge_bursts:
+            reference_cfg = load_reference_config()
+            waveform_cfg = make_waveform_config(
+                reference_cfg=reference_cfg,
+                center_frequency_hz=args.center_frequency_hz,
+                sample_rate_hz=args.sample_rate_hz,
+                rf_bandwidth_hz=args.rf_bandwidth_hz,
+                tx_attenuation_db=args.tx_hardwaregain_db,
+                rx_gain_db=args.rx_hardwaregain_db,
+                settle_ms=args.settle_ms,
+                rx_rf_port_select=args.rx_rf_port_select,
+                tx_rf_port_select=args.tx_rf_port_select,
+            )
+            probe_cfg = build_runtime_probe_config(args, waveform_cfg)
+            attempt_count = max(args.runtime_repeat_count, 1)
+            for attempt_index in range(attempt_count):
+                payload["runtime_attempts"].append(attempt_runtime_bringup(io, probe_cfg))
+                if attempt_index + 1 < attempt_count and args.runtime_repeat_gap_ms > 0:
+                    time.sleep(args.runtime_repeat_gap_ms / 1000.0)
         time.sleep(max(args.capture_postroll_s, 0.0))
         stop_event.set()
-        capture_thread.join(timeout=max(args.rtl_max_capture_duration_s + 2.0, 5.0))
+        capture_thread.join(timeout=max(args.rtl_capture_duration_s + 2.0, 5.0))
 
         if "error" in capture_box:
             raise RuntimeError(capture_box["error"])
@@ -634,9 +844,7 @@ def main() -> int:
             manifest_path=outputs["manifest_out"],
             dataset_id=dataset_id,
             wav_path=outputs["wav_out"],
-            runtime_json_out=outputs["runtime_json_out"],
-            capture_report_out=outputs["capture_report_out"],
-            waveform_cfg=waveform_cfg,
+            report_path=outputs["report_out"],
             args=args,
         )
 
@@ -663,7 +871,18 @@ def main() -> int:
     finally:
         stop_event.set()
         if capture_thread is not None and capture_thread.is_alive():
-            capture_thread.join(timeout=max(args.rtl_max_capture_duration_s + 2.0, 5.0))
+            capture_thread.join(timeout=max(args.rtl_capture_duration_s + 2.0, 5.0))
+        try:
+            if dds is not None and dds_snapshot:
+                restore_dds_state(dds, dds_snapshot)
+        except Exception as exc:
+            payload["cleanup_errors"].append({"stage": "restore_dds_state", "error": str(exc)})
+        try:
+            if dds is not None and dds_device_snapshot:
+                for attr_name, attr_value in dds_device_snapshot.items():
+                    write_device_attr_value(dds, attr_name, attr_value, strict=False)
+        except Exception as exc:
+            payload["cleanup_errors"].append({"stage": "restore_dds_device_attrs", "error": str(exc)})
         try:
             if phy is not None and phy_snapshot:
                 restore_ad9361_state(phy, phy_snapshot)
@@ -674,7 +893,6 @@ def main() -> int:
                 enforce_safe_tx_restore_over_ssh(phy_snapshot, args)
         except Exception as exc:
             payload["cleanup_errors"].append({"stage": "enforce_safe_tx_restore_over_ssh", "error": str(exc)})
-
         try:
             payload["reboot_after"] = maybe_reboot_to_stock(args)
         except Exception as exc:
@@ -688,14 +906,12 @@ def main() -> int:
         except Exception as exc:
             payload["cleanup_errors"].append({"stage": "runner.close", "error": str(exc)})
 
-    outputs["runtime_json_out"].parent.mkdir(parents=True, exist_ok=True)
-    outputs["runtime_json_out"].write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    outputs["capture_report_out"].parent.mkdir(parents=True, exist_ok=True)
-    outputs["capture_report_out"].write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    outputs["report_out"].parent.mkdir(parents=True, exist_ok=True)
+    outputs["report_out"].write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
-    print("Lab 11.22 - Capture RTL-SDR monitor WAV during runtime/PL BPSK bring-up")
-    print(f"Runtime JSON: {repo_relative_or_str(outputs['runtime_json_out'])}")
-    print(f"Capture report: {repo_relative_or_str(outputs['capture_report_out'])}")
+    print("Lab 11.24 - Capture RTL-SDR monitor WAV during DDS-tone TX")
+    print(f"Mode: {args.mode}")
+    print(f"Report JSON: {repo_relative_or_str(outputs['report_out'])}")
     if outputs["wav_out"].exists():
         print(f"WAV IQ: {outputs['wav_out']}")
     if outputs["manifest_out"].exists():

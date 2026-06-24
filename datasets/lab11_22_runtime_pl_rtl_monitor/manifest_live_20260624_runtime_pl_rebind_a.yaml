@@ -1,0 +1,45 @@
+dataset_id: lab11_22_runtime_pl_rtl_monitor_live_20260624_runtime_pl_rebind_a
+title: RTL-SDR monitor capture for runtime bridge_txrx_mux OTA BPSK
+description: Fresh local RTL-SDR stereo WAV IQ capture recorded after the runtime
+  bridge_txrx_mux overlay had already been loaded and AD9361 configured, with the
+  capture window centered on repeated PL-owned start pulses.
+storage: local-workstation
+url: null
+local_path_hint_windows: G:\Programs\zynq-sdr-course\tmp\lab1122_runtime_pl_rtl_monitor_live_20260624_runtime_pl_rebind_a.wav
+format: wav
+i_first: true
+sample_rate_hz: 2400000
+center_frequency_hz: 915000000
+analysis_command: python blocks/block_11_integrated_sdr_project/python/lab_11_20_read_rtl_wav_ota_bpsk_ber.py
+  --manifest datasets/lab11_22_runtime_pl_rtl_monitor/manifest_live_20260624_runtime_pl_rebind_a.yaml
+analysis:
+  reference_config_json: blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/config.json
+  reference_sample_rate_hz: 3840000
+  runtime_bringup_json: docs/assets/lab1122_runtime_bridge_txrx_self_timed_live_20260624_runtime_pl_rebind_a.json
+  capture_report_json: docs/assets/lab1122_runtime_pl_rtl_monitor_live_20260624_runtime_pl_rebind_a.json
+hardware:
+  transmitter: Zynq-7020 + AD9361 board, runtime bridge_txrx_mux PL-owned BPSK TX
+    path
+  monitor_receiver: RTL-SDR V3 Pro
+  context_uri: ip:192.168.40.1
+  tx_attenuation_db: -45.0
+  rx_gain_db: 10.0
+  start_offset: 60
+  rx_decision_mode: neg-q
+  rtl_tuner_gain_db10: 200
+  rtl_auto_gain: false
+signal:
+  modulation: BPSK
+  symbol_rate_hz: 480000
+  samples_per_symbol: 8
+  rolloff: 0.35
+  payload_bit_count: 256
+  reference_sample_rate_hz: 3840000
+  expected_signal_offset_hz: 0.0
+notes:
+- This capture is intended for offline BER validation through the external RTL-SDR
+  monitor path.
+- The runtime bridge_txrx_mux overlay uses the shared end_to_end_bpsk_reference bit
+  package with seed=20260619 and samples_per_symbol=8.
+- The PL start pulse was repeated 3 times to improve external-monitor observability.
+- Keep the local WAV outside Git or move it into Git LFS before sharing the raw recording.

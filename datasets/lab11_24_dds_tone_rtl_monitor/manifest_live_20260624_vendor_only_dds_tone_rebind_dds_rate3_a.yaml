@@ -1,0 +1,45 @@
+dataset_id: lab11_24_dds_tone_rtl_monitor_live_20260624_vendor_only_dds_tone_rebind_dds_rate3_a
+title: RTL-SDR monitor capture for runtime bridge_txrx_mux DDS tone
+description: Fresh local RTL-SDR stereo WAV IQ capture recorded while the board transmitted
+  a DDS-generated complex tone. The file is intended for offline WAV-IQ spectrum analysis
+  through Block 9.
+storage: local-workstation
+url: null
+local_path_hint_windows: G:\Programs\zynq-sdr-course\tmp\lab1124_dds_tone_rtl_monitor_live_20260624_vendor_only_dds_tone_rebind_dds_rate3_a.wav
+format: wav
+i_first: true
+sample_rate_hz: 2400000
+center_frequency_hz: 915000000
+analysis_command: python blocks/block_09_recording_and_analysis_tools/python/lab_9_4_read_wav_iq_and_analyze.py
+  --manifest datasets/lab11_24_dds_tone_rtl_monitor/manifest_live_20260624_vendor_only_dds_tone_rebind_dds_rate3_a.yaml
+processing:
+  fft_length: 65536
+analysis:
+  capture_report_json: docs/assets/lab1124_dds_tone_rtl_monitor_live_20260624_vendor_only_dds_tone_rebind_dds_rate3_a.json
+  peak_search_center_hz: 200000
+  peak_search_half_span_hz: 50000
+hardware:
+  transmitter: Zynq-7020 + AD9361 board, runtime bridge_txrx_mux DDS tone TX
+  monitor_receiver: RTL-SDR V3 Pro
+  context_uri: ip:192.168.40.1
+  tx_attenuation_db: -40.0
+  rx_gain_db: 10.0
+  rtl_tuner_gain_db10: 200
+  rtl_auto_gain: false
+signal:
+  type: single_tone_dds_rf_tx
+  expected_signal_offset_hz: 200000
+  dds_scale: 0.25
+  bridge_bursts: false
+  bridge_repeat_count: 0
+quality_expectations:
+  max_clipping_fraction: 0.01
+  max_dc_offset: 0.25
+  max_frequency_error_hz: 50000
+  min_snr_db: 8.0
+notes:
+- This capture is intended for offline tone validation through the RTL-SDR monitor
+  path.
+- The external WAV path is directly compatible with the Block 9 WAV-IQ analyzer.
+- Keep the local WAV outside Git or move it into Git LFS before sharing the raw recording.
+- The runtime witness hot-loads bridge_txrx_mux before configuring AD9361 and DDS.

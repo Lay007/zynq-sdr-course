@@ -23,7 +23,6 @@ if str(BLOCK11_PYTHON_DIR) not in sys.path:
 from lab_11_13_stock_vs_runtime_rx_compare import try_reboot_to_stock  # noqa: E402
 from lab_11_14_stock_shell_bpsk_ota import repo_relative_or_str  # noqa: E402
 from lab_11_15_runtime_bridge_rx_host_tx_probe import (  # noqa: E402
-    DEFAULT_BIT_BIN_PATH,
     DEFAULT_CENTER_FREQUENCY_HZ,
     DEFAULT_HOST,
     DEFAULT_IIO_URI,
@@ -51,6 +50,7 @@ DEFAULT_TX_ATTENUATION_DB = -50.0
 DEFAULT_REBOOT_TIMEOUT_S = 120.0
 DEFAULT_RUNTIME_REPEAT_COUNT = 3
 DEFAULT_RUNTIME_REPEAT_GAP_MS = 100
+DEFAULT_RUNTIME_BIT_BIN_PATH = ROOT / "tmp" / "bridge_txrx_mux.wordswap.bit.bin"
 
 
 @dataclass(frozen=True)
@@ -108,7 +108,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--ssh-port", type=int, default=DEFAULT_PORT)
     parser.add_argument("--ssh-timeout-s", type=float, default=DEFAULT_TIMEOUT_S)
     parser.add_argument("--iio-uri", default=DEFAULT_IIO_URI)
-    parser.add_argument("--bit-bin-path", type=Path, default=DEFAULT_BIT_BIN_PATH)
+    parser.add_argument("--bit-bin-path", type=Path, default=DEFAULT_RUNTIME_BIT_BIN_PATH)
     parser.add_argument("--remote-firmware-name", default=DEFAULT_REMOTE_FIRMWARE_NAME)
     parser.add_argument("--center-frequency-hz", type=int, default=DEFAULT_CENTER_FREQUENCY_HZ)
     parser.add_argument("--sample-rate-hz", type=int, default=3_840_000)

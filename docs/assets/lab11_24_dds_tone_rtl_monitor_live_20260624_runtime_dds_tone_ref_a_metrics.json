@@ -1,0 +1,20 @@
+{
+  "dataset_id": "lab11_24_dds_tone_rtl_monitor_live_20260624_runtime_dds_tone_ref_a",
+  "sample_count_read": 1179648,
+  "sample_rate_hz": 2400000.0,
+  "center_frequency_hz": 915000000.0,
+  "duration_s": 0.49152,
+  "measured_peak_hz": 2636.71875,
+  "expected_offset_hz": 200000.0,
+  "frequency_error_hz": -197363.28125,
+  "peak_dbfs": -53.55470388613789,
+  "noise_floor_dbfs": -92.03047573543265,
+  "snr_db": 38.47577184929476,
+  "dc_offset_magnitude": 0.0011497786433723304,
+  "clipping_fraction": 0.0,
+  "channels": 2,
+  "sample_width_bytes": 2,
+  "quality_pass": false,
+  "iq_path": "G:\\Programs\\zynq-sdr-course\\tmp\\lab1124_dds_tone_rtl_monitor_live_20260624_runtime_dds_tone_ref_a.wav",
+  "manifest_path": "G:\\Programs\\zynq-sdr-course\\datasets\\lab11_24_dds_tone_rtl_monitor\\manifest_live_20260624_runtime_dds_tone_ref_a.yaml"
+}

@@ -1,0 +1,255 @@
+{
+  "timestamp_utc": "2026-06-24T11:30:06.897365+00:00",
+  "run_tag": "live_20260624_sync_arm_test_a",
+  "config": {
+    "center_frequency_hz": 915000000,
+    "sample_rate_hz": 3840000,
+    "rf_bandwidth_hz": 2000000,
+    "tone_offsets_hz": [
+      200000
+    ],
+    "tone_scale": 0.25,
+    "rx_gain_db": 10.0,
+    "tx_attenuation_db": -40.0,
+    "rtl_tuner_gain_db10": 200,
+    "modes": [
+      "stock",
+      "runtime"
+    ],
+    "dds_sync_start_enable": "arm",
+    "keep_tmp": true
+  },
+  "results": [
+    {
+      "label": "stock_0200k",
+      "mode": "stock",
+      "runtime_like": false,
+      "tone_offset_hz": 200000,
+      "capture_ok": true,
+      "capture_returncode": 0,
+      "capture_stdout_tail": [
+        "Lab 11.24 - Capture RTL-SDR monitor WAV during DDS-tone TX",
+        "Mode: stock",
+        "Report JSON: tmp/lab1125_stock_vs_runtime_dds_tone_sweep/live_20260624_sync_arm_test_a/stock_0200k/capture_report.json",
+        "WAV IQ: G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\stock_0200k\\capture.wav",
+        "Manifest: tmp/lab1125_stock_vs_runtime_dds_tone_sweep/live_20260624_sync_arm_test_a/stock_0200k/manifest.yaml",
+        "Summary: {\"attempt_count\": 0, \"any_ok\": false, \"conclusion\": \"DDS-only witness capture without runtime bridge start pulses.\"}"
+      ],
+      "capture_stderr_tail": [
+        "Found Rafael Micro R820T tuner"
+      ],
+      "manifest_path": "tmp/lab1125_stock_vs_runtime_dds_tone_sweep/live_20260624_sync_arm_test_a/stock_0200k/manifest.yaml",
+      "capture_report_path": "tmp/lab1125_stock_vs_runtime_dds_tone_sweep/live_20260624_sync_arm_test_a/stock_0200k/capture_report.json",
+      "analysis_dir": "G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\stock_0200k\\analysis",
+      "analysis_ok": true,
+      "analysis_returncode": 0,
+      "analysis_stdout_tail": [
+        "Manifest: G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\stock_0200k\\manifest.yaml",
+        "IQ file: G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\stock_0200k\\capture.wav",
+        "Dataset ID: lab11_24_dds_tone_rtl_monitor_stock_0200k",
+        "Samples read: 1179648",
+        "Sample rate: 2400000 Hz",
+        "Center frequency: 915000000 Hz",
+        "Expected offset: 200000.000 Hz",
+        "Measured peak: 202624.512 Hz",
+        "Frequency error: 2624.512 Hz",
+        "SNR estimate: 66.38 dB",
+        "DC offset magnitude: 0.001124",
+        "Clipping fraction: 0.000000e+00",
+        "Quality pass: True",
+        "Spectrum plot: G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\stock_0200k\\analysis\\lab94_lab11_24_dds_tone_rtl_monitor_stock_0200k_spectrum.png",
+        "Time plot: G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\stock_0200k\\analysis\\lab94_lab11_24_dds_tone_rtl_monitor_stock_0200k_time_preview.png",
+        "Metrics JSON: G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\stock_0200k\\analysis\\lab11_24_dds_tone_rtl_monitor_stock_0200k_metrics.json"
+      ],
+      "analysis_stderr_tail": [],
+      "analysis_metrics_path": "tmp/lab1125_stock_vs_runtime_dds_tone_sweep/live_20260624_sync_arm_test_a/stock_0200k/analysis/lab11_24_dds_tone_rtl_monitor_stock_0200k_metrics.json",
+      "runtime_summary": {
+        "attempt_count": 0,
+        "any_ok": false,
+        "conclusion": "DDS-only witness capture without runtime bridge start pulses."
+      },
+      "rtl_capture": {
+        "raw_u8_mean": 127.39861424763997,
+        "raw_u8_std": 4.702701796189526,
+        "raw_u8_min": 119,
+        "raw_u8_max": 137,
+        "rtl_device_name": "Generic RTL2832U OEM",
+        "bytes_captured": 2359296
+      },
+      "dds_after_config": {
+        "altvoltage0_frequency_hz": "199983",
+        "altvoltage0_phase_mdeg": "90000",
+        "altvoltage0_scale": "0.250000",
+        "altvoltage2_frequency_hz": "199983",
+        "altvoltage2_phase_mdeg": "0",
+        "altvoltage2_scale": "0.250000"
+      },
+      "dds_device_after_config": {
+        "sync_start_enable": "arm",
+        "sync_start_enable_available": "arm",
+        "waiting_for_supplier": null
+      },
+      "bitstream_md5": null,
+      "metrics": {
+        "dataset_id": "lab11_24_dds_tone_rtl_monitor_stock_0200k",
+        "sample_count_read": 1179648,
+        "sample_rate_hz": 2400000.0,
+        "center_frequency_hz": 915000000.0,
+        "duration_s": 0.49152,
+        "measured_peak_hz": 202624.51171875,
+        "expected_offset_hz": 200000.0,
+        "frequency_error_hz": 2624.51171875,
+        "peak_dbfs": -25.711772639553416,
+        "noise_floor_dbfs": -92.09116141289243,
+        "snr_db": 66.37938877333902,
+        "dc_offset_magnitude": 0.0011243261788840395,
+        "clipping_fraction": 0.0,
+        "channels": 2,
+        "sample_width_bytes": 2,
+        "quality_pass": true,
+        "iq_path": "G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\stock_0200k\\capture.wav",
+        "manifest_path": "G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\stock_0200k\\manifest.yaml"
+      },
+      "peak_class": "near_expected"
+    },
+    {
+      "label": "runtime_0200k",
+      "mode": "runtime",
+      "runtime_like": true,
+      "tone_offset_hz": 200000,
+      "capture_ok": true,
+      "capture_returncode": 0,
+      "capture_stdout_tail": [
+        "Lab 11.24 - Capture RTL-SDR monitor WAV during DDS-tone TX",
+        "Mode: runtime",
+        "Report JSON: tmp/lab1125_stock_vs_runtime_dds_tone_sweep/live_20260624_sync_arm_test_a/runtime_0200k/capture_report.json",
+        "WAV IQ: G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\runtime_0200k\\capture.wav",
+        "Manifest: tmp/lab1125_stock_vs_runtime_dds_tone_sweep/live_20260624_sync_arm_test_a/runtime_0200k/manifest.yaml",
+        "Summary: {\"attempt_count\": 0, \"any_ok\": false, \"conclusion\": \"DDS-only witness capture without runtime bridge start pulses.\"}"
+      ],
+      "capture_stderr_tail": [
+        "Found Rafael Micro R820T tuner",
+        "ERROR: Unable to send command: Unknown error (10053)"
+      ],
+      "manifest_path": "tmp/lab1125_stock_vs_runtime_dds_tone_sweep/live_20260624_sync_arm_test_a/runtime_0200k/manifest.yaml",
+      "capture_report_path": "tmp/lab1125_stock_vs_runtime_dds_tone_sweep/live_20260624_sync_arm_test_a/runtime_0200k/capture_report.json",
+      "analysis_dir": "G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\runtime_0200k\\analysis",
+      "analysis_ok": true,
+      "analysis_returncode": 0,
+      "analysis_stdout_tail": [
+        "Manifest: G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\runtime_0200k\\manifest.yaml",
+        "IQ file: G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\runtime_0200k\\capture.wav",
+        "Dataset ID: lab11_24_dds_tone_rtl_monitor_runtime_0200k",
+        "Samples read: 1179648",
+        "Sample rate: 2400000 Hz",
+        "Center frequency: 915000000 Hz",
+        "Expected offset: 200000.000 Hz",
+        "Measured peak: 2636.719 Hz",
+        "Frequency error: -197363.281 Hz",
+        "SNR estimate: 38.67 dB",
+        "DC offset magnitude: 0.001151",
+        "Clipping fraction: 0.000000e+00",
+        "Quality pass: False",
+        "Spectrum plot: G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\runtime_0200k\\analysis\\lab94_lab11_24_dds_tone_rtl_monitor_runtime_0200k_spectrum.png",
+        "Time plot: G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\runtime_0200k\\analysis\\lab94_lab11_24_dds_tone_rtl_monitor_runtime_0200k_time_preview.png",
+        "Metrics JSON: G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\runtime_0200k\\analysis\\lab11_24_dds_tone_rtl_monitor_runtime_0200k_metrics.json"
+      ],
+      "analysis_stderr_tail": [],
+      "analysis_metrics_path": "tmp/lab1125_stock_vs_runtime_dds_tone_sweep/live_20260624_sync_arm_test_a/runtime_0200k/analysis/lab11_24_dds_tone_rtl_monitor_runtime_0200k_metrics.json",
+      "runtime_summary": {
+        "attempt_count": 0,
+        "any_ok": false,
+        "conclusion": "DDS-only witness capture without runtime bridge start pulses."
+      },
+      "rtl_capture": {
+        "raw_u8_mean": 127.39594099256728,
+        "raw_u8_std": 0.6107093185265284,
+        "raw_u8_min": 125,
+        "raw_u8_max": 130,
+        "rtl_device_name": "Generic RTL2832U OEM",
+        "bytes_captured": 2359296
+      },
+      "dds_after_config": {
+        "altvoltage0_frequency_hz": "199983",
+        "altvoltage0_phase_mdeg": "90000",
+        "altvoltage0_scale": "0.250000",
+        "altvoltage2_frequency_hz": "199983",
+        "altvoltage2_phase_mdeg": "0",
+        "altvoltage2_scale": "0.250000"
+      },
+      "dds_device_after_config": {
+        "sync_start_enable": "disarm",
+        "sync_start_enable_available": "arm",
+        "waiting_for_supplier": null
+      },
+      "bitstream_md5": "d1e8e6e8ee5eaf6f1508a1d7dca53ce0",
+      "metrics": {
+        "dataset_id": "lab11_24_dds_tone_rtl_monitor_runtime_0200k",
+        "sample_count_read": 1179648,
+        "sample_rate_hz": 2400000.0,
+        "center_frequency_hz": 915000000.0,
+        "duration_s": 0.49152,
+        "measured_peak_hz": 2636.71875,
+        "expected_offset_hz": 200000.0,
+        "frequency_error_hz": -197363.28125,
+        "peak_dbfs": -53.282658449601655,
+        "noise_floor_dbfs": -91.95577529619294,
+        "snr_db": 38.673116846591284,
+        "dc_offset_magnitude": 0.0011508863931235492,
+        "clipping_fraction": 0.0,
+        "channels": 2,
+        "sample_width_bytes": 2,
+        "quality_pass": false,
+        "iq_path": "G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\runtime_0200k\\capture.wav",
+        "manifest_path": "G:\\Programs\\zynq-sdr-course\\tmp\\lab1125_stock_vs_runtime_dds_tone_sweep\\live_20260624_sync_arm_test_a\\runtime_0200k\\manifest.yaml"
+      },
+      "peak_class": "near_dc"
+    }
+  ],
+  "summary_by_offset_hz": {
+    "200000": {
+      "modes": {
+        "stock": {
+          "capture_ok": true,
+          "analysis_ok": true,
+          "peak_class": "near_expected",
+          "raw_u8_std": 4.702701796189526,
+          "measured_peak_hz": 202624.51171875,
+          "frequency_error_hz": 2624.51171875,
+          "peak_dbfs": -25.711772639553416,
+          "snr_db": 66.37938877333902,
+          "quality_pass": true,
+          "bitstream_md5": null
+        },
+        "runtime": {
+          "capture_ok": true,
+          "analysis_ok": true,
+          "peak_class": "near_dc",
+          "raw_u8_std": 0.6107093185265284,
+          "measured_peak_hz": 2636.71875,
+          "frequency_error_hz": -197363.28125,
+          "peak_dbfs": -53.282658449601655,
+          "snr_db": 38.673116846591284,
+          "quality_pass": false,
+          "bitstream_md5": "d1e8e6e8ee5eaf6f1508a1d7dca53ce0"
+        }
+      },
+      "runtime_vs_stock": {
+        "stock_mode": "stock",
+        "other_mode": "runtime",
+        "stock_quality_pass": true,
+        "other_quality_pass": false,
+        "stock_peak_class": "near_expected",
+        "other_peak_class": "near_dc",
+        "measured_peak_delta_hz": -199987.79296875,
+        "frequency_error_delta_hz": -199987.79296875,
+        "peak_dbfs_delta": -27.57088581004824,
+        "snr_db_delta": -27.706271926747732,
+        "dc_offset_delta": 2.656021423950972e-05,
+        "raw_u8_std_ratio": 0.12986350081167594
+      },
+      "runtime_bridge_vs_stock": null
+    }
+  },
+  "conclusion": "Stock-shell DDS tone remains externally visible, while the runtime overlay still collapses the dominant external peak toward DC."
+}

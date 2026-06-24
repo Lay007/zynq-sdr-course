@@ -26,6 +26,7 @@
 - `lab_11_21_capture_rtl_sdr_monitor_wav.py`: включает на ZynqSDR stock-shell BPSK TX path, записывает свежий monitor WAV IQ через RTL-SDR и сразу пишет manifest, который можно напрямую подать в `lab_11_20_read_rtl_wav_ota_bpsk_ber.py`.
 - `lab_11_22_capture_runtime_pl_rtl_monitor_wav.py`: hot-load'ит runtime overlay `bridge_txrx_mux`, настраивает AD9361, пишет свежий RTL-SDR monitor WAV вокруг повторных PL-owned BPSK start pulse и формирует manifest для офлайн BER-replay уже по runtime/PL path.
 - `lab_11_23_runtime_pl_rtl_monitor_sweep.py`: запускает focused sweep по внешнему runtime/PL monitor-path вокруг уже живой точки, ранжирует наборы параметров по офлайн RTL-SDR BER и умеет отдельно rerun'ить лучшую точку как каноническое evidence.
+- `lab_11_24_capture_dds_tone_rtl_monitor_wav.py`: снимает управляемый внешний RTL-SDR WAV вокруг DDS-тона Zynq в режимах `stock` или `runtime` и пишет manifest для немедленного повтора через Block 9 WAV IQ analyzer.
 
 ## Критерии качества
 - файлы должны быть воспроизводимы и понятны без устных комментариев;
