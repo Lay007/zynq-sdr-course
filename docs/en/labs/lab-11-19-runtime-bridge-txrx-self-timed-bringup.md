@@ -1,0 +1,1 @@
+--8<-- "blocks/block_11_integrated_sdr_project/lab_11_19_runtime_bridge_txrx_self_timed_bringup.md"

@@ -1,0 +1,1 @@
+--8<-- "blocks/block_11_integrated_sdr_project/lab_11_15_runtime_bridge_rx_host_tx_probe.md"

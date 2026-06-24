@@ -224,6 +224,20 @@ nav:
           - "Lab 11.9 — AD9361 RF discovery sweep": ru/labs/lab-11-9-rf-discovery-sweep.md
           - "Lab 11.10 — Timed IIO burst capture": ru/labs/lab-11-10-iio-burst-capture.md
           - "Lab 11.11 — IIO vs gpreg contention probe": ru/labs/lab-11-11-iio-gpreg-contention-probe.md
+          - "Lab 11.13 — Stock vs runtime RX compare": ru/labs/lab-11-13-stock-vs-runtime-rx-compare.md
+          - "Lab 11.14 — Stock-shell host BPSK OTA measurement": ru/labs/lab-11-14-stock-shell-bpsk-ota.md
+          - "Lab 11.15 — Runtime bridge RX with host TX probe": ru/labs/lab-11-15-runtime-bridge-rx-host-tx-probe.md
+          - "Lab 11.16 — Runtime RX common re-init probe": ru/labs/lab-11-16-runtime-rx-common-reinit-probe.md
+          - "Lab 11.17 — Runtime RX re-init start-offset sweep": ru/labs/lab-11-17-runtime-rx-common-reinit-start-offset-sweep.md
+          - "Lab 11.18 — Runtime RX re-init fresh-session sweep": ru/labs/lab-11-18-runtime-rx-common-reinit-fresh-session-sweep.md
+          - "Lab 11.19 — Runtime bridge_txrx_mux self-timed bring-up": ru/labs/lab-11-19-runtime-bridge-txrx-self-timed-bringup.md
+          - "Lab 11.20 — Read RTL-SDR WAV OTA BPSK BER": ru/labs/lab-11-20-read-rtl-wav-ota-bpsk-ber.md
+          - "Lab 11.21 — Capture RTL-SDR monitor WAV (stock-shell BPSK)": ru/labs/lab-11-21-capture-rtl-sdr-monitor-wav.md
+          - "Lab 11.22 — Capture RTL-SDR monitor WAV (runtime PL BPSK)": ru/labs/lab-11-22-capture-runtime-pl-rtl-monitor-wav.md
+          - "Lab 11.23 — Runtime PL RTL-SDR attenuation sweep": ru/labs/lab-11-23-runtime-pl-rtl-monitor-sweep.md
+          - "Lab 11.24 — Capture DDS tone RTL-SDR monitor WAV": ru/labs/lab-11-24-capture-dds-tone-rtl-monitor-wav.md
+          - "Lab 11.25 — Stock vs runtime DDS tone sweep": ru/labs/lab-11-25-stock-vs-runtime-dds-tone-sweep.md
+          - "Lab 11.26 — Runtime PL BPSK OTA: DDS-bypass fix": ru/labs/lab-11-26-runtime-dds-bypass-bpsk-ota.md
       - "Проекты Block 12":
           - "Project 12.1 — QPSK modem final project": ru/labs/project-12-1-qpsk-modem-final-project.md
           - "Project 12.2 — RF capture analysis final project": ru/labs/project-12-2-rf-capture-analysis-final-project.md
@@ -335,6 +349,20 @@ nav:
           - "Lab 11.9 — AD9361 RF discovery sweep": en/labs/lab-11-9-rf-discovery-sweep.md
           - "Lab 11.10 — Timed IIO burst capture": en/labs/lab-11-10-iio-burst-capture.md
           - "Lab 11.11 — IIO vs gpreg contention probe": en/labs/lab-11-11-iio-gpreg-contention-probe.md
+          - "Lab 11.13 — Stock vs runtime RX compare": en/labs/lab-11-13-stock-vs-runtime-rx-compare.md
+          - "Lab 11.14 — Stock-shell host BPSK OTA measurement": en/labs/lab-11-14-stock-shell-bpsk-ota.md
+          - "Lab 11.15 — Runtime bridge RX with host TX probe": en/labs/lab-11-15-runtime-bridge-rx-host-tx-probe.md
+          - "Lab 11.16 — Runtime RX common re-init probe": en/labs/lab-11-16-runtime-rx-common-reinit-probe.md
+          - "Lab 11.17 — Runtime RX re-init start-offset sweep": en/labs/lab-11-17-runtime-rx-common-reinit-start-offset-sweep.md
+          - "Lab 11.18 — Runtime RX re-init fresh-session sweep": en/labs/lab-11-18-runtime-rx-common-reinit-fresh-session-sweep.md
+          - "Lab 11.19 — Runtime bridge_txrx_mux self-timed bring-up": en/labs/lab-11-19-runtime-bridge-txrx-self-timed-bringup.md
+          - "Lab 11.20 — Read RTL-SDR WAV OTA BPSK BER": en/labs/lab-11-20-read-rtl-wav-ota-bpsk-ber.md
+          - "Lab 11.21 — Capture RTL-SDR monitor WAV (stock-shell BPSK)": en/labs/lab-11-21-capture-rtl-sdr-monitor-wav.md
+          - "Lab 11.22 — Capture RTL-SDR monitor WAV (runtime PL BPSK)": en/labs/lab-11-22-capture-runtime-pl-rtl-monitor-wav.md
+          - "Lab 11.23 — Runtime PL RTL-SDR attenuation sweep": en/labs/lab-11-23-runtime-pl-rtl-monitor-sweep.md
+          - "Lab 11.24 — Capture DDS tone RTL-SDR monitor WAV": en/labs/lab-11-24-capture-dds-tone-rtl-monitor-wav.md
+          - "Lab 11.25 — Stock vs runtime DDS tone sweep": en/labs/lab-11-25-stock-vs-runtime-dds-tone-sweep.md
+          - "Lab 11.26 — Runtime PL BPSK OTA: DDS-bypass fix": en/labs/lab-11-26-runtime-dds-bypass-bpsk-ota.md
       - "Block 12 projects":
           - "Project 12.1 — QPSK modem final project": en/labs/project-12-1-qpsk-modem-final-project.md
           - "Project 12.2 — RF capture analysis final project": en/labs/project-12-2-rf-capture-analysis-final-project.md

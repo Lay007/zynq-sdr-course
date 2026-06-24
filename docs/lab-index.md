@@ -74,6 +74,20 @@ This page provides a compact index of the executable and report-oriented labs in
 | 11.9 | Integrated project | AD9361 RF discovery sweep | yes | yes/reuse | yes | manual | gated sweep plan to resume after sample-path reintegration around the stock shell |
 | 11.10 | Integrated project | Timed IIO burst capture | yes | yes/reuse | yes | manual | timed CI16 snapshot, trigger-relative power metrics, RF-vs-digital evidence |
 | 11.11 | Integrated project | IIO vs gpreg contention probe | yes | yes/reuse | yes | manual | standalone-vs-overlap matrix, DMAC snapshots, contention evidence |
+| 11.13 | Integrated project | Stock vs runtime RX compare | yes | yes/reuse | yes | manual | stock-shell vs runtime RX SNR/BER comparison evidence |
+| 11.14 | Integrated project | Stock-shell host BPSK OTA measurement | yes | yes/reuse | yes | manual | stock-shell RTL-SDR BER=0 baseline, correlation ratio ≥5.2 |
+| 11.15 | Integrated project | Runtime bridge RX with host TX probe | yes | yes/reuse | yes | manual | runtime bridge RX SNR, host-side TX probe evidence |
+| 11.16 | Integrated project | Runtime RX common re-init probe | yes | yes/reuse | yes | manual | RX common re-init latency, signal-quality before/after |
+| 11.17 | Integrated project | Runtime RX re-init start-offset sweep | yes | yes/reuse | yes | manual | start-offset vs SNR/BER sweep table |
+| 11.18 | Integrated project | Runtime RX re-init fresh-session sweep | yes | yes/reuse | yes | manual | fresh-session re-init stability evidence |
+| 11.19 | Integrated project | Runtime bridge_txrx_mux self-timed bring-up | yes | yes/reuse | yes | manual | tx_valid_count JSON, disable_dds_tones status, DDS/ADC rebind log |
+| 11.20 | Integrated project | Read RTL-SDR WAV OTA BPSK BER | yes | yes/reuse | yes | manual | offline BER analysis on RTL-SDR WAV captures, CFO search results |
+| 11.21 | Integrated project | Capture RTL-SDR monitor WAV (stock-shell BPSK) | yes | yes/reuse | yes | manual | stock-shell RTL-SDR WAV, preamble correlation ratio ≥5.2 |
+| 11.22 | Integrated project | Capture RTL-SDR monitor WAV (runtime PL BPSK) | yes | yes/reuse | yes | manual | runtime PL RTL-SDR WAV, disable_dds_tones applied |
+| 11.23 | Integrated project | Runtime PL RTL-SDR attenuation sweep | yes | yes/reuse | yes | manual | attenuation vs BER/EVM sweep table |
+| 11.24 | Integrated project | Capture DDS tone RTL-SDR monitor WAV | yes | yes/reuse | yes | manual | DDS tone WAV, spectral peak at expected offset, SNR measurement |
+| 11.25 | Integrated project | Stock vs runtime DDS tone sweep | yes | yes/reuse | yes | manual | stock-shell vs runtime DDS tone spectral comparison evidence |
+| 11.26 | Integrated project | Runtime PL BPSK OTA: DDS-bypass fix | yes | yes/reuse | yes | manual | disable_dds_tones applied, first OTA BPSK frame confirmed via PL TX path |
 
 ## Recommended assessment path
 

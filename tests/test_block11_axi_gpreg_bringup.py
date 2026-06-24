@@ -10,9 +10,11 @@ if str(MODULE_DIR) not in sys.path:
 
 from lab_11_8_axi_gpreg_bpsk_bringup import (  # noqa: E402
     DEFAULT_EXPECTED_ID,
+    DEFAULT_RX_DECISION_MODE,
     BringupConfig,
     MockRegisterIo,
     REGS,
+    parse_rx_decision_mode,
     run_bringup,
 )
 
@@ -31,6 +33,7 @@ def make_config(**overrides: int | str | bool | None) -> BringupConfig:
         "clear_done": True,
         "max_total_errors": 0,
         "max_payload_errors": 0,
+        "rx_decision_mode": parse_rx_decision_mode(DEFAULT_RX_DECISION_MODE),
     }
     payload.update(overrides)
     return BringupConfig(**payload)

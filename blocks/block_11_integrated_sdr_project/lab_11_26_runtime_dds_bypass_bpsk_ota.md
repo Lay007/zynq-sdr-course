@@ -1,0 +1,170 @@
+# Lab 11.26 - Runtime PL BPSK OTA: DDS-bypass fix and first air-path validation
+
+## Objective / Цель
+
+**EN:** Identify why the runtime PL BPSK signal was not detectable by the external
+RTL-SDR despite `tx_valid_count > 0`, apply the DDS-bypass fix, and confirm the
+first OTA BPSK frame over the PL-owned AD9361 TX path.
+
+**RU:** Установить, почему сигнал PL BPSK не обнаруживался RTL-SDR несмотря на
+ненулевой `tx_valid_count`, применить исправление DDS-bypass и подтвердить
+первый OTA BPSK-кадр через путь AD9361 TX, управляемый PL.
+
+---
+
+## Background / Предпосылки
+
+**EN:**
+Previous RTL-SDR captures (labs 11.22–11.23) showed consistent BER ≈ 35–40%
+(near-random) with EVM > 500 % for all runtime PL BPSK attempts, even after:
+- AXI DDS repair (`cf_axi_dds` rebind + `RATECNTRL = 3`)
+- ADC driver rebind
+- Fine CFO search at ±12 kHz
+
+A preamble-correlation diagnostic confirmed no BPSK signal was present:
+- Stock-shell capture: correlation ratio ≈ 5.2 (clear peak) → BER = 0
+- Runtime PL captures: correlation ratio ≈ 3.5 (below the ≈ 4.7 noise threshold
+  for 60 000 positions) → no signal at any coarse frequency
+
+The strongest spectral peak at −316 kHz was identified as interference/spurious
+(3 dB bandwidth did not match the expected ≈ 648 kHz BPSK occupied bandwidth).
+
+**RU:**
+Все предыдущие захваты RTL-SDR (lab 11.22–11.23) показывали BER ≈ 35–40%
+(случайный уровень) при EVM > 500 % даже после:
+- DDS-ремонта AXI (`cf_axi_dds` перепривязка + `RATECNTRL = 3`)
+- Перепривязки драйвера АЦП
+- Точного поиска CFO ±12 кГц
+
+Диагностика корреляции преамбулы подтвердила отсутствие сигнала BPSK:
+- Stock-shell захват: отношение корреляции ≈ 5.2 (чёткий пик) → BER = 0
+- Захваты runtime PL: отношение ≈ 3.5 (ниже порога шума ≈ 4.7) → сигнал
+  отсутствует на любой несущей
+
+Доминирующий пик на −316 кГц идентифицирован как помеха/спур (полоса 3 дБ не
+соответствует ожидаемым ≈ 648 кГц для 480 кбит/с BPSK с rolloff 0.35).
+
+---
+
+## Root Cause / Причина
+
+**EN:**
+After `fpga_manager` overlay reload the `cf-ad9361-dds-core-lpc` DDS core
+re-initialises in **DDS-only mode** (driver default). In this mode the PL
+AXI-Stream TX data path is disconnected from the AD9361 DAC: only the DDS tone
+(amplitude zero by default, or whatever was last configured) is forwarded to the
+DAC. The PL BPSK chain asserts `tx_valid` (counted by `axi_gpreg`), but those
+samples never leave the FPGA fabric.
+
+**RU:**
+После перезагрузки оверлея `fpga_manager` ядро `cf-ad9361-dds-core-lpc`
+инициализируется в режиме **DDS-only** (поведение по умолчанию драйвера). В этом
+режиме путь данных AXI-Stream PL TX отключён от ЦАП AD9361: в ЦАП поступает
+только выход DDS-тона (амплитуда 0 по умолчанию, или последнее конфигурированное
+значение). Цепь PL BPSK подтверждает `tx_valid` (считается `axi_gpreg`), но эти
+отсчёты никогда не покидают логику FPGA.
+
+---
+
+## Fix / Исправление
+
+**EN:**
+Call `disable_dds_tones(dds)` after connecting to the IIO context and before
+starting the BPSK bringup. This writes `raw = 0` and `scale = 0` to every DDS
+output channel, muting the DDS and switching the hardware mux to pass PL
+AXI-Stream data through to the AD9361 DAC.
+
+**RU:**
+Вызвать `disable_dds_tones(dds)` после подключения к IIO-контексту и до запуска
+BPSK. Функция записывает `raw = 0` и `scale = 0` во все выходные каналы DDS,
+заглушая тон и переключая мультиплексор на передачу данных PL AXI-Stream в ЦАП
+AD9361.
+
+Files modified / Изменённые файлы:
+- `lab_11_19_runtime_bridge_txrx_self_timed_bringup.py` — `disable_dds_tones`
+  + DDS/ADC rebind args added
+- `lab_11_22_capture_runtime_pl_rtl_monitor_wav.py` — `disable_dds_tones` added
+
+---
+
+## Procedure / Порядок выполнения
+
+### Prerequisites / Предварительные условия
+
+- Zynq SDR board at `192.168.40.1`, SSH root/analog
+- RTL-SDR V3 Pro tuned to 915 MHz, gain 20–40 dB, SDR++ recording
+- TX antenna and RX antenna ≤ 3 m apart, no external attenuator
+- TX attenuation: −45 dB (default, RF-safe)
+
+> **RF Safety / Безопасность:** не увеличивать TX мощность ради «увидеть сигнал».
+> Для первого OTA-обнаружения использовать минимальную мощность TX.
+> RX gain — ручной, AGC выключен. Burst короткий.
+
+### Step 1 — Capture RTL-SDR monitor WAV with DDS bypass
+
+```bash
+# Start SDR++ recording at 915 MHz, 2.4 MS/s
+# Then in a separate terminal:
+python blocks/block_11_integrated_sdr_project/python/lab_11_22_capture_runtime_pl_rtl_monitor_wav.py \
+    --rebind-runtime-dds-driver \
+    --rebind-runtime-adc-driver \
+    --runtime-dds-ratecntrl 3
+```
+
+**What to expect / Ожидаемый результат:**
+- `disable_dds_tones: {"status": "ok"}` в выходном JSON
+- `tx_valid_count > 0` (PL цепь работает)
+- Сигнал BPSK должен появиться вблизи DC (≈ +2.4 кГц, как у stock-shell)
+
+### Step 2 — Offline BER analysis
+
+```bash
+python blocks/block_11_integrated_sdr_project/python/lab_11_20_read_rtl_wav_ota_bpsk_ber.py \
+    --manifest datasets/lab11_22_runtime_pl_rtl_monitor/<new_manifest>.yaml \
+    --run-tag dds_bypass_v1
+```
+
+**Success criterion / Критерий успеха:**
+- Отношение корреляции преамбулы > 5.0 (сигнал обнаружен)
+- BER < 10 % → первое подтверждённое OTA BPSK через PL-путь
+- BER = 0 → полный успех (как у stock-shell)
+
+### Step 3 — If BER > 10 % after DDS fix
+
+| Symptom | Likely cause | Next action |
+|---|---|---|
+| Signal at DC, BER 5–20 % | Residual CFO or low SNR | Increase RTL gain; try `--fine-search-hz 20000` |
+| Signal at DC, BER > 30 % | Wrong waveform params | Check `symbol_rate_hz`, `samples_per_symbol` in manifest |
+| No signal at DC, BER random | DDS still blocking | Check `disable_dds_tones` JSON field; try `--rebind-runtime-dds-driver` again |
+| Signal off-frequency | AD9361 LO mismatch | Verify `center_frequency_hz = 915000000` in IIO |
+
+---
+
+## Evidence template / Шаблон доказательства
+
+After a successful run, record the following metrics in
+`docs/assets/lab1126_runtime_dds_bypass_bpsk_ota_<timestamp>_metrics.json`:
+
+```json
+{
+  "lab": "11.26",
+  "date": "2026-XX-XX",
+  "disable_dds_tones_status": "ok",
+  "selected_coarse_frequency_hz": "...",
+  "total_frequency_shift_hz": "...",
+  "bit_errors_total": "...",
+  "bit_errors_payload": "...",
+  "ber_total": "...",
+  "evm_percent": "...",
+  "conclusion": "First confirmed OTA BPSK frame via PL TX path"
+}
+```
+
+---
+
+## Related labs / Связанные лабораторные работы
+
+- [Lab 11.19](lab_11_19_runtime_bridge_txrx_self_timed_bringup.md) — Runtime self-timed bring-up (DDS bypass now included)
+- [Lab 11.22](lab_11_22_capture_runtime_pl_rtl_monitor_wav.md) — RTL-SDR monitor capture (DDS bypass now included)
+- [Lab 11.24](lab_11_24_capture_dds_tone_rtl_monitor_wav.md) — DDS tone reference (confirms DDS repair)
+- [Lab 11.25](lab_11_25_stock_vs_runtime_dds_tone_sweep.md) — DDS isolation evidence
