@@ -6,7 +6,8 @@ This block moves the student from digital DSP/FPGA processing to a real RF bench
 
 ```mermaid
 flowchart LR
-    BB[Baseband signal] --> DAC[DAC / TX digital path]
+    BB[Baseband signal] --> DBG[Debug waveform]
+    DBG --> DAC[DAC / TX digital path]
     DAC --> TXRF[AD9363 TX RF chain]
     TXRF --> PATH[Coax / attenuator / antenna]
     PATH --> RXRF[Receiver RF chain]
@@ -24,6 +25,7 @@ flowchart LR
 | FIR/decimator | defines useful bandwidth and out-of-band rejection |
 | IQ metadata | records capture parameters for reproducibility |
 | HDL/AXIS interface | connects FPGA streaming path to the RF chain |
+| Debug waveform format | helps find the signal on air and verify the chain through known signatures |
 
 ## Minimum RF discipline
 
@@ -38,6 +40,7 @@ Before enabling transmission, record:
 | TX gain / attenuation | -20 dB | protects receiver from overload |
 | External attenuation | 20–60 dB | safe cabled connection |
 | Expected tone offset | 100 kHz | frequency-plan verification |
+| Expected preamble/sync | `1010...` / `0xA5A55A5A` | packet detection verification |
 
 ## Safe first-bench connection
 
@@ -51,11 +54,34 @@ flowchart LR
 !!! warning "RF safety"
     Do not connect TX directly to a sensitive receiver without attenuation. Start with minimum TX gain, external attenuation and overload monitoring in the spectrum.
 
+## Debug signal for on-air search
+
+For RF bring-up, transmit a dedicated debug frame instead of an arbitrary stream:
+
+```text
+silence → lead-in tone → preamble → sync word → header → training → payload/PRBS → CRC → silence
+```
+
+Minimum TX modes worth supporting:
+
+- pure tone — find the transmission and verify the frequency plan;
+- preamble only — verify correlation-based search;
+- repeated sync word — verify bit/byte order;
+- PRBS packet — compute BER;
+- amplitude sweep — find overload and tune gain/attenuator;
+- frequency sweep — verify NCO sign, I/Q and frequency axis;
+- two-tone/multitone — verify linearity, bandwidth and spurs.
+
+Detailed guide: [Debug Waveform Design for SDR Hardware Bring-up](../../debug-waveform-design.md).
+
 ## Normal operating signs
 
 | Sign | Meaning |
 |---|---|
 | One stable peak | frequency plan is correct |
+| Packet bursts are visible on the waterfall | frame period and silence work correctly |
+| Preamble correlation gives a stable peak | the signal is found automatically |
+| Sync word is found after the preamble | bit/byte ordering is consistent |
 | No broad flat top | no obvious ADC/RF overload |
 | Stable noise floor | gain is reasonable |
 | Side spurs below the useful signal | NCO/LO/quantization do not dominate |
@@ -70,6 +96,7 @@ flowchart LR
 | Noise floor rises with signal | nonlinearity or AGC | disable AGC, reduce level |
 | Peak does not change with gain | clipping/limiting | check levels and cables |
 | Signal drifts in frequency | LO offset / drift | measure frequency error |
+| Correlation peak exists, but CRC fails | timing/CFO/bit-order error | check sync, training and demodulator |
 
 ## Basic RF report
 
@@ -79,10 +106,12 @@ Every Block 6 experiment should contain:
 2. connection diagram;
 3. frequency plan;
 4. gain/bandwidth settings table;
-5. screenshot or FFT plot of normal operation;
-6. overload signs or their absence;
-7. IQ metadata file;
-8. engineering conclusion.
+5. debug waveform or `tx_mode` description;
+6. screenshot or FFT plot of normal operation;
+7. preamble/sync detection result;
+8. overload signs or their absence;
+9. IQ metadata file;
+10. engineering conclusion.
 
 ## Connection to later blocks
 
