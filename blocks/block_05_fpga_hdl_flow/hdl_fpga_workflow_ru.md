@@ -98,6 +98,19 @@ flowchart LR
 | NCO + mixer |  |  |  |  |  |  | LUT/CORDIC trade-off |
 | Decimator |  |  |  |  |  |  | FIR + rate change |
 
+## Debug-by-design
+
+Аппаратная отладка должна планироваться уже на этапе модели. Для каждого RTL-блока нужно заранее определить:
+
+- какие внутренние точки будут наблюдаемыми;
+- какие reference vectors соответствуют этим точкам;
+- какие регистры статуса нужны для стенда;
+- какие test modes можно включить без перепрошивки;
+- какие сигналы нужно вывести в ILA/VIO или debug-mux;
+- какие признаки должны совпасть с внешним RF-наблюдением через RTL-SDR/HDSDR.
+
+Подробный материал вынесен в отдельную страницу: [Отладка железа как часть модели](../../hardware-debug-by-design.md).
+
 ## Vivado integration checklist
 
 - [ ] RTL module has clean clock/reset.
@@ -109,6 +122,8 @@ flowchart LR
 - [ ] IP wrapper or block design connection is described.
 - [ ] Register map is documented if PS control is used.
 - [ ] Debug signals are selected for ILA if needed.
+- [ ] Debug tap plan is linked to model-level reference vectors.
+- [ ] Control/status registers include counters and overflow/underflow flags.
 
 ## Связь с Zynq SoC
 
@@ -130,4 +145,5 @@ flowchart TB
 - написать testbench с reference vectors;
 - оценить latency и ресурсы;
 - объяснить, как блок попадёт в Vivado block design;
+- заранее спланировать наблюдаемые точки, debug-регистры и ILA-сигналы;
 - подготовить минимальный отчёт по HDL/FPGA маршруту.
