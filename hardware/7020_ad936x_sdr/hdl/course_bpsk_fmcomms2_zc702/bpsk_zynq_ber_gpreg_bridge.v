@@ -183,7 +183,7 @@ bpsk_zynq_ber_top #(
     .tx_valid(burst_out_valid),
     .tx_i(burst_out_i),
     .tx_q(burst_out_q),
-    .rx_valid(capture_in_valid),
+    .rx_valid(capture_in_valid && tx_path_active_sample),
     .rx_i(capture_in_i_fmt),
     .rx_q(capture_in_q_fmt),
     .rx_decision_mode(rx_decision_mode),

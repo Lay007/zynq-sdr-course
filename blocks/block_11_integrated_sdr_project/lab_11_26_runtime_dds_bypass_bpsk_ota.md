@@ -333,6 +333,110 @@ the tail-loop problem and allows proper preamble correlation.
 
 ---
 
+---
+
+## Hardware BER counter root cause and RTL fix (2026-06-25)
+
+### Symptom / Симптом
+
+After switching to the AD9361 RX loopback (TX1/RX1 antennas touching on the board),
+the PL hardware BER counter consistently reported **BER ≈ 46–50 %** across all runs
+with `start_offset` 59–66 and both OTA and digital loopback modes:
+
+```text
+v1:  281 bits, 131 errors, BER = 46.6 %,  rx_valid_count = 2982
+v3:  281 bits, 141 errors, BER = 50.2 %,  rx_valid_count = 2982
+dig: 281 bits, 131 errors, BER = 46.6 %,  capture_peak  = 1126
+```
+
+### Root cause / Причина
+
+`bpsk_ynq_ber_gpreg_bridge.v` passes `capture_in_valid` **ungated** to the timing
+sampler:
+
+```verilog
+// BUG — before fix:
+.rx_valid(capture_in_valid),   // always 1 from ADC streaming
+```
+
+The `capture_in_valid` signal from the AD9361 ADC block-design path is **always
+asserted** as soon as the ADC driver is active (continuous streaming). As a result,
+`sample_index` inside `bpsk_symbol_timing_sampler` starts counting from the moment
+the ADC driver is rebound — **seconds before the frame_start pulse**.
+
+At `frame_start`, `sample_index` ≈ `T_config × 3 840 000 mod 65 536` ≈ 63 488 (for
+`T_config ≈ 5 s`). The timing sampler condition
+`((sample_index − start_offset) % SPS == 0)` is already satisfied immediately, so
+all 281 symbol samples are emitted within the first ≈ 300 µs after frame_start —
+**before any TX output can propagate to the RX chain**. The BER counter receives 281
+near-zero (silence) samples → hard decisions are random → BER ≈ 50 %.
+
+Key facts:
+
+- `3 840 000 mod 8 = 0`, so `sample_index mod SPS` is **constant** across all runs
+  regardless of ms-level Python timing jitter → changing `start_offset` by 1..7
+  moves the phase but cannot escape the pre-TX firing window.
+- `rx_valid_count = 2982` reflects the time from `frame_start` to TX completion
+  (~2248 BPSK samples + TX pipeline), not RX preamble reception.
+- `frame_bit_count_cfg` is latched **only** at `start_edge`, so before the first
+  start pulse `symbol_count = 0` (safe: timing sampler never fires before the first
+  frame_start). The bug triggers because `sample_index` has advanced to ~63 488 by
+  then, so all 281 firings happen in the pre-TX silence window.
+
+### RTL fix applied / Применённое RTL-исправление
+
+Gate `rx_valid` with `tx_path_active_sample` in
+`hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/bpsk_ynq_ber_gpreg_bridge.v`:
+
+```verilog
+// FIXED (one line change):
+.rx_valid(capture_in_valid && tx_path_active_sample),
+```
+
+`tx_path_active_sample` is set to 1 at `start_edge` (same cycle as
+`start_pulse_sample`) and cleared when `core_done` or `core_timed_out`. After ADC
+rebind, `sample_resetn` clears `tx_path_active_sample` to 0. Therefore:
+
+- Before `frame_start`: `rx_valid = 0` → `sample_index` stays at 0 regardless of
+  how long Python waits between rebind and start pulse.
+- At `frame_start`: `tx_path_active_sample = 1` → `rx_valid = 1` →
+  `sample_index` starts from 0, exactly as in the testbench
+  (`LOOPBACK_SAMPLE_DELAY = 24`, `start_offset = 62`, BER = 0 %).
+
+With this fix the required `start_offset` satisfies `start_offset ≈ D_total`, where
+`D_total` is the combined TX + propagation + RX pipeline sample delay. The
+testbench uses `start_offset = 62` with a 24-sample loopback; for OTA with adjacent
+antennas, `start_offset = 62` should also work, with fine-tuning ±8 if needed.
+
+### Rebuild and test / Пересборка и тест
+
+The fix requires a Vivado bitstream rebuild (Vivado 2021.1 at `g:/Xilinx/Vivado/`).
+After rebuild:
+
+1. Convert output `.bit` to word-swapped `.bit.bin`:
+
+   ```bash
+   python hardware/7020_ad936x_sdr/boot/build_system_bit_bin.py \
+       tmp/vendor_xpr_course_overlay/zc702/zc702.runs/impl_1/bridge_txrx_mux.bit \
+       --output tmp/bridge_txrx_mux.wordswap.bit.bin
+   ```
+
+2. Run OTA BER test with TX1/RX1 antennas adjacent:
+
+   ```bash
+   python blocks/block_11_integrated_sdr_project/python/lab_11_22_capture_runtime_pl_rtl_monitor_wav.py \
+       --rebind-runtime-adc-driver \
+       --start-offset 62
+   ```
+
+3. Expected outcome: `received_bits = 281`, `total_errors = 0`, `payload_errors = 0`,
+   BER = 0 %. If BER > 0 %, scan `start_offset` in ±8 increments to find
+   the correct OTA pipeline delay alignment.
+
+Evidence files will be saved to `docs/assets/lab1122_runtime_bridge_txrx_*_ber0*.json`.
+
+---
+
 ## Related labs / Связанные лабораторные работы
 
 - [Lab 11.19](lab_11_19_runtime_bridge_txrx_self_timed_bringup.md) — Runtime self-timed bring-up (DDS bypass now included)
