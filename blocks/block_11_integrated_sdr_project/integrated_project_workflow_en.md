@@ -70,7 +70,7 @@ In the final project, the student should demonstrate not only that something was
 - PRBS/known payload allows BER computation;
 - metadata allows repeating the experiment.
 
-Detailed guide: [Debug Waveform Design for SDR Hardware Bring-up](../../debug-waveform-design.md).
+Detailed guide: [Debug Waveform Design for SDR Hardware Bring-up](../debug-waveform-design.md).
 
 ## Block output
 
