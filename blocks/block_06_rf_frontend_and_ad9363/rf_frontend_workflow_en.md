@@ -72,7 +72,7 @@ Minimum TX modes worth supporting:
 - frequency sweep — verify NCO sign, I/Q and frequency axis;
 - two-tone/multitone — verify linearity, bandwidth and spurs.
 
-Detailed guide: [Debug Waveform Design for SDR Hardware Bring-up](../../debug-waveform-design.md).
+Detailed guide: [Debug Waveform Design for SDR Hardware Bring-up](../debug-waveform-design.md).
 
 ## Normal operating signs
 
