@@ -109,7 +109,7 @@ Hardware debug should be planned already at model level. For every RTL block, de
 - which signals should be routed to ILA/VIO or a debug mux;
 - which signs must match external RF observation through RTL-SDR/HDSDR.
 
-The detailed guide is available on a separate page: [Hardware Debug as Part of the Model](../../en/hardware-debug-by-design.md).
+The detailed guide is available on a separate page: [Hardware Debug as Part of the Model](../hardware-debug-by-design.md).
 
 ## Vivado integration checklist
 
