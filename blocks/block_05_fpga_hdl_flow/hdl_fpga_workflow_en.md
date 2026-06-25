@@ -98,6 +98,19 @@ Minimum checks:
 | NCO + mixer |  |  |  |  |  |  | LUT/CORDIC trade-off |
 | Decimator |  |  |  |  |  |  | FIR + rate change |
 
+## Debug-by-design
+
+Hardware debug should be planned already at model level. For every RTL block, define early:
+
+- which internal points can be observed;
+- which reference vectors correspond to these points;
+- which status registers are required at the bench;
+- which test modes can be enabled without rebuilding the bitstream;
+- which signals should be routed to ILA/VIO or a debug mux;
+- which signs must match external RF observation through RTL-SDR/HDSDR.
+
+The detailed guide is available on a separate page: [Hardware Debug as Part of the Model](../hardware-debug-by-design.md).
+
 ## Vivado integration checklist
 
 - [ ] RTL module has clean clock/reset.
@@ -109,6 +122,8 @@ Minimum checks:
 - [ ] IP wrapper or block-design connection is described.
 - [ ] Register map is documented if PS control is used.
 - [ ] Debug signals are selected for ILA if needed.
+- [ ] Debug tap plan is linked to model-level reference vectors.
+- [ ] Control/status registers include counters and overflow/underflow flags.
 
 ## Zynq SoC connection
 
@@ -130,4 +145,5 @@ After this block, the student should be able to:
 - write a testbench with reference vectors;
 - estimate latency and resources;
 - explain how the block enters a Vivado block design;
+- plan observable tap points, debug registers and ILA signals before hardware bring-up;
 - prepare a minimal HDL/FPGA flow report.

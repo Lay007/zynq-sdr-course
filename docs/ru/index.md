@@ -7,6 +7,8 @@
 - [Лабораторный трек](lab-track.md)
 - [Медиа-гайд](media-guide.md)
 - [Статус курса](status.md)
+- [Отладка железа как часть модели](hardware-debug-by-design.md)
+- [Проектирование отладочного сигнала для SDR-стенда](debug-waveform-design.md)
 
 ## Блоки курса
 - [Блок 1. Введение в SDR](blocks/01-intro.md)
