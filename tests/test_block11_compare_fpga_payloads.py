@@ -3,6 +3,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 
 MODULE_DIR = Path(__file__).resolve().parents[1] / "hardware" / "7020_ad936x_sdr"
 if str(MODULE_DIR) not in sys.path:
@@ -11,7 +13,7 @@ if str(MODULE_DIR) not in sys.path:
 from compare_fpga_payloads import compare_payloads  # noqa: E402
 
 
-def test_compare_payloads_normalizes_raw_bit_against_tracked_bit_bin() -> None:
+def system_top_payload_paths() -> tuple[Path, Path]:
     root = Path(__file__).resolve().parents[1]
     bit_path = (
         root
@@ -23,7 +25,20 @@ def test_compare_payloads_normalizes_raw_bit_against_tracked_bit_bin() -> None:
         / "hw"
         / "system_top.bit"
     )
-    bit_bin_path = bit_path.with_suffix(".bit.bin")
+    return bit_path, bit_path.with_suffix(".bit.bin")
+
+
+def require_tracked_vendor_payload() -> tuple[Path, Path]:
+    root = Path(__file__).resolve().parents[1]
+    bit_path, bit_bin_path = system_top_payload_paths()
+    missing = [str(path.relative_to(root)) for path in (bit_path, bit_bin_path) if not path.exists()]
+    if missing:
+        pytest.skip("Vendor FPGA payload is not available in this checkout: " + ", ".join(missing))
+    return bit_path, bit_bin_path
+
+
+def test_compare_payloads_normalizes_raw_bit_against_tracked_bit_bin() -> None:
+    bit_path, bit_bin_path = require_tracked_vendor_payload()
 
     report = compare_payloads(bit_path, bit_bin_path)
 

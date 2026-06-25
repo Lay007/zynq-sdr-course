@@ -3,6 +3,8 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
 
 MODULE_DIR = (
     Path(__file__).resolve().parents[1]
@@ -45,6 +47,29 @@ def encode_test_bit(payload: bytes) -> bytes:
     return bytes(header)
 
 
+def system_top_bit_path() -> Path:
+    root = Path(__file__).resolve().parents[1]
+    return (
+        root
+        / "hardware"
+        / "7020_ad936x_sdr"
+        / "ps"
+        / "ad936x_no_os_reference"
+        / "platform"
+        / "hw"
+        / "system_top.bit"
+    )
+
+
+def require_tracked_vendor_payload() -> tuple[Path, Path]:
+    bit_path = system_top_bit_path()
+    expected_path = bit_path.with_suffix(".bit.bin")
+    missing = [str(path.relative_to(Path(__file__).resolve().parents[1])) for path in (bit_path, expected_path) if not path.exists()]
+    if missing:
+        pytest.skip("Vendor FPGA payload is not available in this checkout: " + ", ".join(missing))
+    return bit_path, expected_path
+
+
 def test_convert_bit_to_fpga_load_payload_word_swaps_and_appends_noops() -> None:
     raw_payload = bytes.fromhex("ffffffff000000bb11220044aa995566")
     metadata, converted = convert_bit_to_fpga_load_payload(encode_test_bit(raw_payload))
@@ -66,18 +91,7 @@ def test_convert_bit_to_fpga_load_payload_rejects_non_word_aligned_payload() -> 
 
 
 def test_build_system_bit_bin_matches_tracked_vendor_payload(tmp_path: Path) -> None:
-    root = Path(__file__).resolve().parents[1]
-    bit_path = (
-        root
-        / "hardware"
-        / "7020_ad936x_sdr"
-        / "ps"
-        / "ad936x_no_os_reference"
-        / "platform"
-        / "hw"
-        / "system_top.bit"
-    )
-    expected_path = bit_path.with_suffix(".bit.bin")
+    bit_path, expected_path = require_tracked_vendor_payload()
     output_path = tmp_path / "system_top.bit.bin"
 
     result_path = build_system_bit_bin(bit_path, output_path=output_path)
