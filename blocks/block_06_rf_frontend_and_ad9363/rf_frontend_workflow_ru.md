@@ -72,7 +72,7 @@ silence → lead-in tone → preamble → sync word → header → training → 
 - frequency sweep — проверить знак NCO, I/Q и частотную ось;
 - two-tone/multitone — проверить линейность, полосу и паразитные составляющие.
 
-Подробный материал: [Проектирование отладочного сигнала для SDR-стенда](../../debug-waveform-design.md).
+Подробный материал: [Проектирование отладочного сигнала для SDR-стенда](../debug-waveform-design.md).
 
 ## Признаки нормального режима
 
