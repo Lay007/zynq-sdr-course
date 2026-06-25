@@ -39,6 +39,7 @@ from lab_11_14_stock_shell_bpsk_ota import (  # noqa: E402
     repo_relative_or_str,
     restore_ad9361_state,
     snapshot_ad9361_state,
+    transmit_cyclic_buffer,
 )
 from lab_11_15_runtime_bridge_rx_host_tx_probe import (  # noqa: E402
     DEFAULT_BASE_ADDR,
@@ -608,6 +609,15 @@ def main() -> int:
             payload["disable_dds_tones"] = {"status": "ok", "device": "cf-ad9361-dds-core-lpc"}
         else:
             payload["disable_dds_tones"] = {"status": "device_not_found"}
+
+        # Pre-fill util_rfifo BRAM with zeros via cyclic DMA buffer.
+        # Without this, util_rfifo outputs BRAM garbage when dac_data_sel=2 is
+        # set (FIFO cold-start), causing wideband noise instead of clean silence.
+        # buf.push() also causes the IIO driver to set dac_data_sel=2 on all TX
+        # channels, which is required for PL BPSK bridge data to reach the DAC.
+        _zero_waveform = np.zeros(65536, dtype=complex)
+        _dma_zero_buf = transmit_cyclic_buffer(iio, dds, _zero_waveform)
+        payload["dma_zero_buffer"] = {"status": "ok", "n_samples": 65536}
 
         capture_thread = threading.Thread(
             target=capture_rtlsdr_unsigned_iq,
