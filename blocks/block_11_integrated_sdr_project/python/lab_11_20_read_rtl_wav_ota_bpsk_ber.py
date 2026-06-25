@@ -103,6 +103,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--skip-samples", type=int, default=0)
     parser.add_argument("--max-samples", type=int, default=4_000_000)
     parser.add_argument("--analysis-window-samples", type=int, default=262_144)
+    parser.add_argument("--force-analysis-window-start", type=int, default=None)
     parser.add_argument("--coarse-candidate-count", type=int, default=5)
     parser.add_argument("--candidate-count", type=int, default=DEFAULT_CANDIDATE_COUNT)
     parser.add_argument("--coarse-search-span-hz", type=float, default=None)
@@ -533,6 +534,7 @@ def analyze_capture(
     fine_search_hz: float,
     fine_step_hz: float,
     analysis_window_samples: int,
+    force_analysis_window_start: int | None = None,
 ) -> tuple[np.ndarray, int, dict[str, Any], list[float]]:
     burst = generate_bpsk_burst(cfg)
     occupied_bandwidth_hz = cfg.symbol_rate_hz * (1.0 + cfg.rolloff)
@@ -553,7 +555,14 @@ def analyze_capture(
     for coarse_frequency_hz in coarse_candidates:
         shifted = mix_frequency(x, capture_sample_rate_hz, coarse_frequency_hz)
         analysis_capture = resample_complex_linear(shifted, capture_sample_rate_hz, cfg.sample_rate_hz)
-        analysis_capture, analysis_start = crop_active_window(analysis_capture, analysis_window_samples)
+        if force_analysis_window_start is not None:
+            start = min(max(force_analysis_window_start, 0), max(len(analysis_capture) - analysis_window_samples, 0))
+            analysis_capture = analysis_capture[start : start + analysis_window_samples]
+            analysis_start = start
+        else:
+            analysis_capture, analysis_start = crop_active_window(analysis_capture, analysis_window_samples)
+        # Remove residual CW component (LO carrier leakage shifts to DC after coarse frequency shift)
+        analysis_capture = analysis_capture - np.mean(analysis_capture)
         matched = np.convolve(analysis_capture, burst["rrc_taps"], mode="full")
         try:
             detection = detect_frame_from_matched_filter(
@@ -640,6 +649,7 @@ def main() -> int:
         fine_search_hz=args.fine_search_hz,
         fine_step_hz=args.fine_step_hz,
         analysis_window_samples=args.analysis_window_samples,
+        force_analysis_window_start=args.force_analysis_window_start,
     )
 
     detection = DetectionResult(
