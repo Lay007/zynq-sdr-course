@@ -6,6 +6,7 @@ A bilingual SDR course from theory to board-level implementation.
 - [Course structure](course-structure.md)
 - [Lab track](lab-track.md)
 - [Media guide](media-guide.md)
+- [Hardware Debug as Part of the Model](hardware-debug-by-design.md)
 
 ## Course blocks
 - [Block 1. Introduction to SDR](blocks/01-intro.md)
