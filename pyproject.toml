@@ -4,3 +4,21 @@ testpaths = ["tests"]
 [tool.ruff]
 target-version = "py312"
 extend-exclude = ["hardware"]
+
+[tool.ruff.lint.per-file-ignores]
+# These scripts intentionally extend sys.path before importing course-local lab
+# helpers because they are designed to run both as standalone bench tools and
+# from the repository root.
+"blocks/block_11_integrated_sdr_project/python/lab_11_14_stock_shell_bpsk_ota.py" = ["E402"]
+"blocks/block_11_integrated_sdr_project/python/lab_11_21_capture_rtl_sdr_monitor_wav.py" = ["E402"]
+
+# Runtime bench scripts keep hardware buffer handles alive until measurement
+# and cleanup are complete. Ruff sees those handles as unused, but removing them
+# can change cyclic-buffer lifetime on real IIO/AD936x sessions.
+"blocks/block_11_integrated_sdr_project/python/lab_11_15_runtime_bridge_rx_host_tx_probe.py" = ["F841"]
+"blocks/block_11_integrated_sdr_project/python/lab_11_17_runtime_rx_common_reinit_start_offset_sweep.py" = ["F841"]
+"blocks/block_11_integrated_sdr_project/python/lab_11_18_runtime_rx_common_reinit_fresh_session_sweep.py" = ["F401", "F841"]
+
+# Hardware capture helpers share import groups with related bring-up scripts;
+# a few imported helpers are optional depending on the selected capture mode.
+"blocks/block_11_integrated_sdr_project/python/lab_11_24_capture_dds_tone_rtl_monitor_wav.py" = ["F401"]
