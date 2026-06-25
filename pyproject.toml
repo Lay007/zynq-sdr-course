@@ -17,9 +17,8 @@ extend-exclude = ["hardware"]
 # can change cyclic-buffer lifetime on real IIO/AD936x sessions.
 "blocks/block_11_integrated_sdr_project/python/lab_11_15_runtime_bridge_rx_host_tx_probe.py" = ["F841"]
 "blocks/block_11_integrated_sdr_project/python/lab_11_17_runtime_rx_common_reinit_start_offset_sweep.py" = ["F841"]
-"blocks/block_11_integrated_sdr_project/python/lab_11_18_runtime_rx_common_reinit_fresh_session_sweep.py" = ["F841"]
+"blocks/block_11_integrated_sdr_project/python/lab_11_18_runtime_rx_common_reinit_fresh_session_sweep.py" = ["F401", "F841"]
 
 # Hardware capture helpers share import groups with related bring-up scripts;
 # a few imported helpers are optional depending on the selected capture mode.
-"blocks/block_11_integrated_sdr_project/python/lab_11_18_runtime_rx_common_reinit_fresh_session_sweep.py" = ["F401", "F841"]
 "blocks/block_11_integrated_sdr_project/python/lab_11_24_capture_dds_tone_rtl_monitor_wav.py" = ["F401"]
