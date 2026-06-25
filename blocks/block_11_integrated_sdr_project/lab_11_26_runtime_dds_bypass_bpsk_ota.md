@@ -264,6 +264,75 @@ The TCL overlay correctly disconnects and reconnects `din_valid_in_0..3` via the
 
 ---
 
+---
+
+## First OTA RF evidence via antennas (2026-06-25) / Первое подтверждение сигнала через антенны
+
+### Setup / Установка
+
+- Run tag: `diag_overlay` (`--no-reboot-after`; board kept in overlay state)
+- TX: Zynq AD9361 → TX1A antenna, attenuation −50 dB (safe floor)
+- RX: RTL-SDR V3 Pro → RX antenna, gain 20 dB (gain10=200), 2.4 MS/s, center 915 MHz
+- Distance TX→RX: free air (same room), no cable / no attenuator
+- Board config: `configure_ad9361_bpsk` OK, `disable_dds_tones` OK, `dma_zero_buffer` OK (65 536 samples)
+- 3 BPSK bursts, 100-poll × 30 ms gap ≈ 3.1 s between each
+
+### Power trace confirms BPSK reaching the air / Трассировка мощности подтверждает выход BPSK в эфир
+
+RTL-SDR WAV (10.81 s, 2.4 MS/s):
+
+| Event | Time, s | Power (ADC²) | Elevation vs baseline |
+| --- | --- | --- | --- |
+| Baseline (silence) | 0–0.90 | 46 000 | — |
+| Burst 1 window | 0.95–1.22 | 474 000 | +10.1 dB |
+| Burst 2 window | 4.30–4.55 | ~474 000 | +10 dB |
+| Burst 3 window | 7.70–7.95 | ~474 000 | +10 dB |
+
+Each elevated window is ≈ 250 ms ≈ `RX_IDLE_TIMEOUT_CYCLES / 3.84 MHz` = 273 ms (RX
+idle timeout; burst itself is 637 μs). Burst-start resolved to t = 0.951 s (1 ms
+resolution scan).
+
+### Spectrum analysis / Спектральный анализ
+
+After coarse −2 800 Hz shift and DC-offset removal (`analysis_capture -= mean`):
+
+- RRC-shaped spectrum visible at ±250 kHz bandwidth
+- Rolloff visible matching α = 0.35, symbol rate 480 kHz
+- BPSK signal ≈ **+10 dB above noise floor**
+- LO carrier residual at +2.8 kHz: **48.9 dB above noise** (AD9361 × RTL-SDR LO beat)
+
+### Why BER demodulation fails via RTL-SDR / Почему BER через RTL-SDR не работает
+
+```text
+Burst duration:          637 μs = 2 448 samples @ 3.84 MHz
+RX idle tail-loop:       273 ms = 1 047 552 samples
+Tail/burst ratio:        430×
+LO carrier at 2.8 kHz:  48.9 dB above noise (in-band, beats preamble correlator)
+```
+
+`crop_active_window` always selects the 273 ms tail-loop (highest sustained power,
+same level as burst but 430× longer). Even with `--force-analysis-window-start` to
+pin the window to t = 0.951 s, the 637 μs burst is 0.23 % of any reasonable analysis
+window → preamble correlator fails. RTL-SDR hardware BER counter is not available.
+
+**Conclusion:** RTL-SDR confirms BPSK signal exists in the air (spectrum shape, power
+elevation). Quantitative BER via RTL-SDR with this architecture is inconclusive
+(BER ≈ 36 %, preliminary). Final BER measurement requires AD9361 RX loopback.
+
+### Evidence files / Файлы доказательств
+
+- `docs/assets/lab1122_runtime_pl_rtl_monitor_diag_overlay.json` — runtime JSON (3 bursts OK, timed_out_observed=True)
+- `docs/assets/lab1120_lab11_22_runtime_pl_rtl_monitor_diag_overlay_ota_carrier_removed_metrics.json` — spectrum after carrier removal (BER 35.6 %, EVM 602 %)
+- `docs/assets/lab1120_lab11_22_runtime_pl_rtl_monitor_diag_overlay_ota_carrier_removed_baseband_spectrum.png` — RRC spectrum shape visible
+
+### Next step / Следующий шаг
+
+Run with AD9361 RX loopback (TX antenna → RX antenna close-range, or short cable) so
+the hardware BER counter closes the loop in ≈ 1 ms instead of 273 ms. This eliminates
+the tail-loop problem and allows proper preamble correlation.
+
+---
+
 ## Related labs / Связанные лабораторные работы
 
 - [Lab 11.19](lab_11_19_runtime_bridge_txrx_self_timed_bringup.md) — Runtime self-timed bring-up (DDS bypass now included)
