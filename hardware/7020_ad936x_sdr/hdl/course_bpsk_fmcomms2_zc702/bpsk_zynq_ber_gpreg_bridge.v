@@ -129,17 +129,6 @@ wire [1:0] rx_decision_mode = control_sync[3:2];
 wire adc_input_sample_nonzero = (adc_input_i != {W{1'b0}}) || (adc_input_q != {W{1'b0}});
 wire capture_sample_nonzero = (capture_in_i != {W{1'b0}}) || (capture_in_q != {W{1'b0}});
 
-function signed [W-1:0] ad9361_offset_binary12_to_signed16;
-    input [W-1:0] value;
-    reg [11:0] twos_complement_12;
-    begin
-        // The ADI RX channel leaves ad_datafmt disabled by default, so the
-        // fabric tap carries raw 12-bit offset-binary samples in the low bits.
-        twos_complement_12 = {~value[11], value[10:0]};
-        ad9361_offset_binary12_to_signed16 = {{(W-12){twos_complement_12[11]}}, twos_complement_12};
-    end
-endfunction
-
 function [W:0] abs_wide;
     input signed [W-1:0] value;
     begin
@@ -159,8 +148,15 @@ wire [13:0] capture_peak_abs_saturated =
 wire [W:0] adc_input_abs_i = abs_wide(adc_input_i);
 wire [W:0] adc_input_abs_q = abs_wide(adc_input_q);
 wire [W:0] adc_input_abs_max = (adc_input_abs_i >= adc_input_abs_q) ? adc_input_abs_i : adc_input_abs_q;
-wire signed [W-1:0] capture_in_i_fmt = ad9361_offset_binary12_to_signed16(capture_in_i);
-wire signed [W-1:0] capture_in_q_fmt = ad9361_offset_binary12_to_signed16(capture_in_q);
+// The cf-ad9361-lpc RX channels report `in_voltageN_type = le:S12/16>>0`, i.e. the
+// ADC samples on the fabric tap are already SIGNED 12-bit sign-extended into 16
+// bits (two's complement), NOT offset-binary. Feed them to the RX chain directly.
+// The earlier ad9361_offset_binary12_to_signed16() conversion flipped bit 11 and
+// corrupted the already-two's-complement samples with a sign-dependent +/-2048
+// shift, which was the root cause of the ~40% BER floor seen in both OTA and
+// AD9361 coherent digital loopback (where there is no carrier offset at all).
+wire signed [W-1:0] capture_in_i_fmt = capture_in_i;
+wire signed [W-1:0] capture_in_q_fmt = capture_in_q;
 
 bpsk_zynq_ber_top #(
     .W(W),

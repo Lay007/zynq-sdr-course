@@ -105,7 +105,12 @@ bpsk_rx_bit_recovery_chain #(
     .COEF_FILE(COEF_FILE)
 ) rx_chain_i (
     .clk(clk),
-    .rst(rst),
+    // Restart the RX matched filter + timing sampler at every frame_start so the
+    // sampler's sample_index/emitted_symbols realign to each burst. Without this
+    // the sampler is single-shot: once one frame emits symbol_count symbols it
+    // stays exhausted (emitted_symbols == symbol_count) until a full PL reset, so
+    // back-to-back runtime attempts silently recover zero symbols and time out.
+    .rst(rst || frame_start),
     .in_valid(rx_valid),
     .in_i(rx_i),
     .in_q(rx_q),

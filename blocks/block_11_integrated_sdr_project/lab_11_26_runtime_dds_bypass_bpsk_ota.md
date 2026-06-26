@@ -437,6 +437,54 @@ Evidence files will be saved to `docs/assets/lab1122_runtime_bridge_txrx_*_ber0*
 
 ---
 
+## Resolution and remaining limit (2026-06-26) / Итог и оставшееся ограничение
+
+The 2026-06-25 "rebuild and test with `start_offset = 62`" plan above did not work as
+written, and the reason turned out to be a build-flow defect that invalidated every
+prior OTA result:
+
+1. **Stale block design (the real blocker).** The deployed bitstream
+   (`tmp/bridge_txrx_mux.wordswap.bit.bin`, old md5 `020dd715…`) was built from a
+   `system.bd` that predated the bridge RTL refactor. Its `axi_gpreg` wiring used the
+   *old* interface (separate `gp_payload_errors`, no `gp_adc_input_debug`/
+   `gp_capture_debug`), so the host register decode never matched the silicon — that
+   is why earlier runs reported impossible values like `total_errors=0, payload_errors=148`.
+   The out-of-context IP checkpoint cache also hid the RTL fixes: `reset_run synth_1`
+   reused the cached `.dcp`, so neither fix ever reached hardware. Rebuilding the BD from
+   the current `course_overlay_injection.tcl` (global synthesis, IP cache disabled)
+   produced a correct bitstream (new md5 `fb6a0119…`).
+
+2. **Timing-sampler single-shot bug (fixed).** `bpsk_zynq_ber_top` reset the RX matched
+   filter + timing sampler only on the global `rst`, so after one frame the sampler
+   stayed exhausted (`emitted_symbols == symbol_count`) and back-to-back attempts
+   recovered zero symbols. Fixed with `rx_chain rst = rst || frame_start`; guarded by
+   `tb_bpsk_zynq_ber_top_multiframe.v` in the Block-5 smoke suite.
+
+3. **Sample-format handling (corrected).** `cf-ad9361-lpc` reports
+   `in_voltageN_type = le:S12/16>>0` — the fabric tap is already signed two's-complement,
+   so the bridge now feeds `capture_in_*` straight to the RX chain (the old
+   offset-binary conversion was wrong for a signed tap).
+
+**Result after all three fixes:** the PL BER path is now alive — it locks and counts
+full 281-bit frames OTA and in AD9361 coherent digital loopback (previously it only
+timed out or returned stale garbage). But BER does **not** reach 0: sweeping
+`start_offset` 20–220 × decision-mode {I, Q} bottoms out at ≈ 39–42 %
+(`total_errors ≈ 110–117 / 281`) with a broad shallow minimum near `start_offset ≈ 150–175`
+and **no sharp alignment dip**.
+
+Two candidate causes were ruled out: carrier offset (coherent loopback has none, same
+floor) and sample format (the fix above was BER-neutral). The remaining floor is
+**SPS/timing/ISI in the AD9361 ↔ fabric sample path** — a broad shallow minimum with no
+sharp dip is the signature of a small samples-per-symbol error / timing drift over the
+281-symbol burst, which the fixed-phase decimator cannot track. Direct measurement of the
+effective SPS is currently blocked: the `cf-ad9361-lpc` RX DMA refill fails
+(`[Errno 110]`) under the `bridge_txrx_mux` overlay, and the RTL-SDR witness sees only
+noise at the RF-safe −50 dB TX. **BER = 0 therefore needs timing recovery added to the
+deterministic RX (Gardner/M&M TED + interpolator), or a working raw-capture path to
+calibrate the rate** — tracked as follow-up work.
+
+---
+
 ## Related labs / Связанные лабораторные работы
 
 - [Lab 11.19](lab_11_19_runtime_bridge_txrx_self_timed_bringup.md) — Runtime self-timed bring-up (DDS bypass now included)
