@@ -94,6 +94,7 @@ xsim.dir/
 blocks/block_05_fpga_hdl_flow/tb/*_vectors.txt
 blocks/block_05_fpga_hdl_flow/tb/*_bits.txt
 blocks/block_05_fpga_hdl_flow/tb/*_meta.txt
+blocks/block_05_fpga_hdl_flow/tb/*.mem
 blocks/block_05_fpga_hdl_flow/rtl/*_taps.mem
 blocks/block_05_fpga_hdl_flow/rtl/*_bits.mem
 
