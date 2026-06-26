@@ -473,15 +473,28 @@ timed out or returned stale garbage). But BER does **not** reach 0: sweeping
 and **no sharp alignment dip**.
 
 Two candidate causes were ruled out: carrier offset (coherent loopback has none, same
-floor) and sample format (the fix above was BER-neutral). The remaining floor is
-**SPS/timing/ISI in the AD9361 ↔ fabric sample path** — a broad shallow minimum with no
-sharp dip is the signature of a small samples-per-symbol error / timing drift over the
-281-symbol burst, which the fixed-phase decimator cannot track. Direct measurement of the
-effective SPS is currently blocked: the `cf-ad9361-lpc` RX DMA refill fails
-(`[Errno 110]`) under the `bridge_txrx_mux` overlay, and the RTL-SDR witness sees only
-noise at the RF-safe −50 dB TX. **BER = 0 therefore needs timing recovery added to the
-deterministic RX (Gardner/M&M TED + interpolator), or a working raw-capture path to
-calibrate the rate** — tracked as follow-up work.
+floor) and sample format (the fix above was BER-neutral). A broad shallow minimum with no
+sharp dip looked like a small samples-per-symbol error / timing drift over the 281-symbol
+burst, which a fixed-phase decimator cannot track.
+
+**A Gardner timing-recovery loop was therefore built, verified and tested — and it does
+NOT fix the floor.** The loop (sign-Gardner TED + linear interpolator + decrementing NCO +
+PI filter, `blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_timing_recovery.v`, enabled via
+`bpsk_rx_bit_recovery_chain TIMING_RECOVERY=1`) reaches BER 0 in full-chain simulation on a
+deliberately drifted SPS=8.03 burst where the fixed-phase sampler floors at 15 errors, and
+it closes hardware timing (multicycle-path in `course_overlay_timing.xdc`). But on the
+board the loopback BER floor is **unchanged at ~42 %** (best te≈119/281 at offset 149),
+with `recovered_valid_count = 281` (the loop does run and emit symbols). So the dominant
+hardware impairment is **not** a samples-per-symbol/timing drift after all — most likely
+AD9361 DAC/ADC FIR-chain ISI / RRC pulse distortion (or a digital-loopback artifact).
+
+Pinning it down is still blocked by instrumentation: the `cf-ad9361-lpc` RX DMA refill
+fails (`[Errno 110]`) under the `bridge_txrx_mux` overlay, and the RTL-SDR witness sees only
+noise at the RF-safe −50 dB TX. **BER = 0 needs a working raw-RX capture** (fix the overlay
+RX DMA, add an in-fabric raw-sample debug tap, or a cabled attenuator + stronger TX for the
+RTL-SDR) **to measure the actual distortion**, then likely an AD9361 FIR-passthrough or an
+equaliser — tracked as follow-up work. The Gardner timing-recovery block is kept (it is the
+correct receiver and tracks genuine clock drift; see Lab 5.8b), just not the fix here.
 
 ---
 

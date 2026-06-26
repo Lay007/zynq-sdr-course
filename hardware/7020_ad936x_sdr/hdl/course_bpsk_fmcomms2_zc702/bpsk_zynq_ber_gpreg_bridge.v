@@ -165,6 +165,7 @@ bpsk_zynq_ber_top #(
     .MAX_FRAME_BITS(MAX_FRAME_BITS),
     .PHASE_W(PHASE_W),
     .FLUSH_SYMBOLS(FLUSH_SYMBOLS),
+    .TIMING_RECOVERY(1),
     .MEM_FILE(MEM_FILE),
     .COEF_FILE(COEF_FILE)
 ) core_i (

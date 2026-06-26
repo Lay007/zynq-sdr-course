@@ -19,6 +19,7 @@ python "$PY_DIR/generate_bpsk_upsampler_8x_vectors.py"
 python "$PY_DIR/generate_bpsk_rrc_tx_fir_vectors.py"
 python "$PY_DIR/generate_bpsk_rx_bit_recovery_vectors.py"
 python "$PY_DIR/generate_bpsk_framed_loopback_vectors.py"
+python "$PY_DIR/generate_bpsk_timing_recovery_vectors.py"
 
 test -s "$TB_DIR/fir_iq_4tap_input_vectors.txt"
 test -s "$TB_DIR/fir_iq_4tap_expected_vectors.txt"
@@ -73,6 +74,7 @@ iverilog -g2012 -o "$TB_DIR/tb_bpsk_rx_bit_recovery.out" \
   "$RTL_DIR/bpsk_rrc_tx_fir.v" \
   "$RTL_DIR/bpsk_rrc_rx_fir.v" \
   "$RTL_DIR/bpsk_symbol_timing_sampler.v" \
+  "$RTL_DIR/bpsk_symbol_timing_recovery.v" \
   "$RTL_DIR/bpsk_hard_decision.v" \
   "$TB_DIR/tb_bpsk_rx_bit_recovery.v"
 vvp "$TB_DIR/tb_bpsk_rx_bit_recovery.out"
@@ -83,6 +85,7 @@ iverilog -g2012 -o "$TB_DIR/tb_bpsk_framed_loopback.out" \
   "$RTL_DIR/bpsk_rrc_tx_fir.v" \
   "$RTL_DIR/bpsk_rrc_rx_fir.v" \
   "$RTL_DIR/bpsk_symbol_timing_sampler.v" \
+  "$RTL_DIR/bpsk_symbol_timing_recovery.v" \
   "$RTL_DIR/bpsk_hard_decision.v" \
   "$RTL_DIR/bpsk_framed_tx_chain.v" \
   "$RTL_DIR/bpsk_rx_bit_recovery_chain.v" \
@@ -95,6 +98,7 @@ iverilog -g2012 -o "$TB_DIR/tb_bpsk_zynq_ber_top.out" \
   "$RTL_DIR/bpsk_rrc_tx_fir.v" \
   "$RTL_DIR/bpsk_rrc_rx_fir.v" \
   "$RTL_DIR/bpsk_symbol_timing_sampler.v" \
+  "$RTL_DIR/bpsk_symbol_timing_recovery.v" \
   "$RTL_DIR/bpsk_hard_decision.v" \
   "$RTL_DIR/bpsk_framed_tx_chain.v" \
   "$RTL_DIR/bpsk_rx_bit_recovery_chain.v" \
@@ -110,6 +114,7 @@ iverilog -g2012 -o "$TB_DIR/tb_bpsk_zynq_ber_top_multiframe.out" \
   "$RTL_DIR/bpsk_rrc_tx_fir.v" \
   "$RTL_DIR/bpsk_rrc_rx_fir.v" \
   "$RTL_DIR/bpsk_symbol_timing_sampler.v" \
+  "$RTL_DIR/bpsk_symbol_timing_recovery.v" \
   "$RTL_DIR/bpsk_hard_decision.v" \
   "$RTL_DIR/bpsk_framed_tx_chain.v" \
   "$RTL_DIR/bpsk_rx_bit_recovery_chain.v" \
@@ -119,12 +124,40 @@ iverilog -g2012 -o "$TB_DIR/tb_bpsk_zynq_ber_top_multiframe.out" \
   "$TB_DIR/tb_bpsk_zynq_ber_top_multiframe.v"
 vvp "$TB_DIR/tb_bpsk_zynq_ber_top_multiframe.out"
 
+test -s "$TB_DIR/bpsk_timing_recovery_mf_input.mem"
+test -s "$TB_DIR/bpsk_timing_recovery_model_bits.txt"
+test -s "$TB_DIR/bpsk_chain_drift_rx.mem"
+
+# Bit-exact check of the Gardner timing-recovery datapath vs the fixed-point model.
+iverilog -g2012 -o "$TB_DIR/tb_bpsk_symbol_timing_recovery.out" \
+  "$RTL_DIR/bpsk_symbol_timing_recovery.v" \
+  "$TB_DIR/tb_bpsk_symbol_timing_recovery.v"
+vvp "$TB_DIR/tb_bpsk_symbol_timing_recovery.out"
+
+# Full-chain: Gardner loop recovers an SPS=8.03 burst at BER=0 where fixed-phase cannot.
+iverilog -g2012 -o "$TB_DIR/tb_bpsk_zynq_ber_timing_recovery.out" \
+  "$RTL_DIR/bpsk_symbol_mapper.v" \
+  "$RTL_DIR/bpsk_upsampler_8x.v" \
+  "$RTL_DIR/bpsk_rrc_tx_fir.v" \
+  "$RTL_DIR/bpsk_rrc_rx_fir.v" \
+  "$RTL_DIR/bpsk_symbol_timing_sampler.v" \
+  "$RTL_DIR/bpsk_symbol_timing_recovery.v" \
+  "$RTL_DIR/bpsk_hard_decision.v" \
+  "$RTL_DIR/bpsk_framed_tx_chain.v" \
+  "$RTL_DIR/bpsk_rx_bit_recovery_chain.v" \
+  "$RTL_DIR/bpsk_frame_bit_source.v" \
+  "$RTL_DIR/bpsk_ber_counter.v" \
+  "$RTL_DIR/bpsk_zynq_ber_top.v" \
+  "$TB_DIR/tb_bpsk_zynq_ber_timing_recovery.v"
+vvp "$TB_DIR/tb_bpsk_zynq_ber_timing_recovery.out"
+
 iverilog -g2012 -o "$TB_DIR/tb_bpsk_zynq_ber_axi_lite.out" \
   "$RTL_DIR/bpsk_symbol_mapper.v" \
   "$RTL_DIR/bpsk_upsampler_8x.v" \
   "$RTL_DIR/bpsk_rrc_tx_fir.v" \
   "$RTL_DIR/bpsk_rrc_rx_fir.v" \
   "$RTL_DIR/bpsk_symbol_timing_sampler.v" \
+  "$RTL_DIR/bpsk_symbol_timing_recovery.v" \
   "$RTL_DIR/bpsk_hard_decision.v" \
   "$RTL_DIR/bpsk_framed_tx_chain.v" \
   "$RTL_DIR/bpsk_rx_bit_recovery_chain.v" \

@@ -100,3 +100,35 @@ The RX HDL chain reused the shared RRC coefficients and recovered the determinis
 Symbol selection used the known matched-filter start offset and one sample every eight clocks.
 This provides the first executable HDL BER anchor before moving to framed Zynq TX/RX integration.
 ```
+
+## Timing-recovery extension (Lab 5.8b) — what comes next
+
+The fixed-phase decimator above assumes exactly 8 samples per symbol. On a real
+AD9361 sample path that assumption can be off by a fraction of a percent, so the
+sampling instant drifts across a 281-symbol burst and BER floors at ~40 % even in a
+coherent loopback (no carrier offset). The course therefore adds a drop-in
+**Gardner symbol timing-recovery loop** that tracks the drift:
+
+- a decrementing modulo-1 NCO at 2 strobes/symbol, a linear interpolator
+  (`mu ≈ nco<<2`), a **sign-Gardner** timing-error detector
+  `e = sgn(y_mid)·sgn(y_on[k]−y_on[k−1])` (amplitude-independent), and a PI loop
+  filter with power-of-two gains (`k1 = 1/256`, `k2 = 1/4096`) — no multipliers in
+  the loop.
+
+Reference models and RTL, all bit-exact with each other:
+
+| Artifact | Path |
+| --- | --- |
+| Float + fixed-point Python models (+ demo) | `python/bpsk_timing_recovery_model.py` |
+| MATLAB float + fixed-point models | `matlab/bpsk_timing_recovery_model.m` |
+| Simulink build script (HDL-Coder MATLAB Function block) | `simulink/bpsk_timing_recovery_build_simulink.m` |
+| Synthesizable RTL | `rtl/bpsk_symbol_timing_recovery.v` |
+| Vector generator | `python/generate_bpsk_timing_recovery_vectors.py` |
+| Bit-exact HDL check | `tb/tb_bpsk_symbol_timing_recovery.v` |
+| Full-chain BER check (TR vs fixed-phase) | `tb/tb_bpsk_zynq_ber_timing_recovery.v` |
+
+`bpsk_rx_bit_recovery_chain` selects between the two via `parameter TIMING_RECOVERY`
+(0 = this lab's fixed-phase sampler, 1 = the Gardner loop); the runtime AD9361
+bridge sets it to 1. Running `python/bpsk_timing_recovery_model.py` prints the
+float / fixed-point / fixed-phase BER table on a drifted burst — both
+timing-recovery models reach BER 0 where the fixed-phase decimator does not.

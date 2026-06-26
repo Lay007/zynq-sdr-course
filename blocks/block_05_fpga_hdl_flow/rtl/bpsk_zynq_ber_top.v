@@ -13,6 +13,7 @@ module bpsk_zynq_ber_top #(
     parameter integer MAX_FRAME_BITS = 512,
     parameter integer PHASE_W = 3,
     parameter integer FLUSH_SYMBOLS = 16,
+    parameter integer TIMING_RECOVERY = 0,
     parameter integer RX_IDLE_TIMEOUT_CYCLES = 1048576,
     parameter MEM_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bits.mem",
     parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
@@ -102,9 +103,11 @@ bpsk_rx_bit_recovery_chain #(
     .W(W),
     .SPS(SPS),
     .INDEX_W(INDEX_W),
+    .TIMING_RECOVERY(TIMING_RECOVERY),
     .COEF_FILE(COEF_FILE)
 ) rx_chain_i (
     .clk(clk),
+    // (TIMING_RECOVERY selects fixed-phase sampler vs Gardner loop, see param below)
     // Restart the RX matched filter + timing sampler at every frame_start so the
     // sampler's sample_index/emitted_symbols realign to each burst. Without this
     // the sampler is single-shot: once one frame emits symbol_count symbols it

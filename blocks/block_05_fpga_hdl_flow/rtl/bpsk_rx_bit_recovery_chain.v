@@ -9,6 +9,10 @@ module bpsk_rx_bit_recovery_chain #(
     parameter integer W = 16,
     parameter integer SPS = 8,
     parameter integer INDEX_W = 16,
+    // 0 = fixed-phase decimator (Lab 5.8, deterministic; used by the Block-5 labs)
+    // 1 = Gardner timing-recovery loop (tracks SPS/timing drift; used by the runtime
+    //     AD9361 bridge where the sample path is not exactly 8 samples/symbol)
+    parameter integer TIMING_RECOVERY = 0,
     parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
 ) (
     input  wire                     clk,
@@ -46,22 +50,43 @@ bpsk_rrc_rx_fir #(
     .out_q(mf_q)
 );
 
-bpsk_symbol_timing_sampler #(
-    .W(W),
-    .SPS(SPS),
-    .INDEX_W(INDEX_W)
-) timing_sampler_i (
-    .clk(clk),
-    .rst(rst),
-    .in_valid(mf_valid),
-    .in_i(mf_i),
-    .in_q(mf_q),
-    .start_offset(start_offset),
-    .symbol_count(symbol_count),
-    .out_valid(sym_valid),
-    .out_i(sym_i),
-    .out_q(sym_q)
-);
+generate
+if (TIMING_RECOVERY == 0) begin : g_fixed_phase
+    bpsk_symbol_timing_sampler #(
+        .W(W),
+        .SPS(SPS),
+        .INDEX_W(INDEX_W)
+    ) timing_i (
+        .clk(clk),
+        .rst(rst),
+        .in_valid(mf_valid),
+        .in_i(mf_i),
+        .in_q(mf_q),
+        .start_offset(start_offset),
+        .symbol_count(symbol_count),
+        .out_valid(sym_valid),
+        .out_i(sym_i),
+        .out_q(sym_q)
+    );
+end else begin : g_timing_recovery
+    bpsk_symbol_timing_recovery #(
+        .W(W),
+        .SPS(SPS),
+        .INDEX_W(INDEX_W)
+    ) timing_i (
+        .clk(clk),
+        .rst(rst),
+        .in_valid(mf_valid),
+        .in_i(mf_i),
+        .in_q(mf_q),
+        .start_offset(start_offset),
+        .symbol_count(symbol_count),
+        .out_valid(sym_valid),
+        .out_i(sym_i),
+        .out_q(sym_q)
+    );
+end
+endgenerate
 
 assign decision_sample =
     (decision_mode == 2'b00) ? sym_i :
