@@ -165,7 +165,14 @@ bpsk_zynq_ber_top #(
     .MAX_FRAME_BITS(MAX_FRAME_BITS),
     .PHASE_W(PHASE_W),
     .FLUSH_SYMBOLS(FLUSH_SYMBOLS),
-    .TIMING_RECOVERY(1),
+    // Fixed-phase symbol sampler. With the gap-free TX prefetch (no DAC-FIFO
+    // under-run) the looped stream is a clean SPS samples/symbol burst that the
+    // 8-bit frame-sync in bpsk_ber_counter aligns to full-frame BER=0. The Gardner
+    // loop was tried here but mis-tracks this short loopback burst and is worse; it
+    // stays available (TIMING_RECOVERY=1) for genuinely drifted streams. Residual
+    // per-burst sampling-phase jitter (AD9361 loopback latency) is handled by a host
+    // retry until BER=0.
+    .TIMING_RECOVERY(0),
     .MEM_FILE(MEM_FILE),
     .COEF_FILE(COEF_FILE)
 ) core_i (
