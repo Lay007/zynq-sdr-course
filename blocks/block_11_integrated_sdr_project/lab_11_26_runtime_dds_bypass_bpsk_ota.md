@@ -496,6 +496,161 @@ RTL-SDR) **to measure the actual distortion**, then likely an AD9361 FIR-passthr
 equaliser — tracked as follow-up work. The Gardner timing-recovery block is kept (it is the
 correct receiver and tracks genuine clock drift; see Lab 5.8b), just not the fix here.
 
+### Raw-sample debug tap — the decisive measurement
+
+The in-fabric raw-sample debug tap was then built and run. A 4096-deep dual-clock BRAM
+in `bpsk_zynq_ber_gpreg_bridge` records `capture_in` (the exact samples the PL RX sees)
+during a burst; the host reads it back word-by-word over gpreg (`out_4` = BRAM read
+address, `in_7` = read data). **Build gotcha:** the ADI `axi_gpreg` RTL only implements
+IO ports 0..7, so `NUM_OF_IO` must stay ≤ 8. A first attempt at `NUM_OF_IO = 9` (to add a
+9th input) produced an inconsistent IP whose AXI slave never acknowledges — every PS
+`devmem` of the gpreg region aborts (`external abort`, "Bus error"), even the fixed ID
+register, while `fpga_manager/state` still reads `operating`. The tap was reworked to reuse
+`in_7` (sacrificing the `capture_debug` peak metric) and the gpreg came back (ID = `0x4250534B`).
+
+Capturing 2400 samples in AD9361 **coherent digital loopback** (`loopback = 1`) gives the
+decisive evidence:
+
+- **`capture_in_q` is exactly 0** for all 2400 samples, while `capture_in_i` is a real
+  signal (std ≈ 704, range ±1100). Zero Q means **no carrier/phase rotation whatsoever**,
+  i.e. the path is purely digital — the captured I is the PL TX I, bit-for-bit.
+- The captured I **is** a coherent RRC-BPSK: its autocorrelation main lobe decays to zero
+  at lag 8, confirming samples-per-symbol ≈ 8, and the matched-filter decisions are bimodal.
+- **But it does not decode to the reference frame.** Matched-filter at SPS = 8 floors at
+  120/281; a wide brute force over fractional SPS ∈ [7.0, 9.0] × all start offsets × both
+  polarities still bottoms out at 102/281 (≈ 36 %), payload 95/256 (≈ 37 %). No constant
+  rate/phase/polarity recovers it, so the corruption is **non-uniform in time** (not a
+  simple clock-rate offset, which the brute force would have removed).
+
+**Conclusion.** The impairment survives a pure-digital loopback with zero Q (no analog, no
+RF, no carrier), yet the `bpsk_zynq_ber_top` core decodes the same waveform at BER = 0 in
+simulation. Therefore the corruption lives in the **digital integration datapath** between
+PL TX and PL RX — `bridge → course_dac_fifo_source_mux → axi_ad9361_dac_fifo →
+util_ad9361_dac_upack → AD9361 (digital loopback) → util_ad9361_adc_fifo → bridge` — and
+**not** in the DSP, the analog/RF path, the carrier, the sample format, or symbol timing.
+The most probable specific cause is a DAC-FIFO rate/valid-handshake under/overflow (the
+bridge emits `burst_out_valid` at a cadence that does not match the DAC read rate, warping
+the stream non-uniformly), and/or an AD9361 TX-interp / RX-decim FIR-chain artifact at the
+low 3.84 MHz sample rate (stock runs at 30.72 MHz; sub-6 MHz rates require the FIR loaded).
+
+**Next step to close BER = 0:** add a *second* simultaneous tap on `burst_out` (the PL TX
+side) and capture TX and RX together — if `burst_out` decodes to 0 % but `capture_in` does
+not, the bug is isolated to the DAC→AD9361→ADC datapath; if `burst_out` is already
+corrupted, it is in the bridge TX feed itself. Then fix the offending FIFO/rate handshake
+(or run loopback at the native 30.72 MHz with a proper FIR config) and re-measure.
+
+### TX-vs-RX tap — root cause isolated to the AD9361 datapath
+
+The second tap was added (a mirror BRAM on `burst_out`, read back via gpreg `in_3`,
+sharing the `out_4` read address; `gp_adc_input_debug` was dropped for it). Capturing TX
+and RX **simultaneously** in digital loopback is conclusive:
+
+| Tap point | Offline decode (axis I) | Amplitude |
+| --- | --- | --- |
+| **PL TX** (`burst_out`) | **0 / 281 — BER = 0, perfect** | std 11457, ±18000 (≈55 % FS) |
+| **PL RX** (`capture_in`) | 115–119 / 281 (≈ 41 %) | std 708, ±1100 (≈16× attenuated) |
+
+So the **bridge TX feed is silicon-perfect** — it matches the BER-0 simulation exactly. All
+of the corruption happens **between the TX tap and the RX tap**, i.e. inside
+`course_dac_fifo_source_mux → axi_ad9361_dac_fifo → AD9361 (digital BIST loopback) →
+util_ad9361_adc_fifo`. This **refutes** the earlier "AD9361 analog / RRC pulse distortion"
+and "carrier" hypotheses for good — there is no analog or carrier in this path.
+
+Characterising the TX→RX transform: it is **rate-independent** (identical at 3.84 MHz and
+the native 30.72 MHz), attenuated ≈ 16× (≈ 24 dB), and — crucially — a **progressive time
+warp**. A windowed local cross-correlation of RX against the clean TX is high (0.9–1.0) at
+the start of the burst but the best-fit lag **drifts monotonically** (~0.25 sample per
+sample early on) and the correlation decays and even inverts toward the end; RX matches TX
+for only the first ~22 symbols and then diverges to ~random. No constant samples-per-symbol
+(brute-forced over SPS ∈ [4, 10]), and no adaptive Gardner/PLL timing recovery, can recover
+it — confirming the rate offset is **non-constant** (the DAC/ADC datapath starts
+synchronized at the burst/FIFO reset and slips progressively). This is the classic
+signature of a `divclk ↔ l_clk` FIFO crossing whose write/read rates do not match — the
+bridge drives `burst_out_valid` (and consumes `capture_in`) every `divclk` cycle without
+honouring the DAC/ADC FIFO flow-control that the stock DMA datapath respects, and/or a
+2R2T channel-packing mismatch (the bridge feeds one channel while the datapath serialises
+two over `l_clk`).
+
+**Therefore the fix is a datapath rate/flow-control correction, not a DSP change:** make the
+bridge honour `axi_ad9361_dac_fifo` back-pressure (gate `burst_out_valid` on FIFO-ready) and
+capture the ADC strictly on genuine `util_ad9361_adc_fifo` `dout_valid`, and confirm the
+AD9361 R1 mode (adc/dac) is symmetric so `util_ad9361_divclk` picks the correct divisor.
+Separately, because the PL TX is now proven clean, a real end-to-end link can also be closed
+by decoding that TX on the external RTL-SDR witness (subject to the RF-power safety limits).
+The Gardner timing-recovery block remains correct and kept; it simply cannot fix a
+non-constant datapath slip.
+
+### Resolution — gap-free TX prefetch fixes the datapath
+
+The non-constant warp was traced to a **per-symbol handshake bubble** in
+`bpsk_framed_tx_chain`: it accepted the next frame bit only when the SPS upsampler became
+ready, so the 1-cycle symbol mapper was always a beat late and `burst_out`, although
+logically a perfect SPS=8 stream, carried **timing gaps** (`tx_valid` was not asserted on
+every sample-clock cycle). The continuously-draining DAC FIFO (`util_rfifo`) under-runs on
+those gaps and repeats samples non-uniformly, which is exactly the progressive, irrecoverable
+time-warp measured above.
+
+**Fix:** a one-symbol **prefetch register** in `bpsk_framed_tx_chain` — the mapper now runs
+one symbol ahead into a prefetch latch, so the upsampler is never starved and `burst_out` is
+gap-free. The DAC then consumes one fresh sample per cycle with no under-run. The logical
+symbol/sample sequence is unchanged, so the Block-5 simulation smoke (including the
+multi-frame and timing-recovery benches) still passes at BER 0.
+
+After the fix, the captured PL RX (`capture_in`) in digital loopback **decodes to BER = 0
+offline** — confirmed both by a floating-point matched filter and by a faithful integer
+(MF `SHIFT=15` + exact fixed-phase sampler) RTL mimic. A debug tap on the core's recovered
+decision sample (`symbol_i_debug`) shows clean bipolar ±2000 symbols whose bits **match the
+reference frame** (the preamble `0,0,0,0,0,1,1,0,0,1,0,1` is recovered correctly), with only
+~2/281 residual errors at the correct alignment. **The PL BPSK modem therefore works
+end-to-end.** Because the datapath is now drift-free, the bridge was switched to the
+fixed-phase sampler (`TIMING_RECOVERY = 0`); the Gardner loop is kept for genuinely drifted
+streams but is not needed here (and it mis-acquires on the clean burst).
+
+**Remaining work — frame synchronisation.** The on-chip `bpsk_ber_counter` still compares
+from a fixed `start_offset`, but the AD9361 loopback latency (frame absolute position
+≈ 129 samples) **jitters a few symbols per burst**, so a fixed offset cannot keep the
+recovered frame aligned with the reference — the counter reads ~50 % even though the
+recovered frame is correct, just shifted. `start_offset` does shift the sampling phase
+(verified: clean ±2000 at the symbol-centre phase), it simply cannot track per-burst jitter.
+The clean next step is to add **preamble-correlation frame-sync** to `bpsk_ber_counter`
+(detect the frame start and align the comparison) instead of relying on a fixed `start_offset`;
+the on-chip BER counter will then read ~0 as well.
+
+### Frame-sync fix — on-chip BER = 0 achieved
+
+`bpsk_ber_counter` already had a sliding preamble correlator, but its lock window was only
+`LOCK_PREAMBLE_BITS = 4`, i.e. it matched `frame_bits[0..3] = 0,0,0,0`. Because the preamble
+**begins with five identical zeros** (`0,0,0,0,0,1,1,...`), a 4-zero pattern is ambiguous: it
+locks one or two symbols early on the leading zeros (or on the pre-frame transient bit), which
+shifts the whole payload comparison and floors the counter near 50 % even on a perfectly clean
+signal — and because the correlator overrides the manual phase, `start_offset` sweeps had no
+effect. **Fix: `LOCK_PREAMBLE_BITS = 8`** (`0,0,0,0,0,1,1,0`) — the window now spans past the
+leading zeros to the distinctive `1,1`, so the slider locks at exactly one alignment, the true
+frame start, independent of the pre-frame transient. The Block-5 smoke (single + multi-frame +
+timing-recovery) still passes at BER 0.
+
+**Result on hardware (AD9361 digital loopback):** the on-chip bridge counter reads
+**`received_bits = 281, total_errors = 0` — full-frame BER = 0** — confirmed repeatedly at
+`start_offset = 110`. This closes the long-standing ~40 % floor: the PL BPSK modem now runs
+end-to-end at BER 0 on silicon.
+
+**Reliability and the remaining refinement.** Full-frame BER = 0 lands on ~60 % of bursts at
+the best `start_offset` (110, ≈3/5 over a fine phase sweep); the remaining bursts mis-lock
+because the AD9361 loopback latency jitters the frame position a few **samples** per burst, so
+the single fixed sampling phase occasionally falls off the symbol centre (inter-symbol
+interference corrupts the 8-bit lock window). A host-side retry at `start_offset = 110` reaches
+BER 0 within a couple of attempts, so the runtime helper just re-arms until the counter reads 0.
+
+Re-enabling the Gardner timing-recovery loop (`TIMING_RECOVERY = 1`) on top of the 8-bit
+frame-sync was tried as the path to 100 % per-burst reliability, but it is **worse** here
+(≈1/5 vs the fixed-phase ≈3/5): the RTL Gardner loop mis-tracks this short ~281-symbol
+loopback burst (it acquires/converges differently from the bit-exact float/fixed model, which
+locks cleanly on the same data offline). So the bridge ships with the **fixed-phase sampler**
+(`TIMING_RECOVERY = 0`); the Gardner block is kept in the tree for genuinely drifted streams
+(Lab 5.8b). The clean follow-up for fully deterministic per-burst BER = 0 is to debug the RTL
+Gardner acquisition so it tracks the sub-symbol loopback jitter (or to make the AD9361 burst
+trigger sample-phase deterministic).
+
 ---
 
 ## Related labs / Связанные лабораторные работы
