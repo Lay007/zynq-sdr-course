@@ -7,7 +7,15 @@
 module bpsk_ber_counter #(
     parameter integer INDEX_W = 16,
     parameter integer MAX_FRAME_BITS = 512,
-    parameter integer LOCK_PREAMBLE_BITS = 4,
+    // Frame-sync acquisition window. The preamble begins with five identical bits
+    // (0,0,0,0,0,1,1,...), so a 4-bit lock pattern (frame_bits[0..3] = 0,0,0,0) is
+    // AMBIGUOUS: it matches one or two samples early on the leading zeros (or on a
+    // pre-frame transient bit), which shifts the whole payload comparison and floors
+    // the BER near 50% even on a clean signal. An 8-bit window (0,0,0,0,0,1,1,0)
+    // spans past the leading zeros to the distinctive 1,1, so the sliding correlator
+    // locks at exactly one alignment = the true frame start, independent of the
+    // pre-frame transient / loopback-latency jitter (and overrides start_offset).
+    parameter integer LOCK_PREAMBLE_BITS = 8,
     parameter MEM_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bits.mem"
 ) (
     input  wire                     clk,
