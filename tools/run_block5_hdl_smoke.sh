@@ -7,19 +7,28 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
+if command -v python3 >/dev/null 2>&1; then
+  PYTHON_BIN="${PYTHON_BIN:-python3}"
+elif command -v python >/dev/null 2>&1; then
+  PYTHON_BIN="${PYTHON_BIN:-python}"
+else
+  echo "python3/python was not found on PATH; install Python or set PYTHON_BIN." >&2
+  exit 1
+fi
+
 TB_DIR="blocks/block_05_fpga_hdl_flow/tb"
 RTL_DIR="blocks/block_05_fpga_hdl_flow/rtl"
 PY_DIR="blocks/block_05_fpga_hdl_flow/python"
 
-python "$PY_DIR/generate_fir_iq_4tap_vectors.py"
-python "$PY_DIR/generate_nco_mixer_iq_vectors.py"
-python "blocks/block_11_integrated_sdr_project/python/end_to_end_bpsk_reference.py"
-python "$PY_DIR/generate_bpsk_symbol_mapper_vectors.py"
-python "$PY_DIR/generate_bpsk_upsampler_8x_vectors.py"
-python "$PY_DIR/generate_bpsk_rrc_tx_fir_vectors.py"
-python "$PY_DIR/generate_bpsk_rx_bit_recovery_vectors.py"
-python "$PY_DIR/generate_bpsk_framed_loopback_vectors.py"
-python "$PY_DIR/generate_bpsk_timing_recovery_vectors.py"
+"$PYTHON_BIN" "$PY_DIR/generate_fir_iq_4tap_vectors.py"
+"$PYTHON_BIN" "$PY_DIR/generate_nco_mixer_iq_vectors.py"
+"$PYTHON_BIN" "blocks/block_11_integrated_sdr_project/python/end_to_end_bpsk_reference.py"
+"$PYTHON_BIN" "$PY_DIR/generate_bpsk_symbol_mapper_vectors.py"
+"$PYTHON_BIN" "$PY_DIR/generate_bpsk_upsampler_8x_vectors.py"
+"$PYTHON_BIN" "$PY_DIR/generate_bpsk_rrc_tx_fir_vectors.py"
+"$PYTHON_BIN" "$PY_DIR/generate_bpsk_rx_bit_recovery_vectors.py"
+"$PYTHON_BIN" "$PY_DIR/generate_bpsk_framed_loopback_vectors.py"
+"$PYTHON_BIN" "$PY_DIR/generate_bpsk_timing_recovery_vectors.py"
 
 test -s "$TB_DIR/fir_iq_4tap_input_vectors.txt"
 test -s "$TB_DIR/fir_iq_4tap_expected_vectors.txt"

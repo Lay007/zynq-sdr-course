@@ -25,7 +25,7 @@ def run_hdl() -> None:
             "bash was not found on PATH; run tools/run_block5_hdl_smoke.sh from a POSIX shell "
             "or install Git Bash/WSL for local HDL CI."
         )
-    run([bash, str(ROOT / "tools" / "run_block5_hdl_smoke.sh")])
+    run([bash, "./tools/run_block5_hdl_smoke.sh"])
 
 
 def main() -> int:
