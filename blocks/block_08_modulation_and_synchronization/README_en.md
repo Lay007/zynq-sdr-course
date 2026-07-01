@@ -103,5 +103,20 @@ Being two orthogonal BPSK axes, Gray QPSK has the same per-bit BER as BPSK,
 `Q(√(2·Eb/N0))` — the simulation matches theory across 0–10 dB. Full walkthrough:
 **[Lab 8.8 — QPSK modem, impairments and BER](lab_8_8_qpsk_modem_and_impairments.md)**.
 
+## QPSK carrier recovery — de-rotating the CFO ring
+
+The CFO ring above is undecodable (BER ≈ 0.5) until a **carrier-recovery loop** de-rotates it.
+A decision-directed **Costas loop** (NCO + PI loop filter + QPSK phase-error detector — the
+frequency-domain twin of the Gardner timing loop) drives the ring back onto the four points and
+tracks the CFO ramp:
+
+![QPSK carrier recovery](https://lay007.github.io/zynq-sdr-course/assets/qpsk_carrier_recovery.png)
+
+The one twist BPSK does not have: the loop locks to one of four `k·90°` rotations, so the
+constellation looks perfect but the bit labelling may be rotated (the **90° ambiguity**). The
+same **known preamble** the modem uses for frame sync resolves it — turning the noisy BER back
+into a flat **BER = 0** across the whole CFO sweep. Full walkthrough:
+**[Lab 8.9 — QPSK carrier recovery](lab_8_9_qpsk_carrier_recovery.md)**.
+
 ## Next step
 After finishing this block, the student should be ready to reuse its results as the starting point for the next stage of the course and the related practical experiment.

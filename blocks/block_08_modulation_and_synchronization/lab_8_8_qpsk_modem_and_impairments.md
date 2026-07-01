@@ -64,8 +64,9 @@ python blocks/block_08_modulation_and_synchronization/python/qpsk_impairments_be
 
 ## Next steps
 
-- **Carrier recovery** (Costas / 4th-power) to de-rotate the CFO ring — turns the smeared
-  constellation back into four points for over-the-air QPSK.
+- **Carrier recovery** — a decision-directed Costas loop de-rotates the CFO ring back into four
+  points (and resolves the residual 90° ambiguity with the preamble): done in
+  **[Lab 8.9 — QPSK carrier recovery](lab_8_9_qpsk_carrier_recovery.md)**.
 - **Hardware**: drop the QPSK modem into the runtime AD9361 bridge (same DAC-mux / ADC-tap /
   gpreg plane as the BPSK bridge in [Lab 11.26](../block_11_integrated_sdr_project/lab_11_26_runtime_dds_bypass_bpsk_ota.md))
   for QPSK BER = 0 in digital loopback, then the real-hardware constellation of
