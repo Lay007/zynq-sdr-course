@@ -143,6 +143,53 @@ def build_arg_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def qpsk_ber_once(runner, base_addr: int, symbol_count: int, offset: int,
+                  poll: int = 300) -> dict[str, Any]:
+    """Run ONE QPSK BER burst entirely on the device with a single SSH command.
+
+    Batching the whole gpreg sequence (frame/offset writes, start pulse, on-device
+    status poll, counter read-back, clear_done) into one remote `sh` invocation
+    keeps the sweep from opening hundreds of SSH channels — the failure mode that
+    exhausted dropbear when each devmem op was its own exec_command.
+    """
+    a_ctrl = f"0x{base_addr + 0x404:X}"
+    a_frame = f"0x{base_addr + 0x444:X}"
+    a_pre = f"0x{base_addr + 0x484:X}"
+    a_off = f"0x{base_addr + 0x4C4:X}"
+    a_stat = f"0x{base_addr + 0x408:X}"
+    a_recv = f"0x{base_addr + 0x448:X}"
+    a_errc = f"0x{base_addr + 0x488:X}"
+    dm = "/sbin/devmem"
+    # gp_ctrl[4]=0x10 selects QPSK; start=0x11 (mode+start), release=0x10,
+    # clear_done=0x12. Status bit2=done, bit3=timeout.
+    cmd = (
+        f"{dm} {a_frame} 32 {symbol_count}; {dm} {a_pre} 32 0; {dm} {a_off} 32 {offset}; "
+        f"{dm} {a_ctrl} 32 0x10; {dm} {a_ctrl} 32 0x11; {dm} {a_ctrl} 32 0x10; "
+        f"i=0; s=0; while [ $i -lt {poll} ]; do s=$({dm} {a_stat} 32); d=$((s)); "
+        f"if [ $((d & 4)) -ne 0 ]; then break; fi; if [ $((d & 8)) -ne 0 ]; then break; fi; "
+        f"i=$((i+1)); done; r=$({dm} {a_recv} 32); e=$({dm} {a_errc} 32); "
+        f"{dm} {a_ctrl} 32 0x12; {dm} {a_ctrl} 32 0x10; "
+        f"echo RESULT off={offset} recv=$r err=$e status=$s polls=$i"
+    )
+    rc, out, err = runner(cmd)
+    row: dict[str, Any] = {"start_offset": offset, "ok": rc == 0}
+    if rc != 0:
+        row["error"] = (err or out or "").strip()[:200]
+        return row
+    line = next((ln for ln in out.splitlines() if ln.startswith("RESULT")), "")
+    fields = dict(tok.split("=", 1) for tok in line.split()[1:] if "=" in tok)
+    recv = int(fields.get("recv", "0"), 16)
+    errc = int(fields.get("err", "0"), 16)
+    status = int(fields.get("status", "0"), 16)
+    row["received_symbols"] = recv
+    row["total_bit_errors"] = (errc >> 16) & 0xFFFF
+    row["payload_errors"] = errc & 0xFFFF
+    row["timed_out"] = bool(status & 0x8)
+    row["status"] = f"0x{status:08X}"
+    row["polls"] = int(fields.get("polls", "0"))
+    return row
+
+
 def summarize_sweep(sweep: list[dict[str, Any]], symbol_count: int) -> dict[str, Any]:
     full = [r for r in sweep if int(r.get("received_symbols") or 0) == symbol_count]
     zero = [r for r in full if int(r.get("total_bit_errors") or 0) == 0]
@@ -314,17 +361,17 @@ def main() -> int:
         if dds is not None:
             disable_dds_tones(dds)
 
+        sig = io.read32(0x508)   # gp_signature_in; bridge keeps the BPSK identity
+        payload["bridge_signature"] = f"0x{sig:08X}"
+        if sig != args.expected_id:
+            raise RuntimeError(
+                f"Unexpected bridge signature 0x{sig:08X}; expected 0x{args.expected_id:08X}.")
+
         for offset in args.start_offsets:
-            attempt = attempt_runtime_bringup(io, replace(base_probe_cfg, start_offset=offset))
-            row: dict[str, Any] = {"start_offset": offset, "ok": bool(attempt.get("ok"))}
-            if attempt.get("ok"):
-                result = attempt.get("result") or {}
-                # For the QPSK core these registers carry symbols / total bit errors.
-                row["received_symbols"] = int(result.get("received_bits") or 0)
-                row["total_bit_errors"] = int(result.get("total_errors") or 0)
-                row["timed_out"] = bool(result.get("timed_out_observed"))
-            else:
-                row["error"] = attempt.get("error")
+            try:
+                row = qpsk_ber_once(io.runner, args.gpreg_base_addr, args.symbol_count, offset)
+            except Exception as exc:  # pragma: no cover - keep sweeping / reach the reboot
+                row = {"start_offset": offset, "ok": False, "error": f"{type(exc).__name__}: {exc}"}
             payload["sweep"].append(row)
             if row.get("received_symbols") == args.symbol_count and row.get("total_bit_errors") == 0:
                 break   # BER=0 found; no need to sweep further
