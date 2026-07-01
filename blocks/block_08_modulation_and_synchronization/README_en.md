@@ -84,5 +84,24 @@ carrier frequency offset (Lab 8.1 / 8.2 seen on real hardware), yet at close ran
 decodes at BER 0. The visual gap between the two constellations *is* the RF channel. Full
 walkthrough, numbers and reproduction: **[Lab 8.7 — Real-hardware BPSK metrics](lab_8_7_real_hardware_bpsk_metrics.md)**.
 
+## QPSK — two bits per symbol, impairments & BER
+
+QPSK is two independent BPSK axes (Gray-coded: low bit → I, high bit → Q), so it doubles the
+bit rate at the same bandwidth. A synthesizable QPSK modem reusing the shared upsampler / RRC /
+sampler recovers a full frame at **BER = 0** in HDL loopback; a channel simulation then shows
+what the two impairments of this block do to it:
+
+![Gray QPSK constellation under impairments](https://lay007.github.io/zynq-sdr-course/assets/qpsk_constellation_impairments.png)
+
+Four clean points → noise-spread clouds → (at low Eb/N0) clouds crossing the axes = bit errors;
+an uncorrected **carrier frequency offset rotates the four points into a ring**, undecodable
+until a carrier-recovery loop de-rotates it (Lab 8.1 / 8.2).
+
+![Gray QPSK BER vs Eb/N0](https://lay007.github.io/zynq-sdr-course/assets/qpsk_ber_vs_ebn0.png)
+
+Being two orthogonal BPSK axes, Gray QPSK has the same per-bit BER as BPSK,
+`Q(√(2·Eb/N0))` — the simulation matches theory across 0–10 dB. Full walkthrough:
+**[Lab 8.8 — QPSK modem, impairments and BER](lab_8_8_qpsk_modem_and_impairments.md)**.
+
 ## Next step
 After finishing this block, the student should be ready to reuse its results as the starting point for the next stage of the course and the related practical experiment.
