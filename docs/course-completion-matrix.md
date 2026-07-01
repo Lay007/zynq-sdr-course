@@ -19,14 +19,20 @@ This matrix shows what each course block should contain before it can be conside
 | 02. Signals and sampling | 🟡 | 🟡 | 🟡 | ⬜ | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ |
 | 03. DSP basics | 🟡 | 🟡 | 🟡 | 🟡 | 🟡 | 🟡 | ⬜ | 🟡 | 🟡 |
 | 04. Simulink and fixed-point | 🟡 | N/A | 🟡 | ⬜ | 🟡 | 🟡 | ⬜ | 🟡 | 🟡 |
-| 05. FPGA / HDL flow | 🟡 | ⬜ | ⬜ | ⬜ | 🟡 | 🟡 | ⬜ | ⬜ | ⬜ |
-| 06. RF frontend and AD9363 | 🟡 | ⬜ | ⬜ | ⬜ | N/A | ⬜ | 🟡 | ⬜ | ⬜ |
-| 07. TX/RX chains | 🟡 | ⬜ | ⬜ | ⬜ | 🟡 | ⬜ | 🟡 | ⬜ | ⬜ |
-| 08. Modulation and synchronization | 🟡 | 🟡 | 🟡 | ⬜ | 🟡 | ⬜ | ⬜ | 🟡 | ⬜ |
-| 09. Recording and analysis tools | 🟡 | 🟡 | 🟡 | ⬜ | N/A | N/A | 🟡 | 🟡 | 🟡 |
-| 10. KiCad and basic electronics | 🟡 | N/A | N/A | N/A | N/A | N/A | 🟡 | ⬜ | ⬜ |
-| 11. Integrated SDR project | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
-| 12. Final projects | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ | ⬜ |
+| 05. FPGA / HDL flow | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | ✅ | ⬜ | 🟡 | 🟡 |
+| 06. RF frontend and AD9363 | 🟡 | 🟡 | ⬜ | ⬜ | N/A | ⬜ | 🟡 | 🟡 | 🟡 |
+| 07. TX/RX chains | 🟡 | 🟡 | ⬜ | ⬜ | 🟡 | ⬜ | 🟡 | 🟡 | 🟡 |
+| 08. Modulation and synchronization | 🟡 | 🟡 | 🟡 | ⬜ | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 |
+| 09. Recording and analysis tools | 🟡 | ✅ | 🟡 | ⬜ | N/A | N/A | 🟡 | ✅ | 🟡 |
+| 10. KiCad and basic electronics | 🟡 | N/A | N/A | N/A | N/A | N/A | 🟡 | ⬜ | 🟡 |
+| 11. Integrated SDR project | 🟡 | ✅ | 🟡 | ⬜ | 🟡 | 🟡 | 🟡 | 🟡 | 🟡 |
+| 12. Final projects | 🟡 | N/A | N/A | N/A | N/A | 🟡 | 🟡 | ⬜ | 🟡 |
+
+## Interpretation notes
+
+- Block 11 is no longer empty: it has a long executable bring-up chain, a promoted internal loopback result and monitor/replay tooling. It remains `🟡` in several columns because the course still needs one polished final report that a reviewer can follow without reading the whole bring-up history.
+- Block 12 has templates, rubrics and project briefs, but still needs one fully filled portfolio-grade example.
+- Blocks 05 and 09 are the strongest automation anchors today: they combine reusable checks, generated artifacts and CI coverage.
 
 ## Lab-level quality gates
 
@@ -63,6 +69,13 @@ This matrix shows what each course block should contain before it can be conside
 - Add final report template.
 - Add example engineering conclusion page.
 - Add screenshots of a finished report and generated figures.
+
+### Batch D — make Block 11 reviewer-friendly
+
+- Create one short model-to-measurement report from the best current evidence.
+- Keep the detailed bring-up logs as background, not as the main reviewer path.
+- Add a one-page summary table: model, implementation, capture/evidence, metrics, conclusion and limitations.
+- Promote routed implementation reports for the exact integrated design.
 
 ## Review rule
 
