@@ -69,6 +69,11 @@ iverilog -g2012 -o "$TB_DIR/tb_bpsk_symbol_mapper.out" \
   "$TB_DIR/tb_bpsk_symbol_mapper.v"
 vvp "$TB_DIR/tb_bpsk_symbol_mapper.out"
 
+iverilog -g2012 -o "$TB_DIR/tb_qpsk_symbol_mapper.out" \
+  "$RTL_DIR/qpsk_symbol_mapper.v" \
+  "$TB_DIR/tb_qpsk_symbol_mapper.v"
+vvp "$TB_DIR/tb_qpsk_symbol_mapper.out"
+
 iverilog -g2012 -o "$TB_DIR/tb_bpsk_upsampler_8x.out" \
   "$RTL_DIR/bpsk_upsampler_8x.v" \
   "$TB_DIR/tb_bpsk_upsampler_8x.v"
