@@ -106,6 +106,10 @@ class BringupConfig:
     clear_done: bool
     max_total_errors: int | None
     max_payload_errors: int | None
+    # Extra gp_ctrl bits OR'd into the control word above the decision-mode field
+    # (bits [3:2]). 0x10 = gp_ctrl[4] selects the QPSK core in the dual-modem
+    # bridge; 0 keeps the BPSK path bit-identical.
+    mod_select_bits: int = 0
 
 
 @dataclass(frozen=True)
@@ -378,7 +382,8 @@ def run_bringup(io: RegisterIo, cfg: BringupConfig) -> BringupResult:
         )
 
     initial_status = io.read32(REGS.gp_status_in)
-    decision_mode_word = (cfg.rx_decision_mode & 0x3) << REGS.decision_mode_shift
+    decision_mode_word = ((cfg.rx_decision_mode & 0x3) << REGS.decision_mode_shift) \
+        | (cfg.mod_select_bits & 0xFFFF_FFF0)
     io.write32(REGS.gp_frame_bit_count_out, cfg.frame_bit_count)
     io.write32(REGS.gp_preamble_count_out, cfg.preamble_count)
     io.write32(REGS.gp_start_offset_out, cfg.start_offset)

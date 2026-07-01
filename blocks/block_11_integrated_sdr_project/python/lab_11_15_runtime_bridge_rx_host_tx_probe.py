@@ -127,6 +127,8 @@ class RuntimeBridgeRxHostTxProbeConfig:
     reboot_after: bool
     reboot_timeout_s: float
     dmesg_line_count: int
+    # 0x10 -> gp_ctrl[4] selects the QPSK core in the dual-modem bridge (0 = BPSK).
+    mod_select_bits: int = 0
 
 
 def iso_now() -> str:
@@ -241,6 +243,7 @@ def attempt_runtime_bringup(io: SshDevMemRegisterIo, cfg: RuntimeBridgeRxHostTxP
         clear_done=True,
         max_total_errors=None,
         max_payload_errors=None,
+        mod_select_bits=cfg.mod_select_bits,
     )
     try:
         result = asdict(run_bringup(io, bringup_cfg))
