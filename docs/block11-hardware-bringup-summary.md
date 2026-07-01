@@ -4,37 +4,41 @@ This page keeps detailed Block 11 hardware notes separate from the top-level cou
 
 ## Purpose
 
-Block 11 is the integrated SDR project track. Its goal is to connect the reference model, fixed-point and HDL handoff, Zynq PL path, AD9363 RF path, external monitor capture, metrics and final report.
+Block 11 is the integrated SDR project track. Its goal is to connect the reference model, fixed-point and HDL handoff, board-side implementation, capture evidence, metrics and final report.
 
 ## Current evidence map
 
 | Evidence | Current state | Notes |
 |---|---|---|
-| Stock-shell AD9363 path | measured | The baseline Linux/IIO path is the known-good reference. |
-| RTL-SDR monitor flow | measured | WAV/IQ monitor capture and offline BER replay are documented. |
-| Stock-shell BPSK fallback | reviewed | The fallback path has a zero-BER reference result. |
-| Runtime PL BPSK path | measured | The runtime path is visible in monitor captures, but BER robustness is still open. |
-| Runtime overlay control path | partially proven | Register readback and re-init helpers show that the overlay is alive after reload. |
+| Baseline board path | reviewed | The vendor Linux/IIO path is the known-good reference. |
+| External monitor flow | measured | WAV/IQ monitor capture and offline replay are documented. |
+| Fallback reference path | reviewed | The fallback path has a zero-error reference result. |
+| Runtime overlay control path | reviewed | Register readback and re-init helpers show that the overlay is alive after reload. |
+| Runtime on-chip loopback | measured | The promoted loopback point reaches zero errors for the current deterministic frame. |
+| External measured proof package | hardware pending | The remaining step is a repeatable measured package with matched settings, metadata, plots and limitations. |
 
-## Current blocker
+## Status alignment note
 
-The remaining Block 11 problem is not simply missing visibility of the runtime path. The better engineering statement is:
+The earlier version of this page described an old blocker with high error rate and run-to-run variability. The top-level status matrix has since been promoted: the current internal loopback result is measured, while the remaining work is external measurement packaging and repeatability.
 
-> The runtime PL BPSK path is observable, but the recovered frame still has high BER and run-to-run variability. The next step is to make acquisition, timing and gain settings repeatable from a clean boot.
+## Remaining engineering statement
+
+> The runtime path has a measured zero-error internal loopback result. The next proof is to make the same story reviewer-friendly at the measurement level: setup notes, manifest-backed capture, generated plots, metrics and a short limitations section.
 
 ## Next experiments
 
 | Priority | Experiment | Expected evidence |
 |---|---|---|
-| P0 | Repeat the promoted runtime monitor point from a clean boot | manifest, metrics JSON, BER table, conclusion |
-| P0 | Sweep acquisition prefix, decision axis and start offset | ranked table and best-point rerun |
-| P1 | Add a cabled attenuated loopback variant | RF notes, attenuation, gain settings and BER/EVM metrics |
-| P1 | Compare stock-shell and runtime captures with matched monitor settings | paired manifests and plots |
+| P0 | Repeat the promoted loopback point from a clean boot | manifest, metrics JSON, snapshot, conclusion |
+| P0 | Add a controlled cabled measurement variant | attenuation, gain settings and metric table |
+| P1 | Compare baseline and runtime captures with matched monitor settings | paired manifests, plots and conclusions |
+| P1 | Promote routed implementation reports for the integrated design | timing, utilization and clocking context |
+| P2 | Extend the same flow to QPSK | dataset manifest, constellation, EVM/SNR summary |
 | P2 | Promote the best result into a final project report | model-to-measurement report with limitations |
 
 ## Done criteria
 
-Block 11 should become `Portfolio-ready` only when it has a clean command path, manifest-backed IQ data, RF configuration notes, plots, BER/EVM/SNR metrics, a short conclusion and an explicit limitations section.
+Block 11 should become `Portfolio-ready` only when it has a clean command path, manifest-backed data, configuration notes, plots, BER/EVM/SNR metrics, a short conclusion and an explicit limitations section.
 
 ## Related pages
 
