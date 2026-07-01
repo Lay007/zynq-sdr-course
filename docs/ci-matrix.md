@@ -7,12 +7,16 @@ This page documents what each GitHub Actions workflow validates and which artifa
 | Workflow | Trigger focus | Main checks | Main artifacts |
 |---|---|---|---|
 | `full_course_smoke.yml` | broad course changes | MkDocs strict build, representative Python labs, Block 5 HDL smoke | reproducibility summary, selected plots |
+| `python_quality.yml` | Python changes | formatting/linting and Python quality gates | PASS/FAIL logs |
 | `block4_labs.yml` | fixed-point lab block | Lab 4.1 and 4.2 executable Python models | fixed-point FIR/mixer figures |
 | `block5_hdl.yml` | HDL/FPGA block | Icarus Verilog compilation and self-checking testbenches | VCD files, PASS/FAIL logs |
+| `hdl-canonical-ci.yml` | canonical HDL vectors | generated vectors and HDL smoke path | canonical vector logs |
 | `block6_rf_analysis.yml` | RF frontend lab block | Lab 6.4 synthetic RF analysis | spectrum/time plots, metrics JSON |
 | `block7_tx_rx.yml` | TX/RX chain block | Lab 7.2 and 7.3 executable models | frequency-plan/spectrum plots, loopback metrics |
 | `block8_sync.yml` | synchronization labs | CFO, phase, timing and end-to-end sync models | constellation plots, EVM/BER metrics |
 | `block9_recording_analysis.yml` | IQ recording labs | CI16 reader and multi-format IQ reader | spectrum plots, metrics JSON, synthetic captures |
+| `qpsk_demo_analysis.yml` | generated QPSK replay dataset | deterministic dataset generation, analyzer run and metric thresholds | constellation SVG, spectrum SVG, analysis summary JSON |
+| `dataset_manifests.yml` | dataset metadata | dataset manifest parsing, Git LFS pointer and checksum rules | manifest validation report |
 | `docs-assets-check.yml` | markdown asset integrity | local markdown asset links | PASS/FAIL report |
 | `experiment-manifests-check.yml` | manifest consistency | YAML structure and required fields in `experiments/*.yaml` | PASS/FAIL report |
 | `pages.yml` / docs deploy | documentation | MkDocs site build and GitHub Pages deploy | published course site |
@@ -33,6 +37,22 @@ Local equivalent:
 
 ```bash
 python tools/tasks.py smoke
+```
+
+## Python Quality
+
+Purpose: catch basic Python regressions before the broader course smoke path.
+
+Checks typically include:
+
+- Ruff configuration from `pyproject.toml`;
+- pytest coverage for repository-level utilities and regression checks;
+- import/runtime sanity for course helpers when they are included in the test set.
+
+Local equivalent:
+
+```bash
+python tools/run_local_ci.py --quick
 ```
 
 ## Block 4 Labs
@@ -75,12 +95,47 @@ Checks:
 - `iq_passthrough`;
 - `fir_iq_4tap`;
 - `nco_mixer_iq`;
-- `axis_iq_passthrough`.
+- `axis_iq_passthrough`;
+- BPSK chain and control-wrapper smoke tests when canonical vectors are regenerated.
 
 Local equivalent:
 
 ```bash
 make hdl
+```
+
+## QPSK Demo Analysis
+
+Purpose: keep the synthetic QPSK replay dataset reproducible and useful for Block 9/11/12 reports.
+
+Checks:
+
+- generate the deterministic CI16 fixture;
+- run the analyzer;
+- verify the summary JSON and preview SVG files exist;
+- enforce basic metric thresholds for sample count, symbol count, EVM and CFO.
+
+Local equivalent:
+
+```bash
+python tools/generate_demo_qpsk_dataset.py
+python tools/analyze_demo_qpsk_dataset.py
+```
+
+## Dataset Manifests
+
+Purpose: keep dataset descriptors consistent without committing unnecessary binary payloads.
+
+Checks:
+
+- parse dataset manifests;
+- verify required metadata fields;
+- check Git LFS pointer rules and checksum fields when present.
+
+Local equivalent:
+
+```bash
+python tools/check_dataset_manifests.py
 ```
 
 ## Block 8 Synchronization
