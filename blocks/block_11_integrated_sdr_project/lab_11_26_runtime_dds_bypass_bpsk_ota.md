@@ -647,9 +647,34 @@ frame-sync was tried as the path to 100 % per-burst reliability, but it is **wor
 loopback burst (it acquires/converges differently from the bit-exact float/fixed model, which
 locks cleanly on the same data offline). So the bridge ships with the **fixed-phase sampler**
 (`TIMING_RECOVERY = 0`); the Gardner block is kept in the tree for genuinely drifted streams
-(Lab 5.8b). The clean follow-up for fully deterministic per-burst BER = 0 is to debug the RTL
-Gardner acquisition so it tracks the sub-symbol loopback jitter (or to make the AD9361 burst
-trigger sample-phase deterministic).
+(Lab 5.8b).
+
+### Why the Gardner cannot help, and the verified fix (multi-phase diversity)
+
+The RTL Gardner was debugged line-by-line against its fixed-point model (`timing_recovery_fixed`
+in `bpsk_timing_recovery_model.py`): the acquisition, `mu = min(nco<<2, 0xFFFF)` interpolation,
+sign-Gardner TED, PI loop and NCO are **bit-exact**, so it is not an RTL bug. Feeding two
+captured hardware bursts through the model shows the real reason it does not help: after the
+gap-free TX fix the loopback stream is **drift-free** (exactly SPS samples/symbol), so a tracking
+loop has nothing to track — it only injects self-noise that *narrows* the good-phase window
+(4 offsets vs the fixed-phase 5). Raising the loop gain, freezing after acquisition, or
+gear-shifting all make it strictly worse. The residual impairment is **inter-burst** sampling-
+phase jitter (an acquisition problem), not intra-burst drift (a tracking problem), so the Gardner
+loop is the wrong tool.
+
+The model pinpoints the fix. Per burst the eight sub-symbol phases split into **five consecutive
+"good" phases (full-frame BER 0) and three consecutive "bad" ones**, and that window slides a few
+phases from burst to burst — which is exactly why a single fixed phase only wins ~60 % of the
+time (e.g. phase mod-8 = 6 gives BER 0 on one captured burst but 70 errors on another). Because
+the good region is five wide and the bad region only three, **two sampling phases 4 apart
+(`start_offset+0` and `start_offset+4`) can never both fall in the bad region**, so taking the
+lower-error of the two always lands in the eye: a multi-phase diversity receiver
+(2–4 parallel fixed-phase samplers + counters, keep the min-error one) gives **deterministic
+per-burst BER = 0**. This is verified in the model: over `start_offset` 100–111 the 2-phase
+`{0,4}`, 4-phase `{0,2,4,6}` and 8-phase pickers all return BER 0 on both captured bursts, where
+the single fixed phase floors at 13–70 errors. Implementing that diversity receiver (or making
+the AD9361 burst-trigger sample-phase deterministic to kill the jitter) is the clean follow-up;
+until then the host retry at `start_offset = 110` already reaches BER 0 in a couple of attempts.
 
 ---
 
