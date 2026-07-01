@@ -1,94 +1,36 @@
 # Lab Index
 
-This page provides a compact index of the executable and report-oriented labs in the course.
+This page provides a compact index of course labs. It is intentionally shorter than the MkDocs navigation tree and is used as a planning checklist.
 
 ## Legend
 
 | Mark | Meaning |
 |---|---|
-| Python | executable Python model or analyzer |
-| MATLAB | MATLAB/Simulink-oriented task or planned translation |
-| Verilog | RTL or testbench activity |
-| Report | documentation/checklist/report deliverable |
-| CI | covered by a GitHub Actions workflow or representative smoke path |
+| `yes` | A page, script, report task or reusable evidence path exists. |
+| `partial` | Present, but still needs stronger examples or final packaging. |
+| `manual` | Requires instructor or local bench execution. |
+| `ci` | Covered by GitHub Actions or the representative smoke path. |
 
-## Labs
+## Compact lab coverage
 
-| Lab | Block | Topic | Python | Verilog | Report | CI | Main metrics / artifacts |
-|---|---|---|---:|---:|---:|---:|---|
-| 1.0 | Intro to SDR | First RF observation with RTL-SDR | no | no | yes | manual | spectrum screenshot, receiver settings, short WAV IQ capture, metadata |
-| 1.1 | Intro to SDR | Controlled Zynq DDS tone via RTL-SDR | yes | no | yes | manual | WAV IQ tone capture, measured peak, frequency error, SNR |
-| 2.1 | Signals and sampling | Sampling axis and interpretation | yes | no | yes | yes | time plot, correct/wrong FFT axis, interpretation error |
-| 2.2 | Signals and sampling | Aliasing sweep | yes | no | yes | yes | alias map, example spectra, alias error |
-| 2.3 | Signals and sampling | I/Q interpretation and mirroring | yes | no | yes | yes | complex vs real spectra, swapped-IQ mirror check |
-| 3.1 | DSP basics | FFT windows and leakage | yes | no | yes | partial | spectra, leakage comparison |
-| 3.2 | DSP basics | FIR low-pass filter | yes | no | yes | partial | FIR response, filtered spectrum |
-| 3.3 | DSP basics | Digital mixing | yes | planned link | yes | partial | spectra before/after mixing |
-| 3.4 | DSP basics | Decimation | yes | no | yes | partial | anti-aliasing, decimated spectrum |
-| 4.1 | Fixed-point | Fixed-point FIR | yes | bridge | yes | partial | quantization error, fixed-point formats |
-| 4.2 | Fixed-point | Fixed-point digital mixer | yes | bridge | yes | partial | mixer error, NCO precision |
-| 5.1 | HDL flow | Streaming interface and testbench | no | yes | yes | yes | VCD, PASS/FAIL |
-| 5.2 | HDL flow | FIR RTL mapping | yes vectors | yes | yes | yes | vector match, saturation, latency |
-| 5.3 | HDL flow | NCO mixer RTL | yes vectors | yes | yes | yes | vector match, complex multiply |
-| 5.4 | HDL flow | AXI-Stream wrapper | no | yes | yes | yes | handshake, backpressure, tlast |
-| 5.5 | HDL flow | Float vs fixed vs RTL comparison | yes | reuse vectors | yes | partial | RMSE/max error, resource-latency table |
-| 5.6 | HDL flow | BPSK RRC TX FIR RTL | yes vectors | yes | yes | yes | pulse-shaped sample match, Q1.15 FIR, coefficient handoff |
-| 5.7 | HDL flow | BPSK 8x symbol upsampler | yes vectors | yes | yes | yes | zero-stuff expansion, symbol/sample bridge |
-| 5.8 | HDL flow | BPSK RX matched filter and bit recovery | yes vectors | yes | yes | yes | deterministic bit recovery, payload BER |
-| 5.9 | HDL flow | BPSK framed TX/RX loopback top-level | yes vectors | yes | yes | yes | framed burst, flush tail, zero-error loopback |
-| 5.10 | HDL flow | Zynq-ready BPSK BER top-level | yes vectors | yes | yes | yes | start/busy/done, BER counters, TX/RX sample seam |
-| 5.11 | HDL flow | AXI-Lite control wrapper for the BPSK BER top-level | yes vectors | yes | yes | yes | register map, start polling, BER readback |
-| 6.1 | RF frontend | RF frequency plan | yes/report | no | yes | partial | expected offset, frequency error |
-| 6.2 | RF frontend | Gain staging and overload | yes/report | no | yes | partial | clipping, SNR, SFDR notes |
-| 6.3 | RF frontend | AD9363 settings and iio_attr | no | no | yes | manual | settings table, metadata |
-| 6.4 | RF frontend | Synthetic RF capture analysis | yes | no | yes | yes | FFT, SNR, clipping, metrics JSON |
-| 6.5 | RF frontend | RF impairment calibration | yes | no | yes | partial | DC/IQ/image/LO metrics before/after |
-| 6.6 | RF frontend | Clean-image Zynq RX-only observation | yes | no | yes | manual | CI16 capture, manifest, offline FFT, Zynq-vs-RTL overlay |
-| 6.7 | RF frontend | dBm vs dBFS power calibration | yes/reuse | no | yes | manual | attenuation sweep, RTL-SDR peak dBFS, optional calibrated dBm estimate |
-| 6.8 | RF frontend | Stock-shell OTA DDS tone observation | yes | no | yes | manual | CI16 tone capture, manifest, measured peak, frequency error, SNR |
-| 7.1 | TX/RX | TX/RX chain architecture | no | no | yes | manual | architecture, sample-rate plan |
-| 7.2 | TX/RX | DUC/DDC frequency translation | yes | no | yes | yes | spectra, residual frequency error |
-| 7.3 | TX/RX | Loopback metrics | yes | no | yes | yes | constellation, EVM, SNR, BER |
-| 7.4 | TX/RX | Packet receiver detection | yes | no | yes | partial | TP/FP/miss, detection probability, timing error |
-| 8.1 | Synchronization | CFO estimation/correction | yes | no | yes | yes | CFO error, EVM, BER |
-| 8.2 | Synchronization | Phase offset correction | yes | no | yes | yes | phase error, EVM, BER |
-| 8.3 | Synchronization | Timing recovery | yes | no | yes | yes | timing phase, eye preview, EVM/BER |
-| 8.4 | Synchronization | End-to-end sync chain | yes | no | yes | yes | CFO, phase, timing, EVM/BER |
-| 8.5 | Synchronization | OFDM mini link | yes | no | yes | partial | sync metric, CFO estimate, channel estimate, BER/EVM |
-| 8.6 | Synchronization | Channel coding BER comparison | yes | no | yes | partial | BER vs SNR, coding and interleaving gain |
-| 9.1 | IQ recording | IQ file format and metadata | no | no | yes | manual | metadata completeness |
-| 9.2 | IQ recording | CI16 IQ reader and analyzer | yes | no | yes | yes | FFT, peak, SNR, DC, clipping |
-| 9.3 | IQ recording | Multi-format IQ reader | yes | no | yes | yes | CI16/CU8/CF32 spectra, metrics JSON |
-| 9.5 | IQ recording | Synthetic QPSK replay and constellation analysis | yes | no | yes | yes | generated CI16, constellation SVG, spectrum SVG, EVM/CFO JSON |
-| 10.1 | Electronics | Passive RC filter | no | no | yes | manual | cutoff calculation, schematic |
-| 10.2 | Electronics | Attenuator pad | no | no | yes | manual | attenuation, safety notes |
-| 10.3 | Electronics | RF measurement safety checklist | no | no | yes | manual | safety checklist |
-| 10.4 | Electronics | KiCad schematic mini-project | no | no | yes | manual | schematic concept, BOM |
-| 11.1 | Integrated project | Requirements and architecture | no | no | yes | manual | requirements, architecture |
-| 11.2 | Integrated project | End-to-end simulation package | yes/reuse | no | yes | manual | figures, metrics JSON |
-| 11.3 | Integrated project | FPGA/RF integration checklist | no | yes/reuse | yes | manual | testbench, RF checklist |
-| 11.4 | Integrated project | Final measurement report | no | no | yes | manual | pass/fail table, report |
-| 11.5 | Integrated project | AXI DMA latency and jitter | yes | no | yes | partial | latency trace, histogram, p95/p99, throughput |
-| 11.6 | Integrated project | Measurement uncertainty budget | yes | no | yes | partial | Type A/B contributions, expanded uncertainty |
-| 11.7 | Integrated project | PS-side AXI-Lite BPSK bring-up | yes | yes/reuse | yes | yes | ID readback, busy/done polling, BER counter JSON |
-| 11.8 | Integrated project | AD9361 gpreg BPSK overlay | yes | yes/reuse | yes | manual | CLG400 overlay, gpreg ID/signature evidence, stock-shell clean-boot baseline |
-| 11.9 | Integrated project | AD9361 RF discovery sweep | yes | yes/reuse | yes | manual | gated sweep plan to resume after sample-path reintegration around the stock shell |
-| 11.10 | Integrated project | Timed IIO burst capture | yes | yes/reuse | yes | manual | timed CI16 snapshot, trigger-relative power metrics, RF-vs-digital evidence |
-| 11.11 | Integrated project | IIO vs gpreg contention probe | yes | yes/reuse | yes | manual | standalone-vs-overlap matrix, DMAC snapshots, contention evidence |
-| 11.13 | Integrated project | Stock vs runtime RX compare | yes | yes/reuse | yes | manual | stock-shell vs runtime RX SNR/BER comparison evidence |
-| 11.14 | Integrated project | Stock-shell host BPSK OTA measurement | yes | yes/reuse | yes | manual | stock-shell RTL-SDR BER=0 baseline, correlation ratio ≥5.2 |
-| 11.15 | Integrated project | Runtime bridge RX with host TX probe | yes | yes/reuse | yes | manual | runtime bridge RX SNR, host-side TX probe evidence |
-| 11.16 | Integrated project | Runtime RX common re-init probe | yes | yes/reuse | yes | manual | RX common re-init latency, signal-quality before/after |
-| 11.17 | Integrated project | Runtime RX re-init start-offset sweep | yes | yes/reuse | yes | manual | start-offset vs SNR/BER sweep table |
-| 11.18 | Integrated project | Runtime RX re-init fresh-session sweep | yes | yes/reuse | yes | manual | fresh-session re-init stability evidence |
-| 11.19 | Integrated project | Runtime bridge_txrx_mux self-timed bring-up | yes | yes/reuse | yes | manual | tx_valid_count JSON, disable_dds_tones status, DDS/ADC rebind log |
-| 11.20 | Integrated project | Read RTL-SDR WAV OTA BPSK BER | yes | yes/reuse | yes | manual | offline BER analysis on RTL-SDR WAV captures, CFO search results |
-| 11.21 | Integrated project | Capture RTL-SDR monitor WAV (stock-shell BPSK) | yes | yes/reuse | yes | manual | stock-shell RTL-SDR WAV, preamble correlation ratio ≥5.2 |
-| 11.22 | Integrated project | Capture RTL-SDR monitor WAV (runtime PL BPSK) | yes | yes/reuse | yes | manual | runtime PL RTL-SDR WAV, disable_dds_tones applied |
-| 11.23 | Integrated project | Runtime PL RTL-SDR attenuation sweep | yes | yes/reuse | yes | manual | attenuation vs BER/EVM sweep table |
-| 11.24 | Integrated project | Capture DDS tone RTL-SDR monitor WAV | yes | yes/reuse | yes | manual | DDS tone WAV, spectral peak at expected offset, SNR measurement |
-| 11.25 | Integrated project | Stock vs runtime DDS tone sweep | yes | yes/reuse | yes | manual | stock-shell vs runtime DDS tone spectral comparison evidence |
-| 11.26 | Integrated project | Runtime PL BPSK OTA: DDS-bypass fix | yes | yes/reuse | yes | manual | disable_dds_tones applied, first OTA BPSK frame confirmed via PL TX path |
+| Block | Labs | Main coverage | State | Next improvement |
+|---|---|---|---|---|
+| 01 | 1.0-1.1 | first observation and learner report flow | manual / measured | add a compact comparison report |
+| 02 | 2.1-2.3 | sampling axis, aliasing and I/Q interpretation | ci / executable | add C++ bridge and metadata-error examples |
+| 03 | 3.1-3.7 | FFT, FIR, mixing, decimation, convolution and windows | partial ci / executable | add more canonical outputs |
+| 04 | 4.1-4.4 | fixed-point workflow and model handoff | partial ci / executable | tighten implementation handoff constraints |
+| 05 | 5.1-5.11 | streaming interfaces, RTL mapping and self-checking tests | ci / executable | promote integrated implementation reports |
+| 06 | 6.1-6.8 plus 6.9 extension | frontend setup, artifact interpretation and measurement preparation | partial ci + manual | add a reviewed measurement package |
+| 07 | 7.1-7.5 | chain architecture and link-level metrics | partial ci / executable | add measured examples |
+| 08 | 8.1-8.6 | synchronization, mini-link and coding comparison | ci / executable | add impairment sweeps and dashboards |
+| 09 | 9.1-9.5 | metadata, file readers and replay analysis | ci / executable | keep manifests and thresholds synchronized |
+| 10 | 10.1-10.4 | electronics, safety checklist and schematic mini-project | manual / report-oriented | add exported design artifacts |
+| 11 | 11.1-11.26 | integrated project workflow and bring-up evidence | manual + measured | compress best evidence into one reviewer-friendly report |
+| 12 | 12.1-12.4 | final project briefs, rubric and report templates | templates / rubric | fill one complete portfolio-ready example |
+
+## Numbering note
+
+The MkDocs-visible Lab 6.7 is **Zero-IF artifacts**. The separate power-scale material is tracked here as a Block 6 extension, so the lab index no longer conflicts with the navigation tree.
 
 ## Recommended assessment path
 
