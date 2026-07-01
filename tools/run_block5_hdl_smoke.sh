@@ -19,6 +19,7 @@ fi
 TB_DIR="blocks/block_05_fpga_hdl_flow/tb"
 RTL_DIR="blocks/block_05_fpga_hdl_flow/rtl"
 PY_DIR="blocks/block_05_fpga_hdl_flow/python"
+COURSE_BRIDGE_DIR="hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702"
 
 "$PYTHON_BIN" "$PY_DIR/generate_fir_iq_4tap_vectors.py"
 "$PYTHON_BIN" "$PY_DIR/generate_nco_mixer_iq_vectors.py"
@@ -136,6 +137,32 @@ iverilog -g2012 -o "$TB_DIR/tb_qpsk_zynq_ber_top.out" \
   "$RTL_DIR/qpsk_zynq_ber_top.v" \
   "$TB_DIR/tb_qpsk_zynq_ber_top.v"
 vvp "$TB_DIR/tb_qpsk_zynq_ber_top.out"
+
+# Dual-modem course bridge: QPSK path end-to-end through the real gpreg plumbing
+# and DAC->ADC digital loopback (gp_ctrl[4]=1 selects the QPSK core).
+iverilog -g2012 -o "$TB_DIR/tb_qpsk_bridge_loopback.out" \
+  "$RTL_DIR/bpsk_symbol_mapper.v" \
+  "$RTL_DIR/bpsk_upsampler_8x.v" \
+  "$RTL_DIR/bpsk_rrc_tx_fir.v" \
+  "$RTL_DIR/bpsk_rrc_rx_fir.v" \
+  "$RTL_DIR/bpsk_symbol_timing_sampler.v" \
+  "$RTL_DIR/bpsk_symbol_timing_recovery.v" \
+  "$RTL_DIR/bpsk_hard_decision.v" \
+  "$RTL_DIR/bpsk_framed_tx_chain.v" \
+  "$RTL_DIR/bpsk_rx_bit_recovery_chain.v" \
+  "$RTL_DIR/bpsk_frame_bit_source.v" \
+  "$RTL_DIR/bpsk_ber_counter.v" \
+  "$RTL_DIR/bpsk_zynq_ber_top.v" \
+  "$RTL_DIR/qpsk_symbol_mapper.v" \
+  "$RTL_DIR/qpsk_hard_decision.v" \
+  "$RTL_DIR/qpsk_framed_tx_chain.v" \
+  "$RTL_DIR/qpsk_rx_bit_recovery_chain.v" \
+  "$RTL_DIR/qpsk_frame_dibit_source.v" \
+  "$RTL_DIR/qpsk_ber_counter.v" \
+  "$RTL_DIR/qpsk_zynq_ber_top.v" \
+  "$COURSE_BRIDGE_DIR/bpsk_zynq_ber_gpreg_bridge.v" \
+  "$TB_DIR/tb_qpsk_bridge_loopback.v"
+vvp "$TB_DIR/tb_qpsk_bridge_loopback.out"
 
 iverilog -g2012 -o "$TB_DIR/tb_bpsk_zynq_ber_top_multiframe.out" \
   "$RTL_DIR/bpsk_symbol_mapper.v" \

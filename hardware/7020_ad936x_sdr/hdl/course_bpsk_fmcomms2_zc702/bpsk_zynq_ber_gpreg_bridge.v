@@ -51,16 +51,53 @@ module bpsk_zynq_ber_gpreg_bridge #(
 localparam [31:0] SIGNATURE = 32'h4250534B; // "BPSK"
 
 wire sample_rst = ~sample_resetn;
-wire core_busy;
-wire core_done;
-wire core_timed_out;
-wire [INDEX_W-1:0] received_bits;
-wire [INDEX_W-1:0] total_errors;
-wire [INDEX_W-1:0] payload_errors;
-wire recovered_valid_debug;
-wire recovered_bit_debug;
-wire symbol_valid_debug;
-wire signed [W-1:0] symbol_i_debug;
+
+// Dual-modem plane. gp_ctrl[4] selects which core drives the DAC mux and the
+// status/counter registers: 0 = BPSK (bit-identical to the original bridge),
+// 1 = QPSK. Both cores are always instantiated and share the sample-domain
+// TX/RX plane, the start pulse and the ADC capture stream; only the selected
+// core's TX reaches the DAC and only its counters are reported. Adding the
+// second core is a second LUT-based RRC pair (xc7z020 headroom is ample:
+// ~24% LUT / 13% DSP / 3% BRAM before this), DSP/BRAM untouched.
+wire mod_qpsk = control_sync[4];
+
+wire bpsk_busy;
+wire bpsk_done;
+wire bpsk_timed_out;
+wire [INDEX_W-1:0] bpsk_received_bits;
+wire [INDEX_W-1:0] bpsk_total_errors;
+wire [INDEX_W-1:0] bpsk_payload_errors;
+wire bpsk_recovered_valid_debug;
+wire bpsk_recovered_bit_debug;
+wire bpsk_symbol_valid_debug;
+wire signed [W-1:0] bpsk_symbol_i_debug;
+wire bpsk_tx_valid;
+wire signed [W-1:0] bpsk_tx_i;
+wire signed [W-1:0] bpsk_tx_q;
+
+wire qpsk_busy;
+wire qpsk_done;
+wire qpsk_timed_out;
+wire [INDEX_W-1:0] qpsk_received_symbols;
+wire [INDEX_W-1:0] qpsk_total_bit_errors;
+wire qpsk_symbol_valid_debug;
+wire signed [W-1:0] qpsk_symbol_i_debug;
+wire signed [W-1:0] qpsk_symbol_q_debug;
+wire qpsk_tx_valid;
+wire signed [W-1:0] qpsk_tx_i;
+wire signed [W-1:0] qpsk_tx_q;
+
+// Modulation-selected views consumed by the rest of the bridge unchanged.
+wire core_busy       = mod_qpsk ? qpsk_busy      : bpsk_busy;
+wire core_done       = mod_qpsk ? qpsk_done      : bpsk_done;
+wire core_timed_out  = mod_qpsk ? qpsk_timed_out : bpsk_timed_out;
+wire [INDEX_W-1:0] received_bits  = mod_qpsk ? qpsk_received_symbols : bpsk_received_bits;
+wire [INDEX_W-1:0] total_errors   = mod_qpsk ? qpsk_total_bit_errors : bpsk_total_errors;
+wire [INDEX_W-1:0] payload_errors = mod_qpsk ? {INDEX_W{1'b0}}       : bpsk_payload_errors;
+wire recovered_valid_debug = mod_qpsk ? 1'b0 : bpsk_recovered_valid_debug;
+wire recovered_bit_debug   = mod_qpsk ? 1'b0 : bpsk_recovered_bit_debug;
+wire symbol_valid_debug    = mod_qpsk ? qpsk_symbol_valid_debug : bpsk_symbol_valid_debug;
+wire signed [W-1:0] symbol_i_debug = mod_qpsk ? qpsk_symbol_i_debug : bpsk_symbol_i_debug;
 
 (* ASYNC_REG = "TRUE" *) reg [31:0] control_meta = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] control_sync = 32'd0;
@@ -182,23 +219,59 @@ bpsk_zynq_ber_top #(
     .frame_bit_count(frame_bit_count_cfg),
     .preamble_count(preamble_count_cfg),
     .start_offset(start_offset_cfg),
-    .busy(core_busy),
-    .done(core_done),
-    .tx_valid(burst_out_valid),
-    .tx_i(burst_out_i),
-    .tx_q(burst_out_q),
+    .busy(bpsk_busy),
+    .done(bpsk_done),
+    .tx_valid(bpsk_tx_valid),
+    .tx_i(bpsk_tx_i),
+    .tx_q(bpsk_tx_q),
     .rx_valid(capture_in_valid && tx_path_active_sample),
     .rx_i(capture_in_i_fmt),
     .rx_q(capture_in_q_fmt),
     .rx_decision_mode(rx_decision_mode),
-    .timed_out(core_timed_out),
-    .received_bits(received_bits),
-    .total_errors(total_errors),
-    .payload_errors(payload_errors),
-    .debug_recovered_valid(recovered_valid_debug),
-    .debug_recovered_bit(recovered_bit_debug),
-    .debug_symbol_valid(symbol_valid_debug),
-    .debug_symbol_i(symbol_i_debug)
+    .timed_out(bpsk_timed_out),
+    .received_bits(bpsk_received_bits),
+    .total_errors(bpsk_total_errors),
+    .payload_errors(bpsk_payload_errors),
+    .debug_recovered_valid(bpsk_recovered_valid_debug),
+    .debug_recovered_bit(bpsk_recovered_bit_debug),
+    .debug_symbol_valid(bpsk_symbol_valid_debug),
+    .debug_symbol_i(bpsk_symbol_i_debug)
+);
+
+// QPSK counterpart (Block 5 qpsk_zynq_ber_top). Reuses the shared upsampler /
+// RRC / sampler; gp_frame_bit_count is reinterpreted as the QPSK *symbol* count
+// (2 bits/symbol) and the fixed-phase sampler is aligned by gp_start_offset,
+// swept by the host until BER=0 exactly like the BPSK path. Same frame-bit and
+// RRC coefficient .mem files.
+qpsk_zynq_ber_top #(
+    .W(W),
+    .SPS(SPS),
+    .INDEX_W(INDEX_W),
+    .MAX_FRAME_BITS(MAX_FRAME_BITS),
+    .PHASE_W(PHASE_W),
+    .FLUSH_SYMBOLS(FLUSH_SYMBOLS),
+    .MEM_FILE(MEM_FILE),
+    .COEF_FILE(COEF_FILE)
+) qpsk_core_i (
+    .clk(sample_clk),
+    .rst(sample_rst),
+    .start(start_pulse_sample),
+    .symbol_count(frame_bit_count_cfg),
+    .start_offset(start_offset_cfg),
+    .busy(qpsk_busy),
+    .done(qpsk_done),
+    .tx_valid(qpsk_tx_valid),
+    .tx_i(qpsk_tx_i),
+    .tx_q(qpsk_tx_q),
+    .rx_valid(capture_in_valid && tx_path_active_sample),
+    .rx_i(capture_in_i_fmt),
+    .rx_q(capture_in_q_fmt),
+    .timed_out(qpsk_timed_out),
+    .received_symbols(qpsk_received_symbols),
+    .total_bit_errors(qpsk_total_bit_errors),
+    .debug_symbol_valid(qpsk_symbol_valid_debug),
+    .debug_symbol_i(qpsk_symbol_i_debug),
+    .debug_symbol_q(qpsk_symbol_q_debug)
 );
 
 always @(posedge adc_input_clk) begin
@@ -397,7 +470,7 @@ always @(posedge ctrl_clk) begin
         capture_debug_meta_ctrl <= 32'd0;
         capture_debug_sync_ctrl <= 32'd0;
     end else begin
-        status_meta_ctrl <= {16'd0, SPS[7:0], 4'd0, timeout_sticky_sample, done_sticky_sample, core_busy, control_sync[0]};
+        status_meta_ctrl <= {16'd0, SPS[7:0], 3'd0, control_sync[4], timeout_sticky_sample, done_sticky_sample, core_busy, control_sync[0]};
         status_sync_ctrl <= status_meta_ctrl;
         received_meta_ctrl <= {{(32-INDEX_W){1'b0}}, received_bits_sample};
         received_sync_ctrl <= received_meta_ctrl;
@@ -458,5 +531,11 @@ assign gp_adc_input_debug = {
 };
 assign gp_capture_debug = capture_debug_sync_ctrl;
 assign tx_path_active = tx_path_active_sample;
+
+// DAC-facing TX stream: the selected modem drives the mux; BPSK mode is
+// bit-identical to the original single-core bridge.
+assign burst_out_valid = mod_qpsk ? qpsk_tx_valid : bpsk_tx_valid;
+assign burst_out_i     = mod_qpsk ? qpsk_tx_i     : bpsk_tx_i;
+assign burst_out_q     = mod_qpsk ? qpsk_tx_q     : bpsk_tx_q;
 
 endmodule
