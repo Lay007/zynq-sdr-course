@@ -133,8 +133,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--rx-rf-port-select", default="A_BALANCED")
     parser.add_argument("--tx-rf-port-select", default="A")
     parser.add_argument("--rx-common-ctrl-value", type=parse_int, default=0x00000003)
-    parser.add_argument("--rebind-runtime-dds-driver", action="store_true")
-    parser.add_argument("--rebind-runtime-adc-driver", action="store_true")
+    # Rebinding the runtime DDS/ADC platform drivers is REQUIRED for the digital
+    # loopback: without it the fabric ADC capture tap reads stale/railed data
+    # (gp_capture_debug pinned at full-scale 0x3FFF) and nothing decodes. Default on.
+    parser.add_argument("--rebind-runtime-dds-driver", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--rebind-runtime-adc-driver", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--runtime-dds-ratecntrl", type=parse_int, default=None)
     parser.add_argument("--reboot-after", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--reboot-timeout-s", type=float, default=DEFAULT_REBOOT_TIMEOUT_S)
