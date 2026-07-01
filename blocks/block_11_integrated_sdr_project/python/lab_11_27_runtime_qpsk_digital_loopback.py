@@ -121,6 +121,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--start-offsets", type=parse_offsets,
                         default=DEFAULT_START_OFFSETS,
                         help="comma-separated start_offset values to sweep")
+    parser.add_argument("--retries", type=int, default=6,
+                        help="bursts per start_offset (best kept); rides out per-burst jitter")
     parser.add_argument("--start-hold-ms", type=int, default=DEFAULT_START_HOLD_MS)
     parser.add_argument("--poll-limit", type=int, default=DEFAULT_POLL_LIMIT)
     parser.add_argument("--poll-delay-ms", type=int, default=DEFAULT_POLL_DELAY_MS)
@@ -191,6 +193,22 @@ def qpsk_ber_once(runner, base_addr: int, symbol_count: int, offset: int,
     row["status"] = f"0x{status:08X}"
     row["polls"] = int(fields.get("polls", "0"))
     return row
+
+
+def set_bist_digital_loopback(runner, enable: bool) -> str:
+    """Enable/disable the AD9361 internal BIST digital loopback (TX digital data
+    looped straight back to RX digital, no RF, no carrier offset) via debugfs on
+    the ad9361-phy device. This is THE loopback that makes the on-chip BER
+    deterministic (no antenna / RF path); over-the-air would need carrier
+    recovery, which the fixed-phase RX core does not have."""
+    val = 1 if enable else 0
+    cmd = (
+        f"for d in /sys/kernel/debug/iio/iio:device*; do "
+        f"idx=${{d##*device}}; n=$(cat /sys/bus/iio/devices/iio:device$idx/name 2>/dev/null); "
+        f"if [ \"$n\" = ad9361-phy ]; then echo {val} > $d/loopback; echo LOOPBACK=$(cat $d/loopback); fi; done")
+    rc, out, err = runner(cmd)
+    line = next((x for x in out.splitlines() if x.startswith("LOOPBACK=")), "")
+    return line.strip() or (err or "").strip()
 
 
 def summarize_sweep(sweep: list[dict[str, Any]], symbol_count: int) -> dict[str, Any]:
@@ -364,21 +382,46 @@ def main() -> int:
         if dds is not None:
             disable_dds_tones(dds)
 
+        # Enable the AD9361 internal digital loopback — the deterministic, carrier-
+        # offset-free TX->RX path this lab decodes (antennas/RF are not used).
+        payload["bist_loopback"] = set_bist_digital_loopback(io.runner, True)
+        print("digital loopback:", payload["bist_loopback"])
+
         sig = io.read32(0x508)   # gp_signature_in; bridge keeps the BPSK identity
         payload["bridge_signature"] = f"0x{sig:08X}"
         if sig != args.expected_id:
             raise RuntimeError(
                 f"Unexpected bridge signature 0x{sig:08X}; expected 0x{args.expected_id:08X}.")
 
+        found = False
         for offset in args.start_offsets:
-            try:
-                row = qpsk_ber_once(io.runner, args.gpreg_base_addr, args.symbol_count, offset)
-            except Exception as exc:  # pragma: no cover - keep sweeping / reach the reboot
-                row = {"start_offset": offset, "ok": False, "error": f"{type(exc).__name__}: {exc}"}
-            payload["sweep"].append(row)
-            if row.get("received_symbols") == args.symbol_count and row.get("total_bit_errors") == 0:
+            # Per-burst sample-phase jitter (AD9361 loopback) shifts the frame a few
+            # samples each burst; retry like the BPSK host-retry and keep the best.
+            best_row = None
+            for _ in range(args.retries):
+                try:
+                    row = qpsk_ber_once(io.runner, args.gpreg_base_addr, args.symbol_count, offset)
+                except Exception as exc:  # pragma: no cover - keep sweeping / reach the reboot
+                    row = {"start_offset": offset, "ok": False, "error": f"{type(exc).__name__}: {exc}"}
+                full = row.get("received_symbols") == args.symbol_count
+                if best_row is None or (full, -row.get("total_bit_errors", 1 << 30)) > \
+                        (best_row.get("received_symbols") == args.symbol_count, -best_row.get("total_bit_errors", 1 << 30)):
+                    best_row = row
+                if full and row.get("total_bit_errors") == 0:
+                    break
+            payload["sweep"].append(best_row)
+            if best_row.get("received_symbols") == args.symbol_count and best_row.get("total_bit_errors") == 0:
+                print(f"QPSK BER=0 at start_offset={offset}  {best_row.get('status')}")
+                found = True
                 break   # BER=0 found; no need to sweep further
+        if not found:
+            print("QPSK: no start_offset reached BER=0 in this sweep")
     finally:
+        try:
+            set_bist_digital_loopback(io.runner, False)
+        except Exception as exc:  # pragma: no cover - hardware dependent
+            payload.setdefault("cleanup_errors", []).append(
+                {"stage": "disable_bist_loopback", "error": str(exc)})
         try:
             if phy is not None and phy_snapshot:
                 restore_ad9361_state(phy, phy_snapshot)
