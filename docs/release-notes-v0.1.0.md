@@ -1,14 +1,14 @@
 # Release notes — v0.1.0
 
-`v0.1.0` is the first public course release of `zynq-sdr-course`. The release establishes the repository as a bilingual engineering course that connects DSP theory, modeling, fixed-point design, HDL simulation, SDR hardware experiments, IQ recording and measurement-style analysis.
+`v0.1.0` is the first public course release of `zynq-sdr-course`. The release establishes the repository as a bilingual engineering course that connects DSP theory, modeling, fixed-point design, HDL simulation, SDR board experiments, IQ recording and measurement-style analysis.
 
 ## Release theme
 
 ```text
-theory -> modeling -> fixed-point -> HDL / FPGA -> SDR board -> RF path -> IQ capture -> analysis -> engineering report
+theory -> modeling -> fixed-point -> HDL / FPGA -> SDR board -> measurement data -> analysis -> engineering report
 ```
 
-The course is intentionally not only a collection of notes. It is structured as a reproducible engineering route with documentation, executable labs, CI checks, generated figures and hardware-facing safety guidance.
+The course is intentionally not only a collection of notes. It is structured as a reproducible engineering route with documentation, executable labs, CI checks, generated figures and evidence-oriented reporting.
 
 ## What is included
 
@@ -18,7 +18,7 @@ The course is intentionally not only a collection of notes. It is structured as 
 - Russian and English learning paths.
 - Main README entry points for English and Russian readers.
 - Visual course map, portfolio view and system-level route pages.
-- Course readiness and reproducibility pages.
+- Course readiness, completion, evidence and reproducibility pages.
 
 ### DSP foundation
 
@@ -43,20 +43,21 @@ The course includes early bridges from floating-point DSP models to hardware imp
 - FIR RTL mapping;
 - NCO mixer RTL;
 - AXI-Stream wrapper;
-- float vs fixed vs RTL comparison.
+- float vs fixed vs RTL comparison;
+- BPSK-oriented HDL smoke checks and control-wrapper examples.
 
-### SDR and RF path
+### SDR and measurement path
 
 The release introduces the hardware-facing SDR route:
 
-- RF frontend and AD9363 workflow;
+- frontend workflow and board setup pages;
 - frequency planning;
 - gain staging and overload discussion;
-- synthetic RF capture analysis;
-- RF impairment calibration;
-- TX/RX chain architecture;
-- DUC/DDC frequency translation;
-- TX/RX loopback metrics;
+- synthetic capture analysis;
+- impairment calibration;
+- chain architecture;
+- frequency translation;
+- loopback metrics;
 - packet receiver detection;
 - CIC decimator as a DSP -> fixed-point -> FPGA bridge.
 
@@ -67,21 +68,23 @@ The course includes reproducible IQ-data discipline:
 - IQ metadata guide;
 - IQ dataset manifest guide;
 - real-data policy;
-- CI16 and multi-format IQ reader labs;
+- CI16, WAV and multi-format reader labs;
 - generated synthetic IQ workflows;
+- deterministic QPSK replay dataset generation and analysis;
 - dataset manifest template;
 - checksum-based reproducibility expectations.
 
-### Safety and measurement discipline
+### Evidence and reporting discipline
 
 The release adds engineering guardrails:
 
-- RF safety guide;
-- hardware bring-up checklist;
+- safety guide;
+- bring-up checklist;
 - measurement error notes;
 - measurement uncertainty guide;
-- SDR measurement report template;
-- final measurement report labs and project templates.
+- measurement report template;
+- final measurement report labs and project templates;
+- hardware evidence index and validation backlog.
 
 ### Executable course path
 
@@ -96,6 +99,12 @@ python tools/tasks.py smoke
 
 Representative executable labs generate figures and JSON metrics under `docs/assets`.
 
+## Promoted evidence since the first draft
+
+- The status pages now track a measured Block 11 internal loopback result rather than the older high-error bring-up blocker.
+- The QPSK replay dataset is generated locally and analyzed by a dedicated workflow.
+- The evidence map, maturity matrix and completion matrix now point reviewers to current proof artifacts and remaining gaps.
+
 ## Acceptance criteria for this release
 
 `v0.1.0` is considered ready when:
@@ -104,13 +113,15 @@ Representative executable labs generate figures and JSON metrics under `docs/ass
 - README files describe the current end-to-end course route;
 - key labs include expected outputs or acceptance criteria;
 - HDL smoke path is documented;
-- RF safety and dataset policy are linked from the course structure;
+- safety and dataset policy are linked from the course structure;
+- status, evidence and completion matrices agree with each other;
 - release notes summarize the current learning path;
 - no large raw IQ captures are committed directly into normal Git history.
 
 ## Known limitations
 
-- Real board-level Zynq/AD9363 captures are represented by synthetic or manifest-driven workflows until hardware validation data is added.
+- The promoted Block 11 result still needs one short reviewer-friendly final report.
+- External measured packages should keep improving through manifests, plots, metrics and limitations.
 - Some advanced labs are roadmap-style and will continue to mature after this first release.
 - The course currently prioritizes deterministic scripts and CI-friendly artifacts over notebook-first interactivity.
 
@@ -118,8 +129,9 @@ Representative executable labs generate figures and JSON metrics under `docs/ass
 
 The next milestone should focus on:
 
-- one validated hardware capture path with Zynq/AD9363 and RTL-SDR/HDSDR;
-- real IQ dataset manifests with checksums;
+- one polished model-to-measurement report built from the strongest current evidence;
+- routed top-level FPGA resource and timing reports for the integrated design;
+- real or generated dataset manifests with analyzer outputs kept in sync;
 - model-vs-RTL comparison for CIC or another multirate DSP block;
 - more complete measurement reports with EVM, SNR, BER and uncertainty budgets;
 - polished final project examples.
