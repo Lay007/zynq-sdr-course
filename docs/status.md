@@ -1,209 +1,64 @@
 # Course status and readiness matrix
 
-This page is the top-level engineering status board for the course. It is intentionally concise: it shows what is already strong, what is executable, and what still needs hardware validation.
+This page is the compact top-level engineering status board for the course. It shows what is already strong, what is executable, and what still needs hardware validation.
+
+Detailed bring-up logs should live on dedicated evidence pages rather than inside this matrix.
 
 ## Readiness legend
 
 | Mark | Meaning |
 |---|---|
-| `Ready` | The material is suitable for learners and can be used as a stable course page. |
-| `Executable` | The block has scripts, tests, generated plots, or reproducible checks. |
-| `Draft` | The structure exists, but the block still needs deeper theory, labs, or examples. |
-| `Hardware pending` | The learning path is defined, but board-level validation or real capture data is still needed. |
-| `Portfolio-ready` | The block has documentation, reproducible artifacts and reviewer-friendly evidence. |
+| `Ready` | Stable learner-facing material. |
+| `Executable` | Scripts, tests, plots or reproducible checks exist. |
+| `Measured` | Real hardware or IQ capture evidence exists. |
+| `Hardware pending` | Board-level validation or real capture data is still needed. |
+| `Portfolio-ready` | Documentation, reproducible artifacts and reviewer-friendly evidence are present. |
 
 ## Quick decodings
 
 | Term | Meaning here |
 |---|---|
-| `stock-shell` | The board's normal vendor Linux + PL baseline after boot, before any runtime course overlay reload. |
-| `OTA` | `Over the air`: TX and RX talk through antennas, not through a cable. |
-| `BPSK` | `Binary phase-shift keying`, a one-bit-per-symbol digital modulation. |
-| `evidence` | A reproducible artifact such as a manifest, JSON report, plot, or log proving the bench result. |
+| `stock-shell` | The board's normal vendor Linux and PL baseline after boot. |
+| `runtime overlay` | A PL payload loaded after Linux boot for course experiments. |
+| `BPSK` | Binary phase-shift keying. |
+| `evidence` | A manifest, JSON report, plot or log proving the result. |
 
 ## Block readiness matrix
 
-| Block | Topic | Theory | Labs | Code / models | Figures | Hardware | CI coverage | Next improvement |
-|---|---|---|---|---|---|---|---|---|
-| 01 | Intro to SDR | Ready | Ready | Partial | Ready | Real RTL-SDR captures + controlled Zynq tone witness | Docs | Add a short learner report example that compares the passive capture with the new controlled Zynq DDS tone, and review the publication/legal status of the narrowband capture. |
-| 02 | Signals and sampling | Ready | Executable | Python path | Ready | Not required | Labs | Add MATLAB/C++ translations and a metadata-mistake replay package. |
-| 03 | DSP basics | Ready | Executable | Python / MATLAB / C++ path | Ready | Not required | Labs | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
-| 04 | Simulink and fixed-point | Ready | Executable | Python / MATLAB references + executable BPSK `.slx` models | Ready | Not required | Labs | Constrain the BPSK Simulink path further for HDL Coder export and integration handoff. |
-| 05 | FPGA / HDL flow | Ready | Executable | Verilog testbenches + AXI-Lite-controlled Zynq-ready BPSK BER top-level + gpreg-based AD9361 overlay scaffolding + integrated CLG400 bitstream/XSA + live proof that only the extracted `BOOT.bin::system_top.bit` partition currently survives external `fpga load`, while the source-correlated no-OS reference payload still times out AD9361 and the saved vendor `zc702.xpr` snapshot remains a zero-drift editable XSA baseline rather than a boot-safe RF shell, plus a new timing-clean `bridge_txrx_mux` rebuild where the FPGA BER path now uses latched frame config, delayed/inverted loopback regression benches, and a coarse acquisition prefix that still meets implementation timing (`WNS = +0.176 ns`) | Ready | Hardware pending | HDL CI | Keep the timing-clean BER core as the new baseline, then replace the coarse acquisition prefix with a more selective but still timing-safe frame detector. |
-| 06 | RF frontend and AD9363 | Ready | Executable | Analysis scripts + measured RX-only and OTA-tone captures | Ready | Hardware pending | Labs | Use the measured RX-only FM and OTA-tone baselines to build the AD9361 RX gain/overload table, then validate a safe cabled loopback. |
-| 07 | TX/RX chains | Ready | Executable | DUC/DDC demos | Ready | Hardware pending | Labs | Add RF loopback measurement package. |
-| 08 | Modulation and synchronization | Ready | Executable | Synchronization demos | Ready | Optional | Sync CI | Add impairment sweeps and BER/EVM dashboards. |
-| 09 | Recording and analysis tools | Ready | Executable | IQ readers | Ready | Hardware pending | Recording CI | Update QPSK dataset manifest with real checksum or synthetic generator. |
-| 10 | KiCad and basic electronics | Ready | Draft | Calculators / templates | Partial | Bench pending | Docs | Add measured breadboard photos and KiCad exports. |
-| 11 | Integrated SDR project | Ready | Executable | Simulation package + BPSK reference package + AXI-Lite helper + gpreg overlay tooling + historical `done+timeout` bring-up evidence + overlap contention probe + raw-clean-boot proof that the `bridge_txrx_mux` candidate reaches PL and exposes `axi_gpreg` at `0x79040000` even though AD9361 still times out, plus manual-UART `fpga load` evidence that the stock BOOT partition is the only currently boot-safe external PL payload, fresh runtime `fpga_manager` evidence that the corrected `bridge_txrx_mux` hot-load again restores `axi_gpreg` and three-device IIO enumeration while `iio_readdev` refill and `rx_valid_count` still remain stuck at zero, a stricter stock-vs-runtime comparison proving that stock-shell host RX capture still works before reload while both host RX paths fail after the runtime overlay is loaded, a narrower `bridge_rx_only` runtime witness proving that even host-driven stock TX BPSK leaves not only `rx_valid_count = 0` but also an all-zero raw RX-tap `CAPTURE_DEBUG` word, a further refined input-side witness proving that the raw `axi_ad9361` RX-side debug remains held in reset after runtime reload (`adc_input_reset_asserted_current = 1`, heartbeat stuck at zero, no `adc_valid_i0` activity), a manual runtime RX-common re-init witness proving that restoring stock `rx_common_ctrl_req = 0x3` revives non-zero RX clock/status activity and clears the raw input-side reset while both host RX capture paths still fail, a reinit-assisted stock-host-TX witness proving that the same runtime overlay can again drive `rx_valid_count`, assert raw capture-valid activity, and receive a full `281-bit` frame on the first post-TX attempt, a raw-sign witness plus ADI-HDL source inspection proving that the bridge tap was still carrying offset-binary AD9361 samples, a local bridge-side format fix that restores negative decisions and recovered `1` bits on live hardware, tuned runtime sweeps that improve the best known live point to `281 / 127 / 114`, a new self-timed `bridge_txrx_mux` runtime helper that now reaches full-frame reception on the PL-owned TX/RX path, a new timing-clean 2026-06-24 rebuild proving that a strict full-preamble live lock is still too selective while a coarse 4-bit acquisition prefix already restores stable full-frame self-timed runtime reception on `neg-q` at `start_offset = 58..60` with the best retained point `281 / 141 / 132`, a controlled external DDS-tone witness proving that the stock-shell path still radiates the expected `200 kHz` tone while the true runtime overlay collapses the dominant external peak near DC instead, a stronger runtime-shell isolation matrix showing the same near-DC collapse on `vendor_only`, `gpreg_only`, `bridge_rx_only`, and `bridge_txrx_mux`, which localizes the blocker to the editable non-stock runtime shell path itself, and a verified runtime repair path showing that rebinding `cf_axi_dds` and restoring `RATECNTRL = 3` brings the external `200 kHz` tone back not only on `vendor_only` but also on the full `bridge_txrx_mux` payload; RTL-SDR OTA BER diagnostic (2026-06-24) confirming BER=0 on stock-shell at +2.4 kHz total CFO while runtime PL captures show preamble correlation at noise floor (ratio 3.5 vs threshold ~4.7), meaning the PL BPSK data is not reaching the AD9361 DAC — root cause identified as `cf-ad9361-dds-core-lpc` DDS remaining in DDS-only mode after overlay reload, blocking the PL AXI-Stream TX path; fix implemented: `disable_dds_tones(dds)` called in lab_11_19 and lab_11_22 before BPSK bringup to mute the DDS and allow PL data through; `--fine-step-hz` default reduced from 1000 to 100 Hz in lab_11_20 (verified: BER=0 with 100 Hz step on stock-shell); and a decisive in-fabric raw-sample debug tap (2026-06-27) that captures the PL TX (`burst_out`) and PL RX (`capture_in`) into mirror BRAMs read back over `axi_gpreg`, proving in AD9361 digital loopback that **the PL TX is silicon-perfect (`burst_out` decodes BER=0, matching simulation) while the PL RX is corrupted (~41%)** — so all corruption lives in the `dac_fifo_mux -> axi_ad9361_dac_fifo -> AD9361 BIST loopback -> util_ad9361_adc_fifo` datapath (rate-independent, ~16x attenuated, progressive non-constant time-warp), which refutes the earlier analog/RRC and carrier hypotheses and localizes the remaining blocker to a `divclk<->l_clk` FIFO flow-control / rate-matching defect, not the DSP | Ready | Hardware pending | Labs | **SOLVED — on-chip PL BPSK BER = 0** (received=281, total_errors=0 in AD9361 digital loopback). The ~40% floor was two bugs: (1) a DAC-FIFO under-run from a bursty TX, fixed by a gap-free one-symbol prefetch in `bpsk_framed_tx_chain`; (2) an ambiguous 4-bit frame-sync lock (preamble starts with five zeros), fixed by an 8-bit lock in `bpsk_ber_counter`. Remaining: BER=0 lands on ~60% of bursts at the best start_offset (host retries until 0); the Gardner loop on top of the frame-sync was tried but mis-tracks this short loopback burst (worse, ~1/5), so the bridge ships fixed-phase — debugging the RTL Gardner acquisition is the follow-up for deterministic per-burst BER=0. |
-| 12 | Final projects | Ready | Draft | Templates + rubric | Partial | Depends on project | Docs | Use grading rubric and example report skeleton for first final project. |
+| Block | Topic | Current state | Evidence level | Main gap / next improvement |
+|---|---|---|---|---|
+| 01 | Intro to SDR | Ready | Real RTL-SDR captures and controlled Zynq tone witness | Add a short learner report comparing passive capture and controlled tone. |
+| 02 | Signals and sampling | Executable | Python labs and generated figures | Add MATLAB/C++ translations and metadata-mistake replay examples. |
+| 03 | DSP basics | Executable | Python / MATLAB / C++ path | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
+| 04 | Simulink and fixed-point | Executable | Python/MATLAB references and BPSK `.slx` models | Constrain the BPSK Simulink path further for HDL Coder handoff. |
+| 05 | FPGA / HDL flow | Executable | Verilog testbenches, HDL CI, timing-clean BPSK BER baseline | Replace the coarse acquisition prefix with a more selective timing-safe detector and promote routed reports. |
+| 06 | RF frontend and AD9363 | Measured | RX-only and tone capture baselines | Build the AD9363 gain table and validate safe cabled loopback. |
+| 07 | TX/RX chains | Executable | DUC/DDC demos and loopback models | Add measurement package. |
+| 08 | Modulation and synchronization | Executable | CFO, phase/timing and BER/EVM demos | Add impairment sweeps and BER/EVM dashboards. |
+| 09 | Recording and analysis tools | Executable | CI16/CU8/CF32 readers and recording CI | Update QPSK dataset manifest with real checksum or synthetic generator. |
+| 10 | KiCad and basic electronics | Draft | Calculators and templates | Add measured breadboard photos and KiCad exports. |
+| 11 | Integrated SDR project | On-chip BER=0 (loopback) | On-chip PL BPSK BER=0 (received=281, total_errors=0) via gap-free TX + 8-bit frame-sync; TX/RX raw-sample tap + RTL-SDR evidence | Deterministic per-burst BER=0 via multi-phase diversity RX (model-verified); then a QPSK modem and a final report. |
+| 12 | Final projects | Draft | Templates, rubric and example skeleton | Fill one complete portfolio-ready final project report. |
 
-## Newly added hardening artifacts
+## Hardware validation priorities
 
-| Artifact | Purpose |
-|---|---|
-| `docs/final-project-grading-rubric.md` | Consistent scoring for Block 12 final projects. |
-| `docs/end-to-end-qpsk-hardware-demo.md` | Flagship QPSK model-to-measurement demo checklist. |
-| `docs/end-to-end-bpsk-reference-report.md` | Executable BPSK route from MATLAB reference to fixed-point and HDL handoff. |
-| `docs/fpga-resource-report-template.md` | FPGA reporting contract and expected fields. |
-| `docs/block5-fpga-evidence.md` | Nav-visible digest of the current Block 5 Vivado evidence package. |
-| `docs/student-ci-grading-guide.md` | Student branch and CI pass/fail workflow. |
-| `docs/final-project-example-report.md` | Skeleton for a portfolio-ready SDR final report. |
-| `docs/hardware-validation-backlog.md` | Separation of documentation tasks and hardware-only tasks. |
-| `docs/iq-demo-dataset-manifest.md` | Dataset contract for QPSK replay/capture work. |
-| `datasets/demo_qpsk_capture/manifest.yaml` | First manifest-only QPSK dataset package. |
-| `datasets/lab1_0_rtl_sdr_observation/` | Real passive RTL-SDR air captures from the first SDR++ bring-up session, stored as WAV IQ files through Git LFS with manifests, SHA256 checksums, capture settings and replay commands. |
-| `datasets/lab11_24_dds_tone_rtl_monitor/manifest_live_20260624_stock_dds_tone_ref_a.yaml` | First controlled Zynq-to-RTL-SDR WAV IQ dataset for Block 1, with a known `915 MHz + 200 kHz` stock-shell DDS tone and direct replay instructions for the WAV analyzer. |
-| `blocks/block_11_integrated_sdr_project/python/lab_11_24_capture_dds_tone_rtl_monitor_wav.py` | Captures an external RTL-SDR WAV monitor recording while the board transmits a DDS tone in either `stock` or `runtime` mode, and writes a manifest that can be analyzed offline immediately. |
-| `docs/assets/lab11_24_dds_tone_rtl_monitor_live_20260624_stock_dds_tone_ref_a_metrics.json` | Live controlled-tone metrics for the stock-shell external witness: peak near `200 kHz`, `SNR ≈ 66.4 dB`, no clipping, quality gate `PASS`. |
-| `docs/assets/lab11_24_dds_tone_rtl_monitor_live_20260624_runtime_dds_tone_ref_a_metrics.json` | Matching runtime-overlay witness showing that the expected `200 kHz` external tone collapses near DC, which localizes the current Block 11 issue to TX-path visibility rather than only BER demodulation. |
-| `docs/assets/lab1124_dds_tone_rtl_monitor_live_20260624_vendor_only_dds_tone_a.json`, `docs/assets/lab1124_dds_tone_rtl_monitor_live_20260624_gpreg_only_dds_tone_a.json`, `docs/assets/lab1124_dds_tone_rtl_monitor_live_20260624_bridge_rx_only_dds_tone_a.json` | Additional controlled-tone runtime witnesses proving that the same near-DC external collapse is already present on the minimal editable shell variants, before the full course TX/RX bridge logic is involved. |
-| `docs/assets/lab1125_stock_vs_runtime_dds_tone_sweep_live_20260624_sync_arm_test_a.json` | Follow-up stock-vs-runtime DDS-tone comparison showing that even an explicit runtime `sync_start_enable=arm` attempt still leaves stock near the expected `200 kHz` peak while runtime stays collapsed near DC. |
-| `docs/assets/lab1124_dds_tone_rtl_monitor_live_20260624_vendor_only_dds_tone_rebind_dds_a.json` | Intermediate runtime repair witness: a post-reload `cf_axi_dds` rebind alone revives a strong external tone again, but at about `800 kHz`, which localizes one more missing state element to the DDS rate-control register. |
-| `docs/assets/lab1124_dds_tone_rtl_monitor_live_20260624_vendor_only_dds_tone_rebind_dds_rate3_a.json` and `docs/assets/lab1124_dds_tone_rtl_monitor_live_20260624_bridge_txrx_mux_dds_tone_rebind_dds_rate3_a.json` | Final repaired runtime tone witnesses showing that `cf_axi_dds` rebind plus `RATECNTRL = 3` restores a clean external `200 kHz` tone on both the minimal editable shell and the full `bridge_txrx_mux` course overlay. |
-| `docs/assets/lab1120_lab11_22_runtime_pl_rtl_monitor_live_20260624_runtime_pl_rebind_a_metrics.json` | First runtime/PL BPSK external-monitor rerun after applying the new AXI DDS/ADC re-init path inside the live helper, providing the new BER baseline for the repaired runtime shell. |
-| `hardware/7020_ad936x_sdr/boot/course_clean/autorun.sh` | Clean stock-image management overlay with fixed `eth0`, DHCP, and safe TX defaults. |
-| `hardware/7020_ad936x_sdr/boot/course_clean/uEnv_course_bpsk_overlay.txt` | Boot-time U-Boot overlay that loads the course PL image and removes stale Linux PL nodes before `bootm`. |
-| `hardware/7020_ad936x_sdr/boot/extract_stock_system_top_partition.py` | Reproducible extractor for the only externally loaded boot-safe `system_top.bit` partition payload currently known: the one embedded in `boot/sd_image/BOOT.bin`. |
-| `hardware/7020_ad936x_sdr/boot/build_system_bit_bin.py` | Reproducible converter from raw Xilinx `.bit` to the word-swapped `.bit.bin` payload accepted by the board's manual U-Boot `fpga load` path. |
-| `hardware/7020_ad936x_sdr/boot/validate_manual_uart_fpga_load.py` | Reproducible helper that stops autoboot over UART, runs manual `fpga load`, boots Linux, and tells whether a `.bit.bin` payload really survived as an externally loaded PL image. |
-| `hardware/7020_ad936x_sdr/compare_fpga_payloads.py` | Normalizes raw `.bit` inputs to the manual `fpga load` payload format and reports first-diff offsets versus stock or course candidates. |
-| `hardware/7020_ad936x_sdr/rebuild_vendor_xpr_snapshot_mio_patch.tcl` | Disposable Vivado rebuild flow that patches only `sys_ps7` MIO14/15 on the saved vendor `zc702.xpr` snapshot before synth/impl/export. |
-| `docs/assets/lab112_clean_boot_pl_validation.json` | Persistent evidence that raw `.bit` `fpga loadb` proves arbitrary PL replacement but still breaks AD9361 for every non-stock candidate tried, while manual `.bit.bin` `fpga load` currently clean-boots only the extracted stock BOOT partition payload. |
-| `docs/assets/stock_vs_vendor_reference_fpga_payload_diff.json` | First-diff evidence showing where the extracted stock BOOT payload diverges from the source-correlated vendor-reference fpga-load payload. |
-| `docs/assets/stock_vs_bridge_txrx_mux_fpga_payload_diff.json` | First-diff evidence showing where the extracted stock BOOT payload diverges from the corrected course `bridge_txrx_mux` fpga-load payload. |
-| `docs/assets/vendor_reference_vs_vendor_xpr_mio14_15_payload_diff.json` | Normalized payload diff proving that the MIO14/15-patched editable vendor snapshot matches the source-correlated vendor reference byte-for-byte on the manual `fpga load` path. |
-| `docs/assets/lab118_axi_gpreg_bringup_cleanboot_raw.json` | Direct raw-clean-boot gpreg readback for the `bridge_txrx_mux` candidate: PL reached fabric, ID/signature matched, `tx_valid_count` incremented, and `rx_valid_count` stayed zero. |
-| `blocks/block_11_integrated_sdr_project/python/lab_11_12_runtime_fpga_manager_reload.py` | Reproducible host-side helper that uploads a checked `.bit.bin` payload over SSH, hot-loads it through Linux `fpga_manager`, then re-probes `axi_gpreg` and the host-visible IIO context. |
-| `docs/assets/lab118_runtime_fpga_manager_reload_live.json` | Consolidated runtime hot-load evidence for the corrected `bridge_txrx_mux` payload: stock-shell baseline lacks `axi_gpreg`, `fpga_manager` accepts the reload, gpreg comes back, and the host still sees the three-device IIO context. |
-| `docs/assets/lab118_axi_gpreg_bringup_runtime_20260623.json` | Post-reload gpreg burst report showing the repeated runtime pattern `done + timeout`, `tx_valid_count = 2376`, `rx_valid_count = 0`, `received_bits = 0`. |
-| `docs/assets/lab110_iio_burst_capture_runtime_20260623.json` | Post-reload timed burst-capture evidence showing that `iio_readdev` still returns refill timeout `Unknown error (110)` and produces zero samples even though gpreg remains readable. |
-| `docs/assets/lab119_rf_discovery_sweep_runtime_20260623.json` | Compact safe-power RF sweep after runtime reload, confirming that varying `START_OFFSET`, RX gain, and TX attenuation still leaves `rx_valid_count = 0` and `RECEIVED_BITS = 0`. |
-| `blocks/block_11_integrated_sdr_project/python/lab_11_13_stock_vs_runtime_rx_compare.py` | A/B helper that first proves stock-shell host RX capture still works, then hot-loads the runtime overlay and repeats the same host RX checks plus gpreg and DMAC probes. |
-| `docs/assets/lab113_stock_vs_runtime_rx_compare_live.json` | Live comparison report proving that stock-shell `libiio` and `iio_readdev` both work before reload, while the runtime overlay keeps `axi_gpreg` alive but breaks both host RX capture paths. |
-| `blocks/block_11_integrated_sdr_project/python/runtime_rx_common.py` | Shared helper for reading and restoring the stock RX common control request after a runtime overlay reload. |
-| `blocks/block_11_integrated_sdr_project/python/lab_11_15_runtime_bridge_rx_host_tx_probe.py` | Runtime witness helper for the intermediate `bridge_rx_only` overlay: it hot-loads the overlay, runs one idle gpreg probe, then repeats the probe while stock host TX transmits the shared deterministic BPSK burst, now decoding both the raw input-side `ADC_INPUT_DEBUG` word and the RX-tap `CAPTURE_DEBUG` word, and it can optionally force the stock RX common control request back in with `--rx-common-reinit`. |
-| `blocks/block_11_integrated_sdr_project/python/lab_11_16_runtime_rx_common_reinit_probe.py` | A/B helper that hot-loads the runtime overlay, records host RX capture failure, restores the stock RX common control request, and proves whether fabric-side recovery also restores host libiio/DMAC capture. |
-| `blocks/block_11_integrated_sdr_project/python/lab_11_17_runtime_rx_common_reinit_start_offset_sweep.py` | Start-offset sweep helper that hot-loads the runtime overlay, restores the stock RX common control request, drives stock host TX, and reports which `start_offset` values complete a full runtime BPSK receive attempt. |
-| `blocks/block_11_integrated_sdr_project/python/lab_11_18_runtime_rx_common_reinit_fresh_session_sweep.py` | Fresh-session sweep helper that reboots back to stock between points, hot-loads the runtime overlay again, and checks whether BER changes across `start_offset`, RX gain, TX attenuation, and TX phase without reusing stale session state. |
-| `docs/assets/lab115_runtime_bridge_rx_host_tx_probe_live_20260623_bridge_rx_only_b.json` | Earlier live `bridge_rx_only` witness report recorded before the extra raw RX-tap instrumentation: the overlay hot-loads cleanly and stock host TX is active, but both probes still end with `tx_valid_count = 2376`, `rx_valid_count = 0`, and `received_bits = 0`. |
-| `docs/assets/lab115_runtime_bridge_rx_host_tx_probe_live_20260623_bridge_rx_only_debug_a.json` | Canonical refined `bridge_rx_only` witness report: the overlay hot-loads cleanly, stock host TX is active, but both probes still end with `tx_valid_count = 2376`, `rx_valid_count = 0`, `received_bits = 0`, and `capture_debug_word = 0`, proving the bridge sees no raw RX-tap activity after the runtime reload. |
-| `docs/assets/lab115_runtime_bridge_rx_host_tx_probe_live_20260623_bridge_rx_only_input_debug_a.json` | Input-side refined `bridge_rx_only` witness report: after runtime reload the raw `axi_ad9361` RX-side debug still reports `adc_input_reset_asserted_current = 1`, zero heartbeat advance, zero `adc_valid_i0` activity, and zero FIFO-output tap activity even during host-driven stock TX, localizing the blocker to the raw RX reset/enable path before the FIFO output domain. |
-| `docs/assets/lab116_runtime_rx_common_reinit_probe_live_20260623.json` | Live re-init probe showing that writing stock `rx_common_ctrl_req = 0x3` after runtime reload restores non-zero `rx_common_clk_count` and clears the raw RX reset condition, while both host RX capture paths still fail with the same timeout symptoms. |
-| `docs/assets/lab116_runtime_rx_common_reinit_host_tx_probe_live_20260623.json` | Live post-reinit host-TX witness showing that the runtime overlay regains raw RX-valid activity, reaches `rx_valid_count > 0`, and completes one full `281-bit` receive attempt even though the resulting BER is still high. |
-| `docs/assets/lab117_runtime_rx_common_reinit_start_offset_sweep_live_20260623.json` | First post-reinit start-offset sweep showing that the runtime overlay can complete a full-frame receive on at least one early start-offset window, which narrows the remaining blocker from dead RX plumbing to timing/phase stability. |
-| `docs/assets/lab118_runtime_rx_common_reinit_fresh_session_start_offset_wide_live_20260623.json` | Partial but already decisive wide fresh-session start-offset sweep: the same `281 / 144 / 136` runtime receive result persisted from `start_offset = 0` through `576`, so the remaining failure is not explained by a narrow local timing window alone. |
-| `docs/assets/lab119_runtime_rx_decision_debug_single_point_live_20260623.json` | Live full-frame decision-sign proof: after runtime reload plus RX-common re-init, the bridge sees recovered valid pulses and non-zero decision samples, but no negative decision sample and no recovered bit `1`, which explains why the BER counters behave like an all-zero recovered bit stream. |
-| `docs/assets/lab120_runtime_capture_sign_single_point_live_20260623.json` | Raw bridge-tap sign witness proving that the revived RX path is still feeding unsigned offset-binary AD9361 samples into the BER core: raw `RX1` activity is present and full-scale, but neither `I` nor `Q` ever appears negative at the bridge tap. |
-| `docs/assets/lab121_runtime_offset_binary_fix_single_point_live_20260623.json` | First live proof after the local bridge-side offset-binary conversion: the recovered path now shows negative decisions and recovered `1` bits, which closes the old all-zero-stream failure mode. |
-| `docs/assets/lab122_runtime_offset_binary_fix_phase_sweep_live_20260623.json` | Fresh-session start-offset phase sweep after the offset-binary fix, showing that the best live point shifts to `start_offset = 34` and improves BER to `281 / 129 / 120`. |
-| `docs/assets/lab123_runtime_offset_binary_fix_tx_phase_sweep_live_20260623.json` | TX phase sweep at the best known runtime sampling point, showing only modest extra gain and confirming that the dominant remaining issue is not the old unsigned-sample defect. |
-| `docs/assets/lab124_runtime_offset_binary_fix_gain_sweep_live_20260623.json` | Best current live runtime point after the offset-binary fix: `received_bits = 281`, `total_errors = 127`, `payload_errors = 114` at `start_offset = 34`, `tx_phase = 315 deg`, `rx_gain = 5 dB`. |
-| `docs/assets/lab125_runtime_bridge_txrx_self_timed_single_point_live_20260623.json` | First self-timed `bridge_txrx_mux` runtime proof: the PL-owned TX/RX path now completes a full `281`-bit frame without timeout after hot-load plus RX-common re-init, which closes the earlier missing-frame ambiguity of the host-driven cyclic-TX path. |
-| `docs/assets/lab125_runtime_bridge_txrx_self_timed_summary_live_20260624.json` | Compact follow-up summary for the timing-clean 2026-06-24 rebuild: strict full-preamble live lock still times out, but the new coarse 4-bit acquisition prefix restores stable self-timed full-frame runtime points on `neg-q` at `start_offset = 58..60`, with the best retained point `281 / 141 / 132`. |
-| `docs/assets/lab126_runtime_bridge_txrx_self_timed_mode_sweep_live_20260623.json` | Exploratory self-timed decision-axis sweep over `I`, `-I`, `Q`, and `-Q`, showing that simple polarity/axis selection already changes BER and that `neg-i` is the best of the four tested modes in-session. |
-| `docs/assets/lab126_runtime_bridge_txrx_self_timed_neg_i_single_point_live_20260623.json` | Clean single-point rerun of the self-timed `neg-i` mode with automatic reboot back to stock afterwards, showing that the deterministic path stays full-frame but still exhibits session-sensitive BER. |
-| `blocks/block_11_integrated_sdr_project/python/lab_11_14_stock_shell_bpsk_ota.py` | Host-driven stock-shell AD9361 fallback that transmits a deterministic OTA BPSK burst through the proven Linux TX/RX DMA path, reports BER/EVM, and now also forces a safe post-run TX restore over SSH/sysfs. |
-| `datasets/lab11_14_stock_shell_bpsk_ota/manifest_live_20260623d.yaml` | First successful live stock-shell OTA BPSK dataset manifest: `915 MHz`, `3.84 MS/s`, `240 ksym/s`, `TX -50 dB`, `RX +35 dB`, detected frame, `BER = 0`. |
-| `docs/assets/lab114_stock_shell_bpsk_ota_live_20260623d_metrics.json` | Live metrics for the first successful stock-shell OTA BPSK fallback run, including board state before/after config, zero BER, EVM, and capture-level amplitude metrics. |
-| `blocks/block_11_integrated_sdr_project/python/lab_11_20_read_rtl_wav_ota_bpsk_ber.py` | Offline RTL-SDR/SDR++ WAV-IQ BER reader that reuses the deterministic Lab 11.14 BPSK reference, searches residual carrier offset, handles `4.0 -> 3.84 MS/s` resampling when needed, and reports BER/EVM from monitor captures. |
-| `datasets/lab11_20_rtl_sdr_ota_bpsk/manifest_template.yaml` | Starter manifest for local RTL-SDR monitor captures so the external WAV path can launch the BER analyzer directly instead of serving only as passive metadata. |
-| `blocks/block_11_integrated_sdr_project/python/lab_11_21_capture_rtl_sdr_monitor_wav.py` | Host-side helper that keys the stock-shell ZynqSDR BPSK transmitter, captures a fresh monitor WAV IQ through RTL-SDR via `rtlsdr.dll`, and writes a manifest for the offline BER reader. |
-| `datasets/lab11_20_rtl_sdr_ota_bpsk/manifest_live_20260624a.yaml` | First fresh local RTL-SDR monitor manifest recorded against the stock-shell ZynqSDR BPSK TX path at `915 MHz`, `2.4 MS/s`, ready for direct BER replay through the new offline reader. |
-| `docs/assets/lab1121_rtl_sdr_monitor_live_20260624a.json` | Capture report for the first automated ZynqSDR-to-RTL-SDR monitor recording helper run, including RTL device, sample rate, TX attenuation, and raw unsigned-IQ amplitude statistics. |
-| `docs/assets/lab1120_lab11_20_rtl_sdr_ota_bpsk_live_20260624a_metrics.json` | First live RTL-SDR offline BER result for the ZynqSDR stock-shell BPSK transmitter: frame detected, `BER total = 0`, `BER payload = 0`, non-clipping monitor capture, and a measured residual offset of about `+2.4 kHz`. |
-| `blocks/block_11_integrated_sdr_project/python/lab_11_22_capture_runtime_pl_rtl_monitor_wav.py` | Runtime-path monitor helper that hot-loads `bridge_txrx_mux`, configures AD9361, records a fresh RTL-SDR WAV around repeated PL-owned BPSK start pulses, and writes a manifest that can be replayed directly by the offline BER reader. |
-| `datasets/lab11_22_runtime_pl_rtl_monitor/manifest_live_20260624_runtime_pl_a.yaml` | First fresh local RTL-SDR monitor manifest for the runtime/PL BPSK path at `915 MHz` and `2.4 MS/s`, aligned with the shared `end_to_end_bpsk_reference` package instead of the stock-shell fallback waveform. |
-| `docs/assets/lab1122_runtime_bridge_txrx_self_timed_live_20260624_runtime_pl_a.json` | Live runtime bring-up report for the external-monitor run: the self-timed PL path reached a full `281-bit` frame on `neg-q`, `start_offset = 59`, with the best retained internal result `281 / 131 / 115`. |
-| `docs/assets/lab1120_lab11_22_runtime_pl_rtl_monitor_live_20260624_runtime_pl_a_live_20260624_runtime_pl_a_metrics.json` | First live RTL-SDR offline BER result for the runtime/PL BPSK path: the external monitor demodulates the transmitted frame and measures `BER total = 105 / 281`, `BER payload = 99 / 256`, confirming that the remaining blocker is BER robustness rather than missing OTA emission. |
-| `blocks/block_11_integrated_sdr_project/python/lab_11_23_runtime_pl_rtl_monitor_sweep.py` | Focused runtime/PL external-monitor sweep helper that tests a compact parameter box around the live point, ranks each point by offline RTL-SDR BER, and can rerun the best point as canonical evidence. |
-| `docs/assets/lab1123_runtime_pl_rtl_monitor_sweep_live_20260624_runtime_pl_sweep_a.json` | Focused live sweep summary over `start_offset = 58..60`, `RX gain = 5,10,15 dB`, `TX attenuation = -50,-45 dB`, and a tuner-gain refinement stage: the best measured sweep point was `start_offset = 60`, `RX = 10 dB`, `TX = -45 dB`, `RTL gain = 20.0 dB`, with transient external BER `95 / 281` and payload BER `90 / 256`. |
-| `datasets/lab11_22_runtime_pl_rtl_monitor/manifest_live_20260624_runtime_pl_sweep_a_best.yaml` | Canonical rerun manifest for the best focused-sweep runtime/PL monitor point, promoted from the temporary sweep workspace into the persistent dataset tree. |
-| `docs/assets/lab1122_runtime_bridge_txrx_self_timed_live_20260624_runtime_pl_sweep_a_best.json` | Runtime bring-up report for the best-point rerun selected by the focused sweep: the self-timed PL path again reaches a full `281-bit` frame at `start_offset = 60`, `RX = 10 dB`, `TX = -45 dB`. |
-| `docs/assets/lab1122_runtime_pl_rtl_monitor_live_20260624_runtime_pl_sweep_a_best.json` | External-monitor capture report for the best-point rerun, including the selected runtime parameters and raw unsigned-IQ capture statistics for the promoted evidence recording. |
-| `docs/assets/lab1120_lab11_22_runtime_pl_rtl_monitor_live_20260624_runtime_pl_sweep_a_best_live_20260624_runtime_pl_sweep_a_best_metrics.json` | Improved canonical live RTL-SDR BER evidence for the runtime/PL BPSK path: the promoted rerun measures `BER total = 99 / 281`, `BER payload = 93 / 256`, which improves on the earlier `105 / 281` baseline while also showing that the best point is still somewhat run-to-run variable. |
-| `hardware/7020_ad936x_sdr/ps/ad936x_no_os_reference/platform/hw/system_top.bit` | Source-correlated vendor reference bitstream that still proves raw `fpga loadb` reaches PL, but still does not keep AD9361 alive on this board. |
-| `hardware/7020_ad936x_sdr/compare_xsa_handoffs.py` | Source-level XSA/HWH drift detector for rebuilt shells versus the vendor reference handoff. |
-| `docs/assets/vendor_reference_vs_vendor_only_handoff_diff.json` | Persistent diff showing that the normalized pure-Tcl `vendor_only` rebuild still diverges only at `sys_ps7.PCW_S_AXI_HP0_FREQMHZ`, DMA protocol selection, and `axi_ad9361.SPEED_GRADE`. |
-| `docs/assets/vendor_reference_vs_bridge_rx_only_handoff_diff.json` | Persistent diff showing what the intermediate `bridge_rx_only` overlay adds on top of the still-not-boot-safe vendor shell. |
-| `docs/assets/vendor_reference_vs_vendor_xpr_snapshot_handoff_diff.json` | Persistent diff showing the historical unpatched `zc702.xpr` snapshot drift against the vendor reference XSA at `sys_ps7` MIO14/15 direction fields. |
-| `docs/assets/vendor_reference_vs_vendor_xpr_mio14_15_patch_handoff_diff.json` | Persistent diff showing that the MIO14/15-patched vendor `zc702.xpr` snapshot rebuild reaches zero module/memrange/parameter drift against the vendor reference XSA. |
-| `datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454.yaml` | First clean-image Zynq RX-only CI16 hardware dataset manifest. |
-| `datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454_live_20260622.yaml` | Repeated live clean-image Zynq RX-only FM manifest captured on 2026-06-22, with fresh FFT/time plots and a Zynq-vs-RTL overlay. |
-| `blocks/block_06_rf_frontend_and_ad9363/python/lab_6_8_capture_zynq_ota_tone.py` | Reproducible stock-shell OTA DDS tone capture helper for the first host-driven TX-to-RX RF proof on the Zynq AD9361 platform. |
-| `datasets/lab6_8_zynq_ota_tone_observation/manifest_tone_915MHz_700kHz_live_20260622.yaml` | First measured stock-shell OTA tone dataset manifest with checksum, conservative TX/RX settings and manifest-guided peak-search window for offline analysis. |
-| `templates/fpga_resource_report.template.md` | Reusable FPGA report template. |
-| `templates/student_assignment.template.md` | Reusable student assignment template. |
-| `reports/fpga/z7020-resource-summary-template.md` | First Z7020 OOC FPGA resource summary with real numbers. |
-| `reports/fpga/block5-utilization-summary.md` | Per-module utilization summary for the four Block 5 HDL examples. |
-| `reports/fpga/block5-timing-summary.md` | Per-module timing summary at the 100 MHz target clock. |
-| `reports/fpga/block5-latency-throughput-notes.md` | One-cycle latency and throughput notes verified by testbenches. |
-
-## CI and local quality gates
-
-| Gate | Purpose | Expected reviewer signal |
+| Priority | Task | Done when |
 |---|---|---|
-| MkDocs build | Documentation remains buildable | Navigation and links do not silently break. |
-| Full course smoke | Representative labs run from a clean checkout | Generated assets are reproducible. |
-| HDL smoke | Verilog examples compile and simulate | FPGA-facing examples are not only static text. |
-| Block-specific checks | Catch regressions near the edited material | Small failures are easier to locate. |
+| P0 | Safe cabled loopback | Attenuation, gain settings, capture metadata and short conclusion are recorded. |
+| P0 | Runtime PL BPSK robustness | External monitor BER is repeatable from clean boot and reported with limitations. |
+| P1 | QPSK demo dataset | Manifest, checksum or immutable link, constellation, EVM/SNR and replay command exist. |
+| P1 | AD9363 gain table | Gain settings, clipping/SNR behavior and safe starting values are documented. |
+| P2 | Final hardware report | One report connects model, HDL, capture, metrics and engineering conclusion. |
 
-## Artifact contract for mature labs
+## Evidence and backlog pages
 
-Each mature lab should eventually provide:
+- [Hardware evidence index](hardware-evidence-index.md)
+- [Hardware validation backlog](hardware-validation-backlog.md)
+- [Block 11 hardware bring-up summary](block11-hardware-bringup-summary.md)
+- [Reviewer acceptance checklist](reviewer-checklist.md)
+- [Course quality roadmap](course-quality-roadmap.md)
+- [Release checklist](release-checklist.md)
 
-- a short problem statement;
-- a runnable script, HDL testbench or clearly bounded manual experiment;
-- expected output files under `docs/assets`, `verification`, `datasets`, `reports`, or a documented report path;
-- a short interpretation section explaining what the figure/table proves;
-- local reproduction commands;
-- a CI or smoke-test hook when practical.
+## Current release focus
 
-## Course-level strengths
-
-- The repository already connects theory, DSP, fixed-point implementation, HDL, RF, IQ recording, analysis and reporting.
-- The documentation site is built with MkDocs and structured for both Russian and English learners.
-- Several blocks are executable and are supported by reproducible scripts, generated assets and CI workflows.
-- The hardware story is clear: Zynq-7020 + AD9363/ADRV is the target SDR platform, and RTL-SDR/HDSDR is the independent observation path.
-- Block 1 already includes both real passive RTL-SDR air recordings captured in SDR++ and a controlled Zynq DDS tone lab observed through RTL-SDR, both backed by manifests and reproducibility metadata.
-
-## Main gaps to close
-
-1. Replace the QPSK manifest-only dataset with a validated small file or external link.
-2. Extend the first board-level Zynq/AD9363 measurements into a fuller gain/loopback package and turn the new post-reinit runtime BPSK receive path into a repeatable low-BER flow.
-3. Promote Block 5 OOC FPGA reports to placed-and-routed top-level design data.
-4. Keep RU/EN pages aligned when adding new labs.
-5. Turn one QPSK or tone flow into a complete final report with plots and limitations.
-6. Review the publication/legal status of real off-air captures before treating them as public redistributable course data.
-
-## Priority improvements
-
-1. Promote one complete `Model -> FPGA -> RF -> Measurement` demo to portfolio-ready status, using the new post-reinit runtime BPSK receive path as the shortest hardware route.
-2. Add a publication-cleared small QPSK IQ dataset or synthetic generator for recording and replay labs.
-3. Use the current Block 5 reports as the baseline, then add routed timing/resource deltas for the integrated design.
-4. Use the final-project grading rubric for instructor evaluation.
-5. Keep Russian and English navigation synchronized whenever a block is promoted.
-
-## Reviewer path
-
-For a fast review, start with:
-
-1. `README.md` or `README_RU.md` for the course promise.
-2. `docs/model-to-measurement.md` for the end-to-end engineering route.
-3. `docs/lab-index.md` for runnable or report-oriented labs.
-4. `docs/reproducibility-guide.md` for local rebuild instructions.
-5. `docs/reviewer-checklist.md` for pass/fail-style evidence checks.
-6. This status page for readiness and remaining gaps.
-
-## Definition of done for a new block
-
-A block is considered course-ready when it has:
-
-- a clear learning goal;
-- theory page in both languages;
-- at least one lab or guided exercise;
-- generated or reproducible figures;
-- expected results and validation notes;
-- references to scripts, templates or test vectors;
-- hardware safety notes if RF equipment is involved;
-- a place in `mkdocs.yml` navigation.
+The next public milestone should be `v0.1.0`: a reviewed, reproducible course snapshot with a clean learner route, green CI, compact status pages and one flagship model-to-measurement hardware story.

@@ -44,6 +44,7 @@ This page provides a compact index of the executable and report-oriented labs in
 | 6.4 | RF frontend | Synthetic RF capture analysis | yes | no | yes | yes | FFT, SNR, clipping, metrics JSON |
 | 6.5 | RF frontend | RF impairment calibration | yes | no | yes | partial | DC/IQ/image/LO metrics before/after |
 | 6.6 | RF frontend | Clean-image Zynq RX-only observation | yes | no | yes | manual | CI16 capture, manifest, offline FFT, Zynq-vs-RTL overlay |
+| 6.7 | RF frontend | dBm vs dBFS power calibration | yes/reuse | no | yes | manual | attenuation sweep, RTL-SDR peak dBFS, optional calibrated dBm estimate |
 | 6.8 | RF frontend | Stock-shell OTA DDS tone observation | yes | no | yes | manual | CI16 tone capture, manifest, measured peak, frequency error, SNR |
 | 7.1 | TX/RX | TX/RX chain architecture | no | no | yes | manual | architecture, sample-rate plan |
 | 7.2 | TX/RX | DUC/DDC frequency translation | yes | no | yes | yes | spectra, residual frequency error |
