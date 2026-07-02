@@ -289,6 +289,7 @@ qpsk_zynq_ber_top #(
     .rst(sample_rst),
     .start(start_pulse_sample),
     .symbol_count(frame_bit_count_cfg),
+    .preamble_count(preamble_count_cfg),
     .start_offset(start_offset_cfg),
     .busy(qpsk_busy),
     .done(qpsk_done),

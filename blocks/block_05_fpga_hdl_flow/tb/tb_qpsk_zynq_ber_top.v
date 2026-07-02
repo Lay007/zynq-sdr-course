@@ -46,6 +46,7 @@ qpsk_zynq_ber_top #(
     .rst(rst),
     .start(start),
     .symbol_count(SYMS[INDEX_W-1:0]),
+    .preamble_count(16'd24),          // enable preamble frame-sync (>= LOCK bits)
     .start_offset(start_offset_cfg),
     .busy(busy),
     .done(done),

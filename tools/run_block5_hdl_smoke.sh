@@ -133,6 +133,7 @@ iverilog -g2012 -o "$TB_DIR/tb_qpsk_zynq_ber_top.out" \
   "$RTL_DIR/qpsk_framed_tx_chain.v" \
   "$RTL_DIR/qpsk_rx_bit_recovery_chain.v" \
   "$RTL_DIR/qpsk_frame_dibit_source.v" \
+  "$RTL_DIR/bpsk_ber_counter.v" \
   "$RTL_DIR/qpsk_ber_counter.v" \
   "$RTL_DIR/qpsk_zynq_ber_top.v" \
   "$TB_DIR/tb_qpsk_zynq_ber_top.v"

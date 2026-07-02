@@ -99,6 +99,7 @@ initial begin
     repeat (8) @(posedge sample_clk);
 
     gp_frame_bit_count = SYMS;                // reinterpreted as QPSK symbol count
+    gp_preamble_count = 32'd24;               // enable preamble frame-sync in the QPSK counter
 
     for (so = 55; so <= 70; so = so + 1) begin
         gp_start_offset = so;

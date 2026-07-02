@@ -143,19 +143,28 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--runtime-dds-ratecntrl", type=parse_int, default=None)
     parser.add_argument("--reboot-after", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--reboot-timeout-s", type=float, default=DEFAULT_REBOOT_TIMEOUT_S)
+    # RX source (gp_ctrl[5]): "raw" = raw axi_ad9361 ADC via the bridge CDC FIFO
+    # (required for the BIST digital loopback, which util_ad9361_adc_fifo does not
+    # forward); "fifo" = the vendor adc_fifo tap (OTA path).
+    parser.add_argument("--rx-source", choices=["raw", "fifo"], default="raw")
     parser.add_argument("--run-tag", default=None)
     parser.add_argument("--json-out", type=Path, default=None)
     return parser
 
 
 def qpsk_ber_once(runner, base_addr: int, symbol_count: int, offset: int,
-                  poll: int = 300) -> dict[str, Any]:
+                  poll: int = 300, mode_bits: int = 0x10, preamble_bits: int = 24) -> dict[str, Any]:
     """Run ONE QPSK BER burst entirely on the device with a single SSH command.
 
     Batching the whole gpreg sequence (frame/offset writes, start pulse, on-device
     status poll, counter read-back, clear_done) into one remote `sh` invocation
     keeps the sweep from opening hundreds of SSH channels — the failure mode that
     exhausted dropbear when each devmem op was its own exec_command.
+
+    mode_bits sets the quasi-static gp_ctrl bits held across the burst: 0x10 =
+    QPSK core select (gp_ctrl[4]); OR 0x20 = raw axi_ad9361 ADC RX source
+    (gp_ctrl[5]) for the digital-loopback path. start pulses bit0, clear pulses
+    bit1 on top of mode_bits.
     """
     a_ctrl = f"0x{base_addr + 0x404:X}"
     a_frame = f"0x{base_addr + 0x444:X}"
@@ -165,15 +174,17 @@ def qpsk_ber_once(runner, base_addr: int, symbol_count: int, offset: int,
     a_recv = f"0x{base_addr + 0x448:X}"
     a_errc = f"0x{base_addr + 0x488:X}"
     dm = "/sbin/devmem"
-    # gp_ctrl[4]=0x10 selects QPSK; start=0x11 (mode+start), release=0x10,
-    # clear_done=0x12. Status bit2=done, bit3=timeout.
+    hold = f"0x{mode_bits:X}"
+    start = f"0x{mode_bits | 0x1:X}"
+    clear = f"0x{mode_bits | 0x2:X}"
+    # Status bit2=done, bit3=timeout.
     cmd = (
-        f"{dm} {a_frame} 32 {symbol_count}; {dm} {a_pre} 32 0; {dm} {a_off} 32 {offset}; "
-        f"{dm} {a_ctrl} 32 0x10; {dm} {a_ctrl} 32 0x11; {dm} {a_ctrl} 32 0x10; "
+        f"{dm} {a_frame} 32 {symbol_count}; {dm} {a_pre} 32 {preamble_bits}; {dm} {a_off} 32 {offset}; "
+        f"{dm} {a_ctrl} 32 {hold}; {dm} {a_ctrl} 32 {start}; {dm} {a_ctrl} 32 {hold}; "
         f"i=0; s=0; while [ $i -lt {poll} ]; do s=$({dm} {a_stat} 32); d=$((s)); "
         f"if [ $((d & 4)) -ne 0 ]; then break; fi; if [ $((d & 8)) -ne 0 ]; then break; fi; "
         f"i=$((i+1)); done; r=$({dm} {a_recv} 32); e=$({dm} {a_errc} 32); "
-        f"{dm} {a_ctrl} 32 0x12; {dm} {a_ctrl} 32 0x10; "
+        f"{dm} {a_ctrl} 32 {clear}; {dm} {a_ctrl} 32 {hold}; "
         f"echo RESULT off={offset} recv=$r err=$e status=$s polls=$i"
     )
     rc, out, err = runner(cmd)
@@ -393,6 +404,11 @@ def main() -> int:
             raise RuntimeError(
                 f"Unexpected bridge signature 0x{sig:08X}; expected 0x{args.expected_id:08X}.")
 
+        mode_bits = QPSK_MODE_BITS | (0x20 if args.rx_source == "raw" else 0x00)
+        payload["mode_bits"] = f"0x{mode_bits:02X}"
+        payload["rx_source"] = args.rx_source
+        print(f"rx_source={args.rx_source} gp_ctrl mode_bits=0x{mode_bits:02X}")
+
         found = False
         for offset in args.start_offsets:
             # Per-burst sample-phase jitter (AD9361 loopback) shifts the frame a few
@@ -400,7 +416,8 @@ def main() -> int:
             best_row = None
             for _ in range(args.retries):
                 try:
-                    row = qpsk_ber_once(io.runner, args.gpreg_base_addr, args.symbol_count, offset)
+                    row = qpsk_ber_once(io.runner, args.gpreg_base_addr, args.symbol_count, offset,
+                                        mode_bits=mode_bits)
                 except Exception as exc:  # pragma: no cover - keep sweeping / reach the reboot
                     row = {"start_offset": offset, "ok": False, "error": f"{type(exc).__name__}: {exc}"}
                 full = row.get("received_symbols") == args.symbol_count

@@ -22,6 +22,7 @@ module qpsk_zynq_ber_top #(
     input  wire                     rst,
     input  wire                     start,
     input  wire [INDEX_W-1:0]       symbol_count,   // QPSK symbols (2 bits each)
+    input  wire [INDEX_W-1:0]       preamble_count, // preamble length in BITS (frame-sync)
     input  wire [INDEX_W-1:0]       start_offset,
     output wire                     busy,
     output reg                      done,
@@ -125,6 +126,7 @@ qpsk_ber_counter #(
     .start(frame_start),
     .abort(ber_abort),
     .symbol_count(symbol_count),
+    .preamble_count(preamble_count),
     .in_valid(recovered_valid),
     .in_dibit(recovered_dibit),
     .busy(ber_busy),
