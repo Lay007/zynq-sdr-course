@@ -160,9 +160,16 @@ iverilog -g2012 -o "$TB_DIR/tb_qpsk_bridge_loopback.out" \
   "$RTL_DIR/qpsk_frame_dibit_source.v" \
   "$RTL_DIR/qpsk_ber_counter.v" \
   "$RTL_DIR/qpsk_zynq_ber_top.v" \
+  "$COURSE_BRIDGE_DIR/bridge_rx_lclk_fifo.v" \
   "$COURSE_BRIDGE_DIR/bpsk_zynq_ber_gpreg_bridge.v" \
   "$TB_DIR/tb_qpsk_bridge_loopback.v"
 vvp "$TB_DIR/tb_qpsk_bridge_loopback.out"
+
+# Async CDC FIFO that re-routes the bridge RX from the raw axi_ad9361 ADC.
+iverilog -g2012 -o "$TB_DIR/tb_bridge_rx_lclk_fifo.out" \
+  "$COURSE_BRIDGE_DIR/bridge_rx_lclk_fifo.v" \
+  "$TB_DIR/tb_bridge_rx_lclk_fifo.v"
+vvp "$TB_DIR/tb_bridge_rx_lclk_fifo.out"
 
 iverilog -g2012 -o "$TB_DIR/tb_bpsk_zynq_ber_top_multiframe.out" \
   "$RTL_DIR/bpsk_symbol_mapper.v" \

@@ -100,6 +100,7 @@ proc collect_bridge_overlay_sources {course_hdl_dir block5_rtl_dir} {
     $block5_rtl_files \
     [list \
       [file join $course_hdl_dir "course_dac_fifo_source_mux.v"] \
+      [file join $course_hdl_dir "bridge_rx_lclk_fifo.v"] \
       [file join $course_hdl_dir "bpsk_zynq_ber_gpreg_bridge.v"] \
       [file join $course_hdl_dir "bpsk_zynq_ber_bridge_bd.v"]]]
 }

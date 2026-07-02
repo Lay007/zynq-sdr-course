@@ -195,6 +195,38 @@ wire [W:0] adc_input_abs_max = (adc_input_abs_i >= adc_input_abs_q) ? adc_input_
 wire signed [W-1:0] capture_in_i_fmt = capture_in_i;
 wire signed [W-1:0] capture_in_q_fmt = capture_in_q;
 
+// RX source select (gp_ctrl[5]): 0 = vendor adc_fifo tap (capture_in) — the
+// normal/OTA path, bit-identical to before; 1 = the RAW axi_ad9361 ADC
+// (adc_input_*) brought into sample_clk through a dual-clock FIFO. The raw ADC
+// carries the AD9361 BIST digital-loopback data that util_ad9361_adc_fifo does
+// NOT forward (localized 2026-07-02), so this path makes the deterministic,
+// carrier-offset-free digital loopback decodable. The raw tap is the same
+// signed S12/16 format as capture_in, so no conversion is needed.
+wire rx_from_raw = control_sync[5];
+wire raw_rx_valid;
+wire signed [W-1:0] raw_rx_i;
+wire signed [W-1:0] raw_rx_q;
+
+bridge_rx_lclk_fifo #(.W(W), .AW(5)) rx_raw_fifo_i (
+    .wr_clk(adc_input_clk),
+    .wr_rst(adc_input_reset),
+    .wr_en(adc_input_valid),
+    .wr_i(adc_input_i),
+    .wr_q(adc_input_q),
+    .rd_clk(sample_clk),
+    .rd_rst(sample_rst),
+    .rd_valid(raw_rx_valid),
+    .rd_i(raw_rx_i),
+    .rd_q(raw_rx_q)
+);
+
+// Modulation cores consume this selected RX stream. rx_from_raw=0 reduces to the
+// original `capture_in_valid && tx_path_active_sample` exactly.
+wire core_rx_valid = tx_path_active_sample &&
+    (rx_from_raw ? raw_rx_valid : capture_in_valid);
+wire signed [W-1:0] core_rx_i = rx_from_raw ? raw_rx_i : capture_in_i_fmt;
+wire signed [W-1:0] core_rx_q = rx_from_raw ? raw_rx_q : capture_in_q_fmt;
+
 bpsk_zynq_ber_top #(
     .W(W),
     .SPS(SPS),
@@ -224,9 +256,9 @@ bpsk_zynq_ber_top #(
     .tx_valid(bpsk_tx_valid),
     .tx_i(bpsk_tx_i),
     .tx_q(bpsk_tx_q),
-    .rx_valid(capture_in_valid && tx_path_active_sample),
-    .rx_i(capture_in_i_fmt),
-    .rx_q(capture_in_q_fmt),
+    .rx_valid(core_rx_valid),
+    .rx_i(core_rx_i),
+    .rx_q(core_rx_q),
     .rx_decision_mode(rx_decision_mode),
     .timed_out(bpsk_timed_out),
     .received_bits(bpsk_received_bits),
@@ -263,9 +295,9 @@ qpsk_zynq_ber_top #(
     .tx_valid(qpsk_tx_valid),
     .tx_i(qpsk_tx_i),
     .tx_q(qpsk_tx_q),
-    .rx_valid(capture_in_valid && tx_path_active_sample),
-    .rx_i(capture_in_i_fmt),
-    .rx_q(capture_in_q_fmt),
+    .rx_valid(core_rx_valid),
+    .rx_i(core_rx_i),
+    .rx_q(core_rx_q),
     .timed_out(qpsk_timed_out),
     .received_symbols(qpsk_received_symbols),
     .total_bit_errors(qpsk_total_bit_errors),
