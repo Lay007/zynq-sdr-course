@@ -322,6 +322,37 @@ qpsk_zynq_ber_top #(
     .debug_symbol_q(qpsk_symbol_q_debug)
 );
 
+// ---------------------------------------------------------------------------
+// RX sample capture tap. Records the exact RX samples the modem sees (core_rx)
+// during a burst into a dual-clock BRAM, read back over gpreg so the host can
+// SEE what the AD9361 delivers on the RF path (vs the known-perfect TX) and
+// localise the analog-chain distortion. Readout mode = gp_ctrl[7]: then
+// gp_start_offset is the BRAM read address and gp_capture_debug returns the
+// {rx_i, rx_q} sample (normal gp_capture_debug when gp_ctrl[7]=0). No BD change.
+localparam integer CAP_AW = 12;                 // 4096 samples (> full 2248-sample frame)
+reg [2*W-1:0] cap_bram [0:(1<<CAP_AW)-1];
+reg [CAP_AW-1:0] cap_wptr = {CAP_AW{1'b0}};
+reg cap_full = 1'b0;
+
+always @(posedge sample_clk) begin
+    if (!sample_resetn) begin
+        cap_wptr <= {CAP_AW{1'b0}};
+        cap_full <= 1'b0;
+    end else if (start_edge) begin
+        cap_wptr <= {CAP_AW{1'b0}};
+        cap_full <= 1'b0;
+    end else if (tx_path_active_sample && core_rx_valid && !cap_full) begin
+        cap_bram[cap_wptr] <= {core_rx_i, core_rx_q};
+        if (cap_wptr == {CAP_AW{1'b1}}) cap_full <= 1'b1;
+        else cap_wptr <= cap_wptr + 1'b1;
+    end
+end
+
+reg [2*W-1:0] cap_rdata = {(2*W){1'b0}};
+always @(posedge ctrl_clk) begin
+    cap_rdata <= cap_bram[gp_start_offset[CAP_AW-1:0]];
+end
+
 always @(posedge adc_input_clk) begin
     if (adc_input_reset) begin
         adc_input_valid_seen_any_sample <= 1'b0;
@@ -577,7 +608,9 @@ assign gp_adc_input_debug = {
     adc_input_counter_sync_ctrl,
     adc_input_debug_sync_ctrl[11:0]
 };
-assign gp_capture_debug = capture_debug_sync_ctrl;
+// gp_ctrl[7]=1 -> readout: return the captured RX sample at gp_start_offset;
+// else the normal capture-debug status word.
+assign gp_capture_debug = gp_ctrl[7] ? cap_rdata : capture_debug_sync_ctrl;
 assign tx_path_active = tx_path_active_sample;
 
 // DAC-facing TX stream: the selected modem drives the mux; BPSK mode is
