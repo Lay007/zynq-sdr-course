@@ -37,15 +37,22 @@ This glossary keeps the course terminology consistent across Russian and English
 |---|---|---|
 | AM | Amplitude modulation. | Early spectrum examples. |
 | FM | Frequency modulation. | Early spectrum examples. |
-| QPSK | Quadrature phase-shift keying. | Constellation, EVM and synchronization labs. |
+| BPSK | Binary phase-shift keying. One bit is represented by one of two carrier phases. | Used in frame-sync, BER and hardware bring-up labs. |
+| QPSK | Quadrature phase-shift keying. Two bits are represented by one of four constellation points. | Constellation, EVM and synchronization labs. |
 | OFDM | Orthogonal frequency-division multiplexing. | Advanced mini-link and final project path. |
 | CFO | Carrier frequency offset. Frequency mismatch between transmitter and receiver. | Synchronization labs. |
+| Coarse CFO | Coarse carrier-frequency-offset estimation/correction. A first, wide-range correction before a fine carrier loop. | Used before Costas/PLL-style tracking in practical receivers. |
 | Phase offset | Constant phase rotation between expected and received symbols. | Constellation correction. |
 | Timing recovery | Estimating correct symbol sampling instants. | Receiver synchronization. |
+| TED | Timing error detector. A block that estimates whether the receiver samples symbols too early or too late. | Gardner timing recovery and symbol-clock labs. |
 | Preamble | Known sequence used for detection, synchronization or channel estimation. | Packet receiver labs. |
+| Costas loop | A carrier-recovery PLL variant for suppressed-carrier modulations such as BPSK and QPSK. | Used to remove residual carrier phase/frequency error before bit decisions. |
 | BER | Bit error rate. Ratio of incorrect bits to total received bits. | End-to-end link quality metric. |
+| BER floor | Error-rate floor below which BER does not improve even when SNR is increased. It usually indicates a systematic issue rather than simple noise. | Used to diagnose CFO, timing error, clipping, phase ambiguity or frame-sync failure. |
+| FER | Frame error rate. Ratio of incorrectly received frames to total received frames. | Useful when packet framing and CRC are available. |
 | EVM | Error vector magnitude. Distance between ideal and measured constellation points. | Modulation quality metric. |
 | SNR | Signal-to-noise ratio. Ratio between signal power and noise power. | Used in measurement and link analysis. |
+| SNR vs BER | SNR says whether a signal is visible above noise; BER says whether the receiver recovered the correct bits. | Core acceptance rule for digital-link labs: SNR alone is not sufficient. |
 
 ## FPGA / HDL terms
 
@@ -94,6 +101,8 @@ This glossary keeps the course terminology consistent across Russian and English
 | measurement report | измерительный отчёт |
 | reproducibility | воспроизводимость |
 | dataset manifest | manifest набора данных / dataset manifest |
+| BER floor | нижняя граница BER / пол BER |
+| SNR vs BER | SNR против BER / почему SNR недостаточен |
 
 ## Style rule
 

@@ -34,7 +34,7 @@ Detailed bring-up logs should live on dedicated evidence pages rather than insid
 | 05 | FPGA / HDL flow | Executable | Verilog testbenches, HDL CI, timing-clean BPSK BER baseline | Replace the coarse acquisition prefix with a more selective timing-safe detector and promote routed reports. |
 | 06 | RF frontend and AD9363 | Measured | RX-only and tone capture baselines | Build the AD9363 gain table and validate safe cabled loopback. |
 | 07 | TX/RX chains | Executable | DUC/DDC demos and loopback models | Add measurement package. |
-| 08 | Modulation and synchronization | Executable | CFO, phase/timing and BER/EVM demos | Add impairment sweeps and BER/EVM dashboards. |
+| 08 | Modulation and synchronization | Executable | CFO, phase/timing, BER/EVM demos and SNR-vs-BER trap material | Promote generated impairment dashboards and connect them to measured Block 11 reports. |
 | 09 | Recording and analysis tools | Executable | CI16/CU8/CF32 readers and recording CI | Update QPSK dataset manifest with real checksum or synthetic generator. |
 | 10 | KiCad and basic electronics | Draft | Calculators and templates | Add measured breadboard photos and KiCad exports. |
 | 11 | Integrated SDR project | On-chip BER=0 (loopback) | On-chip PL BPSK BER=0 (received=281, total_errors=0) via gap-free TX + 8-bit frame-sync; TX/RX raw-sample tap + RTL-SDR evidence | Deterministic per-burst BER=0 via multi-phase diversity RX (model-verified); then a QPSK modem and a final report. |
@@ -47,6 +47,7 @@ Detailed bring-up logs should live on dedicated evidence pages rather than insid
 | P0 | Safe cabled loopback | Attenuation, gain settings, capture metadata and short conclusion are recorded. |
 | P0 | Runtime PL BPSK robustness | External monitor BER is repeatable from clean boot and reported with limitations. |
 | P1 | QPSK demo dataset | Manifest, checksum or immutable link, constellation, EVM/SNR and replay command exist. |
+| P1 | Digital-link metric gate | Digital labs report SNR/EVM plus BER or FER with compared bit/frame count. |
 | P1 | AD9363 gain table | Gain settings, clipping/SNR behavior and safe starting values are documented. |
 | P2 | Final hardware report | One report connects model, HDL, capture, metrics and engineering conclusion. |
 

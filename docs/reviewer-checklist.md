@@ -70,9 +70,24 @@ For RF experiments, check that the report includes:
 - attenuation and safety notes;
 - capture format and metadata;
 - independent observation receiver when possible;
-- SNR, EVM, BER, or another explicit quality metric.
+- explicit quality metrics and a conclusion tied to those metrics.
 
-## 6. Final-project acceptance gate
+## 6. Digital-link metric gate
+
+For digital communication labs, SNR alone is not sufficient. A reviewed BPSK/QPSK/OFDM result should include:
+
+| Evidence | Required? | Why |
+|---|---:|---|
+| SNR or noise estimate | yes | Shows signal margin, but not bit correctness. |
+| EVM or constellation metric | yes | Shows modulation quality and residual distortion. |
+| BER or FER | yes | Shows whether the receiver recovered bits or frames correctly. |
+| Compared bits or frames | yes | Gives statistical weight to BER/FER. |
+| Frame-sync status | yes | Prevents false conclusions from shifted payload comparison. |
+| CFO/timing notes | when relevant | Explains failures that can occur even at high SNR. |
+
+A result with only SNR may be accepted as a spectrum or signal-presence check, but not as a validated digital link.
+
+## 7. Final-project acceptance gate
 
 A portfolio-ready final project should include:
 
@@ -87,7 +102,7 @@ A portfolio-ready final project should include:
 | Limitations | yes | What is not proven yet |
 | Next steps | yes | Clear technical continuation path |
 
-## 7. Review decision
+## 8. Review decision
 
 Use the following decision levels:
 

@@ -86,13 +86,31 @@ Insert IEEE-style figures and short explanations.
 
 ## 8. Metrics
 
+For digital communication labs, SNR is not an acceptance proof by itself. It must be paired with a bit- or frame-level result. A report may say that a signal is visible from SNR alone, but it should not claim that the digital link works until BER or FER is measured.
+
 | Metric | Value | Method |
 |---|---:|---|
 | SNR |  | signal/noise power estimate |
 | EVM |  | RMS error vector |
 | BER |  | bit errors / total bits |
+| FER |  | frame errors / total frames |
+| Compared bits / frames |  | amount of evidence behind BER/FER |
+| Frame detected |  | preamble / unique word / CRC rule |
 | Frequency error |  | peak or estimator |
 | Implementation error |  | floating-point vs fixed-point |
+
+### Digital-link acceptance rule
+
+Minimum evidence for BPSK/QPSK/OFDM link claims:
+
+- SNR or noise estimate;
+- EVM or constellation-quality metric;
+- BER or FER;
+- compared bit or frame count;
+- frame-sync status;
+- frequency/timing offset notes when relevant.
+
+If BER/FER is missing, write a limited conclusion such as: "spectrum and waveform quality were evaluated" rather than "the communication link was validated".
 
 ## 9. Measurement notes
 
