@@ -39,3 +39,18 @@ if {[llength $tr_cells] > 0} {
     puts "course overlay: multicycle-path (setup 4) applied to [llength $tr_d] timing-recovery data pins"
   }
 }
+
+# bridge_rx_lclk_fifo (raw-ADC RX CDC FIFO) gray-code pointer crossings. wr_clk is
+# l_clk (rx_clk) and rd_clk is the divided sample clock (generated from rx_clk), so
+# the two are RELATED and the async clock-group cut above does not cover them; the
+# tool then times the gray pointer -> 2-flop synchronizer capture as a real 4 ns
+# rx_clk path and fails setup (~ -0.78 ns, placement-dependent). A gray-coded
+# pointer through a 2-flop ASYNC_REG synchronizer is a safe CDC (at most one bit
+# changes per step), so false-path the capture into the first synchronizer flop —
+# the standard async-FIFO constraint.
+set fifo_cdc [get_pins -hier -quiet -filter { \
+    NAME =~ *rx_raw_fifo_i/rgray_wr1_reg*/D || NAME =~ *rx_raw_fifo_i/wgray_rd1_reg*/D}]
+if {[llength $fifo_cdc] > 0} {
+  set_false_path -to $fifo_cdc
+  puts "course overlay: false_path applied to [llength $fifo_cdc] rx_raw_fifo CDC sync pins"
+}
