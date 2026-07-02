@@ -25,6 +25,10 @@ module bpsk_zynq_ber_gpreg_bridge #(
     input  wire                     adc_input_valid,
     input  wire signed [W-1:0]      adc_input_i,
     input  wire signed [W-1:0]      adc_input_q,
+    // Raw AD9361 RX channel 2 (adc_data_i1/q1), for a TX2->RX2 cable test.
+    input  wire                     adc_input2_valid,
+    input  wire signed [W-1:0]      adc_input2_i,
+    input  wire signed [W-1:0]      adc_input2_q,
     input  wire                     sample_clk,
     input  wire                     sample_resetn,
     input  wire [31:0]              gp_ctrl,
@@ -210,9 +214,9 @@ wire signed [W-1:0] raw_rx_q;
 bridge_rx_lclk_fifo #(.W(W), .AW(5)) rx_raw_fifo_i (
     .wr_clk(adc_input_clk),
     .wr_rst(adc_input_reset),
-    .wr_en(adc_input_valid),
-    .wr_i(adc_input_i),
-    .wr_q(adc_input_q),
+    .wr_en(raw_wr_en),
+    .wr_i(raw_wr_i),
+    .wr_q(raw_wr_q),
     .rd_clk(sample_clk),
     .rd_rst(sample_rst),
     .rd_valid(raw_rx_valid),
@@ -231,6 +235,14 @@ wire signed [W-1:0] tx_mux_q = mod_qpsk ? qpsk_tx_q : bpsk_tx_q;
 // hardware for both BPSK and QPSK. This proves the synthesized modem runs on the
 // real Zynq PL, independent of the AD9361 analog/digital-loopback issues.
 wire rx_fabric_loop = control_sync[6];
+
+// gp_ctrl[8]=1 feeds the raw-ADC CDC FIFO from AD9361 RX channel 2 (adc_input2 =
+// adc_data_i1/q1) instead of channel 1 — pairs with a TX2->RX2 cable to bypass a
+// possibly-degraded TX1/RX1 channel.
+wire rx_ch2 = control_sync[8];
+wire                 raw_wr_en = rx_ch2 ? adc_input2_valid : adc_input_valid;
+wire signed [W-1:0]  raw_wr_i  = rx_ch2 ? adc_input2_i     : adc_input_i;
+wire signed [W-1:0]  raw_wr_q  = rx_ch2 ? adc_input2_q     : adc_input_q;
 
 // Modulation cores consume this selected RX stream. All selects at 0 reduces to
 // the original `capture_in_valid && tx_path_active_sample` exactly.

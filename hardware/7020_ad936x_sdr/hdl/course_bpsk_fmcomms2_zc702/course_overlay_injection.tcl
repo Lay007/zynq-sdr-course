@@ -92,6 +92,9 @@ proc course_bpsk_apply_overlay {overlay_mode} {
   ad_connect axi_ad9361/adc_data_i0 bpsk_bridge_bd/adc_input_i
   ad_connect axi_ad9361/adc_data_q0 bpsk_bridge_bd/adc_input_q
   ad_connect axi_ad9361/adc_valid_i0 bpsk_bridge_bd/adc_input_valid
+  ad_connect axi_ad9361/adc_data_i1 bpsk_bridge_bd/adc_input2_i
+  ad_connect axi_ad9361/adc_data_q1 bpsk_bridge_bd/adc_input2_q
+  ad_connect axi_ad9361/adc_valid_i1 bpsk_bridge_bd/adc_input2_valid
   ad_connect util_ad9361_divclk/clk_out bpsk_bridge_bd/sample_clk
   ad_connect util_ad9361_divclk_reset/peripheral_aresetn bpsk_bridge_bd/sample_resetn
 
