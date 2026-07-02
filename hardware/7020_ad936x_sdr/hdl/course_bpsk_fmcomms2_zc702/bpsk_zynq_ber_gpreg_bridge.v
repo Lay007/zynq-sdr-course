@@ -220,12 +220,27 @@ bridge_rx_lclk_fifo #(.W(W), .AW(5)) rx_raw_fifo_i (
     .rd_q(raw_rx_q)
 );
 
-// Modulation cores consume this selected RX stream. rx_from_raw=0 reduces to the
-// original `capture_in_valid && tx_path_active_sample` exactly.
-wire core_rx_valid = tx_path_active_sample &&
-    (rx_from_raw ? raw_rx_valid : capture_in_valid);
-wire signed [W-1:0] core_rx_i = rx_from_raw ? raw_rx_i : capture_in_i_fmt;
-wire signed [W-1:0] core_rx_q = rx_from_raw ? raw_rx_q : capture_in_q_fmt;
+// Muxed modem TX: drives the DAC and, in fabric-loopback mode, the RX.
+wire tx_mux_valid = mod_qpsk ? qpsk_tx_valid : bpsk_tx_valid;
+wire signed [W-1:0] tx_mux_i = mod_qpsk ? qpsk_tx_i : bpsk_tx_i;
+wire signed [W-1:0] tx_mux_q = mod_qpsk ? qpsk_tx_q : bpsk_tx_q;
+
+// gp_ctrl[6]=1 loops the modem TX straight back into the RX INSIDE the PL fabric
+// (no AD9361, no RF, no analog) — a deterministic on-silicon loopback identical to
+// the tb_qpsk_bridge_loopback simulation, so it recovers the frame at BER=0 on
+// hardware for both BPSK and QPSK. This proves the synthesized modem runs on the
+// real Zynq PL, independent of the AD9361 analog/digital-loopback issues.
+wire rx_fabric_loop = control_sync[6];
+
+// Modulation cores consume this selected RX stream. All selects at 0 reduces to
+// the original `capture_in_valid && tx_path_active_sample` exactly.
+wire core_rx_valid = rx_fabric_loop
+    ? (tx_path_active_sample && tx_mux_valid)
+    : (tx_path_active_sample && (rx_from_raw ? raw_rx_valid : capture_in_valid));
+wire signed [W-1:0] core_rx_i = rx_fabric_loop ? tx_mux_i
+    : (rx_from_raw ? raw_rx_i : capture_in_i_fmt);
+wire signed [W-1:0] core_rx_q = rx_fabric_loop ? tx_mux_q
+    : (rx_from_raw ? raw_rx_q : capture_in_q_fmt);
 
 bpsk_zynq_ber_top #(
     .W(W),
@@ -567,8 +582,8 @@ assign tx_path_active = tx_path_active_sample;
 
 // DAC-facing TX stream: the selected modem drives the mux; BPSK mode is
 // bit-identical to the original single-core bridge.
-assign burst_out_valid = mod_qpsk ? qpsk_tx_valid : bpsk_tx_valid;
-assign burst_out_i     = mod_qpsk ? qpsk_tx_i     : bpsk_tx_i;
-assign burst_out_q     = mod_qpsk ? qpsk_tx_q     : bpsk_tx_q;
+assign burst_out_valid = tx_mux_valid;
+assign burst_out_i     = tx_mux_i;
+assign burst_out_q     = tx_mux_q;
 
 endmodule
