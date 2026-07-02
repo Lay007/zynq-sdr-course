@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import argparse
 import json
-from dataclasses import asdict, dataclass, replace
+from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -58,10 +58,7 @@ from lab_11_15_runtime_bridge_rx_host_tx_probe import (
     DEFAULT_START_HOLD_MS,
     DEFAULT_TIMEOUT_S,
     DEFAULT_TX_ATTENUATION_DB,
-    DEFAULT_TX_REFERENCE_PATH,
     DEFAULT_USER,
-    RuntimeBridgeRxHostTxProbeConfig,
-    attempt_runtime_bringup,
     load_reference_config,
     make_waveform_config,
     safe_probe,
@@ -278,47 +275,6 @@ def main() -> int:
         settle_ms=args.settle_ms,
         rx_rf_port_select=args.rx_rf_port_select,
         tx_rf_port_select=args.tx_rf_port_select,
-    )
-
-    # One shared probe config; start_offset is replaced per sweep step. QPSK mode
-    # bit set, preamble_count=0 (the QPSK counter has no preamble sync), and
-    # frame_bit_count carries the QPSK symbol count.
-    base_probe_cfg = RuntimeBridgeRxHostTxProbeConfig(
-        ssh_host=args.ssh_host,
-        ssh_user=args.ssh_user,
-        ssh_port=args.ssh_port,
-        ssh_timeout_s=args.ssh_timeout_s,
-        iio_uri=args.iio_uri,
-        raw_bit_path="",
-        bit_bin_path=str(bit_bin_path),
-        tx_reference_path=str(DEFAULT_TX_REFERENCE_PATH),
-        remote_firmware_name=args.remote_firmware_name,
-        gpreg_base_addr=args.gpreg_base_addr,
-        expected_id=args.expected_id,
-        frame_bit_count=args.symbol_count,
-        preamble_count=0,
-        start_offset=args.start_offsets[0],
-        rx_decision_mode=0,
-        start_hold_ms=args.start_hold_ms,
-        poll_limit=args.poll_limit,
-        poll_delay_ms=args.poll_delay_ms,
-        center_frequency_hz=waveform_cfg.center_frequency_hz,
-        sample_rate_hz=waveform_cfg.sample_rate_hz,
-        symbol_rate_hz=waveform_cfg.symbol_rate_hz,
-        samples_per_symbol=waveform_cfg.samples_per_symbol,
-        rf_bandwidth_hz=waveform_cfg.rf_bandwidth_hz,
-        tx_attenuation_db=waveform_cfg.tx_attenuation_db,
-        rx_gain_db=waveform_cfg.rx_gain_db,
-        settle_ms=waveform_cfg.settle_ms,
-        tx_settle_ms=0,
-        rx_rf_port_select=waveform_cfg.rx_rf_port_select,
-        tx_rf_port_select=waveform_cfg.tx_rf_port_select,
-        rx_common_reinit=True,
-        rx_common_ctrl_value=args.rx_common_ctrl_value,
-        reboot_after=bool(args.reboot_after),
-        reboot_timeout_s=args.reboot_timeout_s,
-        dmesg_line_count=80,
-        mod_select_bits=QPSK_MODE_BITS,
     )
 
     bit_payload = bit_bin_path.read_bytes()

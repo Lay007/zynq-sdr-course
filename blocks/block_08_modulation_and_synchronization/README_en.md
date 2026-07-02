@@ -82,7 +82,7 @@ The internal loopback isolates the *modem* — two tight clusters at I = ±1, Q 
 Over the air the *radio channel* spreads the clusters with noise and rotates them with the
 carrier frequency offset (Lab 8.1 / 8.2 seen on real hardware), yet at close range it still
 decodes at BER 0. The visual gap between the two constellations *is* the RF channel. Full
-walkthrough, numbers and reproduction: **[Lab 8.7 — Real-hardware BPSK metrics](lab_8_7_real_hardware_bpsk_metrics.md)**.
+walkthrough, numbers and reproduction: **[Lab 8.7 — Real-hardware BPSK metrics](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_7_real_hardware_bpsk_metrics.md)**.
 
 ## QPSK — two bits per symbol, impairments & BER
 
@@ -101,7 +101,7 @@ until a carrier-recovery loop de-rotates it (Lab 8.1 / 8.2).
 
 Being two orthogonal BPSK axes, Gray QPSK has the same per-bit BER as BPSK,
 `Q(√(2·Eb/N0))` — the simulation matches theory across 0–10 dB. Full walkthrough:
-**[Lab 8.8 — QPSK modem, impairments and BER](lab_8_8_qpsk_modem_and_impairments.md)**.
+**[Lab 8.8 — QPSK modem, impairments and BER](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_8_qpsk_modem_and_impairments.md)**.
 
 ## QPSK carrier recovery — de-rotating the CFO ring
 
@@ -116,7 +116,7 @@ The one twist BPSK does not have: the loop locks to one of four `k·90°` rotati
 constellation looks perfect but the bit labelling may be rotated (the **90° ambiguity**). The
 same **known preamble** the modem uses for frame sync resolves it — turning the noisy BER back
 into a flat **BER = 0** across the whole CFO sweep. Full walkthrough:
-**[Lab 8.9 — QPSK carrier recovery](lab_8_9_qpsk_carrier_recovery.md)**.
+**[Lab 8.9 — QPSK carrier recovery](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_9_qpsk_carrier_recovery.md)**.
 
 ## Next step
 After finishing this block, the student should be ready to reuse its results as the starting point for the next stage of the course and the related practical experiment.

@@ -123,7 +123,8 @@ def main():
                              args.board_fs_hz, "Board PL RX (AD9361 digital loopback)")
     print(f"BOARD: SNR={b_snr:.1f} dB  EVM={b_evm:.1f} %")
     if have_rtl:
-        ri = np.load(args.rtl_i); rq = np.load(args.rtl_q)
+        ri = np.load(args.rtl_i)
+        rq = np.load(args.rtl_q)
         r_snr, r_evm = plot_side(axes[1, 0], axes[1, 1], ri, rq, taps,
                                  args.rtl_fs_hz, "RTL-SDR (over the air)")
         print(f"RTL-SDR: SNR={r_snr:.1f} dB  EVM={r_evm:.1f} %")
