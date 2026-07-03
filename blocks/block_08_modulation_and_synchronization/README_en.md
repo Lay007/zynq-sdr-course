@@ -118,5 +118,28 @@ same **known preamble** the modem uses for frame sync resolves it — turning th
 into a flat **BER = 0** across the whole CFO sweep. Full walkthrough:
 **[Lab 8.9 — QPSK carrier recovery](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_9_qpsk_carrier_recovery.md)**.
 
+## QPSK on real hardware — board loopback vs over the air
+
+The same three quantities as the BPSK measurement above, now for QPSK: the board's own PL receiver in
+**fabric loopback** (the modem isolated — no RF, no carrier) versus an **independent RTL-SDR over the
+air**. The host demodulator does exactly what this block teaches: coarse + fine carrier-frequency-offset
+search, an RRC matched filter, preamble frame-sync, and a four-way 90° quadrant resolve.
+
+![Board PL RX — QPSK constellation (PL fabric loopback)](https://lay007.github.io/zynq-sdr-course/assets/hw_qpsk_board_loopback_constellation.png)
+
+![RTL-SDR — over-the-air QPSK constellation](https://lay007.github.io/zynq-sdr-course/assets/hw_qpsk_rtl_ota_constellation.png)
+
+| Metric | Board PL RX (fabric loopback) | RTL-SDR (over the air, ~1–2 cm) |
+|---|---|---|
+| EVM | ≈ 1.5 % | ≈ 19 % |
+| SNR (from EVM) | ≈ 36 dB | ≈ 14.5 dB |
+| Carrier frequency offset | 0 (digital, no carrier) | ≈ +2.3 kHz |
+| BER | 0 (0/280) | 0 (0/280) |
+
+Four razor-tight dots in loopback (the *modem* isolated) become four noise-spread, carrier-rotated clouds
+over the air (the *radio channel*), yet both decode at **BER = 0** through the same synchronization chain
+the simulations model. The visual gap between the two constellations *is* the RF channel — exactly the
+BPSK story of Lab 8.7, now at two bits per symbol.
+
 ## Next step
 After finishing this block, the student should be ready to reuse its results as the starting point for the next stage of the course and the related practical experiment.
