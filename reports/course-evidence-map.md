@@ -4,6 +4,7 @@ This map gives reviewers a compact view of what is already backed by evidence an
 
 | Evidence area | Location | Status | What it proves | Next action |
 |---|---|---|---|---|
+| Flagship reviewer report | `reports/flagship_reviewer_report.md` | Available | The strongest current evidence is compressed into one reviewer-friendly story with limits and reproduction commands | Keep it synchronized after every promoted hardware or dataset proof |
 | First real observation | `datasets/lab1_0_rtl_sdr_observation/` | Available through Git LFS | The course contains real-world input data, not only synthetic examples | Add generated preview plots and complete publication review |
 | Lab 1.0 learner result | `reports/lab1_0_rtl_sdr_observation_example.md` | Example report added | A student can see what a minimal first report should contain | Add screenshots/metrics references after analysis refresh |
 | Dataset manifest discipline | `tools/check_dataset_manifests.py`, `.github/workflows/dataset_manifests.yml` | Checker and CI workflow added | Git LFS pointers, generated-local manifests and metrics SHA256 fields can be checked automatically | Add more dataset-specific acceptance rules as datasets mature |
@@ -35,4 +36,4 @@ python tools/tasks.py hdl
 1. Add preview plots and metrics for the Lab 1.0 real-data captures.
 2. Keep the generated QPSK dataset, analyzer outputs and documentation synchronized.
 3. Add routed top-level FPGA resource/timing reports for the integrated design.
-4. Complete one final model-to-measurement report with limitations and reproducibility commands.
+4. Promote one board-level result into a complete final model-to-measurement report with plots, limits, reproduction commands and conclusions.
