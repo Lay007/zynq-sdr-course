@@ -153,6 +153,7 @@ Curated local board starting point:
 | [Student path](docs/student-path.md) | Shortest learner route through the repository |
 | [Reviewer path](docs/reviewer-path.md) | Evidence-oriented review path for quick evaluation |
 | [Reviewer acceptance checklist](docs/reviewer-checklist.md) | Pass/fail-style checklist for reproducibility, DSP, HDL, RF and final-project evidence |
+| [Flagship reviewer report](reports/flagship_reviewer_report.md) | One-page portfolio-style evidence story with limitations and reproduction commands |
 | [Course evidence map](reports/course-evidence-map.md) | Compact map of proven artifacts, gaps and next evidence actions |
 | [Instructor guide](docs/instructor-guide.md) | How to use the repository as a teaching workspace |
 | [Model → FPGA → RF → Measurement](docs/model-to-measurement.md) | Core engineering workflow of the course |
