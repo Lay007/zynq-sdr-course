@@ -55,9 +55,11 @@ model -> Zynq/AD9363 -> RF path -> receiver -> IQ capture -> offline analysis
 ## 6. Limitations
 
 - Replace synthetic replay with hardware capture.
-- Add timing/resource reports after Vivado implementation.
+- Correlate the routed timing/resource result with repeatable board operation.
 - Add uncertainty notes for measured RF results.
 
 ## 7. Conclusion
 
 The project is complete when the report links model assumptions, implementation constraints, measured or replayed data, metric results and a reproducible command path.
+
+See [Dual-modem Zynq SDR final implementation report](final-project-dual-modem-implementation-report.md) for the filled current example and its explicitly open hardware gates.

@@ -29,14 +29,14 @@
 | 02 | Сигналы и дискретизация | Executable | Python-лабы и сгенерированные фигуры | Добавить MATLAB/C++-варианты и примеры воспроизведения ошибок в метаданных. |
 | 03 | Базовые DSP-операции | Executable | Python / MATLAB / C++ path | Добавить демонстрацию порога прямой свёртки против FFT и больше эталонов. |
 | 04 | Simulink и fixed-point | Executable | Python/MATLAB references и BPSK `.slx` models | Сильнее ограничить BPSK-маршрут в Simulink под HDL Coder handoff. |
-| 05 | FPGA / HDL flow | Executable | Канонический набор из 18 HDL-тестов: BPSK/QPSK BER=0, timing recovery, AXI-Lite, dual-modem bridge и CDC FIFO | Добавить routed-отчёты интегрированного top-level. |
+| 05 | FPGA / HDL flow | Executable | 18 HDL-тестов и fully routed integrated design: WNS 0,354 нс, TNS 0, routing errors 0 | Сопоставить собранный bitstream с повторяемыми прогонами на плате. |
 | 06 | RF frontend и AD9363 | Measured | RX-only и tone capture baselines | Построить таблицу усиления AD9363 и проверить безопасный cabled loopback. |
 | 07 | TX/RX тракты | Executable | DUC/DDC demos и loopback models | Добавить пакет измерений. |
 | 08 | Модуляция и синхронизация | Executable | CFO, phase/timing и BER/EVM demos | Добавить sweeps по искажениям и дашборды BER/EVM. |
 | 09 | Инструменты записи и анализа | Executable | CI16/CU8/CF32/WAV readers, fail-closed manifest CI и детерминированный synthetic QPSK replay | Добавить прошедший publication review реальный QPSK-захват. |
 | 10 | KiCad и базовая электроника | Draft | Calculators и templates | Добавить фото макета и экспорты из KiCad. |
 | 11 | Интегрированный SDR-проект | BPSK measured; QPSK executable | On-chip PL BPSK BER=0 (281 бит); QPSK RTL и dual-modem bridge BER=0 для 280 бит; доступен runtime helper Lab 11.27 | Измерить clean-boot success rate BPSK/QPSK, интегрировать детерминированный выбор фазы и выпустить итоговый отчёт. |
-| 12 | Итоговые проекты | Draft | Templates, rubric и example skeleton | Заполнить один полный portfolio-ready итоговый отчёт. |
+| 12 | Итоговые проекты | Reviewable example; hardware pending | Заполненный отчёт по dual-modem implementation, templates и rubric | Добавить clean-boot QPSK и внешние RF-измерения для уровня portfolio-ready. |
 
 ## Недавно добавленные артефакты для усиления курса
 
@@ -49,6 +49,7 @@
 | `docs/block5-fpga-evidence.md` | Видимый в навигации конспект текущего пакета Vivado-доказательств для Block 5. |
 | `docs/student-ci-grading-guide.md` | Процесс проверки студенческих веток и прохождения CI. |
 | `docs/final-project-example-report.md` | Каркас portfolio-ready отчета по SDR-проекту. |
+| `docs/final-project-dual-modem-implementation-report.md` | Заполненный отчёт, связывающий модель, RTL, routed implementation и текущие аппаратные доказательства. |
 | `docs/hardware-validation-backlog.md` | Разделение чисто документальных задач и задач, требующих железо. |
 | `docs/iq-demo-dataset-manifest.md` | Контракт на датасеты для QPSK replay/capture работ. |
 | `datasets/demo_qpsk_capture/manifest.yaml` | Первый manifest-only пакет QPSK-датасета. |
@@ -171,7 +172,7 @@
 
 1. Заменить manifest-only QPSK-датасет на маленький подтвержденный файл или внешнюю ссылку.
 2. Расширить первые измерения на реальной плате для тракта Zynq/AD9363 до полного gain/loopback package и превратить новый post-reinit runtime BPSK receive path в повторяемый low-BER сценарий.
-3. Повысить Block 5 OOC FPGA-отчеты до данных по top-level placed-and-routed дизайну.
+3. Сопоставить routed bitstream интегрированного дизайна с повторяемой clean-boot работой на плате.
 4. Держать RU/EN страницы синхронными при добавлении новых лабораторных.
 5. Довести один QPSK- или tone-сценарий до полного финального отчета с графиками и ограничениями.
 6. Проверить публикационный/юридический статус реальных off-air записей, прежде чем считать их публично распространяемыми данными курса.
@@ -180,7 +181,7 @@
 
 1. Поднять один полный сценарий `Model -> FPGA -> RF -> Measurement` до статуса portfolio-ready, используя новый post-reinit runtime BPSK receive path как кратчайший аппаратный маршрут.
 2. Добавить небольшой публичный или синтетический IQ-датасет для лабораторных по записи и replay.
-3. Использовать текущие отчеты Block 5 как baseline, затем добавить deltas по routed timing/resource для интегрированного дизайна.
+3. Использовать routed timing/resource как baseline для bitstream-to-board correlation.
 4. Использовать рубрику оценивания итоговых проектов в преподавательской оценке.
 5. Синхронизировать русскую и английскую навигацию при каждом повышении зрелости блока.
 

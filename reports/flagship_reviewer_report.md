@@ -22,6 +22,7 @@ This is the main reviewer claim: the course teaches students to treat SDR work a
 | DSP foundations | Block 3 labs, generated plots, reproducible scripts | FFT, FIR, windows, mixing, decimation and analysis are introduced as executable material. |
 | Fixed-point bridge | Block 4 labs and fixed-point workflow notes | Students see why scaling, saturation and quantization matter before RTL. |
 | HDL / FPGA flow | Block 5 labs, Verilog smoke tests and FPGA reports | The course does not stop at floating-point models; selected blocks have hardware-facing checks. |
+| Integrated implementation | Routed Vivado reports and machine-readable metrics | The current dual-modem top-level is implementable on XC7Z020 with positive timing margin and no routing errors. |
 | RF and measurement workflow | Block 6/7 materials, IQ metadata, dataset manifests | RF experiments are framed with gain staging, attenuation, capture metadata and safety notes. |
 | Synchronization and link metrics | Block 8 materials, BER/EVM/SNR terminology and acceptance rules | Digital link quality is judged by recovered bits and constellation quality, not by SNR alone. |
 | Data discipline | `datasets/`, `tools/check_dataset_manifests.py`, Git LFS-aware manifest checks | IQ captures can be reviewed without turning the repository into an uncontrolled data dump. |
@@ -39,6 +40,7 @@ This is the main reviewer claim: the course teaches students to treat SDR work a
 | HDL smoke verification | `docs/verification/hdl_smoke.md` | Which RTL-facing examples are smoke-tested? |
 | Dataset policy | `docs/real-data-policy.md` | How are real IQ captures handled safely? |
 | Final project rubric | `docs/final-project-grading-rubric.md` | What counts as an acceptable engineering result? |
+| Filled implementation report | `docs/final-project-dual-modem-implementation-report.md` | How do the model, RTL, routed design and current hardware evidence fit together? |
 
 ## Metric and acceptance view
 
@@ -88,10 +90,10 @@ python tools/run_local_ci.py --quick
 
 | Limitation | Current impact | Next evidence step |
 |---|---|---|
-| Routed integrated Zynq design reports are still hardware/toolchain-dependent | The repository demonstrates the route, but not every final implementation proof is promoted yet | Add Vivado resource/timing reports for the integrated top-level design. |
+| The routed bitstream is not yet correlated with a clean-boot repeatability series | Implementation feasibility is proven, but board robustness is not | Run BPSK/QPSK clean-boot series and record success rate. |
 | Some real hardware captures require local board access | Reviewers can inspect workflow and manifests, but cannot fully reproduce RF capture without hardware | Add a small publication-cleared QPSK or tone dataset with preview plots and metrics. |
 | AD9363 gain/overload table is still measurement-pending | RF gain recommendations remain conservative | Measure gain staging, overload signs, clipping thresholds and recommended safe starting values. |
-| Final model-to-measurement report is still being consolidated | Evidence exists across pages, but the strongest story needs one polished final artifact | Promote one complete final report with plots, limitations, commands and conclusion. |
+| The filled final report still lacks a publication-cleared QPSK RF capture | The implementation story is reviewable, but not yet a complete external model-to-measurement proof | Add manifest-backed RF data, plots, BER/EVM/SNR and uncertainty notes. |
 
 ## Reviewer conclusion
 

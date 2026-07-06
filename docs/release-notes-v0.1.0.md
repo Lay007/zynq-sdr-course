@@ -120,7 +120,7 @@ Representative executable labs generate figures and JSON metrics under `docs/ass
 
 ## Known limitations
 
-- The promoted Block 11 result still needs one short reviewer-friendly final report.
+- The filled Block 11/12 implementation report still needs repeatable board and external RF results.
 - External measured packages should keep improving through manifests, plots, metrics and limitations.
 - Some advanced labs are roadmap-style and will continue to mature after this first release.
 - The course currently prioritizes deterministic scripts and CI-friendly artifacts over notebook-first interactivity.
@@ -129,8 +129,8 @@ Representative executable labs generate figures and JSON metrics under `docs/ass
 
 The next milestone should focus on:
 
-- one polished model-to-measurement report built from the strongest current evidence;
-- routed top-level FPGA resource and timing reports for the integrated design;
+- clean-boot BPSK/QPSK success-rate evidence linked from the filled implementation report;
+- bitstream-to-board correlation for the routed integrated design;
 - real or generated dataset manifests with analyzer outputs kept in sync;
 - model-vs-RTL comparison for CIC or another multirate DSP block;
 - more complete measurement reports with EVM, SNR, BER and uncertainty budgets;

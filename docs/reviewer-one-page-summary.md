@@ -23,7 +23,7 @@ python tools/run_local_ci.py --quick
 | Area | Evidence |
 |---|---|
 | DSP | Executable labs and generated plots |
-| FPGA | HDL examples, testbenches and CI smoke checks |
+| FPGA | 18 HDL tests plus routed integrated timing, utilization and route reports |
 | Data | IQ manifests and replay commands |
 | Documentation | Bilingual MkDocs course pages |
 | Reviewability | Status matrix, checklist and evidence index |
@@ -32,6 +32,6 @@ python tools/run_local_ci.py --quick
 
 | Gap | Expected improvement |
 |---|---|
-| Integrated reports | Add routed timing and utilization evidence. |
-| Demo dataset | Add a small manifest-backed replay package. |
-| Final project | Add one complete model-to-measurement report. |
+| Board repeatability | Correlate the routed bitstream with clean-boot BPSK/QPSK success rates. |
+| Measured QPSK dataset | Add a small publication-cleared manifest-backed RF package. |
+| Final project | Extend the filled implementation report with external BER/EVM/SNR evidence. |

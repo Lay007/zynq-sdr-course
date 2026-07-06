@@ -30,8 +30,8 @@ This matrix shows what each course block should contain before it can be conside
 
 ## Interpretation notes
 
-- Block 11 is no longer empty: it has a long executable bring-up chain, a promoted internal loopback result and monitor/replay tooling. It remains `🟡` in several columns because the course still needs one polished final report that a reviewer can follow without reading the whole bring-up history.
-- Block 12 has templates, rubrics and project briefs, but still needs one fully filled portfolio-grade example.
+- Block 11 is no longer empty: it has a long executable bring-up chain, a promoted internal loopback result, routed implementation evidence and monitor/replay tooling. It remains `🟡` in several columns because clean-boot repeatability and external QPSK measurement are still pending.
+- Block 12 now has a filled dual-modem implementation report alongside templates, rubrics and project briefs. The example remains below portfolio-ready until the pending board and RF gates are measured.
 - Blocks 05 and 09 are the strongest automation anchors today: they combine reusable checks, generated artifacts and CI coverage.
 
 ## Lab-level quality gates
@@ -65,17 +65,16 @@ This matrix shows what each course block should contain before it can be conside
 
 ### Batch C — final portfolio layer
 
-- Add final project brief.
-- Add final report template.
-- Add example engineering conclusion page.
-- Add screenshots of a finished report and generated figures.
+- Extend the filled implementation report with clean-boot success-rate evidence.
+- Add a publication-cleared RF dataset with BER/EVM/SNR figures.
+- Add screenshots of the finished measurement report and generated figures.
 
 ### Batch D — make Block 11 reviewer-friendly
 
-- Create one short model-to-measurement report from the best current evidence.
+- Extend the short implementation report into a complete external model-to-measurement proof.
 - Keep the detailed bring-up logs as background, not as the main reviewer path.
 - Add a one-page summary table: model, implementation, capture/evidence, metrics, conclusion and limitations.
-- Promote routed implementation reports for the exact integrated design.
+- Correlate the routed bitstream with the clean-boot board series.
 
 ## Review rule
 

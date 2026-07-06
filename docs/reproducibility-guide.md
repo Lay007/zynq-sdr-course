@@ -129,6 +129,16 @@ capture_name.json
 
 The metadata file should follow the [IQ recording metadata guide](iq-recording-metadata.md).
 
+## Vivado implementation evidence
+
+Vivado 2021.1 is the tested version for the XC7Z020 course design. A full rebuild can take tens of minutes:
+
+```powershell
+python tools/generate_integrated_vivado_reports.py --build
+```
+
+The command recreates the project, generates the bitstream and publishes normalized utilization, timing, clock and route reports under `reports/fpga/integrated_zynq_raw/`. It fails if metrics cannot be parsed, timing is not met or the design is not fully routed. The large generated bitstream remains local; its size and SHA256 are recorded in the metrics JSON.
+
 ## Pull request checklist
 
 Before merging a lab or course update, check:

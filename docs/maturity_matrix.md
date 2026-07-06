@@ -20,14 +20,14 @@ This page summarizes the maturity of the 12-block course track. The detailed sta
 | 02 | Signals and sampling | executable | Python labs, generated figures, sampling/aliasing tasks | Add C++ bridge and metadata-mistake replay examples. |
 | 03 | DSP basics | executable | FFT, FIR, mixing, decimation, MATLAB/C++ links | Add direct-vs-FFT convolution threshold demo and more fixed-point tables. |
 | 04 | Simulink and fixed-point | executable | Fixed-point references and BPSK Simulink models | Tighten the HDL Coder handoff constraints. |
-| 05 | FPGA / HDL flow | executable | Verilog testbenches, canonical vectors, HDL CI, BPSK chain | Promote routed integrated implementation reports. |
+| 05 | FPGA / HDL flow | executable | 18 HDL tests and a fully routed integrated Zynq implementation with timing closure | Correlate the generated bitstream with repeatable board operation. |
 | 06 | RF frontend and AD9363 | measured | RX-only observation, zero-IF lab, controlled tone evidence | Add gain/overload table and cabled measurement package. |
 | 07 | TX/RX chains | executable | DUC/DDC demos, loopback metrics models | Add measurement package and report-ready examples. |
 | 08 | Modulation and synchronization | executable | CFO, phase, timing, BER/EVM demos, OFDM mini-link | Add impairment sweeps and dashboard-style metric summaries. |
 | 09 | Recording and analysis tools | executable | CI16/CU8/CF32 readers, WAV IQ path, QPSK replay analysis | Keep dataset manifests and analyzer thresholds synchronized. |
 | 10 | KiCad and basic electronics | draft | RF safety, attenuator and schematic templates | Add measured bench photos and exported KiCad artifacts. |
 | 11 | Integrated SDR project | measured / portfolio-target | Runtime loopback result, monitor flow, Block 11 lab chain | Convert best evidence into one final model-to-measurement report. |
-| 12 | Final projects | draft / portfolio-target | Project briefs, rubric, report template and example skeleton | Fill one complete portfolio-ready final project report. |
+| 12 | Final projects | reviewable / portfolio-target | Filled dual-modem implementation report, project briefs, rubric and template | Add repeatable QPSK and external RF measurements. |
 
 ## Review rule
 

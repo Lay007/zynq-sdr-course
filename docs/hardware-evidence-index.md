@@ -24,6 +24,7 @@ Use the status values below:
 | Z7020 OOC FPGA summary | `reports/fpga/z7020-resource-summary-template.md` | synthetic | first curated resource/timing snapshot with board clock provenance |
 | Block 5 utilization summary | `reports/fpga/block5-utilization-summary.md` | synthetic | LUT/FF/DSP/BRAM usage for the four Block 5 HDL examples |
 | Block 5 timing summary | `reports/fpga/block5-timing-summary.md` | synthetic | 100 MHz OOC timing snapshot and limits |
+| Integrated Zynq implementation | `reports/fpga/integrated-zynq-implementation-summary.md` | reviewed | full synthesis, placement and routing: timing met and zero routing errors |
 | Block 5 latency/throughput notes | `reports/fpga/block5-latency-throughput-notes.md` | reviewed | one-cycle behaviour and streaming-rate notes from HDL testbenches |
 | Integrated SDR project labs | `docs/ru/labs/lab-11-7-axi-lite-bpsk-bringup.md` and following | synthetic | control-plane and burst-capture workflow now documented for lab execution |
 | Block 11 hardware bring-up summary | `docs/block11-hardware-bringup-summary.md` | measured | compact tracker for current integrated SDR hardware state, blocker and next experiments |
@@ -39,7 +40,7 @@ Use the status values below:
 | Real data policy | `docs/real-data-policy.md` | reviewed | prevents large binary data from bloating Git |
 | Experiment manifests | `experiments/` | synthetic | machine-checkable scenario descriptors |
 | IQ dataset descriptors | `datasets/` | template | use manifests and external storage when needed |
-| Final project reports | `reports/` | template | connect model, implementation and measurement |
+| Dual-modem final implementation report | `docs/final-project-dual-modem-implementation-report.md` | reviewed | connects model, RTL, routed implementation and current board evidence while marking open RF gates |
 
 ## Recommended hardware proof package
 
@@ -67,11 +68,10 @@ Minimum files for one experiment:
 
 The strongest next artifacts are:
 
-1. Routed top-level Vivado timing and utilization for the integrated Zynq design.
-2. Issue #25 remainder: a safe cabled loopback capture report with attenuation notes.
-3. Issue #26: a small validated QPSK dataset package.
-4. Issue #29: an AD9363 gain and large-signal characterization table.
-5. One final project report that connects model, HDL, capture and metrics.
+1. Issue #25 remainder: a safe cabled loopback capture report with attenuation notes.
+2. Issue #26: a small validated QPSK dataset package.
+3. Issue #29: an AD9363 gain and large-signal characterization table.
+4. Clean-boot correlation of the routed bitstream with repeatable BPSK/QPSK board results.
 
 ## Review rule
 

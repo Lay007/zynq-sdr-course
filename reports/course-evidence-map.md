@@ -9,9 +9,9 @@ This map gives reviewers a compact view of what is already backed by evidence an
 | Lab 1.0 learner result | `reports/lab1_0_rtl_sdr_observation_example.md` | Example report added | A student can see what a minimal first report should contain | Add screenshots/metrics references after analysis refresh |
 | Dataset manifest discipline | `tools/check_dataset_manifests.py`, `.github/workflows/dataset_manifests.yml` | Checker and CI workflow added | Git LFS pointers, generated-local manifests and metrics SHA256 fields can be checked automatically | Add more dataset-specific acceptance rules as datasets mature |
 | QPSK replay dataset | `datasets/demo_qpsk_capture/`, `tools/generate_demo_qpsk_dataset.py`, `tools/analyze_demo_qpsk_dataset.py` | Generated-local synthetic fixture with analyzer workflow | A legally clean deterministic QPSK CI16 dataset can be regenerated, plotted and threshold-checked | Keep analyzer thresholds and report text synchronized with generated metrics |
-| Block 5 HDL evidence | `reports/fpga/`, `blocks/block_05_fpga_hdl_flow/`, CI workflows | Available | RTL examples have testbenches, vectors and smoke coverage | Promote OOC evidence to routed integrated top-level reports |
+| Block 5 HDL evidence | `reports/fpga/`, `blocks/block_05_fpga_hdl_flow/`, CI workflows | Available | 18 RTL tests plus routed integrated timing, utilization and route evidence | Correlate the routed bitstream with repeatable board runs |
 | Zynq observation path | `datasets/lab6_6_zynq_rx_observation/` | Manifest/evidence path available | The hardware validation route is documented | Add more board-level measurements and clean replay artifacts |
-| Integrated project evidence | `docs/block11-hardware-bringup-summary.md`, `docs/end-to-end-bpsk-reference-report.md`, Block 11 labs | Measured internal proof plus external evidence path | The model-to-report route is present and the current promoted internal result is recorded | Compress the best evidence into one reviewer-friendly final report |
+| Integrated project evidence | `docs/final-project-dual-modem-implementation-report.md`, Block 11 labs | Reviewable implementation report plus measured internal proof | Model, HDL, routed implementation and current board evidence are connected without hiding pending RF gates | Add repeatable QPSK and external RF measurements |
 | Reviewer process | `docs/reviewer-checklist.md`, `docs/status.md`, `docs/lab-index.md` | Available | Reviewers can evaluate reproducibility, DSP, HDL and measurement evidence | Keep the status matrix synchronized after every promotion |
 
 ## Immediate quality gates
@@ -35,5 +35,5 @@ python tools/tasks.py hdl
 
 1. Add preview plots and metrics for the Lab 1.0 real-data captures.
 2. Keep the generated QPSK dataset, analyzer outputs and documentation synchronized.
-3. Add routed top-level FPGA resource/timing reports for the integrated design.
-4. Promote one board-level result into a complete final model-to-measurement report with plots, limits, reproduction commands and conclusions.
+3. Correlate the routed bitstream with repeatable clean-boot BPSK/QPSK board runs.
+4. Extend the filled implementation report with publication-cleared RF measurements.

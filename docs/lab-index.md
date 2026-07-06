@@ -19,14 +19,14 @@ This page provides a compact index of course labs. It is intentionally shorter t
 | 02 | 2.1-2.3 | sampling axis, aliasing and I/Q interpretation | ci / executable | add C++ bridge and metadata-error examples |
 | 03 | 3.1-3.7 | FFT, FIR, mixing, decimation, convolution and windows | partial ci / executable | add more canonical outputs |
 | 04 | 4.1-4.4 | fixed-point workflow and model handoff | partial ci / executable | tighten implementation handoff constraints |
-| 05 | 5.1-5.11 | streaming interfaces, RTL mapping and self-checking tests | ci / executable | promote integrated implementation reports |
+| 05 | 5.1-5.11 | streaming interfaces, RTL mapping, self-checking tests and routed evidence | ci / executable | correlate implementation with board runs |
 | 06 | 6.1-6.8 plus 6.9 extension | frontend setup, artifact interpretation and measurement preparation | partial ci + manual | add a reviewed measurement package |
 | 07 | 7.1-7.5 | chain architecture and link-level metrics | partial ci / executable | add measured examples |
 | 08 | 8.1-8.6 | synchronization, mini-link and coding comparison | ci / executable | add impairment sweeps and dashboards |
 | 09 | 9.1-9.5 | metadata, file readers and replay analysis | ci / executable | keep manifests and thresholds synchronized |
 | 10 | 10.1-10.4 | electronics, safety checklist and schematic mini-project | manual / report-oriented | add exported design artifacts |
-| 11 | 11.1-11.26 | integrated project workflow and bring-up evidence | manual + measured | compress best evidence into one reviewer-friendly report |
-| 12 | 12.1-12.4 | final project briefs, rubric and report templates | templates / rubric | fill one complete portfolio-ready example |
+| 11 | 11.1-11.27 | integrated project workflow and bring-up evidence | manual + measured | add repeatable clean-boot QPSK and external RF evidence |
+| 12 | 12.1-12.4 | final project briefs, rubric, templates and filled implementation report | reviewable / hardware pending | complete the open measurement gates |
 
 ## Numbering note
 

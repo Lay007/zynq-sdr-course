@@ -192,7 +192,7 @@ The next major proof points are:
 
 - repeatable clean-boot BPSK/QPSK hardware qualification with success-rate reporting;
 - a small publication-cleared measured QPSK IQ dataset beside the generated replay fixture;
-- routed top-level Vivado implementation reports for the integrated Zynq design;
+- clean-boot correlation of the routed dual-modem bitstream with repeatable board results;
 - complete QPSK or tone model-to-measurement final report.
 
 ---

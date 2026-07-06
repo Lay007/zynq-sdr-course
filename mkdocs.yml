@@ -76,6 +76,7 @@ nav:
       - "End-to-end tone demo report": end-to-end-tone-demo-report.md
       - "End-to-end BPSK reference report": end-to-end-bpsk-reference-report.md
       - "End-to-end QPSK hardware demo": end-to-end-qpsk-hardware-demo.md
+      - "Dual-modem final implementation report": final-project-dual-modem-implementation-report.md
       - "SDR measurement report template": sdr-measurement-report-template.md
       - "HDL smoke verification": verification/hdl_smoke.md
       - "Experiment manifests": experiment-manifests.md
