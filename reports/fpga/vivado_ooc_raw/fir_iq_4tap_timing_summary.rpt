@@ -1,9 +1,9 @@
 Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
-| Date         : Fri Jun 19 01:07:45 2026
-| Host         : WIN-F9DVUKQOSB0 running 64-bit major release  (build 9200)
-| Command      : report_timing_summary -delay_type max -max_paths 10 -file G:/Programs/zynq-sdr-course/reports/fpga/vivado_ooc_raw/fir_iq_4tap_timing_summary.rpt
+| Date         : normalized
+| Host         : normalized
+| Command      : report_timing_summary -delay_type max -max_paths 10 -file <output_dir>/fir_iq_4tap_timing_summary.rpt
 | Design       : fir_iq_4tap
 | Device       : 7z020-clg400
 | Speed File   : -2  PRODUCTION 1.12 2019-11-22
@@ -27,11 +27,11 @@ Timing Summary Report
   Borrow Time for Max Delay Exceptions       :  Yes
   Merge Timing Exceptions                    :  Yes
 
-  Corner  Analyze    Analyze    
-  Name    Max Paths  Min Paths  
-  ------  ---------  ---------  
-  Slow    Yes        Yes        
-  Fast    Yes        Yes        
+  Corner  Analyze    Analyze
+  Name    Max Paths  Min Paths
+  ------  ---------  ---------
+  Slow    Yes        Yes
+  Fast    Yes        Yes
 
 
 ------------------------------------------------------------------------------------------------
@@ -134,9 +134,9 @@ Table of Contents
 | ---------------------
 ------------------------------------------------------------------------------------------------
 
-    WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
-    -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
-     -0.125       -1.865                     32                   96        4.500        0.000                       0                   131  
+    WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
+    -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
+     -0.125       -1.865                     32                   96        4.500        0.000                       0                   131
 
 
 Timing constraints are not met.
@@ -149,7 +149,7 @@ Timing constraints are not met.
 
 Clock  Waveform(ns)       Period(ns)      Frequency(MHz)
 -----  ------------       ----------      --------------
-clk    {0.000 5.000}      10.000          100.000         
+clk    {0.000 5.000}      10.000          100.000
 
 
 ------------------------------------------------------------------------------------------------
@@ -157,9 +157,9 @@ clk    {0.000 5.000}      10.000          100.000
 | -----------------
 ------------------------------------------------------------------------------------------------
 
-Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
------             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
-clk                -0.125       -1.865                     32                   96        4.500        0.000                       0                   131  
+Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
+-----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
+clk                -0.125       -1.865                     32                   96        4.500        0.000                       0                   131
 
 
 ------------------------------------------------------------------------------------------------
@@ -167,8 +167,8 @@ clk                -0.125       -1.865                     32                   
 | -----------------
 ------------------------------------------------------------------------------------------------
 
-From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints  
-----------    --------          -------      -------  ---------------------  -------------------  
+From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints
+----------    --------          -------      -------  ---------------------  -------------------
 
 
 ------------------------------------------------------------------------------------------------
@@ -176,8 +176,8 @@ From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS
 | -----------------------
 ------------------------------------------------------------------------------------------------
 
-Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints  
-----------    ----------    --------          -------      -------  ---------------------  -------------------  
+Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints
+----------    ----------    --------          -------      -------  ---------------------  -------------------
 
 
 ------------------------------------------------------------------------------------------------
@@ -209,7 +209,7 @@ Slack (VIOLATED) :        -0.125ns  (required time - arrival time)
   Data Path Delay:        10.122ns  (logic 7.370ns (72.811%)  route 2.752ns (27.189%))
   Logic Levels:           20  (CARRY4=15 DSP48E1=2 LUT1=1 LUT2=1 LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -220,7 +220,7 @@ Slack (VIOLATED) :        -0.125ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r  
+                         (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
                          net (fo=132, unset)          0.787     0.787    clk
                          FDRE                                         r  xi2_reg[0]/C
@@ -287,18 +287,18 @@ Slack (VIOLATED) :        -0.125ns  (required time - arrival time)
                          FDRE                                         r  out_i_reg[15]/D
   -------------------------------------------------------------------    -------------------
 
-                         (clock clk rise edge)       10.000    10.000 r  
+                         (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=132, unset)          0.748    10.748    clk
                          FDRE                                         r  out_i_reg[15]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_D)        0.072    10.784    out_i_reg[15]
   -------------------------------------------------------------------
-                         required time                         10.784    
-                         arrival time                         -10.909    
+                         required time                         10.784
+                         arrival time                         -10.909
   -------------------------------------------------------------------
-                         slack                                 -0.125    
+                         slack                                 -0.125
 
 Slack (VIOLATED) :        -0.125ns  (required time - arrival time)
   Source:                 xq2_reg[0]/C
@@ -311,7 +311,7 @@ Slack (VIOLATED) :        -0.125ns  (required time - arrival time)
   Data Path Delay:        10.122ns  (logic 7.370ns (72.811%)  route 2.752ns (27.189%))
   Logic Levels:           20  (CARRY4=15 DSP48E1=2 LUT1=1 LUT2=1 LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -322,7 +322,7 @@ Slack (VIOLATED) :        -0.125ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r  
+                         (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
                          net (fo=132, unset)          0.787     0.787    clk
                          FDRE                                         r  xq2_reg[0]/C
@@ -389,18 +389,18 @@ Slack (VIOLATED) :        -0.125ns  (required time - arrival time)
                          FDRE                                         r  out_q_reg[15]/D
   -------------------------------------------------------------------    -------------------
 
-                         (clock clk rise edge)       10.000    10.000 r  
+                         (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=132, unset)          0.748    10.748    clk
                          FDRE                                         r  out_q_reg[15]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_D)        0.072    10.784    out_q_reg[15]
   -------------------------------------------------------------------
-                         required time                         10.784    
-                         arrival time                         -10.909    
+                         required time                         10.784
+                         arrival time                         -10.909
   -------------------------------------------------------------------
-                         slack                                 -0.125    
+                         slack                                 -0.125
 
 Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Source:                 xi2_reg[0]/C
@@ -413,7 +413,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Data Path Delay:        10.051ns  (logic 7.349ns (73.116%)  route 2.702ns (26.884%))
   Logic Levels:           21  (CARRY4=15 DSP48E1=2 LUT1=1 LUT2=2 LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -424,7 +424,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r  
+                         (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
                          net (fo=132, unset)          0.787     0.787    clk
                          FDRE                                         r  xi2_reg[0]/C
@@ -493,18 +493,18 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
                          FDRE                                         r  out_i_reg[0]/D
   -------------------------------------------------------------------    -------------------
 
-                         (clock clk rise edge)       10.000    10.000 r  
+                         (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=132, unset)          0.748    10.748    clk
                          FDRE                                         r  out_i_reg[0]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_D)        0.072    10.784    out_i_reg[0]
   -------------------------------------------------------------------
-                         required time                         10.784    
-                         arrival time                         -10.838    
+                         required time                         10.784
+                         arrival time                         -10.838
   -------------------------------------------------------------------
-                         slack                                 -0.054    
+                         slack                                 -0.054
 
 Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Source:                 xi2_reg[0]/C
@@ -517,7 +517,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Data Path Delay:        10.051ns  (logic 7.349ns (73.116%)  route 2.702ns (26.884%))
   Logic Levels:           21  (CARRY4=15 DSP48E1=2 LUT1=1 LUT2=2 LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -528,7 +528,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r  
+                         (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
                          net (fo=132, unset)          0.787     0.787    clk
                          FDRE                                         r  xi2_reg[0]/C
@@ -597,18 +597,18 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
                          FDRE                                         r  out_i_reg[10]/D
   -------------------------------------------------------------------    -------------------
 
-                         (clock clk rise edge)       10.000    10.000 r  
+                         (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=132, unset)          0.748    10.748    clk
                          FDRE                                         r  out_i_reg[10]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_D)        0.072    10.784    out_i_reg[10]
   -------------------------------------------------------------------
-                         required time                         10.784    
-                         arrival time                         -10.838    
+                         required time                         10.784
+                         arrival time                         -10.838
   -------------------------------------------------------------------
-                         slack                                 -0.054    
+                         slack                                 -0.054
 
 Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Source:                 xi2_reg[0]/C
@@ -621,7 +621,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Data Path Delay:        10.051ns  (logic 7.349ns (73.116%)  route 2.702ns (26.884%))
   Logic Levels:           21  (CARRY4=15 DSP48E1=2 LUT1=1 LUT2=2 LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -632,7 +632,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r  
+                         (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
                          net (fo=132, unset)          0.787     0.787    clk
                          FDRE                                         r  xi2_reg[0]/C
@@ -701,18 +701,18 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
                          FDRE                                         r  out_i_reg[11]/D
   -------------------------------------------------------------------    -------------------
 
-                         (clock clk rise edge)       10.000    10.000 r  
+                         (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=132, unset)          0.748    10.748    clk
                          FDRE                                         r  out_i_reg[11]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_D)        0.072    10.784    out_i_reg[11]
   -------------------------------------------------------------------
-                         required time                         10.784    
-                         arrival time                         -10.838    
+                         required time                         10.784
+                         arrival time                         -10.838
   -------------------------------------------------------------------
-                         slack                                 -0.054    
+                         slack                                 -0.054
 
 Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Source:                 xi2_reg[0]/C
@@ -725,7 +725,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Data Path Delay:        10.051ns  (logic 7.349ns (73.116%)  route 2.702ns (26.884%))
   Logic Levels:           21  (CARRY4=15 DSP48E1=2 LUT1=1 LUT2=2 LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -736,7 +736,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r  
+                         (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
                          net (fo=132, unset)          0.787     0.787    clk
                          FDRE                                         r  xi2_reg[0]/C
@@ -805,18 +805,18 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
                          FDRE                                         r  out_i_reg[12]/D
   -------------------------------------------------------------------    -------------------
 
-                         (clock clk rise edge)       10.000    10.000 r  
+                         (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=132, unset)          0.748    10.748    clk
                          FDRE                                         r  out_i_reg[12]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_D)        0.072    10.784    out_i_reg[12]
   -------------------------------------------------------------------
-                         required time                         10.784    
-                         arrival time                         -10.838    
+                         required time                         10.784
+                         arrival time                         -10.838
   -------------------------------------------------------------------
-                         slack                                 -0.054    
+                         slack                                 -0.054
 
 Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Source:                 xi2_reg[0]/C
@@ -829,7 +829,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Data Path Delay:        10.051ns  (logic 7.349ns (73.116%)  route 2.702ns (26.884%))
   Logic Levels:           21  (CARRY4=15 DSP48E1=2 LUT1=1 LUT2=2 LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -840,7 +840,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r  
+                         (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
                          net (fo=132, unset)          0.787     0.787    clk
                          FDRE                                         r  xi2_reg[0]/C
@@ -909,18 +909,18 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
                          FDRE                                         r  out_i_reg[13]/D
   -------------------------------------------------------------------    -------------------
 
-                         (clock clk rise edge)       10.000    10.000 r  
+                         (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=132, unset)          0.748    10.748    clk
                          FDRE                                         r  out_i_reg[13]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_D)        0.072    10.784    out_i_reg[13]
   -------------------------------------------------------------------
-                         required time                         10.784    
-                         arrival time                         -10.838    
+                         required time                         10.784
+                         arrival time                         -10.838
   -------------------------------------------------------------------
-                         slack                                 -0.054    
+                         slack                                 -0.054
 
 Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Source:                 xi2_reg[0]/C
@@ -933,7 +933,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Data Path Delay:        10.051ns  (logic 7.349ns (73.116%)  route 2.702ns (26.884%))
   Logic Levels:           21  (CARRY4=15 DSP48E1=2 LUT1=1 LUT2=2 LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -944,7 +944,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r  
+                         (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
                          net (fo=132, unset)          0.787     0.787    clk
                          FDRE                                         r  xi2_reg[0]/C
@@ -1013,18 +1013,18 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
                          FDRE                                         r  out_i_reg[14]/D
   -------------------------------------------------------------------    -------------------
 
-                         (clock clk rise edge)       10.000    10.000 r  
+                         (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=132, unset)          0.748    10.748    clk
                          FDRE                                         r  out_i_reg[14]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_D)        0.072    10.784    out_i_reg[14]
   -------------------------------------------------------------------
-                         required time                         10.784    
-                         arrival time                         -10.838    
+                         required time                         10.784
+                         arrival time                         -10.838
   -------------------------------------------------------------------
-                         slack                                 -0.054    
+                         slack                                 -0.054
 
 Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Source:                 xi2_reg[0]/C
@@ -1037,7 +1037,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Data Path Delay:        10.051ns  (logic 7.349ns (73.116%)  route 2.702ns (26.884%))
   Logic Levels:           21  (CARRY4=15 DSP48E1=2 LUT1=1 LUT2=2 LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -1048,7 +1048,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r  
+                         (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
                          net (fo=132, unset)          0.787     0.787    clk
                          FDRE                                         r  xi2_reg[0]/C
@@ -1117,18 +1117,18 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
                          FDRE                                         r  out_i_reg[1]/D
   -------------------------------------------------------------------    -------------------
 
-                         (clock clk rise edge)       10.000    10.000 r  
+                         (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=132, unset)          0.748    10.748    clk
                          FDRE                                         r  out_i_reg[1]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_D)        0.072    10.784    out_i_reg[1]
   -------------------------------------------------------------------
-                         required time                         10.784    
-                         arrival time                         -10.838    
+                         required time                         10.784
+                         arrival time                         -10.838
   -------------------------------------------------------------------
-                         slack                                 -0.054    
+                         slack                                 -0.054
 
 Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Source:                 xi2_reg[0]/C
@@ -1141,7 +1141,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
   Data Path Delay:        10.051ns  (logic 7.349ns (73.116%)  route 2.702ns (26.884%))
   Logic Levels:           21  (CARRY4=15 DSP48E1=2 LUT1=1 LUT2=2 LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -1152,7 +1152,7 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r  
+                         (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
                          net (fo=132, unset)          0.787     0.787    clk
                          FDRE                                         r  xi2_reg[0]/C
@@ -1221,18 +1221,18 @@ Slack (VIOLATED) :        -0.054ns  (required time - arrival time)
                          FDRE                                         r  out_i_reg[2]/D
   -------------------------------------------------------------------    -------------------
 
-                         (clock clk rise edge)       10.000    10.000 r  
+                         (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=132, unset)          0.748    10.748    clk
                          FDRE                                         r  out_i_reg[2]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_D)        0.072    10.784    out_i_reg[2]
   -------------------------------------------------------------------
-                         required time                         10.784    
-                         arrival time                         -10.838    
+                         required time                         10.784
+                         arrival time                         -10.838
   -------------------------------------------------------------------
-                         slack                                 -0.054    
+                         slack                                 -0.054
 
 
 
@@ -1276,6 +1276,3 @@ High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       
 High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500                out_i_reg[12]/C
 High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500                out_i_reg[13]/C
 High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500                out_i_reg[13]/C
-
-
-

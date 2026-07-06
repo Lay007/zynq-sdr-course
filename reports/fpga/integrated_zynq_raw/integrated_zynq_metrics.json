@@ -1,0 +1,30 @@
+{
+  "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+  "device": "7z020clg400-2",
+  "utilization": {
+    "lut": 13795,
+    "ff": 21780,
+    "bram_tiles": 4.0,
+    "dsp": 28
+  },
+  "timing": {
+    "wns_ns": 0.354,
+    "tns_ns": 0.0,
+    "failing_endpoints": 0,
+    "total_endpoints": 48851,
+    "timing_met": true
+  },
+  "route": {
+    "routable_nets": 29899,
+    "fully_routed_nets": 29899,
+    "routing_errors": 0,
+    "unrouted_nets": 0,
+    "fully_routed": true
+  },
+  "bitstream": {
+    "file_name": "system_top.bit",
+    "size_bytes": 2118912,
+    "sha256": "5e46cf4e23b5485aef759822a8deef541383ed8eba5171d24728a36f9cdd1b8d",
+    "committed": false
+  }
+}

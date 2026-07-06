@@ -26,6 +26,25 @@ MODULE_NAMES = (
 )
 
 
+def normalize_report_text(text: str, output_dir: Path) -> str:
+    """Remove host/time/path noise while preserving Vivado evidence content."""
+    text = re.sub(r"^\| Date\s*:.*$", "| Date         : normalized", text, flags=re.MULTILINE)
+    text = re.sub(r"^\| Host\s*:.*$", "| Host         : normalized", text, flags=re.MULTILINE)
+    normalized_dir = output_dir.as_posix()
+    windows_dir = str(output_dir).replace("\\", "/")
+    text = text.replace(normalized_dir, "<output_dir>").replace(windows_dir, "<output_dir>")
+    lines = [line.rstrip() for line in text.splitlines()]
+    while lines and not lines[-1]:
+        lines.pop()
+    return "\n".join(lines) + "\n"
+
+
+def normalize_reports(output_dir: Path) -> None:
+    for report_path in sorted(output_dir.glob("*.rpt")):
+        text = report_path.read_text(encoding="utf-8", errors="ignore")
+        report_path.write_text(normalize_report_text(text, output_dir), encoding="utf-8")
+
+
 def iter_vivado_candidates() -> list[Path]:
     candidates: list[Path] = []
 
@@ -178,6 +197,7 @@ def main() -> int:
     print(f"Vivado: {vivado_bin}")
     print(f"Output directory: {output_dir}")
     run_vivado(vivado_bin, output_dir, args.part, args.clock_period_ns)
+    normalize_reports(output_dir)
     metrics = parse_metrics(output_dir, args.part, args.clock_period_ns)
     metrics_path = output_dir / "block5_vivado_ooc_metrics.json"
     metrics_path.write_text(json.dumps(metrics, indent=2), encoding="utf-8")

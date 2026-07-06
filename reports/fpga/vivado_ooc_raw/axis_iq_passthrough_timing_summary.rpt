@@ -1,9 +1,9 @@
 Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
-| Date         : Fri Jun 19 01:08:32 2026
-| Host         : WIN-F9DVUKQOSB0 running 64-bit major release  (build 9200)
-| Command      : report_timing_summary -delay_type max -max_paths 10 -file G:/Programs/zynq-sdr-course/reports/fpga/vivado_ooc_raw/axis_iq_passthrough_timing_summary.rpt
+| Date         : normalized
+| Host         : normalized
+| Command      : report_timing_summary -delay_type max -max_paths 10 -file <output_dir>/axis_iq_passthrough_timing_summary.rpt
 | Design       : axis_iq_passthrough
 | Device       : 7z020-clg400
 | Speed File   : -2  PRODUCTION 1.12 2019-11-22
@@ -27,11 +27,11 @@ Timing Summary Report
   Borrow Time for Max Delay Exceptions       :  Yes
   Merge Timing Exceptions                    :  Yes
 
-  Corner  Analyze    Analyze    
-  Name    Max Paths  Min Paths  
-  ------  ---------  ---------  
-  Slow    Yes        Yes        
-  Fast    Yes        Yes        
+  Corner  Analyze    Analyze
+  Name    Max Paths  Min Paths
+  ------  ---------  ---------
+  Slow    Yes        Yes
+  Fast    Yes        Yes
 
 
 ------------------------------------------------------------------------------------------------
@@ -134,9 +134,9 @@ Table of Contents
 | ---------------------
 ------------------------------------------------------------------------------------------------
 
-    WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
-    -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
-      8.064        0.000                      0                   34        4.500        0.000                       0                    34  
+    WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
+    -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
+      8.064        0.000                      0                   34        4.500        0.000                       0                    34
 
 
 All user specified timing constraints are met.
@@ -149,7 +149,7 @@ All user specified timing constraints are met.
 
 Clock  Waveform(ns)       Period(ns)      Frequency(MHz)
 -----  ------------       ----------      --------------
-aclk   {0.000 5.000}      10.000          100.000         
+aclk   {0.000 5.000}      10.000          100.000
 
 
 ------------------------------------------------------------------------------------------------
@@ -157,9 +157,9 @@ aclk   {0.000 5.000}      10.000          100.000
 | -----------------
 ------------------------------------------------------------------------------------------------
 
-Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints  
------             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------  
-aclk                8.064        0.000                      0                   34        4.500        0.000                       0                    34  
+Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
+-----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
+aclk                8.064        0.000                      0                   34        4.500        0.000                       0                    34
 
 
 ------------------------------------------------------------------------------------------------
@@ -167,8 +167,8 @@ aclk                8.064        0.000                      0                   
 | -----------------
 ------------------------------------------------------------------------------------------------
 
-From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints  
-----------    --------          -------      -------  ---------------------  -------------------  
+From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints
+----------    --------          -------      -------  ---------------------  -------------------
 
 
 ------------------------------------------------------------------------------------------------
@@ -176,8 +176,8 @@ From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS
 | -----------------------
 ------------------------------------------------------------------------------------------------
 
-Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints  
-----------    ----------    --------          -------      -------  ---------------------  -------------------  
+Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints
+----------    ----------    --------          -------      -------  ---------------------  -------------------
 
 
 ------------------------------------------------------------------------------------------------
@@ -209,7 +209,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
   Data Path Delay:        1.725ns  (logic 0.665ns (38.551%)  route 1.060ns (61.449%))
   Logic Levels:           1  (LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -220,7 +220,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock aclk rise edge)       0.000     0.000 r  
+                         (clock aclk rise edge)       0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
                          net (fo=33, unset)           0.787     0.787    aclk
                          FDRE                                         r  m_axis_tvalid_reg/C
@@ -232,18 +232,18 @@ Slack (MET) :             8.064ns  (required time - arrival time)
                          FDRE                                         r  m_axis_tdata_reg[0]/CE
   -------------------------------------------------------------------    -------------------
 
-                         (clock aclk rise edge)      10.000    10.000 r  
+                         (clock aclk rise edge)      10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
                          net (fo=33, unset)           0.748    10.748    aclk
                          FDRE                                         r  m_axis_tdata_reg[0]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_CE)      -0.136    10.576    m_axis_tdata_reg[0]
   -------------------------------------------------------------------
-                         required time                         10.576    
-                         arrival time                          -2.512    
+                         required time                         10.576
+                         arrival time                          -2.512
   -------------------------------------------------------------------
-                         slack                                  8.064    
+                         slack                                  8.064
 
 Slack (MET) :             8.064ns  (required time - arrival time)
   Source:                 m_axis_tvalid_reg/C
@@ -256,7 +256,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
   Data Path Delay:        1.725ns  (logic 0.665ns (38.551%)  route 1.060ns (61.449%))
   Logic Levels:           1  (LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -267,7 +267,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock aclk rise edge)       0.000     0.000 r  
+                         (clock aclk rise edge)       0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
                          net (fo=33, unset)           0.787     0.787    aclk
                          FDRE                                         r  m_axis_tvalid_reg/C
@@ -279,18 +279,18 @@ Slack (MET) :             8.064ns  (required time - arrival time)
                          FDRE                                         r  m_axis_tdata_reg[10]/CE
   -------------------------------------------------------------------    -------------------
 
-                         (clock aclk rise edge)      10.000    10.000 r  
+                         (clock aclk rise edge)      10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
                          net (fo=33, unset)           0.748    10.748    aclk
                          FDRE                                         r  m_axis_tdata_reg[10]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_CE)      -0.136    10.576    m_axis_tdata_reg[10]
   -------------------------------------------------------------------
-                         required time                         10.576    
-                         arrival time                          -2.512    
+                         required time                         10.576
+                         arrival time                          -2.512
   -------------------------------------------------------------------
-                         slack                                  8.064    
+                         slack                                  8.064
 
 Slack (MET) :             8.064ns  (required time - arrival time)
   Source:                 m_axis_tvalid_reg/C
@@ -303,7 +303,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
   Data Path Delay:        1.725ns  (logic 0.665ns (38.551%)  route 1.060ns (61.449%))
   Logic Levels:           1  (LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -314,7 +314,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock aclk rise edge)       0.000     0.000 r  
+                         (clock aclk rise edge)       0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
                          net (fo=33, unset)           0.787     0.787    aclk
                          FDRE                                         r  m_axis_tvalid_reg/C
@@ -326,18 +326,18 @@ Slack (MET) :             8.064ns  (required time - arrival time)
                          FDRE                                         r  m_axis_tdata_reg[11]/CE
   -------------------------------------------------------------------    -------------------
 
-                         (clock aclk rise edge)      10.000    10.000 r  
+                         (clock aclk rise edge)      10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
                          net (fo=33, unset)           0.748    10.748    aclk
                          FDRE                                         r  m_axis_tdata_reg[11]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_CE)      -0.136    10.576    m_axis_tdata_reg[11]
   -------------------------------------------------------------------
-                         required time                         10.576    
-                         arrival time                          -2.512    
+                         required time                         10.576
+                         arrival time                          -2.512
   -------------------------------------------------------------------
-                         slack                                  8.064    
+                         slack                                  8.064
 
 Slack (MET) :             8.064ns  (required time - arrival time)
   Source:                 m_axis_tvalid_reg/C
@@ -350,7 +350,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
   Data Path Delay:        1.725ns  (logic 0.665ns (38.551%)  route 1.060ns (61.449%))
   Logic Levels:           1  (LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -361,7 +361,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock aclk rise edge)       0.000     0.000 r  
+                         (clock aclk rise edge)       0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
                          net (fo=33, unset)           0.787     0.787    aclk
                          FDRE                                         r  m_axis_tvalid_reg/C
@@ -373,18 +373,18 @@ Slack (MET) :             8.064ns  (required time - arrival time)
                          FDRE                                         r  m_axis_tdata_reg[12]/CE
   -------------------------------------------------------------------    -------------------
 
-                         (clock aclk rise edge)      10.000    10.000 r  
+                         (clock aclk rise edge)      10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
                          net (fo=33, unset)           0.748    10.748    aclk
                          FDRE                                         r  m_axis_tdata_reg[12]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_CE)      -0.136    10.576    m_axis_tdata_reg[12]
   -------------------------------------------------------------------
-                         required time                         10.576    
-                         arrival time                          -2.512    
+                         required time                         10.576
+                         arrival time                          -2.512
   -------------------------------------------------------------------
-                         slack                                  8.064    
+                         slack                                  8.064
 
 Slack (MET) :             8.064ns  (required time - arrival time)
   Source:                 m_axis_tvalid_reg/C
@@ -397,7 +397,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
   Data Path Delay:        1.725ns  (logic 0.665ns (38.551%)  route 1.060ns (61.449%))
   Logic Levels:           1  (LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -408,7 +408,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock aclk rise edge)       0.000     0.000 r  
+                         (clock aclk rise edge)       0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
                          net (fo=33, unset)           0.787     0.787    aclk
                          FDRE                                         r  m_axis_tvalid_reg/C
@@ -420,18 +420,18 @@ Slack (MET) :             8.064ns  (required time - arrival time)
                          FDRE                                         r  m_axis_tdata_reg[13]/CE
   -------------------------------------------------------------------    -------------------
 
-                         (clock aclk rise edge)      10.000    10.000 r  
+                         (clock aclk rise edge)      10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
                          net (fo=33, unset)           0.748    10.748    aclk
                          FDRE                                         r  m_axis_tdata_reg[13]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_CE)      -0.136    10.576    m_axis_tdata_reg[13]
   -------------------------------------------------------------------
-                         required time                         10.576    
-                         arrival time                          -2.512    
+                         required time                         10.576
+                         arrival time                          -2.512
   -------------------------------------------------------------------
-                         slack                                  8.064    
+                         slack                                  8.064
 
 Slack (MET) :             8.064ns  (required time - arrival time)
   Source:                 m_axis_tvalid_reg/C
@@ -444,7 +444,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
   Data Path Delay:        1.725ns  (logic 0.665ns (38.551%)  route 1.060ns (61.449%))
   Logic Levels:           1  (LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -455,7 +455,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock aclk rise edge)       0.000     0.000 r  
+                         (clock aclk rise edge)       0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
                          net (fo=33, unset)           0.787     0.787    aclk
                          FDRE                                         r  m_axis_tvalid_reg/C
@@ -467,18 +467,18 @@ Slack (MET) :             8.064ns  (required time - arrival time)
                          FDRE                                         r  m_axis_tdata_reg[14]/CE
   -------------------------------------------------------------------    -------------------
 
-                         (clock aclk rise edge)      10.000    10.000 r  
+                         (clock aclk rise edge)      10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
                          net (fo=33, unset)           0.748    10.748    aclk
                          FDRE                                         r  m_axis_tdata_reg[14]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_CE)      -0.136    10.576    m_axis_tdata_reg[14]
   -------------------------------------------------------------------
-                         required time                         10.576    
-                         arrival time                          -2.512    
+                         required time                         10.576
+                         arrival time                          -2.512
   -------------------------------------------------------------------
-                         slack                                  8.064    
+                         slack                                  8.064
 
 Slack (MET) :             8.064ns  (required time - arrival time)
   Source:                 m_axis_tvalid_reg/C
@@ -491,7 +491,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
   Data Path Delay:        1.725ns  (logic 0.665ns (38.551%)  route 1.060ns (61.449%))
   Logic Levels:           1  (LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -502,7 +502,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock aclk rise edge)       0.000     0.000 r  
+                         (clock aclk rise edge)       0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
                          net (fo=33, unset)           0.787     0.787    aclk
                          FDRE                                         r  m_axis_tvalid_reg/C
@@ -514,18 +514,18 @@ Slack (MET) :             8.064ns  (required time - arrival time)
                          FDRE                                         r  m_axis_tdata_reg[15]/CE
   -------------------------------------------------------------------    -------------------
 
-                         (clock aclk rise edge)      10.000    10.000 r  
+                         (clock aclk rise edge)      10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
                          net (fo=33, unset)           0.748    10.748    aclk
                          FDRE                                         r  m_axis_tdata_reg[15]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_CE)      -0.136    10.576    m_axis_tdata_reg[15]
   -------------------------------------------------------------------
-                         required time                         10.576    
-                         arrival time                          -2.512    
+                         required time                         10.576
+                         arrival time                          -2.512
   -------------------------------------------------------------------
-                         slack                                  8.064    
+                         slack                                  8.064
 
 Slack (MET) :             8.064ns  (required time - arrival time)
   Source:                 m_axis_tvalid_reg/C
@@ -538,7 +538,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
   Data Path Delay:        1.725ns  (logic 0.665ns (38.551%)  route 1.060ns (61.449%))
   Logic Levels:           1  (LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -549,7 +549,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock aclk rise edge)       0.000     0.000 r  
+                         (clock aclk rise edge)       0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
                          net (fo=33, unset)           0.787     0.787    aclk
                          FDRE                                         r  m_axis_tvalid_reg/C
@@ -561,18 +561,18 @@ Slack (MET) :             8.064ns  (required time - arrival time)
                          FDRE                                         r  m_axis_tdata_reg[16]/CE
   -------------------------------------------------------------------    -------------------
 
-                         (clock aclk rise edge)      10.000    10.000 r  
+                         (clock aclk rise edge)      10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
                          net (fo=33, unset)           0.748    10.748    aclk
                          FDRE                                         r  m_axis_tdata_reg[16]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_CE)      -0.136    10.576    m_axis_tdata_reg[16]
   -------------------------------------------------------------------
-                         required time                         10.576    
-                         arrival time                          -2.512    
+                         required time                         10.576
+                         arrival time                          -2.512
   -------------------------------------------------------------------
-                         slack                                  8.064    
+                         slack                                  8.064
 
 Slack (MET) :             8.064ns  (required time - arrival time)
   Source:                 m_axis_tvalid_reg/C
@@ -585,7 +585,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
   Data Path Delay:        1.725ns  (logic 0.665ns (38.551%)  route 1.060ns (61.449%))
   Logic Levels:           1  (LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -596,7 +596,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock aclk rise edge)       0.000     0.000 r  
+                         (clock aclk rise edge)       0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
                          net (fo=33, unset)           0.787     0.787    aclk
                          FDRE                                         r  m_axis_tvalid_reg/C
@@ -608,18 +608,18 @@ Slack (MET) :             8.064ns  (required time - arrival time)
                          FDRE                                         r  m_axis_tdata_reg[17]/CE
   -------------------------------------------------------------------    -------------------
 
-                         (clock aclk rise edge)      10.000    10.000 r  
+                         (clock aclk rise edge)      10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
                          net (fo=33, unset)           0.748    10.748    aclk
                          FDRE                                         r  m_axis_tdata_reg[17]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_CE)      -0.136    10.576    m_axis_tdata_reg[17]
   -------------------------------------------------------------------
-                         required time                         10.576    
-                         arrival time                          -2.512    
+                         required time                         10.576
+                         arrival time                          -2.512
   -------------------------------------------------------------------
-                         slack                                  8.064    
+                         slack                                  8.064
 
 Slack (MET) :             8.064ns  (required time - arrival time)
   Source:                 m_axis_tvalid_reg/C
@@ -632,7 +632,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
   Data Path Delay:        1.725ns  (logic 0.665ns (38.551%)  route 1.060ns (61.449%))
   Logic Levels:           1  (LUT3=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 ) 
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -643,7 +643,7 @@ Slack (MET) :             8.064ns  (required time - arrival time)
 
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
-                         (clock aclk rise edge)       0.000     0.000 r  
+                         (clock aclk rise edge)       0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
                          net (fo=33, unset)           0.787     0.787    aclk
                          FDRE                                         r  m_axis_tvalid_reg/C
@@ -655,18 +655,18 @@ Slack (MET) :             8.064ns  (required time - arrival time)
                          FDRE                                         r  m_axis_tdata_reg[18]/CE
   -------------------------------------------------------------------    -------------------
 
-                         (clock aclk rise edge)      10.000    10.000 r  
+                         (clock aclk rise edge)      10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
                          net (fo=33, unset)           0.748    10.748    aclk
                          FDRE                                         r  m_axis_tdata_reg[18]/C
-                         clock pessimism              0.000    10.748    
-                         clock uncertainty           -0.035    10.712    
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_CE)      -0.136    10.576    m_axis_tdata_reg[18]
   -------------------------------------------------------------------
-                         required time                         10.576    
-                         arrival time                          -2.512    
+                         required time                         10.576
+                         arrival time                          -2.512
   -------------------------------------------------------------------
-                         slack                                  8.064    
+                         slack                                  8.064
 
 
 
@@ -710,6 +710,3 @@ High Pulse Width  Slow    FDRE/C   n/a            0.500         5.000       4.50
 High Pulse Width  Fast    FDRE/C   n/a            0.500         5.000       4.500                m_axis_tdata_reg[12]/C
 High Pulse Width  Slow    FDRE/C   n/a            0.500         5.000       4.500                m_axis_tdata_reg[13]/C
 High Pulse Width  Fast    FDRE/C   n/a            0.500         5.000       4.500                m_axis_tdata_reg[13]/C
-
-
-

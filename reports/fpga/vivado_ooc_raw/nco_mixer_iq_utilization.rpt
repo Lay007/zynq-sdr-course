@@ -1,9 +1,9 @@
 Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
 -------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
-| Date         : Fri Jun 19 01:08:12 2026
-| Host         : WIN-F9DVUKQOSB0 running 64-bit major release  (build 9200)
-| Command      : report_utilization -file G:/Programs/zynq-sdr-course/reports/fpga/vivado_ooc_raw/nco_mixer_iq_utilization.rpt
+| Date         : normalized
+| Host         : normalized
+| Command      : report_utilization -file <output_dir>/nco_mixer_iq_utilization.rpt
 | Design       : nco_mixer_iq
 | Device       : 7z020clg400-2
 | Design State : Synthesized
@@ -171,5 +171,3 @@ Table of Contents
 +----------+------+
 | Ref Name | Used |
 +----------+------+
-
-
