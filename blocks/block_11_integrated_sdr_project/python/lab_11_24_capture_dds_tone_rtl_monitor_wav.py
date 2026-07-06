@@ -540,7 +540,11 @@ def write_manifest(
         description += " Runtime bridge start pulses were asserted during the capture to witness DAC-mux behavior."
 
     manifest = {
+        "manifest_kind": "capture-session",
+        "schema_version": 1,
         "dataset_id": dataset_id,
+        "version": 0.1,
+        "status": "local-only",
         "title": f"RTL-SDR monitor capture for {title_mode} DDS tone",
         "description": description,
         "storage": "local-workstation",
@@ -554,6 +558,13 @@ def write_manifest(
             "python blocks/block_09_recording_and_analysis_tools/python/lab_9_4_read_wav_iq_and_analyze.py "
             f"--manifest {repo_relative_or_str(manifest_path)}"
         ),
+        "source": "rtl-sdr-dds-tone-monitor-capture",
+        "analysis_targets": ["tone detection", "frequency error", "SNR", "spectrum"],
+        "quality_checks": {
+            "capture_completed": wav_path.is_file() and wav_path.stat().st_size > 0,
+            "offline_analysis_completed": False,
+        },
+        "license": "not-for-publication-until-reviewed",
         "processing": {
             "fft_length": 65536,
         },

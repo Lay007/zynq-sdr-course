@@ -24,7 +24,7 @@ LFS_POINTER_RE = re.compile(
 )
 SHA256_RE = re.compile(r"[0-9a-fA-F]{64}")
 
-REQUIRED_FIELDS = (
+DATASET_REQUIRED_FIELDS = (
     "dataset_id",
     "version",
     "status",
@@ -39,6 +39,38 @@ REQUIRED_FIELDS = (
     "quality_checks",
     "license",
 )
+
+CAPTURE_SESSION_REQUIRED_FIELDS = (
+    "dataset_id",
+    "title",
+    "description",
+    "storage",
+    "format",
+    "sample_rate_hz",
+    "center_frequency_hz",
+    "analysis_command",
+    "signal",
+    "notes",
+)
+
+TEMPLATE_REQUIRED_FIELDS = (
+    "dataset_id",
+    "version",
+    "status",
+    "title",
+    "description",
+    "storage",
+    "file_name",
+    "format",
+    "sample_rate_hz",
+    "source",
+    "analysis_targets",
+    "quality_checks",
+    "license",
+)
+
+CAPTURE_SESSION_STORAGE = {"local-workstation", "repo-generated"}
+MANIFEST_KINDS = {"dataset", "capture-session", "template"}
 
 
 class ManifestError(RuntimeError):
@@ -72,11 +104,53 @@ def read_lfs_pointer_or_digest(path: Path) -> tuple[str, int, str]:
     return hashlib.sha256(payload).hexdigest(), len(payload), "file-content"
 
 
-def require_fields(path: Path, data: dict[str, Any]) -> None:
-    missing = [field for field in REQUIRED_FIELDS if field not in data]
+def require_fields(path: Path, data: dict[str, Any], fields: tuple[str, ...]) -> None:
+    missing = [field for field in fields if field not in data]
     if missing:
         joined = ", ".join(missing)
         raise ManifestError(f"{path}: missing required fields: {joined}")
+
+
+def manifest_kind(path: Path, data: dict[str, Any]) -> str:
+    explicit = data.get("manifest_kind")
+    if explicit is not None:
+        kind = str(explicit)
+        if kind not in MANIFEST_KINDS:
+            expected = ", ".join(sorted(MANIFEST_KINDS))
+            raise ManifestError(f"{path}: manifest_kind must be one of: {expected}")
+        return kind
+    if ".template." in path.name or str(data.get("status", "")) == "template":
+        return "template"
+    if str(data.get("storage", "")) in CAPTURE_SESSION_STORAGE:
+        return "capture-session"
+    if str(data.get("status", "")) in {"local-only", "review-before-lfs"}:
+        return "capture-session"
+    return "dataset"
+
+
+def require_positive_number(path: Path, value: Any, context: str) -> None:
+    if not isinstance(value, (int, float)) or isinstance(value, bool) or value <= 0:
+        raise ManifestError(f"{path}: {context} must be a positive number")
+
+
+def validate_template_manifest(path: Path, data: dict[str, Any]) -> None:
+    require_fields(path, data, TEMPLATE_REQUIRED_FIELDS)
+    if str(data.get("status")) != "template":
+        raise ManifestError(f"{path}: template manifest must use status: template")
+
+
+def validate_capture_session_manifest(path: Path, data: dict[str, Any]) -> None:
+    require_fields(path, data, CAPTURE_SESSION_REQUIRED_FIELDS)
+    if str(data.get("storage")) not in CAPTURE_SESSION_STORAGE:
+        expected = ", ".join(sorted(CAPTURE_SESSION_STORAGE))
+        raise ManifestError(f"{path}: capture-session storage must be one of: {expected}")
+    if not data.get("local_path_hint_windows") and not data.get("file_name"):
+        raise ManifestError(f"{path}: capture-session requires local_path_hint_windows or file_name")
+    if not isinstance(data.get("analysis_command"), str) or not data["analysis_command"].strip():
+        raise ManifestError(f"{path}: capture-session requires a non-empty analysis_command")
+    if not isinstance(data.get("signal"), dict) or not data["signal"]:
+        raise ManifestError(f"{path}: capture-session signal must be a non-empty mapping")
+    require_positive_number(path, data.get("sample_rate_hz"), "sample_rate_hz")
 
 
 def require_sha256(path: Path, sha256: Any, context: str) -> str:
@@ -131,7 +205,16 @@ def validate_generated_local_manifest(path: Path, data: dict[str, Any]) -> None:
 
 def validate_manifest(path: Path) -> None:
     data = load_manifest(path)
-    require_fields(path, data)
+    kind = manifest_kind(path, data)
+    if kind == "template":
+        validate_template_manifest(path, data)
+        return
+    if kind == "capture-session":
+        validate_capture_session_manifest(path, data)
+        return
+
+    require_fields(path, data, DATASET_REQUIRED_FIELDS)
+    require_positive_number(path, data.get("sample_rate_hz"), "sample_rate_hz")
 
     storage = str(data.get("storage", ""))
     status = str(data.get("status", ""))

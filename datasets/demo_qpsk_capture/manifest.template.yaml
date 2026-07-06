@@ -1,56 +1,32 @@
-# Template for a small QPSK dataset used by Block 11/12 reports.
-# Keep raw captures outside Git when they are large. Commit only metadata,
-# checksums, small previews, and links to allowed external storage.
-
+# Canonical template for a shareable IQ dataset. Null values are intentional;
+# replace them before changing status from `template`.
+manifest_kind: template
+schema_version: 1
 dataset_id: demo_qpsk_capture_template
+version: 0.1
 status: template
-
-source:
-  type: synthetic_or_measured
-  storage: external_or_repository
-  uri: ""
-  license_or_sharing_note: ""
-
+title: QPSK capture template
+description: Template for a generated or measured QPSK IQ dataset.
+storage: external-or-git-lfs
+file_name: null
+format: ci16
+sample_rate_hz: null
+source: synthetic-or-measured
+analysis_targets:
+  - constellation
+  - spectrum
+  - EVM
+  - CFO
+quality_checks:
+  checksum_verified: false
+  metadata_reviewed: false
+license: replace-before-publication
 signal:
   modulation: QPSK
-  sample_rate_hz: null
-  symbol_rate_sps: null
+  symbol_rate_hz: null
   samples_per_symbol: null
-  center_or_baseband_reference_hz: null
-  iq_format: ci16
-  sample_count: null
-
-capture_or_generation:
-  date_utc: ""
-  operator: ""
-  hardware: ""
-  software_or_script: ""
-  commit: ""
-  notes: ""
-
-quality:
-  snr_db: null
-  evm_percent: null
-  ber: null
-  frequency_offset_hz: null
-  timing_offset_note: ""
-  constellation_preview: ""
-  spectrum_preview: ""
-
-files:
-  iq_file: ""
-  iq_sha256: ""
-  metadata_file: ""
-  summary_csv: ""
-  report_md: ""
-
-review:
-  status: template
-  reviewer: ""
-  limitations:
-    - "No measured data has been attached yet."
-  next_actions:
-    - "Fill signal parameters."
-    - "Add checksum for the IQ file or external artifact."
-    - "Generate constellation and spectrum previews."
-    - "Link the dataset from the relevant Block 11/12 report."
+  center_frequency_hz: null
+hardware: null
+sha256: replace_after_capture
+notes:
+  - Keep large raw captures outside Git until publication and license review are complete.

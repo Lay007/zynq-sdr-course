@@ -10,11 +10,30 @@ Real IQ recordings are valuable, but they can easily make a repository large, am
 - Do not publish captures with unclear spectrum origin, unknown frequency, or missing sample format.
 - Prefer reproducible synthetic examples for CI and public documentation.
 
+## Manifest kinds
+
+The checker distinguishes three contracts. Use `manifest_kind` explicitly for new files; older captures are classified from `storage` and the filename for compatibility.
+
+| Kind | Purpose | Required evidence |
+|---|---|---|
+| `dataset` | Fixed, reproducible input intended for replay or sharing | version, status, file reference, SHA256 when fixed, source, analysis targets, quality checks and license |
+| `capture-session` | Local bench result whose raw file is not yet published | local/repository file hint, capture settings, analysis command, signal description and notes |
+| `template` | Intentionally incomplete form for a future capture | all canonical top-level fields may contain null or placeholder values while `status: template` |
+
+New manifests start with:
+
+```yaml
+manifest_kind: dataset  # dataset, capture-session, or template
+schema_version: 1
+```
+
 ## Minimum manifest fields
 
 | Field | Meaning |
 |---|---|
 | `dataset_id` | Stable identifier used in docs and scripts. |
+| `version` | Manifest/data revision. |
+| `status` | `git-lfs`, `generated-local`, `manifest-only`, `local-only`, or `template`. |
 | `title` | Human-readable dataset title. |
 | `description` | What the recording contains and why it exists. |
 | `file_name` | Expected local file name after download. |
@@ -32,11 +51,16 @@ Real IQ recordings are valuable, but they can easily make a repository large, am
 | `gain` | RX/TX gain values when available. |
 | `license` | Dataset license or access limitation. |
 | `analysis_targets` | Expected plots, metrics or labs using the dataset. |
+| `quality_checks` | Machine-readable validation state and measured quality gates. |
 
 ## Example manifest
 
 ```yaml
+manifest_kind: dataset
+schema_version: 1
 dataset_id: lab09_ci16_tone_demo_v1
+version: 1.0
+status: external-url
 title: CI16 tone capture demo
 description: Short educational IQ recording containing a single narrowband tone for spectrum and metadata validation.
 storage: external-url
@@ -62,6 +86,9 @@ analysis_targets:
   - peak frequency detection
   - noise floor estimate
   - metadata parser test
+quality_checks:
+  checksum_verified: true
+  clipping_checked: true
 notes:
   - Use only after verifying the checksum.
   - Do not assume this recording is calibrated for absolute power measurements.

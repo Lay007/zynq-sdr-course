@@ -219,7 +219,11 @@ def write_manifest(
     report_path: Path,
 ) -> None:
     manifest = {
+        "manifest_kind": "capture-session",
+        "schema_version": 1,
         "dataset_id": dataset_id,
+        "version": 0.1,
+        "status": "local-only",
         "title": "RTL-SDR monitor capture for stock-shell ZynqSDR OTA BPSK",
         "description": (
             "Fresh local RTL-SDR stereo WAV IQ capture recorded while the stock-shell AD9361 helper "
@@ -236,6 +240,13 @@ def write_manifest(
             "python blocks/block_11_integrated_sdr_project/python/lab_11_20_read_rtl_wav_ota_bpsk_ber.py "
             f"--manifest {repo_relative_or_str(manifest_path)}"
         ),
+        "source": "rtl-sdr-monitor-capture",
+        "analysis_targets": ["BPSK frame detection", "BER", "EVM", "spectrum"],
+        "quality_checks": {
+            "capture_completed": wav_path.is_file() and wav_path.stat().st_size > 0,
+            "offline_analysis_completed": False,
+        },
+        "license": "not-for-publication-until-reviewed",
         "analysis": {
             "reference_metrics_json": repo_relative_or_str(args.reference_metrics_json.resolve()),
             "capture_report_json": repo_relative_or_str(report_path),

@@ -366,7 +366,11 @@ def write_manifest(
     args: argparse.Namespace,
 ) -> None:
     manifest = {
+        "manifest_kind": "capture-session",
+        "schema_version": 1,
         "dataset_id": dataset_id,
+        "version": 0.1,
+        "status": "local-only",
         "title": "RTL-SDR monitor capture for runtime bridge_txrx_mux OTA BPSK",
         "description": (
             "Fresh local RTL-SDR stereo WAV IQ capture recorded after the runtime bridge_txrx_mux "
@@ -384,6 +388,13 @@ def write_manifest(
             "python blocks/block_11_integrated_sdr_project/python/lab_11_20_read_rtl_wav_ota_bpsk_ber.py "
             f"--manifest {repo_relative_or_str(manifest_path)}"
         ),
+        "source": "rtl-sdr-runtime-pl-monitor-capture",
+        "analysis_targets": ["BPSK frame detection", "BER", "EVM", "spectrum"],
+        "quality_checks": {
+            "capture_completed": wav_path.is_file() and wav_path.stat().st_size > 0,
+            "offline_analysis_completed": False,
+        },
+        "license": "not-for-publication-until-reviewed",
         "analysis": {
             "reference_config_json": repo_relative_or_str(REFERENCE_CONFIG_JSON),
             "reference_sample_rate_hz": waveform_cfg.sample_rate_hz,

@@ -677,6 +677,8 @@ def write_manifest(
     detection: DetectionResult,
 ) -> None:
     manifest = {
+        "manifest_kind": "capture-session",
+        "schema_version": 1,
         "dataset_id": dataset_id,
         "version": 0.1,
         "status": "review-before-lfs",
@@ -699,6 +701,9 @@ def write_manifest(
             "python blocks/block_09_recording_and_analysis_tools/python/lab_9_2_read_ci16_iq_and_analyze.py "
             f"--iq {repo_relative_or_str(capture_path)} --sample-rate-hz {cfg.sample_rate_hz}"
         ),
+        "source": "zynq-ad9361-stock-shell-bpsk-ota",
+        "analysis_targets": ["frame detection", "BER", "EVM", "spectrum"],
+        "license": "not-for-publication-until-reviewed",
         "handoff": {
             "tx_reference_ci16": repo_relative_or_str(tx_reference_path),
             "metrics_json": repo_relative_or_str(metrics_path),

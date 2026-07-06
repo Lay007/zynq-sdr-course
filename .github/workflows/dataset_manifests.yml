@@ -26,7 +26,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: python -m pip install numpy pyyaml
@@ -38,8 +38,4 @@ jobs:
         run: git diff --exit-code -- datasets/demo_qpsk_capture/manifest.yaml datasets/demo_qpsk_capture/metrics.json
 
       - name: Validate dataset manifests
-        run: |
-          python tools/check_dataset_manifests.py || {
-            echo "::warning::Dataset manifest checker reported a non-QPSK issue. QPSK metadata freshness remains enforced above."
-            exit 0
-          }
+        run: python tools/check_dataset_manifests.py
