@@ -58,10 +58,10 @@ This matrix shows what each course block should contain before it can be conside
 
 ### Batch B — connect RF hardware
 
-- Add AD9363 frequency-plan page.
-- Add gain and bandwidth setup checklist.
-- Add RTL-SDR/HDSDR capture guide.
-- Add one example metadata JSON file for a real or synthetic IQ capture.
+- Keep the existing AD9363 frequency-plan, gain/bandwidth checklist and RTL-SDR capture guide synchronized.
+- Run the safe cabled loopback and AD9363 gain/overload characterization.
+- Add a publication-reviewed measured QPSK capture beside the existing deterministic synthetic replay.
+- Record clean-boot BPSK/QPSK success rates instead of promoting a best-of-N attempt.
 
 ### Batch C — final portfolio layer
 

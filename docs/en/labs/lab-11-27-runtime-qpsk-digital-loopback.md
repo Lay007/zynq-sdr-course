@@ -1,0 +1,1 @@
+--8<-- "blocks/block_11_integrated_sdr_project/lab_11_27_runtime_qpsk_digital_loopback.md"

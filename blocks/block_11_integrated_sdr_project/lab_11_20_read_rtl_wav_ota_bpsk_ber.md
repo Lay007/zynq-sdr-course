@@ -73,15 +73,17 @@ layout      = I[0] Q[0] I[1] Q[1] ...
 | Metric | Target |
 |---|---|
 | BER total | ≤ 1 % (or 0 for clean OTA) |
-| EVM | record value; < 40 % is typical for 915 MHz short-range OTA |
+| EVM | record and compare against the matched baseline; no universal pass threshold is used until amplitude/timing normalization is calibrated |
 | Frame detected | yes |
 
 ## Live result on 2026-06-23
 
 Applied to a WAV recording captured during the stock-shell BPSK OTA run
 (Lab 11.21), the offline demodulator detected the preamble, recovered
-281 payload bits, and measured BER = 0 / EVM ≈ 55 %. The EVM is consistent
-with the on-board AD9361 self-test result from Lab 11.14 (EVM = 54.98 %).
+281 payload bits, and measured BER = 0 / EVM ≈ 55 %. This passes the bit-recovery
+gate, while the high EVM remains a diagnostic result rather than a modulation-quality
+pass. It matches the on-board AD9361 baseline from Lab 11.14 (EVM = 54.98 %), so
+future captures should be compared against that baseline until normalization is revised.
 
 ## Report checklist
 

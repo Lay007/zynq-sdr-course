@@ -8,6 +8,18 @@ edit_uri: edit/main/
 docs_dir: docs
 site_dir: site
 
+# Compatibility aliases kept for relative links inside shared Block 11 snippets.
+# They intentionally do not appear in the learner navigation.
+not_in_nav: |
+  en/labs/lab_11_19_runtime_bridge_txrx_self_timed_bringup.md
+  en/labs/lab_11_22_capture_runtime_pl_rtl_monitor_wav.md
+  en/labs/lab_11_24_capture_dds_tone_rtl_monitor_wav.md
+  en/labs/lab_11_25_stock_vs_runtime_dds_tone_sweep.md
+  ru/labs/lab_11_19_runtime_bridge_txrx_self_timed_bringup.md
+  ru/labs/lab_11_22_capture_runtime_pl_rtl_monitor_wav.md
+  ru/labs/lab_11_24_capture_dds_tone_rtl_monitor_wav.md
+  ru/labs/lab_11_25_stock_vs_runtime_dds_tone_sweep.md
+
 theme:
   name: material
   language: ru
@@ -84,6 +96,7 @@ nav:
       - "Course status": status.md
       - "Student path": student-path.md
       - "Reviewer path": reviewer-path.md
+      - "Reviewer one-page summary": reviewer-one-page-summary.md
       - "Reviewer acceptance checklist": reviewer-checklist.md
       - "Instructor guide": instructor-guide.md
       - "Quality roadmap": course-quality-roadmap.md
@@ -106,6 +119,7 @@ nav:
       - "Student CI grading guide": student-ci-grading-guide.md
       - "Hardware validation backlog": hardware-validation-backlog.md
       - "Hardware evidence index": hardware-evidence-index.md
+      - "Block 11 hardware bring-up summary": block11-hardware-bringup-summary.md
       - "Block 5 FPGA evidence": block5-fpga-evidence.md
       - "IQ demo dataset manifest": iq-demo-dataset-manifest.md
       - "FPGA resource report template": fpga-resource-report-template.md
@@ -123,6 +137,8 @@ nav:
       - "Лабораторный трек": ru/lab-track.md
       - "Медиа-гайд": ru/media-guide.md
       - "Статус курса": ru/status.md
+      - "Проектирование debug-сигналов": ru/debug-waveform-design.md
+      - "Аппаратная отладка по проекту": ru/hardware-debug-by-design.md
       - "Блоки курса":
           - "01. Введение в SDR": ru/blocks/01-intro.md
           - "02. Сигналы и дискретизация": ru/blocks/02-signals-and-sampling.md
@@ -201,6 +217,7 @@ nav:
           - "Lab 8.4 — End-to-end sync chain": ru/labs/lab-8-4-end-to-end-sync-chain.md
           - "Lab 8.5 — OFDM mini link": ru/labs/lab-8-5-ofdm-mini-link.md
           - "Lab 8.6 — Channel coding BER comparison": ru/labs/lab-8-6-channel-coding-ber-comparison.md
+          - "Lab 8.7 — SNR vs BER traps": ru/labs/lab-8-7-snr-vs-ber-traps.md
       - "Лаборатории Block 9":
           - "Lab 9.1 — IQ file format and metadata": ru/labs/lab-9-1-iq-file-format-and-metadata.md
           - "Lab 9.2 — Read CI16 IQ and analyze spectrum": ru/labs/lab-9-2-read-ci16-iq-and-analyze.md
@@ -238,6 +255,7 @@ nav:
           - "Lab 11.24 — Capture DDS tone RTL-SDR monitor WAV": ru/labs/lab-11-24-capture-dds-tone-rtl-monitor-wav.md
           - "Lab 11.25 — Stock vs runtime DDS tone sweep": ru/labs/lab-11-25-stock-vs-runtime-dds-tone-sweep.md
           - "Lab 11.26 — Runtime PL BPSK OTA: DDS-bypass fix": ru/labs/lab-11-26-runtime-dds-bypass-bpsk-ota.md
+          - "Lab 11.27 — Runtime QPSK digital-loopback BER": ru/labs/lab-11-27-runtime-qpsk-digital-loopback.md
       - "Проекты Block 12":
           - "Project 12.1 — QPSK modem final project": ru/labs/project-12-1-qpsk-modem-final-project.md
           - "Project 12.2 — RF capture analysis final project": ru/labs/project-12-2-rf-capture-analysis-final-project.md
@@ -248,6 +266,8 @@ nav:
       - "Course structure": en/course-structure.md
       - "Lab track": en/lab-track.md
       - "Media guide": en/media-guide.md
+      - "Debug waveform design": en/debug-waveform-design.md
+      - "Hardware debug by design": en/hardware-debug-by-design.md
       - "Course blocks":
           - "01. Intro to SDR": en/blocks/01-intro.md
           - "02. Signals and sampling": en/blocks/02-signals-and-sampling.md
@@ -363,6 +383,7 @@ nav:
           - "Lab 11.24 — Capture DDS tone RTL-SDR monitor WAV": en/labs/lab-11-24-capture-dds-tone-rtl-monitor-wav.md
           - "Lab 11.25 — Stock vs runtime DDS tone sweep": en/labs/lab-11-25-stock-vs-runtime-dds-tone-sweep.md
           - "Lab 11.26 — Runtime PL BPSK OTA: DDS-bypass fix": en/labs/lab-11-26-runtime-dds-bypass-bpsk-ota.md
+          - "Lab 11.27 — Runtime QPSK digital-loopback BER": en/labs/lab-11-27-runtime-qpsk-digital-loopback.md
       - "Block 12 projects":
           - "Project 12.1 — QPSK modem final project": en/labs/project-12-1-qpsk-modem-final-project.md
           - "Project 12.2 — RF capture analysis final project": en/labs/project-12-2-rf-capture-analysis-final-project.md

@@ -15,6 +15,8 @@ Block 11 is the integrated SDR project track. Its goal is to connect the referen
 | Fallback reference path | reviewed | The fallback path has a zero-error reference result. |
 | Runtime overlay control path | reviewed | Register readback and re-init helpers show that the overlay is alive after reload. |
 | Runtime on-chip loopback | measured | The promoted loopback point reaches zero errors for the current deterministic frame. |
+| QPSK RTL and bridge path | executable | Canonical simulation reaches BER=0 for 140 symbols / 280 bits through the dual-modem bridge. |
+| Runtime QPSK helper | hardware pending | Lab 11.27 automates clean-boot offset/retry sweeps, but no board JSON is promoted yet. |
 | External measured proof package | hardware pending | The remaining step is a repeatable measured package with matched settings, metadata, plots and limitations. |
 
 ## Status alignment note
@@ -33,7 +35,8 @@ The earlier version of this page described an old blocker with high error rate a
 | P0 | Add a controlled cabled measurement variant | attenuation, gain settings and metric table |
 | P1 | Compare baseline and runtime captures with matched monitor settings | paired manifests, plots and conclusions |
 | P1 | Promote routed implementation reports for the integrated design | timing, utilization and clocking context |
-| P2 | Extend the same flow to QPSK | dataset manifest, constellation, EVM/SNR summary |
+| P0 | Run the Lab 11.27 clean-boot QPSK series | full attempt table, success rate, configuration and recovery proof |
+| P2 | Extend QPSK from digital loopback to measured RF | dataset manifest, constellation, EVM/SNR and BER summary |
 | P2 | Promote the best result into a final project report | model-to-measurement report with limitations |
 
 ## Done criteria

@@ -29,13 +29,13 @@
 | 02 | Сигналы и дискретизация | Executable | Python-лабы и сгенерированные фигуры | Добавить MATLAB/C++-варианты и примеры воспроизведения ошибок в метаданных. |
 | 03 | Базовые DSP-операции | Executable | Python / MATLAB / C++ path | Добавить демонстрацию порога прямой свёртки против FFT и больше эталонов. |
 | 04 | Simulink и fixed-point | Executable | Python/MATLAB references и BPSK `.slx` models | Сильнее ограничить BPSK-маршрут в Simulink под HDL Coder handoff. |
-| 05 | FPGA / HDL flow | Executable | Verilog testbenches, HDL CI, timing-clean BPSK BER baseline | Заменить coarse acquisition prefix на более избирательный timing-safe детектор и продвинуть routed-отчёты. |
+| 05 | FPGA / HDL flow | Executable | Канонический набор из 18 HDL-тестов: BPSK/QPSK BER=0, timing recovery, AXI-Lite, dual-modem bridge и CDC FIFO | Добавить routed-отчёты интегрированного top-level. |
 | 06 | RF frontend и AD9363 | Measured | RX-only и tone capture baselines | Построить таблицу усиления AD9363 и проверить безопасный cabled loopback. |
 | 07 | TX/RX тракты | Executable | DUC/DDC demos и loopback models | Добавить пакет измерений. |
 | 08 | Модуляция и синхронизация | Executable | CFO, phase/timing и BER/EVM demos | Добавить sweeps по искажениям и дашборды BER/EVM. |
-| 09 | Инструменты записи и анализа | Executable | CI16/CU8/CF32 readers и recording CI | Обновить manifest датасета QPSK реальной checksum или синтетическим генератором. |
+| 09 | Инструменты записи и анализа | Executable | CI16/CU8/CF32/WAV readers, fail-closed manifest CI и детерминированный synthetic QPSK replay | Добавить прошедший publication review реальный QPSK-захват. |
 | 10 | KiCad и базовая электроника | Draft | Calculators и templates | Добавить фото макета и экспорты из KiCad. |
-| 11 | Интегрированный SDR-проект | On-chip BER=0 (loopback) | On-chip PL BPSK BER=0 (received=281, total_errors=0) через gap-free TX + 8-битный frame-sync; TX/RX raw-sample tap + RTL-SDR доказательства | Детерминированный per-burst BER=0 через multi-phase diversity RX (проверено в модели; Gardner тут не помогает); затем QPSK-модем и итоговый отчёт. |
+| 11 | Интегрированный SDR-проект | BPSK measured; QPSK executable | On-chip PL BPSK BER=0 (281 бит); QPSK RTL и dual-modem bridge BER=0 для 280 бит; доступен runtime helper Lab 11.27 | Измерить clean-boot success rate BPSK/QPSK, интегрировать детерминированный выбор фазы и выпустить итоговый отчёт. |
 | 12 | Итоговые проекты | Draft | Templates, rubric и example skeleton | Заполнить один полный portfolio-ready итоговый отчёт. |
 
 ## Недавно добавленные артефакты для усиления курса

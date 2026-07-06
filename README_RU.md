@@ -189,8 +189,8 @@ python tools/run_local_ci.py
 
 Следующие важные proof points:
 
-- валидированные аппаратные захваты Zynq/AD9363;
-- небольшой publication-cleared QPSK или tone IQ demo dataset;
+- повторяемая clean-boot квалификация BPSK/QPSK с отчётом по доле успешных запусков;
+- небольшой прошедший publication review измеренный QPSK dataset рядом с generated replay fixture;
 - routed top-level Vivado implementation reports для интегрированного Zynq-дизайна;
 - полный QPSK или tone model-to-measurement отчёт.
 

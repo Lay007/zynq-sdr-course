@@ -242,12 +242,41 @@ def summarize_sweep(sweep: list[dict[str, Any]], symbol_count: int) -> dict[str,
     else:
         conclusion = "QPSK digital loopback did not reach a full frame at any swept start_offset."
 
+    attempts_by_offset: list[dict[str, Any]] = []
+    for offset in sorted({int(row["start_offset"]) for row in sweep}):
+        attempts = [row for row in sweep if int(row["start_offset"]) == offset]
+        full_count = sum(int(row.get("received_symbols") or 0) == symbol_count for row in attempts)
+        zero_count = sum(
+            int(row.get("received_symbols") or 0) == symbol_count
+            and int(row.get("total_bit_errors") or 0) == 0
+            for row in attempts
+        )
+        attempts_by_offset.append(
+            {
+                "start_offset": offset,
+                "attempts": len(attempts),
+                "full_frames": full_count,
+                "zero_error_frames": zero_count,
+                "zero_error_rate": zero_count / len(attempts),
+            }
+        )
+
+    total_attempts = len(sweep)
+    zero_error_attempts = len(zero)
+    if zero:
+        conclusion += f" Repeatability: {zero_error_attempts}/{total_attempts} attempts reached BER=0."
+
     return {
         "mode": "qpsk_digital_loopback",
         "symbol_count": symbol_count,
         "bit_count": 2 * symbol_count,
-        "full_frame_offsets": [int(r["start_offset"]) for r in full],
-        "zero_error_offsets": [int(r["start_offset"]) for r in zero],
+        "total_attempts": total_attempts,
+        "full_frame_attempts": len(full),
+        "zero_error_attempts": zero_error_attempts,
+        "zero_error_rate": zero_error_attempts / total_attempts if total_attempts else 0.0,
+        "full_frame_offsets": sorted({int(r["start_offset"]) for r in full}),
+        "zero_error_offsets": sorted({int(r["start_offset"]) for r in zero}),
+        "attempts_by_offset": attempts_by_offset,
         "best": best,
         "conclusion": conclusion,
     }

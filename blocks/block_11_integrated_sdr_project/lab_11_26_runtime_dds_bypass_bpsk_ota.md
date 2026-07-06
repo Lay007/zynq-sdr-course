@@ -1,5 +1,19 @@
 # Lab 11.26 - Runtime PL BPSK OTA: DDS-bypass fix and first air-path validation
 
+## Current status (supersedes intermediate conclusions below)
+
+This page preserves the investigation chronology. The promoted result is:
+
+| Layer | Current evidence | Status |
+|---|---|---|
+| PL TX to DAC | DMA tone and BPSK burst power traces prove that the bridge reaches the AD9361 DAC | confirmed |
+| RF witness | RTL-SDR observes the expected burst energy and spectrum shape | confirmed |
+| External RTL-SDR BER | Burst duty cycle and monitor synchronization do not yet provide a repeatable BER result | inconclusive |
+| On-chip BPSK digital loopback | 281 received bits, zero total errors after frame-sync correction | confirmed, but sampling-phase repeatability remains hardware-pending |
+| Multi-phase RX | Model shows deterministic selection is possible across captured phase variants | model-verified, not yet integrated in RTL |
+
+Do not treat the earlier 35–50% BER observations below as the current modem result; they are retained because each one motivated a specific bridge, FIFO, timing or frame-sync correction. The next board gate is a fixed clean-boot repetition series, not another one-off BER=0 run.
+
 ## Objective / Цель
 
 **EN:** Identify why the runtime PL BPSK signal was not detectable by the external

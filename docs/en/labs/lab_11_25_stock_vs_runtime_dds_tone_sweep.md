@@ -1,3 +1,3 @@
 # Lab 11.25
 
-Compatibility page.
+Compatibility page for local links. The canonical page uses hyphens in its filename.
