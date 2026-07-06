@@ -10,6 +10,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from bench_config import (
+    DEFAULT_HOST,
+    DEFAULT_IIO_URI,
+    DEFAULT_PASSWORD,
+    DEFAULT_PORT,
+    DEFAULT_TIMEOUT_S,
+    DEFAULT_USER,
+)
 from lab_11_7_axi_lite_bpsk_bringup import ParamikoCommandRunner, parse_int
 from lab_11_8_axi_gpreg_bpsk_bringup import SshDevMemRegisterIo, register_snapshot
 from lab_11_10_iio_burst_capture import find_iio_readdev_bin
@@ -31,12 +39,6 @@ from runtime_rx_common import force_rx_common_ctrl_request
 
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_BIT_BIN_PATH = ROOT / "tmp" / "bridge_rx_only.wordswap.bit.bin"
-DEFAULT_HOST = "192.168.40.1"
-DEFAULT_USER = "root"
-DEFAULT_PASSWORD = "analog"
-DEFAULT_PORT = 22
-DEFAULT_TIMEOUT_S = 10.0
-DEFAULT_IIO_URI = "ip:192.168.40.1"
 DEFAULT_GPREG_BASE_ADDR = 0x79040000
 DEFAULT_ADC_DMA_BASE_ADDR = 0x7C400000
 DEFAULT_REMOTE_FIRMWARE_NAME = "course_bpsk_fmcomms2_zc702_runtime.bit.bin"

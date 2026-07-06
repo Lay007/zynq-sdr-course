@@ -51,12 +51,19 @@ from lab_11_14_stock_shell_bpsk_ota import (  # noqa: E402
     transmit_cyclic_buffer,
 )
 from lab_6_3_probe_iio_context import load_iio_module  # noqa: E402
+from bench_config import (  # noqa: E402
+    DEFAULT_HOST as DEFAULT_SSH_HOST,
+    DEFAULT_IIO_URI as DEFAULT_URI,
+    DEFAULT_PASSWORD as DEFAULT_SSH_PASSWORD,
+    DEFAULT_PORT as DEFAULT_SSH_PORT,
+    DEFAULT_TIMEOUT_S as DEFAULT_SSH_TIMEOUT_S,
+    DEFAULT_USER as DEFAULT_SSH_USER,
+)
 
 
 DOC_ASSET_DIR = ROOT / "docs" / "assets"
 DATASET_DIR = ROOT / "datasets" / "lab11_20_rtl_sdr_ota_bpsk"
 TMP_DIR = ROOT / "tmp"
-DEFAULT_URI = "ip:192.168.40.1"
 DEFAULT_RTL_SAMPLE_RATE_HZ = 2_400_000
 DEFAULT_RTL_CAPTURE_DURATION_S = 1.6
 DEFAULT_RTL_TUNER_GAIN_DB10 = 200
@@ -73,11 +80,6 @@ DEFAULT_RTL_DLL_PATH = (
     / "rtlsdr.dll"
 )
 DEFAULT_REFERENCE_METRICS_JSON = ROOT / "docs" / "assets" / "lab114_stock_shell_bpsk_ota_live_20260623d_metrics.json"
-DEFAULT_SSH_HOST = "192.168.40.1"
-DEFAULT_SSH_USER = "root"
-DEFAULT_SSH_PASSWORD = "analog"
-DEFAULT_SSH_PORT = 22
-DEFAULT_SSH_TIMEOUT_S = 10.0
 
 
 @dataclass(frozen=True)

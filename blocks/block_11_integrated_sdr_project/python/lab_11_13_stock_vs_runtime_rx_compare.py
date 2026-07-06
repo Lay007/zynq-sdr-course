@@ -14,6 +14,14 @@ from typing import Any
 
 import numpy as np
 
+from bench_config import (
+    DEFAULT_HOST,
+    DEFAULT_IIO_URI,
+    DEFAULT_PASSWORD,
+    DEFAULT_PORT,
+    DEFAULT_TIMEOUT_S,
+    DEFAULT_USER,
+)
 from lab_11_7_axi_lite_bpsk_bringup import ParamikoCommandRunner, parse_int
 from lab_11_8_axi_gpreg_bpsk_bringup import BringupConfig, SshDevMemRegisterIo, run_bringup
 from lab_11_9_rf_discovery_sweep import read_ad9361_state
@@ -32,12 +40,6 @@ from lab_11_12_runtime_fpga_manager_reload import (
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_BIT_BIN_PATH = ROOT / "tmp" / "bridge_txrx_mux.wordswap.bit.bin"
 DEFAULT_JSON_OUT = ROOT / "docs" / "assets" / "lab113_stock_vs_runtime_rx_compare_live.json"
-DEFAULT_HOST = "192.168.40.1"
-DEFAULT_USER = "root"
-DEFAULT_PASSWORD = "analog"
-DEFAULT_PORT = 22
-DEFAULT_TIMEOUT_S = 10.0
-DEFAULT_IIO_URI = "ip:192.168.40.1"
 DEFAULT_BASE_ADDR = 0x79040000
 DEFAULT_ADC_DMA_BASE_ADDR = 0x7C400000
 DEFAULT_EXPECTED_ID = 0x4250534B

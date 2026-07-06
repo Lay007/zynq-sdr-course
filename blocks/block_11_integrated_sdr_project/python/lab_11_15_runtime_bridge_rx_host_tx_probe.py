@@ -15,6 +15,14 @@ from typing import Any
 
 import numpy as np
 
+from bench_config import (
+    DEFAULT_HOST,
+    DEFAULT_IIO_URI,
+    DEFAULT_PASSWORD,
+    DEFAULT_PORT,
+    DEFAULT_TIMEOUT_S,
+    DEFAULT_USER,
+)
 from lab_11_7_axi_lite_bpsk_bringup import ParamikoCommandRunner, parse_int
 from lab_11_8_axi_gpreg_bpsk_bringup import (
     BringupConfig,
@@ -65,12 +73,6 @@ DEFAULT_RAW_BIT_PATH = (
 DEFAULT_BIT_BIN_PATH = ROOT / "tmp" / "bridge_rx_only.wordswap.bit.bin"
 DEFAULT_TX_REFERENCE_PATH = PACKAGE_DIR / "end_to_end_bpsk_reference_v1_tx_reference.ci16"
 DEFAULT_REMOTE_FIRMWARE_NAME = "course_bpsk_fmcomms2_zc702_runtime.bit.bin"
-DEFAULT_IIO_URI = "ip:192.168.40.1"
-DEFAULT_HOST = "192.168.40.1"
-DEFAULT_USER = "root"
-DEFAULT_PASSWORD = "analog"
-DEFAULT_PORT = 22
-DEFAULT_TIMEOUT_S = 10.0
 DEFAULT_BASE_ADDR = 0x79040000
 DEFAULT_EXPECTED_ID = 0x4250534B
 DEFAULT_FRAME_BIT_COUNT = 281

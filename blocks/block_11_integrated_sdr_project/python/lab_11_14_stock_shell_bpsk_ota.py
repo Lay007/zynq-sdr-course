@@ -36,6 +36,14 @@ from end_to_end_bpsk_reference import (  # noqa: E402
 )
 from lab_6_3_probe_iio_context import find_channel, load_iio_module  # noqa: E402
 from lab_11_7_axi_lite_bpsk_bringup import ParamikoCommandRunner  # noqa: E402
+from bench_config import (  # noqa: E402
+    DEFAULT_HOST as DEFAULT_SSH_HOST,
+    DEFAULT_IIO_URI,
+    DEFAULT_PASSWORD as DEFAULT_SSH_PASSWORD,
+    DEFAULT_PORT as DEFAULT_SSH_PORT,
+    DEFAULT_TIMEOUT_S as DEFAULT_SSH_TIMEOUT_S,
+    DEFAULT_USER as DEFAULT_SSH_USER,
+)
 
 
 DATASET_DIR = ROOT / "datasets" / "lab11_14_stock_shell_bpsk_ota"
@@ -58,11 +66,6 @@ DEFAULT_SYNTHETIC_PHASE_OFFSET_RAD = 0.18
 DEFAULT_SYNTHETIC_TIMING_OFFSET_SAMPLES = 5
 DEFAULT_SYNTHETIC_NOISE_RMS = 0.010
 DEFAULT_CANDIDATE_COUNT = 10
-DEFAULT_SSH_HOST = "192.168.40.1"
-DEFAULT_SSH_USER = "root"
-DEFAULT_SSH_PASSWORD = "analog"
-DEFAULT_SSH_PORT = 22
-DEFAULT_SSH_TIMEOUT_S = 10.0
 Q15_SCALE = 32767.0
 
 
@@ -146,7 +149,7 @@ def default_run_tag(synthetic_test: bool) -> str:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--uri", default="ip:192.168.40.1")
+    parser.add_argument("--uri", default=DEFAULT_IIO_URI)
     parser.add_argument("--center-frequency-hz", type=int, default=DEFAULT_CENTER_FREQUENCY_HZ)
     parser.add_argument("--sample-rate-hz", type=int, default=DEFAULT_SAMPLE_RATE_HZ)
     parser.add_argument("--symbol-rate-hz", type=int, default=DEFAULT_SYMBOL_RATE_HZ)
@@ -712,7 +715,7 @@ def write_manifest(
             "transceiver": "Zynq-7020 + AD9361 board",
             "software": "stock Pluto-like Linux 5.15.0 + host libiio",
             "rf_path": "short OTA TX1 to RX1 using separate antennas",
-            "context_uri": "synthetic-test" if cfg.synthetic_test else "ip:192.168.40.1",
+            "context_uri": "synthetic-test" if cfg.synthetic_test else DEFAULT_IIO_URI,
             "rx_gain_db": board_state.get("rx0_hardwaregain_db"),
             "tx_attenuation_db": board_state.get("tx0_hardwaregain_db"),
             "rx_rf_port_select": board_state.get("rx0_rf_port_select"),

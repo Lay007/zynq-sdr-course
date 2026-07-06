@@ -10,6 +10,7 @@ import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
+from bench_config import DEFAULT_HOST, DEFAULT_PASSWORD, DEFAULT_PORT, DEFAULT_TIMEOUT_S, DEFAULT_USER
 from lab_11_7_axi_lite_bpsk_bringup import (
     DevMemRegisterIo,
     MmapRegisterIo,
@@ -578,12 +579,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-total-errors", type=int, default=0)
     parser.add_argument("--max-payload-errors", type=int, default=0)
     parser.add_argument("--json-out", type=Path)
-    parser.add_argument("--ssh-host", default="192.168.40.1")
-    parser.add_argument("--ssh-user", default="root")
-    parser.add_argument("--ssh-password", default="analog")
-    parser.add_argument("--ssh-port", type=int, default=22)
+    parser.add_argument("--ssh-host", default=DEFAULT_HOST)
+    parser.add_argument("--ssh-user", default=DEFAULT_USER)
+    parser.add_argument("--ssh-password", default=DEFAULT_PASSWORD)
+    parser.add_argument("--ssh-port", type=int, default=DEFAULT_PORT)
     parser.add_argument("--ssh-key")
-    parser.add_argument("--ssh-timeout-s", type=float, default=10.0)
+    parser.add_argument("--ssh-timeout-s", type=float, default=DEFAULT_TIMEOUT_S)
     return parser
 
 

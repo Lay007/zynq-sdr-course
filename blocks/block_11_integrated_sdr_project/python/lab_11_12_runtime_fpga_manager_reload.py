@@ -15,6 +15,14 @@ from pathlib import Path
 from types import ModuleType
 from typing import Any
 
+from bench_config import (
+    DEFAULT_HOST,
+    DEFAULT_IIO_URI,
+    DEFAULT_PASSWORD,
+    DEFAULT_PORT,
+    DEFAULT_TIMEOUT_S,
+    DEFAULT_USER,
+)
 from lab_11_7_axi_lite_bpsk_bringup import ParamikoCommandRunner, parse_int
 from lab_11_8_axi_gpreg_bpsk_bringup import BringupConfig, REGS, SshDevMemRegisterIo, run_bringup
 
@@ -22,12 +30,6 @@ from lab_11_8_axi_gpreg_bpsk_bringup import BringupConfig, REGS, SshDevMemRegist
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULT_BIT_BIN_PATH = ROOT / "tmp" / "bridge_txrx_mux.wordswap.bit.bin"
 DEFAULT_JSON_OUT = ROOT / "docs" / "assets" / "lab118_runtime_fpga_manager_reload_live.json"
-DEFAULT_HOST = "192.168.40.1"
-DEFAULT_USER = "root"
-DEFAULT_PASSWORD = "analog"
-DEFAULT_PORT = 22
-DEFAULT_TIMEOUT_S = 10.0
-DEFAULT_IIO_URI = "ip:192.168.40.1"
 DEFAULT_BASE_ADDR = 0x79040000
 DEFAULT_EXPECTED_ID = 0x4250534B
 DEFAULT_FRAME_BIT_COUNT = 281

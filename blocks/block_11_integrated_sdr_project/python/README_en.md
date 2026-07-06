@@ -3,6 +3,10 @@
 ## Purpose
 This folder is intended for reproducible processing scripts, measurement automation, and quick hypothesis checks for Block 11 “Integrated SDR Project”.
 
+## Bench connection defaults
+
+Hardware helpers read `ZYNQ_SSH_HOST`, `ZYNQ_SSH_USER`, `ZYNQ_SSH_PASSWORD`, `ZYNQ_SSH_PORT`, `ZYNQ_SSH_TIMEOUT_S` and `ZYNQ_IIO_URI`. If unset, they retain the vendor-image defaults (`192.168.40.1`, `root`, `analog`). Set environment variables instead of placing non-default credentials in scripts or command history.
+
 ## What should be stored here
 - materials that directly support the block topics: integrated-project decomposition; signal and interface architecture; combining DSP, RF, and control logic;
 - files that can be reused in a laboratory task, demonstration, or mini-project;
