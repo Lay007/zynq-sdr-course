@@ -48,7 +48,7 @@ docs/assets/lab06_ber.png
 Block 4 contains executable fixed-point labs. Install the Python dependencies:
 
 ```bash
-python -m pip install numpy matplotlib
+python -m pip install -r requirements-dev.txt
 ```
 
 Run the labs:

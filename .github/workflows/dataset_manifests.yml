@@ -6,12 +6,16 @@ on:
       - 'datasets/**'
       - 'tools/check_dataset_manifests.py'
       - 'tools/generate_demo_qpsk_dataset.py'
+      - 'requirements.txt'
+      - 'requirements-dev.txt'
       - '.github/workflows/dataset_manifests.yml'
   pull_request:
     paths:
       - 'datasets/**'
       - 'tools/check_dataset_manifests.py'
       - 'tools/generate_demo_qpsk_dataset.py'
+      - 'requirements.txt'
+      - 'requirements-dev.txt'
       - '.github/workflows/dataset_manifests.yml'
 
 jobs:
@@ -29,7 +33,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: python -m pip install numpy pyyaml
+        run: python -m pip install -r requirements-dev.txt
 
       - name: Regenerate QPSK metadata
         run: python tools/generate_demo_qpsk_dataset.py --metadata-only

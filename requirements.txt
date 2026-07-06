@@ -1,7 +1,8 @@
-numpy
-matplotlib
-mkdocs
-mkdocs-material
-pymdown-extensions
-pyyaml
-paramiko
+# Tested course runtime baseline. Dependabot updates these pins in reviewable PRs.
+numpy==2.4.6
+matplotlib==3.11.0
+mkdocs==1.6.1
+mkdocs-material==9.7.6
+pymdown-extensions==10.21.3
+pyyaml==6.0.3
+paramiko==4.0.0
