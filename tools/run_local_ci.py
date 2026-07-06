@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -19,13 +18,7 @@ def run(cmd: list[str]) -> None:
 
 
 def run_hdl() -> None:
-    bash = shutil.which("bash")
-    if bash is None:
-        raise FileNotFoundError(
-            "bash was not found on PATH; run tools/run_block5_hdl_smoke.sh from a POSIX shell "
-            "or install Git Bash/WSL for local HDL CI."
-        )
-    run([bash, "./tools/run_block5_hdl_smoke.sh"])
+    run([sys.executable, "tools/run_block5_hdl_smoke.py"])
 
 
 def main() -> int:

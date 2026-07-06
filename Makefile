@@ -16,7 +16,7 @@ labs:
 	$(PYTHON) tools/run_all_labs.py
 
 hdl:
-	bash tools/run_block5_hdl_smoke.sh
+	$(PYTHON) tools/run_block5_hdl_smoke.py
 
 test:
 	$(PYTHON) -m pytest -q

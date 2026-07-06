@@ -6,3 +6,4 @@ python -m pip install matplotlib numpy
 python tools/generate_ieee_plots.py
 
 echo "Generated IEEE-style plots in docs/assets"
+true

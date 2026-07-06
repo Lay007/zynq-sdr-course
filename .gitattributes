@@ -2,3 +2,7 @@ datasets/**/*.wav filter=lfs diff=lfs merge=lfs -text
 datasets/**/*.ci16 filter=lfs diff=lfs merge=lfs -text
 datasets/**/*.cu8 filter=lfs diff=lfs merge=lfs -text
 datasets/**/*.cf32 filter=lfs diff=lfs merge=lfs -text
+
+# Scripts executed by Linux CI and by Git Bash/WSL on Windows must not acquire
+# CRLF endings.  Without this rule, `set -o pipefail` is parsed as `pipefail\r`.
+*.sh text eol=lf

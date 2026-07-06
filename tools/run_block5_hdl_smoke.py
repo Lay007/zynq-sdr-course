@@ -1,0 +1,214 @@
+#!/usr/bin/env python3
+"""Run the canonical Block 5 HDL smoke suite on Windows, Linux, or macOS."""
+
+from __future__ import annotations
+
+import argparse
+import shutil
+import subprocess
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+TB_DIR = ROOT / "blocks" / "block_05_fpga_hdl_flow" / "tb"
+RTL_DIR = ROOT / "blocks" / "block_05_fpga_hdl_flow" / "rtl"
+PY_DIR = ROOT / "blocks" / "block_05_fpga_hdl_flow" / "python"
+BRIDGE_DIR = ROOT / "hardware" / "7020_ad936x_sdr" / "hdl" / "course_bpsk_fmcomms2_zc702"
+
+
+@dataclass(frozen=True)
+class HdlTest:
+    name: str
+    sources: tuple[Path, ...]
+
+    @property
+    def output(self) -> Path:
+        return TB_DIR / f"{self.name}.out"
+
+
+def rtl(*names: str) -> tuple[Path, ...]:
+    return tuple(RTL_DIR / name for name in names)
+
+
+def tb(name: str) -> Path:
+    return TB_DIR / name
+
+
+COMMON_BPSK = rtl(
+    "bpsk_symbol_mapper.v",
+    "bpsk_upsampler_8x.v",
+    "bpsk_rrc_tx_fir.v",
+    "bpsk_rrc_rx_fir.v",
+    "bpsk_symbol_timing_sampler.v",
+    "bpsk_symbol_timing_recovery.v",
+    "bpsk_hard_decision.v",
+    "bpsk_framed_tx_chain.v",
+    "bpsk_rx_bit_recovery_chain.v",
+)
+
+BPSK_TOP = COMMON_BPSK + rtl(
+    "bpsk_frame_bit_source.v",
+    "bpsk_ber_counter.v",
+    "bpsk_zynq_ber_top.v",
+)
+
+QPSK_TOP = rtl(
+    "qpsk_symbol_mapper.v",
+    "bpsk_upsampler_8x.v",
+    "bpsk_rrc_tx_fir.v",
+    "bpsk_rrc_rx_fir.v",
+    "bpsk_symbol_timing_sampler.v",
+    "qpsk_hard_decision.v",
+    "qpsk_framed_tx_chain.v",
+    "qpsk_rx_bit_recovery_chain.v",
+    "qpsk_frame_dibit_source.v",
+    "bpsk_ber_counter.v",
+    "qpsk_ber_counter.v",
+    "qpsk_zynq_ber_top.v",
+)
+
+QPSK_BRIDGE = BPSK_TOP + rtl(
+    "qpsk_symbol_mapper.v",
+    "qpsk_hard_decision.v",
+    "qpsk_framed_tx_chain.v",
+    "qpsk_rx_bit_recovery_chain.v",
+    "qpsk_frame_dibit_source.v",
+    "qpsk_ber_counter.v",
+    "qpsk_zynq_ber_top.v",
+) + (
+    BRIDGE_DIR / "bridge_rx_lclk_fifo.v",
+    BRIDGE_DIR / "bpsk_zynq_ber_gpreg_bridge.v",
+)
+
+TESTS = (
+    HdlTest("tb_iq_passthrough", rtl("iq_passthrough.v") + (tb("tb_iq_passthrough.v"),)),
+    HdlTest("tb_fir_iq_4tap", rtl("fir_iq_4tap.v") + (tb("tb_fir_iq_4tap.v"),)),
+    HdlTest("tb_nco_mixer_iq", rtl("nco_mixer_iq.v") + (tb("tb_nco_mixer_iq.v"),)),
+    HdlTest("tb_bpsk_symbol_mapper", rtl("bpsk_symbol_mapper.v") + (tb("tb_bpsk_symbol_mapper.v"),)),
+    HdlTest("tb_qpsk_symbol_mapper", rtl("qpsk_symbol_mapper.v") + (tb("tb_qpsk_symbol_mapper.v"),)),
+    HdlTest("tb_bpsk_upsampler_8x", rtl("bpsk_upsampler_8x.v") + (tb("tb_bpsk_upsampler_8x.v"),)),
+    HdlTest("tb_bpsk_rrc_tx_fir", rtl("bpsk_rrc_tx_fir.v") + (tb("tb_bpsk_rrc_tx_fir.v"),)),
+    HdlTest(
+        "tb_bpsk_rx_bit_recovery",
+        rtl(
+            "bpsk_rrc_tx_fir.v",
+            "bpsk_rrc_rx_fir.v",
+            "bpsk_symbol_timing_sampler.v",
+            "bpsk_symbol_timing_recovery.v",
+            "bpsk_hard_decision.v",
+        ) + (tb("tb_bpsk_rx_bit_recovery.v"),),
+    ),
+    HdlTest("tb_bpsk_framed_loopback", COMMON_BPSK + (tb("tb_bpsk_framed_loopback.v"),)),
+    HdlTest("tb_bpsk_zynq_ber_top", BPSK_TOP + (tb("tb_bpsk_zynq_ber_top.v"),)),
+    HdlTest("tb_qpsk_zynq_ber_top", QPSK_TOP + (tb("tb_qpsk_zynq_ber_top.v"),)),
+    HdlTest("tb_qpsk_bridge_loopback", QPSK_BRIDGE + (tb("tb_qpsk_bridge_loopback.v"),)),
+    HdlTest(
+        "tb_bridge_rx_lclk_fifo",
+        (BRIDGE_DIR / "bridge_rx_lclk_fifo.v", tb("tb_bridge_rx_lclk_fifo.v")),
+    ),
+    HdlTest(
+        "tb_bpsk_zynq_ber_top_multiframe",
+        BPSK_TOP + (tb("tb_bpsk_zynq_ber_top_multiframe.v"),),
+    ),
+    HdlTest(
+        "tb_bpsk_symbol_timing_recovery",
+        rtl("bpsk_symbol_timing_recovery.v") + (tb("tb_bpsk_symbol_timing_recovery.v"),),
+    ),
+    HdlTest(
+        "tb_bpsk_zynq_ber_timing_recovery",
+        BPSK_TOP + (tb("tb_bpsk_zynq_ber_timing_recovery.v"),),
+    ),
+    HdlTest(
+        "tb_bpsk_zynq_ber_axi_lite",
+        BPSK_TOP + rtl("bpsk_zynq_ber_axi_lite.v") + (tb("tb_bpsk_zynq_ber_axi_lite.v"),),
+    ),
+    HdlTest("tb_axis_iq_passthrough", rtl("axis_iq_passthrough.v") + (tb("tb_axis_iq_passthrough.v"),)),
+)
+
+GENERATORS = (
+    PY_DIR / "generate_fir_iq_4tap_vectors.py",
+    PY_DIR / "generate_nco_mixer_iq_vectors.py",
+    ROOT / "blocks" / "block_11_integrated_sdr_project" / "python" / "end_to_end_bpsk_reference.py",
+    PY_DIR / "generate_bpsk_symbol_mapper_vectors.py",
+    PY_DIR / "generate_bpsk_upsampler_8x_vectors.py",
+    PY_DIR / "generate_bpsk_rrc_tx_fir_vectors.py",
+    PY_DIR / "generate_bpsk_rx_bit_recovery_vectors.py",
+    PY_DIR / "generate_bpsk_framed_loopback_vectors.py",
+    PY_DIR / "generate_bpsk_timing_recovery_vectors.py",
+)
+
+REQUIRED_GENERATED_FILES = (
+    TB_DIR / "fir_iq_4tap_input_vectors.txt",
+    TB_DIR / "fir_iq_4tap_expected_vectors.txt",
+    TB_DIR / "nco_mixer_iq_input_vectors.txt",
+    TB_DIR / "nco_mixer_iq_expected_vectors.txt",
+    TB_DIR / "bpsk_symbol_mapper_input_vectors.txt",
+    TB_DIR / "bpsk_symbol_mapper_expected_vectors.txt",
+    TB_DIR / "bpsk_upsampler_8x_input_vectors.txt",
+    TB_DIR / "bpsk_upsampler_8x_expected_vectors.txt",
+    TB_DIR / "bpsk_rrc_tx_fir_input_vectors.txt",
+    TB_DIR / "bpsk_rrc_tx_fir_expected_vectors.txt",
+    TB_DIR / "bpsk_rx_bit_recovery_input_vectors.txt",
+    TB_DIR / "bpsk_rx_bit_recovery_expected_bits.txt",
+    TB_DIR / "bpsk_rx_bit_recovery_meta.txt",
+    TB_DIR / "bpsk_framed_loopback_input_bits.txt",
+    TB_DIR / "bpsk_framed_loopback_expected_bits.txt",
+    TB_DIR / "bpsk_framed_loopback_meta.txt",
+    TB_DIR / "bpsk_timing_recovery_mf_input.mem",
+    TB_DIR / "bpsk_timing_recovery_model_bits.txt",
+    TB_DIR / "bpsk_chain_drift_rx.mem",
+    RTL_DIR / "bpsk_rrc_tx_fir_taps.mem",
+    RTL_DIR / "bpsk_frame_bits.mem",
+)
+
+
+def run(command: list[str]) -> None:
+    print(f">>> {' '.join(command)}", flush=True)
+    subprocess.run(command, cwd=ROOT, check=True)
+
+
+def require_tool(name: str) -> str:
+    executable = shutil.which(name)
+    if executable is None:
+        raise FileNotFoundError(f"{name} was not found on PATH")
+    return executable
+
+
+def generate_vectors() -> None:
+    for generator in GENERATORS:
+        run([sys.executable, str(generator)])
+    missing = [str(path.relative_to(ROOT)) for path in REQUIRED_GENERATED_FILES if not path.is_file() or path.stat().st_size == 0]
+    if missing:
+        raise RuntimeError(f"Missing generated HDL inputs: {', '.join(missing)}")
+
+
+def run_tests(*, generate: bool = True) -> None:
+    iverilog = require_tool("iverilog")
+    vvp = require_tool("vvp")
+    if generate:
+        generate_vectors()
+    for test in TESTS:
+        missing_sources = [str(path.relative_to(ROOT)) for path in test.sources if not path.is_file()]
+        if missing_sources:
+            raise FileNotFoundError(f"{test.name}: missing source(s): {', '.join(missing_sources)}")
+        run([iverilog, "-g2012", "-o", str(test.output), *(str(path) for path in test.sources)])
+        run([vvp, str(test.output)])
+    print(f"Canonical HDL smoke passed: {len(TESTS)} testbenches.")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--no-generate",
+        action="store_true",
+        help="Reuse existing generated vectors instead of regenerating them.",
+    )
+    args = parser.parse_args()
+    run_tests(generate=not args.no_generate)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
