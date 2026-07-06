@@ -155,6 +155,19 @@ def validate_lab93(root: Path) -> list[str]:
     return errors
 
 
+def validate_lab102(root: Path) -> list[str]:
+    payload = load_json(root / "docs/assets/lab102_rf_passives_metrics.json")
+    errors: list[str] = []
+    attenuator = payload["pi_attenuator"]
+    if abs(attenuator["series_resistor_ohm"] - 71.151) > 0.01:
+        errors.append("10 dB Pi series resistor does not match the 50-ohm reference")
+    if abs(attenuator["shunt_resistor_ohm"] - 96.248) > 0.01:
+        errors.append("10 dB Pi shunt resistor does not match the 50-ohm reference")
+    if abs(payload["power_budget"]["output_dbm_ideal"] + 20.0) > 1e-9:
+        errors.append("ideal attenuator power budget is inconsistent")
+    return errors
+
+
 def validate_end_to_end_tone(root: Path) -> list[str]:
     metrics = load_json(root / "docs/assets/end_to_end_tone_metrics.json")
     errors: list[str] = []
@@ -324,6 +337,12 @@ LABS: list[LabCommand] = [
             "docs/assets/lab93_multiformat_iq_spectrum_cf32.png",
         ],
         validate_lab93,
+    ),
+    LabCommand(
+        "Block 10 / Lab 10.2 RF passive design calculations",
+        [sys.executable, "blocks/block_10_kicad_and_basic_electronics/python/lab_10_2_rf_passives_design.py"],
+        ["docs/assets/lab102_rf_passives_metrics.json"],
+        validate_lab102,
     ),
     LabCommand(
         "Block 11 / End-to-end tone demo",

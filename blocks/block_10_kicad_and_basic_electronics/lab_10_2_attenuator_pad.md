@@ -59,6 +59,15 @@ A_dB = 20*log10(Vout/Vin)
 
 ## Engineering conclusion template
 
+Generate a matched 50-ohm symmetric π-pad reference and loaded-voltage budget:
+
+```bash
+python blocks/block_10_kicad_and_basic_electronics/python/lab_10_2_rf_passives_design.py \
+  --attenuation-db 10 --impedance-ohm 50 --input-dbm -10
+```
+
+For the default 10 dB design the ideal values are approximately `71.151 Ω` for the series resistor and `96.248 Ω` for each shunt resistor. Use available resistor combinations, then measure the assembled network; the ideal calculation is not an RF safety certificate.
+
 ```text
 The attenuator uses R1 = ____ and R2 = ____, giving a voltage ratio of ____ and attenuation of ____ dB.
 It is suitable / not suitable for the planned SDR experiment because ______.

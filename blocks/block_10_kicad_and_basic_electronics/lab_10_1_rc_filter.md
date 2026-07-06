@@ -53,6 +53,14 @@ flowchart LR
 
 ## Engineering conclusion template
 
+Generate the reference cutoff and response points before selecting real components:
+
+```bash
+python blocks/block_10_kicad_and_basic_electronics/python/lab_10_2_rf_passives_design.py
+```
+
+The generated `docs/assets/lab102_rf_passives_metrics.json` is the ideal calculation baseline. Measured values must be reported separately.
+
 ```text
 The selected RC filter uses R = ____ and C = ____, giving an expected cutoff of ____ Hz.
 The circuit is suitable / not suitable for the SDR bench because ______.

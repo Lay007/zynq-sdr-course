@@ -1,0 +1,42 @@
+{
+  "lab": "10.2",
+  "pi_attenuator": {
+    "attenuation_db": 10.0,
+    "impedance_ohm": 50.0,
+    "voltage_ratio": 3.1622776601683795,
+    "series_resistor_ohm": 71.15124735378855,
+    "shunt_resistor_ohm": 96.24752955742645
+  },
+  "power_budget": {
+    "input_dbm": -10.0,
+    "output_dbm_ideal": -20.0,
+    "input_loaded_vrms": 0.07071067811865475,
+    "output_loaded_vrms_ideal": 0.022360679774997897
+  },
+  "rc_lowpass": {
+    "resistance_ohm": 1000.0,
+    "capacitance_f": 1e-09,
+    "cutoff_hz": 159154.94309189534,
+    "response": [
+      {
+        "frequency_hz": 0.0,
+        "magnitude": 1.0,
+        "magnitude_db": 0.0
+      },
+      {
+        "frequency_hz": 100000.0,
+        "magnitude": 0.8467330159648304,
+        "magnitude_db": -1.445070116205287
+      },
+      {
+        "frequency_hz": 1000000.0,
+        "magnitude": 0.15717672547758985,
+        "magnitude_db": -16.072235265805517
+      }
+    ]
+  },
+  "limitations": [
+    "Ideal matched-resistor model; parasitics and resistor tolerances are not included.",
+    "Bench validation must verify attenuation, return loss, heating and receiver overload margin."
+  ]
+}
