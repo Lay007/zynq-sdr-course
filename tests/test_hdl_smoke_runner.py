@@ -38,3 +38,13 @@ def test_all_generated_inputs_have_a_declared_generator() -> None:
     assert runner.GENERATORS
     assert all(generator.is_file() for generator in runner.GENERATORS)
     assert len(runner.REQUIRED_GENERATED_FILES) == len(set(runner.REQUIRED_GENERATED_FILES))
+
+
+def test_simulation_workspace_mirrors_generated_inputs(tmp_path: Path) -> None:
+    runner = load_runner()
+
+    runner.require_generated_inputs()
+    runner.populate_simulation_workspace(tmp_path)
+
+    assert all((tmp_path / path.relative_to(ROOT)).is_file() for path in runner.REQUIRED_GENERATED_FILES)
+    assert not list(tmp_path.glob("*.out"))

@@ -7,6 +7,7 @@ import argparse
 import shutil
 import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -22,10 +23,6 @@ BRIDGE_DIR = ROOT / "hardware" / "7020_ad936x_sdr" / "hdl" / "course_bpsk_fmcomm
 class HdlTest:
     name: str
     sources: tuple[Path, ...]
-
-    @property
-    def output(self) -> Path:
-        return TB_DIR / f"{self.name}.out"
 
 
 def rtl(*names: str) -> tuple[Path, ...]:
@@ -164,9 +161,9 @@ REQUIRED_GENERATED_FILES = (
 )
 
 
-def run(command: list[str]) -> None:
+def run(command: list[str], *, cwd: Path = ROOT) -> None:
     print(f">>> {' '.join(command)}", flush=True)
-    subprocess.run(command, cwd=ROOT, check=True)
+    subprocess.run(command, cwd=cwd, check=True)
 
 
 def require_tool(name: str) -> str:
@@ -179,9 +176,19 @@ def require_tool(name: str) -> str:
 def generate_vectors() -> None:
     for generator in GENERATORS:
         run([sys.executable, str(generator)])
+
+
+def require_generated_inputs() -> None:
     missing = [str(path.relative_to(ROOT)) for path in REQUIRED_GENERATED_FILES if not path.is_file() or path.stat().st_size == 0]
     if missing:
         raise RuntimeError(f"Missing generated HDL inputs: {', '.join(missing)}")
+
+
+def populate_simulation_workspace(workspace: Path) -> None:
+    for source in REQUIRED_GENERATED_FILES:
+        target = workspace / source.relative_to(ROOT)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
 
 
 def run_tests(*, generate: bool = True) -> None:
@@ -189,12 +196,17 @@ def run_tests(*, generate: bool = True) -> None:
     vvp = require_tool("vvp")
     if generate:
         generate_vectors()
-    for test in TESTS:
-        missing_sources = [str(path.relative_to(ROOT)) for path in test.sources if not path.is_file()]
-        if missing_sources:
-            raise FileNotFoundError(f"{test.name}: missing source(s): {', '.join(missing_sources)}")
-        run([iverilog, "-g2012", "-o", str(test.output), *(str(path) for path in test.sources)])
-        run([vvp, str(test.output)])
+    require_generated_inputs()
+    with tempfile.TemporaryDirectory(prefix="zynq-sdr-hdl-") as temporary_dir:
+        workspace = Path(temporary_dir)
+        populate_simulation_workspace(workspace)
+        for test in TESTS:
+            missing_sources = [str(path.relative_to(ROOT)) for path in test.sources if not path.is_file()]
+            if missing_sources:
+                raise FileNotFoundError(f"{test.name}: missing source(s): {', '.join(missing_sources)}")
+            output = workspace / f"{test.name}.out"
+            run([iverilog, "-g2012", "-o", str(output), *(str(path) for path in test.sources)])
+            run([vvp, str(output)], cwd=workspace)
     print(f"Canonical HDL smoke passed: {len(TESTS)} testbenches.")
 
 
