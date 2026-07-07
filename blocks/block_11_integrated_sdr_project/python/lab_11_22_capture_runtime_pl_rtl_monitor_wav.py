@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lab 11.22 - Capture RTL-SDR monitor WAV during runtime/PL BPSK bring-up."""
+"""Lab 11.22 - Capture RTL-SDR monitor WAV during runtime/PL modem bring-up."""
 
 from __future__ import annotations
 
@@ -83,6 +83,10 @@ from lab_11_24_capture_dds_tone_rtl_monitor_wav import (  # noqa: E402
     rebind_platform_driver,
     write_runtime_dds_ratecntrl,
 )
+from lab_11_27_runtime_qpsk_digital_loopback import (  # noqa: E402
+    QPSK_MODE_BITS,
+    qpsk_ber_once,
+)
 from lab_11_7_axi_lite_bpsk_bringup import ParamikoCommandRunner, parse_int  # noqa: E402
 from lab_11_8_axi_gpreg_bpsk_bringup import (  # noqa: E402
     DEFAULT_RX_DECISION_MODE,
@@ -135,6 +139,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--gpreg-base-addr", type=parse_int, default=DEFAULT_BASE_ADDR)
     parser.add_argument("--expected-id", type=parse_int, default=DEFAULT_EXPECTED_ID)
     parser.add_argument("--frame-bit-count", type=int, default=DEFAULT_FRAME_BIT_COUNT)
+    parser.add_argument("--modulation", choices=["bpsk", "qpsk"], default="bpsk")
+    parser.add_argument("--qpsk-symbol-count", type=int, default=140)
     parser.add_argument("--preamble-count", type=int, default=DEFAULT_PREAMBLE_COUNT)
     parser.add_argument("--center-frequency-hz", type=int, default=DEFAULT_CENTER_FREQUENCY_HZ)
     parser.add_argument("--sample-rate-hz", type=int, default=3_840_000)
@@ -355,6 +361,29 @@ def build_attempt_summary(attempts: list[dict[str, Any]], frame_bit_count: int) 
     }
 
 
+def build_qpsk_attempt_summary(attempts: list[dict[str, Any]], symbol_count: int) -> dict[str, Any]:
+    successful = [row for row in attempts if row.get("ok")]
+    complete = [row for row in successful if int(row.get("received_symbols") or 0) == symbol_count]
+    zero_error = [
+        row
+        for row in complete
+        if int(row.get("total_bit_errors") or 0) == 0
+        and int(row.get("payload_errors") or 0) == 0
+    ]
+    return {
+        "attempt_count": len(attempts),
+        "command_success_count": len(successful),
+        "complete_internal_rx_count": len(complete),
+        "zero_error_internal_rx_count": len(zero_error),
+        "transmitted_symbols_per_attempt": symbol_count,
+        "transmitted_bits_per_attempt": symbol_count * 2,
+        "conclusion": (
+            "Repeated QPSK PL-owned bursts were issued during the RTL-SDR capture window; "
+            "external BER/EVM require the QPSK WAV analyzer."
+        ),
+    }
+
+
 def write_manifest(
     *,
     manifest_path: Path,
@@ -365,17 +394,24 @@ def write_manifest(
     waveform_cfg: Any,
     args: argparse.Namespace,
 ) -> None:
+    modulation = args.modulation.upper()
+    analysis_script = (
+        "lab_11_28_read_rtl_wav_ota_qpsk.py"
+        if args.modulation == "qpsk"
+        else "lab_11_20_read_rtl_wav_ota_bpsk_ber.py"
+    )
+    transmitted_bits = args.qpsk_symbol_count * 2 if args.modulation == "qpsk" else args.frame_bit_count
     manifest = {
         "manifest_kind": "capture-session",
         "schema_version": 1,
         "dataset_id": dataset_id,
         "version": 0.1,
         "status": "local-only",
-        "title": "RTL-SDR monitor capture for runtime bridge_txrx_mux OTA BPSK",
+        "title": f"RTL-SDR monitor capture for runtime bridge_txrx_mux OTA {modulation}",
         "description": (
             "Fresh local RTL-SDR stereo WAV IQ capture recorded after the runtime bridge_txrx_mux "
             "overlay had already been loaded and AD9361 configured, with the capture window centered "
-            "on repeated PL-owned start pulses."
+            f"on repeated PL-owned {modulation} start pulses."
         ),
         "storage": "local-workstation",
         "url": None,
@@ -385,11 +421,11 @@ def write_manifest(
         "sample_rate_hz": args.rtl_sample_rate_hz,
         "center_frequency_hz": args.center_frequency_hz,
         "analysis_command": (
-            "python blocks/block_11_integrated_sdr_project/python/lab_11_20_read_rtl_wav_ota_bpsk_ber.py "
+            f"python blocks/block_11_integrated_sdr_project/python/{analysis_script} "
             f"--manifest {repo_relative_or_str(manifest_path)}"
         ),
         "source": "rtl-sdr-runtime-pl-monitor-capture",
-        "analysis_targets": ["BPSK frame detection", "BER", "EVM", "spectrum"],
+        "analysis_targets": [f"{modulation} frame detection", "BER", "EVM", "spectrum"],
         "quality_checks": {
             "capture_completed": wav_path.is_file() and wav_path.stat().st_size > 0,
             "offline_analysis_completed": False,
@@ -402,8 +438,9 @@ def write_manifest(
             "capture_report_json": repo_relative_or_str(capture_report_out),
         },
         "hardware": {
-            "transmitter": "Zynq-7020 + AD9361 board, runtime bridge_txrx_mux PL-owned BPSK TX path",
+            "transmitter": f"Zynq-7020 + AD9361 board, runtime bridge_txrx_mux PL-owned {modulation} TX path",
             "monitor_receiver": "RTL-SDR V3 Pro",
+            "rf_path": "separate TX1 and RTL-SDR antennas (over the air)",
             "context_uri": args.iio_uri,
             "tx_attenuation_db": args.tx_attenuation_db,
             "rx_gain_db": args.rx_gain_db,
@@ -413,17 +450,22 @@ def write_manifest(
             "rtl_auto_gain": bool(args.rtl_auto_gain),
         },
         "signal": {
-            "modulation": "BPSK",
+            "modulation": modulation,
             "symbol_rate_hz": waveform_cfg.symbol_rate_hz,
             "samples_per_symbol": waveform_cfg.samples_per_symbol,
             "rolloff": waveform_cfg.rolloff,
+            "rrc_span_symbols": waveform_cfg.rrc_span_symbols,
             "payload_bit_count": waveform_cfg.payload_bit_count,
+            "transmitted_bit_count": transmitted_bits,
+            "transmitted_symbol_count": (
+                args.qpsk_symbol_count if args.modulation == "qpsk" else args.frame_bit_count
+            ),
             "reference_sample_rate_hz": waveform_cfg.sample_rate_hz,
             "expected_signal_offset_hz": 0.0,
         },
         "notes": [
-            "This capture is intended for offline BER validation through the external RTL-SDR monitor path.",
-            "The runtime bridge_txrx_mux overlay uses the shared end_to_end_bpsk_reference bit package with seed=20260619 and samples_per_symbol=8.",
+            f"This capture is intended for offline {modulation} validation through the external RTL-SDR monitor path.",
+            "The runtime overlay uses the shared deterministic frame-bit ROM and samples_per_symbol=8.",
             f"The PL start pulse was repeated {max(args.runtime_repeat_count, 1)} times to improve external-monitor observability.",
             "Keep the local WAV outside Git or move it into Git LFS before sharing the raw recording.",
         ],
@@ -519,6 +561,8 @@ def main() -> int:
             "gpreg_base_addr": f"0x{args.gpreg_base_addr:08X}",
             "expected_id": f"0x{args.expected_id:08X}",
             "frame_bit_count": args.frame_bit_count,
+            "modulation": args.modulation,
+            "qpsk_symbol_count": args.qpsk_symbol_count,
             "preamble_count": args.preamble_count,
             "start_offset": args.start_offset,
             "rx_decision_mode": rx_decision_mode_name(args.rx_decision_mode),
@@ -648,7 +692,20 @@ def main() -> int:
         time.sleep(max(args.capture_preroll_s, 0.0))
         attempt_count = max(args.runtime_repeat_count, 1)
         for attempt_index in range(attempt_count):
-            payload["runtime_attempts"].append(attempt_runtime_bringup(io, probe_cfg))
+            if args.modulation == "qpsk":
+                payload["runtime_attempts"].append(
+                    qpsk_ber_once(
+                        runner,
+                        args.gpreg_base_addr,
+                        args.qpsk_symbol_count,
+                        args.start_offset,
+                        poll=args.poll_limit,
+                        mode_bits=QPSK_MODE_BITS,
+                        preamble_bits=args.preamble_count,
+                    )
+                )
+            else:
+                payload["runtime_attempts"].append(attempt_runtime_bringup(io, probe_cfg))
             if attempt_index + 1 < attempt_count and args.runtime_repeat_gap_ms > 0:
                 time.sleep(args.runtime_repeat_gap_ms / 1000.0)
         time.sleep(max(args.capture_postroll_s, 0.0))
@@ -672,7 +729,12 @@ def main() -> int:
             args=args,
         )
 
-        payload["summary"] = build_attempt_summary(payload["runtime_attempts"], args.frame_bit_count)
+        if args.modulation == "qpsk":
+            payload["summary"] = build_qpsk_attempt_summary(
+                payload["runtime_attempts"], args.qpsk_symbol_count
+            )
+        else:
+            payload["summary"] = build_attempt_summary(payload["runtime_attempts"], args.frame_bit_count)
         payload["rtl_capture"] = {
             "rtl_device_index": args.rtl_device_index,
             "rtl_device_name": str(capture_box.get("rtl_device_name", "")),
@@ -725,7 +787,7 @@ def main() -> int:
     outputs["capture_report_out"].parent.mkdir(parents=True, exist_ok=True)
     outputs["capture_report_out"].write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
-    print("Lab 11.22 - Capture RTL-SDR monitor WAV during runtime/PL BPSK bring-up")
+    print(f"Lab 11.22 - Capture RTL-SDR monitor WAV during runtime/PL {args.modulation.upper()} bring-up")
     print(f"Runtime JSON: {repo_relative_or_str(outputs['runtime_json_out'])}")
     print(f"Capture report: {repo_relative_or_str(outputs['capture_report_out'])}")
     if outputs["wav_out"].exists():

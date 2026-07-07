@@ -28,7 +28,8 @@ Hardware helpers read `ZYNQ_SSH_HOST`, `ZYNQ_SSH_USER`, `ZYNQ_SSH_PASSWORD`, `ZY
 - `lab_11_14_stock_shell_bpsk_ota.py`: uses the stock AD9361 Linux shell as a host-driven OTA BPSK fallback while the PL overlay RX path is still blocked.
 - `lab_11_20_read_rtl_wav_ota_bpsk_ber.py`: reads a stereo RTL-SDR/SDR++ WAV IQ capture, searches the residual carrier offset, resamples to the reference BPSK rate when needed, and reports BER/EVM against either the stock-shell Lab 11.14 waveform or the shared runtime `end_to_end_bpsk_reference` package.
 - `lab_11_21_capture_rtl_sdr_monitor_wav.py`: keys the stock-shell AD9361 BPSK TX path on ZynqSDR, captures a fresh monitor WAV IQ through RTL-SDR, and writes a manifest that can be fed directly into `lab_11_20_read_rtl_wav_ota_bpsk_ber.py`.
-- `lab_11_22_capture_runtime_pl_rtl_monitor_wav.py`: hot-loads the runtime `bridge_txrx_mux` overlay, configures AD9361, records a fresh RTL-SDR monitor WAV around repeated PL-owned BPSK start pulses, and writes a manifest for offline BER replay of the runtime/PL path.
+- `lab_11_22_capture_runtime_pl_rtl_monitor_wav.py`: hot-loads the runtime `bridge_txrx_mux` overlay, configures AD9361, records a fresh RTL-SDR monitor WAV around repeated PL-owned BPSK or QPSK start pulses, and writes a manifest for offline replay.
+- `lab_11_28_read_rtl_wav_ota_qpsk.py`: reads the exact QPSK RTL ROM reference, detects a frame in an RTL-SDR WAV, corrects CFO/phase and reports BER/EVM with spectrum and constellation plots.
 - `lab_11_23_runtime_pl_rtl_monitor_sweep.py`: runs a focused runtime/PL external-monitor sweep around the known live point, ranks the tested parameter sets by offline RTL-SDR BER, and can rerun the best point as canonical evidence.
 - `lab_11_24_capture_dds_tone_rtl_monitor_wav.py`: captures a controlled external RTL-SDR WAV around a Zynq DDS tone in either `stock` or `runtime` mode and writes a manifest for immediate replay through the Block 9 WAV IQ analyzer.
 
