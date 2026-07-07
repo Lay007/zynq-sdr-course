@@ -448,6 +448,7 @@ def write_manifest(
             "rx_decision_mode": rx_decision_mode_name(args.rx_decision_mode),
             "rtl_tuner_gain_db10": args.rtl_tuner_gain_db10,
             "rtl_auto_gain": bool(args.rtl_auto_gain),
+            "runtime_repeat_count": max(args.runtime_repeat_count, 1),
         },
         "signal": {
             "modulation": modulation,
