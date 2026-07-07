@@ -35,10 +35,10 @@ Detailed bring-up logs should live on dedicated evidence pages rather than insid
 | 06 | RF frontend and AD9363 | Measured | RX-only and tone capture baselines | Build the AD9363 gain table and validate safe cabled loopback. |
 | 07 | TX/RX chains | Executable | DUC/DDC demos and loopback models | Add measurement package. |
 | 08 | Modulation and synchronization | Executable | CFO, phase/timing, BER/EVM demos and SNR-vs-BER trap material | Promote generated impairment dashboards and connect them to measured Block 11 reports. |
-| 09 | Recording and analysis tools | Executable | CI16/CU8/CF32/WAV readers, fail-closed manifest CI and deterministic generated QPSK replay | Add a publication-reviewed measured QPSK capture. |
+| 09 | Recording and analysis tools | Measured | CI16/CU8/CF32/WAV readers, fail-closed manifest CI, generated replay and measured QPSK WAV analysis | Add burst-by-burst QPSK repeatability analysis. |
 | 10 | KiCad and basic electronics | Draft | Calculators and templates | Add measured breadboard photos and KiCad exports. |
-| 11 | Integrated SDR project | BPSK/QPSK measured internally | Timing-clean QPSK payload: 4/4 boot sessions and 13/13 attempts at BER=0 for 280 bits; BPSK PL result retained | Add external QPSK RF evidence. |
-| 12 | Final projects | Reviewable example; RF pending | Filled report plus promoted QPSK silicon qualification | Add external RTL-SDR QPSK capture with BER/EVM/SNR. |
+| 11 | Integrated SDR project | QPSK measured internally and externally | Timing-clean payload: 4/4 internal boot sessions; external RTL-SDR selected frame: 280/280 bits, EVM 20.25%, no clipping | Add burst-by-burst RF repeatability and improve timing margin. |
+| 12 | Final projects | Measured example; repeatability pending | Filled report plus internal and external QPSK qualification | Add controlled cabled and multi-frame RF statistics. |
 
 ## Hardware validation priorities
 

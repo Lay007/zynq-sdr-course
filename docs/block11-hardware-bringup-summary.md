@@ -19,7 +19,7 @@ Block 11 is the integrated SDR project track. Its goal is to connect the referen
 | QPSK RTL and bridge path | executable | Canonical simulation reaches BER=0 for 140 symbols / 280 bits through the dual-modem bridge. |
 | Runtime QPSK fabric loopback | measured | Timing-clean payload: 4/4 boot sessions and 13/13 attempts at offset 62 reached BER=0 for 140 symbols / 280 bits. |
 | Integrated FPGA implementation | measured signoff candidate | Hardware-correlated snapshot is fully routed with WNS +0.003 ns and passes the QPSK fabric qualification; timing margin remains narrow. |
-| External measured proof package | hardware pending | The remaining step is a repeatable measured package with matched settings, metadata, plots and limitations. |
+| External QPSK RTL-SDR path | measured single frame | Promoted OTA frame recovers 280/280 bits with 20.25% EVM, +1.996 kHz CFO and no clipping; burst repeatability remains open. |
 
 ## Status alignment note
 
@@ -27,7 +27,7 @@ The earlier version of this page described an old blocker with high error rate a
 
 ## Remaining engineering statement
 
-> The runtime path has a measured zero-error internal loopback result. The next proof is to make the same story reviewer-friendly at the measurement level: setup notes, manifest-backed capture, generated plots, metrics and a short limitations section.
+> The runtime path now has both a repeated zero-error internal loopback and a manifest-backed external RTL-SDR frame at BER=0. The next proof is burst-by-burst RF repeatability under a controlled path.
 
 ## Next experiments
 
@@ -37,7 +37,8 @@ The earlier version of this page described an old blocker with high error rate a
 | P0 | Add a controlled cabled measurement variant | attenuation, gain settings and metric table |
 | P1 | Compare baseline and runtime captures with matched monitor settings | paired manifests, plots and conclusions |
 | P1 | Improve timing-closure margin | repeat builds or seed sweep with stable positive WNS |
-| P2 | Extend QPSK from digital loopback to measured RF | dataset manifest, constellation, EVM/SNR and BER summary |
+| Done | Extend QPSK from digital loopback to measured RF | OTA manifest, constellation, EVM/SNR and BER summary |
+| P1 | Measure external QPSK burst repeatability | per-burst detection count, BER/EVM distribution and confidence limits |
 | P2 | Promote the best result into a final project report | model-to-measurement report with limitations |
 
 ## Done criteria

@@ -257,6 +257,7 @@ nav:
           - "Lab 11.25 — Stock vs runtime DDS tone sweep": ru/labs/lab-11-25-stock-vs-runtime-dds-tone-sweep.md
           - "Lab 11.26 — Runtime PL BPSK OTA: DDS-bypass fix": ru/labs/lab-11-26-runtime-dds-bypass-bpsk-ota.md
           - "Lab 11.27 — Runtime QPSK digital-loopback BER": ru/labs/lab-11-27-runtime-qpsk-digital-loopback.md
+          - "Lab 11.28 — Runtime QPSK через RTL-SDR": ru/labs/lab-11-28-rtl-sdr-ota-qpsk.md
       - "Проекты Block 12":
           - "Project 12.1 — QPSK modem final project": ru/labs/project-12-1-qpsk-modem-final-project.md
           - "Project 12.2 — RF capture analysis final project": ru/labs/project-12-2-rf-capture-analysis-final-project.md
@@ -385,6 +386,7 @@ nav:
           - "Lab 11.25 — Stock vs runtime DDS tone sweep": en/labs/lab-11-25-stock-vs-runtime-dds-tone-sweep.md
           - "Lab 11.26 — Runtime PL BPSK OTA: DDS-bypass fix": en/labs/lab-11-26-runtime-dds-bypass-bpsk-ota.md
           - "Lab 11.27 — Runtime QPSK digital-loopback BER": en/labs/lab-11-27-runtime-qpsk-digital-loopback.md
+          - "Lab 11.28 — Runtime QPSK through RTL-SDR": en/labs/lab-11-28-rtl-sdr-ota-qpsk.md
       - "Block 12 projects":
           - "Project 12.1 — QPSK modem final project": en/labs/project-12-1-qpsk-modem-final-project.md
           - "Project 12.2 — RF capture analysis final project": en/labs/project-12-2-rf-capture-analysis-final-project.md

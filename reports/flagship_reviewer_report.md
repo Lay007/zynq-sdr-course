@@ -91,9 +91,9 @@ python tools/run_local_ci.py --quick
 | Limitation | Current impact | Next evidence step |
 |---|---|---|
 | Snapshot timing margin is only +0.003 ns | The routed build meets timing and passes board qualification, but seed/rebuild robustness is not established | Repeat implementation with additional seeds or improve the critical path. |
-| Some real hardware captures require local board access | Reviewers can inspect workflow and manifests, but cannot fully reproduce RF capture without hardware | Add a small publication-cleared QPSK or tone dataset with preview plots and metrics. |
+| Raw QPSK RF WAV remains local-only | Reviewers can inspect its checksum, manifest, plots and metrics but cannot replay the raw recording from Git | Publish a reviewed small capture or immutable external artifact. |
 | AD9363 gain/overload table is still measurement-pending | RF gain recommendations remain conservative | Measure gain staging, overload signs, clipping thresholds and recommended safe starting values. |
-| The filled final report still lacks a publication-cleared QPSK RF capture | The implementation story is reviewable, but not yet a complete external model-to-measurement proof | Add manifest-backed RF data, plots, BER/EVM/SNR and uncertainty notes. |
+| External QPSK evidence is one selected frame | BER=0 proves the path but not burst success rate or a BER floor | Add burst-by-burst statistics and a controlled cabled comparison. |
 
 ## Reviewer conclusion
 

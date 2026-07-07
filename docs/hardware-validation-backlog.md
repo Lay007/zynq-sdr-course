@@ -7,7 +7,7 @@ This page separates documentation work from tasks that require real hardware acc
 | Priority | Issue | Task | Evidence to collect |
 |---|---:|---|---|
 | P0 | #25 | Validate safe cabled loopback | attenuation value, gain settings, signal-level check |
-| P1 | #26 | Capture QPSK demo IQ | dataset manifest, constellation, EVM/SNR metrics |
+| P1 | #26 | Publish and repeat QPSK demo IQ | measured local manifest/plots/metrics exist; add raw-data access and per-burst statistics |
 | P2 | #29 | Add AD9363 gain table | gain settings, measured clipping/SNR behavior; use `templates/ad9363-gain-overload-log.md` during the board session |
 | P2 | #25/#26 | Add final hardware report | report page, figures, limitations |
 

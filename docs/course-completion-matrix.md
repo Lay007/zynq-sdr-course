@@ -30,8 +30,8 @@ This matrix shows what each course block should contain before it can be conside
 
 ## Interpretation notes
 
-- Block 11 now has a timing-clean, repeatable QPSK silicon payload (4/4 boot sessions, 13/13 selected-offset attempts), a promoted BPSK result and monitor/replay tooling. It remains `🟡` because external QPSK RF evidence is still pending and timing margin is narrow.
-- Block 12 now has a filled dual-modem implementation report alongside templates, rubrics and project briefs. The example remains below portfolio-ready until the pending board and RF gates are measured.
+- Block 11 now has a timing-clean, repeatable QPSK silicon payload (4/4 boot sessions, 13/13 selected-offset attempts) and a selected external RTL-SDR frame at BER=0. It remains `🟡` because multi-frame RF repeatability and stronger timing margin are still pending.
+- Block 12 now has a filled dual-modem report with internal and selected-frame external RF evidence. It remains below portfolio-ready until multi-frame and controlled-path statistics are measured.
 - Blocks 05 and 09 are the strongest automation anchors today: they combine reusable checks, generated artifacts and CI coverage.
 
 ## Lab-level quality gates
@@ -60,21 +60,21 @@ This matrix shows what each course block should contain before it can be conside
 
 - Keep the existing AD9363 frequency-plan, gain/bandwidth checklist and RTL-SDR capture guide synchronized.
 - Run the safe cabled loopback and AD9363 gain/overload characterization.
-- Add a publication-reviewed measured QPSK capture beside the existing deterministic synthetic replay.
-- Record clean-boot BPSK/QPSK success rates instead of promoting a best-of-N attempt.
+- Publish or externally archive the measured QPSK raw WAV beside the existing manifest, plots and metrics.
+- Extend the selected-frame RF result to per-burst success rates and BER/EVM distributions.
 
 ### Batch C — final portfolio layer
 
-- Extend the filled implementation report with clean-boot success-rate evidence.
+- Extend the filled implementation report with external burst success-rate evidence.
 - Add a publication-cleared RF dataset with BER/EVM/SNR figures.
 - Add screenshots of the finished measurement report and generated figures.
 
 ### Batch D — make Block 11 reviewer-friendly
 
-- Extend the short implementation report into a complete external model-to-measurement proof.
+- Extend the selected-frame implementation report into a statistically repeatable external model-to-measurement proof.
 - Keep the detailed bring-up logs as background, not as the main reviewer path.
 - Add a one-page summary table: model, implementation, capture/evidence, metrics, conclusion and limitations.
-- Correlate the routed bitstream with the clean-boot board series.
+- Challenge the routed bitstream timing margin across repeat builds or seeds.
 
 ## Review rule
 

@@ -32,6 +32,6 @@ python tools/run_local_ci.py --quick
 
 | Gap | Expected improvement |
 |---|---|
-| Board repeatability | Correlate the routed bitstream with clean-boot BPSK/QPSK success rates. |
-| Measured QPSK dataset | Add a small publication-cleared manifest-backed RF package. |
-| Final project | Extend the filled implementation report with external BER/EVM/SNR evidence. |
+| Board repeatability | Extend the selected RTL-SDR frame to per-burst BER/EVM success statistics. |
+| Measured QPSK dataset | Publish or externally archive the local-only raw WAV already backed by a manifest and SHA256. |
+| Final project | Add a controlled cabled comparison and timing-margin repeat builds. |
