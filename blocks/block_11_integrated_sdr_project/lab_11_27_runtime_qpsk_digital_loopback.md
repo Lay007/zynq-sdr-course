@@ -25,7 +25,7 @@ Deterministic PL fabric qualification, without AD9361 or RF transmission:
 
 ```bash
 python blocks/block_11_integrated_sdr_project/python/lab_11_27_runtime_qpsk_digital_loopback.py \
-  --bit-bin-path tmp/bridge_txrx_mux.qpsk.wordswap.bit.bin \
+  --bit-bin-path tmp/bridge_txrx_mux.qpsk.cdcfix_20260707.wordswap.bit.bin \
   --loopback fabric \
   --start-offsets 62 \
   --retries 10 \
@@ -69,8 +69,8 @@ A single best BER=0 attempt is evidence that the datapath works, not that it is 
 
 ## Measured result — 2026-07-07
 
-The hardware-correlated QPSK payload reached BER=0 at `start_offset=62`. Five independent stock→runtime→stock sessions passed, and all 14 attempts at the selected offset recovered 140 symbols / 280 bits with zero errors. Every session returned to stock successfully.
+The CDC-fixed, timing-clean QPSK payload reached BER=0 at `start_offset=62`. Four independent stock→runtime→stock sessions passed, and all 13 attempts at the selected offset recovered 140 symbols / 280 bits with zero errors. Every session returned to stock successfully.
 
-See `reports/hardware/qpsk-fabric-loopback-qualification-20260707.md` and `docs/assets/lab1127_qpsk_fabric_qualification_20260707.json`.
+See `reports/hardware/qpsk-fabric-loopback-qualification-20260707.md` and `docs/assets/lab1127_qpsk_fabric_cdcfix_qualification_20260707.json`.
 
-The result qualifies the QPSK core on silicon but bypasses AD9361 and RF. The AD9361 raw digital-loopback source still returns zero QPSK symbols. The hardware-working vendor-snapshot bitstream also has unresolved timing violations (WNS `-1.676 ns`), so timing closure and external RTL-SDR evidence remain open gates.
+The result qualifies the QPSK core on silicon but bypasses AD9361 and RF. The AD9361 raw digital-loopback source still returns zero QPSK symbols. The hardware-working vendor-snapshot bitstream now meets timing with WNS `+0.003 ns`; external RTL-SDR QPSK evidence and stronger timing margin remain open gates.

@@ -1,0 +1,46 @@
+{
+  "mode": "qpsk_fabric_loopback_clean_boot_qualification",
+  "start_offset": 62,
+  "bitstream_md5": "414eca88fe628de06c9bef09cf73e30e",
+  "boot_sessions": 4,
+  "successful_boot_sessions": 4,
+  "boot_success_rate": 1.0,
+  "safe_reboot_sessions": 4,
+  "attempts_at_offset": 13,
+  "zero_error_attempts_at_offset": 13,
+  "zero_error_rate_at_offset": 1.0,
+  "runs": [
+    {
+      "file": "lab1127_runtime_qpsk_digital_loopback_live_20260707_qpsk_fabric_cdcfix_cleanboot_01.json",
+      "run_tag": "live_20260707_qpsk_fabric_cdcfix_cleanboot_01",
+      "attempts_at_offset": 1,
+      "zero_error_attempts_at_offset": 1,
+      "boot_success": true,
+      "reboot_to_stock_ok": true
+    },
+    {
+      "file": "lab1127_runtime_qpsk_digital_loopback_live_20260707_qpsk_fabric_cdcfix_cleanboot_02.json",
+      "run_tag": "live_20260707_qpsk_fabric_cdcfix_cleanboot_02",
+      "attempts_at_offset": 1,
+      "zero_error_attempts_at_offset": 1,
+      "boot_success": true,
+      "reboot_to_stock_ok": true
+    },
+    {
+      "file": "lab1127_runtime_qpsk_digital_loopback_live_20260707_qpsk_fabric_cdcfix_cleanboot_03.json",
+      "run_tag": "live_20260707_qpsk_fabric_cdcfix_cleanboot_03",
+      "attempts_at_offset": 1,
+      "zero_error_attempts_at_offset": 1,
+      "boot_success": true,
+      "reboot_to_stock_ok": true
+    },
+    {
+      "file": "lab1127_runtime_qpsk_digital_loopback_live_20260707_qpsk_fabric_cdcfix_repeat10_01.json",
+      "run_tag": "live_20260707_qpsk_fabric_cdcfix_repeat10_01",
+      "attempts_at_offset": 10,
+      "zero_error_attempts_at_offset": 10,
+      "boot_success": true,
+      "reboot_to_stock_ok": true
+    }
+  ]
+}

@@ -24,7 +24,7 @@ Use the status values below:
 | Z7020 OOC FPGA summary | `reports/fpga/z7020-resource-summary-template.md` | synthetic | first curated resource/timing snapshot with board clock provenance |
 | Block 5 utilization summary | `reports/fpga/block5-utilization-summary.md` | synthetic | LUT/FF/DSP/BRAM usage for the four Block 5 HDL examples |
 | Block 5 timing summary | `reports/fpga/block5-timing-summary.md` | synthetic | 100 MHz OOC timing snapshot and limits |
-| Integrated Zynq implementation pair | `reports/fpga/integrated-zynq-implementation-summary.md`, `reports/fpga/integrated-zynq-snapshot-implementation-summary.md` | reviewed | exposes the unresolved split between standalone timing closure and snapshot board function |
+| Integrated Zynq implementation pair | `reports/fpga/integrated-zynq-implementation-summary.md`, `reports/fpga/integrated-zynq-snapshot-implementation-summary.md` | measured | CDC-fixed snapshot closes timing and passes board qualification; standalone remains diagnostic |
 | Block 5 latency/throughput notes | `reports/fpga/block5-latency-throughput-notes.md` | reviewed | one-cycle behaviour and streaming-rate notes from HDL testbenches |
 | Integrated SDR project labs | `docs/ru/labs/lab-11-7-axi-lite-bpsk-bringup.md` and following | synthetic | control-plane and burst-capture workflow now documented for lab execution |
 | Block 11 hardware bring-up summary | `docs/block11-hardware-bringup-summary.md` | measured | compact tracker for current integrated SDR hardware state, blocker and next experiments |
@@ -32,7 +32,7 @@ Use the status values below:
 | Stock-shell Zynq OTA tone observation | `datasets/lab6_8_zynq_ota_tone_observation/` | reviewed | measured `915 MHz / 700 kHz` tone package with manifest, FFT plot, metrics JSON and conservative TX/RX settings |
 | Synthetic QPSK replay dataset | `datasets/demo_qpsk_capture/manifest.yaml` | synthetic | deterministic generator, checksum, analyzer and CI thresholds provide replay evidence; measured RF capture remains open |
 | QPSK dual-modem HDL path | `blocks/block_05_fpga_hdl_flow/tb/tb_qpsk_bridge_loopback.v` | synthetic | 140 QPSK symbols / 280 bits cross the course gpreg bridge at BER=0 |
-| Runtime QPSK fabric qualification | `reports/hardware/qpsk-fabric-loopback-qualification-20260707.md` | measured | 5/5 boots and 14/14 selected-offset attempts reach BER=0 on the Zynq PL |
+| Runtime QPSK fabric qualification | `reports/hardware/qpsk-fabric-loopback-qualification-20260707.md` | measured | timing-clean payload reaches BER=0 across 4/4 boots and 13/13 selected-offset attempts on the Zynq PL |
 | Zynq-to-RTL-SDR tone witness | `reports/hardware/rtl-sdr-tone-witness-20260707.md` | measured | antenna path sees +201.965 kHz tone at 40.30 dB SNR with no clipping |
 | Hardware validation backlog | `docs/hardware-validation-backlog.md` | reviewed | issue-linked closure plan for #25, #26 and #29 |
 | FPGA resource report template | `reports/fpga_resource_report.template.md` | template | use when extending the current package to a new design |
@@ -72,7 +72,7 @@ The strongest next artifacts are:
 1. Issue #25 remainder: a safe cabled loopback capture report with attenuation notes.
 2. Issue #26: a small validated QPSK dataset package.
 3. Issue #29: an AD9363 gain and large-signal characterization table.
-4. One integrated flow that simultaneously closes timing and passes the QPSK board qualification.
+4. Repeat-build or seed evidence that the board-qualified snapshot keeps useful positive timing margin.
 
 ## Review rule
 

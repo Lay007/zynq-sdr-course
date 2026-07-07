@@ -22,7 +22,7 @@ This is the main reviewer claim: the course teaches students to treat SDR work a
 | DSP foundations | Block 3 labs, generated plots, reproducible scripts | FFT, FIR, windows, mixing, decimation and analysis are introduced as executable material. |
 | Fixed-point bridge | Block 4 labs and fixed-point workflow notes | Students see why scaling, saturation and quantization matter before RTL. |
 | HDL / FPGA flow | Block 5 labs, Verilog smoke tests and FPGA reports | The course does not stop at floating-point models; selected blocks have hardware-facing checks. |
-| Integrated implementation | Paired Vivado reports and machine-readable metrics | The current evidence exposes the signoff gap: standalone timing passes, while the hardware-working snapshot fails timing. |
+| Integrated implementation | Paired Vivado reports and machine-readable metrics | The CDC-fixed hardware-working snapshot is fully routed, meets timing and passes repeated board qualification. |
 | RF and measurement workflow | Block 6/7 materials, IQ metadata, dataset manifests | RF experiments are framed with gain staging, attenuation, capture metadata and safety notes. |
 | Synchronization and link metrics | Block 8 materials, BER/EVM/SNR terminology and acceptance rules | Digital link quality is judged by recovered bits and constellation quality, not by SNR alone. |
 | Data discipline | `datasets/`, `tools/check_dataset_manifests.py`, Git LFS-aware manifest checks | IQ captures can be reviewed without turning the repository into an uncontrolled data dump. |
@@ -90,7 +90,7 @@ python tools/run_local_ci.py --quick
 
 | Limitation | Current impact | Next evidence step |
 |---|---|---|
-| No single bitstream both closes timing and passes board qualification | QPSK fabric BER is repeatable, but only on the snapshot with WNS -1.676 ns | Close snapshot timing or restore runtime clocks in the timing-clean flow. |
+| Snapshot timing margin is only +0.003 ns | The routed build meets timing and passes board qualification, but seed/rebuild robustness is not established | Repeat implementation with additional seeds or improve the critical path. |
 | Some real hardware captures require local board access | Reviewers can inspect workflow and manifests, but cannot fully reproduce RF capture without hardware | Add a small publication-cleared QPSK or tone dataset with preview plots and metrics. |
 | AD9363 gain/overload table is still measurement-pending | RF gain recommendations remain conservative | Measure gain staging, overload signs, clipping thresholds and recommended safe starting values. |
 | The filled final report still lacks a publication-cleared QPSK RF capture | The implementation story is reviewable, but not yet a complete external model-to-measurement proof | Add manifest-backed RF data, plots, BER/EVM/SNR and uncertainty notes. |

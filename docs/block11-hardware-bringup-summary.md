@@ -17,8 +17,8 @@ Block 11 is the integrated SDR project track. Its goal is to connect the referen
 | Runtime overlay control path | reviewed | Register readback and re-init helpers show that the overlay is alive after reload. |
 | Runtime on-chip loopback | measured | The promoted loopback point reaches zero errors for the current deterministic frame. |
 | QPSK RTL and bridge path | executable | Canonical simulation reaches BER=0 for 140 symbols / 280 bits through the dual-modem bridge. |
-| Runtime QPSK fabric loopback | measured | 5/5 boot sessions and 14/14 attempts at offset 62 reached BER=0 for 140 symbols / 280 bits. |
-| Integrated FPGA implementation | split result | Standalone flow closes timing but has zero runtime sample counters; working snapshot has WNS -1.676 ns. |
+| Runtime QPSK fabric loopback | measured | Timing-clean payload: 4/4 boot sessions and 13/13 attempts at offset 62 reached BER=0 for 140 symbols / 280 bits. |
+| Integrated FPGA implementation | measured signoff candidate | Hardware-correlated snapshot is fully routed with WNS +0.003 ns and passes the QPSK fabric qualification; timing margin remains narrow. |
 | External measured proof package | hardware pending | The remaining step is a repeatable measured package with matched settings, metadata, plots and limitations. |
 
 ## Status alignment note
@@ -33,10 +33,10 @@ The earlier version of this page described an old blocker with high error rate a
 
 | Priority | Experiment | Expected evidence |
 |---|---|---|
-| P0 | Repeat the promoted loopback point from a clean boot | manifest, metrics JSON, snapshot, conclusion |
+| Done | Repeat the promoted loopback point from a clean boot | 4/4 clean boot sessions and 13/13 attempts on the timing-clean payload |
 | P0 | Add a controlled cabled measurement variant | attenuation, gain settings and metric table |
 | P1 | Compare baseline and runtime captures with matched monitor settings | paired manifests, plots and conclusions |
-| P0 | Close Vivado/board correlation | one bitstream both meets timing and passes the QPSK fabric qualification |
+| P1 | Improve timing-closure margin | repeat builds or seed sweep with stable positive WNS |
 | P2 | Extend QPSK from digital loopback to measured RF | dataset manifest, constellation, EVM/SNR and BER summary |
 | P2 | Promote the best result into a final project report | model-to-measurement report with limitations |
 

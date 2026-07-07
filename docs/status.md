@@ -31,13 +31,13 @@ Detailed bring-up logs should live on dedicated evidence pages rather than insid
 | 02 | Signals and sampling | Executable | Python labs and generated figures | Add MATLAB/C++ translations and metadata-mistake replay examples. |
 | 03 | DSP basics | Executable | Python / MATLAB / C++ path | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
 | 04 | Simulink and fixed-point | Executable | Python/MATLAB references and BPSK `.slx` models | Constrain the BPSK Simulink path further for HDL Coder handoff. |
-| 05 | FPGA / HDL flow | Executable; signoff pending | 18 HDL tests; standalone flow closes timing but fails runtime clocks; hardware-working snapshot has WNS -1.676 ns | Close timing on the hardware-correlated snapshot or restore clocks in the standalone flow. |
+| 05 | FPGA / HDL flow | Measured signoff candidate | 18 HDL tests; hardware-working snapshot is fully routed, WNS +0.003 ns, and passes board fabric-loopback qualification | Improve timing margin and verify repeat-build/seed stability. |
 | 06 | RF frontend and AD9363 | Measured | RX-only and tone capture baselines | Build the AD9363 gain table and validate safe cabled loopback. |
 | 07 | TX/RX chains | Executable | DUC/DDC demos and loopback models | Add measurement package. |
 | 08 | Modulation and synchronization | Executable | CFO, phase/timing, BER/EVM demos and SNR-vs-BER trap material | Promote generated impairment dashboards and connect them to measured Block 11 reports. |
 | 09 | Recording and analysis tools | Executable | CI16/CU8/CF32/WAV readers, fail-closed manifest CI and deterministic generated QPSK replay | Add a publication-reviewed measured QPSK capture. |
 | 10 | KiCad and basic electronics | Draft | Calculators and templates | Add measured breadboard photos and KiCad exports. |
-| 11 | Integrated SDR project | BPSK/QPSK measured internally | QPSK fabric loopback: 5/5 boot sessions and 14/14 attempts at BER=0 for 280 bits; BPSK PL result retained | Close FPGA timing correlation and add external QPSK RF evidence. |
+| 11 | Integrated SDR project | BPSK/QPSK measured internally | Timing-clean QPSK payload: 4/4 boot sessions and 13/13 attempts at BER=0 for 280 bits; BPSK PL result retained | Add external QPSK RF evidence. |
 | 12 | Final projects | Reviewable example; RF pending | Filled report plus promoted QPSK silicon qualification | Add external RTL-SDR QPSK capture with BER/EVM/SNR. |
 
 ## Hardware validation priorities

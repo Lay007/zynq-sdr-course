@@ -190,7 +190,7 @@ The repository already contains:
 
 The next major proof points are:
 
-- one integrated bitstream that both closes timing and passes board qualification;
+- repeat-build timing margin for the board-qualified integrated bitstream;
 - a small publication-cleared measured QPSK IQ dataset beside the generated replay fixture;
 - external RTL-SDR QPSK measurement with BER/EVM/SNR;
 - complete QPSK or tone model-to-measurement final report.

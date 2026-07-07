@@ -1,0 +1,500 @@
+{
+  "timestamp_utc": "2026-07-07T09:23:00.234398+00:00",
+  "run_tag": "live_20260707_qpsk_fabric_cdcfix_repeat10_01",
+  "waveform_config": {
+    "center_frequency_hz": 915000000,
+    "sample_rate_hz": 3840000,
+    "symbol_rate_hz": 480000,
+    "samples_per_symbol": 8,
+    "rf_bandwidth_hz": 2000000,
+    "payload_bit_count": 256,
+    "rolloff": 0.35,
+    "rrc_span_symbols": 8,
+    "tx_amplitude": 0.82,
+    "leading_silence_samples": 384,
+    "trailing_silence_samples": 640,
+    "capture_sample_count": 0,
+    "tx_attenuation_db": -89.75,
+    "rx_gain_db": 35.0,
+    "settle_ms": 150,
+    "rx_rf_port_select": "A_BALANCED",
+    "tx_rf_port_select": "A",
+    "synthetic_test": false,
+    "synthetic_cfo_hz": 0.0,
+    "synthetic_phase_offset_rad": 0.0,
+    "synthetic_timing_offset_samples": 0,
+    "synthetic_noise_rms": 0.0,
+    "seed": 20260619
+  },
+  "bitstream": {
+    "path": "G:\\Programs\\zynq-sdr-course\\tmp\\bridge_txrx_mux.qpsk.cdcfix_20260707.wordswap.bit.bin",
+    "size_bytes": 2505796,
+    "md5": "414eca88fe628de06c9bef09cf73e30e"
+  },
+  "symbol_count": 140,
+  "start_offsets": [
+    62
+  ],
+  "stock_context_before": {
+    "ok": true,
+    "result": {
+      "uri": "ip:192.168.40.1",
+      "context_name": "network",
+      "context_description": "192.168.40.1 Linux (none) 5.15.0 #7 SMP PREEMPT Sun Nov 3 04:49:37 PST 2024 armv7l",
+      "context_attrs": {
+        "ad9361-phy,model": "ad9361",
+        "ad9361-phy,xo_correction": "40000000",
+        "fw_version": "80403-dirty",
+        "hw_model": "FISH Ball PlutoSDR Rev.A (Z7020-AD9361)",
+        "hw_model_variant": "1",
+        "hw_serial": "",
+        "ip,ip-addr": "192.168.40.1",
+        "local,kernel": "5.15.0",
+        "uri": "ip:192.168.40.1"
+      },
+      "devices": [
+        {
+          "id": "iio:device0",
+          "name": "ad9361-phy",
+          "channel_count": 11,
+          "attrs": {},
+          "ad9361_summary": {
+            "rx_lo_frequency_hz": "2400000000",
+            "tx_lo_frequency_hz": "2400000000",
+            "rx_rf_bandwidth_hz": "18000000",
+            "tx_rf_bandwidth_hz": "18000000",
+            "rx_sampling_frequency_hz": "30720000",
+            "tx_sampling_frequency_hz": "30720000",
+            "rx_gain_control_mode": "slow_attack",
+            "rx_hardwaregain_db": "71.000000 dB",
+            "tx_hardwaregain_db": "-89.750000 dB",
+            "rx_rf_port_select": "A_BALANCED",
+            "tx_rf_port_select": "A"
+          }
+        },
+        {
+          "id": "iio:device2",
+          "name": "cf-ad9361-dds-core-lpc",
+          "channel_count": 12,
+          "attrs": {
+            "sync_start_enable": "arm",
+            "sync_start_enable_available": "arm"
+          }
+        },
+        {
+          "id": "iio:device3",
+          "name": "cf-ad9361-lpc",
+          "channel_count": 4,
+          "attrs": {
+            "sync_start_enable": "disarm",
+            "sync_start_enable_available": "arm"
+          }
+        }
+      ]
+    }
+  },
+  "upload": {
+    "path": "/lib/firmware/course_bpsk_fmcomms2_zc702_runtime.bit.bin",
+    "md5": "414eca88fe628de06c9bef09cf73e30e",
+    "size_bytes": 2505796
+  },
+  "reload": {
+    "state": "operating",
+    "dmesg_tail": [
+      "ULPI integrity check: passed.",
+      "i2c_dev: i2c /dev entries driver",
+      "cdns-wdt f8005000.watchdog: Xilinx Watchdog Timer with timeout 10s",
+      "Xilinx Zynq CpuIdle Driver started",
+      "sdhci: Secure Digital Host Controller Interface driver",
+      "sdhci: Copyright(c) Pierre Ossman",
+      "sdhci-pltfm: SDHCI platform and OF driver helper",
+      "ledtrig-cpu: registered to indicate activity on CPUs",
+      "hid: raw HID events driver (C) Jiri Kosina",
+      "usbcore: registered new interface driver usbhid",
+      "usbhid: USB HID core driver",
+      "usbcore: registered new interface driver r8712u",
+      "usbcore: registered new interface driver r8188eu",
+      "ad9361 spi0.0: ad9361_probe : enter (ad9361)",
+      "mmc0: SDHCI controller on e0100000.mmc [e0100000.mmc] using ADMA",
+      "random: fast init done",
+      "mmc0: new high speed SD card at address 21ed",
+      "mmcblk0: mmc0:21ed APPSD 240 MiB ",
+      " mmcblk0: p1",
+      "ad9361 spi0.0: ad9361_probe : AD936x Rev 0 successfully initialized",
+      "cf_axi_dds 79024000.cf-ad9361-dds-core-lpc: Analog Devices CF_AXI_DDS_DDS MASTER (9.01.b) at 0x79024000 mapped to 0x(ptrval), probed DDS AD9361",
+      "fpga_manager fpga0: Xilinx Zynq FPGA Manager registered",
+      "NET: Registered PF_PACKET protocol family",
+      "lib80211: common routines for IEEE802.11 drivers",
+      "lib80211_crypt: registered algorithm 'NULL'",
+      "lib80211_crypt: registered algorithm 'WEP'",
+      "lib80211_crypt: registered algorithm 'CCMP'",
+      "Registering SWP/SWPB emulation handler",
+      "Loading compiled-in X.509 certificates",
+      "cf_axi_adc 79020000.cf-ad9361-lpc: ADI AIM (10.03.\u0000) at 0x79020000 mapped to 0x(ptrval) probed ADC AD9361 as MASTER",
+      "cfg80211: Loading compiled-in X.509 certificates for regulatory database",
+      "cfg80211: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'",
+      "platform regulatory.0: Direct firmware load for regulatory.db failed with error -2",
+      "cfg80211: failed to load regulatory.db",
+      "Freeing unused kernel image (initmem) memory: 1024K",
+      "Run /init as init process",
+      "  with arguments:",
+      "    /init",
+      "  with environment:",
+      "    HOME=/",
+      "    TERM=linux",
+      "file system registered",
+      "using random self ethernet address",
+      "using random host ethernet address",
+      "Mass Storage Function, version: 2009/09/11",
+      "LUN: removable file: (no medium)",
+      "read descriptors",
+      "read strings",
+      "usb0: HOST MAC 00:e0:22:ad:c8:3b",
+      "usb0: MAC 00:05:f7:19:e7:93",
+      "random: dbus-uuidgen: uninitialized urandom read (12 bytes read)",
+      "random: dbus-uuidgen: uninitialized urandom read (8 bytes read)",
+      "random: dbus-daemon: uninitialized urandom read (12 bytes read)",
+      "random: crng init done",
+      "random: 1 urandom warning(s) missed due to ratelimiting",
+      "macb e000b000.ethernet eth0: PHY [e000b000.ethernet-ffffffff:00] driver [RTL8211F Gigabit Ethernet] (irq=POLL)",
+      "macb e000b000.ethernet eth0: configuring for phy/rgmii-id link mode",
+      "macb e000b000.ethernet eth0: Link is Up - 100Mbps/Full - flow control off",
+      "loop7: detected capacity change from 0 to 61440",
+      "fpga_manager fpga0: writing course_bpsk_fmcomms2_zc702_runtime.bit.bin to Xilinx Zynq FPGA Manager"
+    ]
+  },
+  "gpreg_after_reload": {
+    "core_id": "0x4250534B",
+    "signature": "0x4250534B"
+  },
+  "sweep": [
+    {
+      "start_offset": 62,
+      "ok": true,
+      "received_symbols": 140,
+      "total_bit_errors": 0,
+      "payload_errors": 0,
+      "timed_out": false,
+      "status": "0x00000814",
+      "polls": 0,
+      "debug": {
+        "adc_input": "0xC725AFFF",
+        "tx": "0x300004A5",
+        "rx": "0x000004B1",
+        "capture": "0xE7FFCFFF",
+        "tx_sample_count_lsb": 1189,
+        "recovered_symbol_count_lsb": 0,
+        "rx_valid_count": 1201
+      },
+      "attempt": 1
+    },
+    {
+      "start_offset": 62,
+      "ok": true,
+      "received_symbols": 140,
+      "total_bit_errors": 0,
+      "payload_errors": 0,
+      "timed_out": false,
+      "status": "0x00000814",
+      "polls": 0,
+      "debug": {
+        "adc_input": "0xC3D1EFFF",
+        "tx": "0x300004A5",
+        "rx": "0x000004B1",
+        "capture": "0xE7FFCFFF",
+        "tx_sample_count_lsb": 1189,
+        "recovered_symbol_count_lsb": 0,
+        "rx_valid_count": 1201
+      },
+      "attempt": 2
+    },
+    {
+      "start_offset": 62,
+      "ok": true,
+      "received_symbols": 140,
+      "total_bit_errors": 0,
+      "payload_errors": 0,
+      "timed_out": false,
+      "status": "0x00000814",
+      "polls": 0,
+      "debug": {
+        "adc_input": "0xC01DCFFF",
+        "tx": "0x300004A5",
+        "rx": "0x000004B1",
+        "capture": "0xE7FFCFFF",
+        "tx_sample_count_lsb": 1189,
+        "recovered_symbol_count_lsb": 0,
+        "rx_valid_count": 1201
+      },
+      "attempt": 3
+    },
+    {
+      "start_offset": 62,
+      "ok": true,
+      "received_symbols": 140,
+      "total_bit_errors": 0,
+      "payload_errors": 0,
+      "timed_out": false,
+      "status": "0x00000814",
+      "polls": 0,
+      "debug": {
+        "adc_input": "0xC6957FFF",
+        "tx": "0x300004A5",
+        "rx": "0x000004B1",
+        "capture": "0xE7FFCFFF",
+        "tx_sample_count_lsb": 1189,
+        "recovered_symbol_count_lsb": 0,
+        "rx_valid_count": 1201
+      },
+      "attempt": 4
+    },
+    {
+      "start_offset": 62,
+      "ok": true,
+      "received_symbols": 140,
+      "total_bit_errors": 0,
+      "payload_errors": 0,
+      "timed_out": false,
+      "status": "0x00000814",
+      "polls": 0,
+      "debug": {
+        "adc_input": "0xC0A52FFF",
+        "tx": "0x300004A5",
+        "rx": "0x000004B1",
+        "capture": "0xE7FFCFFF",
+        "tx_sample_count_lsb": 1189,
+        "recovered_symbol_count_lsb": 0,
+        "rx_valid_count": 1201
+      },
+      "attempt": 5
+    },
+    {
+      "start_offset": 62,
+      "ok": true,
+      "received_symbols": 140,
+      "total_bit_errors": 0,
+      "payload_errors": 0,
+      "timed_out": false,
+      "status": "0x00000814",
+      "polls": 0,
+      "debug": {
+        "adc_input": "0xCE396FFF",
+        "tx": "0x300004A5",
+        "rx": "0x000004B1",
+        "capture": "0xE7FFCFFF",
+        "tx_sample_count_lsb": 1189,
+        "recovered_symbol_count_lsb": 0,
+        "rx_valid_count": 1201
+      },
+      "attempt": 6
+    },
+    {
+      "start_offset": 62,
+      "ok": true,
+      "received_symbols": 140,
+      "total_bit_errors": 0,
+      "payload_errors": 0,
+      "timed_out": false,
+      "status": "0x00000814",
+      "polls": 0,
+      "debug": {
+        "adc_input": "0xC9237FFF",
+        "tx": "0x300004A5",
+        "rx": "0x000004B1",
+        "capture": "0xE7FFCFFF",
+        "tx_sample_count_lsb": 1189,
+        "recovered_symbol_count_lsb": 0,
+        "rx_valid_count": 1201
+      },
+      "attempt": 7
+    },
+    {
+      "start_offset": 62,
+      "ok": true,
+      "received_symbols": 140,
+      "total_bit_errors": 0,
+      "payload_errors": 0,
+      "timed_out": false,
+      "status": "0x00000814",
+      "polls": 0,
+      "debug": {
+        "adc_input": "0xC27B8FFF",
+        "tx": "0x300004A5",
+        "rx": "0x000004B1",
+        "capture": "0xE7FFCFFF",
+        "tx_sample_count_lsb": 1189,
+        "recovered_symbol_count_lsb": 0,
+        "rx_valid_count": 1201
+      },
+      "attempt": 8
+    },
+    {
+      "start_offset": 62,
+      "ok": true,
+      "received_symbols": 140,
+      "total_bit_errors": 0,
+      "payload_errors": 0,
+      "timed_out": false,
+      "status": "0x00000814",
+      "polls": 0,
+      "debug": {
+        "adc_input": "0xCCF70FFF",
+        "tx": "0x300004A5",
+        "rx": "0x000004B1",
+        "capture": "0xE7FFCFFF",
+        "tx_sample_count_lsb": 1189,
+        "recovered_symbol_count_lsb": 0,
+        "rx_valid_count": 1201
+      },
+      "attempt": 9
+    },
+    {
+      "start_offset": 62,
+      "ok": true,
+      "received_symbols": 140,
+      "total_bit_errors": 0,
+      "payload_errors": 0,
+      "timed_out": false,
+      "status": "0x00000814",
+      "polls": 0,
+      "debug": {
+        "adc_input": "0xC521CFFF",
+        "tx": "0x300004A5",
+        "rx": "0x000004B1",
+        "capture": "0xE7FFCFFF",
+        "tx_sample_count_lsb": 1189,
+        "recovered_symbol_count_lsb": 0,
+        "rx_valid_count": 1201
+      },
+      "attempt": 10
+    }
+  ],
+  "reboot_after": {
+    "ok": true,
+    "result": {
+      "reboot_issued_utc": "2026-07-07T09:24:43.979544+00:00",
+      "ssh_down_seen": true,
+      "ssh_up_seen": true,
+      "board_state": {
+        "model": "FISH Ball PlutoSDR Rev.A (Z7020/AD9361)",
+        "rx_lo_hz": "2400000000",
+        "tx_lo_hz": "2400000000",
+        "rx_sample_rate_hz": "30720000",
+        "tx_sample_rate_hz": "30720000",
+        "rx_gain_mode_ch0": "slow_attack",
+        "rx_gain_mode_ch1": "slow_attack",
+        "rx_gain_db_ch0": "71.000000 dB",
+        "rx_gain_db_ch1": "71.000000 dB",
+        "tx_attenuation_db_ch0": "-89.750000 dB",
+        "tx_attenuation_db_ch1": "-89.750000 dB",
+        "tx_lo_powerdown": "1"
+      },
+      "iio_context": {
+        "uri": "ip:192.168.40.1",
+        "context_name": "network",
+        "context_description": "192.168.40.1 Linux (none) 5.15.0 #7 SMP PREEMPT Sun Nov 3 04:49:37 PST 2024 armv7l",
+        "context_attrs": {
+          "ad9361-phy,model": "ad9361",
+          "ad9361-phy,xo_correction": "40000000",
+          "fw_version": "80403-dirty",
+          "hw_model": "FISH Ball PlutoSDR Rev.A (Z7020-AD9361)",
+          "hw_model_variant": "1",
+          "hw_serial": "",
+          "ip,ip-addr": "192.168.40.1",
+          "local,kernel": "5.15.0",
+          "uri": "ip:192.168.40.1"
+        },
+        "devices": [
+          {
+            "id": "iio:device0",
+            "name": "ad9361-phy",
+            "channel_count": 11,
+            "attrs": {},
+            "ad9361_summary": {
+              "rx_lo_frequency_hz": "2400000000",
+              "tx_lo_frequency_hz": "2400000000",
+              "rx_rf_bandwidth_hz": "18000000",
+              "tx_rf_bandwidth_hz": "18000000",
+              "rx_sampling_frequency_hz": "30720000",
+              "tx_sampling_frequency_hz": "30720000",
+              "rx_gain_control_mode": "slow_attack",
+              "rx_hardwaregain_db": "71.000000 dB",
+              "tx_hardwaregain_db": "-89.750000 dB",
+              "rx_rf_port_select": "A_BALANCED",
+              "tx_rf_port_select": "A"
+            }
+          },
+          {
+            "id": "iio:device2",
+            "name": "cf-ad9361-dds-core-lpc",
+            "channel_count": 12,
+            "attrs": {
+              "sync_start_enable": "arm",
+              "sync_start_enable_available": "arm"
+            }
+          },
+          {
+            "id": "iio:device3",
+            "name": "cf-ad9361-lpc",
+            "channel_count": 4,
+            "attrs": {
+              "sync_start_enable": "disarm",
+              "sync_start_enable_available": "arm"
+            }
+          }
+        ]
+      },
+      "fpga_manager_state": "operating"
+    }
+  },
+  "summary": {
+    "mode": "qpsk_fabric_loopback",
+    "symbol_count": 140,
+    "bit_count": 280,
+    "total_attempts": 10,
+    "full_frame_attempts": 10,
+    "zero_error_attempts": 10,
+    "zero_error_rate": 1.0,
+    "full_frame_offsets": [
+      62
+    ],
+    "zero_error_offsets": [
+      62
+    ],
+    "attempts_by_offset": [
+      {
+        "start_offset": 62,
+        "attempts": 10,
+        "full_frames": 10,
+        "zero_error_frames": 10,
+        "zero_error_rate": 1.0
+      }
+    ],
+    "best": {
+      "start_offset": 62,
+      "ok": true,
+      "received_symbols": 140,
+      "total_bit_errors": 0,
+      "payload_errors": 0,
+      "timed_out": false,
+      "status": "0x00000814",
+      "polls": 0,
+      "debug": {
+        "adc_input": "0xC725AFFF",
+        "tx": "0x300004A5",
+        "rx": "0x000004B1",
+        "capture": "0xE7FFCFFF",
+        "tx_sample_count_lsb": 1189,
+        "recovered_symbol_count_lsb": 0,
+        "rx_valid_count": 1201
+      },
+      "attempt": 1
+    },
+    "conclusion": "QPSK digital loopback reached BER=0: 140 symbols / 280 bits recovered with 0 errors at start_offset=62. Repeatability: 10/10 attempts reached BER=0."
+  },
+  "loopback": "fabric",
+  "bist_loopback": "skipped: PL fabric loopback",
+  "bridge_signature": "0x4250534B",
+  "mode_bits": "0x50",
+  "rx_source": "fabric"
+}

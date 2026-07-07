@@ -44,14 +44,14 @@ The run targets `xc7z020clg400-2` and uses a `10.000 ns` / `100.000 MHz` clock c
 
 ## Integrated routed results
 
-The dual-modem overlay has two distinct Vivado flows. Their evidence must not be combined into one signoff claim.
+The dual-modem overlay has two distinct Vivado flows. The vendor-snapshot flow is the hardware-correlated signoff candidate; the standalone reconstruction remains a diagnostic comparison.
 
 | Flow | LUT | FF | DSP | BRAM | WNS, ns | TNS, ns | Hardware result |
 |---|---:|---:|---:|---:|---:|---:|---|
 | Standalone recreated | 13,795 | 21,780 | 28 | 4.0 | +0.354 | 0.000 | gpreg alive, sample-path counters stay zero |
-| Vendor snapshot | 27,887 | 36,203 | 212 | 8.0 | -1.676 | -53.405 | QPSK fabric BER=0, 5/5 boot sessions |
+| Vendor snapshot | 27,597 | 36,169 | 216 | 8.0 | +0.003 | 0.000 | QPSK fabric BER=0, 4/4 boot sessions and 13/13 attempts on the timing-clean payload |
 
-Both designs are fully routed with zero routing errors. The standalone flow closes timing but is not hardware-functional after runtime reload. The vendor snapshot is hardware-functional but has 66 failing timing endpoints. Closing this correlation gap is the current FPGA signoff task.
+Both designs are fully routed with zero routing errors. The standalone flow closes timing but is not hardware-functional after runtime reload. After synchronizing the RX channel-select control into the ADC write domain, the vendor snapshot has zero failing timing endpoints and the same payload passes repeated board qualification. Its WNS is only `+0.003 ns`, so repeat-build/seed margin remains an engineering improvement rather than an open functional signoff gate.
 
 Rebuild and promote the normalized evidence on Windows with:
 
@@ -66,4 +66,5 @@ Without `--build`, the command republishes reports from an existing completed im
 
 - The per-module tables are OOC synthesis results; both integrated packages are placed-and-routed results.
 - Port-level input/output timing is intentionally unconstrained in this educational flow.
-- Neither integrated flow currently satisfies both timing closure and board correlation.
+- The vendor-snapshot result satisfies timing closure and board correlation for the internal QPSK fabric path; AD9361/RF operation is a separate acceptance gate.
+- Timing margin is only `+0.003 ns`; a repeat-build or seed sweep is needed before calling the closure robust.

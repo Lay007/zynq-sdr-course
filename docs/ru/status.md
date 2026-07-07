@@ -29,13 +29,13 @@
 | 02 | Сигналы и дискретизация | Executable | Python-лабы и сгенерированные фигуры | Добавить MATLAB/C++-варианты и примеры воспроизведения ошибок в метаданных. |
 | 03 | Базовые DSP-операции | Executable | Python / MATLAB / C++ path | Добавить демонстрацию порога прямой свёртки против FFT и больше эталонов. |
 | 04 | Simulink и fixed-point | Executable | Python/MATLAB references и BPSK `.slx` models | Сильнее ограничить BPSK-маршрут в Simulink под HDL Coder handoff. |
-| 05 | FPGA / HDL flow | Executable; signoff pending | 18 HDL-тестов; standalone flow закрывает timing, но не запускает runtime clocks; рабочий snapshot имеет WNS -1,676 нс | Закрыть timing hardware-correlated snapshot либо восстановить clocks standalone flow. |
+| 05 | FPGA / HDL flow | Measured signoff candidate | 18 HDL-тестов; рабочий snapshot полностью разведен, имеет WNS +0,003 нс и проходит fabric-loopback на плате | Увеличить timing margin и проверить устойчивость повторных сборок/seeds. |
 | 06 | RF frontend и AD9363 | Measured | RX-only и tone capture baselines | Построить таблицу усиления AD9363 и проверить безопасный cabled loopback. |
 | 07 | TX/RX тракты | Executable | DUC/DDC demos и loopback models | Добавить пакет измерений. |
 | 08 | Модуляция и синхронизация | Executable | CFO, phase/timing и BER/EVM demos | Добавить sweeps по искажениям и дашборды BER/EVM. |
 | 09 | Инструменты записи и анализа | Executable | CI16/CU8/CF32/WAV readers, fail-closed manifest CI и детерминированный synthetic QPSK replay | Добавить прошедший publication review реальный QPSK-захват. |
 | 10 | KiCad и базовая электроника | Draft | Calculators и templates | Добавить фото макета и экспорты из KiCad. |
-| 11 | Интегрированный SDR-проект | BPSK/QPSK measured internally | QPSK fabric loopback: 5/5 boot-сессий и 14/14 попыток BER=0 для 280 бит | Закрыть FPGA timing correlation и добавить внешнее QPSK RF evidence. |
+| 11 | Интегрированный SDR-проект | BPSK/QPSK measured internally | Timing-clean QPSK payload: 4/4 boot-сессии и 13/13 попыток BER=0 для 280 бит | Добавить внешнее QPSK RF evidence. |
 | 12 | Итоговые проекты | Reviewable example; RF pending | Заполненный отчёт и QPSK silicon qualification | Добавить внешний RTL-SDR QPSK-захват с BER/EVM/SNR. |
 
 ## Недавно добавленные артефакты для усиления курса

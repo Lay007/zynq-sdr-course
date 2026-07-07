@@ -4,7 +4,7 @@
 
 The project connects the BPSK/QPSK reference paths, the course RTL, the Zynq/AD9361 integration design and the current hardware evidence. The implementation portion is accepted when the canonical HDL suite passes, the exact integrated top-level is fully routed and all constrained timing endpoints pass.
 
-Board-level acceptance is stricter: repeatable silicon operation and a manifest-backed external RF measurement are separate gates. QPSK fabric-loopback repeatability is now measured; RF and combined timing/board signoff remain open.
+Board-level acceptance is stricter: repeatable silicon operation and a manifest-backed external RF measurement are separate gates. The timing-clean QPSK fabric-loopback payload is now repeatable; external RF remains open.
 
 ## Architecture
 
@@ -25,27 +25,27 @@ PS7 + AXI + AD9361 interface -> placed-and-routed XC7Z020 design -> local bitstr
 | Reference/model | BPSK package and deterministic QPSK replay | reproducible vectors, plots and metrics | synthetic |
 | RTL | canonical HDL smoke suite | 18/18 tests pass; BPSK/QPSK BER=0 in their deterministic tests | simulation |
 | QPSK bridge | dual-modem loopback testbench | 140 symbols / 280 bits, BER=0 | simulation |
-| FPGA implementation | two integrated Vivado 2021.1 flows | standalone timing passes; hardware-working snapshot timing fails | signoff pending |
+| FPGA implementation | two integrated Vivado 2021.1 flows | hardware-working snapshot is fully routed and timing-clean | internal-path signoff candidate |
 | BPSK board path | promoted on-chip PL result | 281 compared bits, BER=0 | measured single promoted result |
-| QPSK board path | Lab 11.27 fabric loopback | 5/5 boots, 14/14 attempts at BER=0 for 280 bits | measured silicon |
+| QPSK board path | Lab 11.27 fabric loopback | timing-clean payload: 4/4 boots, 13/13 attempts at BER=0 for 280 bits | measured silicon |
 | External RF | RTL-SDR/Zynq capture workflows | tone and monitor paths exist | complete dual-modem proof pending |
 
 ## Integrated implementation result
 
-The dual-modem top-level was synthesized through two flows for `xc7z020clg400-2` with Vivado 2021.1. The results expose a correlation defect rather than a final signoff point.
+The dual-modem top-level was synthesized through two flows for `xc7z020clg400-2` with Vivado 2021.1. The standalone reconstruction remains useful diagnostically; the vendor snapshot is the hardware-correlated signoff candidate.
 
 | Metric | Standalone recreated | Vendor snapshot |
 |---|---:|---:|
-| LUT | 13,795 | 27,887 |
-| FF | 21,780 | 36,203 |
-| DSP | 28 | 212 |
+| LUT | 13,795 | 27,597 |
+| FF | 21,780 | 36,169 |
+| DSP | 28 | 216 |
 | BRAM tiles | 4.0 | 8.0 |
-| WNS | +0.354 ns | -1.676 ns |
-| TNS | 0.000 ns | -53.405 ns |
-| Failing endpoints | 0 | 66 |
+| WNS | +0.354 ns | +0.003 ns |
+| TNS | 0.000 ns | 0.000 ns |
+| Failing endpoints | 0 | 0 |
 | Routing errors | 0 | 0 |
 
-The standalone bitstream is timing-clean but produced zero TX/RX valid counts after runtime reload. The vendor-snapshot payload is hardware-correlated and passes QPSK fabric BER, but fails timing. Neither result alone satisfies final acceptance.
+The standalone bitstream is timing-clean but produced zero TX/RX valid counts after runtime reload. The vendor-snapshot payload closes timing after the RX channel-select CDC fix and passes QPSK fabric BER on the same generated payload. The remaining caveat is the `+0.003 ns` WNS margin, which should be challenged with repeat builds or a seed sweep.
 
 ## Reproduction
 
@@ -85,6 +85,6 @@ Primary artifacts:
 
 ## Engineering conclusion
 
-The QPSK modem is proven on the real Zynq PL at BER=0 and is repeatable across five boot sessions. FPGA capacity and routing are feasible, but final timing/board correlation is not closed.
+The QPSK modem is proven on the real Zynq PL at BER=0. The final timing-clean payload is repeatable across four boot sessions and 13 attempts, and FPGA timing/board correlation is closed for the internal fabric path.
 
-The next FPGA task is to make the hardware-correlated snapshot meet timing or restore sample clocks in the timing-clean standalone flow. The next measurement task is an external RTL-SDR QPSK capture with configuration metadata, BER, EVM, SNR and uncertainty notes.
+The next FPGA task is to improve and demonstrate timing margin across repeat builds. The next measurement task is an external RTL-SDR QPSK capture with configuration metadata, BER, EVM, SNR and uncertainty notes.
