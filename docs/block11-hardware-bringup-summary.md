@@ -12,12 +12,13 @@ Block 11 is the integrated SDR project track. Its goal is to connect the referen
 |---|---|---|
 | Baseline board path | reviewed | The vendor Linux/IIO path is the known-good reference. |
 | External monitor flow | measured | WAV/IQ monitor capture and offline replay are documented. |
+| Connected RTL-SDR witness | measured | 868.3 MHz stock DDS tone measured at +201.965 kHz, SNR 40.30 dB, no clipping. |
 | Fallback reference path | reviewed | The fallback path has a zero-error reference result. |
 | Runtime overlay control path | reviewed | Register readback and re-init helpers show that the overlay is alive after reload. |
 | Runtime on-chip loopback | measured | The promoted loopback point reaches zero errors for the current deterministic frame. |
 | QPSK RTL and bridge path | executable | Canonical simulation reaches BER=0 for 140 symbols / 280 bits through the dual-modem bridge. |
-| Runtime QPSK helper | hardware pending | Lab 11.27 automates clean-boot offset/retry sweeps, but no board JSON is promoted yet. |
-| Integrated FPGA implementation | reviewed | The current top-level is fully routed with WNS 0.354 ns, TNS 0 and no routing errors. |
+| Runtime QPSK fabric loopback | measured | 5/5 boot sessions and 14/14 attempts at offset 62 reached BER=0 for 140 symbols / 280 bits. |
+| Integrated FPGA implementation | split result | Standalone flow closes timing but has zero runtime sample counters; working snapshot has WNS -1.676 ns. |
 | External measured proof package | hardware pending | The remaining step is a repeatable measured package with matched settings, metadata, plots and limitations. |
 
 ## Status alignment note
@@ -35,7 +36,7 @@ The earlier version of this page described an old blocker with high error rate a
 | P0 | Repeat the promoted loopback point from a clean boot | manifest, metrics JSON, snapshot, conclusion |
 | P0 | Add a controlled cabled measurement variant | attenuation, gain settings and metric table |
 | P1 | Compare baseline and runtime captures with matched monitor settings | paired manifests, plots and conclusions |
-| P0 | Run the Lab 11.27 clean-boot QPSK series | full attempt table, success rate, configuration and recovery proof |
+| P0 | Close Vivado/board correlation | one bitstream both meets timing and passes the QPSK fabric qualification |
 | P2 | Extend QPSK from digital loopback to measured RF | dataset manifest, constellation, EVM/SNR and BER summary |
 | P2 | Promote the best result into a final project report | model-to-measurement report with limitations |
 

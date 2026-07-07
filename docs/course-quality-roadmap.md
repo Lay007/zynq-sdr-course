@@ -55,7 +55,7 @@ A lab is complete only when it contains:
 
 - Add fixed-point error tables for FIR, mixer, NCO and decimator labs.
 - Add streaming FPGA diagrams for each DSP block.
-- Correlate the routed top-level implementation evidence with repeatable clean-boot board runs.
+- Resolve the measured split between standalone timing closure and vendor-snapshot board operation.
 - Extend the current Verilog testbench strategy toward integrated AXI/DMA-level verification.
 
 ### P2 — make it publication/portfolio-ready

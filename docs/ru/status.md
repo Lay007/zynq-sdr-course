@@ -29,14 +29,14 @@
 | 02 | Сигналы и дискретизация | Executable | Python-лабы и сгенерированные фигуры | Добавить MATLAB/C++-варианты и примеры воспроизведения ошибок в метаданных. |
 | 03 | Базовые DSP-операции | Executable | Python / MATLAB / C++ path | Добавить демонстрацию порога прямой свёртки против FFT и больше эталонов. |
 | 04 | Simulink и fixed-point | Executable | Python/MATLAB references и BPSK `.slx` models | Сильнее ограничить BPSK-маршрут в Simulink под HDL Coder handoff. |
-| 05 | FPGA / HDL flow | Executable | 18 HDL-тестов и fully routed integrated design: WNS 0,354 нс, TNS 0, routing errors 0 | Сопоставить собранный bitstream с повторяемыми прогонами на плате. |
+| 05 | FPGA / HDL flow | Executable; signoff pending | 18 HDL-тестов; standalone flow закрывает timing, но не запускает runtime clocks; рабочий snapshot имеет WNS -1,676 нс | Закрыть timing hardware-correlated snapshot либо восстановить clocks standalone flow. |
 | 06 | RF frontend и AD9363 | Measured | RX-only и tone capture baselines | Построить таблицу усиления AD9363 и проверить безопасный cabled loopback. |
 | 07 | TX/RX тракты | Executable | DUC/DDC demos и loopback models | Добавить пакет измерений. |
 | 08 | Модуляция и синхронизация | Executable | CFO, phase/timing и BER/EVM demos | Добавить sweeps по искажениям и дашборды BER/EVM. |
 | 09 | Инструменты записи и анализа | Executable | CI16/CU8/CF32/WAV readers, fail-closed manifest CI и детерминированный synthetic QPSK replay | Добавить прошедший publication review реальный QPSK-захват. |
 | 10 | KiCad и базовая электроника | Draft | Calculators и templates | Добавить фото макета и экспорты из KiCad. |
-| 11 | Интегрированный SDR-проект | BPSK measured; QPSK executable | On-chip PL BPSK BER=0 (281 бит); QPSK RTL и dual-modem bridge BER=0 для 280 бит; доступен runtime helper Lab 11.27 | Измерить clean-boot success rate BPSK/QPSK, интегрировать детерминированный выбор фазы и выпустить итоговый отчёт. |
-| 12 | Итоговые проекты | Reviewable example; hardware pending | Заполненный отчёт по dual-modem implementation, templates и rubric | Добавить clean-boot QPSK и внешние RF-измерения для уровня portfolio-ready. |
+| 11 | Интегрированный SDR-проект | BPSK/QPSK measured internally | QPSK fabric loopback: 5/5 boot-сессий и 14/14 попыток BER=0 для 280 бит | Закрыть FPGA timing correlation и добавить внешнее QPSK RF evidence. |
+| 12 | Итоговые проекты | Reviewable example; RF pending | Заполненный отчёт и QPSK silicon qualification | Добавить внешний RTL-SDR QPSK-захват с BER/EVM/SNR. |
 
 ## Недавно добавленные артефакты для усиления курса
 

@@ -24,6 +24,7 @@ The run targets `xc7z020clg400-2` and uses a `10.000 ns` / `100.000 MHz` clock c
 | Raw metrics JSON | Machine-readable run summary | `reports/fpga/vivado_ooc_raw/block5_vivado_ooc_metrics.json` |
 | Integrated implementation summary | Placed-and-routed top-level result | `reports/fpga/integrated-zynq-implementation-summary.md` |
 | Integrated metrics JSON | Machine-readable routed result | `reports/fpga/integrated_zynq_raw/integrated_zynq_metrics.json` |
+| Vendor-snapshot implementation | Hardware-correlated routed result | `reports/fpga/integrated-zynq-snapshot-implementation-summary.md` |
 | PS7 provenance artifact | Board clock and DDR settings snapshot | `hardware/7020_ad936x_sdr/ps/bringup_tests/design_1_wrapper/ps7_summary.html` |
 
 ## Key results
@@ -41,26 +42,28 @@ The run targets `xc7z020clg400-2` and uses a `10.000 ns` / `100.000 MHz` clock c
 - The AXI-Stream wrapper overhead is negligible compared with the arithmetic blocks, which is useful when estimating integration cost into a Zynq data path.
 - `fir_iq_4tap` is already close to the 100 MHz target, while `nco_mixer_iq` needs additional timing headroom before it should be treated as an integrated board-level datapath block.
 
-## Integrated routed result
+## Integrated routed results
 
-The current dual-modem Zynq overlay was also built through synthesis, placement, routing and bitstream generation with Vivado 2021.1 for `xc7z020clg400-2`.
+The dual-modem overlay has two distinct Vivado flows. Their evidence must not be combined into one signoff claim.
 
-| LUT | FF | DSP | BRAM tiles | WNS, ns | TNS, ns | Routing errors |
-|---:|---:|---:|---:|---:|---:|---:|
-| 13,795 | 21,780 | 28 | 4.0 | 0.354 | 0.000 | 0 |
+| Flow | LUT | FF | DSP | BRAM | WNS, ns | TNS, ns | Hardware result |
+|---|---:|---:|---:|---:|---:|---:|---|
+| Standalone recreated | 13,795 | 21,780 | 28 | 4.0 | +0.354 | 0.000 | gpreg alive, sample-path counters stay zero |
+| Vendor snapshot | 27,887 | 36,203 | 212 | 8.0 | -1.676 | -53.405 | QPSK fabric BER=0, 5/5 boot sessions |
 
-All 29,899 routable nets are fully routed and all 48,851 timing endpoints pass. The report generator rejects missing metrics, routing errors and timing failure instead of publishing a partial success.
+Both designs are fully routed with zero routing errors. The standalone flow closes timing but is not hardware-functional after runtime reload. The vendor snapshot is hardware-functional but has 66 failing timing endpoints. Closing this correlation gap is the current FPGA signoff task.
 
 Rebuild and promote the normalized evidence on Windows with:
 
 ```powershell
-python tools/generate_integrated_vivado_reports.py --build
+python tools/generate_integrated_vivado_reports.py --flow standalone --build
+python tools/generate_integrated_vivado_reports.py --flow snapshot --build
 ```
 
 Without `--build`, the command republishes reports from an existing completed implementation run.
 
 ## Limits of the evidence
 
-- The per-module tables are OOC synthesis results; the separate integrated package is a placed-and-routed top-level result.
+- The per-module tables are OOC synthesis results; both integrated packages are placed-and-routed results.
 - Port-level input/output timing is intentionally unconstrained in this educational flow.
-- Successful implementation does not prove AD9361 calibration, RF quality or repeatable clean-boot board operation.
+- Neither integrated flow currently satisfies both timing closure and board correlation.

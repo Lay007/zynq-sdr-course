@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -21,6 +22,14 @@ BUILD_SCRIPT = DESIGN_DIR / "build_bitstream.tcl"
 IMPL_DIR = DESIGN_DIR / "build" / "course_bpsk_fmcomms2_zc702.runs" / "impl_1"
 OUTPUT_DIR = ROOT / "reports" / "fpga" / "integrated_zynq_raw"
 SUMMARY_PATH = ROOT / "reports" / "fpga" / "integrated-zynq-implementation-summary.md"
+SNAPSHOT_SCRIPT = ROOT / "hardware" / "7020_ad936x_sdr" / "rebuild_vendor_xpr_snapshot_course_overlay.tcl"
+SNAPSHOT_IMPL_DIR = (
+    ROOT / "tmp" / "vendor_xpr_course_overlay" / "zc702" / "zc702.runs" / "impl_1"
+)
+SNAPSHOT_OUTPUT_DIR = ROOT / "reports" / "fpga" / "integrated_zynq_snapshot_raw"
+SNAPSHOT_SUMMARY_PATH = (
+    ROOT / "reports" / "fpga" / "integrated-zynq-snapshot-implementation-summary.md"
+)
 
 REPORT_FILES = (
     "system_top_utilization_placed.rpt",
@@ -30,9 +39,13 @@ REPORT_FILES = (
 )
 
 
-def run_vivado_script(vivado_bin: Path, script: Path) -> None:
+def run_vivado_script(
+    vivado_bin: Path, script: Path, *, extra_environment: dict[str, str] | None = None
+) -> None:
     command = ["cmd.exe", "/c", str(vivado_bin), "-mode", "batch", "-source", str(script)]
-    subprocess.run(command, cwd=ROOT, check=True)
+    environment = os.environ.copy()
+    environment.update(extra_environment or {})
+    subprocess.run(command, cwd=ROOT, check=True, env=environment)
 
 
 def search(pattern: str, text: str) -> re.Match[str] | None:
@@ -112,7 +125,7 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def validate_integrated_metrics(metrics: dict[str, Any]) -> None:
+def validate_integrated_metrics(metrics: dict[str, Any], *, require_timing: bool = True) -> None:
     """Reject incomplete or failing implementation evidence."""
     missing_resources = [
         name for name, value in metrics["utilization"].items() if value is None
@@ -121,7 +134,7 @@ def validate_integrated_metrics(metrics: dict[str, Any]) -> None:
         raise ValueError(f"Could not parse utilization field(s): {', '.join(missing_resources)}")
     if metrics["timing"]["wns_ns"] is None or metrics["timing"]["tns_ns"] is None:
         raise ValueError("Could not parse routed timing summary")
-    if not metrics["timing"]["timing_met"]:
+    if require_timing and not metrics["timing"]["timing_met"]:
         raise ValueError("Routed design does not meet timing")
     if metrics["route"]["routing_errors"] is None:
         raise ValueError("Could not parse route status")
@@ -129,34 +142,42 @@ def validate_integrated_metrics(metrics: dict[str, Any]) -> None:
         raise ValueError("Design is not fully routed")
 
 
-def promote_reports() -> dict[str, Any]:
-    missing = [name for name in REPORT_FILES if not (IMPL_DIR / name).is_file()]
+def promote_reports(
+    *,
+    impl_dir: Path = IMPL_DIR,
+    output_dir: Path = OUTPUT_DIR,
+    summary_path: Path = SUMMARY_PATH,
+    flow_name: str = "standalone recreated project",
+    require_timing: bool = True,
+) -> dict[str, Any]:
+    missing = [name for name in REPORT_FILES if not (impl_dir / name).is_file()]
     if missing:
         raise FileNotFoundError(f"Missing routed report(s): {', '.join(missing)}. Run with --build first.")
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
     for name in REPORT_FILES:
-        source = IMPL_DIR / name
-        target = OUTPUT_DIR / name
+        source = impl_dir / name
+        target = output_dir / name
         text = source.read_text(encoding="utf-8", errors="ignore")
-        target.write_text(normalize_report_text(text, IMPL_DIR), encoding="utf-8")
+        target.write_text(normalize_report_text(text, impl_dir), encoding="utf-8")
 
-    util_text = (OUTPUT_DIR / REPORT_FILES[0]).read_text(encoding="utf-8", errors="ignore")
-    timing_text = (OUTPUT_DIR / REPORT_FILES[1]).read_text(encoding="utf-8", errors="ignore")
-    route_text = (OUTPUT_DIR / REPORT_FILES[3]).read_text(encoding="utf-8", errors="ignore")
+    util_text = (output_dir / REPORT_FILES[0]).read_text(encoding="utf-8", errors="ignore")
+    timing_text = (output_dir / REPORT_FILES[1]).read_text(encoding="utf-8", errors="ignore")
+    route_text = (output_dir / REPORT_FILES[3]).read_text(encoding="utf-8", errors="ignore")
     metrics = parse_integrated_metrics(util_text, timing_text, route_text)
-    validate_integrated_metrics(metrics)
+    metrics["flow"] = flow_name
+    validate_integrated_metrics(metrics, require_timing=require_timing)
 
-    bitstream = IMPL_DIR / "system_top.bit"
+    bitstream = impl_dir / "system_top.bit"
     metrics["bitstream"] = {
         "file_name": bitstream.name,
         "size_bytes": bitstream.stat().st_size if bitstream.is_file() else None,
         "sha256": sha256_file(bitstream) if bitstream.is_file() else None,
         "committed": False,
     }
-    metrics_path = OUTPUT_DIR / "integrated_zynq_metrics.json"
+    metrics_path = output_dir / "integrated_zynq_metrics.json"
     metrics_path.write_text(json.dumps(metrics, indent=2), encoding="utf-8")
-    write_summary(metrics)
+    write_summary(metrics, summary_path=summary_path, output_dir=output_dir)
     return metrics
 
 
@@ -164,7 +185,9 @@ def display(value: Any, suffix: str = "") -> str:
     return "N/A" if value is None else f"{value}{suffix}"
 
 
-def write_summary(metrics: dict[str, Any]) -> None:
+def write_summary(
+    metrics: dict[str, Any], *, summary_path: Path = SUMMARY_PATH, output_dir: Path = OUTPUT_DIR
+) -> None:
     utilization = metrics["utilization"]
     timing = metrics["timing"]
     route = metrics["route"]
@@ -172,7 +195,7 @@ def write_summary(metrics: dict[str, Any]) -> None:
     lines = [
         "# Integrated Zynq implementation summary",
         "",
-        "This report is generated from the current dual-modem course overlay after full Vivado synthesis, placement, routing and bitstream generation.",
+        f"This report is generated from the `{metrics['flow']}` flow after full Vivado synthesis, placement, routing and bitstream generation.",
         "",
         "## Build context",
         "",
@@ -200,12 +223,12 @@ def write_summary(metrics: dict[str, Any]) -> None:
         "",
         "## Interpretation",
         "",
-        "The routed report proves implementation feasibility for the exact integrated PL design. It does not prove AD9361 calibration, RF performance or clean-boot repeatability; those remain board-level gates.",
+        "This routed report applies only to the named build flow. Hardware compatibility, runtime clock activity and RF performance require separate board evidence.",
         "",
-        "Raw normalized reports are stored in `reports/fpga/integrated_zynq_raw/`.",
+        f"Raw normalized reports are stored in `{output_dir.relative_to(ROOT).as_posix()}/`.",
         "",
     ]
-    SUMMARY_PATH.write_text("\n".join(lines), encoding="utf-8")
+    summary_path.write_text("\n".join(lines), encoding="utf-8")
 
 
 def main() -> int:
@@ -215,12 +238,34 @@ def main() -> int:
         action="store_true",
         help="Recreate the Vivado project and run full implementation before promoting reports.",
     )
+    parser.add_argument(
+        "--flow",
+        choices=["standalone", "snapshot"],
+        default="standalone",
+        help="Select the recreated standalone project or hardware-correlated vendor snapshot flow.",
+    )
     args = parser.parse_args()
     if args.build:
         vivado = detect_vivado()
-        run_vivado_script(vivado, PROJECT_SCRIPT)
-        run_vivado_script(vivado, BUILD_SCRIPT)
-    metrics = promote_reports()
+        if args.flow == "snapshot":
+            run_vivado_script(
+                vivado,
+                SNAPSHOT_SCRIPT,
+                extra_environment={"COURSE_OVERLAY_MODE": "bridge_txrx_mux"},
+            )
+        else:
+            run_vivado_script(vivado, PROJECT_SCRIPT)
+            run_vivado_script(vivado, BUILD_SCRIPT)
+    if args.flow == "snapshot":
+        metrics = promote_reports(
+            impl_dir=SNAPSHOT_IMPL_DIR,
+            output_dir=SNAPSHOT_OUTPUT_DIR,
+            summary_path=SNAPSHOT_SUMMARY_PATH,
+            flow_name="vendor snapshot bridge_txrx_mux",
+            require_timing=False,
+        )
+    else:
+        metrics = promote_reports()
     print(json.dumps(metrics, indent=2))
     return 0
 

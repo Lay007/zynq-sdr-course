@@ -65,3 +65,5 @@ def test_validation_rejects_timing_failure() -> None:
         assert str(error) == "Routed design does not meet timing"
     else:
         raise AssertionError("A timing failure must not be promoted")
+
+    validate_integrated_metrics(metrics, require_timing=False)

@@ -21,6 +21,7 @@
     "unrouted_nets": 0,
     "fully_routed": true
   },
+  "flow": "standalone recreated project",
   "bitstream": {
     "file_name": "system_top.bit",
     "size_bytes": 2118912,

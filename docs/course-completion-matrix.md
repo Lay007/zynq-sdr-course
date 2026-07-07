@@ -30,7 +30,7 @@ This matrix shows what each course block should contain before it can be conside
 
 ## Interpretation notes
 
-- Block 11 is no longer empty: it has a long executable bring-up chain, a promoted internal loopback result, routed implementation evidence and monitor/replay tooling. It remains `🟡` in several columns because clean-boot repeatability and external QPSK measurement are still pending.
+- Block 11 now has repeatable QPSK silicon evidence (5/5 boot sessions, 14/14 selected-offset attempts), a promoted BPSK result and monitor/replay tooling. It remains `🟡` because external QPSK RF evidence and combined timing/board signoff are still pending.
 - Block 12 now has a filled dual-modem implementation report alongside templates, rubrics and project briefs. The example remains below portfolio-ready until the pending board and RF gates are measured.
 - Blocks 05 and 09 are the strongest automation anchors today: they combine reusable checks, generated artifacts and CI coverage.
 

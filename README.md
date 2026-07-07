@@ -190,9 +190,9 @@ The repository already contains:
 
 The next major proof points are:
 
-- repeatable clean-boot BPSK/QPSK hardware qualification with success-rate reporting;
+- one integrated bitstream that both closes timing and passes board qualification;
 - a small publication-cleared measured QPSK IQ dataset beside the generated replay fixture;
-- clean-boot correlation of the routed dual-modem bitstream with repeatable board results;
+- external RTL-SDR QPSK measurement with BER/EVM/SNR;
 - complete QPSK or tone model-to-measurement final report.
 
 ---
