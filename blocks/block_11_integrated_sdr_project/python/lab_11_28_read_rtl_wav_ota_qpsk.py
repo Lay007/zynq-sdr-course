@@ -316,6 +316,44 @@ def commanded_burst_count(manifest: dict[str, Any], manifest_path: Path | None) 
     return int(value) if value is not None else None
 
 
+def capture_session_metadata(
+    manifest: dict[str, Any], manifest_path: Path | None
+) -> dict[str, Any] | None:
+    capture_report = resolve_path_hint(
+        manifest.get("analysis", {}).get("capture_report_json"),
+        manifest_path=manifest_path,
+    )
+    if capture_report is None:
+        return None
+    payload = json.loads(capture_report.read_text(encoding="utf-8"))
+    config = payload.get("config", {})
+    reboot = payload.get("reboot_after") or {}
+    board_state = reboot.get("board_state") or {}
+    safe_reboot = bool(
+        reboot.get("ssh_down_seen")
+        and reboot.get("ssh_up_seen")
+        and str(board_state.get("tx_attenuation_db_ch0", "")).startswith("-89.750000")
+        and str(board_state.get("tx_lo_powerdown", "")) == "1"
+        and not payload.get("cleanup_errors")
+        and payload.get("fatal_error") is None
+    )
+    return {
+        "run_tag": payload.get("run_tag"),
+        "capture_report": repo_relative_or_str(capture_report),
+        "bitstream_md5": payload.get("bitstream", {}).get("md5"),
+        "bitstream_size_bytes": payload.get("bitstream", {}).get("size_bytes"),
+        "center_frequency_hz": config.get("center_frequency_hz"),
+        "transmitter_sample_rate_hz": config.get("sample_rate_hz"),
+        "rtl_sample_rate_hz": config.get("rtl_sample_rate_hz"),
+        "tx_attenuation_db": config.get("tx_attenuation_db"),
+        "rtl_tuner_gain_db10": config.get("rtl_tuner_gain_db10"),
+        "runtime_repeat_count": config.get("runtime_repeat_count"),
+        "reboot_to_stock_ok": safe_reboot,
+        "stock_tx_attenuation_db_ch0": board_state.get("tx_attenuation_db_ch0"),
+        "stock_tx_lo_powerdown": board_state.get("tx_lo_powerdown"),
+    }
+
+
 def analyze_bursts(
     x: np.ndarray,
     *,
@@ -536,6 +574,7 @@ def main() -> int:
     )
     x = (x - dc_offset).astype(np.complex64)
     capture_sha256 = sha256_file(iq_path)
+    session_metadata = capture_session_metadata(manifest, manifest_path)
 
     burst_rows: list[dict[str, Any]] | None = None
     burst_detector: dict[str, Any] | None = None
@@ -559,7 +598,12 @@ def main() -> int:
         burst_summary = summarize_bursts(
             burst_rows,
             bits_per_burst=len(tx_bits),
-            commanded_count=commanded_burst_count(manifest, manifest_path),
+            commanded_count=(
+                int(session_metadata["runtime_repeat_count"])
+                if session_metadata is not None
+                and session_metadata.get("runtime_repeat_count") is not None
+                else commanded_burst_count(manifest, manifest_path)
+            ),
         )
     else:
         analysis_window, detection, coarse_candidates = analyze(
@@ -596,6 +640,7 @@ def main() -> int:
         "dataset_id": dataset_id,
         "iq_path": str(iq_path),
         "capture_sha256": capture_sha256,
+        "session": session_metadata,
         "manifest_path": str(manifest_path) if manifest_path is not None else None,
         "capture_sample_rate_hz": wav_info.sample_rate_hz,
         "analysis_sample_rate_hz": analysis_sample_rate_hz,
