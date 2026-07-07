@@ -1,0 +1,20 @@
+{
+  "dataset_id": "lab11_24_dds_tone_rtl_monitor_live_20260707_rtl_smoke_868m3_step2",
+  "sample_count_read": 1048576,
+  "sample_rate_hz": 2400000.0,
+  "center_frequency_hz": 868300000.0,
+  "duration_s": 0.43690666666666667,
+  "measured_peak_hz": 201965.33203125,
+  "expected_offset_hz": 200000.0,
+  "frequency_error_hz": 1965.33203125,
+  "peak_dbfs": -51.52365454655147,
+  "noise_floor_dbfs": -91.82852292346087,
+  "snr_db": 40.3048683769094,
+  "dc_offset_magnitude": 0.0011365903326987542,
+  "clipping_fraction": 0.0,
+  "channels": 2,
+  "sample_width_bytes": 2,
+  "quality_pass": true,
+  "iq_path": "G:\\Programs\\zynq-sdr-course\\tmp\\lab1124_rtl_smoke_868m3_step2.wav",
+  "manifest_path": "G:\\Programs\\zynq-sdr-course\\tmp\\lab1124_rtl_smoke_868m3_step2.yaml"
+}

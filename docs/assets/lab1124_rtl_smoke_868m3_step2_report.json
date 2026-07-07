@@ -1,0 +1,562 @@
+{
+  "timestamp_utc": "2026-07-07T08:35:06.750453+00:00",
+  "run_tag": "live_20260707_rtl_smoke_868m3_step2",
+  "dataset_id": "lab11_24_dds_tone_rtl_monitor_live_20260707_rtl_smoke_868m3_step2",
+  "mode": "stock",
+  "config": {
+    "iio_uri": "ip:192.168.40.1",
+    "center_frequency_hz": 868300000,
+    "sample_rate_hz": 3840000,
+    "rf_bandwidth_hz": 2000000,
+    "tone_offset_hz": 200000,
+    "tone_scale": 0.1,
+    "rx_gain_db": 10.0,
+    "tx_attenuation_db": -55.0,
+    "bridge_bursts": false,
+    "allow_missing_gpreg": false,
+    "start_offset": 60,
+    "runtime_repeat_count": 3,
+    "runtime_repeat_gap_ms": 100,
+    "rtl_sample_rate_hz": 2400000,
+    "rtl_capture_duration_s": 1.0,
+    "rtl_tuner_gain_db10": 300,
+    "rtl_auto_gain": false,
+    "dds_sync_start_enable": null,
+    "rebind_runtime_dds_driver": false,
+    "rebind_runtime_adc_driver": false,
+    "runtime_dds_ratecntrl": null,
+    "bit_bin_path": null,
+    "remote_firmware_name": null
+  },
+  "stock_context_before": null,
+  "upload": null,
+  "reload": null,
+  "gpreg_after_reload": null,
+  "post_reload_context": null,
+  "rx_common_reinit": null,
+  "runtime_dds_driver_rebind": null,
+  "runtime_adc_driver_rebind": null,
+  "runtime_dds_ratecntrl_write": null,
+  "phy_before": {
+    "rx_lo_frequency_hz": "2400000000",
+    "tx_lo_frequency_hz": "2400000000",
+    "tx_lo_powerdown": "1",
+    "rx0_sampling_frequency_hz": "30720000",
+    "rx1_sampling_frequency_hz": "30720000",
+    "tx0_sampling_frequency_hz": "30720000",
+    "tx1_sampling_frequency_hz": "30720000",
+    "rx0_rf_bandwidth_hz": "18000000",
+    "rx1_rf_bandwidth_hz": "18000000",
+    "tx0_rf_bandwidth_hz": "18000000",
+    "tx1_rf_bandwidth_hz": "18000000",
+    "rx0_gain_control_mode": "slow_attack",
+    "rx1_gain_control_mode": "slow_attack",
+    "rx0_hardwaregain_db": "71.000000 dB",
+    "rx1_hardwaregain_db": "71.000000 dB",
+    "tx0_hardwaregain_db": "-89.750000 dB",
+    "tx1_hardwaregain_db": "-89.750000 dB",
+    "rx0_rf_port_select": "A_BALANCED",
+    "rx1_rf_port_select": "A_BALANCED",
+    "tx0_rf_port_select": "A",
+    "tx1_rf_port_select": "A",
+    "rx0_rssi_db": "104.50 dB",
+    "rx1_rssi_db": "116.25 dB"
+  },
+  "phy_after_config": {
+    "rx_lo_frequency_hz": "868299998",
+    "tx_lo_frequency_hz": "868299998",
+    "tx_lo_powerdown": "0",
+    "rx0_sampling_frequency_hz": "3840000",
+    "rx1_sampling_frequency_hz": "3840000",
+    "tx0_sampling_frequency_hz": "3840000",
+    "tx1_sampling_frequency_hz": "3840000",
+    "rx0_rf_bandwidth_hz": "2000000",
+    "rx1_rf_bandwidth_hz": "2000000",
+    "tx0_rf_bandwidth_hz": "2000000",
+    "tx1_rf_bandwidth_hz": "2000000",
+    "rx0_gain_control_mode": "manual",
+    "rx1_gain_control_mode": "manual",
+    "rx0_hardwaregain_db": "10.000000 dB",
+    "rx1_hardwaregain_db": "10.000000 dB",
+    "tx0_hardwaregain_db": "-55.000000 dB",
+    "tx1_hardwaregain_db": "-55.000000 dB",
+    "rx0_rf_port_select": "A_BALANCED",
+    "rx1_rf_port_select": "A_BALANCED",
+    "tx0_rf_port_select": "A",
+    "tx1_rf_port_select": "A",
+    "rx0_rssi_db": "64.75 dB",
+    "rx1_rssi_db": "64.75 dB"
+  },
+  "dds_before": {
+    "altvoltage0": {
+      "frequency": "9279985",
+      "phase": "90000",
+      "scale": "0.000000",
+      "raw": "1"
+    },
+    "altvoltage1": {
+      "frequency": "9279985",
+      "phase": "90000",
+      "scale": "0.000000",
+      "raw": "1"
+    },
+    "altvoltage2": {
+      "frequency": "9279985",
+      "phase": "0",
+      "scale": "0.000000",
+      "raw": "1"
+    },
+    "altvoltage3": {
+      "frequency": "9279985",
+      "phase": "0",
+      "scale": "0.000000",
+      "raw": "1"
+    },
+    "altvoltage4": {
+      "frequency": "9279985",
+      "phase": "90000",
+      "scale": "0.000000",
+      "raw": "1"
+    },
+    "altvoltage5": {
+      "frequency": "9279985",
+      "phase": "90000",
+      "scale": "0.000000",
+      "raw": "1"
+    },
+    "altvoltage6": {
+      "frequency": "9279985",
+      "phase": "0",
+      "scale": "0.000000",
+      "raw": "1"
+    },
+    "altvoltage7": {
+      "frequency": "9279985",
+      "phase": "0",
+      "scale": "0.000000",
+      "raw": "1"
+    }
+  },
+  "dds_device_before": {
+    "sync_start_enable": "arm",
+    "sync_start_enable_available": "arm",
+    "waiting_for_supplier": null
+  },
+  "dds_core_regs_before_config": {
+    "REG_RSTN": {
+      "offset": "0x0040",
+      "address": "0x79024040",
+      "value": "0x00000003"
+    },
+    "REG_SYNC_CONTROL": {
+      "offset": "0x0044",
+      "address": "0x79024044",
+      "value": "0x00000000"
+    },
+    "REG_RATECNTRL": {
+      "offset": "0x004C",
+      "address": "0x7902404C",
+      "value": "0x00000003"
+    },
+    "REG_CLK_FREQ": {
+      "offset": "0x0054",
+      "address": "0x79024054",
+      "value": "0x00013AE4"
+    },
+    "REG_CLK_RATIO": {
+      "offset": "0x0058",
+      "address": "0x79024058",
+      "value": "0x00000001"
+    },
+    "REG_STATUS": {
+      "offset": "0x005C",
+      "address": "0x7902405C",
+      "value": "0x00000001"
+    },
+    "CH0_DDS_SCALE": {
+      "offset": "0x0400",
+      "address": "0x79024400",
+      "value": "0x00000000"
+    },
+    "CH0_DDS_INIT_INCR": {
+      "offset": "0x0404",
+      "address": "0x79024404",
+      "value": "0x40004D55"
+    },
+    "CH0_CHAN_CNTRL_6": {
+      "offset": "0x0414",
+      "address": "0x79024414",
+      "value": "0x00000000"
+    },
+    "CH0_CHAN_CNTRL_7": {
+      "offset": "0x0418",
+      "address": "0x79024418",
+      "value": "0x00000000"
+    },
+    "CH0_CHAN_CNTRL_8": {
+      "offset": "0x041C",
+      "address": "0x7902441C",
+      "value": "0x40000000"
+    },
+    "CH1_DDS_SCALE": {
+      "offset": "0x0408",
+      "address": "0x79024408",
+      "value": "0x00000000"
+    },
+    "CH1_DDS_INIT_INCR": {
+      "offset": "0x040C",
+      "address": "0x7902440C",
+      "value": "0x40004D55"
+    },
+    "CH1_CHAN_CNTRL_6": {
+      "offset": "0x0454",
+      "address": "0x79024454",
+      "value": "0x00000000"
+    },
+    "CH1_CHAN_CNTRL_7": {
+      "offset": "0x0458",
+      "address": "0x79024458",
+      "value": "0x00000000"
+    },
+    "CH1_CHAN_CNTRL_8": {
+      "offset": "0x045C",
+      "address": "0x7902445C",
+      "value": "0x00004000"
+    },
+    "CH2_DDS_SCALE": {
+      "offset": "0x0440",
+      "address": "0x79024440",
+      "value": "0x00000000"
+    },
+    "CH2_DDS_INIT_INCR": {
+      "offset": "0x0444",
+      "address": "0x79024444",
+      "value": "0x00004D55"
+    },
+    "CH2_CHAN_CNTRL_6": {
+      "offset": "0x0494",
+      "address": "0x79024494",
+      "value": "0x00000000"
+    },
+    "CH2_CHAN_CNTRL_7": {
+      "offset": "0x0498",
+      "address": "0x79024498",
+      "value": "0x00000000"
+    },
+    "CH2_CHAN_CNTRL_8": {
+      "offset": "0x049C",
+      "address": "0x7902449C",
+      "value": "0x40000000"
+    },
+    "CH3_DDS_SCALE": {
+      "offset": "0x0448",
+      "address": "0x79024448",
+      "value": "0x00000000"
+    },
+    "CH3_DDS_INIT_INCR": {
+      "offset": "0x044C",
+      "address": "0x7902444C",
+      "value": "0x00004D55"
+    },
+    "CH3_CHAN_CNTRL_6": {
+      "offset": "0x04D4",
+      "address": "0x790244D4",
+      "value": "0x00000000"
+    },
+    "CH3_CHAN_CNTRL_7": {
+      "offset": "0x04D8",
+      "address": "0x790244D8",
+      "value": "0x00000000"
+    },
+    "CH3_CHAN_CNTRL_8": {
+      "offset": "0x04DC",
+      "address": "0x790244DC",
+      "value": "0x00004000"
+    }
+  },
+  "dds_after_config": {
+    "altvoltage0": {
+      "frequency": "199983",
+      "phase": "90000",
+      "scale": "0.099976",
+      "raw": "1"
+    },
+    "altvoltage1": {
+      "frequency": "1599457",
+      "phase": "90000",
+      "scale": "0.000000",
+      "raw": "1"
+    },
+    "altvoltage2": {
+      "frequency": "199983",
+      "phase": "0",
+      "scale": "0.099976",
+      "raw": "1"
+    },
+    "altvoltage3": {
+      "frequency": "1599457",
+      "phase": "0",
+      "scale": "0.000000",
+      "raw": "1"
+    },
+    "altvoltage4": {
+      "frequency": "1599457",
+      "phase": "90000",
+      "scale": "0.000000",
+      "raw": "1"
+    },
+    "altvoltage5": {
+      "frequency": "1599457",
+      "phase": "90000",
+      "scale": "0.000000",
+      "raw": "1"
+    },
+    "altvoltage6": {
+      "frequency": "1599457",
+      "phase": "0",
+      "scale": "0.000000",
+      "raw": "1"
+    },
+    "altvoltage7": {
+      "frequency": "1599457",
+      "phase": "0",
+      "scale": "0.000000",
+      "raw": "1"
+    }
+  },
+  "dds_device_after_config": {
+    "sync_start_enable": "arm",
+    "sync_start_enable_available": "arm",
+    "waiting_for_supplier": null
+  },
+  "dds_core_regs_after_config": {
+    "REG_RSTN": {
+      "offset": "0x0040",
+      "address": "0x79024040",
+      "value": "0x00000003"
+    },
+    "REG_SYNC_CONTROL": {
+      "offset": "0x0044",
+      "address": "0x79024044",
+      "value": "0x00000000"
+    },
+    "REG_RATECNTRL": {
+      "offset": "0x004C",
+      "address": "0x7902404C",
+      "value": "0x00000003"
+    },
+    "REG_CLK_FREQ": {
+      "offset": "0x0054",
+      "address": "0x79024054",
+      "value": "0x0000275D"
+    },
+    "REG_CLK_RATIO": {
+      "offset": "0x0058",
+      "address": "0x79024058",
+      "value": "0x00000001"
+    },
+    "REG_STATUS": {
+      "offset": "0x005C",
+      "address": "0x7902405C",
+      "value": "0x00000001"
+    },
+    "CH0_DDS_SCALE": {
+      "offset": "0x0400",
+      "address": "0x79024400",
+      "value": "0x00000666"
+    },
+    "CH0_DDS_INIT_INCR": {
+      "offset": "0x0404",
+      "address": "0x79024404",
+      "value": "0x40000D55"
+    },
+    "CH0_CHAN_CNTRL_6": {
+      "offset": "0x0414",
+      "address": "0x79024414",
+      "value": "0x00000000"
+    },
+    "CH0_CHAN_CNTRL_7": {
+      "offset": "0x0418",
+      "address": "0x79024418",
+      "value": "0x00000000"
+    },
+    "CH0_CHAN_CNTRL_8": {
+      "offset": "0x041C",
+      "address": "0x7902441C",
+      "value": "0x40000000"
+    },
+    "CH1_DDS_SCALE": {
+      "offset": "0x0408",
+      "address": "0x79024408",
+      "value": "0x00000000"
+    },
+    "CH1_DDS_INIT_INCR": {
+      "offset": "0x040C",
+      "address": "0x7902440C",
+      "value": "0x40006AA1"
+    },
+    "CH1_CHAN_CNTRL_6": {
+      "offset": "0x0454",
+      "address": "0x79024454",
+      "value": "0x00000000"
+    },
+    "CH1_CHAN_CNTRL_7": {
+      "offset": "0x0458",
+      "address": "0x79024458",
+      "value": "0x00000000"
+    },
+    "CH1_CHAN_CNTRL_8": {
+      "offset": "0x045C",
+      "address": "0x7902445C",
+      "value": "0x00004000"
+    },
+    "CH2_DDS_SCALE": {
+      "offset": "0x0440",
+      "address": "0x79024440",
+      "value": "0x00000666"
+    },
+    "CH2_DDS_INIT_INCR": {
+      "offset": "0x0444",
+      "address": "0x79024444",
+      "value": "0x00000D55"
+    },
+    "CH2_CHAN_CNTRL_6": {
+      "offset": "0x0494",
+      "address": "0x79024494",
+      "value": "0x00000000"
+    },
+    "CH2_CHAN_CNTRL_7": {
+      "offset": "0x0498",
+      "address": "0x79024498",
+      "value": "0x00000000"
+    },
+    "CH2_CHAN_CNTRL_8": {
+      "offset": "0x049C",
+      "address": "0x7902449C",
+      "value": "0x40000000"
+    },
+    "CH3_DDS_SCALE": {
+      "offset": "0x0448",
+      "address": "0x79024448",
+      "value": "0x00000000"
+    },
+    "CH3_DDS_INIT_INCR": {
+      "offset": "0x044C",
+      "address": "0x7902444C",
+      "value": "0x00006AA1"
+    },
+    "CH3_CHAN_CNTRL_6": {
+      "offset": "0x04D4",
+      "address": "0x790244D4",
+      "value": "0x00000000"
+    },
+    "CH3_CHAN_CNTRL_7": {
+      "offset": "0x04D8",
+      "address": "0x790244D8",
+      "value": "0x00000000"
+    },
+    "CH3_CHAN_CNTRL_8": {
+      "offset": "0x04DC",
+      "address": "0x790244DC",
+      "value": "0x00004000"
+    }
+  },
+  "runtime_attempts": [],
+  "summary": {
+    "attempt_count": 0,
+    "any_ok": false,
+    "conclusion": "DDS-only witness capture without runtime bridge start pulses."
+  },
+  "rtl_capture": {
+    "rtl_device_index": 0,
+    "rtl_device_name": "Generic RTL2832U OEM",
+    "rtl_sample_rate_hz": 2400000,
+    "rtl_capture_duration_s": 0.43690666666666667,
+    "rtl_tuner_gain_db10": 300,
+    "bytes_captured": 2097152,
+    "wav_path": "G:\\Programs\\zynq-sdr-course\\tmp\\lab1124_rtl_smoke_868m3_step2.wav",
+    "raw_u8_mean": 127.39725303649902,
+    "raw_u8_std": 0.6389101832001861,
+    "raw_u8_min": 125,
+    "raw_u8_max": 130
+  },
+  "capture_wave_path": "G:\\Programs\\zynq-sdr-course\\tmp\\lab1124_rtl_smoke_868m3_step2.wav",
+  "manifest_path": "tmp/lab1124_rtl_smoke_868m3_step2.yaml",
+  "reboot_after": {
+    "reboot_issued_utc": "2026-07-07T08:36:52.800959+00:00",
+    "ssh_down_seen": true,
+    "ssh_up_seen": true,
+    "board_state": {
+      "model": "FISH Ball PlutoSDR Rev.A (Z7020/AD9361)",
+      "rx_lo_hz": "2400000000",
+      "tx_lo_hz": "2400000000",
+      "rx_sample_rate_hz": "30720000",
+      "tx_sample_rate_hz": "30720000",
+      "rx_gain_mode_ch0": "slow_attack",
+      "rx_gain_mode_ch1": "slow_attack",
+      "rx_gain_db_ch0": "71.000000 dB",
+      "rx_gain_db_ch1": "71.000000 dB",
+      "tx_attenuation_db_ch0": "-89.750000 dB",
+      "tx_attenuation_db_ch1": "-89.750000 dB",
+      "tx_lo_powerdown": "1"
+    },
+    "iio_context": {
+      "uri": "ip:192.168.40.1",
+      "context_name": "network",
+      "context_description": "192.168.40.1 Linux (none) 5.15.0 #7 SMP PREEMPT Sun Nov 3 04:49:37 PST 2024 armv7l",
+      "context_attrs": {
+        "ad9361-phy,model": "ad9361",
+        "ad9361-phy,xo_correction": "40000000",
+        "fw_version": "80403-dirty",
+        "hw_model": "FISH Ball PlutoSDR Rev.A (Z7020-AD9361)",
+        "hw_model_variant": "1",
+        "hw_serial": "",
+        "ip,ip-addr": "192.168.40.1",
+        "local,kernel": "5.15.0",
+        "uri": "ip:192.168.40.1"
+      },
+      "devices": [
+        {
+          "id": "iio:device0",
+          "name": "ad9361-phy",
+          "channel_count": 11,
+          "attrs": {},
+          "ad9361_summary": {
+            "rx_lo_frequency_hz": "2400000000",
+            "tx_lo_frequency_hz": "2400000000",
+            "rx_rf_bandwidth_hz": "18000000",
+            "tx_rf_bandwidth_hz": "18000000",
+            "rx_sampling_frequency_hz": "30720000",
+            "tx_sampling_frequency_hz": "30720000",
+            "rx_gain_control_mode": "slow_attack",
+            "rx_hardwaregain_db": "71.000000 dB",
+            "tx_hardwaregain_db": "-89.750000 dB",
+            "rx_rf_port_select": "A_BALANCED",
+            "tx_rf_port_select": "A"
+          }
+        },
+        {
+          "id": "iio:device2",
+          "name": "cf-ad9361-dds-core-lpc",
+          "channel_count": 12,
+          "attrs": {
+            "sync_start_enable": "arm",
+            "sync_start_enable_available": "arm"
+          }
+        },
+        {
+          "id": "iio:device3",
+          "name": "cf-ad9361-lpc",
+          "channel_count": 4,
+          "attrs": {
+            "sync_start_enable": "disarm",
+            "sync_start_enable_available": "arm"
+          }
+        }
+      ]
+    },
+    "fpga_manager_state": "operating"
+  },
+  "cleanup_errors": [],
+  "fatal_error": null
+}
