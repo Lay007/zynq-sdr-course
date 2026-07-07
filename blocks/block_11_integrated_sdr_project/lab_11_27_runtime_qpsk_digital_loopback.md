@@ -2,7 +2,7 @@
 
 ## Objective
 
-Validate the QPSK modem through the same runtime PL control plane and AD9361 digital-loopback route used by the promoted BPSK result. The experiment selects QPSK through `gp_ctrl[4]`, sweeps the sampling start offset and records every attempt instead of keeping only the best run.
+Validate the QPSK modem through the runtime PL control plane. The helper supports a direct PL fabric loopback for deterministic modem qualification and a separate AD9361 digital-loopback diagnostic. It selects QPSK through `gp_ctrl[4]` and records every attempt.
 
 ## What is already proven without hardware
 
@@ -19,16 +19,31 @@ Run the software proof with:
 python tools/run_block5_hdl_smoke.py --no-generate
 ```
 
-## Board command
+## Board commands
+
+Deterministic PL fabric qualification, without AD9361 or RF transmission:
+
+```bash
+python blocks/block_11_integrated_sdr_project/python/lab_11_27_runtime_qpsk_digital_loopback.py \
+  --bit-bin-path tmp/bridge_txrx_mux.qpsk.wordswap.bit.bin \
+  --loopback fabric \
+  --start-offsets 62 \
+  --retries 10 \
+  --no-stop-on-zero \
+  --tx-attenuation-db -89.75
+```
+
+AD9361 BIST diagnostic:
 
 ```bash
 python blocks/block_11_integrated_sdr_project/python/lab_11_27_runtime_qpsk_digital_loopback.py \
   --start-offsets 96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111 \
+  --loopback ad9361 \
   --retries 20 \
   --run-tag qpsk_clean_boot_01
 ```
 
-The helper reloads the runtime payload, rebinds the required DDS/ADC drivers, configures the digital loopback, runs the sweep, writes JSON evidence and restores the stock state by reboot unless `--no-reboot-after` is specified.
+The helper reloads the runtime payload, runs the selected loopback, writes every attempt and debug counter to JSON, and restores the stock state by reboot unless `--no-reboot-after` is specified. AD9361 driver rebind/configuration is skipped in fabric mode.
 
 ## Acceptance gates
 
@@ -52,6 +67,10 @@ A single best BER=0 attempt is evidence that the datapath works, not that it is 
 - short conclusion separating functional success from repeatability;
 - optional RTL-SDR spectrum witness when an antenna or cabled path is added later.
 
-## Current limitation
+## Measured result — 2026-07-07
 
-The repository contains the runtime helper and passing RTL proof, but no promoted Lab 11.27 board JSON yet. Therefore the QPSK runtime path is `executable / hardware-pending`, not measured.
+The hardware-correlated QPSK payload reached BER=0 at `start_offset=62`. Five independent stock→runtime→stock sessions passed, and all 14 attempts at the selected offset recovered 140 symbols / 280 bits with zero errors. Every session returned to stock successfully.
+
+See `reports/hardware/qpsk-fabric-loopback-qualification-20260707.md` and `docs/assets/lab1127_qpsk_fabric_qualification_20260707.json`.
+
+The result qualifies the QPSK core on silicon but bypasses AD9361 and RF. The AD9361 raw digital-loopback source still returns zero QPSK symbols. The hardware-working vendor-snapshot bitstream also has unresolved timing violations (WNS `-1.676 ns`), so timing closure and external RTL-SDR evidence remain open gates.

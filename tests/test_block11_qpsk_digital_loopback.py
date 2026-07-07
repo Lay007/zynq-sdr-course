@@ -8,7 +8,10 @@ MODULE_DIR = Path(__file__).resolve().parents[1] / "blocks" / "block_11_integrat
 if str(MODULE_DIR) not in sys.path:
     sys.path.insert(0, str(MODULE_DIR))
 
-from lab_11_27_runtime_qpsk_digital_loopback import summarize_sweep  # noqa: E402
+from lab_11_27_runtime_qpsk_digital_loopback import (  # noqa: E402
+    loopback_mode_bits,
+    summarize_sweep,
+)
 
 
 def test_summarize_sweep_reports_repeatability_by_offset() -> None:
@@ -46,8 +49,15 @@ def test_summarize_sweep_reports_repeatability_by_offset() -> None:
 
 
 def test_summarize_empty_sweep_has_zero_rate() -> None:
-    summary = summarize_sweep([], symbol_count=140)
+    summary = summarize_sweep([], symbol_count=140, loopback="fabric")
 
     assert summary["total_attempts"] == 0
     assert summary["zero_error_rate"] == 0.0
     assert summary["attempts_by_offset"] == []
+    assert summary["mode"] == "qpsk_fabric_loopback"
+
+
+def test_loopback_mode_bits_selects_fabric_or_ad9361_source() -> None:
+    assert loopback_mode_bits("fabric", "raw") == 0x50
+    assert loopback_mode_bits("ad9361", "raw") == 0x30
+    assert loopback_mode_bits("ad9361", "fifo") == 0x10

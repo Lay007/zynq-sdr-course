@@ -120,6 +120,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
                         help="comma-separated start_offset values to sweep")
     parser.add_argument("--retries", type=int, default=6,
                         help="bursts per start_offset (best kept); rides out per-burst jitter")
+    parser.add_argument(
+        "--stop-on-zero",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Stop the sweep after the first BER=0 result; disable for repeatability measurement.",
+    )
     parser.add_argument("--start-hold-ms", type=int, default=DEFAULT_START_HOLD_MS)
     parser.add_argument("--poll-limit", type=int, default=DEFAULT_POLL_LIMIT)
     parser.add_argument("--poll-delay-ms", type=int, default=DEFAULT_POLL_DELAY_MS)
@@ -144,6 +150,15 @@ def build_arg_parser() -> argparse.ArgumentParser:
     # (required for the BIST digital loopback, which util_ad9361_adc_fifo does not
     # forward); "fifo" = the vendor adc_fifo tap (OTA path).
     parser.add_argument("--rx-source", choices=["raw", "fifo"], default="raw")
+    parser.add_argument(
+        "--loopback",
+        choices=["ad9361", "fabric"],
+        default="ad9361",
+        help=(
+            "ad9361 uses the transceiver BIST path; fabric loops modem TX directly "
+            "to modem RX inside the PL and does not configure or transmit through AD9361"
+        ),
+    )
     parser.add_argument("--run-tag", default=None)
     parser.add_argument("--json-out", type=Path, default=None)
     return parser
@@ -170,6 +185,10 @@ def qpsk_ber_once(runner, base_addr: int, symbol_count: int, offset: int,
     a_stat = f"0x{base_addr + 0x408:X}"
     a_recv = f"0x{base_addr + 0x448:X}"
     a_errc = f"0x{base_addr + 0x488:X}"
+    a_adc = f"0x{base_addr + 0x4C8:X}"
+    a_tx = f"0x{base_addr + 0x548:X}"
+    a_rx = f"0x{base_addr + 0x588:X}"
+    a_cap = f"0x{base_addr + 0x5C8:X}"
     dm = "/sbin/devmem"
     hold = f"0x{mode_bits:X}"
     start = f"0x{mode_bits | 0x1:X}"
@@ -181,8 +200,9 @@ def qpsk_ber_once(runner, base_addr: int, symbol_count: int, offset: int,
         f"i=0; s=0; while [ $i -lt {poll} ]; do s=$({dm} {a_stat} 32); d=$((s)); "
         f"if [ $((d & 4)) -ne 0 ]; then break; fi; if [ $((d & 8)) -ne 0 ]; then break; fi; "
         f"i=$((i+1)); done; r=$({dm} {a_recv} 32); e=$({dm} {a_errc} 32); "
+        f"a=$({dm} {a_adc} 32); t=$({dm} {a_tx} 32); v=$({dm} {a_rx} 32); c=$({dm} {a_cap} 32); "
         f"{dm} {a_ctrl} 32 {clear}; {dm} {a_ctrl} 32 {hold}; "
-        f"echo RESULT off={offset} recv=$r err=$e status=$s polls=$i"
+        f"echo RESULT off={offset} recv=$r err=$e status=$s polls=$i adc=$a tx=$t rx=$v cap=$c"
     )
     rc, out, err = runner(cmd)
     row: dict[str, Any] = {"start_offset": offset, "ok": rc == 0}
@@ -200,7 +220,26 @@ def qpsk_ber_once(runner, base_addr: int, symbol_count: int, offset: int,
     row["timed_out"] = bool(status & 0x8)
     row["status"] = f"0x{status:08X}"
     row["polls"] = int(fields.get("polls", "0"))
+    adc_debug = int(fields.get("adc", "0"), 16)
+    tx_debug = int(fields.get("tx", "0"), 16)
+    rx_debug = int(fields.get("rx", "0"), 16)
+    capture_debug = int(fields.get("cap", "0"), 16)
+    row["debug"] = {
+        "adc_input": f"0x{adc_debug:08X}",
+        "tx": f"0x{tx_debug:08X}",
+        "rx": f"0x{rx_debug:08X}",
+        "capture": f"0x{capture_debug:08X}",
+        "tx_sample_count_lsb": tx_debug & 0xFFF,
+        "recovered_symbol_count_lsb": (tx_debug >> 12) & 0xFF,
+        "rx_valid_count": rx_debug,
+    }
     return row
+
+
+def loopback_mode_bits(loopback: str, rx_source: str) -> int:
+    if loopback == "fabric":
+        return QPSK_MODE_BITS | 0x40
+    return QPSK_MODE_BITS | (0x20 if rx_source == "raw" else 0x00)
 
 
 def set_bist_digital_loopback(runner, enable: bool) -> str:
@@ -219,7 +258,9 @@ def set_bist_digital_loopback(runner, enable: bool) -> str:
     return line.strip() or (err or "").strip()
 
 
-def summarize_sweep(sweep: list[dict[str, Any]], symbol_count: int) -> dict[str, Any]:
+def summarize_sweep(
+    sweep: list[dict[str, Any]], symbol_count: int, loopback: str = "ad9361"
+) -> dict[str, Any]:
     full = [r for r in sweep if int(r.get("received_symbols") or 0) == symbol_count]
     zero = [r for r in full if int(r.get("total_bit_errors") or 0) == 0]
     best = None
@@ -267,7 +308,7 @@ def summarize_sweep(sweep: list[dict[str, Any]], symbol_count: int) -> dict[str,
         conclusion += f" Repeatability: {zero_error_attempts}/{total_attempts} attempts reached BER=0."
 
     return {
-        "mode": "qpsk_digital_loopback",
+        "mode": f"qpsk_{loopback}_loopback",
         "symbol_count": symbol_count,
         "bit_count": 2 * symbol_count,
         "total_attempts": total_attempts,
@@ -285,6 +326,8 @@ def summarize_sweep(sweep: list[dict[str, Any]], symbol_count: int) -> dict[str,
 def main() -> int:
     parser = build_arg_parser()
     args = parser.parse_args()
+    if args.retries < 1:
+        parser.error("--retries must be at least 1")
     bit_bin_path = args.bit_bin_path.resolve()
     if not bit_bin_path.exists():
         raise SystemExit(f"Missing runtime payload: {bit_bin_path}")
@@ -335,12 +378,14 @@ def main() -> int:
         "sweep": [],
         "reboot_after": None,
         "summary": None,
+        "loopback": args.loopback,
     }
 
     iio = None
     context = None
     phy = None
     phy_snapshot: dict[str, str | None] = {}
+    bist_enabled = False
 
     try:
         payload["stock_context_before"] = safe_probe(
@@ -357,31 +402,35 @@ def main() -> int:
         payload["gpreg_after_reload"] = probe_gpreg_id(io)
         force_rx_common_ctrl_request(runner, value=args.rx_common_ctrl_value)
 
-        if args.rebind_runtime_dds_driver:
-            rebind_platform_driver(runner, driver_name=DEFAULT_DDS_DRIVER_NAME,
-                                   device_name=DEFAULT_DDS_DEVICE_NAME)
-        if args.rebind_runtime_adc_driver:
-            rebind_platform_driver(runner, driver_name=DEFAULT_ADC_DRIVER_NAME,
-                                   device_name=DEFAULT_ADC_DEVICE_NAME)
-        if args.runtime_dds_ratecntrl is not None:
-            write_runtime_dds_ratecntrl(runner, args.runtime_dds_ratecntrl)
+        if args.loopback == "ad9361":
+            if args.rebind_runtime_dds_driver:
+                rebind_platform_driver(runner, driver_name=DEFAULT_DDS_DRIVER_NAME,
+                                       device_name=DEFAULT_DDS_DEVICE_NAME)
+            if args.rebind_runtime_adc_driver:
+                rebind_platform_driver(runner, driver_name=DEFAULT_ADC_DRIVER_NAME,
+                                       device_name=DEFAULT_ADC_DEVICE_NAME)
+            if args.runtime_dds_ratecntrl is not None:
+                write_runtime_dds_ratecntrl(runner, args.runtime_dds_ratecntrl)
 
-        iio = load_iio_module()
-        context = iio.Context(args.iio_uri)
-        phy = next((d for d in context.devices if d.name == "ad9361-phy"), None)
-        if phy is None:
-            raise RuntimeError("Expected `ad9361-phy` after runtime reload.")
+            iio = load_iio_module()
+            context = iio.Context(args.iio_uri)
+            phy = next((d for d in context.devices if d.name == "ad9361-phy"), None)
+            if phy is None:
+                raise RuntimeError("Expected `ad9361-phy` after runtime reload.")
 
-        phy_snapshot = snapshot_ad9361_state(phy)
-        configure_ad9361_bpsk(phy, waveform_cfg)   # modulation-agnostic I/Q setup
-        dds = next((d for d in context.devices if d.name == "cf-ad9361-dds-core-lpc"), None)
-        if dds is not None:
-            disable_dds_tones(dds)
+            phy_snapshot = snapshot_ad9361_state(phy)
+            configure_ad9361_bpsk(phy, waveform_cfg)   # modulation-agnostic I/Q setup
+            dds = next((d for d in context.devices if d.name == "cf-ad9361-dds-core-lpc"), None)
+            if dds is not None:
+                disable_dds_tones(dds)
 
-        # Enable the AD9361 internal digital loopback — the deterministic, carrier-
-        # offset-free TX->RX path this lab decodes (antennas/RF are not used).
-        payload["bist_loopback"] = set_bist_digital_loopback(io.runner, True)
-        print("digital loopback:", payload["bist_loopback"])
+            # Enable the AD9361 internal digital loopback — no RF or carrier offset.
+            payload["bist_loopback"] = set_bist_digital_loopback(io.runner, True)
+            bist_enabled = True
+            print("digital loopback:", payload["bist_loopback"])
+        else:
+            payload["bist_loopback"] = "skipped: PL fabric loopback"
+            print("fabric loopback: gp_ctrl[6]=1; AD9361 configuration skipped")
 
         sig = io.read32(0x508)   # gp_signature_in; bridge keeps the BPSK identity
         payload["bridge_signature"] = f"0x{sig:08X}"
@@ -389,38 +438,40 @@ def main() -> int:
             raise RuntimeError(
                 f"Unexpected bridge signature 0x{sig:08X}; expected 0x{args.expected_id:08X}.")
 
-        mode_bits = QPSK_MODE_BITS | (0x20 if args.rx_source == "raw" else 0x00)
+        mode_bits = loopback_mode_bits(args.loopback, args.rx_source)
         payload["mode_bits"] = f"0x{mode_bits:02X}"
-        payload["rx_source"] = args.rx_source
-        print(f"rx_source={args.rx_source} gp_ctrl mode_bits=0x{mode_bits:02X}")
+        payload["rx_source"] = "fabric" if args.loopback == "fabric" else args.rx_source
+        print(f"rx_source={payload['rx_source']} gp_ctrl mode_bits=0x{mode_bits:02X}")
 
         found = False
         for offset in args.start_offsets:
             # Per-burst sample-phase jitter (AD9361 loopback) shifts the frame a few
             # samples each burst; retry like the BPSK host-retry and keep the best.
-            best_row = None
-            for _ in range(args.retries):
+            offset_found = False
+            for attempt_index in range(1, args.retries + 1):
                 try:
                     row = qpsk_ber_once(io.runner, args.gpreg_base_addr, args.symbol_count, offset,
                                         mode_bits=mode_bits)
                 except Exception as exc:  # pragma: no cover - keep sweeping / reach the reboot
                     row = {"start_offset": offset, "ok": False, "error": f"{type(exc).__name__}: {exc}"}
+                row["attempt"] = attempt_index
+                payload["sweep"].append(row)
                 full = row.get("received_symbols") == args.symbol_count
-                if best_row is None or (full, -row.get("total_bit_errors", 1 << 30)) > \
-                        (best_row.get("received_symbols") == args.symbol_count, -best_row.get("total_bit_errors", 1 << 30)):
-                    best_row = row
                 if full and row.get("total_bit_errors") == 0:
-                    break
-            payload["sweep"].append(best_row)
-            if best_row.get("received_symbols") == args.symbol_count and best_row.get("total_bit_errors") == 0:
-                print(f"QPSK BER=0 at start_offset={offset}  {best_row.get('status')}")
+                    offset_found = True
+                    if args.stop_on_zero:
+                        break
+            if offset_found:
+                print(f"QPSK BER=0 at start_offset={offset}")
                 found = True
-                break   # BER=0 found; no need to sweep further
+                if args.stop_on_zero:
+                    break
         if not found:
             print("QPSK: no start_offset reached BER=0 in this sweep")
     finally:
         try:
-            set_bist_digital_loopback(io.runner, False)
+            if bist_enabled:
+                set_bist_digital_loopback(io.runner, False)
         except Exception as exc:  # pragma: no cover - hardware dependent
             payload.setdefault("cleanup_errors", []).append(
                 {"stage": "disable_bist_loopback", "error": str(exc)})
@@ -459,7 +510,7 @@ def main() -> int:
             payload.setdefault("cleanup_errors", []).append(
                 {"stage": "runner.close", "error": str(exc)})
 
-    payload["summary"] = summarize_sweep(payload["sweep"], args.symbol_count)
+    payload["summary"] = summarize_sweep(payload["sweep"], args.symbol_count, args.loopback)
     json_out.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
     print("Lab 11.27 - Runtime QPSK digital-loopback BER")

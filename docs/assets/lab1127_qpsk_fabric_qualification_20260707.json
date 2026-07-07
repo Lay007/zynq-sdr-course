@@ -1,0 +1,54 @@
+{
+  "mode": "qpsk_fabric_loopback_clean_boot_qualification",
+  "start_offset": 62,
+  "bitstream_md5": "d8372303f18308586ae92d3d7f78e7b0",
+  "boot_sessions": 5,
+  "successful_boot_sessions": 5,
+  "boot_success_rate": 1.0,
+  "safe_reboot_sessions": 5,
+  "attempts_at_offset": 14,
+  "zero_error_attempts_at_offset": 14,
+  "zero_error_rate_at_offset": 1.0,
+  "runs": [
+    {
+      "file": "lab1127_runtime_qpsk_digital_loopback_live_20260707_qpsk_fabric_01.json",
+      "run_tag": "live_20260707_qpsk_fabric_01",
+      "attempts_at_offset": 1,
+      "zero_error_attempts_at_offset": 1,
+      "boot_success": true,
+      "reboot_to_stock_ok": true
+    },
+    {
+      "file": "lab1127_runtime_qpsk_digital_loopback_live_20260707_qpsk_fabric_cleanboot_01.json",
+      "run_tag": "live_20260707_qpsk_fabric_cleanboot_01",
+      "attempts_at_offset": 1,
+      "zero_error_attempts_at_offset": 1,
+      "boot_success": true,
+      "reboot_to_stock_ok": true
+    },
+    {
+      "file": "lab1127_runtime_qpsk_digital_loopback_live_20260707_qpsk_fabric_cleanboot_02.json",
+      "run_tag": "live_20260707_qpsk_fabric_cleanboot_02",
+      "attempts_at_offset": 1,
+      "zero_error_attempts_at_offset": 1,
+      "boot_success": true,
+      "reboot_to_stock_ok": true
+    },
+    {
+      "file": "lab1127_runtime_qpsk_digital_loopback_live_20260707_qpsk_fabric_cleanboot_03.json",
+      "run_tag": "live_20260707_qpsk_fabric_cleanboot_03",
+      "attempts_at_offset": 1,
+      "zero_error_attempts_at_offset": 1,
+      "boot_success": true,
+      "reboot_to_stock_ok": true
+    },
+    {
+      "file": "lab1127_runtime_qpsk_digital_loopback_live_20260707_qpsk_fabric_repeat10_01.json",
+      "run_tag": "live_20260707_qpsk_fabric_repeat10_01",
+      "attempts_at_offset": 10,
+      "zero_error_attempts_at_offset": 10,
+      "boot_success": true,
+      "reboot_to_stock_ok": true
+    }
+  ]
+}
