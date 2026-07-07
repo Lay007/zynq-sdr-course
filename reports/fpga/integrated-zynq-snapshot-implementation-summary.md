@@ -11,20 +11,20 @@ This report is generated from the `vendor snapshot bridge_txrx_mux` flow after f
 | Fully routed | True |
 | Unrouted nets | 0 |
 | Routing errors | 0 |
-| Bitstream size | 2516200 bytes |
-| Bitstream SHA256 | `753ced5676e1364c62a3c12c9006290368519803dda602bda64cee617ddf3428` |
+| Bitstream size | 2505900 bytes |
+| Bitstream SHA256 | `973bb897010af1f5e3c31ccbd37b69e8e5ecf8abe624edea8e5a42954feb4e41` |
 
 ## Utilization
 
 | LUT | FF | DSP | BRAM tiles |
 |---:|---:|---:|---:|
-| 27887 | 36203 | 212 | 8.0 |
+| 27597 | 36169 | 216 | 8.0 |
 
 ## Timing
 
 | WNS, ns | TNS, ns | Failing endpoints | Total endpoints | Timing met |
 |---:|---:|---:|---:|---|
-| -1.676 | -53.405 | 66 | 105640 | False |
+| 0.003 | 0.0 | 0 | 105709 | True |
 
 ## Interpretation
 

@@ -54,3 +54,12 @@ if {[llength $fifo_cdc] > 0} {
   set_false_path -to $fifo_cdc
   puts "course overlay: false_path applied to [llength $fifo_cdc] rx_raw_fifo CDC sync pins"
 }
+
+# gp_ctrl[8] is quasi-static and crosses from sample_clk into adc_input_clk only
+# through rx_ch2_adc_meta -> rx_ch2_adc_sync. Cut capture into the first ASYNC_REG
+# stage; the second stage remains timed normally in the destination domain.
+set rx_ch2_cdc [get_pins -hier -quiet -filter {NAME =~ *rx_ch2_adc_meta_reg/D}]
+if {[llength $rx_ch2_cdc] > 0} {
+  set_false_path -to $rx_ch2_cdc
+  puts "course overlay: false_path applied to rx_ch2 ADC-domain synchronizer"
+}

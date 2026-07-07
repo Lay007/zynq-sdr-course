@@ -237,12 +237,25 @@ wire signed [W-1:0] tx_mux_q = mod_qpsk ? qpsk_tx_q : bpsk_tx_q;
 wire rx_fabric_loop = control_sync[6];
 
 // gp_ctrl[8]=1 feeds the raw-ADC CDC FIFO from AD9361 RX channel 2 (adc_input2 =
-// adc_data_i1/q1) instead of channel 1 — pairs with a TX2->RX2 cable to bypass a
-// possibly-degraded TX1/RX1 channel.
-wire rx_ch2 = control_sync[8];
-wire                 raw_wr_en = rx_ch2 ? adc_input2_valid : adc_input_valid;
-wire signed [W-1:0]  raw_wr_i  = rx_ch2 ? adc_input2_i     : adc_input_i;
-wire signed [W-1:0]  raw_wr_q  = rx_ch2 ? adc_input2_q     : adc_input_q;
+// adc_data_i1/q1) instead of channel 1. control_sync lives on sample_clk, while
+// this mux feeds memory written on adc_input_clk; synchronize the quasi-static
+// select into the write domain before it can affect FIFO data or write enable.
+(* ASYNC_REG = "TRUE" *) reg rx_ch2_adc_meta = 1'b0;
+(* ASYNC_REG = "TRUE" *) reg rx_ch2_adc_sync = 1'b0;
+
+always @(posedge adc_input_clk) begin
+    if (adc_input_reset) begin
+        rx_ch2_adc_meta <= 1'b0;
+        rx_ch2_adc_sync <= 1'b0;
+    end else begin
+        rx_ch2_adc_meta <= control_sync[8];
+        rx_ch2_adc_sync <= rx_ch2_adc_meta;
+    end
+end
+
+wire                 raw_wr_en = rx_ch2_adc_sync ? adc_input2_valid : adc_input_valid;
+wire signed [W-1:0]  raw_wr_i  = rx_ch2_adc_sync ? adc_input2_i     : adc_input_i;
+wire signed [W-1:0]  raw_wr_q  = rx_ch2_adc_sync ? adc_input2_q     : adc_input_q;
 
 // Modulation cores consume this selected RX stream. All selects at 0 reduces to
 // the original `capture_in_valid && tx_path_active_sample` exactly.
