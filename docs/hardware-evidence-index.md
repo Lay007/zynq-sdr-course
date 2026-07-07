@@ -33,7 +33,7 @@ Use the status values below:
 | Synthetic QPSK replay dataset | `datasets/demo_qpsk_capture/manifest.yaml` | synthetic | deterministic generator, checksum, analyzer and CI thresholds provide replay evidence; measured RF capture remains open |
 | QPSK dual-modem HDL path | `blocks/block_05_fpga_hdl_flow/tb/tb_qpsk_bridge_loopback.v` | synthetic | 140 QPSK symbols / 280 bits cross the course gpreg bridge at BER=0 |
 | Runtime QPSK fabric qualification | `reports/hardware/qpsk-fabric-loopback-qualification-20260707.md` | measured | timing-clean payload reaches BER=0 across 4/4 boots and 13/13 selected-offset attempts on the Zynq PL |
-| Runtime QPSK external RF qualification | `reports/hardware/qpsk-rtl-sdr-qualification-20260707.md` | measured | independent RTL-SDR recovers one selected 280-bit OTA frame at BER=0 with 20.25% EVM and no clipping |
+| Runtime QPSK external RF qualification | `reports/hardware/qpsk-rtl-sdr-qualification-20260707.md` | measured | independent RTL-SDR detects 30/30 OTA bursts with 0/8,400 bit errors, median EVM 21.32% and no clipping |
 | Zynq-to-RTL-SDR tone witness | `reports/hardware/rtl-sdr-tone-witness-20260707.md` | measured | antenna path sees +201.965 kHz tone at 40.30 dB SNR with no clipping |
 | Hardware validation backlog | `docs/hardware-validation-backlog.md` | reviewed | issue-linked closure plan for #25, #26 and #29 |
 | FPGA resource report template | `reports/fpga_resource_report.template.md` | template | use when extending the current package to a new design |

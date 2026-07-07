@@ -192,7 +192,7 @@ The next major proof points are:
 
 - repeat-build timing margin for the board-qualified integrated bitstream;
 - a publication-cleared raw QPSK IQ dataset beside the committed measured plots and metrics;
-- burst-by-burst external RTL-SDR QPSK statistics;
+- independent-session and controlled-cable RTL-SDR QPSK statistics;
 - complete QPSK or tone model-to-measurement final report.
 
 ---

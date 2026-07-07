@@ -33,10 +33,10 @@
 | 06 | RF frontend и AD9363 | Measured | RX-only и tone capture baselines | Построить таблицу усиления AD9363 и проверить безопасный cabled loopback. |
 | 07 | TX/RX тракты | Executable | DUC/DDC demos и loopback models | Добавить пакет измерений. |
 | 08 | Модуляция и синхронизация | Executable | CFO, phase/timing и BER/EVM demos | Добавить sweeps по искажениям и дашборды BER/EVM. |
-| 09 | Инструменты записи и анализа | Measured | CI16/CU8/CF32/WAV readers, fail-closed manifest CI, synthetic replay и measured QPSK WAV analysis | Добавить burst-by-burst анализ повторяемости QPSK. |
+| 09 | Инструменты записи и анализа | Measured | CI16/CU8/CF32/WAV readers, fail-closed manifest CI и QPSK multi-burst BER/EVM/CFO analysis | Опубликовать либо внешне архивировать raw QPSK WAV. |
 | 10 | KiCad и базовая электроника | Draft | Calculators и templates | Добавить фото макета и экспорты из KiCad. |
-| 11 | Интегрированный SDR-проект | QPSK measured internally and externally | Timing-clean payload: 4/4 внутренних boot-сессии; внешний RTL-SDR кадр: 280/280 бит, EVM 20,25%, без clipping | Добавить burst-by-burst RF repeatability и увеличить timing margin. |
-| 12 | Итоговые проекты | Measured example; repeatability pending | Заполненный отчёт и внутренняя/внешняя QPSK qualification | Добавить controlled cabled и multi-frame RF statistics. |
+| 11 | Интегрированный SDR-проект | QPSK measured internally and externally | Timing-clean payload: 4/4 внутренних boot-сессии; внешний RTL-SDR: 30/30 BER=0 burst, 0/8400 бит, median EVM 21,32% | Добавить независимые RF-сессии, controlled cabled evidence и timing margin. |
+| 12 | Итоговые проекты | Measured example; cross-session proof pending | Заполненный отчёт и внутренняя/30-burst внешняя QPSK qualification | Добавить controlled cabled и cross-session statistics. |
 
 ## Недавно добавленные артефакты для усиления курса
 

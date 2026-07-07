@@ -25,6 +25,7 @@ analysis_targets:
 quality_checks:
   capture_completed: true
   offline_analysis_completed: true
+  multi_burst_analysis_completed: true
 license: not-for-publication-until-reviewed
 analysis:
   reference_config_json: blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/config.json
@@ -35,6 +36,8 @@ analysis:
   raw_spectrum_plot: docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_cdcfix_01_raw_capture_spectrum.png
   baseband_spectrum_plot: docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_cdcfix_01_baseband_spectrum.png
   constellation_plot: docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_cdcfix_01_constellation.png
+  multiburst_metrics_plot: docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_cdcfix_01_multiburst_metrics.png
+  multiburst_constellation_plot: docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_cdcfix_01_multiburst_constellation.png
 hardware:
   transmitter: Zynq-7020 + AD9361 board, runtime bridge_txrx_mux PL-owned QPSK TX
     path

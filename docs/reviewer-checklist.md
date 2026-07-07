@@ -87,6 +87,8 @@ For digital communication labs, SNR alone is not sufficient. A reviewed BPSK/QPS
 
 A result with only SNR may be accepted as a spectrum or signal-presence check, but not as a validated digital link.
 
+Metric formulas, preprocessing and statistical limits must follow [Digital-link metric calculations](digital-link-metrics.md) or an explicitly documented alternative.
+
 ## 7. Final-project acceptance gate
 
 A portfolio-ready final project should include:

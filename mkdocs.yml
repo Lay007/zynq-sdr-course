@@ -78,6 +78,7 @@ nav:
       - "End-to-end QPSK hardware demo": end-to-end-qpsk-hardware-demo.md
       - "Dual-modem final implementation report": final-project-dual-modem-implementation-report.md
       - "SDR measurement report template": sdr-measurement-report-template.md
+      - "Digital-link metric calculations": digital-link-metrics.md
       - "HDL smoke verification": verification/hdl_smoke.md
       - "Experiment manifests": experiment-manifests.md
       - "Lab 1: Tone → RF → IQ → Analysis": lab01-tone-rf-iq-analysis.md

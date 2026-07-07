@@ -2,23 +2,31 @@
 
 ## Result
 
-The timing-clean dual-modem payload transmitted its deterministic 140-symbol QPSK ROM frame through the Zynq TX1/AD9361 RF path. An independent RTL-SDR received the over-the-air signal through a separate antenna. The promoted `-50 dB` TX-gain run recovered all 280 compared bits with zero errors.
+The timing-clean dual-modem payload transmitted its deterministic 140-symbol QPSK ROM frame through the Zynq TX1/AD9361 RF path. An independent RTL-SDR received the over-the-air signal through a separate antenna. Multi-burst analysis found every commanded burst in both recordings. The promoted `-50 dB` run recovered all 30 bursts and all 8,400 compared bits without error.
 
-| Metric | Conservative run | Promoted run |
+| Metric | -55 dB run | Promoted -50 dB run |
 |---|---:|---:|
 | TX hardware gain | -55 dB | -50 dB |
 | RTL-SDR tuner gain | 30 dB | 30 dB |
-| Compared bits | 280 | 280 |
-| Bit errors | 1 | 0 |
-| BER | 3.571429e-3 | 0 |
-| EVM RMS | 37.379% | 20.250% |
-| SNR estimated from EVM | 8.55 dB | 13.87 dB |
-| Residual frequency offset | +2003.7 Hz | +1995.8 Hz |
+| Commanded / energy-detected / correlated bursts | 40 / 40 / 40 | 30 / 30 / 30 |
+| Zero-error bursts | 23 / 40 | 30 / 30 |
+| Frame error rate | 42.5% | 0% |
+| Compared bits | 11,200 | 8,400 |
+| Bit errors | 18 | 0 |
+| Aggregate BER | 1.607143e-3 | 0 |
+| Median EVM RMS | 35.684% | 21.317% |
+| Median SNR estimated from EVM | 8.95 dB | 13.43 dB |
+| Median residual frequency offset | +1963.9 Hz | +1963.6 Hz |
+| Median normalized correlation | 0.940 | 0.975 |
 | Clipping fraction | 0 | 0 |
 
 Both runs used a 2.4 MS/s RTL-SDR capture centered at 868.3 MHz. The Zynq sample rate was 3.84 MS/s, the QPSK symbol rate was 480 ksymbol/s, and the RRC rolloff was 0.35. The promoted capture SHA256 is `ebea5717237f4c8a1df830370f124cc77ced9af32e741419f6e340ae9d669ffa`.
 
 ![Promoted QPSK constellation](../../docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_cdcfix_02_constellation.png)
+
+![Promoted QPSK per-burst metrics](../../docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_cdcfix_02_multiburst_metrics.png)
+
+![Promoted QPSK all-burst constellation](../../docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_cdcfix_02_multiburst_constellation.png)
 
 ![Promoted QPSK selected-window spectrum](../../docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_cdcfix_02_baseband_spectrum.png)
 
@@ -31,7 +39,20 @@ Both runs used a 2.4 MS/s RTL-SDR capture centered at 868.3 MHz. The Zynq sample
 - Transmitted payload MD5: `414eca88fe628de06c9bef09cf73e30e`
 - Transmitted payload SHA256: `48a17b8cbabec9c7d9c5236cb665397d154813e6537c24067765f601d73ead28`
 
-The analyzer reads the exact `bpsk_frame_bits.mem` ROM shared by the QPSK RTL source, pairs consecutive bits onto I and Q, resamples the RTL-SDR recording, applies the RRC matched filter, estimates residual CFO and phase, and compares the recovered axes against all 280 transmitted bits.
+The analyzer reads the exact `bpsk_frame_bits.mem` ROM shared by the QPSK RTL source, pairs consecutive bits onto I and Q, applies the RRC matched filter, estimates residual CFO and phase, and compares the recovered axes against all 280 transmitted bits in every detected burst. Energy detection uses 256-sample blocks and robust median/MAD thresholds. A candidate becomes a frame only when normalized reference correlation is at least `0.8`; all hardware frames measured `0.898…0.983`.
+
+## Metric definitions
+
+The complete equations and assumptions are in `docs/digital-link-metrics.md`. The key definitions used here are:
+
+- `BER = total wrong bits / total compared bits` over all correlated bursts;
+- `FER = bursts containing at least one wrong bit / correlated bursts`;
+- `EVM_RMS = sqrt(sum(|aligned_rx-reference|^2) / sum(|reference|^2))`;
+- `SNR_from_EVM = -20 log10(EVM_RMS)`, valid as an SNR estimate only under noise-dominant assumptions;
+- CFO is the fitted phase slope of `rx * conj(reference)`, converted from radians/symbol to hertz;
+- clipping fraction is the fraction of raw IQ samples where either normalized axis exceeds `0.999` full scale.
+
+For the promoted run, 30/30 zero-error bursts give a Wilson 95% success-rate interval of `88.65%…100%`. Zero errors in 8,400 bits give the rule-of-three bound `BER < 3.571429e-4` at approximately 95% confidence. Neither statement proves a physical BER floor.
 
 ## Reproduction
 
@@ -62,8 +83,9 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_28_read_rtl_wav_ota_
 
 ## Limits
 
-- BER=0 applies to one selected 280-bit frame in the promoted recording; it is not a statistical BER floor or a 30/30 burst success claim.
+- The 30/30 result covers one capture session and 8,400 bits; it is not a long-duration BER floor or cross-session reliability proof.
 - SNR is inferred from EVM after scalar/CFO alignment, not measured independently from calibrated RF power.
+- Wilson BER bounds treat bit errors as independent Bernoulli trials; RF burst errors may be correlated, so the interval is descriptive.
 - The RF path was antenna-to-antenna, so geometry and ambient interference are not controlled like a cabled attenuator experiment.
 - The raw WAV remains local-only; its SHA256, manifest, plots, capture report and derived metrics are committed.
 - Every capture session rebooted the board to stock; the final state had TX gain `-89.75 dB` and the TX LO powered down.

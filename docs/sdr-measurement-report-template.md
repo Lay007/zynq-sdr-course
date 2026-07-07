@@ -45,6 +45,8 @@ reference model
 | EVM | TBD | modulation quality |
 | BER | TBD | receiver quality |
 
+Use the exact definitions and assumptions from [Digital-link metric calculations](digital-link-metrics.md). State the compared bit/frame count, synchronization and alignment applied before EVM, whether SNR is independently measured or inferred from EVM, and the confidence bound for zero observed errors.
+
 ## 5. Plots
 
 Include:

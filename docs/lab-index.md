@@ -25,7 +25,7 @@ This page provides a compact index of course labs. It is intentionally shorter t
 | 08 | 8.1-8.6 | synchronization, mini-link and coding comparison | ci / executable | add impairment sweeps and dashboards |
 | 09 | 9.1-9.5 | metadata, file readers and replay analysis | ci / executable | keep manifests and thresholds synchronized |
 | 10 | 10.1-10.4 | electronics, safety checklist and schematic mini-project | manual / report-oriented | add exported design artifacts |
-| 11 | 11.1-11.28 | integrated project workflow and bring-up evidence | manual + measured | add multi-frame QPSK RF statistics and improve timing margin |
+| 11 | 11.1-11.28 | integrated project workflow and bring-up evidence | manual + measured | add cross-session/cabled QPSK statistics and improve timing margin |
 | 12 | 12.1-12.4 | final project briefs, rubric, templates and filled implementation report | reviewable / hardware pending | complete the open measurement gates |
 
 ## Numbering note

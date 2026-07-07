@@ -31,17 +31,27 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_28_read_rtl_wav_ota_
   --manifest datasets/lab11_22_runtime_pl_rtl_monitor/manifest_live_20260707_qpsk_ota_cdcfix_02.yaml
 ```
 
-## Measured result — 2026-07-07
+## Metric calculation
 
-| Gate | Result |
-|---|---:|
-| Compared bits | 280 |
-| Bit errors / BER | 0 / 0 |
-| EVM RMS | 20.250% |
-| SNR estimated from EVM | 13.87 dB |
-| Residual frequency offset | +1995.8 Hz |
-| Clipping fraction | 0 |
+The analyzer uses the exact QPSK RTL ROM as its reference. It removes one global DC estimate, detects burst energy with a median/MAD threshold, applies an RRC matched filter, and requires normalized reference correlation `>= 0.8`. It then estimates CFO from the linear phase slope of `rx * conj(reference)`, removes one complex gain/phase coefficient, and makes I/Q sign decisions.
 
-The lower-power `-55 dB` run produced one error in 280 bits and 37.379% EVM. Raising the TX gain to `-50 dB` improved the selected frame without clipping. See `reports/hardware/qpsk-rtl-sdr-qualification-20260707.md` for the complete evidence chain and limitations.
+The exact BER, FER, EVM, SNR-from-EVM, CFO, clipping and confidence-interval formulas are defined in `docs/digital-link-metrics.md`. In particular, `snr_from_evm_db = -20 log10(EVM_RMS)` is a diagnostic noise-dominant estimate, not calibrated RF SNR.
 
-This result is a single-frame external RF qualification. A burst-by-burst detector and a controlled cabled run are still required for a repeatability or BER-floor claim.
+## Measured multi-burst result — 2026-07-07
+
+| Metric | -55 dB run | -50 dB run |
+|---|---:|---:|
+| Commanded / detected bursts | 40 / 40 | 30 / 30 |
+| BER=0 bursts | 23 / 40 | 30 / 30 |
+| Frame error rate | 42.5% | 0% |
+| Compared bits / bit errors | 11,200 / 18 | 8,400 / 0 |
+| Aggregate BER | 1.607143e-3 | 0 |
+| Median EVM RMS | 35.684% | 21.317% |
+| Median SNR estimated from EVM | 8.95 dB | 13.43 dB |
+| Median residual frequency offset | +1963.9 Hz | +1963.6 Hz |
+| Median normalized correlation | 0.940 | 0.975 |
+| Clipping fraction | 0 | 0 |
+
+At `-50 dB`, the Wilson 95% interval for the zero-error burst rate is `88.65%…100%`. With zero errors in 8,400 compared bits, the rule-of-three upper bound is `BER < 3.571429e-4`; this is a sample-size bound, not a measured BER floor.
+
+See `reports/hardware/qpsk-rtl-sdr-qualification-20260707.md` for plots, evidence files and limitations. A controlled cabled run and independent clean-session repetitions are still required for calibrated link-budget and long-term repeatability claims.
