@@ -30,8 +30,8 @@ This matrix shows what each course block should contain before it can be conside
 
 ## Interpretation notes
 
-- Block 11 now has a timing-clean, repeatable QPSK silicon payload (4/4 boot sessions, 13/13 selected-offset attempts) and a 30/30 external RTL-SDR burst session at BER=0. It remains `🟡` because cross-session RF repeatability and stronger timing margin are still pending.
-- Block 12 now has a filled dual-modem report with internal and multi-burst external RF evidence. It remains below portfolio-ready until independent-session and controlled-path statistics are measured.
+- Block 11 now has a timing-clean, repeatable QPSK silicon payload (4/4 boot sessions, 13/13 selected-offset attempts) and 3/3 external RTL-SDR sessions with 90/90 bursts at BER=0. It remains `🟡` because controlled-path evidence and stronger timing margin are still pending.
+- Block 12 now has a filled dual-modem report with internal and cross-session external RF evidence. It remains below portfolio-ready until controlled-path and longer-duration statistics are measured.
 - Blocks 05 and 09 are the strongest automation anchors today: they combine reusable checks, generated artifacts and CI coverage.
 
 ## Lab-level quality gates

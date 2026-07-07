@@ -54,4 +54,28 @@ The exact BER, FER, EVM, SNR-from-EVM, CFO, clipping and confidence-interval for
 
 At `-50 dB`, the Wilson 95% interval for the zero-error burst rate is `88.65%…100%`. With zero errors in 8,400 compared bits, the rule-of-three upper bound is `BER < 3.571429e-4`; this is a sample-size bound, not a measured BER floor.
 
-See `reports/hardware/qpsk-rtl-sdr-qualification-20260707.md` for plots, evidence files and limitations. A controlled cabled run and independent clean-session repetitions are still required for calibrated link-budget and long-term repeatability claims.
+See `reports/hardware/qpsk-rtl-sdr-qualification-20260707.md` for plots, evidence files and limitations.
+
+## Cross-session qualification — 2026-07-07
+
+Three additional independent stock→runtime→stock sessions used the same payload and `-50 dB` operating point. Each session commanded 30 bursts.
+
+| Session | Detected / commanded | BER=0 bursts | Bit errors / compared bits | Median EVM | Median CFO | Safe stock reboot |
+|---|---:|---:|---:|---:|---:|---:|
+| 01 | 30 / 30 | 30 / 30 | 0 / 8,400 | 18.396% | +1964.1 Hz | yes |
+| 02 | 30 / 30 | 30 / 30 | 0 / 8,400 | 19.013% | +1975.1 Hz | yes |
+| 03 | 30 / 30 | 30 / 30 | 0 / 8,400 | 19.728% | +1966.1 Hz | yes |
+| Combined | 90 / 90 | 90 / 90 | 0 / 25,200 | 19.038% across frames | +1968.7 Hz across frames | 3 / 3 |
+
+The combined zero-error burst-rate Wilson 95% interval is `95.91%…100%`. The zero-error BER rule-of-three bound is `BER < 1.190476e-4`. The session success interval is only `43.85%…100%` because three sessions are still a small session-level sample.
+
+Rebuild the aggregate with:
+
+```powershell
+python tools/aggregate_lab11_28_sessions.py `
+  "docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_crosssession_*_metrics.json" `
+  --json-out docs/assets/lab1128_qpsk_ota_crosssession_qualification_20260707.json `
+  --plot-out docs/assets/lab1128_qpsk_ota_crosssession_summary_20260707.png
+```
+
+A controlled cabled run and a larger number of independent sessions remain necessary for calibrated link-budget and long-duration reliability claims.

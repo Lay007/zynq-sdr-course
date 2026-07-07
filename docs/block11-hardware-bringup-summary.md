@@ -19,15 +19,15 @@ Block 11 is the integrated SDR project track. Its goal is to connect the referen
 | QPSK RTL and bridge path | executable | Canonical simulation reaches BER=0 for 140 symbols / 280 bits through the dual-modem bridge. |
 | Runtime QPSK fabric loopback | measured | Timing-clean payload: 4/4 boot sessions and 13/13 attempts at offset 62 reached BER=0 for 140 symbols / 280 bits. |
 | Integrated FPGA implementation | measured signoff candidate | Hardware-correlated snapshot is fully routed with WNS +0.003 ns and passes the QPSK fabric qualification; timing margin remains narrow. |
-| External QPSK RTL-SDR path | measured multi-burst | Promoted OTA run detects 30/30 bursts with 0/8,400 bit errors, median EVM 21.32%, median CFO +1.964 kHz and no clipping. |
+| External QPSK RTL-SDR path | measured cross-session | Three independent OTA sessions detect 90/90 bursts with 0/25,200 bit errors, median EVM 19.04%, median CFO +1.969 kHz and no clipping. |
 
 ## Status alignment note
 
-The earlier version of this page described an old blocker with high error rate and run-to-run variability. The internal loopback and one 30-burst external session are now measured; the remaining work is cross-session/cabled validation, raw-data publication and timing margin.
+The earlier version of this page described an old blocker with high error rate and run-to-run variability. The internal loopback and three 30-burst external sessions are now measured; the remaining work is controlled-cabled validation, raw-data publication, longer runs and timing margin.
 
 ## Remaining engineering statement
 
-> The runtime path now has repeated zero-error internal loopback and a manifest-backed 30/30 external RTL-SDR burst series. The next proof is repetition across independent boots and a controlled cabled path.
+> The runtime path now has repeated zero-error internal loopback and a manifest-backed 3/3-session external RTL-SDR series. The next proof is a controlled cabled path and longer-duration statistics.
 
 ## Next experiments
 
@@ -39,7 +39,7 @@ The earlier version of this page described an old blocker with high error rate a
 | P1 | Improve timing-closure margin | repeat builds or seed sweep with stable positive WNS |
 | Done | Extend QPSK from digital loopback to measured RF | OTA manifest, constellation, EVM/SNR and BER summary |
 | Done | Measure external QPSK burst repeatability | 30/30 detected zero-error bursts with BER/EVM/CFO distributions and confidence bounds |
-| P1 | Repeat QPSK across independent RF sessions | per-session burst statistics and cross-session variance |
+| Done | Repeat QPSK across independent RF sessions | 3/3 sessions, 90/90 bursts, 0/25,200 bits and safe stock restore |
 | P2 | Promote the best result into a final project report | model-to-measurement report with limitations |
 
 ## Done criteria

@@ -37,8 +37,8 @@ Detailed bring-up logs should live on dedicated evidence pages rather than insid
 | 08 | Modulation and synchronization | Executable | CFO, phase/timing, BER/EVM demos and SNR-vs-BER trap material | Promote generated impairment dashboards and connect them to measured Block 11 reports. |
 | 09 | Recording and analysis tools | Measured | CI16/CU8/CF32/WAV readers, fail-closed manifest CI and QPSK multi-burst BER/EVM/CFO analysis | Publish or externally archive the raw QPSK WAV. |
 | 10 | KiCad and basic electronics | Draft | Calculators and templates | Add measured breadboard photos and KiCad exports. |
-| 11 | Integrated SDR project | QPSK measured internally and externally | Timing-clean payload: 4/4 internal boots; external RTL-SDR: 30/30 BER=0 bursts, 0/8,400 bits, median EVM 21.32% | Add independent RF sessions, controlled cabled evidence and timing margin. |
-| 12 | Final projects | Measured example; cross-session proof pending | Filled report plus internal and 30-burst external QPSK qualification | Add controlled cabled and cross-session statistics. |
+| 11 | Integrated SDR project | QPSK measured internally and externally | Timing-clean payload: 4/4 internal boots; external RTL-SDR: 3/3 sessions, 90/90 bursts and 0/25,200 bits | Add controlled cabled evidence, longer runs and timing margin. |
+| 12 | Final projects | Measured cross-session example | Filled report plus internal and three-session external QPSK qualification | Add calibrated cabled and longer-duration statistics. |
 
 ## Hardware validation priorities
 

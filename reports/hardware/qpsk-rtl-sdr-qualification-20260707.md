@@ -35,6 +35,8 @@ Both runs used a 2.4 MS/s RTL-SDR capture centered at 868.3 MHz. The Zynq sample
 - Capture manifest: `datasets/lab11_22_runtime_pl_rtl_monitor/manifest_live_20260707_qpsk_ota_cdcfix_02.yaml`
 - Capture/session report: `docs/assets/lab1122_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_cdcfix_02.json`
 - Offline metrics: `docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_cdcfix_02_metrics.json`
+- Cross-session aggregate: `docs/assets/lab1128_qpsk_ota_crosssession_qualification_20260707.json`
+- Cross-session run artifacts: matching `qpsk_ota_crosssession_01`, `_02` and `_03` manifests, capture reports and metrics
 - Lower-power comparison: matching `_01` manifest, capture report and metrics files
 - Transmitted payload MD5: `414eca88fe628de06c9bef09cf73e30e`
 - Transmitted payload SHA256: `48a17b8cbabec9c7d9c5236cb665397d154813e6537c24067765f601d73ead28`
@@ -53,6 +55,21 @@ The complete equations and assumptions are in `docs/digital-link-metrics.md`. Th
 - clipping fraction is the fraction of raw IQ samples where either normalized axis exceeds `0.999` full scale.
 
 For the promoted run, 30/30 zero-error bursts give a Wilson 95% success-rate interval of `88.65%…100%`. Zero errors in 8,400 bits give the rule-of-three bound `BER < 3.571429e-4` at approximately 95% confidence. Neither statement proves a physical BER floor.
+
+## Independent-session series
+
+Three new clean sessions repeated the promoted `-50 dB` configuration without changing the payload or monitor settings.
+
+| Session | Bursts detected | Zero-error bursts | Errors / bits | Median EVM | Median SNR from EVM | Median CFO | Stock restore |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 01 | 30 / 30 | 30 / 30 | 0 / 8,400 | 18.396% | 14.71 dB | +1964.1 Hz | pass |
+| 02 | 30 / 30 | 30 / 30 | 0 / 8,400 | 19.013% | 14.42 dB | +1975.1 Hz | pass |
+| 03 | 30 / 30 | 30 / 30 | 0 / 8,400 | 19.728% | 14.10 dB | +1966.1 Hz | pass |
+| Combined | 90 / 90 | 90 / 90 | 0 / 25,200 | 19.038% | 14.41 dB | +1968.7 Hz | 3 / 3 |
+
+![QPSK cross-session summary](../../docs/assets/lab1128_qpsk_ota_crosssession_summary_20260707.png)
+
+The aggregate is `docs/assets/lab1128_qpsk_ota_crosssession_qualification_20260707.json`. It validates a common bitstream MD5 and RF/modem configuration before combining sessions. The combined burst success Wilson 95% interval is `95.91%…100%`; the session success interval is `43.85%…100%`, reflecting the small session count. With zero errors in 25,200 compared bits, the rule-of-three bound is `BER < 1.190476e-4`.
 
 ## Reproduction
 
@@ -81,9 +98,18 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_28_read_rtl_wav_ota_
   --manifest datasets/lab11_22_runtime_pl_rtl_monitor/manifest_live_20260707_qpsk_ota_cdcfix_02.yaml
 ```
 
+Aggregate independent sessions:
+
+```powershell
+python tools/aggregate_lab11_28_sessions.py `
+  "docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_crosssession_*_metrics.json" `
+  --json-out docs/assets/lab1128_qpsk_ota_crosssession_qualification_20260707.json `
+  --plot-out docs/assets/lab1128_qpsk_ota_crosssession_summary_20260707.png
+```
+
 ## Limits
 
-- The 30/30 result covers one capture session and 8,400 bits; it is not a long-duration BER floor or cross-session reliability proof.
+- The cross-session result covers three sessions and 25,200 bits; it is still not a long-duration BER floor.
 - SNR is inferred from EVM after scalar/CFO alignment, not measured independently from calibrated RF power.
 - Wilson BER bounds treat bit errors as independent Bernoulli trials; RF burst errors may be correlated, so the interval is descriptive.
 - The RF path was antenna-to-antenna, so geometry and ambient interference are not controlled like a cabled attenuator experiment.

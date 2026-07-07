@@ -28,7 +28,7 @@ PS7 + AXI + AD9361 interface -> placed-and-routed XC7Z020 design -> local bitstr
 | FPGA implementation | two integrated Vivado 2021.1 flows | hardware-working snapshot is fully routed and timing-clean | internal-path signoff candidate |
 | BPSK board path | promoted on-chip PL result | 281 compared bits, BER=0 | measured single promoted result |
 | QPSK board path | Lab 11.27 fabric loopback | timing-clean payload: 4/4 boots, 13/13 attempts at BER=0 for 280 bits | measured silicon |
-| External RF | Lab 11.28 RTL-SDR OTA QPSK | 30/30 bursts, 0/8,400 bit errors, median EVM 21.32%, median CFO +1.964 kHz | measured session |
+| External RF | Lab 11.28 RTL-SDR OTA QPSK | 3/3 sessions, 90/90 bursts, 0/25,200 bit errors, median EVM 19.04% | measured cross-session |
 
 ## Integrated implementation result
 
@@ -88,4 +88,4 @@ Primary artifacts:
 
 The QPSK modem is proven on the real Zynq PL at BER=0. The final timing-clean payload is repeatable across four boot sessions and 13 attempts, and FPGA timing/board correlation is closed for the internal fabric path.
 
-The next FPGA task is to improve and demonstrate timing margin across repeat builds. The next measurement task is independent-session RTL-SDR QPSK statistics and a controlled cabled comparison; 0/8,400 bits bounds the tested session but does not establish a long-duration BER floor.
+The next FPGA task is to improve and demonstrate timing margin across repeat builds. The next measurement task is a controlled cabled comparison and longer-duration statistics; 0/25,200 bits across three sessions does not establish a BER floor.

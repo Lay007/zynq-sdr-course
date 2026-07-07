@@ -1,0 +1,71 @@
+manifest_kind: capture-session
+schema_version: 1
+dataset_id: lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_crosssession_03
+version: 0.1
+status: local-only
+title: RTL-SDR monitor capture for runtime bridge_txrx_mux OTA QPSK
+description: Fresh local RTL-SDR stereo WAV IQ capture recorded after the runtime
+  bridge_txrx_mux overlay had already been loaded and AD9361 configured, with the
+  capture window centered on repeated PL-owned QPSK start pulses.
+storage: local-workstation
+url: null
+local_path_hint_windows: G:\Programs\zynq-sdr-course\tmp\lab1122_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_crosssession_03.wav
+format: wav
+i_first: true
+sample_rate_hz: 2400000
+center_frequency_hz: 868300000
+analysis_command: python blocks/block_11_integrated_sdr_project/python/lab_11_28_read_rtl_wav_ota_qpsk.py
+  --manifest datasets/lab11_22_runtime_pl_rtl_monitor/manifest_live_20260707_qpsk_ota_crosssession_03.yaml
+source: rtl-sdr-runtime-pl-monitor-capture
+analysis_targets:
+- QPSK frame detection
+- BER
+- EVM
+- spectrum
+quality_checks:
+  capture_completed: true
+  offline_analysis_completed: true
+  multi_burst_analysis_completed: true
+license: not-for-publication-until-reviewed
+analysis:
+  reference_config_json: blocks/block_11_integrated_sdr_project/assets/end_to_end_bpsk_reference/config.json
+  reference_sample_rate_hz: 3840000
+  runtime_bringup_json: docs/assets/lab1122_runtime_bridge_txrx_self_timed_live_20260707_qpsk_ota_crosssession_03.json
+  capture_report_json: docs/assets/lab1122_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_crosssession_03.json
+  metrics_json: docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_crosssession_03_metrics.json
+  raw_spectrum_plot: docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_crosssession_03_raw_capture_spectrum.png
+  baseband_spectrum_plot: docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_crosssession_03_baseband_spectrum.png
+  constellation_plot: docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_crosssession_03_constellation.png
+  multiburst_metrics_plot: docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_crosssession_03_multiburst_metrics.png
+  multiburst_constellation_plot: docs/assets/lab1128_lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_crosssession_03_multiburst_constellation.png
+hardware:
+  transmitter: Zynq-7020 + AD9361 board, runtime bridge_txrx_mux PL-owned QPSK TX
+    path
+  monitor_receiver: RTL-SDR V3 Pro
+  rf_path: separate TX1 and RTL-SDR antennas (over the air)
+  context_uri: ip:192.168.40.1
+  tx_attenuation_db: -50.0
+  rx_gain_db: 5.0
+  start_offset: 62
+  rx_decision_mode: i
+  rtl_tuner_gain_db10: 300
+  rtl_auto_gain: false
+  runtime_repeat_count: 30
+signal:
+  modulation: QPSK
+  symbol_rate_hz: 480000
+  samples_per_symbol: 8
+  rolloff: 0.35
+  rrc_span_symbols: 8
+  payload_bit_count: 256
+  transmitted_bit_count: 280
+  transmitted_symbol_count: 140
+  reference_sample_rate_hz: 3840000
+  expected_signal_offset_hz: 0.0
+notes:
+- This capture is intended for offline QPSK validation through the external RTL-SDR
+  monitor path.
+- The runtime overlay uses the shared deterministic frame-bit ROM and samples_per_symbol=8.
+- The PL start pulse was repeated 30 times to improve external-monitor observability.
+- Keep the local WAV outside Git or move it into Git LFS before sharing the raw recording.
+sha256: f0139819b127728bc9e3b574f0cd768cd669e4c695b8e8717a2378e8d1886f5a

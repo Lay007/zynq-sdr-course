@@ -35,8 +35,8 @@
 | 08 | Модуляция и синхронизация | Executable | CFO, phase/timing и BER/EVM demos | Добавить sweeps по искажениям и дашборды BER/EVM. |
 | 09 | Инструменты записи и анализа | Measured | CI16/CU8/CF32/WAV readers, fail-closed manifest CI и QPSK multi-burst BER/EVM/CFO analysis | Опубликовать либо внешне архивировать raw QPSK WAV. |
 | 10 | KiCad и базовая электроника | Draft | Calculators и templates | Добавить фото макета и экспорты из KiCad. |
-| 11 | Интегрированный SDR-проект | QPSK measured internally and externally | Timing-clean payload: 4/4 внутренних boot-сессии; внешний RTL-SDR: 30/30 BER=0 burst, 0/8400 бит, median EVM 21,32% | Добавить независимые RF-сессии, controlled cabled evidence и timing margin. |
-| 12 | Итоговые проекты | Measured example; cross-session proof pending | Заполненный отчёт и внутренняя/30-burst внешняя QPSK qualification | Добавить controlled cabled и cross-session statistics. |
+| 11 | Интегрированный SDR-проект | QPSK measured internally and externally | Timing-clean payload: 4/4 внутренних boot-сессии; внешний RTL-SDR: 3/3 сессии, 90/90 burst и 0/25 200 бит | Добавить controlled cabled evidence, более длинные серии и timing margin. |
+| 12 | Итоговые проекты | Measured cross-session example | Заполненный отчёт и внутренняя/трёхсессионная внешняя QPSK qualification | Добавить calibrated cabled и longer-duration statistics. |
 
 ## Недавно добавленные артефакты для усиления курса
 

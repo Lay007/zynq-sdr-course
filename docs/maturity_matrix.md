@@ -26,7 +26,7 @@ This page summarizes the maturity of the 12-block course track. The detailed sta
 | 08 | Modulation and synchronization | executable | CFO, phase, timing, BER/EVM demos, OFDM mini-link | Add impairment sweeps and dashboard-style metric summaries. |
 | 09 | Recording and analysis tools | executable | CI16/CU8/CF32 readers, WAV IQ path, QPSK replay analysis | Keep dataset manifests and analyzer thresholds synchronized. |
 | 10 | KiCad and basic electronics | draft | RF safety, attenuator and schematic templates | Add measured bench photos and exported KiCad artifacts. |
-| 11 | Integrated SDR project | measured / portfolio-target | Timing-clean QPSK fabric qualification plus 30/30 external RTL-SDR bursts at BER=0 | Add cross-session/cabled statistics and improve timing margin. |
+| 11 | Integrated SDR project | measured / portfolio-target | Timing-clean QPSK fabric qualification plus 3/3 RTL-SDR sessions and 90/90 bursts at BER=0 | Add controlled-cabled/long-duration statistics and improve timing margin. |
 | 12 | Final projects | measured / portfolio-target | Filled report with internal and external QPSK evidence | Add repeatable cabled/OTA measurement statistics. |
 
 ## Review rule

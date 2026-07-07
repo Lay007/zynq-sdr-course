@@ -93,7 +93,7 @@ python tools/run_local_ci.py --quick
 | Snapshot timing margin is only +0.003 ns | The routed build meets timing and passes board qualification, but seed/rebuild robustness is not established | Repeat implementation with additional seeds or improve the critical path. |
 | Raw QPSK RF WAV remains local-only | Reviewers can inspect its checksum, manifest, plots and metrics but cannot replay the raw recording from Git | Publish a reviewed small capture or immutable external artifact. |
 | AD9363 gain/overload table is still measurement-pending | RF gain recommendations remain conservative | Measure gain staging, overload signs, clipping thresholds and recommended safe starting values. |
-| External QPSK evidence is one 30-burst session | 0/8,400 bits proves in-session repeatability but not a long-duration BER floor or cross-session stability | Repeat from independent boots and add a controlled cabled comparison. |
+| External QPSK evidence covers three 30-burst sessions | 0/25,200 bits proves short cross-session repeatability but not a long-duration BER floor | Add a controlled cabled comparison and longer runs. |
 
 ## Reviewer conclusion
 
