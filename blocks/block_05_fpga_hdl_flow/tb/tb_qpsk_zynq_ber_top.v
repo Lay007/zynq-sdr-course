@@ -48,6 +48,7 @@ qpsk_zynq_ber_top #(
     .symbol_count(SYMS[INDEX_W-1:0]),
     .preamble_count(16'd24),          // enable preamble frame-sync (>= LOCK bits)
     .start_offset(start_offset_cfg),
+    .dc_block_en(1'b0),               // clean loopback: DC blocker off (passthrough)
     .busy(busy),
     .done(done),
     .tx_valid(tx_valid),

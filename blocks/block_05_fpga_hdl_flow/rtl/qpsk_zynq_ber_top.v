@@ -15,6 +15,8 @@ module qpsk_zynq_ber_top #(
     parameter integer PHASE_W = 3,
     parameter integer FLUSH_SYMBOLS = 16,
     parameter integer RX_IDLE_TIMEOUT_CYCLES = 4096,
+    parameter integer LOCK_PREAMBLE_BITS = 8,   // frame-sync correlation window (24 for OTA)
+    parameter integer LOCK_ERR_TOL = 0,         // 0 = exact lock; >0 = OTA-robust correlation lock
     parameter MEM_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bits.mem",
     parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
 ) (
@@ -24,6 +26,7 @@ module qpsk_zynq_ber_top #(
     input  wire [INDEX_W-1:0]       symbol_count,   // QPSK symbols (2 bits each)
     input  wire [INDEX_W-1:0]       preamble_count, // preamble length in BITS (frame-sync)
     input  wire [INDEX_W-1:0]       start_offset,
+    input  wire                     dc_block_en,    // 1 = RX DC blocker on (OTA); 0 = passthrough
     output wire                     busy,
     output reg                      done,
     output wire                     tx_valid,
@@ -104,6 +107,7 @@ qpsk_rx_bit_recovery_chain #(
     .clk(clk),
     // restart the matched filter + sampler each frame so back-to-back bursts realign
     .rst(rst || frame_start),
+    .dc_block_en(dc_block_en),
     .in_valid(rx_valid),
     .in_i(rx_i),
     .in_q(rx_q),
@@ -119,6 +123,8 @@ qpsk_rx_bit_recovery_chain #(
 qpsk_ber_counter #(
     .INDEX_W(INDEX_W),
     .MAX_FRAME_BITS(MAX_FRAME_BITS),
+    .LOCK_PREAMBLE_BITS(LOCK_PREAMBLE_BITS),
+    .LOCK_ERR_TOL(LOCK_ERR_TOL),
     .MEM_FILE(MEM_FILE)
 ) ber_counter_i (
     .clk(clk),

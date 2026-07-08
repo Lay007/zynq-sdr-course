@@ -236,6 +236,11 @@ wire signed [W-1:0] tx_mux_q = mod_qpsk ? qpsk_tx_q : bpsk_tx_q;
 // real Zynq PL, independent of the AD9361 analog/digital-loopback issues.
 wire rx_fabric_loop = control_sync[6];
 
+// gp_ctrl[9]=1 enables the RX DC blocker (removes the AD9361 LO-leakage DC that
+// dominates a real over-the-air capture). Keep it 0 for the fabric loopback (the
+// clean signal is DC-free) so that path stays bit-identical; set it 1 for OTA.
+wire dc_block_en = control_sync[9];
+
 // gp_ctrl[8]=1 feeds the raw-ADC CDC FIFO from AD9361 RX channel 2 (adc_input2 =
 // adc_data_i1/q1) instead of channel 1. control_sync lives on sample_clk, while
 // this mux feeds memory written on adc_input_clk; synchronize the quasi-static
@@ -315,6 +320,10 @@ bpsk_zynq_ber_top #(
 // (2 bits/symbol) and the fixed-phase sampler is aligned by gp_start_offset,
 // swept by the host until BER=0 exactly like the BPSK path. Same frame-bit and
 // RRC coefficient .mem files.
+// Frame-sync is always the OTA-robust sliding correlation lock (WIN=24, tolerate 3
+// bit errors): on the clean fabric loopback it still finds the exact 24/24 match at
+// the true frame start (verified BER=0), while over the air it no longer false-locks
+// on the leading-zeros run. gp_ctrl[9] enables the RX DC blocker for the OTA path.
 qpsk_zynq_ber_top #(
     .W(W),
     .SPS(SPS),
@@ -322,6 +331,8 @@ qpsk_zynq_ber_top #(
     .MAX_FRAME_BITS(MAX_FRAME_BITS),
     .PHASE_W(PHASE_W),
     .FLUSH_SYMBOLS(FLUSH_SYMBOLS),
+    .LOCK_PREAMBLE_BITS(24),
+    .LOCK_ERR_TOL(3),
     .MEM_FILE(MEM_FILE),
     .COEF_FILE(COEF_FILE)
 ) qpsk_core_i (
@@ -331,6 +342,7 @@ qpsk_zynq_ber_top #(
     .symbol_count(frame_bit_count_cfg),
     .preamble_count(preamble_count_cfg),
     .start_offset(start_offset_cfg),
+    .dc_block_en(dc_block_en),
     .busy(qpsk_busy),
     .done(qpsk_done),
     .tx_valid(qpsk_tx_valid),
