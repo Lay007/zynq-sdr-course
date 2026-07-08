@@ -17,6 +17,12 @@ module qpsk_zynq_ber_top #(
     parameter integer RX_IDLE_TIMEOUT_CYCLES = 4096,
     parameter integer LOCK_PREAMBLE_BITS = 8,   // frame-sync correlation window (24 for OTA)
     parameter integer LOCK_ERR_TOL = 0,         // 0 = exact lock; >0 = OTA-robust correlation lock
+    // Extra symbols the RX sampler emits beyond the frame length. On a real OTA link
+    // the frame arrives after the AD9361 TX+RX group delay (hundreds of samples), so
+    // a sampler window == frame length misses the late frame. This margin lets the
+    // frame-sync find the frame regardless of round-trip latency. 0 for the tight
+    // fabric loop; ~256 for OTA. (The counter still uses the true symbol_count.)
+    parameter integer RX_SAMPLE_MARGIN = 0,
     parameter MEM_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bits.mem",
     parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
 ) (
@@ -112,7 +118,8 @@ qpsk_rx_bit_recovery_chain #(
     .in_i(rx_i),
     .in_q(rx_q),
     .start_offset(start_offset),
-    .symbol_count(symbol_count),
+    // sampler emits margin extra symbols so a latency-delayed OTA frame still fits
+    .symbol_count(symbol_count + RX_SAMPLE_MARGIN[INDEX_W-1:0]),
     .out_valid(recovered_valid),
     .out_dibit(recovered_dibit),
     .debug_symbol_valid(debug_symbol_valid),

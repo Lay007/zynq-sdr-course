@@ -333,6 +333,7 @@ qpsk_zynq_ber_top #(
     .FLUSH_SYMBOLS(FLUSH_SYMBOLS),
     .LOCK_PREAMBLE_BITS(24),
     .LOCK_ERR_TOL(3),
+    .RX_SAMPLE_MARGIN(256),   // OTA frame arrives after the AD9361 round-trip delay
     .MEM_FILE(MEM_FILE),
     .COEF_FILE(COEF_FILE)
 ) qpsk_core_i (
