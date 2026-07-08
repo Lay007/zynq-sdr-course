@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Digital RF attenuator bench photo placeholder</title>
+  <desc id="desc">Placeholder for the edited bench photo: digital RF attenuator powered by USB, SMA input and output, OLED attenuation readout.</desc>
+  <rect width="1200" height="675" fill="#f7f7f7"/>
+  <rect x="300" y="110" width="600" height="455" rx="18" fill="#0b7a42" stroke="#07572f" stroke-width="8"/>
+  <rect x="455" y="205" width="290" height="190" rx="8" fill="#111" stroke="#333" stroke-width="6"/>
+  <text x="600" y="275" text-anchor="middle" font-family="monospace" font-size="34" fill="#fff">ATT=-31.25 dB</text>
+  <text x="600" y="325" text-anchor="middle" font-family="monospace" font-size="30" fill="#fff">Freq=6 MHz</text>
+  <rect x="220" y="310" width="95" height="54" rx="8" fill="#cfcfcf" stroke="#777" stroke-width="4"/>
+  <rect x="885" y="310" width="95" height="54" rx="8" fill="#d49b2a" stroke="#8b6500" stroke-width="4"/>
+  <circle cx="395" cy="175" r="16" fill="#ff3b30"/>
+  <text x="600" y="612" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#333">Edited source photo should be stored here when binary uploads are available</text>
+</svg>
