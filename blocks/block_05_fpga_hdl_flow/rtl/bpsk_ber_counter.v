@@ -16,6 +16,15 @@ module bpsk_ber_counter #(
     // locks at exactly one alignment = the true frame start, independent of the
     // pre-frame transient / loopback-latency jitter (and overrides start_offset).
     parameter integer LOCK_PREAMBLE_BITS = 8,
+    // OTA robustness: LOCK_ERR_TOL = 0 keeps the exact sequential match (bit-identical
+    // to the original clean-loopback behaviour, zero regression). LOCK_ERR_TOL > 0
+    // switches to a sliding LOCK_PREAMBLE_BITS-wide correlation lock that fires at the
+    // first window whose match count >= LOCK_PREAMBLE_BITS - LOCK_ERR_TOL, tolerating a
+    // few over-the-air preamble bit errors instead of resetting and false-locking on
+    // the leading-zeros run (which floored real self-OTA captures at ~44%). Use a wide
+    // window (e.g. 24) + small tolerance (e.g. 3) for OTA; noise never reaches the
+    // threshold, so it does not false-trigger.
+    parameter integer LOCK_ERR_TOL = 0,
     parameter MEM_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bits.mem"
 ) (
     input  wire                     clk,
@@ -33,6 +42,8 @@ module bpsk_ber_counter #(
     output reg [INDEX_W-1:0]        payload_errors
 );
 
+localparam integer WIN = (LOCK_PREAMBLE_BITS < 1) ? 1 : LOCK_PREAMBLE_BITS;
+
 reg [0:0] frame_bits [0:MAX_FRAME_BITS-1];
 reg [INDEX_W-1:0] frame_limit_reg = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] preamble_limit_reg = {INDEX_W{1'b0}};
@@ -47,6 +58,36 @@ reg expected_preamble_bit = 1'b0;
 reg start_invert = 1'b0;
 reg [INDEX_W-1:0] next_preamble_limit = {INDEX_W{1'b0}};
 integer idx;
+
+// --- sliding-window correlation lock state (used only when LOCK_ERR_TOL > 0) ---
+reg [WIN-1:0] win_sr = {WIN{1'b0}};
+reg [INDEX_W-1:0] win_fill = {INDEX_W{1'b0}};
+
+// Count matches of a WIN-bit window against the first WIN frame bits (oldest window
+// bit w[WIN-1] aligns with frame_bits[0]); inv selects the 180-degree polarity.
+function [INDEX_W-1:0] count_matches(input [WIN-1:0] w, input inv);
+    integer j;
+    reg exp_bit;
+    begin
+        count_matches = {INDEX_W{1'b0}};
+        for (j = 0; j < WIN; j = j + 1) begin
+            exp_bit = inv ? ~frame_bits[WIN-1-j][0] : frame_bits[WIN-1-j][0];
+            if (w[j] == exp_bit) count_matches = count_matches + 1'b1;
+        end
+    end
+endfunction
+
+wire [WIN-1:0] next_win = {win_sr[WIN-2:0], in_bit};
+wire [INDEX_W-1:0] m_noninv = count_matches(next_win, 1'b0);
+wire [INDEX_W-1:0] m_inv    = count_matches(next_win, 1'b1);
+wire [INDEX_W-1:0] lock_thresh = WIN[INDEX_W-1:0] - LOCK_ERR_TOL[INDEX_W-1:0];
+wire corr_full = (win_fill >= (WIN[INDEX_W-1:0] - 1'b1));   // this bit fills the window
+wire corr_hit_noninv = corr_full && (m_noninv >= lock_thresh);
+wire corr_hit_inv    = corr_full && (m_inv    >= lock_thresh) && (m_inv > m_noninv);
+wire corr_hit = corr_hit_noninv || corr_hit_inv;
+wire corr_inv_sel = corr_hit_inv;
+wire [INDEX_W-1:0] corr_matches = corr_hit_inv ? m_inv : m_noninv;
+wire [INDEX_W-1:0] corr_pre_err = WIN[INDEX_W-1:0] - corr_matches;
 
 initial begin
     for (idx = 0; idx < MAX_FRAME_BITS; idx = idx + 1) begin
@@ -70,6 +111,8 @@ always @(posedge clk) begin
         locked <= 1'b0;
         invert_bits <= 1'b0;
         acq_invert_bits <= 1'b0;
+        win_sr <= {WIN{1'b0}};
+        win_fill <= {INDEX_W{1'b0}};
     end else begin
         done <= 1'b0;
         compare_bit = in_bit;
@@ -97,6 +140,8 @@ always @(posedge clk) begin
             locked <= (next_preamble_limit == 0);
             invert_bits <= 1'b0;
             acq_invert_bits <= 1'b0;
+            win_sr <= {WIN{1'b0}};
+            win_fill <= {INDEX_W{1'b0}};
         end else if (busy && abort) begin
             busy <= 1'b0;
             done <= 1'b1;
@@ -108,8 +153,35 @@ always @(posedge clk) begin
             locked <= 1'b0;
             invert_bits <= 1'b0;
             acq_invert_bits <= 1'b0;
+            win_sr <= {WIN{1'b0}};
+            win_fill <= {INDEX_W{1'b0}};
         end else if (busy && in_valid) begin
-            if (!locked && acquisition_enabled_reg) begin
+            if (!locked && acquisition_enabled_reg && (LOCK_ERR_TOL > 0)) begin
+                // ---- sliding-window correlation lock (OTA-robust) ----
+                win_sr <= next_win;
+                if (win_fill < WIN[INDEX_W-1:0]) win_fill <= win_fill + 1'b1;
+                if (corr_hit) begin
+                    locked <= 1'b1;
+                    invert_bits <= corr_inv_sel;
+                    received_bits <= WIN[INDEX_W-1:0];
+                    total_errors <= corr_pre_err;
+                    payload_errors <= {INDEX_W{1'b0}};  // WIN preamble bits are pre-payload
+                    acq_index <= {INDEX_W{1'b0}};
+                    acq_invert_bits <= 1'b0;
+                    if (WIN[INDEX_W-1:0] >= frame_limit_reg) begin
+                        received_bits <= frame_limit_reg;
+                        busy <= 1'b0;
+                        done <= 1'b1;
+                        frame_limit_reg <= {INDEX_W{1'b0}};
+                        preamble_limit_reg <= {INDEX_W{1'b0}};
+                        lock_preamble_limit_reg <= {INDEX_W{1'b0}};
+                        acquisition_enabled_reg <= 1'b0;
+                        locked <= 1'b0;
+                        invert_bits <= 1'b0;
+                    end
+                end
+            end else if (!locked && acquisition_enabled_reg) begin
+                // ---- original exact sequential match (LOCK_ERR_TOL == 0) ----
                 if (acq_index == {INDEX_W{1'b0}}) begin
                     if (lock_preamble_limit_reg == {{(INDEX_W-1){1'b0}}, 1'b1}) begin
                         locked <= 1'b1;
@@ -214,6 +286,8 @@ always @(posedge clk) begin
             locked <= 1'b0;
             invert_bits <= 1'b0;
             acq_invert_bits <= 1'b0;
+            win_sr <= {WIN{1'b0}};
+            win_fill <= {INDEX_W{1'b0}};
         end
     end
 end

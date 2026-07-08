@@ -20,6 +20,7 @@ module qpsk_ber_counter #(
     parameter integer INDEX_W = 16,
     parameter integer MAX_FRAME_BITS = 512,
     parameter integer LOCK_PREAMBLE_BITS = 8,
+    parameter integer LOCK_ERR_TOL = 0,   // >0 = OTA-robust sliding-correlation lock
     parameter MEM_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bits.mem"
 ) (
     input  wire                     clk,
@@ -83,6 +84,7 @@ bpsk_ber_counter #(
     .INDEX_W(INDEX_W),
     .MAX_FRAME_BITS(MAX_FRAME_BITS),
     .LOCK_PREAMBLE_BITS(LOCK_PREAMBLE_BITS),
+    .LOCK_ERR_TOL(LOCK_ERR_TOL),
     .MEM_FILE(MEM_FILE)
 ) bit_ber_i (
     .clk(clk),
