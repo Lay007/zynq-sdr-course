@@ -80,6 +80,12 @@ DEFAULT_RTL_DLL_PATH = (
     / "rtlsdr.dll"
 )
 DEFAULT_REFERENCE_METRICS_JSON = ROOT / "docs" / "assets" / "lab114_stock_shell_bpsk_ota_live_20260623d_metrics.json"
+RTLSDR_ASYNC_CALLBACK = ctypes.CFUNCTYPE(
+    None,
+    ctypes.POINTER(ctypes.c_ubyte),
+    ctypes.c_uint32,
+    ctypes.c_void_p,
+)
 
 
 @dataclass(frozen=True)
@@ -193,6 +199,16 @@ def load_rtlsdr_library(dll_path: Path) -> Any:
     rtl.rtlsdr_reset_buffer.restype = ctypes.c_int
     rtl.rtlsdr_read_sync.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int, ctypes.POINTER(ctypes.c_int)]
     rtl.rtlsdr_read_sync.restype = ctypes.c_int
+    rtl.rtlsdr_read_async.argtypes = [
+        ctypes.c_void_p,
+        RTLSDR_ASYNC_CALLBACK,
+        ctypes.c_void_p,
+        ctypes.c_uint32,
+        ctypes.c_uint32,
+    ]
+    rtl.rtlsdr_read_async.restype = ctypes.c_int
+    rtl.rtlsdr_cancel_async.argtypes = [ctypes.c_void_p]
+    rtl.rtlsdr_cancel_async.restype = ctypes.c_int
     return rtl
 
 

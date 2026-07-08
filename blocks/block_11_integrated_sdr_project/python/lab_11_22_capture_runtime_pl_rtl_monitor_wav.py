@@ -72,6 +72,7 @@ from lab_11_21_capture_rtl_sdr_monitor_wav import (  # noqa: E402
     DEFAULT_RTL_SAMPLE_RATE_HZ,
     DEFAULT_RTL_SYNC_BLOCK_BYTES,
     DEFAULT_RTL_TUNER_GAIN_DB10,
+    RTLSDR_ASYNC_CALLBACK,
     load_rtlsdr_library,
     write_wav_iq,
 )
@@ -168,6 +169,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--rtl-tuner-gain-db10", type=int, default=DEFAULT_RTL_TUNER_GAIN_DB10)
     parser.add_argument("--rtl-auto-gain", action="store_true")
     parser.add_argument("--rtl-sync-block-bytes", type=int, default=DEFAULT_RTL_SYNC_BLOCK_BYTES)
+    parser.add_argument("--rtl-read-mode", choices=["sync", "async"], default="sync")
     parser.add_argument("--rtl-dll-path", type=Path, default=DEFAULT_RTL_DLL_PATH)
     parser.add_argument("--capture-preroll-s", type=float, default=DEFAULT_CAPTURE_PREROLL_S)
     parser.add_argument("--capture-postroll-s", type=float, default=DEFAULT_CAPTURE_POSTROLL_S)
@@ -238,20 +240,53 @@ def capture_rtlsdr_unsigned_iq(
                 raise RuntimeError(f"{label} failed with rc={code}")
 
         started_event.set()
-        while bytes_captured < max_bytes:
-            if stop_event.is_set() and bytes_captured > 0:
-                break
-            block = min(args.rtl_sync_block_bytes, max_bytes - bytes_captured)
-            buf = (ctypes.c_ubyte * block)()
-            n_read = ctypes.c_int()
-            rc = rtl.rtlsdr_read_sync(rtl_dev, buf, block, ctypes.byref(n_read))
+        if args.rtl_read_mode == "async":
+
+            def on_async_buffer(
+                buf: ctypes.POINTER(ctypes.c_ubyte),
+                length: int,
+                _context: ctypes.c_void_p,
+            ) -> None:
+                nonlocal bytes_captured
+                remaining = max_bytes - bytes_captured
+                take = min(int(length), remaining)
+                if take > 0:
+                    raw_parts.append(
+                        np.ctypeslib.as_array(buf, shape=(int(length),))[:take].copy()
+                    )
+                    bytes_captured += take
+                if bytes_captured >= max_bytes or (stop_event.is_set() and bytes_captured > 0):
+                    rtl.rtlsdr_cancel_async(rtl_dev)
+
+            async_callback = RTLSDR_ASYNC_CALLBACK(on_async_buffer)
+            rc = rtl.rtlsdr_read_async(
+                rtl_dev,
+                async_callback,
+                None,
+                0,
+                args.rtl_sync_block_bytes,
+            )
             if rc != 0:
-                raise RuntimeError(f"rtlsdr_read_sync failed with rc={rc} after {bytes_captured} bytes")
-            if n_read.value <= 0:
-                raise RuntimeError("rtlsdr_read_sync returned no bytes")
-            raw = np.ctypeslib.as_array(buf)[: n_read.value].copy()
-            raw_parts.append(raw)
-            bytes_captured += n_read.value
+                raise RuntimeError(
+                    f"rtlsdr_read_async failed with rc={rc} after {bytes_captured} bytes"
+                )
+        else:
+            while bytes_captured < max_bytes:
+                if stop_event.is_set() and bytes_captured > 0:
+                    break
+                block = min(args.rtl_sync_block_bytes, max_bytes - bytes_captured)
+                buf = (ctypes.c_ubyte * block)()
+                n_read = ctypes.c_int()
+                rc = rtl.rtlsdr_read_sync(rtl_dev, buf, block, ctypes.byref(n_read))
+                if rc != 0:
+                    raise RuntimeError(
+                        f"rtlsdr_read_sync failed with rc={rc} after {bytes_captured} bytes"
+                    )
+                if n_read.value <= 0:
+                    raise RuntimeError("rtlsdr_read_sync returned no bytes")
+                raw = np.ctypeslib.as_array(buf)[: n_read.value].copy()
+                raw_parts.append(raw)
+                bytes_captured += n_read.value
     except Exception as exc:
         result_box["error"] = str(exc)
     finally:
@@ -447,6 +482,7 @@ def write_manifest(
             "start_offset": args.start_offset,
             "rx_decision_mode": rx_decision_mode_name(args.rx_decision_mode),
             "rtl_tuner_gain_db10": args.rtl_tuner_gain_db10,
+            "rtl_read_mode": args.rtl_read_mode,
             "rtl_auto_gain": bool(args.rtl_auto_gain),
             "runtime_repeat_count": max(args.runtime_repeat_count, 1),
         },
@@ -576,6 +612,7 @@ def main() -> int:
             "rx_gain_db": args.rx_gain_db,
             "rtl_sample_rate_hz": args.rtl_sample_rate_hz,
             "rtl_tuner_gain_db10": args.rtl_tuner_gain_db10,
+            "rtl_read_mode": args.rtl_read_mode,
             "rtl_auto_gain": bool(args.rtl_auto_gain),
         },
         "waveform_config": asdict(waveform_cfg),
