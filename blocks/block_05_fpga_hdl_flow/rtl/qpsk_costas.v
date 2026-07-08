@@ -29,8 +29,8 @@ module qpsk_costas #(
     //   proportional step = 2^KP_LOG, integral step = 2^KI_LOG (in PHASE_W phase units,
     //   full scale 2^PHASE_W = 2*pi). KP_LOG large enough to pull +-pi within the ~12-symbol
     //   preamble; KI_LOG smaller for slow CFO tracking.
-    parameter integer KP_LOG = 18,
-    parameter integer KI_LOG = 12,
+    parameter integer KP_LOG = 6,            // proportional gain: e_ext <<< KP_LOG (tuned on real self-OTA)
+    parameter integer KI_LOG = 1,            // integral/frequency gain: e_ext <<< KI_LOG (< KP_LOG)
     parameter LUT_FILE = "blocks/block_05_fpga_hdl_flow/rtl/cos_sin_lut.mem"
 ) (
     input  wire                 clk,
@@ -73,11 +73,14 @@ wire signed [W-1:0] y_q = (mult_is + mult_qc) >>> 15;
 // decision-directed QPSK phase error: e = sgn(y_I)*y_Q - sgn(y_Q)*y_I.
 wire signed [W-1:0] term_a = y_i[W-1] ? -y_q :  y_q;    // sgn(y_I)*y_Q  (sgn: y_I<0 -> -)
 wire signed [W-1:0] term_b = y_q[W-1] ? -y_i :  y_i;    // sgn(y_Q)*y_I
-wire signed [W:0]   e_raw  = term_a - term_b;           // one guard bit
-// bang-bang: only the SIGN of the phase error drives the loop (amplitude-independent)
-wire signed [1:0] e_bb = (e_raw > 0) ? 2'sd1 : ((e_raw < 0) ? -2'sd1 : 2'sd0);
-wire signed [PHASE_W-1:0] kp_step = $signed({{(PHASE_W-2){e_bb[1]}}, e_bb}) <<< KP_LOG;
-wire signed [PHASE_W-1:0] ki_step = $signed({{(PHASE_W-2){e_bb[1]}}, e_bb}) <<< KI_LOG;
+wire signed [W:0]   e_raw  = term_a - term_b;           // one guard bit; e ~ A*phase_error
+// Linear PED with LEFT-shift loop gains: the error scales with the (un-normalised) symbol
+// amplitude A, so the NCO step must be shifted UP into phase units (full scale 2^PHASE_W
+// = 2*pi). A linear error makes the loop SETTLE (unlike bang-bang, which limit-cycles);
+// KP_LOG sets the proportional gain, KI_LOG (< KP_LOG) the slow integral / frequency term.
+wire signed [PHASE_W-1:0] e_ext  = {{(PHASE_W-(W+1)){e_raw[W]}}, e_raw};
+wire signed [PHASE_W-1:0] kp_step = e_ext <<< KP_LOG;
+wire signed [PHASE_W-1:0] ki_step = e_ext <<< KI_LOG;
 
 always @(posedge clk) begin
     if (rst) begin

@@ -11,8 +11,8 @@ module qpsk_rx_bit_recovery_chain #(
     parameter integer SPS = 8,
     parameter integer INDEX_W = 16,
     parameter integer DC_BLOCK_K = 6,
-    parameter integer COSTAS_KP_LOG = 18,
-    parameter integer COSTAS_KI_LOG = 12,
+    parameter integer COSTAS_KP_LOG = 6,
+    parameter integer COSTAS_KI_LOG = 1,
     parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
 ) (
     input  wire                     clk,

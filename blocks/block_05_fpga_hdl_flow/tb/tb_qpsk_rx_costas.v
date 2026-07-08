@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb_qpsk_rx_costas #(parameter integer KP=20, parameter integer KI=12);
+module tb_qpsk_rx_costas #(parameter integer KP=6, parameter integer KI=1);
   localparam W=16, INDEX_W=16, SYMS=140, CHAIN_SYMS=450, NS=4000;
   reg clk=0, rst=1, rx_valid=0, cnt_start=0, dc_en=1, cos_en=1;
   reg signed [W-1:0] rx_i=0, rx_q=0;
