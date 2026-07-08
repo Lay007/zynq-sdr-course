@@ -1,0 +1,221 @@
+{
+  "generated_utc": "2026-07-08T05:49:38.465627+00:00",
+  "runs_root": "tmp/snapshot_impl_sweep",
+  "selected_run": "impl_perf_extra_timing",
+  "selected_strategy": "Performance_ExtraTimingOpt",
+  "selected_wns_ns": 0.096,
+  "completed_runs": 6,
+  "timing_clean_runs": 6,
+  "runs": [
+    {
+      "run_name": "impl_1",
+      "strategy": "Performance_Explore",
+      "status": "complete",
+      "run_directory": "tmp/vendor_xpr_course_overlay/zc702/zc702.runs/impl_1",
+      "metrics": {
+        "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+        "device": "7z020clg400-2",
+        "utilization": {
+          "lut": 27597,
+          "ff": 36169,
+          "bram_tiles": 8.0,
+          "dsp": 216
+        },
+        "timing": {
+          "wns_ns": 0.003,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 105709,
+          "timing_met": true
+        },
+        "route": {
+          "routable_nets": 67115,
+          "fully_routed_nets": 67115,
+          "routing_errors": 0,
+          "unrouted_nets": 0,
+          "fully_routed": true
+        }
+      },
+      "bitstream": {
+        "path": "tmp/vendor_xpr_course_overlay/zc702/zc702.runs/impl_1/system_top.bit",
+        "size_bytes": 2505900,
+        "sha256": "973bb897010af1f5e3c31ccbd37b69e8e5ecf8abe624edea8e5a42954feb4e41"
+      }
+    },
+    {
+      "run_name": "impl_perf_explore_repeat",
+      "strategy": "Performance_Explore",
+      "status": "complete",
+      "run_directory": "tmp/snapshot_impl_sweep/impl_perf_explore_repeat",
+      "metrics": {
+        "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+        "device": "7z020clg400-2",
+        "utilization": {
+          "lut": 27597,
+          "ff": 36169,
+          "bram_tiles": 8.0,
+          "dsp": 216
+        },
+        "timing": {
+          "wns_ns": 0.003,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 105709,
+          "timing_met": true
+        },
+        "route": {
+          "routable_nets": 67115,
+          "fully_routed_nets": 67115,
+          "routing_errors": 0,
+          "unrouted_nets": 0,
+          "fully_routed": true
+        }
+      },
+      "bitstream": {
+        "path": "tmp/snapshot_impl_sweep/impl_perf_explore_repeat/system_top.bit",
+        "size_bytes": 2505900,
+        "sha256": "a6b677d4abbffd98ac6117d6a89b0ccf1ad069d686da45fd830153cc1c0a28c3"
+      }
+    },
+    {
+      "run_name": "impl_perf_postroute",
+      "strategy": "Performance_ExplorePostRoutePhysOpt",
+      "status": "complete",
+      "run_directory": "tmp/snapshot_impl_sweep/impl_perf_postroute",
+      "metrics": {
+        "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+        "device": "7z020clg400-2",
+        "utilization": {
+          "lut": 27597,
+          "ff": 36169,
+          "bram_tiles": 8.0,
+          "dsp": 216
+        },
+        "timing": {
+          "wns_ns": 0.003,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 105709,
+          "timing_met": true
+        },
+        "route": {
+          "routable_nets": 67115,
+          "fully_routed_nets": 67115,
+          "routing_errors": 0,
+          "unrouted_nets": 0,
+          "fully_routed": true
+        }
+      },
+      "bitstream": {
+        "path": "tmp/snapshot_impl_sweep/impl_perf_postroute/system_top.bit",
+        "size_bytes": 2505900,
+        "sha256": "a6b677d4abbffd98ac6117d6a89b0ccf1ad069d686da45fd830153cc1c0a28c3"
+      }
+    },
+    {
+      "run_name": "impl_perf_netdelay_high",
+      "strategy": "Performance_NetDelay_high",
+      "status": "complete",
+      "run_directory": "tmp/snapshot_impl_sweep/impl_perf_netdelay_high",
+      "metrics": {
+        "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+        "device": "7z020clg400-2",
+        "utilization": {
+          "lut": 27603,
+          "ff": 36196,
+          "bram_tiles": 8.0,
+          "dsp": 216
+        },
+        "timing": {
+          "wns_ns": 0.083,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 105788,
+          "timing_met": true
+        },
+        "route": {
+          "routable_nets": 67072,
+          "fully_routed_nets": 67072,
+          "routing_errors": 0,
+          "unrouted_nets": 0,
+          "fully_routed": true
+        }
+      },
+      "bitstream": {
+        "path": "tmp/snapshot_impl_sweep/impl_perf_netdelay_high/system_top.bit",
+        "size_bytes": 2515204,
+        "sha256": "ebd08c489179970686edb56999a17f0fcc47155972292ee7a5ee95805fb81d3f"
+      }
+    },
+    {
+      "run_name": "impl_perf_extra_timing",
+      "strategy": "Performance_ExtraTimingOpt",
+      "status": "complete",
+      "run_directory": "tmp/snapshot_impl_sweep/impl_perf_extra_timing",
+      "metrics": {
+        "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+        "device": "7z020clg400-2",
+        "utilization": {
+          "lut": 27649,
+          "ff": 36224,
+          "bram_tiles": 8.0,
+          "dsp": 216
+        },
+        "timing": {
+          "wns_ns": 0.096,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 105870,
+          "timing_met": true
+        },
+        "route": {
+          "routable_nets": 67145,
+          "fully_routed_nets": 67145,
+          "routing_errors": 0,
+          "unrouted_nets": 0,
+          "fully_routed": true
+        }
+      },
+      "bitstream": {
+        "path": "tmp/snapshot_impl_sweep/impl_perf_extra_timing/system_top.bit",
+        "size_bytes": 2519848,
+        "sha256": "50ae27c0cca1fde8621d8a405cdee53dc5d25b5c5fb1dc47e6c1a8d7faac0bb7"
+      }
+    },
+    {
+      "run_name": "impl_perf_refine",
+      "strategy": "Performance_RefinePlacement",
+      "status": "complete",
+      "run_directory": "tmp/snapshot_impl_sweep/impl_perf_refine",
+      "metrics": {
+        "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+        "device": "7z020clg400-2",
+        "utilization": {
+          "lut": 27599,
+          "ff": 36169,
+          "bram_tiles": 8.0,
+          "dsp": 216
+        },
+        "timing": {
+          "wns_ns": 0.047,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 105709,
+          "timing_met": true
+        },
+        "route": {
+          "routable_nets": 67081,
+          "fully_routed_nets": 67081,
+          "routing_errors": 0,
+          "unrouted_nets": 0,
+          "fully_routed": true
+        }
+      },
+      "bitstream": {
+        "path": "tmp/snapshot_impl_sweep/impl_perf_refine/system_top.bit",
+        "size_bytes": 2506892,
+        "sha256": "d5a017831dc59082231dd14404232148e3de8b6d739e11d5197bd993f5dbc1e8"
+      }
+    }
+  ]
+}

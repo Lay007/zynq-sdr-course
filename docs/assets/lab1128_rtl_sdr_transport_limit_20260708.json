@@ -1,0 +1,48 @@
+{
+  "timestamp_utc": "2026-07-08T01:35:00+00:00",
+  "purpose": "Compact diagnostic record for the 2026-07-08 attempt to extend QPSK OTA qualification with the timing-sweep bitstream.",
+  "conclusion": "The ExtraTimingOpt payload stayed valid on detected RF bursts, but the Windows RTL-SDR/libusb capture path was not stable enough for strict longer-series qualification. Keep the 2026-07-07 three-session OTA result as the external RF signoff baseline until the RTL-SDR transport is stabilized or replaced.",
+  "bitstream_under_test": {
+    "vivado_strategy": "Performance_ExtraTimingOpt",
+    "raw_bitstream_sha256": "50ae27c0cca1fde8621d8a405cdee53dc5d25b5c5fb1dc47e6c1a8d7faac0bb7",
+    "runtime_bit_bin_md5": "662222122c76331e793d1049e42a2507"
+  },
+  "sync_long_100_burst_attempt": {
+    "run_tag": "live_20260708_qpsk_ota_timingsweep_longfinal_01",
+    "rtl_read_mode": "sync",
+    "commanded_bursts": 100,
+    "detected_bursts": 80,
+    "zero_error_bursts": 80,
+    "compared_bits": 22400,
+    "bit_errors": 0,
+    "aggregate_ber_on_detected_bursts": 0.0,
+    "median_evm_percent": 16.89745008950748,
+    "median_snr_from_evm_db": 15.443576695550686,
+    "duration_s_read": 19.715413333333334,
+    "capture_sha256": "172eece18c0a9cfe7ebd17fed223fba8c0b1d3436faf077f69846f54cad37dfd",
+    "strict_qualification": "fail: detector did not find all commanded bursts"
+  },
+  "sync_30_burst_attempt": {
+    "run_tag": "live_20260708_qpsk_ota_timingsweep_10x30_01",
+    "rtl_read_mode": "sync",
+    "commanded_bursts": 30,
+    "detected_bursts": 29,
+    "zero_error_bursts": 29,
+    "compared_bits": 8120,
+    "bit_errors": 0,
+    "aggregate_ber_on_detected_bursts": 0.0,
+    "median_evm_percent": 17.859121148746315,
+    "median_snr_from_evm_db": 14.962798332959547,
+    "duration_s_read": 6.5536,
+    "capture_sha256": "fb5a7f90c5de914ccc8e126d62fab3c31d8bac53e1ef79ecc5abe40267fe6cd7",
+    "strict_qualification": "fail: one commanded burst was not correlated"
+  },
+  "async_30_burst_attempt": {
+    "run_tag": "live_20260708_qpsk_ota_timingsweep_asyncpilot_01",
+    "rtl_read_mode": "async",
+    "fatal_error": "rtlsdr_read_async failed with rc=-5 after 31457280 bytes",
+    "safe_reboot_to_stock": true,
+    "stock_tx_lo_powerdown_after_reboot": "1"
+  },
+  "next_action": "Retry long OTA qualification after resetting/replugging RTL-SDR USB, moving to a different USB controller/cable/hub, or using a stable rtl_sdr/WSL/usbipd capture backend."
+}

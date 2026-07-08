@@ -2,7 +2,9 @@
 
 ## Result
 
-The dual-modem QPSK core ran on the Zynq PL at BER=0 through the direct fabric loopback (`gp_ctrl[6]=1`). The final CDC-fixed, timing-clean payload completed four independent stock-boot sessions and all 13 recorded attempts at `start_offset=62` recovered 140/140 QPSK symbols, or 280 compared bits, with zero errors.
+The dual-modem QPSK core ran on the Zynq PL at BER=0 through the direct fabric loopback (`gp_ctrl[6]=1`). The CDC-fixed, timing-clean payload completed four independent stock-boot sessions and all 13 recorded attempts at `start_offset=62` recovered 140/140 QPSK symbols, or 280 compared bits, with zero errors.
+
+A follow-up implementation-strategy sweep on 2026-07-08 selected the `Performance_ExtraTimingOpt` payload. That selected payload also passed fabric loopback: 10/10 attempts at `start_offset=62`, 140 symbols / 280 bits per attempt, zero bit errors, and safe reboot to stock.
 
 | Gate | Result |
 |---|---:|
@@ -12,8 +14,10 @@ The dual-modem QPSK core ran on the Zynq PL at BER=0 through the direct fabric l
 | Symbols / bits per attempt | 140 / 280 |
 | Bitstream payload MD5 | `414eca88fe628de06c9bef09cf73e30e` |
 | Bitstream payload SHA256 | `48a17b8cbabec9c7d9c5236cb665397d154813e6537c24067765f601d73ead28` |
+| Selected ExtraTiming payload MD5 | `662222122c76331e793d1049e42a2507` |
+| Selected ExtraTiming raw bit SHA256 | `50ae27c0cca1fde8621d8a405cdee53dc5d25b5c5fb1dc47e6c1a8d7faac0bb7` |
 
-The machine-readable aggregate is `docs/assets/lab1127_qpsk_fabric_cdcfix_qualification_20260707.json`. The earlier pre-fix qualification remains preserved separately as historical functional evidence, but is not the signoff payload.
+The machine-readable 2026-07-07 aggregate is `docs/assets/lab1127_qpsk_fabric_cdcfix_qualification_20260707.json`. The 2026-07-08 selected-payload run is `docs/assets/lab1127_runtime_qpsk_digital_loopback_live_20260708_qpsk_fabric_timingsweep_extra_timing.json`. The earlier pre-fix qualification remains preserved separately as historical functional evidence, but is not the signoff payload.
 
 ## Scope
 
@@ -27,10 +31,11 @@ The RX channel-select control originally crossed from `sample_clk` into the raw 
 
 | Flow | Board observation | Timing |
 |---|---|---|
-| Vendor snapshot `bridge_txrx_mux`, CDC-fixed | QPSK fabric BER=0, 4/4 boots and 13/13 attempts | WNS +0.003 ns, TNS 0, 0 failing endpoints |
+| Vendor snapshot `bridge_txrx_mux`, CDC-fixed baseline | QPSK fabric BER=0, 4/4 boots and 13/13 attempts | WNS +0.003 ns, TNS 0, 0 failing endpoints |
+| Vendor snapshot `bridge_txrx_mux`, `Performance_ExtraTimingOpt` | QPSK fabric BER=0, 10/10 attempts | WNS +0.096 ns, TNS 0, 0 failing endpoints |
 | Standalone recreated project | gpreg responds, but TX/RX valid counters remain zero after runtime reload | WNS +0.354 ns, TNS 0 |
 
-The CDC-fixed vendor snapshot is the first payload that both meets routed timing and passes the board qualification. The raw Vivado bitstream is 2,505,900 bytes with SHA256 `973bb897010af1f5e3c31ccbd37b69e8e5ecf8abe624edea8e5a42954feb4e41`. WNS is only `+0.003 ns`, so closure is valid for this implementation but repeat-build or seed stability is not yet demonstrated.
+The CDC-fixed vendor snapshot was the first payload that both met routed timing and passed the board qualification. The follow-up strategy sweep completed 6/6 timing-clean implementations and promoted `Performance_ExtraTimingOpt`, whose raw Vivado bitstream is 2,519,848 bytes with SHA256 `50ae27c0cca1fde8621d8a405cdee53dc5d25b5c5fb1dc47e6c1a8d7faac0bb7`. Closure is now less marginal for the selected implementation, but repeat-build or seed stability is not yet demonstrated.
 
 ## Reproduction
 
@@ -51,4 +56,11 @@ python tools/aggregate_lab11_27_runs.py `
   "docs/assets/lab1127_runtime_qpsk_digital_loopback_live_20260707_qpsk_fabric_cdcfix*.json" `
   --start-offset 62 `
   --json-out docs/assets/lab1127_qpsk_fabric_cdcfix_qualification_20260707.json
+```
+
+Rebuild and select the 2026-07-08 timing-sweep payload with:
+
+```powershell
+python tools/run_snapshot_impl_sweep.py --jobs 2
+python tools/summarize_snapshot_impl_sweep.py --promote-best
 ```

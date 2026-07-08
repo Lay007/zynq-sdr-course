@@ -22,7 +22,7 @@ This is the main reviewer claim: the course teaches students to treat SDR work a
 | DSP foundations | Block 3 labs, generated plots, reproducible scripts | FFT, FIR, windows, mixing, decimation and analysis are introduced as executable material. |
 | Fixed-point bridge | Block 4 labs and fixed-point workflow notes | Students see why scaling, saturation and quantization matter before RTL. |
 | HDL / FPGA flow | Block 5 labs, Verilog smoke tests and FPGA reports | The course does not stop at floating-point models; selected blocks have hardware-facing checks. |
-| Integrated implementation | Paired Vivado reports and machine-readable metrics | The CDC-fixed hardware-working snapshot is fully routed, meets timing and passes repeated board qualification. |
+| Integrated implementation | Paired Vivado reports, implementation sweep and machine-readable metrics | The CDC-fixed hardware-working snapshot is fully routed; the selected ExtraTiming implementation reaches WNS +0.096 ns and passes fabric board qualification. |
 | RF and measurement workflow | Block 6/7 materials, IQ metadata, dataset manifests | RF experiments are framed with gain staging, attenuation, capture metadata and safety notes. |
 | Synchronization and link metrics | Block 8 materials, BER/EVM/SNR terminology and acceptance rules | Digital link quality is judged by recovered bits and constellation quality, not by SNR alone. |
 | Data discipline | `datasets/`, `tools/check_dataset_manifests.py`, Git LFS-aware manifest checks | IQ captures can be reviewed without turning the repository into an uncontrolled data dump. |
@@ -90,10 +90,10 @@ python tools/run_local_ci.py --quick
 
 | Limitation | Current impact | Next evidence step |
 |---|---|---|
-| Snapshot timing margin is only +0.003 ns | The routed build meets timing and passes board qualification, but seed/rebuild robustness is not established | Repeat implementation with additional seeds or improve the critical path. |
+| Snapshot timing robustness is only sweep-level | The selected routed build improves WNS to +0.096 ns and passes fabric qualification, but independent rebuild/seed robustness is not established | Repeat implementation with additional seeds or clean rebuilds. |
 | Raw QPSK RF WAV remains local-only | Reviewers can inspect its checksum, manifest, plots and metrics but cannot replay the raw recording from Git | Publish a reviewed small capture or immutable external artifact. |
 | AD9363 gain/overload table is still measurement-pending | RF gain recommendations remain conservative | Measure gain staging, overload signs, clipping thresholds and recommended safe starting values. |
-| External QPSK evidence covers three 30-burst sessions | 0/25,200 bits proves short cross-session repeatability but not a long-duration BER floor | Add a controlled cabled comparison and longer runs. |
+| External QPSK evidence covers three 30-burst sessions | 0/25,200 bits proves short cross-session repeatability but not a long-duration BER floor; the 2026-07-08 longer attempt was limited by RTL-SDR transport stability | Add a controlled cabled comparison and longer runs on a stable capture backend. |
 
 ## Reviewer conclusion
 

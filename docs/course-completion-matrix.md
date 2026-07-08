@@ -30,8 +30,8 @@ This matrix shows what each course block should contain before it can be conside
 
 ## Interpretation notes
 
-- Block 11 now has a timing-clean, repeatable QPSK silicon payload (4/4 boot sessions, 13/13 selected-offset attempts) and 3/3 external RTL-SDR sessions with 90/90 bursts at BER=0. It remains `🟡` because controlled-path evidence and stronger timing margin are still pending.
-- Block 12 now has a filled dual-modem report with internal and cross-session external RF evidence. It remains below portfolio-ready until controlled-path and longer-duration statistics are measured.
+- Block 11 now has a timing-clean, repeatable QPSK silicon payload, an ExtraTiming implementation selected at WNS +0.096 ns, and 3/3 external RTL-SDR sessions with 90/90 bursts at BER=0. It remains `🟡` because controlled-path evidence, repeat-build/seed robustness and stable longer-duration capture are still pending.
+- Block 12 now has a filled dual-modem report with internal and cross-session external RF evidence. It remains below portfolio-ready until controlled-path and longer-duration statistics are measured on a stable capture backend.
 - Blocks 05 and 09 are the strongest automation anchors today: they combine reusable checks, generated artifacts and CI coverage.
 
 ## Lab-level quality gates
@@ -74,7 +74,7 @@ This matrix shows what each course block should contain before it can be conside
 - Extend the selected-frame implementation report into a statistically repeatable external model-to-measurement proof.
 - Keep the detailed bring-up logs as background, not as the main reviewer path.
 - Add a one-page summary table: model, implementation, capture/evidence, metrics, conclusion and limitations.
-- Challenge the routed bitstream timing margin across repeat builds or seeds.
+- Challenge the selected routed bitstream timing margin across repeat builds or seeds.
 
 ## Review rule
 

@@ -31,14 +31,14 @@ Detailed bring-up logs should live on dedicated evidence pages rather than insid
 | 02 | Signals and sampling | Executable | Python labs and generated figures | Add MATLAB/C++ translations and metadata-mistake replay examples. |
 | 03 | DSP basics | Executable | Python / MATLAB / C++ path | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
 | 04 | Simulink and fixed-point | Executable | Python/MATLAB references and BPSK `.slx` models | Constrain the BPSK Simulink path further for HDL Coder handoff. |
-| 05 | FPGA / HDL flow | Measured signoff candidate | 18 HDL tests; hardware-working snapshot is fully routed, WNS +0.003 ns, and passes board fabric-loopback qualification | Improve timing margin and verify repeat-build/seed stability. |
+| 05 | FPGA / HDL flow | Measured signoff candidate | 18 HDL tests; hardware-working snapshot is fully routed, strategy sweep selects WNS +0.096 ns, and passes board fabric-loopback qualification | Verify repeat-build/seed stability for the selected implementation. |
 | 06 | RF frontend and AD9363 | Measured | RX-only and tone capture baselines | Build the AD9363 gain table and validate safe cabled loopback. |
 | 07 | TX/RX chains | Executable | DUC/DDC demos and loopback models | Add measurement package. |
 | 08 | Modulation and synchronization | Executable | CFO, phase/timing, BER/EVM demos and SNR-vs-BER trap material | Promote generated impairment dashboards and connect them to measured Block 11 reports. |
 | 09 | Recording and analysis tools | Measured | CI16/CU8/CF32/WAV readers, fail-closed manifest CI and QPSK multi-burst BER/EVM/CFO analysis | Publish or externally archive the raw QPSK WAV. |
 | 10 | KiCad and basic electronics | Draft | Calculators and templates | Add measured breadboard photos and KiCad exports. |
-| 11 | Integrated SDR project | QPSK measured internally and externally | Timing-clean payload: 4/4 internal boots; external RTL-SDR: 3/3 sessions, 90/90 bursts and 0/25,200 bits | Add controlled cabled evidence, longer runs and timing margin. |
-| 12 | Final projects | Measured cross-session example | Filled report plus internal and three-session external QPSK qualification | Add calibrated cabled and longer-duration statistics. |
+| 11 | Integrated SDR project | QPSK measured internally and externally | Current ExtraTiming payload: WNS +0.096 ns and 10/10 fabric attempts at BER=0; external RTL-SDR baseline: 3/3 sessions, 90/90 bursts and 0/25,200 bits | Add controlled cabled evidence and stabilize RTL-SDR capture for longer runs. |
+| 12 | Final projects | Measured cross-session example | Filled report plus internal QPSK qualification and three-session external OTA baseline | Add calibrated cabled and longer-duration statistics on a stable capture backend. |
 
 ## Hardware validation priorities
 

@@ -25,6 +25,7 @@ The run targets `xc7z020clg400-2` and uses a `10.000 ns` / `100.000 MHz` clock c
 | Integrated implementation summary | Placed-and-routed top-level result | `reports/fpga/integrated-zynq-implementation-summary.md` |
 | Integrated metrics JSON | Machine-readable routed result | `reports/fpga/integrated_zynq_raw/integrated_zynq_metrics.json` |
 | Vendor-snapshot implementation | Hardware-correlated routed result | `reports/fpga/integrated-zynq-snapshot-implementation-summary.md` |
+| Vendor-snapshot strategy sweep | Repeat implementation directives and selected timing result | `reports/fpga/integrated-zynq-snapshot-implementation-sweep.md` |
 | PS7 provenance artifact | Board clock and DDR settings snapshot | `hardware/7020_ad936x_sdr/ps/bringup_tests/design_1_wrapper/ps7_summary.html` |
 
 ## Key results
@@ -49,15 +50,17 @@ The dual-modem overlay has two distinct Vivado flows. The vendor-snapshot flow i
 | Flow | LUT | FF | DSP | BRAM | WNS, ns | TNS, ns | Hardware result |
 |---|---:|---:|---:|---:|---:|---:|---|
 | Standalone recreated | 13,795 | 21,780 | 28 | 4.0 | +0.354 | 0.000 | gpreg alive, sample-path counters stay zero |
-| Vendor snapshot | 27,597 | 36,169 | 216 | 8.0 | +0.003 | 0.000 | QPSK fabric BER=0, 4/4 boot sessions and 13/13 attempts on the timing-clean payload |
+| Vendor snapshot, `Performance_ExtraTimingOpt` | 27,649 | 36,224 | 216 | 8.0 | +0.096 | 0.000 | QPSK fabric BER=0 on the selected timing-sweep payload; previous CDC-fixed payload also has 4/4 boot sessions and 13/13 attempts |
 
-Both designs are fully routed with zero routing errors. The standalone flow closes timing but is not hardware-functional after runtime reload. After synchronizing the RX channel-select control into the ADC write domain, the vendor snapshot has zero failing timing endpoints and the same payload passes repeated board qualification. Its WNS is only `+0.003 ns`, so repeat-build/seed margin remains an engineering improvement rather than an open functional signoff gate.
+Both designs are fully routed with zero routing errors. The standalone flow closes timing but is not hardware-functional after runtime reload. After synchronizing the RX channel-select control into the ADC write domain, the vendor snapshot has zero failing timing endpoints and passes board fabric qualification. A follow-up implementation-strategy sweep completed 6/6 timing-clean runs and promoted `Performance_ExtraTimingOpt`, improving canonical WNS from `+0.003 ns` to `+0.096 ns`. This improves margin for the selected implementation, but repeat-build/seed robustness is still separate evidence.
 
 Rebuild and promote the normalized evidence on Windows with:
 
 ```powershell
 python tools/generate_integrated_vivado_reports.py --flow standalone --build
 python tools/generate_integrated_vivado_reports.py --flow snapshot --build
+python tools/run_snapshot_impl_sweep.py --jobs 2
+python tools/summarize_snapshot_impl_sweep.py --promote-best
 ```
 
 Without `--build`, the command republishes reports from an existing completed implementation run.
@@ -67,4 +70,4 @@ Without `--build`, the command republishes reports from an existing completed im
 - The per-module tables are OOC synthesis results; both integrated packages are placed-and-routed results.
 - Port-level input/output timing is intentionally unconstrained in this educational flow.
 - The vendor-snapshot result satisfies timing closure and board correlation for the internal QPSK fabric path; AD9361/RF operation is a separate acceptance gate.
-- Timing margin is only `+0.003 ns`; a repeat-build or seed sweep is needed before calling the closure robust.
+- The `+0.096 ns` selected result comes from a single strategy sweep over one synthesized snapshot; repeat-build or seed evidence is still needed before calling timing closure robust.

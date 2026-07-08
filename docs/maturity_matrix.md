@@ -20,14 +20,14 @@ This page summarizes the maturity of the 12-block course track. The detailed sta
 | 02 | Signals and sampling | executable | Python labs, generated figures, sampling/aliasing tasks | Add C++ bridge and metadata-mistake replay examples. |
 | 03 | DSP basics | executable | FFT, FIR, mixing, decimation, MATLAB/C++ links | Add direct-vs-FFT convolution threshold demo and more fixed-point tables. |
 | 04 | Simulink and fixed-point | executable | Fixed-point references and BPSK Simulink models | Tighten the HDL Coder handoff constraints. |
-| 05 | FPGA / HDL flow | measured / signoff-target | 18 HDL tests plus a timing-clean, board-qualified vendor-snapshot bitstream | Demonstrate repeat-build timing margin. |
+| 05 | FPGA / HDL flow | measured / signoff-target | 18 HDL tests plus a timing-clean, board-qualified vendor-snapshot bitstream selected at WNS +0.096 ns | Demonstrate repeat-build/seed timing robustness. |
 | 06 | RF frontend and AD9363 | measured | RX-only observation, zero-IF lab, controlled tone evidence | Add gain/overload table and cabled measurement package. |
 | 07 | TX/RX chains | executable | DUC/DDC demos, loopback metrics models | Add measurement package and report-ready examples. |
 | 08 | Modulation and synchronization | executable | CFO, phase, timing, BER/EVM demos, OFDM mini-link | Add impairment sweeps and dashboard-style metric summaries. |
 | 09 | Recording and analysis tools | executable | CI16/CU8/CF32 readers, WAV IQ path, QPSK replay analysis | Keep dataset manifests and analyzer thresholds synchronized. |
 | 10 | KiCad and basic electronics | draft | RF safety, attenuator and schematic templates | Add measured bench photos and exported KiCad artifacts. |
-| 11 | Integrated SDR project | measured / portfolio-target | Timing-clean QPSK fabric qualification plus 3/3 RTL-SDR sessions and 90/90 bursts at BER=0 | Add controlled-cabled/long-duration statistics and improve timing margin. |
-| 12 | Final projects | measured / portfolio-target | Filled report with internal and external QPSK evidence | Add repeatable cabled/OTA measurement statistics. |
+| 11 | Integrated SDR project | measured / portfolio-target | ExtraTiming QPSK fabric qualification plus 3/3 RTL-SDR baseline sessions and 90/90 bursts at BER=0 | Add controlled-cabled/long-duration statistics on a stable capture backend. |
+| 12 | Final projects | measured / portfolio-target | Filled report with internal and external QPSK evidence | Add repeatable cabled/OTA measurement statistics on a stable capture backend. |
 
 ## Review rule
 

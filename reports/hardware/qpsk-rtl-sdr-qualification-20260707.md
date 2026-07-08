@@ -71,6 +71,18 @@ Three new clean sessions repeated the promoted `-50 dB` configuration without ch
 
 The aggregate is `docs/assets/lab1128_qpsk_ota_crosssession_qualification_20260707.json`. It validates a common bitstream MD5 and RF/modem configuration before combining sessions. The combined burst success Wilson 95% interval is `95.91%…100%`; the session success interval is `43.85%…100%`, reflecting the small session count. With zero errors in 25,200 compared bits, the rule-of-three bound is `BER < 1.190476e-4`.
 
+## 2026-07-08 ExtraTimingOpt long-series attempt
+
+The 2026-07-08 timing-sweep payload (`Performance_ExtraTimingOpt`, runtime `.bit.bin` MD5 `662222122c76331e793d1049e42a2507`) passed fabric loopback, then was tried on the antenna-to-antenna RTL-SDR path for longer strict qualification. This did not replace the 2026-07-07 external RF baseline because the RTL-SDR capture transport was not stable enough to detect every commanded burst.
+
+| Attempt | RTL read mode | Commanded bursts | Detected bursts | Bit errors / compared bits | Median EVM | Median SNR from EVM | Strict result |
+|---|---|---:|---:|---:|---:|---:|---|
+| 100-burst long run | sync | 100 | 80 | 0 / 22,400 | 16.90% | 15.44 dB | fail: not all commanded bursts detected |
+| 30-burst retry | sync | 30 | 29 | 0 / 8,120 | 17.86% | 14.96 dB | fail: one burst not correlated |
+| 30-burst async pilot | async | 30 | N/A | N/A | N/A | N/A | fail: `rtlsdr_read_async` returned `rc=-5` after 31,457,280 bytes |
+
+The compact diagnostic record is `docs/assets/lab1128_rtl_sdr_transport_limit_20260708.json`. The detected bursts were still zero-error, so this points at the monitor/capture path rather than a demonstrated modem BER regression. The next external qualification should reset or replug the RTL-SDR, try a different USB controller/cable/hub, or move capture to a stable `rtl_sdr`/WSL/usbipd backend before running long strict series.
+
 ## Reproduction
 
 Capture:
@@ -110,6 +122,7 @@ python tools/aggregate_lab11_28_sessions.py `
 ## Limits
 
 - The cross-session result covers three sessions and 25,200 bits; it is still not a long-duration BER floor.
+- The 2026-07-08 attempt to extend this with the ExtraTimingOpt payload was limited by RTL-SDR transport stability, so it is recorded as diagnostic evidence rather than promoted qualification.
 - SNR is inferred from EVM after scalar/CFO alignment, not measured independently from calibrated RF power.
 - Wilson BER bounds treat bit errors as independent Bernoulli trials; RF burst errors may be correlated, so the interval is descriptive.
 - The RF path was antenna-to-antenna, so geometry and ambient interference are not controlled like a cabled attenuator experiment.
