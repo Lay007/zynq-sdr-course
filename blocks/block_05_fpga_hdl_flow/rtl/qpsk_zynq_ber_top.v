@@ -33,6 +33,7 @@ module qpsk_zynq_ber_top #(
     input  wire [INDEX_W-1:0]       preamble_count, // preamble length in BITS (frame-sync)
     input  wire [INDEX_W-1:0]       start_offset,
     input  wire                     dc_block_en,    // 1 = RX DC blocker on (OTA); 0 = passthrough
+    input  wire                     costas_en,      // 1 = carrier recovery on (OTA); 0 = passthrough
     output wire                     busy,
     output reg                      done,
     output wire                     tx_valid,
@@ -114,6 +115,7 @@ qpsk_rx_bit_recovery_chain #(
     // restart the matched filter + sampler each frame so back-to-back bursts realign
     .rst(rst || frame_start),
     .dc_block_en(dc_block_en),
+    .costas_en(costas_en),
     .in_valid(rx_valid),
     .in_i(rx_i),
     .in_q(rx_q),

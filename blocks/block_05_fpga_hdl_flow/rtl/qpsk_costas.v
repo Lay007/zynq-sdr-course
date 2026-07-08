@@ -23,9 +23,14 @@ module qpsk_costas #(
     parameter integer W = 16,
     parameter integer PHASE_W = 24,          // NCO phase accumulator width (full scale = 2*pi)
     parameter integer LUT_AW = 8,            // cos/sin LUT address bits (256 entries)
-    parameter integer KP_SHIFT = 4,          // proportional gain  = 2^-KP_SHIFT  (~0.06)
-    parameter integer KI_SHIFT = 9,          // integral gain      = 2^-KI_SHIFT  (~0.002)
-    parameter integer E_SHIFT = 2,           // pre-scale of the phase error into loop units
+    // Bang-bang loop: the phase-error detector is reduced to its SIGN (+-1), so the loop
+    // gain is amplitude-independent (the RTL symbols are un-normalised MF outputs, unlike
+    // the unit-amplitude Python model). Each symbol the NCO steps by a fixed phase quantum:
+    //   proportional step = 2^KP_LOG, integral step = 2^KI_LOG (in PHASE_W phase units,
+    //   full scale 2^PHASE_W = 2*pi). KP_LOG large enough to pull +-pi within the ~12-symbol
+    //   preamble; KI_LOG smaller for slow CFO tracking.
+    parameter integer KP_LOG = 18,
+    parameter integer KI_LOG = 12,
     parameter LUT_FILE = "blocks/block_05_fpga_hdl_flow/rtl/cos_sin_lut.mem"
 ) (
     input  wire                 clk,
@@ -69,7 +74,10 @@ wire signed [W-1:0] y_q = (mult_is + mult_qc) >>> 15;
 wire signed [W-1:0] term_a = y_i[W-1] ? -y_q :  y_q;    // sgn(y_I)*y_Q  (sgn: y_I<0 -> -)
 wire signed [W-1:0] term_b = y_q[W-1] ? -y_i :  y_i;    // sgn(y_Q)*y_I
 wire signed [W:0]   e_raw  = term_a - term_b;           // one guard bit
-wire signed [PHASE_W-1:0] e_scaled = $signed(e_raw) <<< E_SHIFT;
+// bang-bang: only the SIGN of the phase error drives the loop (amplitude-independent)
+wire signed [1:0] e_bb = (e_raw > 0) ? 2'sd1 : ((e_raw < 0) ? -2'sd1 : 2'sd0);
+wire signed [PHASE_W-1:0] kp_step = $signed({{(PHASE_W-2){e_bb[1]}}, e_bb}) <<< KP_LOG;
+wire signed [PHASE_W-1:0] ki_step = $signed({{(PHASE_W-2){e_bb[1]}}, e_bb}) <<< KI_LOG;
 
 always @(posedge clk) begin
     if (rst) begin
@@ -85,8 +93,8 @@ always @(posedge clk) begin
             out_q <= enable ? y_q : in_q;
             if (enable) begin
                 // PI loop + NCO accumulate (phase wraps naturally at PHASE_W).
-                freq  <= freq + (e_scaled >>> KI_SHIFT);
-                theta <= theta + freq + (e_scaled >>> KP_SHIFT);
+                freq  <= freq + ki_step;
+                theta <= theta + freq + kp_step;
             end
         end
     end

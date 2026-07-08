@@ -49,6 +49,7 @@ qpsk_zynq_ber_top #(
     .preamble_count(16'd24),          // enable preamble frame-sync (>= LOCK bits)
     .start_offset(start_offset_cfg),
     .dc_block_en(1'b0),               // clean loopback: DC blocker off (passthrough)
+    .costas_en(1'b0),                 // clean loopback: carrier recovery off (passthrough)
     .busy(busy),
     .done(done),
     .tx_valid(tx_valid),

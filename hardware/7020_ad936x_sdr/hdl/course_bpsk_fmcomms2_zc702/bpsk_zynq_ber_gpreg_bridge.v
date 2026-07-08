@@ -241,6 +241,10 @@ wire rx_fabric_loop = control_sync[6];
 // clean signal is DC-free) so that path stays bit-identical; set it 1 for OTA.
 wire dc_block_en = control_sync[9];
 
+// gp_ctrl[10]=1 enables the QPSK Costas carrier-recovery loop (tracks the per-burst
+// carrier phase of a real OTA link). 0 for the coherent fabric loop (passthrough).
+wire costas_en = control_sync[10];
+
 // gp_ctrl[8]=1 feeds the raw-ADC CDC FIFO from AD9361 RX channel 2 (adc_input2 =
 // adc_data_i1/q1) instead of channel 1. control_sync lives on sample_clk, while
 // this mux feeds memory written on adc_input_clk; synchronize the quasi-static
@@ -344,6 +348,7 @@ qpsk_zynq_ber_top #(
     .preamble_count(preamble_count_cfg),
     .start_offset(start_offset_cfg),
     .dc_block_en(dc_block_en),
+    .costas_en(costas_en),
     .busy(qpsk_busy),
     .done(qpsk_done),
     .tx_valid(qpsk_tx_valid),

@@ -11,11 +11,14 @@ module qpsk_rx_bit_recovery_chain #(
     parameter integer SPS = 8,
     parameter integer INDEX_W = 16,
     parameter integer DC_BLOCK_K = 6,
+    parameter integer COSTAS_KP_LOG = 18,
+    parameter integer COSTAS_KI_LOG = 12,
     parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
 ) (
     input  wire                     clk,
     input  wire                     rst,
     input  wire                     dc_block_en,   // 1 = subtract LO-leakage DC (OTA); 0 = passthrough
+    input  wire                     costas_en,     // 1 = carrier tracking (OTA); 0 = passthrough
     input  wire                     in_valid,
     input  wire signed [W-1:0]      in_i,
     input  wire signed [W-1:0]      in_q,
@@ -86,18 +89,41 @@ bpsk_symbol_timing_sampler #(
     .out_q(sym_q)
 );
 
-qpsk_hard_decision decision_i (
+// Carrier-recovery Costas loop tracks the per-burst carrier phase of a real OTA link
+// (the fixed-phase sampler alone floors at ~44%). Passthrough when costas_en=0 keeps
+// the coherent fabric loopback bit-identical. The residual 90-degree QPSK ambiguity is
+// resolved downstream by the preamble frame-sync in the BER counter.
+wire cos_valid;
+wire signed [W-1:0] cos_i;
+wire signed [W-1:0] cos_q;
+qpsk_costas #(
+    .W(W),
+    .KP_LOG(COSTAS_KP_LOG),
+    .KI_LOG(COSTAS_KI_LOG)
+) costas_i (
     .clk(clk),
     .rst(rst),
+    .enable(costas_en),
     .in_valid(sym_valid),
     .in_i(sym_i),
     .in_q(sym_q),
+    .out_valid(cos_valid),
+    .out_i(cos_i),
+    .out_q(cos_q)
+);
+
+qpsk_hard_decision decision_i (
+    .clk(clk),
+    .rst(rst),
+    .in_valid(cos_valid),
+    .in_i(cos_i),
+    .in_q(cos_q),
     .out_valid(out_valid),
     .out_dibit(out_dibit)
 );
 
-assign debug_symbol_valid = sym_valid;
-assign debug_symbol_i = sym_i;
-assign debug_symbol_q = sym_q;
+assign debug_symbol_valid = cos_valid;
+assign debug_symbol_i = cos_i;
+assign debug_symbol_q = cos_q;
 
 endmodule
