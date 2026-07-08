@@ -24,7 +24,7 @@ This page provides a compact index of course labs. It is intentionally shorter t
 | 07 | 7.1-7.5 | chain architecture and link-level metrics | partial ci / executable | add measured examples |
 | 08 | 8.1-8.6 | synchronization, mini-link and coding comparison | ci / executable | add impairment sweeps and dashboards |
 | 09 | 9.1-9.5 | metadata, file readers and replay analysis | ci / executable | keep manifests and thresholds synchronized |
-| 10 | 10.1-10.4 | electronics, safety checklist and schematic mini-project | manual / report-oriented | add exported design artifacts |
+| 10 | 10.1-10.6 | electronics, RF safety, attenuators, NanoVNA/S-parameters and schematic mini-project | manual / measured | add real NanoVNA CSV/Touchstone exports and final edited photos |
 | 11 | 11.1-11.28 | integrated project workflow and bring-up evidence | manual + measured | add controlled-cabled/long-duration statistics and seed/rebuild timing robustness |
 | 12 | 12.1-12.4 | final project briefs, rubric, templates and filled implementation report | reviewable / hardware pending | complete the open measurement gates |
 
