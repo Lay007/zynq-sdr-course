@@ -23,14 +23,19 @@ module qpsk_costas #(
     parameter integer W = 16,
     parameter integer PHASE_W = 24,          // NCO phase accumulator width (full scale = 2*pi)
     parameter integer LUT_AW = 8,            // cos/sin LUT address bits (256 entries)
-    // Bang-bang loop: the phase-error detector is reduced to its SIGN (+-1), so the loop
-    // gain is amplitude-independent (the RTL symbols are un-normalised MF outputs, unlike
-    // the unit-amplitude Python model). Each symbol the NCO steps by a fixed phase quantum:
-    //   proportional step = 2^KP_LOG, integral step = 2^KI_LOG (in PHASE_W phase units,
-    //   full scale 2^PHASE_W = 2*pi). KP_LOG large enough to pull +-pi within the ~12-symbol
-    //   preamble; KI_LOG smaller for slow CFO tracking.
-    parameter integer KP_LOG = 6,            // proportional gain: e_ext <<< KP_LOG (tuned on real self-OTA)
-    parameter integer KI_LOG = 1,            // integral/frequency gain: e_ext <<< KI_LOG (< KP_LOG)
+    // Linear decision-directed PED with LEFT-shift loop gains (e ~ A*phase_error, A =
+    // un-normalised MF amplitude, so the NCO step shifts UP into phase units; full scale
+    // 2^PHASE_W = 2*pi). Proportional step = e_ext <<< KP_LOG, integral/frequency step =
+    // e_ext <<< KI_LOG (< KP_LOG). Tuned on the real self-OTA capture (KP_LOG=6/KI_LOG=1).
+    parameter integer KP_LOG = 6,
+    parameter integer KI_LOG = 1,
+    // FREEZE GATE (burst-mode acquisition). The RX chain resets the loop per frame, and a
+    // real burst starts with pre-frame NOISE (the AD9361 round-trip latency). Without a
+    // gate the loop wanders on that noise and cannot settle by the time the ~12-symbol
+    // preamble arrives -> no frame-sync lock. When |in_i|+|in_q| < SIG_THRESH the loop
+    // HOLDS theta/freq (freezes), so it starts acquiring from a clean held phase exactly
+    // when the frame (high magnitude) arrives. 0 disables the gate (always update).
+    parameter integer SIG_THRESH = 1000,
     parameter LUT_FILE = "blocks/block_05_fpga_hdl_flow/rtl/cos_sin_lut.mem"
 ) (
     input  wire                 clk,
@@ -82,6 +87,11 @@ wire signed [PHASE_W-1:0] e_ext  = {{(PHASE_W-(W+1)){e_raw[W]}}, e_raw};
 wire signed [PHASE_W-1:0] kp_step = e_ext <<< KP_LOG;
 wire signed [PHASE_W-1:0] ki_step = e_ext <<< KI_LOG;
 
+// Freeze gate: run the loop only when a signal is present (|in_i|+|in_q| >= SIG_THRESH).
+wire [W-1:0] abs_ii = in_i[W-1] ? (~in_i + 1'b1) : in_i;
+wire [W-1:0] abs_qq = in_q[W-1] ? (~in_q + 1'b1) : in_q;
+wire loop_run = (SIG_THRESH == 0) || (({1'b0, abs_ii} + {1'b0, abs_qq}) >= SIG_THRESH[W:0]);
+
 always @(posedge clk) begin
     if (rst) begin
         theta     <= {PHASE_W{1'b0}};
@@ -94,8 +104,10 @@ always @(posedge clk) begin
         if (in_valid) begin
             out_i <= enable ? y_i : in_i;
             out_q <= enable ? y_q : in_q;
-            if (enable) begin
+            if (enable && loop_run) begin
                 // PI loop + NCO accumulate (phase wraps naturally at PHASE_W).
+                // Frozen (held) while no signal is present, so the loop does not wander
+                // on the pre-frame noise and acquires cleanly when the burst arrives.
                 freq  <= freq + ki_step;
                 theta <= theta + freq + kp_step;
             end

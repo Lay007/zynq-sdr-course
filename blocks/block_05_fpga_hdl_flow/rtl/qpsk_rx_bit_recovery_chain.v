@@ -13,6 +13,8 @@ module qpsk_rx_bit_recovery_chain #(
     parameter integer DC_BLOCK_K = 6,
     parameter integer COSTAS_KP_LOG = 6,
     parameter integer COSTAS_KI_LOG = 1,
+    parameter integer COSTAS_SIG_THRESH = 1000,  // freeze-gate: hold the loop while |I|+|Q| < this
+                                                  // (works 600..1400 on real self-OTA; noise <600, signal >1400)
     parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
 ) (
     input  wire                     clk,
@@ -99,7 +101,8 @@ wire signed [W-1:0] cos_q;
 qpsk_costas #(
     .W(W),
     .KP_LOG(COSTAS_KP_LOG),
-    .KI_LOG(COSTAS_KI_LOG)
+    .KI_LOG(COSTAS_KI_LOG),
+    .SIG_THRESH(COSTAS_SIG_THRESH)
 ) costas_i (
     .clk(clk),
     .rst(rst),
