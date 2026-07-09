@@ -71,6 +71,7 @@ This glossary keeps the course terminology consistent across Russian and English
 | Term | Meaning | Course context |
 |---|---|---|
 | Attenuator | Passive component that reduces signal power by a known amount. | Required for safe conducted RF experiments. |
+| Digital attenuator | Electronically controlled attenuator with discrete dB steps. | Used for repeatable attenuation sweeps and BER/SNR threshold measurements. |
 | Gain staging | Choosing gains across TX, RF path and RX to avoid overload and poor SNR. | Used in AD9363 and RTL-SDR labs. |
 | Noise floor | Baseline noise level visible in spectrum. | Used for receiver and capture quality. |
 | Clipping | Signal amplitude exceeding ADC or numeric range. | Indicates overload or wrong scaling. |
@@ -78,6 +79,18 @@ This glossary keeps the course terminology consistent across Russian and English
 | IQ imbalance | Amplitude or phase mismatch between I and Q paths. | Advanced receiver quality metric. |
 | Loopback | Feeding transmitter output back to receiver through a controlled path. | Used in board-level validation. |
 | OTA | Over-the-air. Wireless path through antennas. | Use carefully and legally. |
+| VNA | Vector network analyzer. Measures complex reflection and transmission parameters over frequency. | Used in NanoVNA labs before SDR RF loopback. |
+| NanoVNA | Low-cost handheld VNA. | Used as a practical instrument for cable, filter, attenuator and matching checks. |
+| DUT | Device under test. | The measured cable, filter, attenuator, antenna or RF Demo Kit element. |
+| S11 | Input reflection coefficient. | Used to check matching, return loss, VSWR and Smith-chart position. |
+| S21 | Forward transmission coefficient. | Used to measure filter response, cable loss and attenuation. |
+| VSWR / КСВН | Voltage standing-wave ratio. A scalar indicator of mismatch derived from reflection. | Used as a quick matching metric, but should be interpreted together with frequency and Smith chart. |
+| Smith chart | Graphical representation of complex impedance/reflection coefficient. | Used to see whether a DUT looks resistive, inductive or capacitive across frequency. |
+| SOLT calibration | Short-Open-Load-Thru calibration. | Required before meaningful NanoVNA S11/S21 measurements. |
+| Return loss | Reflection magnitude usually expressed in dB. Larger positive return-loss numbers mean lower reflection. | Used when judging loads, antennas and input matching. |
+| Insertion loss | Loss through a two-port device, usually measured from S21. | Used for cables, filters and attenuators. |
+| TDR | Time-domain reflectometry. Estimates cable length and discontinuities from reflections. | Optional NanoVNA-Saver extension for cable validation. |
+| Touchstone | Common text file format for S-parameter data, such as `.s1p` or `.s2p`. | Used for preserving VNA measurements and comparing them with simulations. |
 
 ## IQ file formats
 
@@ -103,7 +116,16 @@ This glossary keeps the course terminology consistent across Russian and English
 | dataset manifest | manifest набора данных / dataset manifest |
 | BER floor | нижняя граница BER / пол BER |
 | SNR vs BER | SNR против BER / почему SNR недостаточен |
+| VNA | векторный анализатор цепей / VNA |
+| S11 | коэффициент отражения от входа / S11 |
+| S21 | коэффициент прямой передачи / S21 |
+| VSWR | КСВН / коэффициент стоячей волны по напряжению |
+| Smith chart | диаграмма Смита |
+| SOLT calibration | SOLT-калибровка: Short, Open, Load, Thru |
+| TDR | рефлектометрия во временной области / TDR |
+| insertion loss | вносимые потери |
+| return loss | обратные потери / return loss |
 
 ## Style rule
 
-Prefer the English acronym when it is standard in SDR literature, and explain it once in Russian text. Examples: CFO, EVM, BER, IQ, DDC, DUC, NCO, HDL, RTL.
+Prefer the English acronym when it is standard in SDR literature, and explain it once in Russian text. Examples: CFO, EVM, BER, IQ, DDC, DUC, NCO, HDL, RTL, VNA, S11, S21, TDR.
