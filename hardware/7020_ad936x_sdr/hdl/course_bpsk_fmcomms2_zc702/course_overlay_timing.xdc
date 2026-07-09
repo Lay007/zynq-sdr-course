@@ -40,6 +40,26 @@ if {[llength $tr_cells] > 0} {
   }
 }
 
+# The QPSK Costas loop (qpsk_costas) updates theta / freq once per RECOVERED SYMBOL, and
+# the symbol sampler emits one symbol every SPS=8 sample-clock cycles. Its recurrence
+# (NCO phase -> cos/sin LUT -> complex de-rotate -> decision-directed PED -> PI -> phase)
+# is ~16 ns of logic (23 levels, 2 DSP48), so it does not close in one 16 ns sample-clock
+# period (measured -0.057 ns), and it fails outright against the 8 ns divide-select clock
+# the tools also analyze. Relax the DATA pins (D, and the sync set/reset R/S the tools may
+# use for the LUT constants) but NOT the clock enable CE, which carries the per-symbol
+# strobe and must stay single-cycle. Setup 4 covers the path on both the 16 ns and the
+# 8 ns clock, and is safe because updates are >= 8 cycles apart.
+set costas_cells [get_cells -hier -quiet -filter {NAME =~ *costas_i/*}]
+if {[llength $costas_cells] > 0} {
+  set costas_d [get_pins -quiet -of_objects $costas_cells \
+                  -filter {REF_PIN_NAME == D || REF_PIN_NAME == R || REF_PIN_NAME == S}]
+  if {[llength $costas_d] > 0} {
+    set_multicycle_path -setup 4 -to $costas_d
+    set_multicycle_path -hold  3 -to $costas_d
+    puts "course overlay: multicycle-path (setup 4) applied to [llength $costas_d] Costas data pins"
+  }
+}
+
 # bridge_rx_lclk_fifo (raw-ADC RX CDC FIFO) gray-code pointer crossings. wr_clk is
 # l_clk (rx_clk) and rd_clk is the divided sample clock (generated from rx_clk), so
 # the two are RELATED and the async clock-group cut above does not cover them; the

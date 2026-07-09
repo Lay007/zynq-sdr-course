@@ -11,7 +11,7 @@ module qpsk_rx_bit_recovery_chain #(
     parameter integer SPS = 8,
     parameter integer INDEX_W = 16,
     parameter integer DC_BLOCK_K = 6,
-    parameter integer COSTAS_KP_LOG = 6,
+    parameter integer COSTAS_KP_LOG = 8,   // pull-in must finish inside the 12-symbol preamble
     parameter integer COSTAS_KI_LOG = 1,
     parameter integer COSTAS_SIG_THRESH = 1000,  // freeze-gate: hold the loop while |I|+|Q| < this
                                                   // (works 600..1400 on real self-OTA; noise <600, signal >1400)
@@ -115,10 +115,32 @@ qpsk_costas #(
     .out_q(cos_q)
 );
 
+// Signal-present gate on the decision. A real burst begins with hundreds of samples
+// of pre-frame NOISE (the AD9361 round-trip latency), whose hard decisions are random
+// bits. Fed to the frame-sync correlator they occasionally match the preamble within
+// LOCK_ERR_TOL and false-lock the frame ahead of the real one (~5% of bursts, seen on
+// hardware as a "locked" frame with ~50% errors). Suppressing the decision until the
+// burst actually arrives removes that exposure. The gate LATCHES open on the first
+// signal-present symbol, so a mid-frame dip can never drop a symbol and shift the bit
+// alignment. Only active with costas_en (the OTA path) so the coherent fabric loopback
+// stays bit-identical; COSTAS_SIG_THRESH=0 disables it entirely.
+wire [W-1:0] abs_ci = cos_i[W-1] ? (~cos_i + 1'b1) : cos_i;
+wire [W-1:0] abs_cq = cos_q[W-1] ? (~cos_q + 1'b1) : cos_q;
+wire sig_now = (COSTAS_SIG_THRESH == 0) ||
+               (({1'b0, abs_ci} + {1'b0, abs_cq}) >= COSTAS_SIG_THRESH[W:0]);
+
+reg sig_seen = 1'b0;
+always @(posedge clk) begin
+    if (rst) sig_seen <= 1'b0;
+    else if (cos_valid && sig_now) sig_seen <= 1'b1;
+end
+
+wire dec_valid = cos_valid && (!costas_en || sig_now || sig_seen);
+
 qpsk_hard_decision decision_i (
     .clk(clk),
     .rst(rst),
-    .in_valid(cos_valid),
+    .in_valid(dec_valid),
     .in_i(cos_i),
     .in_q(cos_q),
     .out_valid(out_valid),

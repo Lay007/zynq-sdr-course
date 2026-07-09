@@ -33,6 +33,15 @@ def tb(name: str) -> Path:
     return TB_DIR / name
 
 
+def merge(*groups: tuple[Path, ...]) -> tuple[Path, ...]:
+    """Concatenate source groups, dropping repeats — iverilog rejects a file twice."""
+    seen: dict[Path, None] = {}
+    for group in groups:
+        for path in group:
+            seen.setdefault(path, None)
+    return tuple(seen)
+
+
 COMMON_BPSK = rtl(
     "bpsk_symbol_mapper.v",
     "bpsk_upsampler_8x.v",
@@ -51,32 +60,48 @@ BPSK_TOP = COMMON_BPSK + rtl(
     "bpsk_zynq_ber_top.v",
 )
 
-QPSK_TOP = rtl(
-    "qpsk_symbol_mapper.v",
-    "bpsk_upsampler_8x.v",
-    "bpsk_rrc_tx_fir.v",
+QPSK_RX_CHAIN = rtl(
+    "dc_blocker.v",
     "bpsk_rrc_rx_fir.v",
     "bpsk_symbol_timing_sampler.v",
+    "qpsk_costas.v",
     "qpsk_hard_decision.v",
-    "qpsk_framed_tx_chain.v",
     "qpsk_rx_bit_recovery_chain.v",
-    "qpsk_frame_dibit_source.v",
-    "bpsk_ber_counter.v",
-    "qpsk_ber_counter.v",
-    "qpsk_zynq_ber_top.v",
 )
 
-QPSK_BRIDGE = BPSK_TOP + rtl(
-    "qpsk_symbol_mapper.v",
-    "qpsk_hard_decision.v",
-    "qpsk_framed_tx_chain.v",
-    "qpsk_rx_bit_recovery_chain.v",
-    "qpsk_frame_dibit_source.v",
-    "qpsk_ber_counter.v",
-    "qpsk_zynq_ber_top.v",
-) + (
-    BRIDGE_DIR / "bridge_rx_lclk_fifo.v",
-    BRIDGE_DIR / "bpsk_zynq_ber_gpreg_bridge.v",
+QPSK_RX_BENCH = merge(
+    QPSK_RX_CHAIN,
+    rtl("bpsk_rrc_tx_fir.v", "bpsk_ber_counter.v", "qpsk_ber_counter.v"),
+)
+
+QPSK_TOP = merge(
+    QPSK_RX_CHAIN,
+    rtl(
+        "qpsk_symbol_mapper.v",
+        "bpsk_upsampler_8x.v",
+        "bpsk_rrc_tx_fir.v",
+        "qpsk_framed_tx_chain.v",
+        "qpsk_frame_dibit_source.v",
+        "bpsk_ber_counter.v",
+        "qpsk_ber_counter.v",
+        "qpsk_zynq_ber_top.v",
+    ),
+)
+
+QPSK_BRIDGE = merge(
+    BPSK_TOP,
+    QPSK_RX_CHAIN,
+    rtl(
+        "qpsk_symbol_mapper.v",
+        "qpsk_framed_tx_chain.v",
+        "qpsk_frame_dibit_source.v",
+        "qpsk_ber_counter.v",
+        "qpsk_zynq_ber_top.v",
+    ),
+    (
+        BRIDGE_DIR / "bridge_rx_lclk_fifo.v",
+        BRIDGE_DIR / "bpsk_zynq_ber_gpreg_bridge.v",
+    ),
 )
 
 TESTS = (
@@ -100,6 +125,14 @@ TESTS = (
     HdlTest("tb_bpsk_framed_loopback", COMMON_BPSK + (tb("tb_bpsk_framed_loopback.v"),)),
     HdlTest("tb_bpsk_zynq_ber_top", BPSK_TOP + (tb("tb_bpsk_zynq_ber_top.v"),)),
     HdlTest("tb_qpsk_zynq_ber_top", QPSK_TOP + (tb("tb_qpsk_zynq_ber_top.v"),)),
+    # Real-capture RX benches. They were absent from this suite while the RX chain grew a
+    # DC blocker and a Costas loop, so nothing caught the 90/270-degree frame-sync hole
+    # until hardware did. QPSK_RX_BENCH carries everything the RX chain needs.
+    HdlTest("tb_qpsk_quadrant_resolve", QPSK_RX_BENCH + (tb("tb_qpsk_quadrant_resolve.v"),)),
+    HdlTest("tb_qpsk_costas_acquire", QPSK_RX_BENCH + (tb("tb_qpsk_costas_acquire.v"),)),
+    HdlTest("tb_qpsk_rx_dcblock", QPSK_RX_BENCH + (tb("tb_qpsk_rx_dcblock.v"),)),
+    HdlTest("tb_qpsk_rx_costas", QPSK_RX_BENCH + (tb("tb_qpsk_rx_costas.v"),)),
+    HdlTest("tb_qpsk_costas_stress", QPSK_RX_BENCH + (tb("tb_qpsk_costas_stress.v"),)),
     HdlTest("tb_qpsk_bridge_loopback", QPSK_BRIDGE + (tb("tb_qpsk_bridge_loopback.v"),)),
     HdlTest(
         "tb_bridge_rx_lclk_fifo",
@@ -160,6 +193,16 @@ REQUIRED_GENERATED_FILES = (
     RTL_DIR / "bpsk_frame_bits.mem",
 )
 
+# Committed (not generated) stimulus that testbenches $readmemh by repo-relative path.
+# Simulations run from a temporary workspace, so these must be copied in alongside the
+# generated vectors -- otherwise $readmemh silently loads an all-zero array and the
+# testbench "fails" for reasons that have nothing to do with the RTL.
+STATIC_SIM_INPUTS = (
+    TB_DIR / "qpsk_selfota_a0_rx.mem",
+    TB_DIR / "qpsk_selfota_fresh_rx.mem",
+    TB_DIR / "qpsk_selfota_stress_rx.mem",
+)
+
 
 def run(command: list[str], *, cwd: Path = ROOT) -> None:
     print(f">>> {' '.join(command)}", flush=True)
@@ -179,13 +222,14 @@ def generate_vectors() -> None:
 
 
 def require_generated_inputs() -> None:
-    missing = [str(path.relative_to(ROOT)) for path in REQUIRED_GENERATED_FILES if not path.is_file() or path.stat().st_size == 0]
+    candidates = REQUIRED_GENERATED_FILES + STATIC_SIM_INPUTS
+    missing = [str(path.relative_to(ROOT)) for path in candidates if not path.is_file() or path.stat().st_size == 0]
     if missing:
-        raise RuntimeError(f"Missing generated HDL inputs: {', '.join(missing)}")
+        raise RuntimeError(f"Missing HDL simulation inputs: {', '.join(missing)}")
 
 
 def populate_simulation_workspace(workspace: Path) -> None:
-    for source in REQUIRED_GENERATED_FILES:
+    for source in REQUIRED_GENERATED_FILES + STATIC_SIM_INPUTS:
         target = workspace / source.relative_to(ROOT)
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, target)

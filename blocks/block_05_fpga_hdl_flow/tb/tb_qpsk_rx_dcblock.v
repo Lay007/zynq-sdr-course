@@ -40,8 +40,13 @@ dc_blocker #(.W(W), .K(6)) dcb (
 
 wire rxdv;
 wire [1:0] rxdibit;
+// This bench predates both the in-chain DC blocker and the Costas loop: it drives its
+// own dc_blocker above and studies the plain fixed-phase chain. Tie the runtime enables
+// off explicitly -- leaving them unconnected floats them to z, which reads as "off" in
+// an if() but poisons any expression built on them.
 qpsk_rx_bit_recovery_chain #(.W(W), .SPS(8), .INDEX_W(INDEX_W)) rxc (
     .clk(clk), .rst(rst),
+    .dc_block_en(1'b0), .costas_en(1'b0),
     .in_valid(dcv), .in_i(dci), .in_q(dcq),
     .start_offset(start_offset), .symbol_count(CHAIN_SYMS[INDEX_W-1:0]),
     .out_valid(rxdv), .out_dibit(rxdibit),
@@ -92,8 +97,10 @@ endtask
 
 integer rr, global_best;
 initial begin
-    $dumpfile("blocks/block_05_fpga_hdl_flow/tb/tb_qpsk_rx_dcblock.vcd");
-    $dumpvars(0, tb_qpsk_rx_dcblock);
+    // No $dumpvars here: this bench runs 4 rotations x 16 sampler phases over a
+    // 4000-sample capture, and dumping every signal produced a 161 MB VCD that
+    // filled the simulation workspace and made the NEXT iverilog invocation fail
+    // with "ivlpp: No input files given". Waveforms for a sweep are useless anyway.
     $readmemh("blocks/block_05_fpga_hdl_flow/tb/qpsk_selfota_a0_rx.mem", samp);
     repeat (4) @(negedge clk);
 

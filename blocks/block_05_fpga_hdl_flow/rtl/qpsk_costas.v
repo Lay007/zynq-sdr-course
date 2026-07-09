@@ -26,8 +26,18 @@ module qpsk_costas #(
     // Linear decision-directed PED with LEFT-shift loop gains (e ~ A*phase_error, A =
     // un-normalised MF amplitude, so the NCO step shifts UP into phase units; full scale
     // 2^PHASE_W = 2*pi). Proportional step = e_ext <<< KP_LOG, integral/frequency step =
-    // e_ext <<< KI_LOG (< KP_LOG). Tuned on the real self-OTA capture (KP_LOG=6/KI_LOG=1).
-    parameter integer KP_LOG = 6,
+    // e_ext <<< KI_LOG (< KP_LOG).
+    //
+    // KP_LOG sets the PULL-IN TIME, and in burst mode that is the binding constraint, not
+    // steady-state tracking. The loop restarts per frame and must settle within the
+    // 12-symbol preamble or the frame-sync correlates against a still-rotating
+    // constellation. KP_LOG=6 corrects only ~4% of the phase error per symbol (~27-symbol
+    // time constant): it tracks beautifully once locked, and on real self-OTA captures it
+    // decodes any residual phase up to ~60 degrees -- but near the +-45-degree worst case
+    // (the loop removes phase modulo 90) it never settles in time. KP_LOG=8 acquires every
+    // residual angle within the preamble (verified across 0..80 degrees on the real capture
+    // in tb_qpsk_costas_acquire) and still tracks to BER 0.
+    parameter integer KP_LOG = 8,
     parameter integer KI_LOG = 1,
     // FREEZE GATE (burst-mode acquisition). The RX chain resets the loop per frame, and a
     // real burst starts with pre-frame NOISE (the AD9361 round-trip latency). Without a

@@ -37,6 +37,10 @@ module bpsk_ber_counter #(
     input  wire                     in_bit,
     output reg                      busy,
     output reg                      done,
+    // High from preamble lock until the frame completes. Lets a parent run several
+    // of these in parallel on differently-rotated bit streams and pick the branch
+    // that actually acquired the frame (see qpsk_ber_counter's quadrant resolve).
+    output wire                     lock_acquired,
     output reg [INDEX_W-1:0]        received_bits,
     output reg [INDEX_W-1:0]        total_errors,
     output reg [INDEX_W-1:0]        payload_errors
@@ -76,6 +80,8 @@ function [INDEX_W-1:0] count_matches(input [WIN-1:0] w, input inv);
         end
     end
 endfunction
+
+assign lock_acquired = locked;
 
 wire [WIN-1:0] next_win = {win_sr[WIN-2:0], in_bit};
 wire [INDEX_W-1:0] m_noninv = count_matches(next_win, 1'b0);

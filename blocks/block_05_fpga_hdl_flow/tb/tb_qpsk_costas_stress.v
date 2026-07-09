@@ -2,7 +2,10 @@
 // then wanders on the leading pre-frame NOISE before the burst arrives) by prepending
 // 3000 noise samples to the real capture, and show SIG_THRESH>0 (freeze) recovers it.
 `timescale 1ns/1ps
-module tb_qpsk_costas_stress #(parameter integer TH=0);
+// Default TH matches the shipped COSTAS_SIG_THRESH so the smoke suite exercises the
+// configuration that runs on silicon; override with -Ptb_qpsk_costas_stress.TH=0 to see
+// the un-gated loop wander on the pre-frame noise.
+module tb_qpsk_costas_stress #(parameter integer TH=1000);
   localparam W=16, INDEX_W=16, SYMS=140, CHAIN_SYMS=700, NS=7000;
   reg clk=0, rst=1, rx_valid=0, cnt_start=0;
   reg signed [W-1:0] rx_i=0, rx_q=0;
@@ -41,6 +44,17 @@ module tb_qpsk_costas_stress #(parameter integer TH=0);
     best_err=32'h7fffffff; best_so=-1;
     for (so=0; so<=15; so=so+1) begin run_off(so); if (rxsyms==SYMS[INDEX_W-1:0] && errs<best_err) begin best_err=errs; best_so=so; end end
     $display("SIG_THRESH=%0d: best off=%0d recv_ok=%0s bit_errors=%0d/280", TH, best_so, (best_so>=0)?"140":"NONE", best_err);
+    if (TH == 0) begin
+      $display("NOTE: freeze gate disabled -- result is diagnostic only, not asserted");
+    end else if (best_so < 0) begin
+      $display("FAIL: qpsk_costas_stress -- no frame lock with the freeze gate on");
+      $fatal(1);
+    end else if (best_err != 0) begin
+      $display("FAIL: qpsk_costas_stress -- %0d/280 bit errors with the freeze gate on", best_err);
+      $fatal(1);
+    end else begin
+      $display("PASS: qpsk_costas_stress -- Costas acquires through 3000 pre-frame noise samples (BER 0/280)");
+    end
     $finish;
   end
 endmodule
