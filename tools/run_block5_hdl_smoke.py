@@ -62,6 +62,7 @@ BPSK_TOP = COMMON_BPSK + rtl(
 
 QPSK_RX_CHAIN = rtl(
     "dc_blocker.v",
+    "qpsk_mf_phase_picker.v",
     "bpsk_rrc_rx_fir.v",
     "bpsk_symbol_timing_sampler.v",
     "qpsk_costas.v",
@@ -132,6 +133,7 @@ TESTS = (
     HdlTest("tb_qpsk_costas_acquire", QPSK_RX_BENCH + (tb("tb_qpsk_costas_acquire.v"),)),
     HdlTest("tb_qpsk_costas_multiburst", QPSK_RX_BENCH + (tb("tb_qpsk_costas_multiburst.v"),)),
     HdlTest("tb_qpsk_costas_acq_window", QPSK_RX_BENCH + (tb("tb_qpsk_costas_acq_window.v"),)),
+    HdlTest("tb_qpsk_phase_picker", QPSK_RX_BENCH + (tb("tb_qpsk_phase_picker.v"),)),
     HdlTest("tb_qpsk_rx_dcblock", QPSK_RX_BENCH + (tb("tb_qpsk_rx_dcblock.v"),)),
     HdlTest("tb_qpsk_rx_costas", QPSK_RX_BENCH + (tb("tb_qpsk_rx_costas.v"),)),
     HdlTest("tb_qpsk_costas_stress", QPSK_RX_BENCH + (tb("tb_qpsk_costas_stress.v"),)),
@@ -201,6 +203,8 @@ REQUIRED_GENERATED_FILES = (
 # testbench "fails" for reasons that have nothing to do with the RTL.
 STATIC_SIM_INPUTS = (
     TB_DIR / "qpsk_selfota_a0_rx.mem",
+    TB_DIR / "qpsk_selfota_burst_centred_rx.mem",
+    TB_DIR / "qpsk_selfota_burst_halfsym_rx.mem",
     TB_DIR / "qpsk_selfota_fresh_rx.mem",
     TB_DIR / "qpsk_selfota_stress_rx.mem",
 )
