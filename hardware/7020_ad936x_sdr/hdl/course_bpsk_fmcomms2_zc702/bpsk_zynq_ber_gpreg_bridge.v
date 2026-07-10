@@ -245,6 +245,12 @@ wire dc_block_en = control_sync[9];
 // carrier phase of a real OTA link). 0 for the coherent fabric loop (passthrough).
 wire costas_en = control_sync[10];
 
+// gp_ctrl[11]=1 carries the acquired carrier phase from one burst into the next instead
+// of restarting the loop at zero every frame. A single board talking to itself has a
+// quasi-static path phase, so the next burst should start already locked; this bit exists
+// so that assumption can be MEASURED on hardware rather than assumed.
+wire costas_hold_phase = control_sync[11];
+
 // gp_ctrl[8]=1 feeds the raw-ADC CDC FIFO from AD9361 RX channel 2 (adc_input2 =
 // adc_data_i1/q1) instead of channel 1. control_sync lives on sample_clk, while
 // this mux feeds memory written on adc_input_clk; synchronize the quasi-static
@@ -349,6 +355,7 @@ qpsk_zynq_ber_top #(
     .start_offset(start_offset_cfg),
     .dc_block_en(dc_block_en),
     .costas_en(costas_en),
+    .costas_hold_phase(costas_hold_phase),
     .busy(qpsk_busy),
     .done(qpsk_done),
     .tx_valid(qpsk_tx_valid),

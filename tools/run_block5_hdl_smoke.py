@@ -130,6 +130,8 @@ TESTS = (
     # until hardware did. QPSK_RX_BENCH carries everything the RX chain needs.
     HdlTest("tb_qpsk_quadrant_resolve", QPSK_RX_BENCH + (tb("tb_qpsk_quadrant_resolve.v"),)),
     HdlTest("tb_qpsk_costas_acquire", QPSK_RX_BENCH + (tb("tb_qpsk_costas_acquire.v"),)),
+    HdlTest("tb_qpsk_costas_multiburst", QPSK_RX_BENCH + (tb("tb_qpsk_costas_multiburst.v"),)),
+    HdlTest("tb_qpsk_costas_acq_window", QPSK_RX_BENCH + (tb("tb_qpsk_costas_acq_window.v"),)),
     HdlTest("tb_qpsk_rx_dcblock", QPSK_RX_BENCH + (tb("tb_qpsk_rx_dcblock.v"),)),
     HdlTest("tb_qpsk_rx_costas", QPSK_RX_BENCH + (tb("tb_qpsk_rx_costas.v"),)),
     HdlTest("tb_qpsk_costas_stress", QPSK_RX_BENCH + (tb("tb_qpsk_costas_stress.v"),)),

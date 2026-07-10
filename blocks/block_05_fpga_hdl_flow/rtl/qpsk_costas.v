@@ -28,16 +28,28 @@ module qpsk_costas #(
     // 2^PHASE_W = 2*pi). Proportional step = e_ext <<< KP_LOG, integral/frequency step =
     // e_ext <<< KI_LOG (< KP_LOG).
     //
-    // KP_LOG sets the PULL-IN TIME, and in burst mode that is the binding constraint, not
-    // steady-state tracking. The loop restarts per frame and must settle within the
-    // 12-symbol preamble or the frame-sync correlates against a still-rotating
-    // constellation. KP_LOG=6 corrects only ~4% of the phase error per symbol (~27-symbol
-    // time constant): it tracks beautifully once locked, and on real self-OTA captures it
-    // decodes any residual phase up to ~60 degrees -- but near the +-45-degree worst case
-    // (the loop removes phase modulo 90) it never settles in time. KP_LOG=8 acquires every
-    // residual angle within the preamble (verified across 0..80 degrees on the real capture
-    // in tb_qpsk_costas_acquire) and still tracks to BER 0.
-    parameter integer KP_LOG = 8,
+    // GEAR SHIFT. The proportional gain wants to be two different things. Pull-in must
+    // finish inside the 12-symbol preamble or the frame-sync correlates against a still-
+    // rotating constellation, and the loop removes phase modulo 90 degrees so it can face
+    // a +-45-degree error: that needs a wide loop. Tracking wants the opposite -- a wide
+    // loop passes more noise into theta and slips a quadrant mid-frame (measured: 6 of 40
+    // hardware bursts locked, then took ~86 of 280 bit errors, i.e. half the bits after a
+    // slip ~40% into the frame). So acquire with KP_LOG_ACQ for ACQ_SYMBOLS symbols, then
+    // drop to the quiet KP_LOG_TRACK. KP_LOG=6 alone corrects ~4% of the phase error per
+    // symbol (~27-symbol time constant) and never settles in 12; KP_LOG=8 alone acquires
+    // every angle but tracks noisily.
+    //
+    // ACQ_SYMBOLS counts the symbols the loop actually RAN on, i.e. from the moment the
+    // freeze gate opens. That is not the start of the frame: the gate trips on the RRC
+    // ramp, measured 16 symbols before the frame-sync latches (gate at symbol 15, lock at
+    // symbol 31 on the real self-OTA capture). ACQ_SYMBOLS=16 therefore expired exactly at
+    // the lock instant, and any burst whose gate opened a symbol early finished its
+    // preamble on the slow loop -- 8 of 40 hardware bursts then locked a quadrant off
+    // (~125 of 280 bit errors). 32 leaves 2x margin and still hands the frame to the quiet
+    // loop long before the mid-frame slips (~symbol 56) it exists to prevent.
+    parameter integer KP_LOG_ACQ = 8,
+    parameter integer KP_LOG_TRACK = 6,
+    parameter integer ACQ_SYMBOLS = 32,
     parameter integer KI_LOG = 1,
     // FREEZE GATE (burst-mode acquisition). The RX chain resets the loop per frame, and a
     // real burst starts with pre-frame NOISE (the AD9361 round-trip latency). Without a
@@ -48,7 +60,13 @@ module qpsk_costas #(
     parameter integer SIG_THRESH = 1000
 ) (
     input  wire                 clk,
-    input  wire                 rst,
+    input  wire                 rst,         // clears the output pipeline and the gear-shift counter
+    // Clears the NCO phase / frequency accumulators. Usually tied to `rst`. Driving it
+    // separately lets a burst-mode receiver KEEP the carrier phase across frames: the RF
+    // path phase is quasi-static and the freeze gate already holds theta through the
+    // inter-burst silence, so the next burst starts near the right phase instead of
+    // pulling in from zero. Harmless when the phase does drift -- the loop just re-acquires.
+    input  wire                 rst_phase,
     input  wire                 enable,      // 1 = carrier tracking; 0 = pass-through
     input  wire                 in_valid,
     input  wire signed [W-1:0]  in_i,
@@ -346,9 +364,14 @@ wire signed [W:0]   e_raw  = term_a - term_b;           // one guard bit; e ~ A*
 // Linear PED with LEFT-shift loop gains: the error scales with the (un-normalised) symbol
 // amplitude A, so the NCO step must be shifted UP into phase units (full scale 2^PHASE_W
 // = 2*pi). A linear error makes the loop SETTLE (unlike bang-bang, which limit-cycles);
-// KP_LOG sets the proportional gain, KI_LOG (< KP_LOG) the slow integral / frequency term.
+// the KP_LOG_* pair sets the proportional gain, KI_LOG the slow integral / frequency term.
 wire signed [PHASE_W-1:0] e_ext  = {{(PHASE_W-(W+1)){e_raw[W]}}, e_raw};
-wire signed [PHASE_W-1:0] kp_step = e_ext <<< KP_LOG;
+
+// Gear shift: wide loop while acquiring, quiet loop once the preamble is behind us.
+reg [15:0] acq_cnt = 16'd0;
+wire acquiring = (acq_cnt < ACQ_SYMBOLS[15:0]);
+wire signed [PHASE_W-1:0] kp_step = acquiring ? (e_ext <<< KP_LOG_ACQ)
+                                              : (e_ext <<< KP_LOG_TRACK);
 wire signed [PHASE_W-1:0] ki_step = e_ext <<< KI_LOG;
 
 // Freeze gate: run the loop only when a signal is present (|in_i|+|in_q| >= SIG_THRESH).
@@ -356,10 +379,26 @@ wire [W-1:0] abs_ii = in_i[W-1] ? (~in_i + 1'b1) : in_i;
 wire [W-1:0] abs_qq = in_q[W-1] ? (~in_q + 1'b1) : in_q;
 wire loop_run = (SIG_THRESH == 0) || (({1'b0, abs_ii} + {1'b0, abs_qq}) >= SIG_THRESH[W:0]);
 
+// theta/freq follow rst_phase (usually == rst); the pipeline and the gear-shift counter
+// follow rst, so a receiver that holds its phase across bursts still re-acquires with the
+// wide loop on each new frame -- when the held phase is already right the error is small,
+// so the wide gain costs nothing.
+always @(posedge clk) begin
+    if (rst_phase) begin
+        theta <= {PHASE_W{1'b0}};
+        freq  <= {PHASE_W{1'b0}};
+    end else if (in_valid && enable && loop_run) begin
+        // PI loop + NCO accumulate (phase wraps naturally at PHASE_W).
+        // Frozen (held) while no signal is present, so the loop does not wander
+        // on the pre-frame noise and acquires cleanly when the burst arrives.
+        freq  <= freq + ki_step;
+        theta <= theta + freq + kp_step;
+    end
+end
+
 always @(posedge clk) begin
     if (rst) begin
-        theta     <= {PHASE_W{1'b0}};
-        freq      <= {PHASE_W{1'b0}};
+        acq_cnt   <= 16'd0;
         out_valid <= 1'b0;
         out_i     <= {W{1'b0}};
         out_q     <= {W{1'b0}};
@@ -368,13 +407,9 @@ always @(posedge clk) begin
         if (in_valid) begin
             out_i <= enable ? y_i : in_i;
             out_q <= enable ? y_q : in_q;
-            if (enable && loop_run) begin
-                // PI loop + NCO accumulate (phase wraps naturally at PHASE_W).
-                // Frozen (held) while no signal is present, so the loop does not wander
-                // on the pre-frame noise and acquires cleanly when the burst arrives.
-                freq  <= freq + ki_step;
-                theta <= theta + freq + kp_step;
-            end
+            // Count only the symbols the loop actually ran on, so the acquisition window
+            // starts when the burst arrives, not when the (silent) frame window opens.
+            if (enable && loop_run && acquiring) acq_cnt <= acq_cnt + 1'b1;
         end
     end
 end

@@ -34,6 +34,10 @@ module qpsk_zynq_ber_top #(
     input  wire [INDEX_W-1:0]       start_offset,
     input  wire                     dc_block_en,    // 1 = RX DC blocker on (OTA); 0 = passthrough
     input  wire                     costas_en,      // 1 = carrier recovery on (OTA); 0 = passthrough
+    // 1 = carry the acquired carrier phase from one burst into the next instead of
+    // restarting the loop at zero. Sound when the RF path phase is quasi-static (a single
+    // board talking to itself); harmless otherwise, the loop simply re-acquires.
+    input  wire                     costas_hold_phase,
     output wire                     busy,
     output reg                      done,
     output wire                     tx_valid,
@@ -114,6 +118,8 @@ qpsk_rx_bit_recovery_chain #(
     .clk(clk),
     // restart the matched filter + sampler each frame so back-to-back bursts realign
     .rst(rst || frame_start),
+    // ... but optionally let the carrier loop keep the phase it already found
+    .rst_carrier(rst || (frame_start && !costas_hold_phase)),
     .dc_block_en(dc_block_en),
     .costas_en(costas_en),
     .in_valid(rx_valid),

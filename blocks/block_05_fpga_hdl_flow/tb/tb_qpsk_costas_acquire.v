@@ -35,7 +35,7 @@ module tb_qpsk_costas_acquire;
   wire rxdv;
   wire [1:0] rxdibit;
   qpsk_rx_bit_recovery_chain #(.W(W), .SPS(8), .INDEX_W(INDEX_W)) rxc (
-      .clk(clk), .rst(rst), .dc_block_en(1'b1), .costas_en(1'b1),
+      .clk(clk), .rst(rst), .rst_carrier(rst), .dc_block_en(1'b1), .costas_en(1'b1),
       .in_valid(rx_valid), .in_i(rx_i), .in_q(rx_q),
       .start_offset(start_offset), .symbol_count(CHAIN_SYMS[INDEX_W-1:0]),
       .out_valid(rxdv), .out_dibit(rxdibit),

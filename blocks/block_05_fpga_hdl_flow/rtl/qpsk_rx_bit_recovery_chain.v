@@ -11,7 +11,10 @@ module qpsk_rx_bit_recovery_chain #(
     parameter integer SPS = 8,
     parameter integer INDEX_W = 16,
     parameter integer DC_BLOCK_K = 6,
-    parameter integer COSTAS_KP_LOG = 8,   // pull-in must finish inside the 12-symbol preamble
+    parameter integer COSTAS_KP_LOG_ACQ = 8,     // pull-in must finish inside the 12-symbol preamble
+    parameter integer COSTAS_KP_LOG_TRACK = 6,   // ... then track quietly, or the loop slips mid-frame
+    parameter integer COSTAS_ACQ_SYMBOLS = 32,   // counted from the freeze gate, which opens
+                                                  // ~16 symbols before the frame-sync locks
     parameter integer COSTAS_KI_LOG = 1,
     parameter integer COSTAS_SIG_THRESH = 1000,  // freeze-gate: hold the loop while |I|+|Q| < this
                                                   // (works 600..1400 on real self-OTA; noise <600, signal >1400)
@@ -19,6 +22,10 @@ module qpsk_rx_bit_recovery_chain #(
 ) (
     input  wire                     clk,
     input  wire                     rst,
+    // Reset for the carrier loop's phase/frequency accumulators only. Tie to `rst` for the
+    // usual "start every frame from zero phase"; hold it low across frames to keep the
+    // acquired carrier phase (see qpsk_costas.rst_phase).
+    input  wire                     rst_carrier,
     input  wire                     dc_block_en,   // 1 = subtract LO-leakage DC (OTA); 0 = passthrough
     input  wire                     costas_en,     // 1 = carrier tracking (OTA); 0 = passthrough
     input  wire                     in_valid,
@@ -100,12 +107,15 @@ wire signed [W-1:0] cos_i;
 wire signed [W-1:0] cos_q;
 qpsk_costas #(
     .W(W),
-    .KP_LOG(COSTAS_KP_LOG),
+    .KP_LOG_ACQ(COSTAS_KP_LOG_ACQ),
+    .KP_LOG_TRACK(COSTAS_KP_LOG_TRACK),
+    .ACQ_SYMBOLS(COSTAS_ACQ_SYMBOLS),
     .KI_LOG(COSTAS_KI_LOG),
     .SIG_THRESH(COSTAS_SIG_THRESH)
 ) costas_i (
     .clk(clk),
     .rst(rst),
+    .rst_phase(rst_carrier),
     .enable(costas_en),
     .in_valid(sym_valid),
     .in_i(sym_i),
