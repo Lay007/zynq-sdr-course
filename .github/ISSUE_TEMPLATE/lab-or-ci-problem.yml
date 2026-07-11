@@ -1,0 +1,100 @@
+name: Lab or CI problem
+description: Report a reproducible problem in a lab, script, HDL flow, documentation page, dataset, or GitHub Actions check.
+title: "[Lab/CI] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the course. Please provide enough information to reproduce the problem without guessing your board, software stack, command, or input data.
+
+  - type: input
+    id: location
+    attributes:
+      label: Block, lab, file, or workflow
+      description: Identify the affected block/lab and include the repository path or workflow name when possible.
+      placeholder: "Block 8, Lab 8.1, docs/ru/labs/lab-8-1-cfo-estimation-correction.md"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Problem area
+      options:
+        - Documentation or broken link
+        - Python or data-analysis script
+        - MATLAB or Simulink
+        - HDL simulation or synthesis
+        - Zynq or AD936x hardware bring-up
+        - RF or measurement procedure
+        - IQ dataset or manifest
+        - GitHub Actions or local CI
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: revision
+    attributes:
+      label: Repository revision
+      description: Commit SHA, branch, tag, or the date when the repository was cloned.
+      placeholder: "main at 58a6855 or v0.1.0"
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include OS, Python/MATLAB/Vivado versions, board and RF hardware, and any relevant sample-rate or clock settings.
+      placeholder: |
+        OS: Ubuntu 24.04
+        Python: 3.12
+        Board/RFIC: Zynq-7020 + AD9363
+        Toolchain: Vivado 2025.2
+        Sample rate / RF bandwidth: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: command
+    attributes:
+      label: Exact command or procedure
+      description: Paste the smallest command sequence or numbered procedure that reproduces the problem.
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result and first relevant error
+      description: Include the first meaningful error, not only the final exit code.
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Add short logs, screenshots, plots, measurements, checksums, or links to a minimal sample. Do not upload secrets or large raw IQ captures without a manifest.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission checks
+      options:
+        - label: I searched existing issues for the same problem.
+          required: true
+        - label: I ran the relevant local check from the documentation when it was available.
+          required: true
+        - label: I removed passwords, tokens, private keys, internal addresses, and other sensitive data.
+          required: true
