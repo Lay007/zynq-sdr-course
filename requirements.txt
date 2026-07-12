@@ -1,5 +1,5 @@
 # Tested course runtime baseline. Dependabot updates these pins in reviewable PRs.
-numpy==2.4.6
+numpy==2.5.1
 matplotlib==3.11.0
 mkdocs==1.6.1
 mkdocs-material==9.7.6
