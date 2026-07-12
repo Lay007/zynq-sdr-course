@@ -1,0 +1,6 @@
+# Temporary pre-existing navigation debt tracked by issue #37.
+# Remove each entry as soon as the page is added to mkdocs.yml.
+ru/labs/lab-10-5-nanovna-rf-demo-kit.md
+ru/labs/lab-10-6-digital-attenuator-characterization.md
+en/labs/lab-10-5-nanovna-rf-demo-kit.md
+en/labs/lab-10-6-digital-attenuator-characterization.md
