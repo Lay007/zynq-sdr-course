@@ -135,6 +135,10 @@ TESTS = (
     HdlTest("tb_qpsk_costas_acq_window", QPSK_RX_BENCH + (tb("tb_qpsk_costas_acq_window.v"),)),
     HdlTest("tb_qpsk_phase_picker", QPSK_RX_BENCH + (tb("tb_qpsk_phase_picker.v"),)),
     HdlTest("tb_qpsk_coarse_cfo", merge(QPSK_RX_BENCH, rtl("qpsk_coarse_cfo.v")) + (tb("tb_qpsk_coarse_cfo.v"),)),
+    HdlTest("tb_qpsk_coarse_cfo_chain",
+            merge(QPSK_RX_BENCH, rtl("qpsk_coarse_cfo.v", "dc_blocker.v", "bpsk_rrc_rx_fir.v",
+                                     "bpsk_rrc_tx_fir.v", "bpsk_symbol_timing_sampler.v"))
+            + (tb("tb_qpsk_coarse_cfo_chain.v"),)),
     HdlTest("tb_qpsk_rx_dcblock", QPSK_RX_BENCH + (tb("tb_qpsk_rx_dcblock.v"),)),
     HdlTest("tb_qpsk_rx_costas", QPSK_RX_BENCH + (tb("tb_qpsk_rx_costas.v"),)),
     HdlTest("tb_qpsk_costas_stress", QPSK_RX_BENCH + (tb("tb_qpsk_costas_stress.v"),)),
@@ -208,6 +212,8 @@ STATIC_SIM_INPUTS = (
     TB_DIR / "qpsk_selfota_burst_halfsym_rx.mem",
     TB_DIR / "framed_cfo25k_rx.mem",
     TB_DIR / "framed_cfo0_rx.mem",
+    TB_DIR / "srate_cfo25k_rx.mem",
+    TB_DIR / "srate_cfo0_rx.mem",
     TB_DIR / "qpsk_selfota_fresh_rx.mem",
     TB_DIR / "qpsk_selfota_stress_rx.mem",
 )
