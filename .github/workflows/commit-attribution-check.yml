@@ -1,0 +1,39 @@
+name: Commit Attribution Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  commit-attribution-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Select commit range
+        id: range
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            revision_range="$PR_BASE_SHA..$PR_HEAD_SHA"
+          elif [[ "$BEFORE_SHA" == "0000000000000000000000000000000000000000" ]]; then
+            revision_range="$CURRENT_SHA^!"
+          else
+            revision_range="$BEFORE_SHA..$CURRENT_SHA"
+          fi
+          echo "revision_range=$revision_range" >> "$GITHUB_OUTPUT"
+
+      - name: Reject Claude co-author trailers
+        run: python tools/check_commit_attribution.py --range '${{ steps.range.outputs.revision_range }}'
