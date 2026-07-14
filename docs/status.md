@@ -21,6 +21,7 @@ Detailed bring-up logs should live on dedicated evidence pages rather than insid
 | `stock-shell` | The board's normal vendor Linux and PL baseline after boot. |
 | `runtime overlay` | A PL payload loaded after Linux boot for course experiments. |
 | `BPSK` | Binary phase-shift keying. |
+| `CSS` | Chirp spread spectrum; the current labs implement an educational waveform and detector, not yet a complete LoRa packet PHY. |
 | `evidence` | A manifest, JSON report, plot or log proving the result. |
 
 ## Block readiness matrix
@@ -34,7 +35,7 @@ Detailed bring-up logs should live on dedicated evidence pages rather than insid
 | 05 | FPGA / HDL flow | Measured signoff candidate | 18 HDL tests; hardware-working snapshot is fully routed, strategy sweep selects WNS +0.096 ns, and passes board fabric-loopback qualification | Verify repeat-build/seed stability for the selected implementation. |
 | 06 | RF frontend and AD9363 | Measured | RX-only and tone capture baselines | Build the AD9363 gain table and validate safe cabled loopback. |
 | 07 | TX/RX chains | Executable | DUC/DDC demos and loopback models | Add measurement package. |
-| 08 | Modulation and synchronization | Executable | CFO, phase/timing, BER/EVM demos and SNR-vs-BER trap material | Promote generated impairment dashboards and connect them to measured Block 11 reports. |
+| 08 | Modulation and synchronization | Executable | CFO, timing, BER/EVM, OFDM mini-link, OFDM PAPR/clipping and CSS dechirp/FFT models with CI metric gates | Add packet-level CSS synchronization, LoRa interoperability evidence and FPGA implementations. |
 | 09 | Recording and analysis tools | Measured | CI16/CU8/CF32/WAV readers, fail-closed manifest CI and QPSK multi-burst BER/EVM/CFO analysis | Publish or externally archive the raw QPSK WAV. |
 | 10 | KiCad and basic electronics | Draft | Calculators and templates | Add measured breadboard photos and KiCad exports. |
 | 11 | Integrated SDR project | QPSK measured internally and externally | Current ExtraTiming payload: WNS +0.096 ns and 10/10 fabric attempts at BER=0; external RTL-SDR baseline: 3/3 sessions, 90/90 bursts and 0/25,200 bits | Add controlled cabled evidence and stabilize RTL-SDR capture for longer runs. |
@@ -49,6 +50,7 @@ Detailed bring-up logs should live on dedicated evidence pages rather than insid
 | P1 | QPSK demo dataset | Manifest, checksum or immutable link, constellation, EVM/SNR and replay command exist. |
 | P1 | Digital-link metric gate | Digital labs report SNR/EVM plus BER or FER with compared bit/frame count. |
 | P1 | AD9363 gain table | Gain settings, clipping/SNR behavior and safe starting values are documented. |
+| P2 | OFDM/CSS hardware evidence | Digital loopback, safe RF path, configuration metadata, EVM plus BER/SER/PER and limitations are recorded. |
 | P2 | Final hardware report | One report connects model, HDL, capture, metrics and engineering conclusion. |
 
 ## Evidence and backlog pages
