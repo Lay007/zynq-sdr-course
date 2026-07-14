@@ -8,7 +8,7 @@ This page separates documentation work from tasks that require real hardware acc
 |---|---:|---|---|
 | P0 | #25 | Complete safe cabled loopback validation | conducted capture/report are measured; add NanoVNA `S21` for the cable and marked 30 dB attenuator |
 | P1 | #26 | Publish and repeat QPSK demo IQ | measured local manifest/plots/metrics exist; add raw-data access and per-burst statistics |
-| P2 | #29 | Add AD9363 gain table | gain settings, measured clipping/SNR behavior; use `templates/ad9363-gain-overload-log.md` during the board session |
+| P2 | #29 | Extend AD9363 gain table | first 915 MHz relative RX/TX sweeps are measured; add calibrated multi-frequency and large-signal points |
 | P2 | #25/#26 | Add final hardware report | report page, figures, limitations |
 
 ## Priority non-hardware follow-up
@@ -25,7 +25,7 @@ This page separates documentation work from tasks that require real hardware acc
 |---:|---|
 | #25 | The safe cabled tone run now has nominal attenuation, gain settings, capture metadata, FFT/metrics and a short conclusion in `reports/hardware/ad9361-conducted-loopback-20260715.md`. Full closure still requires NanoVNA `S21` evidence for the cable and marked 30 dB attenuator. |
 | #26 | A small QPSK IQ dataset has a manifest, checksum or external immutable link, replay command, constellation plot and EVM/SNR summary. |
-| #29 | The AD9363 gain table records settings, input path, clipping behavior, safe starting values and measurement limitations. The measurement log template is `templates/ad9363-gain-overload-log.md`. |
+| #29 | The first relative table is recorded in `reports/hardware/ad9361-gain-overload-table-20260715.md` with safe starting values and limitations. Full closure requires calibrated passive-path loss, multiple frequencies and a controlled large-signal boundary. |
 
 ## NanoVNA pre-check for safe cabled loopback
 
@@ -65,6 +65,6 @@ A hardware task is done when it has:
 ## Tasks that require hardware
 
 - NanoVNA characterization of the cable and marked 30 dB attenuator used by the measured conducted loopback.
-- AD9363 gain table.
+- Calibrated multi-frequency extension of the AD9363 gain table and controlled large-signal boundary.
 - Receiver large-signal checks.
 - Final measured QPSK or OFDM demo.
