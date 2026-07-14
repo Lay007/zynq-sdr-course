@@ -234,6 +234,8 @@ nav:
           - "Lab 10.2 — Simple attenuator pad": ru/labs/lab-10-2-attenuator-pad.md
           - "Lab 10.3 — RF measurement safety checklist": ru/labs/lab-10-3-rf-measurement-safety-checklist.md
           - "Lab 10.4 — KiCad schematic mini-project": ru/labs/lab-10-4-kicad-schematic-mini-project.md
+          - "Lab 10.5 — NanoVNA и RF Demo Kit": ru/labs/lab-10-5-nanovna-rf-demo-kit.md
+          - "Lab 10.6 — Характеризация цифрового RF-аттенюатора": ru/labs/lab-10-6-digital-attenuator-characterization.md
       - "Лаборатории Block 11":
           - "Lab 11.1 — Project requirements and architecture": ru/labs/lab-11-1-project-requirements-and-architecture.md
           - "Lab 11.2 — End-to-end simulation package": ru/labs/lab-11-2-end-to-end-simulation-package.md
@@ -366,6 +368,8 @@ nav:
           - "Lab 10.2 — Simple attenuator pad": en/labs/lab-10-2-attenuator-pad.md
           - "Lab 10.3 — RF measurement safety checklist": en/labs/lab-10-3-rf-measurement-safety-checklist.md
           - "Lab 10.4 — KiCad schematic mini-project": en/labs/lab-10-4-kicad-schematic-mini-project.md
+          - "Lab 10.5 — NanoVNA and RF Demo Kit": en/labs/lab-10-5-nanovna-rf-demo-kit.md
+          - "Lab 10.6 — Digital RF attenuator characterization": en/labs/lab-10-6-digital-attenuator-characterization.md
       - "Block 11 labs":
           - "Lab 11.1 — Project requirements and architecture": en/labs/lab-11-1-project-requirements-and-architecture.md
           - "Lab 11.2 — End-to-end simulation package": en/labs/lab-11-2-end-to-end-simulation-package.md
