@@ -1,0 +1,18 @@
+{
+  "dataset_id": "conducted_tone_915mhz_700khz_m60db_30db_att",
+  "sample_count_read": 262144,
+  "sample_rate_hz": 3840000.0,
+  "center_frequency_hz": 915000000.0,
+  "duration_s": 0.06826666666666667,
+  "expected_offset_hz": 700000.0,
+  "measured_peak_hz": 700019.53125,
+  "frequency_error_hz": 19.53125,
+  "peak_dbfs": -114.89851920495195,
+  "noise_floor_dbfs": -130.44083509374948,
+  "snr_db": 15.542315888797532,
+  "dc_offset_magnitude": 2.7614947811605815e-06,
+  "clipping_fraction": 0.0,
+  "quality_pass": true,
+  "iq_path": "G:\\Programs\\zynq-sdr-course\\tmp\\conducted_loopback\\qualified_tone_tx_m60_scale005_rx20.ci16",
+  "manifest_path": "G:\\Programs\\zynq-sdr-course\\tmp\\conducted_loopback\\qualified_tone_tx_m60_scale005_rx20.yaml"
+}

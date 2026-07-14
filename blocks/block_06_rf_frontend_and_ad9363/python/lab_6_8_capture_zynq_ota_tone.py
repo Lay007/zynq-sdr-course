@@ -83,6 +83,11 @@ def write_attr_value(channel: Any | None, attr_name: str, value: str | int | flo
             raise
 
 
+def format_hardwaregain_db(value: float) -> str:
+    """Preserve the AD9361 quarter-decibel TX attenuation step."""
+    return f"{value:.2f}"
+
+
 def snapshot_ad9361_state(phy: Any) -> dict[str, str | None]:
     rx_lo = find_channel(phy, "altvoltage0", output=True)
     tx_lo = find_channel(phy, "altvoltage1", output=True)
@@ -206,13 +211,13 @@ def configure_ad9361_tone_capture(phy: Any, args: argparse.Namespace) -> dict[st
         write_attr_value(channel, "sampling_frequency", args.sample_rate_hz)
         write_attr_value(channel, "rf_bandwidth", args.rf_bandwidth_hz)
         write_attr_value(channel, "gain_control_mode", "manual")
-        write_attr_value(channel, "hardwaregain", f"{args.rx_hardwaregain_db:.1f}")
+        write_attr_value(channel, "hardwaregain", format_hardwaregain_db(args.rx_hardwaregain_db))
         write_attr_value(channel, "rf_port_select", args.rx_rf_port_select)
 
     for channel in (tx0, tx1):
         write_attr_value(channel, "sampling_frequency", args.sample_rate_hz)
         write_attr_value(channel, "rf_bandwidth", args.rf_bandwidth_hz)
-        write_attr_value(channel, "hardwaregain", f"{args.tx_hardwaregain_db:.1f}")
+        write_attr_value(channel, "hardwaregain", format_hardwaregain_db(args.tx_hardwaregain_db))
         write_attr_value(channel, "rf_port_select", args.tx_rf_port_select)
 
     return snapshot_ad9361_state(phy)

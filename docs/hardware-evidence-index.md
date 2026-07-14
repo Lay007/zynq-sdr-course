@@ -31,6 +31,7 @@ Use the status values below:
 | Block 11 hardware bring-up summary | `docs/block11-hardware-bringup-summary.md` | measured | compact tracker for current integrated SDR hardware state, blocker and next experiments |
 | Clean-image Zynq RX observation manifest | `datasets/lab6_6_zynq_rx_observation/` | measured | first board-facing RX-only manifest package; keep reports and plots synchronized when new captures are added |
 | Stock-shell Zynq OTA tone observation | `datasets/lab6_8_zynq_ota_tone_observation/` | reviewed | measured `915 MHz / 700 kHz` tone package with manifest, FFT plot, metrics JSON and conservative TX/RX settings |
+| AD9361 conducted tone loopback | `reports/hardware/ad9361-conducted-loopback-20260715.md` | measured | TX1-to-RX1 through a marked 30 dB attenuator passes at 15.54 dB SNR with zero clipping; passive-path NanoVNA `S21` remains pending |
 | Synthetic QPSK replay dataset | `datasets/demo_qpsk_capture/manifest.yaml` | synthetic | deterministic generator, checksum, analyzer and CI thresholds provide replay evidence; measured RF capture remains open |
 | QPSK dual-modem HDL path | `blocks/block_05_fpga_hdl_flow/tb/tb_qpsk_bridge_loopback.v` | synthetic | 140 QPSK symbols / 280 bits cross the course gpreg bridge at BER=0 |
 | Runtime QPSK fabric qualification | `reports/hardware/qpsk-fabric-loopback-qualification-20260707.md` | measured | CDC-fixed payload reaches BER=0 across 4/4 boots and 13/13 selected-offset attempts; selected ExtraTiming payload passes 10/10 fabric attempts |
@@ -71,7 +72,7 @@ Minimum files for one experiment:
 
 The strongest next artifacts are:
 
-1. Issue #25 remainder: a safe cabled loopback capture report with attenuation notes.
+1. Issue #25 remainder: NanoVNA `S21` evidence for the cable and marked 30 dB attenuator used by the measured conducted-loopback report.
 2. Issue #26: a small validated QPSK dataset package.
 3. Issue #29: an AD9363 gain and large-signal characterization table.
 4. Repeat-build or seed evidence that the selected WNS +0.096 ns snapshot keeps useful positive timing margin.

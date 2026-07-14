@@ -30,7 +30,7 @@
 | 03 | Базовые DSP-операции | Executable | Python / MATLAB / C++ path | Добавить демонстрацию порога прямой свёртки против FFT и больше эталонов. |
 | 04 | Simulink и fixed-point | Executable | Python/MATLAB references и BPSK `.slx` models | Сильнее ограничить BPSK-маршрут в Simulink под HDL Coder handoff. |
 | 05 | FPGA / HDL flow | Measured signoff candidate | 18 HDL-тестов; рабочий snapshot полностью разведен, strategy sweep выбрал WNS +0,096 нс, fabric-loopback на плате проходит | Проверить устойчивость выбранной реализации на повторных сборках/seeds. |
-| 06 | RF frontend и AD9363 | Measured | RX-only и tone capture baselines | Построить таблицу усиления AD9363 и проверить безопасный cabled loopback. |
+| 06 | RF frontend и AD9363 | Measured | RX-only, OTA tone и защищённый 30 дБ conducted-tone baseline | Измерить `S21` кабеля/аттенюатора через NanoVNA и построить таблицу усиления AD9363. |
 | 07 | TX/RX тракты | Executable | DUC/DDC demos и loopback models | Добавить пакет измерений. |
 | 08 | Модуляция и синхронизация | Executable | CFO, phase/timing и BER/EVM demos | Добавить sweeps по искажениям и дашборды BER/EVM. |
 | 09 | Инструменты записи и анализа | Measured | CI16/CU8/CF32/WAV readers, fail-closed manifest CI и QPSK multi-burst BER/EVM/CFO analysis | Опубликовать либо внешне архивировать raw QPSK WAV. |

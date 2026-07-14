@@ -9,7 +9,11 @@ MODULE_DIR = Path(__file__).resolve().parents[1] / "blocks" / "block_06_rf_front
 if str(MODULE_DIR) not in sys.path:
     sys.path.insert(0, str(MODULE_DIR))
 
-from lab_6_8_capture_zynq_ota_tone import build_manifest, write_attr_value  # noqa: E402
+from lab_6_8_capture_zynq_ota_tone import (  # noqa: E402
+    build_manifest,
+    format_hardwaregain_db,
+    write_attr_value,
+)
 
 
 class NumericOnlyAttr:
@@ -34,6 +38,11 @@ def test_write_attr_value_strips_display_units_for_hardwaregain() -> None:
     write_attr_value(channel, "hardwaregain", "-89.750000 dB")
 
     assert attr.value == "-89.750000"
+
+
+def test_format_hardwaregain_preserves_quarter_db_step() -> None:
+    assert format_hardwaregain_db(-89.75) == "-89.75"
+    assert format_hardwaregain_db(-40.0) == "-40.00"
 
 
 def test_build_manifest_records_peak_search_window_and_relative_path(tmp_path: Path) -> None:

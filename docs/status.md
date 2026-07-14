@@ -33,7 +33,7 @@ Detailed bring-up logs should live on dedicated evidence pages rather than insid
 | 03 | DSP basics | Executable | Python / MATLAB / C++ path | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
 | 04 | Simulink and fixed-point | Executable | Python/MATLAB references and BPSK `.slx` models | Constrain the BPSK Simulink path further for HDL Coder handoff. |
 | 05 | FPGA / HDL flow | Measured signoff candidate | 18 HDL tests; hardware-working snapshot is fully routed, strategy sweep selects WNS +0.096 ns, and passes board fabric-loopback qualification | Verify repeat-build/seed stability for the selected implementation. |
-| 06 | RF frontend and AD9363 | Measured | RX-only and tone capture baselines | Build the AD9363 gain table and validate safe cabled loopback. |
+| 06 | RF frontend and AD9363 | Measured | RX-only, OTA tone and 30 dB protected conducted-tone baselines | Measure cable/attenuator `S21` with a NanoVNA and build the AD9363 gain table. |
 | 07 | TX/RX chains | Executable | DUC/DDC demos and loopback models | Add measurement package. |
 | 08 | Modulation and synchronization | Executable | CFO, timing, BER/EVM, OFDM mini-link, OFDM PAPR/clipping and CSS dechirp/FFT models with CI metric gates | Add packet-level CSS synchronization, LoRa interoperability evidence and FPGA implementations. |
 | 09 | Recording and analysis tools | Measured | CI16/CU8/CF32/WAV readers, fail-closed manifest CI and QPSK multi-burst BER/EVM/CFO analysis | Publish or externally archive the raw QPSK WAV. |

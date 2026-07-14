@@ -6,7 +6,7 @@ This page separates documentation work from tasks that require real hardware acc
 
 | Priority | Issue | Task | Evidence to collect |
 |---|---:|---|---|
-| P0 | #25 | Validate safe cabled loopback | attenuation value, gain settings, signal-level check, NanoVNA `S21` check of the passive path |
+| P0 | #25 | Complete safe cabled loopback validation | conducted capture/report are measured; add NanoVNA `S21` for the cable and marked 30 dB attenuator |
 | P1 | #26 | Publish and repeat QPSK demo IQ | measured local manifest/plots/metrics exist; add raw-data access and per-burst statistics |
 | P2 | #29 | Add AD9363 gain table | gain settings, measured clipping/SNR behavior; use `templates/ad9363-gain-overload-log.md` during the board session |
 | P2 | #25/#26 | Add final hardware report | report page, figures, limitations |
@@ -23,7 +23,7 @@ This page separates documentation work from tasks that require real hardware acc
 
 | Issue | Done when |
 |---:|---|
-| #25 | The tone-and-IQ-capture portion is closed by Lab 6.8. The remaining loopback portion is done when a safe cabled run has attenuation value, gain settings, capture metadata, FFT plot, NanoVNA evidence for the passive RF path and short conclusion. |
+| #25 | The safe cabled tone run now has nominal attenuation, gain settings, capture metadata, FFT/metrics and a short conclusion in `reports/hardware/ad9361-conducted-loopback-20260715.md`. Full closure still requires NanoVNA `S21` evidence for the cable and marked 30 dB attenuator. |
 | #26 | A small QPSK IQ dataset has a manifest, checksum or external immutable link, replay command, constellation plot and EVM/SNR summary. |
 | #29 | The AD9363 gain table records settings, input path, clipping behavior, safe starting values and measurement limitations. The measurement log template is `templates/ad9363-gain-overload-log.md`. |
 
@@ -64,7 +64,7 @@ A hardware task is done when it has:
 
 ## Tasks that require hardware
 
-- Safe cabled loopback validation after the OTA tone baseline.
+- NanoVNA characterization of the cable and marked 30 dB attenuator used by the measured conducted loopback.
 - AD9363 gain table.
 - Receiver large-signal checks.
 - Final measured QPSK or OFDM demo.
