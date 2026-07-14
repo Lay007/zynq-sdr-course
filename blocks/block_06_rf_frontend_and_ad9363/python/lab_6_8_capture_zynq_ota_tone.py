@@ -11,7 +11,13 @@ from typing import Any
 import yaml
 
 from lab_6_3_probe_iio_context import find_channel, load_iio_module
-from lab_6_6_capture_zynq_rx_only import capture_iq, repo_relative_or_str, sha256_file, write_ci16
+from lab_6_6_capture_zynq_rx_only import (
+    attr_value_for_write,
+    capture_iq,
+    repo_relative_or_str,
+    sha256_file,
+    write_ci16,
+)
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -71,7 +77,7 @@ def write_attr_value(channel: Any | None, attr_name: str, value: str | int | flo
     if attr is None:
         return
     try:
-        attr.value = str(value)
+        attr.value = attr_value_for_write(attr_name, str(value))
     except OSError:
         if strict:
             raise
