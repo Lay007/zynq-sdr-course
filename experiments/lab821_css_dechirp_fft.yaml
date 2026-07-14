@@ -1,0 +1,42 @@
+experiment:
+  id: lab821_css_dechirp_fft
+  title: CSS dechirp and FFT symbol detector
+  objective: Measure CSS symbol error rate versus SNR and normalized carrier-frequency offset.
+
+signal:
+  waveform: generic_css_symbol_bank
+  expected_outputs:
+    - ser_vs_snr_plot
+    - ser_vs_cfo_plot
+    - example_dechirped_fft
+    - detector_metrics_json
+
+metadata_required:
+  - spreading_factor
+  - bandwidth_hz
+  - symbols_per_point
+  - snr_sweep
+  - normalized_cfo_sweep
+  - random_seed
+
+metrics:
+  - symbol_error_rate
+  - compared_symbol_count
+  - peak_to_second_db
+  - noiseless_mapping_permutation_check
+
+reports:
+  template: docs/lab-report-template.md
+  figures:
+    - docs/assets/lab821_css_ser_vs_snr.png
+    - docs/assets/lab821_css_ser_vs_cfo.png
+    - docs/assets/lab821_css_example_fft.png
+  expected_artifacts:
+    - docs/assets/lab821_css_detector_metrics.json
+
+acceptance:
+  - noiseless_symbol_to_bin_mapping_is_one_to_one
+  - example_symbol_is_detected
+  - zero_db_default_seed_has_zero_ser
+  - lowest_snr_point_has_nonzero_ser
+  - normalized_cfo_sensitivity_is_reported

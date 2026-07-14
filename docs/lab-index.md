@@ -22,7 +22,7 @@ This page provides a compact index of course labs. It is intentionally shorter t
 | 05 | 5.1-5.11 | streaming interfaces, RTL mapping, self-checking tests and routed evidence | ci / executable | correlate implementation with board runs |
 | 06 | 6.1-6.8 plus 6.9 extension | frontend setup, artifact interpretation and measurement preparation | partial ci + manual | add a reviewed measurement package |
 | 07 | 7.1-7.5 | chain architecture and link-level metrics | partial ci / executable | add measured examples |
-| 08 | 8.1-8.6 | synchronization, mini-link and coding comparison | ci / executable | add impairment sweeps and dashboards |
+| 08 | 8.1-8.10, 8.20-8.21 | synchronization, QPSK, OFDM mini-link, OFDM PAPR/clipping, coding, SNR/BER traps and executable CSS waveform/detector | ci / executable | add packet-level CSS/LoRa-like synchronization and FPGA mapping |
 | 09 | 9.1-9.5 | metadata, file readers and replay analysis | ci / executable | keep manifests and thresholds synchronized |
 | 10 | 10.1-10.6 | electronics, RF safety, attenuators, NanoVNA/S-parameters and schematic mini-project | manual / measured | add real NanoVNA CSV/Touchstone exports and final edited photos |
 | 11 | 11.1-11.28 | integrated project workflow and bring-up evidence | manual + measured | add controlled-cabled/long-duration statistics and seed/rebuild timing robustness |
@@ -31,6 +31,8 @@ This page provides a compact index of course labs. It is intentionally shorter t
 ## Numbering note
 
 The MkDocs-visible Lab 6.7 is **Zero-IF artifacts**. The separate power-scale material is tracked here as a Block 6 extension, so the lab index no longer conflicts with the navigation tree.
+
+Block 8 uses `8.10-8.19` for OFDM/QAM implementation labs. The CSS track starts at `8.20` so that waveform families remain easy to identify without renumbering the existing synchronization and hardware evidence pages.
 
 ## Recommended assessment path
 

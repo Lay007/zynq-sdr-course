@@ -1,0 +1,40 @@
+experiment:
+  id: lab820_css_waveform
+  title: CSS chirp waveform and symbol mapping
+  objective: Generate an educational CSS symbol and verify dechirp-to-FFT-bin behavior.
+
+signal:
+  waveform: generic_css_upchirp
+  expected_outputs:
+    - instantaneous_frequency_plot
+    - symbol_spectrogram
+    - dechirped_fft
+    - css_metrics_json
+
+metadata_required:
+  - spreading_factor
+  - bandwidth_hz
+  - sample_rate_hz
+  - symbol_index
+  - symbol_duration
+
+metrics:
+  - chips_per_symbol
+  - samples_per_symbol
+  - dechirped_symbol_peak_bin
+  - peak_to_second_db
+  - constant_envelope_error
+
+reports:
+  template: docs/lab-report-template.md
+  figures:
+    - docs/assets/lab820_css_upchirp_frequency.png
+    - docs/assets/lab820_css_symbol_spectrogram.png
+    - docs/assets/lab820_css_dechirped_fft.png
+  expected_artifacts:
+    - docs/assets/lab820_css_metrics.json
+
+acceptance:
+  - constant_envelope_is_preserved
+  - dechirped_peak_matches_symbol_index
+  - css_is_not_claimed_as_complete_lora_phy

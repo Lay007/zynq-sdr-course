@@ -1,0 +1,46 @@
+experiment:
+  id: lab810_ofdm_papr_clipping
+  title: OFDM PAPR, clipping and spectral regrowth
+  objective: Quantify OFDM peak statistics and clipping trade-offs using PAPR, EVM, BER and out-of-band energy.
+
+signal:
+  waveform: oversampled_qpsk_ofdm
+  expected_outputs:
+    - papr_ccdf
+    - clipping_tradeoff_plot
+    - spectral_regrowth_plot
+    - papr_metrics_json
+
+metadata_required:
+  - fft_size
+  - oversampling
+  - occupied_subcarriers
+  - symbol_count
+  - snr_db
+  - clipping_ratios
+  - random_seed
+
+metrics:
+  - median_papr_db
+  - papr_99_percent_db
+  - evm_percent
+  - ber
+  - compared_bits
+  - out_of_band_to_in_band_db
+
+reports:
+  template: docs/lab-report-template.md
+  figures:
+    - docs/assets/lab810_ofdm_papr_ccdf.png
+    - docs/assets/lab810_ofdm_clipping_tradeoff.png
+    - docs/assets/lab810_ofdm_spectral_regrowth.png
+  expected_artifacts:
+    - docs/assets/lab810_ofdm_papr_metrics.json
+
+acceptance:
+  - papr_ccdf_is_reported
+  - clipping_reduces_papr
+  - clipping_increases_evm
+  - severe_clipping_creates_nonzero_ber
+  - spectral_regrowth_is_reported
+  - compared_bit_count_is_reported

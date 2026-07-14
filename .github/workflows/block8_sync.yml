@@ -1,16 +1,18 @@
-name: Block 8 Synchronization
+name: Block 8 Digital PHY
 
 on:
   push:
     branches: [ main ]
     paths:
       - "blocks/block_08_modulation_and_synchronization/**"
+      - "experiments/lab8*.yaml"
       - "requirements.txt"
       - "requirements-dev.txt"
       - ".github/workflows/block8_sync.yml"
   pull_request:
     paths:
       - "blocks/block_08_modulation_and_synchronization/**"
+      - "experiments/lab8*.yaml"
       - "requirements.txt"
       - "requirements-dev.txt"
       - ".github/workflows/block8_sync.yml"
@@ -20,8 +22,8 @@ permissions:
   contents: read
 
 jobs:
-  synchronization-models:
-    name: Run synchronization executable models
+  digital-phy-models:
+    name: Run synchronization, OFDM and CSS models
     runs-on: ubuntu-latest
 
     steps:
@@ -54,6 +56,22 @@ jobs:
         run: |
           python blocks/block_08_modulation_and_synchronization/python/lab_8_4_end_to_end_sync_chain.py
 
+      - name: Run Lab 8.5 OFDM mini link
+        run: |
+          python blocks/block_08_modulation_and_synchronization/python/lab_8_5_ofdm_mini_link.py
+
+      - name: Run Lab 8.10 OFDM PAPR and clipping model
+        run: |
+          python blocks/block_08_modulation_and_synchronization/python/lab_8_10_ofdm_papr_clipping.py
+
+      - name: Run Lab 8.20 CSS waveform model
+        run: |
+          python blocks/block_08_modulation_and_synchronization/python/lab_8_20_css_waveform.py
+
+      - name: Run Lab 8.21 CSS detector model
+        run: |
+          python blocks/block_08_modulation_and_synchronization/python/lab_8_21_css_dechirp_fft.py
+
       - name: Validate generated artifacts
         shell: bash
         run: |
@@ -80,6 +98,22 @@ jobs:
             docs/assets/lab84_sync_evm_stages.png
             docs/assets/lab84_sync_ber_summary.png
             docs/assets/lab84_sync_chain_metrics.json
+            docs/assets/lab85_ofdm_sync_metric.png
+            docs/assets/lab85_ofdm_equalized_constellation.png
+            docs/assets/lab85_ofdm_channel_estimate.png
+            docs/assets/lab85_ofdm_metrics.json
+            docs/assets/lab810_ofdm_papr_ccdf.png
+            docs/assets/lab810_ofdm_clipping_tradeoff.png
+            docs/assets/lab810_ofdm_spectral_regrowth.png
+            docs/assets/lab810_ofdm_papr_metrics.json
+            docs/assets/lab820_css_upchirp_frequency.png
+            docs/assets/lab820_css_symbol_spectrogram.png
+            docs/assets/lab820_css_dechirped_fft.png
+            docs/assets/lab820_css_metrics.json
+            docs/assets/lab821_css_ser_vs_snr.png
+            docs/assets/lab821_css_ser_vs_cfo.png
+            docs/assets/lab821_css_example_fft.png
+            docs/assets/lab821_css_detector_metrics.json
           )
 
           for file in "${expected[@]}"; do
@@ -90,30 +124,67 @@ jobs:
             echo "OK: $file"
           done
 
-      - name: Upload generated synchronization artifacts
+      - name: Validate OFDM and CSS metric gates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          assets = Path("docs/assets")
+
+          ofdm = json.loads((assets / "lab85_ofdm_metrics.json").read_text())
+          ofdm_metrics = ofdm["metrics"]
+          assert ofdm_metrics["ber"] <= 1e-9, ofdm_metrics
+          assert ofdm_metrics["evm_percent"] < 20.0, ofdm_metrics
+          assert abs(ofdm_metrics["cfo_error_hz"]) < 250.0, ofdm_metrics
+          assert ofdm_metrics["compared_bits"] >= 1000, ofdm_metrics
+
+          papr = json.loads((assets / "lab810_ofdm_papr_metrics.json").read_text())
+          papr_metrics = papr["metrics"]
+          assert 5.0 < papr_metrics["median_papr_db"] < 9.0, papr_metrics
+          assert papr_metrics["papr_99_percent_db"] > papr_metrics["median_papr_db"], papr_metrics
+          assert papr_metrics["strongest_clipping_papr_db"] < papr_metrics["median_papr_db"], papr_metrics
+          assert papr_metrics["strongest_clipping_evm_percent"] > papr_metrics["unclipped_evm_percent"], papr_metrics
+          assert papr_metrics["unclipped_ber"] <= 1e-9, papr_metrics
+          assert papr_metrics["strongest_clipping_ber"] > 0.0, papr_metrics
+          assert papr_metrics["compared_bits_per_point"] >= 30000, papr_metrics
+
+          waveform = json.loads((assets / "lab820_css_metrics.json").read_text())
+          waveform_cfg = waveform["config"]
+          waveform_metrics = waveform["metrics"]
+          assert waveform_metrics["constant_envelope_error"] < 1e-9, waveform_metrics
+          assert waveform_metrics["dechirped_symbol_peak_bin"] == waveform_cfg["symbol_index"], waveform
+          assert waveform_metrics["dechirped_peak_to_second_db"] > 40.0, waveform_metrics
+
+          detector = json.loads((assets / "lab821_css_detector_metrics.json").read_text())
+          detector_metrics = detector["metrics"]
+          assert detector_metrics["noiseless_mapping_is_permutation"], detector_metrics
+          assert detector_metrics["example_detected_symbol"] == detector_metrics["example_symbol"], detector_metrics
+          assert detector_metrics["ser_at_zero_db"] <= 0.01, detector_metrics
+          assert detector_metrics["ser_at_lowest_snr"] >= 0.10, detector_metrics
+          assert detector_metrics["worst_cfo_ser"] > detector_metrics["best_cfo_ser"], detector_metrics
+          assert detector_metrics["symbol_count_per_point"] >= 500, detector_metrics
+          PY
+
+      - name: Upload generated Block 8 artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: block8-sync-artifacts
+          name: block8-digital-phy-artifacts
           path: |
-            docs/assets/lab81_cfo_constellation_before.png
-            docs/assets/lab81_cfo_constellation_after.png
-            docs/assets/lab81_cfo_phase_evolution.png
-            docs/assets/lab81_cfo_metrics.json
-            docs/assets/lab82_phase_constellation_before.png
-            docs/assets/lab82_phase_constellation_after_blind.png
-            docs/assets/lab82_phase_constellation_after_dd.png
-            docs/assets/lab82_phase_evm_comparison.png
-            docs/assets/lab82_phase_metrics.json
-            docs/assets/lab83_timing_constellation_wrong_phase.png
-            docs/assets/lab83_timing_constellation_recovered.png
-            docs/assets/lab83_timing_phase_search.png
-            docs/assets/lab83_timing_eye_preview.png
-            docs/assets/lab83_timing_metrics.json
-            docs/assets/lab84_sync_constellation_raw.png
-            docs/assets/lab84_sync_constellation_after_timing.png
-            docs/assets/lab84_sync_constellation_final.png
-            docs/assets/lab84_sync_timing_search.png
-            docs/assets/lab84_sync_evm_stages.png
-            docs/assets/lab84_sync_ber_summary.png
-            docs/assets/lab84_sync_chain_metrics.json
+            docs/assets/lab81_*.png
+            docs/assets/lab81_*.json
+            docs/assets/lab82_*.png
+            docs/assets/lab82_*.json
+            docs/assets/lab83_*.png
+            docs/assets/lab83_*.json
+            docs/assets/lab84_*.png
+            docs/assets/lab84_*.json
+            docs/assets/lab85_*.png
+            docs/assets/lab85_*.json
+            docs/assets/lab810_*.png
+            docs/assets/lab810_*.json
+            docs/assets/lab820_*.png
+            docs/assets/lab820_*.json
+            docs/assets/lab821_*.png
+            docs/assets/lab821_*.json
           if-no-files-found: error

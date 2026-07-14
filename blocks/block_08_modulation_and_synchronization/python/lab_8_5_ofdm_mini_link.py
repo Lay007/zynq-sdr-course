@@ -29,7 +29,9 @@ class OfdmConfig:
 
 @dataclass(frozen=True)
 class OfdmMetrics:
+    coarse_start_sample: int
     estimated_start_sample: int
+    fine_sync_score: float
     estimated_cfo_hz: float
     cfo_error_hz: float
     ber: float
@@ -77,7 +79,11 @@ def schmidl_metric(x: np.ndarray, l_half: int) -> tuple[np.ndarray, np.ndarray]:
     return metric, p_vals
 
 
-def build_preamble(cfg: OfdmConfig, rng: np.random.Generator, used_k: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+def build_preamble(
+    cfg: OfdmConfig,
+    rng: np.random.Generator,
+    used_k: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray]:
     x_fd = np.zeros(cfg.fft_size, dtype=np.complex128)
     even_used = used_k[np.mod(np.abs(used_k), 2) == 0]
     bpsk = 2 * rng.integers(0, 2, size=len(even_used)) - 1
@@ -86,7 +92,11 @@ def build_preamble(cfg: OfdmConfig, rng: np.random.Generator, used_k: np.ndarray
     return add_cp(x_td, cfg.cp_len), x_fd
 
 
-def interpolate_channel(used_k: np.ndarray, x_pre_used: np.ndarray, y_pre_used: np.ndarray) -> np.ndarray:
+def interpolate_channel(
+    used_k: np.ndarray,
+    x_pre_used: np.ndarray,
+    y_pre_used: np.ndarray,
+) -> np.ndarray:
     known = np.where(np.abs(x_pre_used) > 1e-12)[0]
     if len(known) == 0:
         return np.ones(len(used_k), dtype=np.complex128)
@@ -95,6 +105,33 @@ def interpolate_channel(used_k: np.ndarray, x_pre_used: np.ndarray, y_pre_used: 
     h_real = np.interp(pos, known, np.real(h_known))
     h_imag = np.interp(pos, known, np.imag(h_known))
     return h_real + 1j * h_imag
+
+
+def refine_frame_start(
+    x: np.ndarray,
+    template: np.ndarray,
+    coarse_start: int,
+    search_radius: int,
+) -> tuple[int, float]:
+    """Resolve the Schmidl plateau using normalized preamble correlation."""
+    template_energy = float(np.sum(np.abs(template) ** 2))
+    first = max(0, coarse_start - search_radius)
+    last = min(len(x) - len(template), coarse_start + search_radius)
+    best_start = coarse_start
+    best_score = -1.0
+
+    for start in range(first, last + 1):
+        segment = x[start : start + len(template)]
+        segment_energy = float(np.sum(np.abs(segment) ** 2))
+        denominator = np.sqrt(
+            max(template_energy * segment_energy, 1e-15)
+        )
+        score = float(np.abs(np.vdot(template, segment)) / denominator)
+        if score > best_score:
+            best_score = score
+            best_start = start
+
+    return best_start, best_score
 
 
 def main() -> None:
@@ -106,16 +143,33 @@ def main() -> None:
     pilot_k = np.array([-21, -7, 7, 21])
     data_k = np.array([k for k in used_k if k not in set(pilot_k)])
     used_idx = k_to_idx(used_k, cfg.fft_size)
-    pilot_idx_local = np.array([np.where(used_k == k)[0][0] for k in pilot_k], dtype=np.int64)
-    data_idx_local = np.array([np.where(used_k == k)[0][0] for k in data_k], dtype=np.int64)
+    pilot_idx_local = np.array(
+        [np.where(used_k == k)[0][0] for k in pilot_k],
+        dtype=np.int64,
+    )
+    data_idx_local = np.array(
+        [np.where(used_k == k)[0][0] for k in data_k],
+        dtype=np.int64,
+    )
 
     preamble_cp, preamble_fd = build_preamble(cfg, rng, used_k)
 
     bits_per_symbol = 2 * len(data_k)
-    tx_bits = rng.integers(0, 2, size=cfg.ofdm_symbols * bits_per_symbol, dtype=np.uint8)
-    tx_syms_all = qpsk_from_bits(tx_bits).reshape(cfg.ofdm_symbols, len(data_k))
+    tx_bits = rng.integers(
+        0,
+        2,
+        size=cfg.ofdm_symbols * bits_per_symbol,
+        dtype=np.uint8,
+    )
+    tx_syms_all = qpsk_from_bits(tx_bits).reshape(
+        cfg.ofdm_symbols,
+        len(data_k),
+    )
 
-    tx_wave = [np.zeros(cfg.start_padding, dtype=np.complex128), preamble_cp]
+    tx_wave = [
+        np.zeros(cfg.start_padding, dtype=np.complex128),
+        preamble_cp,
+    ]
     pilot_ref = np.array([1.0, 1.0, 1.0, -1.0], dtype=np.complex128)
 
     for s in range(cfg.ofdm_symbols):
@@ -125,28 +179,51 @@ def main() -> None:
         tx_wave.append(add_cp(np.fft.ifft(x_fd), cfg.cp_len))
     tx = np.concatenate(tx_wave)
 
-    taps = np.array([1.0 + 0j, 0.28 * np.exp(1j * 0.35), 0.12 * np.exp(-1j * 0.8)], dtype=np.complex128)
+    taps = np.array(
+        [
+            1.0 + 0j,
+            0.28 * np.exp(1j * 0.35),
+            0.12 * np.exp(-1j * 0.8),
+        ],
+        dtype=np.complex128,
+    )
     delays = np.array([0, 2, 4], dtype=np.int64)
     h = np.zeros(delays[-1] + 1, dtype=np.complex128)
     h[delays] = taps
     ch = np.convolve(tx, h, mode="full")[: len(tx)]
 
     n = np.arange(len(ch), dtype=np.float64)
-    cfo = np.exp(1j * 2.0 * np.pi * cfg.cfo_hz * n / cfg.sample_rate_hz)
+    cfo = np.exp(
+        1j * 2.0 * np.pi * cfg.cfo_hz * n / cfg.sample_rate_hz
+    )
     rx_noisy = ch * cfo
     sig_pow = np.mean(np.abs(rx_noisy) ** 2)
     noise_pow = sig_pow / (10.0 ** (cfg.snr_db / 10.0))
-    noise = np.sqrt(noise_pow / 2.0) * (rng.standard_normal(len(ch)) + 1j * rng.standard_normal(len(ch)))
+    noise = np.sqrt(noise_pow / 2.0) * (
+        rng.standard_normal(len(ch)) + 1j * rng.standard_normal(len(ch))
+    )
     rx = rx_noisy + noise
 
     l_half = cfg.fft_size // 2
     metric, p_vals = schmidl_metric(rx, l_half)
     d_peak = int(np.argmax(metric))
-    start_est = max(d_peak - cfg.cp_len, 0)
-    cfo_est = float(np.angle(p_vals[d_peak]) * cfg.sample_rate_hz / (2.0 * np.pi * l_half))
+    coarse_start = max(d_peak - cfg.cp_len, 0)
+    cfo_est = float(
+        np.angle(p_vals[d_peak])
+        * cfg.sample_rate_hz
+        / (2.0 * np.pi * l_half)
+    )
 
     n_full = np.arange(len(rx), dtype=np.float64)
-    rx_cfo = rx * np.exp(-1j * 2.0 * np.pi * cfo_est * n_full / cfg.sample_rate_hz)
+    rx_cfo = rx * np.exp(
+        -1j * 2.0 * np.pi * cfo_est * n_full / cfg.sample_rate_hz
+    )
+    start_est, fine_sync_score = refine_frame_start(
+        rx_cfo,
+        preamble_cp,
+        coarse_start,
+        2 * cfg.cp_len,
+    )
 
     pre_start = start_est + cfg.cp_len
     pre_end = pre_start + cfg.fft_size
@@ -170,9 +247,15 @@ def main() -> None:
         if en > len(rx_cfo):
             break
         y_fd = np.fft.fft(rx_cfo[st:en])[used_idx]
-        y_eq = y_fd / np.where(np.abs(h_used) > 1e-12, h_used, 1.0 + 0j)
+        y_eq = y_fd / np.where(
+            np.abs(h_used) > 1e-12,
+            h_used,
+            1.0 + 0j,
+        )
 
-        pilot_phase = np.angle(np.vdot(pilot_ref, y_eq[pilot_idx_local]))
+        pilot_phase = np.angle(
+            np.vdot(pilot_ref, y_eq[pilot_idx_local])
+        )
         y_eq = y_eq * np.exp(-1j * pilot_phase)
 
         data_eq = y_eq[data_idx_local]
@@ -191,15 +274,23 @@ def main() -> None:
     eq_flat = np.concatenate(eq_symbols)
     ref_flat = np.concatenate(ref_symbols)
     n_cmp = min(len(eq_flat), len(ref_flat))
-    gain = np.vdot(ref_flat[:n_cmp], eq_flat[:n_cmp]) / max(np.vdot(ref_flat[:n_cmp], ref_flat[:n_cmp]), 1e-15)
+    gain = np.vdot(ref_flat[:n_cmp], eq_flat[:n_cmp]) / max(
+        np.vdot(ref_flat[:n_cmp], ref_flat[:n_cmp]),
+        1e-15,
+    )
     eq_aligned = eq_flat[:n_cmp] / gain
     err = eq_aligned - ref_flat[:n_cmp]
-    evm_rms = np.sqrt(np.mean(np.abs(err) ** 2)) / max(np.sqrt(np.mean(np.abs(ref_flat[:n_cmp]) ** 2)), 1e-15)
+    evm_rms = np.sqrt(np.mean(np.abs(err) ** 2)) / max(
+        np.sqrt(np.mean(np.abs(ref_flat[:n_cmp]) ** 2)),
+        1e-15,
+    )
     evm_percent = float(100.0 * evm_rms)
     evm_db = float(20.0 * np.log10(max(evm_rms, 1e-15)))
 
     metrics = OfdmMetrics(
+        coarse_start_sample=coarse_start,
         estimated_start_sample=start_est,
+        fine_sync_score=fine_sync_score,
         estimated_cfo_hz=cfo_est,
         cfo_error_hz=float(cfo_est - cfg.cfo_hz),
         ber=ber,
@@ -216,11 +307,22 @@ def main() -> None:
 
     plt.figure(figsize=(7.8, 4.3))
     plt.plot(metric, linewidth=1.1)
-    plt.axvline(d_peak, linestyle="--", color="tab:red", label="metric peak")
+    plt.axvline(
+        d_peak,
+        linestyle="--",
+        color="tab:red",
+        label="Schmidl peak",
+    )
+    plt.axvline(
+        start_est + cfg.cp_len,
+        linestyle=":",
+        color="tab:green",
+        label="refined FFT start",
+    )
     plt.grid(True, alpha=0.35)
     plt.xlabel("Sample index")
     plt.ylabel("Schmidl metric")
-    plt.title("Lab 8.5 - OFDM coarse frame synchronization")
+    plt.title("Lab 8.5 - OFDM coarse and refined frame synchronization")
     plt.legend(loc="upper right")
     plt.tight_layout()
     plt.savefig(metric_path, dpi=180)
@@ -228,7 +330,12 @@ def main() -> None:
 
     plt.figure(figsize=(5.1, 5.1))
     shown = min(3500, len(eq_aligned))
-    plt.scatter(np.real(eq_aligned[:shown]), np.imag(eq_aligned[:shown]), s=5, alpha=0.45)
+    plt.scatter(
+        np.real(eq_aligned[:shown]),
+        np.imag(eq_aligned[:shown]),
+        s=5,
+        alpha=0.45,
+    )
     plt.grid(True, alpha=0.35)
     plt.xlabel("I")
     plt.ylabel("Q")
@@ -239,7 +346,10 @@ def main() -> None:
     plt.close()
 
     plt.figure(figsize=(7.5, 4.3))
-    plt.plot(used_k, 20.0 * np.log10(np.maximum(np.abs(h_used), 1e-12)))
+    plt.plot(
+        used_k,
+        20.0 * np.log10(np.maximum(np.abs(h_used), 1e-12)),
+    )
     plt.grid(True, alpha=0.35)
     plt.xlabel("Subcarrier index")
     plt.ylabel("|H|, dB")
@@ -262,8 +372,21 @@ def main() -> None:
     )
 
     print("Lab 8.5 - OFDM mini link")
-    print(f"CFO true/estimated/error: {cfg.cfo_hz:.3f} / {metrics.estimated_cfo_hz:.3f} / {metrics.cfo_error_hz:.3f} Hz")
-    print(f"BER: {metrics.ber:.6e} ({metrics.bit_errors}/{metrics.compared_bits})")
+    print(
+        "Frame start coarse/refined/true: "
+        f"{metrics.coarse_start_sample} / "
+        f"{metrics.estimated_start_sample} / {cfg.start_padding}"
+    )
+    print(f"Fine synchronization score: {metrics.fine_sync_score:.4f}")
+    print(
+        "CFO true/estimated/error: "
+        f"{cfg.cfo_hz:.3f} / {metrics.estimated_cfo_hz:.3f} / "
+        f"{metrics.cfo_error_hz:.3f} Hz"
+    )
+    print(
+        f"BER: {metrics.ber:.6e} "
+        f"({metrics.bit_errors}/{metrics.compared_bits})"
+    )
     print(f"EVM: {metrics.evm_percent:.3f}% ({metrics.evm_db:.2f} dB)")
     print(f"Metrics JSON: {metrics_path}")
 
