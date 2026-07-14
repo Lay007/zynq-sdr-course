@@ -76,6 +76,15 @@ def snapshot_rx_state(phy: Any) -> dict[str, str | None]:
     }
 
 
+def attr_value_for_write(attr_name: str, value: str) -> str:
+    """Convert a displayed IIO attribute value back to its writable form."""
+    if attr_name == "hardwaregain":
+        # Some libiio versions return values such as ``40.000000 dB`` while
+        # the corresponding sysfs attribute accepts only the numeric token.
+        return value.split()[0]
+    return value
+
+
 def restore_rx_state(phy: Any, snapshot: dict[str, str | None]) -> None:
     rx_lo = find_channel(phy, "altvoltage0", output=True)
     rx0 = find_channel(phy, "voltage0", output=False)
@@ -88,7 +97,7 @@ def restore_rx_state(phy: Any, snapshot: dict[str, str | None]) -> None:
         if channel is None or value is None or attr_name not in channel.attrs:
             return
         try:
-            channel.attrs[attr_name].value = value
+            channel.attrs[attr_name].value = attr_value_for_write(attr_name, value)
         except OSError:
             pass
 
