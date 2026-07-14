@@ -60,6 +60,10 @@ jobs:
         run: |
           python blocks/block_08_modulation_and_synchronization/python/lab_8_5_ofdm_mini_link.py
 
+      - name: Run Lab 8.10 OFDM PAPR and clipping model
+        run: |
+          python blocks/block_08_modulation_and_synchronization/python/lab_8_10_ofdm_papr_clipping.py
+
       - name: Run Lab 8.20 CSS waveform model
         run: |
           python blocks/block_08_modulation_and_synchronization/python/lab_8_20_css_waveform.py
@@ -98,6 +102,10 @@ jobs:
             docs/assets/lab85_ofdm_equalized_constellation.png
             docs/assets/lab85_ofdm_channel_estimate.png
             docs/assets/lab85_ofdm_metrics.json
+            docs/assets/lab810_ofdm_papr_ccdf.png
+            docs/assets/lab810_ofdm_clipping_tradeoff.png
+            docs/assets/lab810_ofdm_spectral_regrowth.png
+            docs/assets/lab810_ofdm_papr_metrics.json
             docs/assets/lab820_css_upchirp_frequency.png
             docs/assets/lab820_css_symbol_spectrogram.png
             docs/assets/lab820_css_dechirped_fft.png
@@ -131,6 +139,16 @@ jobs:
           assert abs(ofdm_metrics["cfo_error_hz"]) < 250.0, ofdm_metrics
           assert ofdm_metrics["compared_bits"] >= 1000, ofdm_metrics
 
+          papr = json.loads((assets / "lab810_ofdm_papr_metrics.json").read_text())
+          papr_metrics = papr["metrics"]
+          assert 5.0 < papr_metrics["median_papr_db"] < 9.0, papr_metrics
+          assert papr_metrics["papr_99_percent_db"] > papr_metrics["median_papr_db"], papr_metrics
+          assert papr_metrics["strongest_clipping_papr_db"] < papr_metrics["median_papr_db"], papr_metrics
+          assert papr_metrics["strongest_clipping_evm_percent"] > papr_metrics["unclipped_evm_percent"], papr_metrics
+          assert papr_metrics["unclipped_ber"] <= 1e-9, papr_metrics
+          assert papr_metrics["strongest_clipping_ber"] > 0.0, papr_metrics
+          assert papr_metrics["compared_bits_per_point"] >= 30000, papr_metrics
+
           waveform = json.loads((assets / "lab820_css_metrics.json").read_text())
           waveform_cfg = waveform["config"]
           waveform_metrics = waveform["metrics"]
@@ -163,6 +181,8 @@ jobs:
             docs/assets/lab84_*.json
             docs/assets/lab85_*.png
             docs/assets/lab85_*.json
+            docs/assets/lab810_*.png
+            docs/assets/lab810_*.json
             docs/assets/lab820_*.png
             docs/assets/lab820_*.json
             docs/assets/lab821_*.png
