@@ -220,6 +220,9 @@ nav:
           - "Lab 8.5 — OFDM mini link": ru/labs/lab-8-5-ofdm-mini-link.md
           - "Lab 8.6 — Channel coding BER comparison": ru/labs/lab-8-6-channel-coding-ber-comparison.md
           - "Lab 8.7 — SNR vs BER traps": ru/labs/lab-8-7-snr-vs-ber-traps.md
+          - "Lab 8.10 — OFDM: PAPR, clipping и спектральный рост": ru/labs/lab-8-10-ofdm-papr-clipping.md
+          - "Lab 8.20 — CSS: chirp-сигнал и кодирование символа": ru/labs/lab-8-20-css-waveform.md
+          - "Lab 8.21 — CSS: dechirp и FFT-детектор": ru/labs/lab-8-21-css-dechirp-fft.md
       - "Лаборатории Block 9":
           - "Lab 9.1 — IQ file format and metadata": ru/labs/lab-9-1-iq-file-format-and-metadata.md
           - "Lab 9.2 — Read CI16 IQ and analyze spectrum": ru/labs/lab-9-2-read-ci16-iq-and-analyze.md
@@ -349,6 +352,9 @@ nav:
           - "Lab 8.4 — End-to-end sync chain": en/labs/lab-8-4-end-to-end-sync-chain.md
           - "Lab 8.5 — OFDM mini link": en/labs/lab-8-5-ofdm-mini-link.md
           - "Lab 8.6 — Channel coding BER comparison": en/labs/lab-8-6-channel-coding-ber-comparison.md
+          - "Lab 8.10 — OFDM PAPR, clipping and spectral regrowth": en/labs/lab-8-10-ofdm-papr-clipping.md
+          - "Lab 8.20 — CSS waveform and symbol mapping": en/labs/lab-8-20-css-waveform.md
+          - "Lab 8.21 — CSS dechirp and FFT detector": en/labs/lab-8-21-css-dechirp-fft.md
       - "Block 9 labs":
           - "Lab 9.1 — IQ file format and metadata": en/labs/lab-9-1-iq-file-format-and-metadata.md
           - "Lab 9.2 — Read CI16 IQ and analyze spectrum": en/labs/lab-9-2-read-ci16-iq-and-analyze.md
