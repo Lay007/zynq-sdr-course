@@ -61,3 +61,16 @@ def test_loopback_mode_bits_selects_fabric_or_ad9361_source() -> None:
     assert loopback_mode_bits("fabric", "raw") == 0x50
     assert loopback_mode_bits("ad9361", "raw") == 0x30
     assert loopback_mode_bits("ad9361", "fifo") == 0x10
+    assert loopback_mode_bits("rf", "raw") == 0x630
+    assert loopback_mode_bits("rf", "fifo") == 0x610
+
+
+def test_summarize_rf_sweep_names_physical_path() -> None:
+    summary = summarize_sweep(
+        [{"start_offset": 62, "received_symbols": 140, "total_bit_errors": 0}],
+        symbol_count=140,
+        loopback="rf",
+    )
+
+    assert summary["mode"] == "qpsk_rf_path"
+    assert "QPSK RF path reached BER=0" in summary["conclusion"]

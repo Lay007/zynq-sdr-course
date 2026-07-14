@@ -35,7 +35,7 @@
 | 08 | Модуляция и синхронизация | Executable | CFO, phase/timing и BER/EVM demos | Добавить sweeps по искажениям и дашборды BER/EVM. |
 | 09 | Инструменты записи и анализа | Measured | CI16/CU8/CF32/WAV readers, fail-closed manifest CI и QPSK multi-burst BER/EVM/CFO analysis | Опубликовать либо внешне архивировать raw QPSK WAV. |
 | 10 | KiCad и базовая электроника | Draft | Calculators и templates | Добавить фото макета и экспорты из KiCad. |
-| 11 | Интегрированный SDR-проект | QPSK measured internally and externally | Текущий ExtraTiming payload: WNS +0,096 нс и 10/10 fabric-попыток с BER=0; внешний RTL-SDR baseline: 3/3 сессии, 90/90 burst и 0/25 200 бит | Добавить controlled cabled evidence и стабилизировать RTL-SDR capture для длинных серий. |
+| 11 | Интегрированный SDR-проект | QPSK measured internally and externally; conducted partial | ExtraTiming: WNS +0,096 нс и 10/10 fabric-попыток с BER=0; внешний RTL-SDR baseline: 3/3 сессии, 90/90 burst и 0/25 200 бит; защищённый кабельный baseline: BPSK 204/281 бит и QPSK 139/140 символов, но BER ещё не закрыт | Стабилизировать runtime RX source/scaling и межкадровую фазу дискретизации, затем повторить длинную cabled BER-серию. |
 | 12 | Итоговые проекты | Measured cross-session example | Заполненный отчёт, внутренняя QPSK qualification и трёхсессионный внешний OTA baseline | Добавить calibrated cabled и longer-duration statistics на стабильном capture backend. |
 
 ## Недавно добавленные артефакты для усиления курса

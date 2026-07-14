@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Lab 11.27 - Runtime QPSK digital-loopback BER on the dual-modem bridge.
+"""Lab 11.27 - Runtime QPSK BER on the dual-modem bridge.
 
 Same runtime plane as the BPSK bring-up of Lab 11.19 (upload the overlay, reload
 via the FPGA manager, configure the AD9361, run the self-timed BER core through
-the DAC->ADC digital loopback, reboot to stock), but flips gp_ctrl[4]=1 to select
+the selected PL/AD9361/RF path, reboot to stock), but flips gp_ctrl[4]=1 to select
 the QPSK core added to the course bridge. gp_frame_bit_count is reinterpreted as
 the QPSK *symbol* count (2 bits/symbol) and gp_start_offset is swept until a full
 frame decodes at BER=0 — exactly the host-retry strategy the BPSK path uses.
@@ -81,6 +81,8 @@ DEFAULT_JSON_STEM = "lab1127_runtime_qpsk_digital_loopback"
 DEFAULT_REBOOT_TIMEOUT_S = 120.0
 
 QPSK_MODE_BITS = 0x10          # gp_ctrl[4] selects the QPSK core
+RF_DC_BLOCK_BITS = 0x200       # gp_ctrl[9] removes AD9361 LO-leakage DC
+RF_COSTAS_BITS = 0x400         # gp_ctrl[10] enables QPSK carrier recovery
 DEFAULT_SYMBOL_COUNT = 140     # QPSK symbols == the loopback frame the sim proved
 # The QPSK BER counter uses fixed alignment (no preamble sync), so the working
 # sampling phase is found by sweeping start_offset like the BPSK host retry.
@@ -152,11 +154,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--rx-source", choices=["raw", "fifo"], default="raw")
     parser.add_argument(
         "--loopback",
-        choices=["ad9361", "fabric"],
+        choices=["ad9361", "fabric", "rf"],
         default="ad9361",
         help=(
             "ad9361 uses the transceiver BIST path; fabric loops modem TX directly "
-            "to modem RX inside the PL and does not configure or transmit through AD9361"
+            "to modem RX inside the PL; rf transmits through TX1 and receives through RX1 "
+            "without enabling either internal loopback"
         ),
     )
     parser.add_argument("--run-tag", default=None)
@@ -173,10 +176,10 @@ def qpsk_ber_once(runner, base_addr: int, symbol_count: int, offset: int,
     keeps the sweep from opening hundreds of SSH channels — the failure mode that
     exhausted dropbear when each devmem op was its own exec_command.
 
-    mode_bits sets the quasi-static gp_ctrl bits held across the burst: 0x10 =
-    QPSK core select (gp_ctrl[4]); OR 0x20 = raw axi_ad9361 ADC RX source
-    (gp_ctrl[5]) for the digital-loopback path. start pulses bit0, clear pulses
-    bit1 on top of mode_bits.
+    mode_bits sets the quasi-static gp_ctrl bits held across the burst. The QPSK
+    core uses gp_ctrl[4], the optional raw ADC source uses gp_ctrl[5], and the RF
+    path additionally uses gp_ctrl[9:10] for DC blocking and carrier recovery.
+    Start pulses bit0 and clear pulses bit1 on top of mode_bits.
     """
     a_ctrl = f"0x{base_addr + 0x404:X}"
     a_frame = f"0x{base_addr + 0x444:X}"
@@ -239,7 +242,9 @@ def qpsk_ber_once(runner, base_addr: int, symbol_count: int, offset: int,
 def loopback_mode_bits(loopback: str, rx_source: str) -> int:
     if loopback == "fabric":
         return QPSK_MODE_BITS | 0x40
-    return QPSK_MODE_BITS | (0x20 if rx_source == "raw" else 0x00)
+    source_bits = 0x20 if rx_source == "raw" else 0x00
+    rf_bits = RF_DC_BLOCK_BITS | RF_COSTAS_BITS if loopback == "rf" else 0x00
+    return QPSK_MODE_BITS | source_bits | rf_bits
 
 
 def set_bist_digital_loopback(runner, enable: bool) -> str:
@@ -269,19 +274,20 @@ def summarize_sweep(
     elif full:
         best = min(full, key=lambda r: int(r["total_bit_errors"]))
 
+    path_name = "RF path" if loopback == "rf" else "digital loopback"
     if zero:
         conclusion = (
-            f"QPSK digital loopback reached BER=0: {symbol_count} symbols / "
+            f"QPSK {path_name} reached BER=0: {symbol_count} symbols / "
             f"{2 * symbol_count} bits recovered with 0 errors at start_offset="
             f"{best['start_offset']}."
         )
     elif full:
         conclusion = (
-            "QPSK digital loopback recovered a full frame but with residual bit errors; "
+            f"QPSK {path_name} recovered a full frame but with residual bit errors; "
             "sampling phase is aligned, remaining errors are a tuning problem."
         )
     else:
-        conclusion = "QPSK digital loopback did not reach a full frame at any swept start_offset."
+        conclusion = f"QPSK {path_name} did not reach a full frame at any swept start_offset."
 
     attempts_by_offset: list[dict[str, Any]] = []
     for offset in sorted({int(row["start_offset"]) for row in sweep}):
@@ -308,7 +314,7 @@ def summarize_sweep(
         conclusion += f" Repeatability: {zero_error_attempts}/{total_attempts} attempts reached BER=0."
 
     return {
-        "mode": f"qpsk_{loopback}_loopback",
+        "mode": "qpsk_rf_path" if loopback == "rf" else f"qpsk_{loopback}_loopback",
         "symbol_count": symbol_count,
         "bit_count": 2 * symbol_count,
         "total_attempts": total_attempts,
@@ -402,7 +408,7 @@ def main() -> int:
         payload["gpreg_after_reload"] = probe_gpreg_id(io)
         force_rx_common_ctrl_request(runner, value=args.rx_common_ctrl_value)
 
-        if args.loopback == "ad9361":
+        if args.loopback in {"ad9361", "rf"}:
             if args.rebind_runtime_dds_driver:
                 rebind_platform_driver(runner, driver_name=DEFAULT_DDS_DRIVER_NAME,
                                        device_name=DEFAULT_DDS_DEVICE_NAME)
@@ -425,9 +431,13 @@ def main() -> int:
                 disable_dds_tones(dds)
 
             # Enable the AD9361 internal digital loopback — no RF or carrier offset.
-            payload["bist_loopback"] = set_bist_digital_loopback(io.runner, True)
-            bist_enabled = True
-            print("digital loopback:", payload["bist_loopback"])
+            if args.loopback == "ad9361":
+                payload["bist_loopback"] = set_bist_digital_loopback(io.runner, True)
+                bist_enabled = True
+                print("digital loopback:", payload["bist_loopback"])
+            else:
+                payload["bist_loopback"] = "skipped: physical RF path"
+                print("RF path: internal loopbacks disabled; using physical TX1/RX1")
         else:
             payload["bist_loopback"] = "skipped: PL fabric loopback"
             print("fabric loopback: gp_ctrl[6]=1; AD9361 configuration skipped")
@@ -513,7 +523,7 @@ def main() -> int:
     payload["summary"] = summarize_sweep(payload["sweep"], args.symbol_count, args.loopback)
     json_out.write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
-    print("Lab 11.27 - Runtime QPSK digital-loopback BER")
+    print("Lab 11.27 - Runtime QPSK BER")
     print(f"JSON: {json_out}")
     print(f"Conclusion: {payload['summary'].get('conclusion')}")
     return 0

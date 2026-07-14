@@ -38,7 +38,7 @@ Detailed bring-up logs should live on dedicated evidence pages rather than insid
 | 08 | Modulation and synchronization | Executable | CFO, timing, BER/EVM, OFDM mini-link, OFDM PAPR/clipping and CSS dechirp/FFT models with CI metric gates | Add packet-level CSS synchronization, LoRa interoperability evidence and FPGA implementations. |
 | 09 | Recording and analysis tools | Measured | CI16/CU8/CF32/WAV readers, fail-closed manifest CI and QPSK multi-burst BER/EVM/CFO analysis | Publish or externally archive the raw QPSK WAV. |
 | 10 | KiCad and basic electronics | Draft | Calculators and templates | Add measured breadboard photos and KiCad exports. |
-| 11 | Integrated SDR project | QPSK measured internally and externally | Current ExtraTiming payload: WNS +0.096 ns and 10/10 fabric attempts at BER=0; external RTL-SDR baseline: 3/3 sessions, 90/90 bursts and 0/25,200 bits | Add controlled cabled evidence and stabilize RTL-SDR capture for longer runs. |
+| 11 | Integrated SDR project | QPSK measured internally and externally; conducted partial | ExtraTiming: WNS +0.096 ns and 10/10 fabric attempts at BER=0; external RTL-SDR baseline: 3/3 sessions, 90/90 bursts and 0/25,200 bits; protected cable baseline: BPSK 204/281 bits and QPSK 139/140 symbols, with BER not yet closed | Stabilize runtime RX source/scaling and inter-burst sample phase, then repeat a long cabled BER series. |
 | 12 | Final projects | Measured cross-session example | Filled report plus internal QPSK qualification and three-session external OTA baseline | Add calibrated cabled and longer-duration statistics on a stable capture backend. |
 
 ## Hardware validation priorities
