@@ -2,13 +2,13 @@
 
 ## Result
 
-A short TX1-to-RX1 conducted loopback through a marked 30 dB fixed attenuator
+A short TX1-to-RX1 conducted loopback through a measured 30 dB fixed attenuator
 produced a clean DDS tone without ADC clipping. The conservative accepted point
 used TX attenuation `-60 dB`, DDS scale `0.05` and manual RX gain `20 dB`.
 
 | Parameter | Value |
 |---|---:|
-| RF chain | TX1 -> coax -> marked 30 dB attenuator -> RX1 |
+| RF chain | TX1 -> coax -> measured 30 dB attenuator -> RX1 |
 | Center frequency | 915 MHz |
 | DDS offset | +700 kHz |
 | Sample rate | 3.84 MS/s |
@@ -88,6 +88,10 @@ internal loopback.
 | BPSK conducted, self-timed | `662222122c76331e793d1049e42a2507` | TX -60 dB, RX 30 dB | best run 204/281 bits, 90 errors, timed out |
 | QPSK conducted, fixed phase | `662222122c76331e793d1049e42a2507` | TX -60 dB, RX 30 dB | best run 139/140 symbols, 129 errors |
 | QPSK conducted, DC blocker + Costas, raw ADC | `e5f91b5271ce3295ffcb1088ee477405` | TX -40 dB, RX 30 dB | 0/10 preamble locks at offset 108 |
+| QPSK phase-picker fabric qualification | `b916ea6f67ec91834e3441a031338a3e` | RF skipped | 3/3 frames, 140/140 symbols, BER = 0 |
+| QPSK conducted, phase picker + Costas, raw ADC | `b916ea6f67ec91834e3441a031338a3e` | TX -60 dB, RX 30 dB | 1/24 full frames; best 140/140 symbols, 142/280 errors at offset 2 |
+| QPSK conducted, phase picker + Costas, RX FIFO | `b916ea6f67ec91834e3441a031338a3e` | TX -60 dB, RX 30 dB | 0/24 full frames |
+| BPSK conducted control on final payload | `b916ea6f67ec91834e3441a031338a3e` | TX -60 dB, RX 30 dB | 214/281 bits, 99 errors, timed out |
 
 The BPSK result improved from 89 to 204 received bits when TX attenuation moved
 from -70 to -60 dB, but the capture debug peak stayed at 29--30 counts and the
@@ -106,6 +110,26 @@ The legacy `bridge_rx_only` host-TX control was also repeated. It again left
 `rx_valid_count` at zero, confirming that image is not a valid fallback for this
 measurement.
 
+The next payload integrated the already-tested eight-phase matched-filter picker
+into the runtime QPSK chain. Its first implementation exposed a real 250 MHz
+timing failure (`WNS -4.635 ns`) and was rejected without loading the board. The
+picker argmax was changed from a seven-comparator combinational chain to one
+comparison per phase during the last measurement symbol; its dynamic delay tap
+was also restricted to the eight reachable samples. The final implementation
+meets all timing constraints with `WNS +0.129 ns`, `WHS +0.051 ns`, zero failing
+endpoints and zero DRC errors. The word-swapped payload is 2,507,608 bytes with
+SHA256 `812D0825B313C8340015C448679FE5A0A4FB56E21A833B22D89AC2ED5D349628`.
+
+The raw conducted capture peaks at only 27--30 ADC counts. The former signal
+gate of 1000 therefore kept both the picker and Costas loop frozen. A bridge-only
+threshold of 8 passes the captured 3000-sample leading-noise stress test at BER
+0/280 and, on hardware, changes the result from no QPSK locks to one complete
+140-symbol frame. Its 142/280 residual errors are near the random half-bit floor,
+so sample phase and frame length are no longer the primary blocker; carrier or
+constellation recovery on the raw RX source is. The FIFO source never produced a
+full frame and is not a fallback. The BPSK control remained partial (214/281), so
+the QPSK-only changes did not falsely close or mask the BPSK limitation.
+
 Evidence:
 
 - `docs/assets/lab1119_bpsk_conducted_20260715.json`
@@ -119,11 +143,13 @@ readback again showed TX LO powered down, TX attenuation `-89.75 dB`, LO at
 
 ## Limitations and conclusion
 
-The attenuator value is the marked nominal value; its `S21` and the cable loss
-have not yet been measured with a NanoVNA. Therefore this run proves safe
+The attenuator was subsequently checked at 30 dB with a flat response from
+50 MHz to 1 GHz, covering the 915 MHz test frequency. Cable loss was not
+measured separately, so this is a calibrated attenuator value rather than an
+absolute connector-to-connector power calibration. The run proves safe
 conducted signal flow, frequency-plan correctness and absence of overload. It
-also reconfirms the QPSK modem in fabric and observes partial BPSK/QPSK frames
+also reconfirms the QPSK modem in fabric and now recovers a complete QPSK frame
 through the real cable, but it does not yet claim end-to-end conducted BER
-success or an absolute RF power calibration. Issue #25 still needs the passive
-path `S21` measurement, and the runtime RX timing/source blocker above must be
-closed.
+success because that frame contains 142/280 bit errors. The remaining blocker is
+raw-path carrier/constellation recovery; BPSK timing recovery also remains
+partial.

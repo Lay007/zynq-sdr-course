@@ -17,6 +17,7 @@ module qpsk_zynq_ber_top #(
     parameter integer RX_IDLE_TIMEOUT_CYCLES = 4096,
     parameter integer LOCK_PREAMBLE_BITS = 8,   // frame-sync correlation window (24 for OTA)
     parameter integer LOCK_ERR_TOL = 0,         // 0 = exact lock; >0 = OTA-robust correlation lock
+    parameter integer RX_SIG_THRESH = 1000,     // matched-filter/symbol |I|+|Q| signal gate
     // Extra symbols the RX sampler emits beyond the frame length. On a real OTA link
     // the frame arrives after the AD9361 TX+RX group delay (hundreds of samples), so
     // a sampler window == frame length misses the late frame. This margin lets the
@@ -34,6 +35,7 @@ module qpsk_zynq_ber_top #(
     input  wire [INDEX_W-1:0]       start_offset,
     input  wire                     dc_block_en,    // 1 = RX DC blocker on (OTA); 0 = passthrough
     input  wire                     costas_en,      // 1 = carrier recovery on (OTA); 0 = passthrough
+    input  wire                     phase_pick_en,  // 1 = feedforward burst timing phase selection
     // 1 = carry the acquired carrier phase from one burst into the next instead of
     // restarting the loop at zero. Sound when the RF path phase is quasi-static (a single
     // board talking to itself); harmless otherwise, the loop simply re-acquires.
@@ -113,6 +115,7 @@ qpsk_rx_bit_recovery_chain #(
     .W(W),
     .SPS(SPS),
     .INDEX_W(INDEX_W),
+    .COSTAS_SIG_THRESH(RX_SIG_THRESH),
     .COEF_FILE(COEF_FILE)
 ) rx_chain_i (
     .clk(clk),
@@ -122,6 +125,7 @@ qpsk_rx_bit_recovery_chain #(
     .rst_carrier(rst || (frame_start && !costas_hold_phase)),
     .dc_block_en(dc_block_en),
     .costas_en(costas_en),
+    .phase_pick_en(phase_pick_en),
     .in_valid(rx_valid),
     .in_i(rx_i),
     .in_q(rx_q),

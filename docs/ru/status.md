@@ -30,12 +30,12 @@
 | 03 | Базовые DSP-операции | Executable | Python / MATLAB / C++ path | Добавить демонстрацию порога прямой свёртки против FFT и больше эталонов. |
 | 04 | Simulink и fixed-point | Executable | Python/MATLAB references и BPSK `.slx` models | Сильнее ограничить BPSK-маршрут в Simulink под HDL Coder handoff. |
 | 05 | FPGA / HDL flow | Measured signoff candidate | 18 HDL-тестов; рабочий snapshot полностью разведен, strategy sweep выбрал WNS +0,096 нс, fabric-loopback на плате проходит | Проверить устойчивость выбранной реализации на повторных сборках/seeds. |
-| 06 | RF frontend и AD9363 | Measured | RX-only, OTA tone, защищённый conducted-tone baseline и первая относительная gain table | Измерить `S21`, повторить таблицу по частоте и определить калиброванный large-signal limit. |
+| 06 | RF frontend и AD9363 | Measured | RX-only, OTA tone, защищённый conducted-tone baseline, первая относительная gain table и измеренный аттенюатор 30 дБ с ровной характеристикой 50 МГц–1 ГГц | Отдельно измерить потери кабеля, повторить таблицу по частоте и определить connector-to-connector large-signal limit. |
 | 07 | TX/RX тракты | Executable | DUC/DDC demos и loopback models | Добавить пакет измерений. |
 | 08 | Модуляция и синхронизация | Executable | CFO, phase/timing и BER/EVM demos | Добавить sweeps по искажениям и дашборды BER/EVM. |
 | 09 | Инструменты записи и анализа | Measured | CI16/CU8/CF32/WAV readers, fail-closed manifest CI и QPSK multi-burst BER/EVM/CFO analysis | Опубликовать либо внешне архивировать raw QPSK WAV. |
 | 10 | KiCad и базовая электроника | Draft | Calculators и templates | Добавить фото макета и экспорты из KiCad. |
-| 11 | Интегрированный SDR-проект | QPSK measured internally and externally; conducted partial | ExtraTiming: WNS +0,096 нс и 10/10 fabric-попыток с BER=0; внешний RTL-SDR baseline: 3/3 сессии, 90/90 burst и 0/25 200 бит; защищённый кабельный baseline: BPSK 204/281 бит и QPSK 139/140 символов, но BER ещё не закрыт | Стабилизировать runtime RX source/scaling и межкадровую фазу дискретизации, затем повторить длинную cabled BER-серию. |
+| 11 | Интегрированный SDR-проект | QPSK measured internally and externally; conducted full-frame partial | Payload с phase picker: routed WNS +0,129 нс, 3/3 fabric-кадра с BER=0; защищённый raw-ADC кабельный прогон теперь достигает QPSK 140/140 символов с 142/280 ошибками, BPSK — 214/281 бит | Настроить восстановление несущей/созвездия на raw RX source, затем повторить длинную cabled BER-серию. |
 | 12 | Итоговые проекты | Measured cross-session example | Заполненный отчёт, внутренняя QPSK qualification и трёхсессионный внешний OTA baseline | Добавить calibrated cabled и longer-duration statistics на стабильном capture backend. |
 
 ## Недавно добавленные артефакты для усиления курса

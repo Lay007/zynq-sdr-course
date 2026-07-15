@@ -10,6 +10,7 @@ if str(MODULE_DIR) not in sys.path:
 
 from lab_11_27_runtime_qpsk_digital_loopback import (  # noqa: E402
     loopback_mode_bits,
+    resolve_start_offsets,
     summarize_sweep,
 )
 
@@ -61,8 +62,8 @@ def test_loopback_mode_bits_selects_fabric_or_ad9361_source() -> None:
     assert loopback_mode_bits("fabric", "raw") == 0x50
     assert loopback_mode_bits("ad9361", "raw") == 0x30
     assert loopback_mode_bits("ad9361", "fifo") == 0x10
-    assert loopback_mode_bits("rf", "raw") == 0x630
-    assert loopback_mode_bits("rf", "fifo") == 0x610
+    assert loopback_mode_bits("rf", "raw") == 0x1630
+    assert loopback_mode_bits("rf", "fifo") == 0x1610
 
 
 def test_summarize_rf_sweep_names_physical_path() -> None:
@@ -74,3 +75,9 @@ def test_summarize_rf_sweep_names_physical_path() -> None:
 
     assert summary["mode"] == "qpsk_rf_path"
     assert "QPSK RF path reached BER=0" in summary["conclusion"]
+
+
+def test_rf_default_sweeps_only_the_eight_picker_phases() -> None:
+    assert resolve_start_offsets("rf", None) == list(range(8))
+    assert resolve_start_offsets("fabric", None) != list(range(8))
+    assert resolve_start_offsets("rf", [3, 7]) == [3, 7]

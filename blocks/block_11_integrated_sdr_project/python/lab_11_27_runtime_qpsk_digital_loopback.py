@@ -83,9 +83,10 @@ DEFAULT_REBOOT_TIMEOUT_S = 120.0
 QPSK_MODE_BITS = 0x10          # gp_ctrl[4] selects the QPSK core
 RF_DC_BLOCK_BITS = 0x200       # gp_ctrl[9] removes AD9361 LO-leakage DC
 RF_COSTAS_BITS = 0x400         # gp_ctrl[10] enables QPSK carrier recovery
+RF_PHASE_PICK_BITS = 0x1000    # gp_ctrl[12] picks the strongest matched-filter phase
 DEFAULT_SYMBOL_COUNT = 140     # QPSK symbols == the loopback frame the sim proved
-# The QPSK BER counter uses fixed alignment (no preamble sync), so the working
-# sampling phase is found by sweeping start_offset like the BPSK host retry.
+# The sampler remains fixed-phase downstream of the picker, so RF only needs the
+# eight residual sample phases while coherent legacy paths retain their wider sweep.
 DEFAULT_START_OFFSETS = list(range(96, 132))
 
 
@@ -104,6 +105,12 @@ def parse_offsets(value: str) -> list[int]:
     return offsets
 
 
+def resolve_start_offsets(loopback: str, offsets: list[int] | None) -> list[int]:
+    if offsets is not None:
+        return offsets
+    return list(range(8)) if loopback == "rf" else list(DEFAULT_START_OFFSETS)
+
+
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--ssh-host", default=DEFAULT_HOST)
@@ -118,8 +125,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument("--expected-id", type=parse_int, default=DEFAULT_EXPECTED_ID)
     parser.add_argument("--symbol-count", type=int, default=DEFAULT_SYMBOL_COUNT)
     parser.add_argument("--start-offsets", type=parse_offsets,
-                        default=DEFAULT_START_OFFSETS,
-                        help="comma-separated start_offset values to sweep")
+                        default=None,
+                        help=("comma-separated start_offset values to sweep; defaults to 0..7 "
+                              "for the RF phase picker and the legacy timing sweep otherwise"))
     parser.add_argument("--retries", type=int, default=6,
                         help="bursts per start_offset (best kept); rides out per-burst jitter")
     parser.add_argument(
@@ -178,7 +186,8 @@ def qpsk_ber_once(runner, base_addr: int, symbol_count: int, offset: int,
 
     mode_bits sets the quasi-static gp_ctrl bits held across the burst. The QPSK
     core uses gp_ctrl[4], the optional raw ADC source uses gp_ctrl[5], and the RF
-    path additionally uses gp_ctrl[9:10] for DC blocking and carrier recovery.
+    path additionally uses gp_ctrl[9:10] for DC blocking and carrier recovery,
+    plus gp_ctrl[12] for feedforward burst timing.
     Start pulses bit0 and clear pulses bit1 on top of mode_bits.
     """
     a_ctrl = f"0x{base_addr + 0x404:X}"
@@ -243,7 +252,11 @@ def loopback_mode_bits(loopback: str, rx_source: str) -> int:
     if loopback == "fabric":
         return QPSK_MODE_BITS | 0x40
     source_bits = 0x20 if rx_source == "raw" else 0x00
-    rf_bits = RF_DC_BLOCK_BITS | RF_COSTAS_BITS if loopback == "rf" else 0x00
+    rf_bits = (
+        RF_DC_BLOCK_BITS | RF_COSTAS_BITS | RF_PHASE_PICK_BITS
+        if loopback == "rf"
+        else 0x00
+    )
     return QPSK_MODE_BITS | source_bits | rf_bits
 
 
@@ -334,6 +347,7 @@ def main() -> int:
     args = parser.parse_args()
     if args.retries < 1:
         parser.error("--retries must be at least 1")
+    args.start_offsets = resolve_start_offsets(args.loopback, args.start_offsets)
     bit_bin_path = args.bit_bin_path.resolve()
     if not bit_bin_path.exists():
         raise SystemExit(f"Missing runtime payload: {bit_bin_path}")

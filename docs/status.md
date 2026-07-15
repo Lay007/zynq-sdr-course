@@ -33,12 +33,12 @@ Detailed bring-up logs should live on dedicated evidence pages rather than insid
 | 03 | DSP basics | Executable | Python / MATLAB / C++ path | Add direct-vs-FFT convolution threshold demo and more reference outputs. |
 | 04 | Simulink and fixed-point | Executable | Python/MATLAB references and BPSK `.slx` models | Constrain the BPSK Simulink path further for HDL Coder handoff. |
 | 05 | FPGA / HDL flow | Measured signoff candidate | 18 HDL tests; hardware-working snapshot is fully routed, strategy sweep selects WNS +0.096 ns, and passes board fabric-loopback qualification | Verify repeat-build/seed stability for the selected implementation. |
-| 06 | RF frontend and AD9363 | Measured | RX-only, OTA tone, protected conducted-tone baseline and first relative gain table | Measure cable/attenuator `S21`, repeat the table across frequency and establish a calibrated large-signal limit. |
+| 06 | RF frontend and AD9363 | Measured | RX-only, OTA tone, protected conducted-tone baseline, first relative gain table, and a measured 30 dB attenuator flat from 50 MHz to 1 GHz | Measure cable loss separately, repeat the table across frequency and establish a connector-to-connector large-signal limit. |
 | 07 | TX/RX chains | Executable | DUC/DDC demos and loopback models | Add measurement package. |
 | 08 | Modulation and synchronization | Executable | CFO, timing, BER/EVM, OFDM mini-link, OFDM PAPR/clipping and CSS dechirp/FFT models with CI metric gates | Add packet-level CSS synchronization, LoRa interoperability evidence and FPGA implementations. |
 | 09 | Recording and analysis tools | Measured | CI16/CU8/CF32/WAV readers, fail-closed manifest CI and QPSK multi-burst BER/EVM/CFO analysis | Publish or externally archive the raw QPSK WAV. |
 | 10 | KiCad and basic electronics | Draft | Calculators and templates | Add measured breadboard photos and KiCad exports. |
-| 11 | Integrated SDR project | QPSK measured internally and externally; conducted partial | ExtraTiming: WNS +0.096 ns and 10/10 fabric attempts at BER=0; external RTL-SDR baseline: 3/3 sessions, 90/90 bursts and 0/25,200 bits; protected cable baseline: BPSK 204/281 bits and QPSK 139/140 symbols, with BER not yet closed | Stabilize runtime RX source/scaling and inter-burst sample phase, then repeat a long cabled BER series. |
+| 11 | Integrated SDR project | QPSK measured internally and externally; conducted full-frame partial | Phase-picker payload: routed WNS +0.129 ns, 3/3 fabric frames at BER=0; protected raw-ADC cable run now reaches QPSK 140/140 symbols with 142/280 errors, while BPSK reaches 214/281 bits | Tune carrier/constellation recovery on the raw RX source, then repeat a long cabled BER series. |
 | 12 | Final projects | Measured cross-session example | Filled report plus internal QPSK qualification and three-session external OTA baseline | Add calibrated cabled and longer-duration statistics on a stable capture backend. |
 
 ## Hardware validation priorities

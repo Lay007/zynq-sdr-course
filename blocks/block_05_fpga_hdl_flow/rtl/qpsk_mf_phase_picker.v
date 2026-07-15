@@ -56,7 +56,9 @@ module qpsk_mf_phase_picker #(
 localparam integer WIN_SAMPLES = WIN_SYMBOLS * SPS;
 // One extra symbol of slack so the tap can reach back a whole symbol period.
 localparam integer DEPTH = WIN_SAMPLES + SPS + 1;
-localparam integer ACC_W = 32;
+// Each phase receives WIN_SYMBOLS magnitudes; 20 bits cover the worst-case six-sample
+// accumulation for 16-bit I/Q with margin, and keep the 250 MHz add/compare paths short.
+localparam integer ACC_W = 20;
 
 integer k;
 
@@ -92,26 +94,25 @@ reg        locked = 1'b0;
 reg [2:0]  best_ph = 3'd0;
 reg [ACC_W-1:0] acc [0:7];
 
-// argmax over the 8 accumulators
-reg [2:0]  best_ph_comb;
-reg [ACC_W-1:0] best_acc_comb;
-always @(*) begin
-    best_ph_comb  = 3'd0;
-    best_acc_comb = acc[0];
-    for (k = 1; k < 8; k = k + 1) begin
-        if (acc[k] > best_acc_comb) begin
-            best_acc_comb = acc[k];
-            best_ph_comb  = k[2:0];
-        end
-    end
-end
+// The last symbol visits all eight phases in order. Compare each phase when its final
+// contribution arrives instead of building an eight-way combinational argmax. This leaves
+// one phase comparison at a time on the 250 MHz path, rather than a seven-comparator chain.
+reg [2:0] final_best_ph = 3'd0;
+reg [ACC_W-1:0] final_best_acc = {ACC_W{1'b0}};
+wire [ACC_W-1:0] phase_sum =
+    acc[ph_cnt] + {{(ACC_W-(W+1)){1'b0}}, mag};
+// Compare the five contributions already stored when the sixth (scheduling) symbol visits
+// the phase. The sixth contribution is still accumulated, but keeping its adder off the
+// argmax path is valuable at 250 MHz and five full symbols are ample for the energy pick.
+wire current_phase_wins = acc[ph_cnt] > final_best_acc;
+wire [2:0] winning_phase = current_phase_wins ? ph_cnt : final_best_ph;
 
 // Tap: the first released sample must be a symbol centre. At the instant we lock, the newest
 // sample has phase ph_cnt, so dl[k] carries phase (ph_cnt - k) mod SPS. Reach back to the
 // most recent centre, then add the whole window so nothing measured is thrown away.
 // WIN_SAMPLES is a multiple of SPS, so it does not disturb the phase arithmetic.
-reg [15:0] tap = 16'd0;
-wire [2:0] back = (ph_cnt - best_ph_comb) & 3'd7;
+reg [2:0] tap_sel = 3'd0;
+wire [2:0] back = (ph_cnt - winning_phase) & 3'd7;
 
 always @(posedge clk) begin
     if (rst) begin
@@ -120,7 +121,9 @@ always @(posedge clk) begin
         measuring <= 1'b0;
         locked    <= 1'b0;
         best_ph   <= 3'd0;
-        tap       <= 16'd0;
+        tap_sel   <= 3'd0;
+        final_best_ph  <= 3'd0;
+        final_best_acc <= {ACC_W{1'b0}};
         for (k = 0; k < 8; k = k + 1) acc[k] <= {ACC_W{1'b0}};
     end else if (in_valid) begin
         ph_cnt <= ph_cnt + 3'd1;
@@ -134,14 +137,22 @@ always @(posedge clk) begin
                     win_cnt   <= 16'd1;
                     for (k = 0; k < 8; k = k + 1) acc[k] <= {ACC_W{1'b0}};
                     acc[0] <= {{(ACC_W-(W+1)){1'b0}}, mag};
+                    final_best_ph  <= 3'd0;
+                    final_best_acc <= {ACC_W{1'b0}};
                 end
             end else begin
-                acc[ph_cnt] <= acc[ph_cnt] + {{(ACC_W-(W+1)){1'b0}}, mag};
+                acc[ph_cnt] <= phase_sum;
+                if (win_cnt >= (WIN_SAMPLES - SPS)) begin
+                    if (current_phase_wins) begin
+                        final_best_acc <= acc[ph_cnt];
+                        final_best_ph  <= ph_cnt;
+                    end
+                end
                 if (win_cnt == WIN_SAMPLES[15:0] - 16'd1) begin
                     locked <= 1'b1;
-                    best_ph <= best_ph_comb;
+                    best_ph <= winning_phase;
                     // dl[back] is the newest centre; the window sits behind it.
-                    tap <= WIN_SAMPLES[15:0] + {13'd0, ((back + TAP_TRIM[2:0]) & 3'd7)};
+                    tap_sel <= (back + TAP_TRIM[2:0]) & 3'd7;
                 end else begin
                     win_cnt <= win_cnt + 16'd1;
                 end
@@ -153,8 +164,22 @@ end
 // ---------------------------------------------------------------------------
 // Output. Bypassed entirely when disabled, so the clean paths are untouched.
 // ---------------------------------------------------------------------------
-wire signed [W-1:0] tapped_i = dl_i[tap[$clog2(DEPTH)-1:0]];
-wire signed [W-1:0] tapped_q = dl_q[tap[$clog2(DEPTH)-1:0]];
+// Only eight locations are reachable. Keeping the selector three bits wide prevents Vivado
+// from constructing a 57-way mux for a broadly sized dynamic array index.
+reg signed [W-1:0] tapped_i;
+reg signed [W-1:0] tapped_q;
+always @(*) begin
+    case (tap_sel)
+        3'd0: begin tapped_i = dl_i[WIN_SAMPLES + 0]; tapped_q = dl_q[WIN_SAMPLES + 0]; end
+        3'd1: begin tapped_i = dl_i[WIN_SAMPLES + 1]; tapped_q = dl_q[WIN_SAMPLES + 1]; end
+        3'd2: begin tapped_i = dl_i[WIN_SAMPLES + 2]; tapped_q = dl_q[WIN_SAMPLES + 2]; end
+        3'd3: begin tapped_i = dl_i[WIN_SAMPLES + 3]; tapped_q = dl_q[WIN_SAMPLES + 3]; end
+        3'd4: begin tapped_i = dl_i[WIN_SAMPLES + 4]; tapped_q = dl_q[WIN_SAMPLES + 4]; end
+        3'd5: begin tapped_i = dl_i[WIN_SAMPLES + 5]; tapped_q = dl_q[WIN_SAMPLES + 5]; end
+        3'd6: begin tapped_i = dl_i[WIN_SAMPLES + 6]; tapped_q = dl_q[WIN_SAMPLES + 6]; end
+        default: begin tapped_i = dl_i[WIN_SAMPLES + 7]; tapped_q = dl_q[WIN_SAMPLES + 7]; end
+    endcase
+end
 
 assign out_valid    = enable ? (in_valid && locked) : in_valid;
 assign out_i        = enable ? tapped_i : in_i;

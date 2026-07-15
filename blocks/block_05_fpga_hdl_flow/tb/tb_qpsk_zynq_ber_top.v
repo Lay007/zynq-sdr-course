@@ -50,6 +50,7 @@ qpsk_zynq_ber_top #(
     .start_offset(start_offset_cfg),
     .dc_block_en(1'b0),               // clean loopback: DC blocker off (passthrough)
     .costas_en(1'b0),                 // clean loopback: carrier recovery off (passthrough)
+    .phase_pick_en(1'b0),             // clean loopback: timing picker off (passthrough)
     .costas_hold_phase(1'b0),          // clean loopback: no phase carried between frames
     .busy(busy),
     .done(done),

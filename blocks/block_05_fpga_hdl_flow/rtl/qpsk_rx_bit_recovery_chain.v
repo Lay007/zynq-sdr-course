@@ -28,6 +28,7 @@ module qpsk_rx_bit_recovery_chain #(
     input  wire                     rst_carrier,
     input  wire                     dc_block_en,   // 1 = subtract LO-leakage DC (OTA); 0 = passthrough
     input  wire                     costas_en,     // 1 = carrier tracking (OTA); 0 = passthrough
+    input  wire                     phase_pick_en, // 1 = feedforward 8-phase burst timing pick
     input  wire                     in_valid,
     input  wire signed [W-1:0]      in_i,
     input  wire signed [W-1:0]      in_q,
@@ -64,6 +65,9 @@ dc_blocker #(
 wire mf_valid;
 wire signed [W-1:0] mf_i;
 wire signed [W-1:0] mf_q;
+wire picked_valid;
+wire signed [W-1:0] picked_i;
+wire signed [W-1:0] picked_q;
 wire sym_valid;
 wire signed [W-1:0] sym_i;
 wire signed [W-1:0] sym_q;
@@ -81,6 +85,27 @@ bpsk_rrc_rx_fir #(
     .out_q(mf_q)
 );
 
+// A burst can arrive at any of the SPS sub-symbol phases. Measure matched-filter
+// energy over a short window, delay the intact preamble, and release the stream
+// on the strongest phase. Bypass keeps all coherent/internal paths unchanged.
+qpsk_mf_phase_picker #(
+    .W(W),
+    .SPS(SPS),
+    .SIG_THRESH(COSTAS_SIG_THRESH)
+) phase_picker_i (
+    .clk(clk),
+    .rst(rst),
+    .enable(phase_pick_en),
+    .in_valid(mf_valid),
+    .in_i(mf_i),
+    .in_q(mf_q),
+    .out_valid(picked_valid),
+    .out_i(picked_i),
+    .out_q(picked_q),
+    .phase_locked(),
+    .phase()
+);
+
 bpsk_symbol_timing_sampler #(
     .W(W),
     .SPS(SPS),
@@ -88,9 +113,9 @@ bpsk_symbol_timing_sampler #(
 ) timing_i (
     .clk(clk),
     .rst(rst),
-    .in_valid(mf_valid),
-    .in_i(mf_i),
-    .in_q(mf_q),
+    .in_valid(picked_valid),
+    .in_i(picked_i),
+    .in_q(picked_q),
     .start_offset(start_offset),
     .symbol_count(symbol_count),
     .out_valid(sym_valid),
