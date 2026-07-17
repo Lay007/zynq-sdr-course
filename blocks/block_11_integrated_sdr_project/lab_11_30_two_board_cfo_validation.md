@@ -138,9 +138,17 @@ correlation still reports a perfect lock.
 
 ## Repeatability
 
-The lab runs back-to-back with **no reboots between runs** — verified with a 5-run series, all
-`SER = 0`, CFO in a −268…−290 Hz band, EVM ~7 %. Two things make that possible, and both were
-hard-won:
+The lab runs back-to-back with **no reboots between runs**. Verified with a **25-run unattended
+series** (232 s), no failures:
+
+| Over 25 runs | |
+|---|---|
+| Decoded | **768 000 bits, 0 errors → BER = 0** (0 / 384 000 symbols) |
+| Inter-board CFO | mean −288.5 Hz, **σ 11.0 Hz** (min −311.5, max −262.0) |
+| EVM | mean 7.35 % (6.65…8.27 %) |
+| Correlation lock | ≥ 35.5× above mean; contiguity `\|autocorr\|` ≥ 0.994 every run |
+
+Two things make that possible, and both were hard-won:
 
 - **The receiver must be a board of the same class as the transmitter** (stock ADI/Pluto,
   Linux 5.15). The first receiver — a FishBall/ZynqSDR appliance on a frozen Linux 4.0 — had a
