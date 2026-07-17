@@ -90,6 +90,13 @@ SAMPLE_RATE = SPS * SYMBOL_RATE  # 3.84 MHz, the shipped modem configuration
 PHY = "/sys/bus/iio/devices/iio:device0"
 DDS = "/sys/bus/iio/devices/iio:device2"
 QUIET_DB = "-89.750000"
+# cf_axi_dds CHAN_CNTRL_7 for channel 0: DAC source select (0 = DDS, 2 = DMA, 3 = zero).
+# Read-only here -- the driver owns it; we only use it to prove the DAC really carries the
+# DMA buffer, because a running iio_writedev alone does not prove that.
+DAC_CHAN_CNTRL_7_CH0 = "0x79024418"
+# Symbols the float and fixed estimators are compared over. 256 keeps the fixed model's
+# accumulator in the range its sq_shift=11 assumes, matching the RTL's own window scale.
+ESTIMATOR_COMPARE_SYMBOLS = 256
 
 
 # --------------------------------------------------------------------------- #
@@ -211,10 +218,13 @@ def analyse(rx: np.ndarray, tx_symbols: np.ndarray, window: int) -> dict:
         derotated = seg * np.exp(-1j * omega * np.arange(len(seg)))
         offset, ratio, rotation = align(derotated, ref_fft, n_ref)
 
-        hz_float = omega / (2 * np.pi) * SYMBOL_RATE
-        omega_fixed, _, _ = ref.cfo_4th_fixed(
-            derotated[:256], win=min(256, len(derotated)), sq_shift=11, amp=2000.0
-        )
+        # The point of the comparison is float-vs-fixed ARITHMETIC, so both must see exactly the
+        # same input over exactly the same symbols. Feeding the fixed model a derotated slice
+        # would have it estimate the residual instead, and any difference would just be the two
+        # estimators' own variance over different sample counts.
+        n_cmp = min(ESTIMATOR_COMPARE_SYMBOLS, len(seg))
+        hz_float = ref.cfo_4th_float(seg[:n_cmp]) / (2 * np.pi) * SYMBOL_RATE
+        omega_fixed, _, _ = ref.cfo_4th_fixed(seg[:n_cmp], win=n_cmp, sq_shift=11, amp=2000.0)
         hz_fixed = ref.phase_units_to_hz(omega_fixed)
 
         aligned = derotated * np.exp(-1j * rotation)
@@ -305,6 +315,23 @@ def check_capture_sane(samples: np.ndarray) -> None:
         )
 
 
+def start_detached(run: ParamikoCommandRunner, command: str) -> None:
+    """Launch a long-lived background process on the board.
+
+    Must bypass ParamikoCommandRunner.__call__: it wraps everything in `sh -lc '...; rc=$?; ...'`
+    and reads the channel to EOF, which tears the backgrounded job down with it -- `nohup ... &`
+    started that way is gone within seconds, silently and with an empty log. Measured: launching
+    the transmitter through the wrapper leaves the DAC source at 0x0 (DDS) with no process; the
+    same command on a raw session gives 0x2 (DMA) and a live writer.
+    """
+    transport = run.client.get_transport()
+    if transport is None:
+        raise RuntimeError("SSH transport is not available.")
+    channel = transport.open_session()
+    channel.exec_command(command)
+    channel.close()
+
+
 def pull_binary(run: ParamikoCommandRunner, remote_path: str) -> bytes:
     transport = run.client.get_transport()
     if transport is None:
@@ -370,16 +397,29 @@ def main() -> int:
         # Trap 2: a DMA stream is what brings the TX synthesizer up. Assert it anyway; harmless
         # if the driver already did, and it makes the intent explicit.
         run_a(f"echo 0 > {PHY}/out_altvoltage1_TX_LO_powerdown 2>/dev/null")
-        run_a(
+        start_detached(
+            run_a,
             f"nohup iio_writedev -c -b {n_samples} -s {n_samples} cf-ad9361-dds-core-lpc "
-            "voltage0 voltage1 < /tmp/lab_11_30_wave.bin > /tmp/lab_11_30_wd.log 2>&1 &"
+            "voltage0 voltage1 < /tmp/lab_11_30_wave.bin > /tmp/lab_11_30_wd.log 2>&1 &",
         )
         time.sleep(3.0)
         log = sh(run_a, "head -1 /tmp/lab_11_30_wd.log 2>/dev/null")
         if log:
             raise RuntimeError(f"iio_writedev failed: {log!r} (a stale cyclic buffer holds the DMA; reboot board A)")
+        # A running iio_writedev is not proof of transmission: the DAC only carries the buffer
+        # once the driver has switched the channel source DDS(0) -> DMA(2). Read it back rather
+        # than trust the process, or a silent DDS-with-zero-scale looks exactly like a dead link.
+        dac_src = sh(run_a, f"devmem {DAC_CHAN_CNTRL_7_CH0}")
+        if dac_src.strip() not in ("0x00000002", "0x2"):
+            raise RuntimeError(
+                f"transmitter is not streaming: DAC source select reads {dac_src} "
+                "(expected 0x2 = DMA). 0x0 means the channel is still on the DDS, 0x3 means a "
+                "forced-zero output. Do not devmem this register by hand -- let the driver own "
+                "it, and reboot board A if a stale buffer is stuck."
+            )
         print(f"board A transmitting: TX={sh(run_a, f'cat {PHY}/out_voltage0_hardwaregain')} dB "
-              f"at {args.carrier/1e6:.3f} MHz, LO_powerdown={sh(run_a, f'cat {PHY}/out_altvoltage1_TX_LO_powerdown')}")
+              f"at {args.carrier/1e6:.3f} MHz, DAC source={dac_src} (DMA), "
+              f"LO_powerdown={sh(run_a, f'cat {PHY}/out_altvoltage1_TX_LO_powerdown')}")
 
         # Trap 1: -b MUST cover the whole capture or the record is chunked with gaps. Do this
         # exactly ONCE -- the receiver survives one capture per boot, and a second read with a

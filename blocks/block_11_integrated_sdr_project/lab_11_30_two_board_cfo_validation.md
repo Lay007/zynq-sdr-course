@@ -44,27 +44,40 @@ Useful flags: `--carrier` (default 915e6), `--tx-gain` (default −30 dB, conduc
 
 ## Result (2026-07-17, 915 MHz, −30 dB TX into 30 dB attenuator, RX gain 50 dB)
 
-> **Provenance.** These are real hardware numbers from the conducted link described above, taken
-> with the same command sequence this lab automates. They were captured interactively while the
-> sequence was being worked out; the script's own end-to-end run has not yet reproduced them,
-> because the receiver's DMA wedged (see *Known fragility*) and would not recover without a
-> physical power cycle. The analysis chain itself is verified independently and repeatedly by
-> `--self-test` (SER = 0, EVM 2.20 %, |corr| 36×). Re-run the script once the receiver is power
-> cycled and replace this note with its output.
+Verbatim from the script:
+
+```text
+board A transmitting: TX=-30.000000 dB at 915.000 MHz, DAC source=0x00000002 (DMA), LO_powerdown=0
+receiver alive: capture rms = 253.5 counts
+contiguity check: |autocorr| at the 32768-sample cyclic period = 0.9989
+
+timing mu = 1.625 samples, |corr| = 35.6x
+EVM       = 6.62 %
+CFO       = -173.2 Hz (std 13.4 Hz) -> -0.189 ppm at 915 MHz
+estimator float vs fixed(RTL): mean |diff| = 0.14 Hz, max 0.34 Hz
+SER       = 0 / 15360 = 0.000000
+```
 
 | Metric | Value |
 |---|---|
-| Contiguity `\|autocorr\|` at the cyclic period | 0.9944 |
-| Correlation peak | 35–50× above mean |
-| EVM | 6.59 % |
-| Inter-board CFO | −208.0 Hz, std 4.2 Hz (−0.23 ppm at 915 MHz) |
-| **Estimator float vs fixed (RTL)** | **mean \|diff\| = 0.09 Hz** |
-| **SER** | **0 / 14 336 symbols (28 672 bits)** |
+| Contiguity `\|autocorr\|` at the cyclic period | 0.9989 |
+| Correlation peak | 35.6× above mean |
+| EVM | 6.62 % |
+| Inter-board CFO | −173.2 Hz, std 13.4 Hz (−0.189 ppm at 915 MHz) |
+| **Estimator float vs fixed (RTL)** | **mean \|diff\| = 0.14 Hz, max 0.34 Hz** |
+| **SER** | **0 / 15 360 symbols (30 720 bits)** |
 
-Two independent TCXOs land ~0.2 ppm apart — a few hundred Hz at 915 MHz. The estimator is
-unambiguous to ±60 kHz (±1/8 cycle/symbol at 480 kSym/s), so the hardware sits inside its design
-range with more than two orders of margin, and the fixed-point arithmetic that the RTL performs
-tracks the float reference to **fractions of a hertz on a live signal**.
+Two independent TCXOs land ~0.2 ppm apart — a couple of hundred Hz at 915 MHz, stable to ~13 Hz
+across the record. The estimator is unambiguous to ±60 kHz (±1/8 cycle/symbol at 480 kSym/s), so
+the hardware sits inside its design range with more than two orders of margin, and the
+fixed-point arithmetic that the RTL performs tracks the float reference to **fractions of a hertz
+on a live signal**. An earlier interactive run of the same sequence gave EVM 6.59 %, CFO
+−208.0 Hz and float-vs-fixed 0.09 Hz — the same numbers to within run-to-run drift.
+
+The estimator comparison feeds **both** models the same symbols of the same (non-derotated)
+segment. Handing the fixed model a derotated slice, or a different symbol count, measures the two
+estimators' own variance instead of the arithmetic — it inflated this figure from 0.14 Hz to
+66 Hz before it was fixed.
 
 ## Four traps this lab encodes
 
@@ -148,15 +161,36 @@ during one session it stopped responding to sysrq entirely (uptime kept climbing
 echo 1 > /proc/sys/kernel/sysrq && echo b > /proc/sysrq-trigger   # or: reboot -f
 ```
 
-Practical recipe: **power-cycle the receiver, then run the lab once.** If it reports a wedged
-DMA or a failed contiguity check, power-cycle again rather than retrying — retries make it worse.
+- It tolerates about **one RX reconfiguration per boot**. The lab configures the receiver before
+  the transmitter, so a run that dies later (say on the transmitter's DMA) still spends that
+  budget — the next run then captures zeros even though nothing looks wrong.
 
-On the transmitter, a killed `iio_writedev` can leave the cyclic DMA buffer allocated; the next
-run then fails with `Unable to allocate buffer: Device or resource busy`. The lab surfaces that
-error explicitly; a reboot clears it.
+On the transmitter, every successful run leaves the cyclic DMA buffer allocated: `pkill -9` does
+not release it, and the next run fails with `Unable to allocate buffer: Device or resource busy`.
+The lab surfaces that error explicitly; only a reboot clears it.
+
+> **Practical recipe: reboot BOTH boards, then run the lab exactly once.** If anything fails —
+> wedged DMA, busy buffer, failed contiguity — reboot both again rather than retrying. Retries
+> spend the receiver's one reconfiguration and make the next attempt worse.
 
 A more robust receiver (a second board of the same class as the transmitter) would remove nearly
 all of the above — the measurement itself is undemanding.
+
+## A launch trap worth knowing
+
+`ParamikoCommandRunner` wraps every command in `sh -lc '...; rc=$?; printf ...'` and reads the
+channel to EOF. A background job started through it — even `nohup ... &` — is **torn down with
+the wrapper**, silently and with an empty log. Measured side by side:
+
+```text
+start via ParamikoCommandRunner:  DAC source = 0x0 (DDS), writedev gone
+start via a raw exec_command:     DAC source = 0x2 (DMA), writer alive
+```
+
+So the transmitter is launched on a raw session (`start_detached`). And because a *running*
+`iio_writedev` still does not prove transmission, the lab reads the DAC source select back and
+demands `0x2`; a channel left on the DDS with zero scale otherwise looks exactly like a dead
+link — which is precisely how this was found.
 
 ## RF safety
 
