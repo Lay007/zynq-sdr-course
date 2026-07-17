@@ -1,0 +1,1 @@
+--8<-- "blocks/block_11_integrated_sdr_project/lab_11_30_two_board_cfo_validation.md"

@@ -1,0 +1,1 @@
+--8<-- "blocks/block_11_integrated_sdr_project/lab_11_29_cold_boot_ber_campaign.md"
