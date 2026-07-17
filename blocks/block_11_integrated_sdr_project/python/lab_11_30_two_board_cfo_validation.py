@@ -87,9 +87,9 @@ RRC_TAPS_MEM = _BLOCK05 / "rtl" / "bpsk_rrc_tx_fir_taps.mem"
 SPS = 8
 SYMBOL_RATE = 480_000.0
 SAMPLE_RATE = SPS * SYMBOL_RATE  # 3.84 MHz, the shipped modem configuration
-PHY = "/sys/bus/iio/devices/iio:device0"
-DDS = "/sys/bus/iio/devices/iio:device2"
+PHY = "/sys/bus/iio/devices/iio:device0"  # ad9361-phy; stable, the ad9361 driver is never rebound
 QUIET_DB = "-89.750000"
+DDS_DRIVER = "/sys/bus/platform/drivers/cf_axi_dds"
 # cf_axi_dds CHAN_CNTRL_7 for channel 0: DAC source select (0 = DDS, 2 = DMA, 3 = zero).
 # Read-only here -- the driver owns it; we only use it to prove the DAC really carries the
 # DMA buffer, because a running iio_writedev alone does not prove that.
@@ -315,6 +315,30 @@ def check_capture_sane(samples: np.ndarray) -> None:
         )
 
 
+def reset_tx_dma(run: ParamikoCommandRunner) -> None:
+    """Release the transmitter's cyclic DMA buffer so the lab can run repeatedly.
+
+    `iio_writedev -c` gets stuck in an unkillable (uninterruptible-DMA) state on this platform
+    and keeps the DAC's DMA buffer allocated, so the NEXT run fails with
+    'Unable to allocate buffer: Device or resource busy' even after `pkill -9`, `SIGTERM`, or a
+    DDS-core RSTN toggle -- only a driver rebind (or a reboot) clears it. Unbind+rebind of
+    cf_axi_dds tears the buffer down and lets the next allocation succeed. It re-registers the
+    DDS core under a NEW iio:deviceN, which is harmless here: the transmitter is addressed by
+    name (cf-ad9361-dds-core-lpc), the receiver by name (cf-ad9361-lpc), the DAC source by
+    physical address, and the phy stays iio:device0 -- nothing depends on the DDS number.
+
+    Run at the start of every attempt, so a run self-heals from a previous stuck transmitter
+    without rebooting board A.
+    """
+    run("pkill -9 -f iio_writedev 2>/dev/null")
+    dev = sh(run, f"ls {DDS_DRIVER}/ | grep dds-core | head -1")
+    if dev:
+        run(f"echo {dev} > {DDS_DRIVER}/unbind 2>/dev/null")
+        time.sleep(1.0)
+        run(f"echo {dev} > {DDS_DRIVER}/bind 2>/dev/null")
+        time.sleep(2.0)
+
+
 def start_detached(run: ParamikoCommandRunner, command: str) -> None:
     """Launch a long-lived background process on the board.
 
@@ -390,6 +414,8 @@ def main() -> int:
         run_b(f"echo manual > {PHY}/in_voltage0_gain_control_mode 2>/dev/null")
         run_b(f"echo {args.rx_gain:.0f} > {PHY}/in_voltage0_hardwaregain 2>/dev/null")
         quiet_board(run_a)
+        # Free any cyclic DMA buffer left stuck by a previous run, so a series needs no reboots.
+        reset_tx_dma(run_a)
         upload_bytes_via_ssh_cat(run_a, payload=iq.tobytes(), remote_path="/tmp/lab_11_30_wave.bin")
         run_a(f"echo {int(SAMPLE_RATE)} > {PHY}/out_voltage_sampling_frequency 2>/dev/null")
         run_a(f"echo {int(args.carrier)} > {PHY}/out_altvoltage1_TX_LO_frequency")

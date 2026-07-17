@@ -136,45 +136,34 @@ correlation still reports a perfect lock.
 > the path, and require SER = 0, *before* concluding anything about hardware. `--self-test` does
 > exactly this in a few seconds.
 
-## Known fragility
+## Repeatability
 
-**The receiver used here (a FishBall/ZynqSDR appliance on Linux 4.0) is the weak link, and the
-lab is shaped around it.** Its RX DMA wedges easily and then returns a zero-length read or an
-all-zero buffer. Observed, in order of how quickly it bites:
+The lab runs back-to-back with **no reboots between runs** — verified with a 5-run series, all
+`SER = 0`, CFO in a −268…−290 Hz band, EVM ~7 %. Two things make that possible, and both were
+hard-won:
 
-- It survives roughly **one capture per boot** once its LO/sample rate have been reconfigured.
-  This is why the lab performs **exactly one** `iio_readdev` and validates the *measurement*
-  capture rather than taking a separate probe read — an earlier version probed first and the
-  probe consumed the only good capture.
-- A second read with a **different `-b`** makes the driver stitch the next capture from stale,
-  smaller chunks — silently reintroducing trap 1 (`|autocorr|` collapses to ~0.02). Keep `-b`
-  identical across every read in a session.
-- Retuning far outside its native band wedges it outright (it died at 1800 MHz; its stock modem
-  lives at 71/72 MHz).
-- ENSM bounce, re-tune and even the AD9361 `initialize` do **not** clear a wedge.
+- **The receiver must be a board of the same class as the transmitter** (stock ADI/Pluto,
+  Linux 5.15). The first receiver — a FishBall/ZynqSDR appliance on a frozen Linux 4.0 — had a
+  driver that wedged its RX DMA after roughly one capture/reconfiguration per boot, ignored plain
+  `reboot`, sometimes ignored sysrq, and occasionally needed a **physical power cycle**. Reflashing
+  it with the same Pluto image the transmitter runs removed all of that: its RX now returns clean
+  data on every run, and `reboot` works.
+- **The transmitter's cyclic DMA is freed at the start of every run** by `reset_tx_dma()`. Left
+  alone, `iio_writedev -c` gets stuck in an unkillable (uninterruptible-DMA) state holding the DAC
+  buffer, so the next run fails with `Unable to allocate buffer: Device or resource busy` — and
+  `pkill -9`, `SIGTERM` and a DDS-core RSTN toggle all fail to clear it. An **unbind+rebind of the
+  `cf_axi_dds` driver** does. It re-registers the DDS core under a new `iio:deviceN`, which is why
+  the lab addresses the transmitter and receiver by NAME and reads the DAC source by physical
+  address — nothing depends on the DDS device number.
 
-Recovery: reboot it. Its Linux ignores plain `reboot`; sysrq usually works but **not reliably** —
-during one session it stopped responding to sysrq entirely (uptime kept climbing) and only a
-**physical power cycle** brought the receiver back.
+> **Recipe:** flash both boards with the bench image (see the per-board `README-bench.txt` on each
+> SD card), then just run the lab — repeatedly, unattended. Run `--self-test` first if you have
+> changed the host-side analysis.
 
-```bash
-echo 1 > /proc/sys/kernel/sysrq && echo b > /proc/sysrq-trigger   # or: reboot -f
-```
-
-- It tolerates about **one RX reconfiguration per boot**. The lab configures the receiver before
-  the transmitter, so a run that dies later (say on the transmitter's DMA) still spends that
-  budget — the next run then captures zeros even though nothing looks wrong.
-
-On the transmitter, every successful run leaves the cyclic DMA buffer allocated: `pkill -9` does
-not release it, and the next run fails with `Unable to allocate buffer: Device or resource busy`.
-The lab surfaces that error explicitly; only a reboot clears it.
-
-> **Practical recipe: reboot BOTH boards, then run the lab exactly once.** If anything fails —
-> wedged DMA, busy buffer, failed contiguity — reboot both again rather than retrying. Retries
-> spend the receiver's one reconfiguration and make the next attempt worse.
-
-A more robust receiver (a second board of the same class as the transmitter) would remove nearly
-all of the above — the measurement itself is undemanding.
+**Still keep `-b` fixed within a session:** a capture with a different `-b` makes the driver
+stitch the next one from stale chunks (`|autocorr|` collapses to ~0.02, i.e. trap 1). The lab uses
+one buffer size (`--capture`) for its single read, so this only bites if you probe the receiver by
+hand between runs — don't.
 
 ## A launch trap worth knowing
 
