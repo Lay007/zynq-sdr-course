@@ -1,27 +1,33 @@
-## What changed
+## Summary
 
-Describe the course, lab, HDL, documentation or tooling change in 3–5 lines.
-
-## Why this change is needed
-
-Explain how this improves clarity, reproducibility, safety, measurement value or DSP/FPGA learning quality.
+Describe the problem, the change and its effect on the course.
 
 ## Validation
 
-- [ ] `python tools/tasks.py docs` passed
-- [ ] `python tools/tasks.py labs` passed, if relevant
-- [ ] `python tools/tasks.py hdl` passed, if relevant
-- [ ] MkDocs navigation updated, if new pages were added
-- [ ] Russian and English navigation remain consistent, if relevant
-- [ ] Generated figures or reports are reproducible
-- [ ] RF safety notes are present for hardware-facing labs
-- [ ] Dataset manifests/checksums are present for IQ/data workflows
-- [ ] No private data or credentials committed
+List the commands, simulations or measurements used to validate the change.
+
+```text
+python tools/tasks.py docs
+python tools/tasks.py labs
+# python tools/tasks.py hdl   # for HDL changes
+```
 
 ## Evidence
 
-Link or attach generated plots, logs, reports, vectors, screenshots or manifests.
+- [ ] Results are reproducible from the repository root.
+- [ ] Generated plots, metrics or hardware artifacts are included or linked.
+- [ ] Synthetic and real measurements are clearly distinguished.
+- [ ] RF-facing changes document frequency, gain, attenuation and safety assumptions.
 
-## Risks
+## Documentation
 
-What can regress? What assumptions, lab procedures, fixed-point formats or RF settings changed?
+- [ ] New lab pages are represented in `mkdocs.yml` or explicitly excluded.
+- [ ] Russian and English course paths remain consistent.
+- [ ] Units, fixed-point formats and engineering assumptions are stated.
+- [ ] Relevant status, index or readiness documents are updated.
+
+## Commit quality
+
+- [ ] Commits are focused and have descriptive messages.
+- [ ] No generated secrets, credentials or large non-LFS captures are committed.
+- [ ] AI tools are not listed as commit co-authors.
