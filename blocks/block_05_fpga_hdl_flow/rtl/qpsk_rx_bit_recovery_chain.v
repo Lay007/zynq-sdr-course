@@ -134,8 +134,10 @@ bpsk_symbol_timing_sampler #(
 // sit tens of kHz apart -- far outside the Costas pull-in (a few hundred Hz), so the loop alone
 // never acquires. This 4th-power estimator strips the QPSK modulation, measures the per-symbol
 // phase increment over COARSE_WIN_SYMBOLS, and derotates the buffered burst (delayed by the
-// window) so Costas only has to close a small residual. Passthrough (coarse_cfo_en=0) is
-// combinational and zero-latency, so the coherent fabric-loopback path stays bit-identical.
+// window) so Costas only has to close a small residual. Its output is registered (one clock in
+// BOTH modes, passthrough included), which keeps the long derotate off the downstream Costas
+// enable gate so timing closes; the coherent fabric loopback still decodes at BER 0 (the uniform
+// one-clock delay is below the sampler phase choice, so start_offset is unchanged).
 wire cfo_out_valid;
 wire signed [W-1:0] cfo_out_i;
 wire signed [W-1:0] cfo_out_q;

@@ -60,6 +60,34 @@ if {[llength $costas_cells] > 0} {
   }
 }
 
+# The coarse-CFO estimator (qpsk_coarse_cfo) has two once-per-symbol datapaths that cannot close in
+# one sample-clock period, at the SAME cadence the Costas loop above runs at (updates on in_valid):
+#   * acc_i/acc_q -- the differential 4th-power accumulate: a complex multiply feeding a 48-bit add
+#     (measured 21.8 ns, 21 logic levels incl. DSP48 + a 12-deep CARRY4 chain);
+#   * out_i_r/out_q_r -- the registered derotate output: theta -> Q15 cos/sin LUT -> complex
+#     multiply -> >>>15, captured on in_valid (the register exists precisely so this long path does
+#     NOT reach the downstream Costas per-symbol enable gate as a single-cycle cross-module path).
+# Both fail outright (down to -13.9 ns) against the 8 ns divide-select clock the tools also analyze.
+# Relax ONLY these accumulator/output data pins. Crucially this must NOT be the whole coarse block:
+# the CORDIC state (cx/cy/cang/citer) iterates EVERY cycle during the once-per-window rotation and
+# must stay single-cycle (it already meets timing). The `-to <reg>/D` covers each entire path through
+# its DSP/LUT regardless of launch register, and leaves the clock enable (the per-symbol strobe)
+# single-cycle. Setup 4 covers the paths on both the 16 ns (64 ns) and 8 ns (32 ns) clocks; safe
+# because these registers update >= 8 cycles apart.
+set coarse_slow [get_cells -hier -quiet -filter {NAME =~ *coarse_cfo_i/acc_i_reg* || \
+                                                 NAME =~ *coarse_cfo_i/acc_q_reg* || \
+                                                 NAME =~ *coarse_cfo_i/out_i_r_reg* || \
+                                                 NAME =~ *coarse_cfo_i/out_q_r_reg*}]
+if {[llength $coarse_slow] > 0} {
+  set coarse_d [get_pins -quiet -of_objects $coarse_slow \
+                  -filter {REF_PIN_NAME == D || REF_PIN_NAME == R || REF_PIN_NAME == S}]
+  if {[llength $coarse_d] > 0} {
+    set_multicycle_path -setup 4 -to $coarse_d
+    set_multicycle_path -hold  3 -to $coarse_d
+    puts "course overlay: multicycle-path (setup 4) applied to [llength $coarse_d] coarse-CFO accumulator/output data pins"
+  }
+}
+
 # bridge_rx_lclk_fifo (raw-ADC RX CDC FIFO) gray-code pointer crossings. wr_clk is
 # l_clk (rx_clk) and rd_clk is the divided sample clock (generated from rx_clk), so
 # the two are RELATED and the async clock-group cut above does not cover them; the

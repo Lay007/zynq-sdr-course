@@ -127,8 +127,9 @@ qpsk_rx_bit_recovery_chain #(
     .dc_block_en(dc_block_en),
     .costas_en(costas_en),
     // Runtime coarse-CFO enable. The bridge drives this from a gp_ctrl bit so the fabric receiver
-    // can strip a real inter-board CFO (validated standalone in Lab 11.30/11.31); benches tie it
-    // to 0, which is combinational zero-latency passthrough, so the coherent loopback is unchanged.
+    // can strip a real inter-board CFO (validated standalone in Lab 11.30/11.31); benches tie it to
+    // 0 (passthrough). The estimator's output is registered either way, so the coherent loopback
+    // still decodes at BER 0 (one added clock, below the sampler phase choice).
     .coarse_cfo_en(coarse_cfo_en),
     .phase_pick_en(phase_pick_en),
     .in_valid(rx_valid),

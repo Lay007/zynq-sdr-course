@@ -147,9 +147,11 @@ The estimator is now validated end to end on silicon across its full operating r
 precondition for wiring it into the fabric receiver. `qpsk_rx_bit_recovery_chain` instantiates it
 ahead of the Costas loop behind a `coarse_cfo_en` bit, `qpsk_zynq_ber_top` exposes that bit, and the
 gpreg bridge now drives it from **`gp_ctrl[13]`** — so the offset can be stripped in fabric at
-runtime with a single register write. The [Block 05 smoke suite](../block_05_fpga_hdl_flow/) covers
-the whole path from the bridge down: with the bit clear the coherent loopback stays bit-identical
-(BER 0/280), and a 25 kHz injected offset the estimator removes to BER 0. The remaining step is a
+runtime with a single register write. The estimator's output is registered (one clock in both
+modes) so its derotate stays off the Costas enable gate and the design closes timing. The
+[Block 05 smoke suite](../block_05_fpga_hdl_flow/) covers the whole path from the bridge down: with
+the bit clear the coherent loopback still decodes at BER 0/280, and a 25 kHz injected offset the
+estimator removes to BER 0. The remaining step is a
 Vivado rebuild carrying the new bridge, then re-running the two-board link with `gp_ctrl[13]=1` so
 the receiver acquires the real inter-board CFO **in fabric** rather than on the host — the timing
 margin to watch there is the coarse stage's CORDIC and squares against the design's thin +0.017 ns

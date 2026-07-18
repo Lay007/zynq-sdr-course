@@ -492,9 +492,34 @@ wire signed [W+16-1:0] r_qc = old_q * cos_v;
 wire signed [W-1:0] rot_i = (r_ic - r_qs) >>> 15;
 wire signed [W-1:0] rot_q = (r_is + r_qc) >>> 15;
 
-assign out_valid = enable ? (in_valid && ready) : in_valid;
-assign out_i     = enable ? rot_i : in_i;
-assign out_q     = enable ? rot_q : in_q;
+// Registered output pipeline. The derotate above (theta -> LUT -> complex multiply -> >>>15) is a
+// long combinational path; driving it straight into the downstream Costas per-symbol enable gate
+// (loop_run = |in_i|+|in_q| >= SIG_THRESH, which feeds acq_cnt/theta CE) forms a single-cycle
+// cross-module path that will not close on the fast divide-select clock. Capture the released
+// symbol on in_valid so out_i_r/out_q_r change only at symbol cadence (their input path is then a
+// multicycle -- see course_overlay_timing.xdc), and delay the valid strobe by the matching one
+// clock so data and valid stay aligned. This adds one clock of latency in BOTH modes (passthrough
+// included); the symbol stream is sparse, so a uniform one-clock delay preserves alignment and the
+// coherent loopback still decodes at BER 0 (at a start_offset shifted by one).
+reg out_valid_r = 1'b0;
+reg signed [W-1:0] out_i_r = 0;
+reg signed [W-1:0] out_q_r = 0;
+always @(posedge clk) begin
+    if (rst) begin
+        out_valid_r <= 1'b0;
+        out_i_r     <= 0;
+        out_q_r     <= 0;
+    end else begin
+        out_valid_r <= enable ? (in_valid && ready) : in_valid;
+        if (in_valid) begin
+            out_i_r <= enable ? rot_i : in_i;
+            out_q_r <= enable ? rot_q : in_q;
+        end
+    end
+end
+assign out_valid = out_valid_r;
+assign out_i     = out_i_r;
+assign out_q     = out_q_r;
 assign cfo_ready = ready;
 assign cfo_omega = omega;
 
