@@ -20,6 +20,12 @@ module qpsk_rx_bit_recovery_chain #(
                                                   // (works 600..1400 on real self-OTA; noise <600, signal >1400)
     parameter integer COARSE_WIN_SYMBOLS = 64,    // 4th-power measurement window (also the derotate delay)
     parameter integer COARSE_SQ_SHIFT = 11,       // per-square right shift, ~log2(|MF symbol|) ~ 2000 -> 11
+    // Compile-time coarse-CFO gate. 0 (default) OPTIMIZES THE ESTIMATOR AWAY: the chain is a plain
+    // combinational passthrough, so the baseline bitstream keeps its stock timing (the 4th-power
+    // multiply-accumulate does not close on the divide-select clock and is not needed unless you are
+    // running the two-board fabric-CFO experiment). Set to 1 for that build; then coarse_cfo_en
+    // still gates it at runtime, but the datapath must first meet timing (see the timing notes).
+    parameter integer COARSE_ENABLE = 0,
     parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
 ) (
     input  wire                     clk,
@@ -141,24 +147,35 @@ bpsk_symbol_timing_sampler #(
 wire cfo_out_valid;
 wire signed [W-1:0] cfo_out_i;
 wire signed [W-1:0] cfo_out_q;
-qpsk_coarse_cfo #(
-    .W(W),
-    .WIN_SYMBOLS(COARSE_WIN_SYMBOLS),
-    .SQ_SHIFT(COARSE_SQ_SHIFT),
-    .SIG_THRESH(COSTAS_SIG_THRESH)
-) coarse_cfo_i (
-    .clk(clk),
-    .rst(rst),
-    .enable(coarse_cfo_en),
-    .in_valid(sym_valid),
-    .in_i(sym_i),
-    .in_q(sym_q),
-    .out_valid(cfo_out_valid),
-    .out_i(cfo_out_i),
-    .out_q(cfo_out_q),
-    .cfo_ready(cfo_ready),
-    .cfo_omega(cfo_omega)
-);
+generate
+if (COARSE_ENABLE) begin : g_coarse
+    qpsk_coarse_cfo #(
+        .W(W),
+        .WIN_SYMBOLS(COARSE_WIN_SYMBOLS),
+        .SQ_SHIFT(COARSE_SQ_SHIFT),
+        .SIG_THRESH(COSTAS_SIG_THRESH)
+    ) coarse_cfo_i (
+        .clk(clk),
+        .rst(rst),
+        .enable(coarse_cfo_en),
+        .in_valid(sym_valid),
+        .in_i(sym_i),
+        .in_q(sym_q),
+        .out_valid(cfo_out_valid),
+        .out_i(cfo_out_i),
+        .out_q(cfo_out_q),
+        .cfo_ready(cfo_ready),
+        .cfo_omega(cfo_omega)
+    );
+end else begin : g_no_coarse
+    // Estimator compiled out: combinational passthrough, nothing to synthesize.
+    assign cfo_out_valid = sym_valid;
+    assign cfo_out_i     = sym_i;
+    assign cfo_out_q     = sym_q;
+    assign cfo_ready     = 1'b0;
+    assign cfo_omega     = 24'sd0;
+end
+endgenerate
 
 // Carrier-recovery Costas loop tracks the per-burst carrier phase of a real OTA link
 // (the fixed-phase sampler alone floors at ~44%). Passthrough when costas_en=0 keeps

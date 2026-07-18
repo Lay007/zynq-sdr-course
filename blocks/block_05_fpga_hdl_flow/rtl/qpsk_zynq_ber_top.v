@@ -24,6 +24,9 @@ module qpsk_zynq_ber_top #(
     // frame-sync find the frame regardless of round-trip latency. 0 for the tight
     // fabric loop; ~256 for OTA. (The counter still uses the true symbol_count.)
     parameter integer RX_SAMPLE_MARGIN = 0,
+    // 0 (default) compiles the coarse-CFO estimator out of the RX chain for the stock timing-clean
+    // bitstream; set to 1 only for the two-board fabric-CFO build (see qpsk_rx_bit_recovery_chain).
+    parameter integer COARSE_ENABLE = 0,
     parameter MEM_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bits.mem",
     parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
 ) (
@@ -117,6 +120,7 @@ qpsk_rx_bit_recovery_chain #(
     .SPS(SPS),
     .INDEX_W(INDEX_W),
     .COSTAS_SIG_THRESH(RX_SIG_THRESH),
+    .COARSE_ENABLE(COARSE_ENABLE),
     .COEF_FILE(COEF_FILE)
 ) rx_chain_i (
     .clk(clk),

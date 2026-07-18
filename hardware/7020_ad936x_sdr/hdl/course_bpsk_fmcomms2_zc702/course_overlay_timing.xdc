@@ -74,10 +74,22 @@ if {[llength $costas_cells] > 0} {
 # its DSP/LUT regardless of launch register, and leaves the clock enable (the per-symbol strobe)
 # single-cycle. Setup 4 covers the paths on both the 16 ns (64 ns) and 8 ns (32 ns) clocks; safe
 # because these registers update >= 8 cycles apart.
-set coarse_slow [get_cells -hier -quiet -filter {NAME =~ *coarse_cfo_i/acc_i_reg* || \
-                                                 NAME =~ *coarse_cfo_i/acc_q_reg* || \
-                                                 NAME =~ *coarse_cfo_i/out_i_r_reg* || \
-                                                 NAME =~ *coarse_cfo_i/out_q_r_reg*}]
+# Match by prefix, NOT *_reg exactly: the 48-bit accumulate is mapped through intermediate
+# synthesis registers (e.g. acc_i[19]_i_10_psdsp_1) that carry the same per-symbol data but are
+# not named acc_i_reg, so a *_reg-only filter leaves them single-cycle and they fail. acc_i* /
+# acc_q* catch those. The explicit include-list (accumulate, registered output, previous-y4, and
+# the derotate phase) is every coarse register whose inputs are stable between in_valid pulses; the
+# CORDIC state (cx/cy/cang/citer/cfold), the FSM state, and omega are deliberately EXCLUDED because
+# they capture from the per-cycle CORDIC and must stay single-cycle.
+set coarse_slow [get_cells -hier -quiet -filter {NAME =~ *coarse_cfo_i/acc_i* || \
+                                                 NAME =~ *coarse_cfo_i/acc_q* || \
+                                                 NAME =~ *coarse_cfo_i/p_i_r* || \
+                                                 NAME =~ *coarse_cfo_i/p_q_r* || \
+                                                 NAME =~ *coarse_cfo_i/out_i_r* || \
+                                                 NAME =~ *coarse_cfo_i/out_q_r* || \
+                                                 NAME =~ *coarse_cfo_i/y4p_i* || \
+                                                 NAME =~ *coarse_cfo_i/y4p_q* || \
+                                                 NAME =~ *coarse_cfo_i/theta_reg*}]
 if {[llength $coarse_slow] > 0} {
   set coarse_d [get_pins -quiet -of_objects $coarse_slow \
                   -filter {REF_PIN_NAME == D || REF_PIN_NAME == R || REF_PIN_NAME == S}]
@@ -101,6 +113,22 @@ set fifo_cdc [get_pins -hier -quiet -filter { \
 if {[llength $fifo_cdc] > 0} {
   set_false_path -to $fifo_cdc
   puts "course overlay: false_path applied to [llength $fifo_cdc] rx_raw_fifo CDC sync pins"
+}
+
+# Same FIFO, the read DATA path: the distributed-RAM cell is written on rx_clk (4 ns) and read into
+# rd_i/rd_q on the divided sample clock; being related clocks, the tool times it as a tight 4 ns
+# crossing (-0.7 ns, 86% route, placement-dependent -- it only slipped once the coarse-CFO logic
+# crowded the region; the stock build met it by ~+0.02 ns, i.e. luck). The gray read pointer
+# (synchronized through two flops, false-pathed above) guarantees the word has been sitting in
+# memory for at least two read cycles before it is selected, so the exact rx_clk edge is a false
+# relationship. Bound it datapath-only to one read period instead of removing it entirely, which
+# still catches gross bit-to-bit skew. 16 ns is the read-clock period and is well inside the
+# multi-cycle stability window.
+set fifo_data [get_pins -hier -quiet -filter { \
+    NAME =~ *rx_raw_fifo_i/rd_i_reg*/D || NAME =~ *rx_raw_fifo_i/rd_q_reg*/D}]
+if {[llength $fifo_data] > 0} {
+  set_max_delay -datapath_only -from [get_clocks -quiet rx_clk] -to $fifo_data 16.000
+  puts "course overlay: datapath-only max_delay (16 ns) applied to [llength $fifo_data] rx_raw_fifo read-data pins"
 }
 
 # gp_ctrl[8] is quasi-static and crosses from sample_clk into adc_input_clk only

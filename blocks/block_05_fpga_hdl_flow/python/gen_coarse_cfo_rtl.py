@@ -149,6 +149,14 @@ reg signed [W+7:0] y4p_i, y4p_q;       // previous symbol's y4
 reg have_prev;
 reg [15:0] mcnt;                       // measured-symbol counter
 reg signed [ACC_W-1:0] acc_i, acc_q;   // differential-product accumulator
+// Pipeline the differential-product accumulate across two clocks so the wide 24x24 multiply and
+// the 48-bit accumulate add never share one sample-clock period (a single-cycle multiply+add did
+// not close, and synthesis hid intermediate registers a name-based multicycle could not reach).
+// Stage 1 registers the product; stage 2 accumulates the previous product. Both are explicit
+// per-symbol (in_valid) registers, so timing is nameable and the sum is unchanged -- just drained
+// one symbol later (the CORDIC trigger below counts to WIN+1 to match).
+reg signed [2*(W+8)-1:0] p_i_r, p_q_r;
+reg prod_valid;
 
 // derotate NCO
 reg signed [PHASE_W-1:0] theta;
@@ -161,8 +169,12 @@ reg signed [PHASE_W+1:0] cang;
 reg [7:0] citer;
 reg cfold;
 
-localparam signed [PHASE_W+1:0] HALF = (1 <<< (PHASE_W-1));      // pi (PHASE_W+2 wide to match cang)
-localparam signed [PHASE_W+1:0] QUART = (1 <<< (PHASE_W-2));     // pi/2 (PHASE_W+2 wide to match cang)
+// pi and pi/2 in phase units, PHASE_W+2 wide to match cang. Use these SIGNED localparams bare
+// below (cang > HALF, cang <= -HALF, cang +/- QUART) -- never a part-select like HALF[PHASE_W+1:0],
+// which Verilog treats as UNSIGNED and turns `cang <= -HALF` into an almost-always-true unsigned
+// compare (the wrap picks the wrong branch and omega comes out ~pi/2 too high).
+localparam signed [PHASE_W+1:0] HALF = (1 <<< (PHASE_W-1));
+localparam signed [PHASE_W+1:0] QUART = (1 <<< (PHASE_W-2));
 
 // differential product of current y4 with previous: y4 * conj(y4_prev)
 wire signed [2*(W+8)-1:0] p_i = y4i * y4p_i + y4q * y4p_q;
@@ -172,11 +184,12 @@ always @(posedge clk) begin
     if (rst) begin
         state <= S_IDLE; have_prev <= 1'b0; mcnt <= 0;
         acc_i <= 0; acc_q <= 0; theta <= 0; omega <= 0; ready <= 1'b0;
-        citer <= 0; cfold <= 1'b0;
+        citer <= 0; cfold <= 1'b0; prod_valid <= 1'b0;
     end else begin
         case (state)
         S_IDLE: begin
             ready <= 1'b0; theta <= 0; have_prev <= 1'b0; mcnt <= 0; acc_i <= 0; acc_q <= 0;
+            prod_valid <= 1'b0;
             if (in_valid && sig_present) begin
                 // first signal symbol: seed prev, start measuring
                 y4p_i <= y4i; y4p_q <= y4q; have_prev <= 1'b1; mcnt <= 16'd1;
@@ -185,13 +198,23 @@ always @(posedge clk) begin
         end
         S_MEASURE: begin
             if (in_valid) begin
+                // stage 1: register the differential product (current y4 vs previous)
                 if (have_prev) begin
-                    acc_i <= acc_i + p_i;
-                    acc_q <= acc_q + p_q;
+                    p_i_r <= p_i;
+                    p_q_r <= p_q;
+                    prod_valid <= 1'b1;
+                end
+                // stage 2: accumulate the PREVIOUS cycle's registered product, so the 24x24
+                // multiply and the 48-bit accumulate add sit in separate sample-clock periods
+                if (prod_valid) begin
+                    acc_i <= acc_i + p_i_r;
+                    acc_q <= acc_q + p_q_r;
                 end
                 y4p_i <= y4i; y4p_q <= y4q; have_prev <= 1'b1;
-                if (mcnt == WIN_SYMBOLS[15:0]) begin
-                    // launch sequential CORDIC on the accumulated vector
+                if (mcnt == WIN_SYMBOLS[15:0] + 16'd1) begin
+                    // launch sequential CORDIC. acc_i/acc_q here hold exactly the WIN-1 products
+                    // the single-cycle version captured at WIN -- the extra symbol just drains the
+                    // one-stage product pipeline, so the estimate (cfo_omega) is bit-identical.
                     cx <= acc_i; cy <= acc_q; cang <= 0; citer <= 0; cfold <= 1'b1;
                     state <= S_CORDIC;
                 end else begin
@@ -204,8 +227,8 @@ always @(posedge clk) begin
                 // quadrant fold so the rotation converges (matches the model)
                 cfold <= 1'b0;
                 if (cx < 0) begin
-                    if (cy >= 0) begin cx <= cy;  cy <= -cx; cang <= cang + QUART[PHASE_W+1:0]; end
-                    else         begin cx <= -cy; cy <= cx;  cang <= cang - QUART[PHASE_W+1:0]; end
+                    if (cy >= 0) begin cx <= cy;  cy <= -cx; cang <= cang + QUART; end
+                    else         begin cx <= -cy; cy <= cx;  cang <= cang - QUART; end
                 end
             end else if (citer < CORDIC_N[7:0]) begin
                 if (cy > 0) begin
@@ -220,8 +243,8 @@ always @(posedge clk) begin
                 citer <= citer + 8'd1;
             end else begin
                 // angle done: wrap to (-pi,pi], omega = angle/4
-                if (cang > HALF[PHASE_W+1:0])        omega <= (cang - (1 <<< PHASE_W)) >>> 2;
-                else if (cang <= -HALF[PHASE_W+1:0]) omega <= (cang + (1 <<< PHASE_W)) >>> 2;
+                if (cang > HALF)        omega <= (cang - (1 <<< PHASE_W)) >>> 2;
+                else if (cang <= -HALF) omega <= (cang + (1 <<< PHASE_W)) >>> 2;
                 else                                 omega <= cang >>> 2;
                 theta <= 0; ready <= 1'b1;
                 state <= S_DEROTATE;
