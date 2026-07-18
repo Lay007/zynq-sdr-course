@@ -125,6 +125,10 @@ qpsk_rx_bit_recovery_chain #(
     .rst_carrier(rst || (frame_start && !costas_hold_phase)),
     .dc_block_en(dc_block_en),
     .costas_en(costas_en),
+    // Coarse-CFO removal is held off at the top level for now; the two-board bench validates
+    // it standalone (Lab 11.30/11.31). Wiring it to a runtime gp_ctrl bit through the bridge is
+    // the on-silicon step that lets the fabric receiver acquire a real inter-board CFO.
+    .coarse_cfo_en(1'b0),
     .phase_pick_en(phase_pick_en),
     .in_valid(rx_valid),
     .in_i(rx_i),

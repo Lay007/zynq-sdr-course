@@ -18,6 +18,8 @@ module qpsk_rx_bit_recovery_chain #(
     parameter integer COSTAS_KI_LOG = 1,
     parameter integer COSTAS_SIG_THRESH = 1000,  // freeze-gate: hold the loop while |I|+|Q| < this
                                                   // (works 600..1400 on real self-OTA; noise <600, signal >1400)
+    parameter integer COARSE_WIN_SYMBOLS = 64,    // 4th-power measurement window (also the derotate delay)
+    parameter integer COARSE_SQ_SHIFT = 11,       // per-square right shift, ~log2(|MF symbol|) ~ 2000 -> 11
     parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
 ) (
     input  wire                     clk,
@@ -28,6 +30,7 @@ module qpsk_rx_bit_recovery_chain #(
     input  wire                     rst_carrier,
     input  wire                     dc_block_en,   // 1 = subtract LO-leakage DC (OTA); 0 = passthrough
     input  wire                     costas_en,     // 1 = carrier tracking (OTA); 0 = passthrough
+    input  wire                     coarse_cfo_en, // 1 = strip bulk inter-board CFO before Costas; 0 = passthrough
     input  wire                     phase_pick_en, // 1 = feedforward 8-phase burst timing pick
     input  wire                     in_valid,
     input  wire signed [W-1:0]      in_i,
@@ -38,7 +41,11 @@ module qpsk_rx_bit_recovery_chain #(
     output wire [1:0]               out_dibit,
     output wire                     debug_symbol_valid,
     output wire signed [W-1:0]      debug_symbol_i,
-    output wire signed [W-1:0]      debug_symbol_q
+    output wire signed [W-1:0]      debug_symbol_q,
+    // Observability: the coarse-CFO estimate for the current burst (per-symbol phase increment,
+    // full scale 2^24 = 2*pi) and its ready strobe. Leave unconnected if not needed.
+    output wire                     cfo_ready,
+    output wire signed [23:0]       cfo_omega
 );
 
 // DC blocker on the RX sample front: removes the AD9361 LO-leakage DC offset that
@@ -123,6 +130,34 @@ bpsk_symbol_timing_sampler #(
     .out_q(sym_q)
 );
 
+// Feedforward coarse-CFO removal, ahead of the Costas loop. Two independent-oscillator boards
+// sit tens of kHz apart -- far outside the Costas pull-in (a few hundred Hz), so the loop alone
+// never acquires. This 4th-power estimator strips the QPSK modulation, measures the per-symbol
+// phase increment over COARSE_WIN_SYMBOLS, and derotates the buffered burst (delayed by the
+// window) so Costas only has to close a small residual. Passthrough (coarse_cfo_en=0) is
+// combinational and zero-latency, so the coherent fabric-loopback path stays bit-identical.
+wire cfo_out_valid;
+wire signed [W-1:0] cfo_out_i;
+wire signed [W-1:0] cfo_out_q;
+qpsk_coarse_cfo #(
+    .W(W),
+    .WIN_SYMBOLS(COARSE_WIN_SYMBOLS),
+    .SQ_SHIFT(COARSE_SQ_SHIFT),
+    .SIG_THRESH(COSTAS_SIG_THRESH)
+) coarse_cfo_i (
+    .clk(clk),
+    .rst(rst),
+    .enable(coarse_cfo_en),
+    .in_valid(sym_valid),
+    .in_i(sym_i),
+    .in_q(sym_q),
+    .out_valid(cfo_out_valid),
+    .out_i(cfo_out_i),
+    .out_q(cfo_out_q),
+    .cfo_ready(cfo_ready),
+    .cfo_omega(cfo_omega)
+);
+
 // Carrier-recovery Costas loop tracks the per-burst carrier phase of a real OTA link
 // (the fixed-phase sampler alone floors at ~44%). Passthrough when costas_en=0 keeps
 // the coherent fabric loopback bit-identical. The residual 90-degree QPSK ambiguity is
@@ -142,9 +177,9 @@ qpsk_costas #(
     .rst(rst),
     .rst_phase(rst_carrier),
     .enable(costas_en),
-    .in_valid(sym_valid),
-    .in_i(sym_i),
-    .in_q(sym_q),
+    .in_valid(cfo_out_valid),
+    .in_i(cfo_out_i),
+    .in_q(cfo_out_q),
     .out_valid(cos_valid),
     .out_i(cos_i),
     .out_q(cos_q)

@@ -65,6 +65,7 @@ QPSK_RX_CHAIN = rtl(
     "qpsk_mf_phase_picker.v",
     "bpsk_rrc_rx_fir.v",
     "bpsk_symbol_timing_sampler.v",
+    "qpsk_coarse_cfo.v",
     "qpsk_costas.v",
     "qpsk_hard_decision.v",
     "qpsk_rx_bit_recovery_chain.v",

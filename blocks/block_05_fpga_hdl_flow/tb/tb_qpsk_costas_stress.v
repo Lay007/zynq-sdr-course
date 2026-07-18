@@ -17,7 +17,7 @@ module tb_qpsk_costas_stress #(parameter integer TH=1000);
   wire rxdv; wire [1:0] rxdibit;
   qpsk_rx_bit_recovery_chain #(.W(W),.SPS(8),.INDEX_W(INDEX_W),.COSTAS_SIG_THRESH(TH)) rxc (
     .clk(clk),.rst(rst),.rst_carrier(rst), .dc_block_en(1'b1),.costas_en(1'b1),
-    .phase_pick_en(1'b1),
+    .coarse_cfo_en(1'b0), .phase_pick_en(1'b1),
     .in_valid(rx_valid),.in_i(rx_i),.in_q(rx_q),
     .start_offset(start_offset),.symbol_count(CHAIN_SYMS[INDEX_W-1:0]),
     .out_valid(rxdv),.out_dibit(rxdibit),

@@ -47,7 +47,7 @@ wire [1:0] rxdibit;
 qpsk_rx_bit_recovery_chain #(.W(W), .SPS(8), .INDEX_W(INDEX_W)) rxc (
     .clk(clk), .rst(rst),
     .rst_carrier(rst),
-    .dc_block_en(1'b0), .costas_en(1'b0), .phase_pick_en(1'b0),
+    .dc_block_en(1'b0), .costas_en(1'b0), .coarse_cfo_en(1'b0), .phase_pick_en(1'b0),
     .in_valid(dcv), .in_i(dci), .in_q(dcq),
     .start_offset(start_offset), .symbol_count(CHAIN_SYMS[INDEX_W-1:0]),
     .out_valid(rxdv), .out_dibit(rxdibit),
