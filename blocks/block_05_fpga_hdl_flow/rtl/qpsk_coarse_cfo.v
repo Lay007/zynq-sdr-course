@@ -402,8 +402,8 @@ reg signed [PHASE_W+1:0] cang;
 reg [7:0] citer;
 reg cfold;
 
-localparam signed [PHASE_W:0] HALF = (1 <<< (PHASE_W-1));        // pi
-localparam signed [PHASE_W:0] QUART = (1 <<< (PHASE_W-2));       // pi/2
+localparam signed [PHASE_W+1:0] HALF = (1 <<< (PHASE_W-1));      // pi (PHASE_W+2 wide to match cang)
+localparam signed [PHASE_W+1:0] QUART = (1 <<< (PHASE_W-2));     // pi/2 (PHASE_W+2 wide to match cang)
 
 // differential product of current y4 with previous: y4 * conj(y4_prev)
 wire signed [2*(W+8)-1:0] p_i = y4i * y4p_i + y4q * y4p_q;
