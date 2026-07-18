@@ -256,6 +256,13 @@ wire costas_hold_phase = control_sync[11];
 // Keep it 0 for coherent fabric/BIST compatibility; enable it for the RF path.
 wire qpsk_phase_pick_en = control_sync[12];
 
+// gp_ctrl[13]=1 enables the coarse-CFO estimator ahead of the Costas loop. Two boards on
+// independent references sit tens of kHz apart -- outside the Costas pull-in -- so the loop alone
+// never acquires; this 4th-power stage removes the bulk offset first. Keep it 0 for the coherent
+// fabric loop (it is combinational zero-latency passthrough then); enable it for a two-board RF
+// link. Validated standalone on hardware in Lab 11.30/11.31.
+wire coarse_cfo_en = control_sync[13];
+
 // gp_ctrl[8]=1 feeds the raw-ADC CDC FIFO from AD9361 RX channel 2 (adc_input2 =
 // adc_data_i1/q1) instead of channel 1. control_sync lives on sample_clk, while
 // this mux feeds memory written on adc_input_clk; synchronize the quasi-static
@@ -365,6 +372,7 @@ qpsk_zynq_ber_top #(
     .start_offset(start_offset_cfg),
     .dc_block_en(dc_block_en),
     .costas_en(costas_en),
+    .coarse_cfo_en(coarse_cfo_en),
     .costas_hold_phase(costas_hold_phase),
     .phase_pick_en(qpsk_phase_pick_en),
     .busy(qpsk_busy),

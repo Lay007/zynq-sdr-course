@@ -35,6 +35,7 @@ module qpsk_zynq_ber_top #(
     input  wire [INDEX_W-1:0]       start_offset,
     input  wire                     dc_block_en,    // 1 = RX DC blocker on (OTA); 0 = passthrough
     input  wire                     costas_en,      // 1 = carrier recovery on (OTA); 0 = passthrough
+    input  wire                     coarse_cfo_en,  // 1 = strip bulk inter-board CFO before Costas; 0 = passthrough
     input  wire                     phase_pick_en,  // 1 = feedforward burst timing phase selection
     // 1 = carry the acquired carrier phase from one burst into the next instead of
     // restarting the loop at zero. Sound when the RF path phase is quasi-static (a single
@@ -125,10 +126,10 @@ qpsk_rx_bit_recovery_chain #(
     .rst_carrier(rst || (frame_start && !costas_hold_phase)),
     .dc_block_en(dc_block_en),
     .costas_en(costas_en),
-    // Coarse-CFO removal is held off at the top level for now; the two-board bench validates
-    // it standalone (Lab 11.30/11.31). Wiring it to a runtime gp_ctrl bit through the bridge is
-    // the on-silicon step that lets the fabric receiver acquire a real inter-board CFO.
-    .coarse_cfo_en(1'b0),
+    // Runtime coarse-CFO enable. The bridge drives this from a gp_ctrl bit so the fabric receiver
+    // can strip a real inter-board CFO (validated standalone in Lab 11.30/11.31); benches tie it
+    // to 0, which is combinational zero-latency passthrough, so the coherent loopback is unchanged.
+    .coarse_cfo_en(coarse_cfo_en),
     .phase_pick_en(phase_pick_en),
     .in_valid(rx_valid),
     .in_i(rx_i),
