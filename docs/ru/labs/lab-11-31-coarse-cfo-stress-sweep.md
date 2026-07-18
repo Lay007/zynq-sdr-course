@@ -1,0 +1,1 @@
+--8<-- "blocks/block_11_integrated_sdr_project/lab_11_31_coarse_cfo_stress_sweep.md"
