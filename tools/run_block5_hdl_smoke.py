@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import re
 import shutil
 import subprocess
 import sys
@@ -225,6 +226,24 @@ def run(command: list[str], *, cwd: Path = ROOT) -> None:
     subprocess.run(command, cwd=cwd, check=True)
 
 
+# vvp exits 0 even when a testbench $displays a failure and $finishes normally, so a check on the
+# return code alone silently passes a broken bench. Capture the simulation output and treat an
+# upper-case FAIL token (the shared convention: "FAIL: ...") as a hard error. This is what would
+# have caught the coarse-CFO omega regression that slipped through as "28 passed".
+_FAIL_RE = re.compile(r"\bFAIL\b")
+
+
+def run_sim(command: list[str], *, cwd: Path, name: str) -> None:
+    print(f">>> {' '.join(command)}", flush=True)
+    result = subprocess.run(command, cwd=cwd, check=True, capture_output=True, text=True)
+    sys.stdout.write(result.stdout)
+    if result.stderr:
+        sys.stderr.write(result.stderr)
+    hits = [ln for ln in result.stdout.splitlines() if _FAIL_RE.search(ln)]
+    if hits:
+        raise RuntimeError(f"{name}: testbench reported failure:\n  " + "\n  ".join(hits))
+
+
 def require_tool(name: str) -> str:
     executable = shutil.which(name)
     if executable is None:
@@ -266,7 +285,7 @@ def run_tests(*, generate: bool = True) -> None:
                 raise FileNotFoundError(f"{test.name}: missing source(s): {', '.join(missing_sources)}")
             output = workspace / f"{test.name}.out"
             run([iverilog, "-g2012", "-o", str(output), *(str(path) for path in test.sources)])
-            run([vvp, str(output)], cwd=workspace)
+            run_sim([vvp, str(output)], cwd=workspace, name=test.name)
     print(f"Canonical HDL smoke passed: {len(TESTS)} testbenches.")
 
 
