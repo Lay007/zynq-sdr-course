@@ -150,12 +150,17 @@ gpreg bridge drives it from **`gp_ctrl[13]`** — so the offset can be stripped 
 with a single register write. The [Block 05 smoke suite](../block_05_fpga_hdl_flow/) covers the whole
 path from the bridge down, and the estimator decodes a 25 kHz injected offset to BER 0.
 
-Timing, however, is **not yet closed**: the 4th-power multiply-accumulate is deep and does not meet
-the fast divide-select clock, and synthesis/phys-opt hides intermediate registers a name-based
-multicycle cannot reach (pipelining the accumulate moved the failing stage but did not close it). So
-the estimator is gated behind a **compile-time `COARSE_ENABLE` (default 0)**: the stock bitstream
-compiles the datapath out entirely and keeps its clean baseline timing, and the coherent loopback
-still decodes at BER 0/280 through a plain passthrough. The remaining step is to pipeline the
-4th-power datapath (or apply post-place timing directives) so it closes, then rebuild with
-`COARSE_ENABLE=1` and re-run the two-board link with `gp_ctrl[13]=1` — the receiver acquiring the
-real inter-board CFO **in fabric** rather than on the host.
+**Timing now closes.** The naive integration missed the fast (8 ns) divide-select clock badly
+(-13.9 ns): the 4th-power multiply-accumulate and the derotate LUT-plus-multiply are each ~11-14 ns
+of cascaded DSPs, and synthesis/phys-opt hid intermediate registers a name-based multicycle could
+not reach. Both chains are now **pipelined** — every stage is a single multiply, registered on
+`in_valid`, with a fill counter that skips the pipeline-fill transients and a `GUARD`-deep delay
+line that keeps the burst aligned — and the accumulate/derotate multicycles reach the DSP data
+inputs. With `COARSE_ENABLE=1` (set in the bridge) the estimator is in the shipped bitstream and no
+longer limits timing: the 16 ns operating clock meets at **+7.997 ns**, and the only residual is a
+pre-existing matched-filter path at -0.003 ns on the 8 ns clock (the design's inherent divide-select
+margin; the coarse-out baseline itself sits at -0.035 ns). `cfo_omega` is unchanged, since a
+constant CFO gives `4·ω` regardless of the window position. The `COARSE_ENABLE` parameter stays
+(default 0) so the loopback/OTA labs can still compile the estimator out. The remaining step is the
+two-board run with `gp_ctrl[13]=1` — the receiver acquiring the real inter-board CFO **in fabric**
+rather than on the host.
