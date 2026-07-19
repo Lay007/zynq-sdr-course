@@ -51,8 +51,11 @@ if {[llength $tr_cells] > 0} {
 # 8 ns clock, and is safe because updates are >= 8 cycles apart.
 set costas_cells [get_cells -hier -quiet -filter {NAME =~ *costas_i/*}]
 if {[llength $costas_cells] > 0} {
+  # D/R/S catches fabric FFs; A*/B*/C* catches DSP48 data inputs (e.g. the input de-rotate multiply
+  # y_q0/A that a coarse->Costas per-symbol path lands on), which REF_PIN_NAME == D does not.
   set costas_d [get_pins -quiet -of_objects $costas_cells \
-                  -filter {REF_PIN_NAME == D || REF_PIN_NAME == R || REF_PIN_NAME == S}]
+                  -filter {REF_PIN_NAME == D || REF_PIN_NAME == R || REF_PIN_NAME == S || \
+                           REF_PIN_NAME =~ A* || REF_PIN_NAME =~ B* || REF_PIN_NAME =~ C*}]
   if {[llength $costas_d] > 0} {
     set_multicycle_path -setup 4 -to $costas_d
     set_multicycle_path -hold  3 -to $costas_d
@@ -92,7 +95,8 @@ set coarse_slow [get_cells -hier -quiet -filter {NAME =~ *coarse_cfo_i/acc_i* ||
                                                  NAME =~ *coarse_cfo_i/theta_reg*}]
 if {[llength $coarse_slow] > 0} {
   set coarse_d [get_pins -quiet -of_objects $coarse_slow \
-                  -filter {REF_PIN_NAME == D || REF_PIN_NAME == R || REF_PIN_NAME == S}]
+                  -filter {REF_PIN_NAME == D || REF_PIN_NAME == R || REF_PIN_NAME == S || \
+                           REF_PIN_NAME =~ A* || REF_PIN_NAME =~ B* || REF_PIN_NAME =~ C*}]
   if {[llength $coarse_d] > 0} {
     set_multicycle_path -setup 4 -to $coarse_d
     set_multicycle_path -hold  3 -to $coarse_d

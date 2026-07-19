@@ -361,6 +361,7 @@ qpsk_zynq_ber_top #(
     // leading noise and passes the captured-noise Costas stress test at BER 0/280.
     .RX_SIG_THRESH(8),
     .RX_SAMPLE_MARGIN(256),   // OTA frame arrives after the AD9361 round-trip delay
+    .COARSE_ENABLE(1),        // fabric-CFO build: synthesize the pipelined coarse-CFO estimator
     .MEM_FILE(MEM_FILE),
     .COEF_FILE(COEF_FILE)
 ) qpsk_core_i (

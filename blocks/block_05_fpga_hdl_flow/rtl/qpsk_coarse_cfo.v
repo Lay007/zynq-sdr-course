@@ -34,7 +34,7 @@ module qpsk_coarse_cfo #(
     parameter integer CORDIC_N = 20,
     parameter integer LUT_AW = 8,
     parameter integer ACC_W = 48,
-    parameter integer GUARD = 8               // delay-line slack for the CORDIC latency
+    parameter integer GUARD = 12               // delay-line slack for the CORDIC latency
 ) (
     input  wire                 clk,
     input  wire                 rst,
@@ -362,23 +362,31 @@ wire [W:0]   mag   = {1'b0, abs_i} + {1'b0, abs_q};
 wire sig_present = (SIG_THRESH == 0) || (mag >= SIG_THRESH[W:0]);
 
 // ---------------------------------------------------------------------------
-// complex 4th power of the CURRENT input symbol (combinational)
+// complex 4th power of the input symbol, PIPELINED into two square stages, each
+// registered on in_valid, so no single sample-clock period carries more than one
+// 24x24 multiply. A fully combinational in -> y2 -> y4 -> differential-product chain
+// is ~14 ns of cascaded DSPs and does not close on the 8 ns divide-select clock; the
+// pipeline (and the differential product below) makes every stage a single multiply.
 //   y2 = (i*i - q*q, 2*i*q) >> SQ_SHIFT ; y4 = square(y2) >> SQ_SHIFT
 // ---------------------------------------------------------------------------
+// stage 1: square of the CURRENT input -> registered y2
 wire signed [2*W-1:0] ii = in_i * in_i;
 wire signed [2*W-1:0] qq = in_q * in_q;
 wire signed [2*W-1:0] iq = in_i * in_q;
 wire signed [2*W:0]   y2i_f = ii - qq;
 wire signed [2*W:0]   y2q_f = (iq <<< 1);
-wire signed [W+3:0]   y2i = y2i_f >>> SQ_SHIFT;
-wire signed [W+3:0]   y2q = y2q_f >>> SQ_SHIFT;
-wire signed [2*(W+4)-1:0] aa = y2i * y2i;
-wire signed [2*(W+4)-1:0] bb = y2q * y2q;
-wire signed [2*(W+4)-1:0] ab = y2i * y2q;
+wire signed [W+3:0]   y2i_c = y2i_f >>> SQ_SHIFT;
+wire signed [W+3:0]   y2q_c = y2q_f >>> SQ_SHIFT;
+reg  signed [W+3:0]   y2i_r, y2q_r;
+// stage 2: square of the REGISTERED y2 -> registered y4 (the 4th power)
+wire signed [2*(W+4)-1:0] aa = y2i_r * y2i_r;
+wire signed [2*(W+4)-1:0] bb = y2q_r * y2q_r;
+wire signed [2*(W+4)-1:0] ab = y2i_r * y2q_r;
 wire signed [2*(W+4):0]   y4i_f = aa - bb;
 wire signed [2*(W+4):0]   y4q_f = (ab <<< 1);
-wire signed [W+7:0] y4i = y4i_f >>> SQ_SHIFT;
-wire signed [W+7:0] y4q = y4q_f >>> SQ_SHIFT;
+wire signed [W+7:0]   y4i_c = y4i_f >>> SQ_SHIFT;
+wire signed [W+7:0]   y4q_c = y4q_f >>> SQ_SHIFT;
+reg  signed [W+7:0]   y4i_r, y4q_r;
 
 // ---------------------------------------------------------------------------
 // FSM: IDLE -> MEASURE (accumulate WIN differential products) -> CORDIC -> DEROTATE
@@ -386,18 +394,15 @@ wire signed [W+7:0] y4q = y4q_f >>> SQ_SHIFT;
 localparam [1:0] S_IDLE = 2'd0, S_MEASURE = 2'd1, S_CORDIC = 2'd2, S_DEROTATE = 2'd3;
 reg [1:0] state = S_IDLE;
 
-reg signed [W+7:0] y4p_i, y4p_q;       // previous symbol's y4
-reg have_prev;
-reg [15:0] mcnt;                       // measured-symbol counter
+reg signed [W+7:0] y4p_i, y4p_q;       // previous symbol's 4th power (y4 delayed one symbol)
+reg [15:0] mcnt;                       // accumulated-product counter
+reg [2:0]  fill;                       // pipeline-fill counter: skip the first FILL products, which
+                                        // are transients while the two square stages + the product
+                                        // register fill; only then is p_i_r a valid differential
+                                        // product of two consecutive signal symbols.
 reg signed [ACC_W-1:0] acc_i, acc_q;   // differential-product accumulator
-// Pipeline the differential-product accumulate across two clocks so the wide 24x24 multiply and
-// the 48-bit accumulate add never share one sample-clock period (a single-cycle multiply+add did
-// not close, and synthesis hid intermediate registers a name-based multicycle could not reach).
-// Stage 1 registers the product; stage 2 accumulates the previous product. Both are explicit
-// per-symbol (in_valid) registers, so timing is nameable and the sum is unchanged -- just drained
-// one symbol later (the CORDIC trigger below counts to WIN+1 to match).
-reg signed [2*(W+8)-1:0] p_i_r, p_q_r;
-reg prod_valid;
+reg signed [2*(W+8)-1:0] p_i_r, p_q_r; // registered differential product (last pipeline stage)
+localparam integer FILL = 4;
 
 // derotate NCO
 reg signed [PHASE_W-1:0] theta;
@@ -417,49 +422,50 @@ reg cfold;
 localparam signed [PHASE_W+1:0] HALF = (1 <<< (PHASE_W-1));
 localparam signed [PHASE_W+1:0] QUART = (1 <<< (PHASE_W-2));
 
-// differential product of current y4 with previous: y4 * conj(y4_prev)
-wire signed [2*(W+8)-1:0] p_i = y4i * y4p_i + y4q * y4p_q;
-wire signed [2*(W+8)-1:0] p_q = y4q * y4p_i - y4i * y4p_q;
+// differential product of the current (registered) 4th power with the previous symbol's:
+// y4 * conj(y4_prev). One multiply-add, registered into p_i_r below (its own pipeline stage).
+wire signed [2*(W+8)-1:0] p_i_c = y4i_r * y4p_i + y4q_r * y4p_q;
+wire signed [2*(W+8)-1:0] p_q_c = y4q_r * y4p_i - y4i_r * y4p_q;
 
 always @(posedge clk) begin
     if (rst) begin
-        state <= S_IDLE; have_prev <= 1'b0; mcnt <= 0;
+        state <= S_IDLE; mcnt <= 0; fill <= 3'd0;
         acc_i <= 0; acc_q <= 0; theta <= 0; omega <= 0; ready <= 1'b0;
-        citer <= 0; cfold <= 1'b0; prod_valid <= 1'b0;
+        citer <= 0; cfold <= 1'b0;
     end else begin
         case (state)
         S_IDLE: begin
-            ready <= 1'b0; theta <= 0; have_prev <= 1'b0; mcnt <= 0; acc_i <= 0; acc_q <= 0;
-            prod_valid <= 1'b0;
+            ready <= 1'b0; theta <= 0; mcnt <= 0; acc_i <= 0; acc_q <= 0; fill <= 3'd0;
             if (in_valid && sig_present) begin
-                // first signal symbol: seed prev, start measuring
-                y4p_i <= y4i; y4p_q <= y4q; have_prev <= 1'b1; mcnt <= 16'd1;
+                // first signal symbol: prime stage 1 of the 4th-power pipeline, start filling
+                y2i_r <= y2i_c; y2q_r <= y2q_c;
+                fill <= 3'd1;
                 state <= S_MEASURE;
             end
         end
         S_MEASURE: begin
             if (in_valid) begin
-                // stage 1: register the differential product (current y4 vs previous)
-                if (have_prev) begin
-                    p_i_r <= p_i;
-                    p_q_r <= p_q;
-                    prod_valid <= 1'b1;
-                end
-                // stage 2: accumulate the PREVIOUS cycle's registered product, so the 24x24
-                // multiply and the 48-bit accumulate add sit in separate sample-clock periods
-                if (prod_valid) begin
+                // advance every pipeline stage one symbol: square -> 4th power -> delay -> product
+                y2i_r <= y2i_c; y2q_r <= y2q_c;   // stage 1
+                y4i_r <= y4i_c; y4q_r <= y4q_c;   // stage 2 (4th power)
+                y4p_i <= y4i_r; y4p_q <= y4q_r;   // previous symbol's 4th power
+                p_i_r <= p_i_c; p_q_r <= p_q_c;   // stage 3 (differential product)
+                if (fill < FILL[2:0]) begin
+                    // pipeline still filling -- p_i_r is a transient, do not accumulate it
+                    fill <= fill + 3'd1;
+                end else begin
+                    // stage 4: accumulate the valid product (one add per symbol)
                     acc_i <= acc_i + p_i_r;
                     acc_q <= acc_q + p_q_r;
-                end
-                y4p_i <= y4i; y4p_q <= y4q; have_prev <= 1'b1;
-                if (mcnt == WIN_SYMBOLS[15:0] + 16'd1) begin
-                    // launch sequential CORDIC. acc_i/acc_q here hold exactly the WIN-1 products
-                    // the single-cycle version captured at WIN -- the extra symbol just drains the
-                    // one-stage product pipeline, so the estimate (cfo_omega) is bit-identical.
-                    cx <= acc_i; cy <= acc_q; cang <= 0; citer <= 0; cfold <= 1'b1;
-                    state <= S_CORDIC;
-                end else begin
-                    mcnt <= mcnt + 16'd1;
+                    if (mcnt == WIN_SYMBOLS[15:0]) begin
+                        // launch the sequential CORDIC on the accumulated vector. Its angle is
+                        // 4*omega regardless of the exact window position, so a constant CFO gives
+                        // the same estimate the un-pipelined version did.
+                        cx <= acc_i; cy <= acc_q; cang <= 0; citer <= 0; cfold <= 1'b1;
+                        state <= S_CORDIC;
+                    end else begin
+                        mcnt <= mcnt + 16'd1;
+                    end
                 end
             end
         end
@@ -500,7 +506,12 @@ always @(posedge clk) begin
 end
 
 // ---------------------------------------------------------------------------
-// NCO derotate of the DELAYED (oldest) symbol by -theta, using the Q15 LUT
+// NCO derotate of the DELAYED (oldest) symbol by -theta, PIPELINED: the phase -> Q15 LUT lookup and
+// the complex multiply are split by a register so neither the LUT read nor the four 16x16 products
+// carry a whole sample-clock period (theta -> LUT -> multiply -> >>>15 is ~11 ns and does not close
+// on the 8 ns divide-select clock; synthesis also hides intermediate registers a name-based
+// multicycle cannot reach). Stage 1 registers the cos/sin and the symbol (and the passthrough
+// symbol, so both modes have identical latency); stage 2 multiplies into the output register.
 // ---------------------------------------------------------------------------
 wire signed [PHASE_W-1:0] ntheta = -theta;
 wire [LUT_AW-1:0] lut_idx = ntheta[PHASE_W-1 -: LUT_AW];
@@ -508,22 +519,38 @@ wire signed [15:0] cos_v = cos_sin[lut_idx][31:16];
 wire signed [15:0] sin_v = cos_sin[lut_idx][15:0];
 wire signed [W-1:0] old_i = dl_i[DEPTH-1];
 wire signed [W-1:0] old_q = dl_q[DEPTH-1];
-wire signed [W+16-1:0] r_ic = old_i * cos_v;
-wire signed [W+16-1:0] r_qs = old_q * sin_v;
-wire signed [W+16-1:0] r_is = old_i * sin_v;
-wire signed [W+16-1:0] r_qc = old_q * cos_v;
+
+// stage 1: register the LUT output + the delayed symbol + the passthrough symbol, plus valid/ready
+reg signed [15:0]  cos_r, sin_r;
+reg signed [W-1:0] old_i_r, old_q_r;     // delayed derotate symbol, aligned with cos_r/sin_r
+reg signed [W-1:0] pass_i_r, pass_q_r;   // passthrough symbol, same one-stage delay
+reg vld1, rdy1;
+always @(posedge clk) begin
+    if (rst) begin
+        vld1 <= 1'b0; rdy1 <= 1'b0;
+    end else begin
+        vld1 <= in_valid;
+        rdy1 <= ready;
+        if (in_valid) begin
+            cos_r <= cos_v; sin_r <= sin_v;
+            old_i_r <= old_i; old_q_r <= old_q;
+            pass_i_r <= in_i; pass_q_r <= in_q;
+        end
+    end
+end
+
+// stage 2: complex multiply of the registered LUT and symbol -> registered output
+wire signed [W+16-1:0] r_ic = old_i_r * cos_r;
+wire signed [W+16-1:0] r_qs = old_q_r * sin_r;
+wire signed [W+16-1:0] r_is = old_i_r * sin_r;
+wire signed [W+16-1:0] r_qc = old_q_r * cos_r;
 wire signed [W-1:0] rot_i = (r_ic - r_qs) >>> 15;
 wire signed [W-1:0] rot_q = (r_is + r_qc) >>> 15;
 
-// Registered output pipeline. The derotate above (theta -> LUT -> complex multiply -> >>>15) is a
-// long combinational path; driving it straight into the downstream Costas per-symbol enable gate
-// (loop_run = |in_i|+|in_q| >= SIG_THRESH, which feeds acq_cnt/theta CE) forms a single-cycle
-// cross-module path that will not close on the fast divide-select clock. Capture the released
-// symbol on in_valid so out_i_r/out_q_r change only at symbol cadence (their input path is then a
-// multicycle -- see course_overlay_timing.xdc), and delay the valid strobe by the matching one
-// clock so data and valid stay aligned. This adds one clock of latency in BOTH modes (passthrough
-// included); the symbol stream is sparse, so a uniform one-clock delay preserves alignment and the
-// coherent loopback still decodes at BER 0 (at a start_offset shifted by one).
+// Registered output. Capturing on the (delayed) valid keeps out_i_r/out_q_r at symbol cadence so
+// their input path is a multicycle, and the strobe is delayed to match. Two clocks of latency in
+// BOTH modes (passthrough included); the symbol stream is sparse so a uniform delay is transparent
+// -- the coherent loopback still decodes at BER 0 (at a start_offset shifted by the pipeline depth).
 reg out_valid_r = 1'b0;
 reg signed [W-1:0] out_i_r = 0;
 reg signed [W-1:0] out_q_r = 0;
@@ -533,10 +560,10 @@ always @(posedge clk) begin
         out_i_r     <= 0;
         out_q_r     <= 0;
     end else begin
-        out_valid_r <= enable ? (in_valid && ready) : in_valid;
-        if (in_valid) begin
-            out_i_r <= enable ? rot_i : in_i;
-            out_q_r <= enable ? rot_q : in_q;
+        out_valid_r <= enable ? (vld1 && rdy1) : vld1;
+        if (vld1) begin
+            out_i_r <= enable ? rot_i : pass_i_r;
+            out_q_r <= enable ? rot_q : pass_q_r;
         end
     end
 end
