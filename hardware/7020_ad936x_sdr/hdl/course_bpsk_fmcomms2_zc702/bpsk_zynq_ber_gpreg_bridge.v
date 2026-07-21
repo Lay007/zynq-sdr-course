@@ -84,6 +84,7 @@ wire qpsk_done;
 wire qpsk_timed_out;
 wire [INDEX_W-1:0] qpsk_received_symbols;
 wire [INDEX_W-1:0] qpsk_total_bit_errors;
+wire [INDEX_W-1:0] qpsk_payload_bit_errors;
 wire qpsk_symbol_valid_debug;
 wire signed [W-1:0] qpsk_symbol_i_debug;
 wire signed [W-1:0] qpsk_symbol_q_debug;
@@ -100,7 +101,7 @@ wire core_done       = mod_qpsk ? qpsk_done      : bpsk_done;
 wire core_timed_out  = mod_qpsk ? qpsk_timed_out : bpsk_timed_out;
 wire [INDEX_W-1:0] received_bits  = mod_qpsk ? qpsk_received_symbols : bpsk_received_bits;
 wire [INDEX_W-1:0] total_errors   = mod_qpsk ? qpsk_total_bit_errors : bpsk_total_errors;
-wire [INDEX_W-1:0] payload_errors = mod_qpsk ? {INDEX_W{1'b0}}       : bpsk_payload_errors;
+wire [INDEX_W-1:0] payload_errors = mod_qpsk ? qpsk_payload_bit_errors : bpsk_payload_errors;
 wire recovered_valid_debug = mod_qpsk ? 1'b0 : bpsk_recovered_valid_debug;
 wire recovered_bit_debug   = mod_qpsk ? 1'b0 : bpsk_recovered_bit_debug;
 wire symbol_valid_debug    = mod_qpsk ? qpsk_symbol_valid_debug : bpsk_symbol_valid_debug;
@@ -410,6 +411,7 @@ qpsk_zynq_ber_top #(
     .timed_out(qpsk_timed_out),
     .received_symbols(qpsk_received_symbols),
     .total_bit_errors(qpsk_total_bit_errors),
+    .payload_bit_errors(qpsk_payload_bit_errors),
     .debug_symbol_valid(qpsk_symbol_valid_debug),
     .debug_symbol_i(qpsk_symbol_i_debug),
     .debug_symbol_q(qpsk_symbol_q_debug),

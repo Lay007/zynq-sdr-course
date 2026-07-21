@@ -61,6 +61,7 @@ module qpsk_zynq_ber_top #(
     output reg                      timed_out,
     output wire [INDEX_W-1:0]       received_symbols,
     output wire [INDEX_W-1:0]       total_bit_errors,
+    output wire [INDEX_W-1:0]       payload_bit_errors,
     output wire                     debug_symbol_valid,
     output wire signed [W-1:0]      debug_symbol_i,
     output wire signed [W-1:0]      debug_symbol_q,
@@ -185,7 +186,8 @@ qpsk_ber_counter #(
     .busy(ber_busy),
     .done(ber_done),
     .received_symbols(received_symbols),
-    .total_bit_errors(total_bit_errors)
+    .total_bit_errors(total_bit_errors),
+    .payload_bit_errors(payload_bit_errors)
 );
 
 always @(posedge clk) begin

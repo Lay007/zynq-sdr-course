@@ -130,6 +130,11 @@ TESTS = (
     HdlTest("tb_bpsk_framed_loopback", COMMON_BPSK + (tb("tb_bpsk_framed_loopback.v"),)),
     HdlTest("tb_bpsk_zynq_ber_top", BPSK_TOP + (tb("tb_bpsk_zynq_ber_top.v"),)),
     HdlTest("tb_qpsk_zynq_ber_top", QPSK_TOP + (tb("tb_qpsk_zynq_ber_top.v"),)),
+    HdlTest(
+        "tb_qpsk_payload_errors",
+        rtl("bpsk_ber_counter.v", "qpsk_ber_counter.v")
+        + (tb("tb_qpsk_payload_errors.v"),),
+    ),
     # Real-capture RX benches. They were absent from this suite while the RX chain grew a
     # DC blocker and a Costas loop, so nothing caught the 90/270-degree frame-sync hole
     # until hardware did. QPSK_RX_BENCH carries everything the RX chain needs.

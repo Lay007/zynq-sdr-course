@@ -53,7 +53,8 @@ module qpsk_ber_counter #(
     output wire                     done,
     output wire                     quadrant_swapped, // 1 = branch B won (90/270 deg)
     output reg  [INDEX_W-1:0]       received_symbols,
-    output reg  [INDEX_W-1:0]       total_bit_errors
+    output reg  [INDEX_W-1:0]       total_bit_errors,
+    output reg  [INDEX_W-1:0]       payload_bit_errors
 );
 
 localparam [1:0] S_IDLE  = 2'd0;
@@ -127,7 +128,7 @@ wire abort_a = abort || (winner_valid &&  winner_b);
 wire abort_b = abort || (winner_valid && !winner_b);
 
 wire busy_a, busy_b, done_a, done_b;
-wire [INDEX_W-1:0] recv_a, recv_b, err_a, err_b;
+wire [INDEX_W-1:0] recv_a, recv_b, err_a, err_b, payload_err_a, payload_err_b;
 
 bpsk_ber_counter #(
     .INDEX_W(INDEX_W),
@@ -149,7 +150,7 @@ bpsk_ber_counter #(
     .lock_acquired(lock_a),
     .received_bits(recv_a),
     .total_errors(err_a),
-    .payload_errors()
+    .payload_errors(payload_err_a)
 );
 
 bpsk_ber_counter #(
@@ -172,7 +173,7 @@ bpsk_ber_counter #(
     .lock_acquired(lock_b),
     .received_bits(recv_b),
     .total_errors(err_b),
-    .payload_errors()
+    .payload_errors(payload_err_b)
 );
 
 // Before a winner exists neither branch can be `done` on its own, so the only way
@@ -185,6 +186,7 @@ assign quadrant_swapped = winner_valid && winner_b;
 always @(*) begin
     received_symbols = (winner_b ? recv_b : recv_a) >> 1;   // 2 bits/symbol
     total_bit_errors = (winner_b ? err_b : err_a);
+    payload_bit_errors = (winner_b ? payload_err_b : payload_err_a);
 end
 
 endmodule
