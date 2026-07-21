@@ -17,7 +17,7 @@ if {[llength $ctrl_async_clks] > 0 && [llength $sample_async_clks] > 0} {
 # NCO / loop-filter / interpolator state once per ADC capture-valid. capture_in_valid
 # is the AD9361 sample strobe (~3.84 MHz) seen inside the ~62.5 MHz sample clock, so
 # those state registers only change roughly every 16 sample-clock cycles. Their
-# recurrence (nco -> interpolate -> sign-Gardner TED -> PI loop -> w_step) is a long
+# recurrence (nco -> interpolate -> Gardner TED -> PI loop -> w_step) is a long
 # combinational path that cannot close in a single 16 ns period, so relax the DATA
 # inputs (not the clock enable) by a multicycle. The QPSK implementation has the same
 # cadence under g_qpsk_timing_recovery/continuous_timing_i and must be included too.
@@ -29,12 +29,23 @@ if {[llength $tr_cells] > 0} {
   # CE is the per-cycle capture_in_valid strobe and must stay single-cycle.
   set tr_d [get_pins -quiet -of_objects $tr_cells \
               -filter {REF_PIN_NAME == D || REF_PIN_NAME == R || REF_PIN_NAME == S}]
+  # Vivado can materialize a register on a DSP input during placement. Constrain
+  # the existing DSP data pins as well so the multicycle follows that transform;
+  # otherwise the generated *_psdsp/D endpoint silently falls back to one cycle.
+  set tr_dsps [get_cells -quiet -filter {REF_NAME =~ DSP48*} $tr_cells]
+  if {[llength $tr_dsps] > 0} {
+    set tr_d [concat $tr_d [get_pins -quiet -of_objects $tr_dsps \
+                              -filter {DIRECTION == IN && \
+                                       (REF_PIN_NAME =~ A* || REF_PIN_NAME =~ B* || REF_PIN_NAME =~ C*) && \
+                                       REF_PIN_NAME !~ ACIN* && REF_PIN_NAME !~ BCIN* && \
+                                       REF_PIN_NAME !~ CARRY* && REF_PIN_NAME !~ CE* && REF_PIN_NAME != CLK}]]
+  }
   if {[llength $tr_d] > 0} {
     # util_ad9361_divclk exposes two run-time divide-select clocks on the sample
     # clock (62.5 MHz and 125 MHz); only one is active but the tools analyze both.
-    # Setup 4 covers the ~21.5 ns recurrence on the faster 8 ns clock (32 ns) and on
-    # the 16 ns clock (64 ns); both are safe because capture_in_valid is >= ~16/32
-    # cycles sparse.
+    # Setup 4 covers the recurrence on the faster 8 ns clock (32 ns) and on the
+    # 16 ns clock (64 ns); both remain conservative because capture_in_valid is
+    # >= ~16/32 cycles sparse. The paired setup/hold 4/3 changes only data checks.
     set_multicycle_path -setup 4 -to $tr_d
     set_multicycle_path -hold  3 -to $tr_d
     puts "course overlay: multicycle-path (setup 4) applied to [llength $tr_d] timing-recovery data pins"
