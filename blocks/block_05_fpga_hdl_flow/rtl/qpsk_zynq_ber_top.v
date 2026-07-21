@@ -22,6 +22,7 @@ module qpsk_zynq_ber_top #(
     parameter integer COSTAS_KP_LOG_TRACK = 6,
     parameter integer COSTAS_ACQ_SYMBOLS = 32,
     parameter integer COSTAS_KI_LOG = 1,
+    parameter integer TIMING_RECOVERY_ENABLE = 0,
     // Extra symbols the RX sampler emits beyond the frame length. On a real OTA link
     // the frame arrives after the AD9361 TX+RX group delay (hundreds of samples), so
     // a sampler window == frame length misses the late frame. This margin lets the
@@ -44,6 +45,7 @@ module qpsk_zynq_ber_top #(
     input  wire                     costas_en,      // 1 = carrier recovery on (OTA); 0 = passthrough
     input  wire                     coarse_cfo_en,  // 1 = strip bulk inter-board CFO before Costas; 0 = passthrough
     input  wire                     phase_pick_en,  // 1 = feedforward burst timing phase selection
+    input  wire                     timing_recovery_en, // 1 = continuous Gardner timing recovery
     // 1 = carry the acquired carrier phase from one burst into the next instead of
     // restarting the loop at zero. Sound when the RF path phase is quasi-static (a single
     // board talking to itself); harmless otherwise, the loop simply re-acquires.
@@ -61,7 +63,10 @@ module qpsk_zynq_ber_top #(
     output wire [INDEX_W-1:0]       total_bit_errors,
     output wire                     debug_symbol_valid,
     output wire signed [W-1:0]      debug_symbol_i,
-    output wire signed [W-1:0]      debug_symbol_q
+    output wire signed [W-1:0]      debug_symbol_q,
+    output wire [15:0]              timing_mu,
+    output wire signed [16:0]       timing_omega,
+    output wire signed [2:0]        timing_error
 );
 
 localparam integer RX_IDLE_TIMEOUT_W = (RX_IDLE_TIMEOUT_CYCLES <= 1) ? 1 : $clog2(RX_IDLE_TIMEOUT_CYCLES);
@@ -128,6 +133,7 @@ qpsk_rx_bit_recovery_chain #(
     .COSTAS_ACQ_SYMBOLS(COSTAS_ACQ_SYMBOLS),
     .COSTAS_KI_LOG(COSTAS_KI_LOG),
     .COSTAS_SIG_THRESH(RX_SIG_THRESH),
+    .TIMING_RECOVERY_ENABLE(TIMING_RECOVERY_ENABLE),
     .COARSE_ENABLE(COARSE_ENABLE),
     .COEF_FILE(COEF_FILE)
 ) rx_chain_i (
@@ -144,6 +150,7 @@ qpsk_rx_bit_recovery_chain #(
     // still decodes at BER 0 (one added clock, below the sampler phase choice).
     .coarse_cfo_en(coarse_cfo_en),
     .phase_pick_en(phase_pick_en),
+    .timing_recovery_en(timing_recovery_en),
     .in_valid(rx_valid),
     .in_i(rx_i),
     .in_q(rx_q),
@@ -154,7 +161,10 @@ qpsk_rx_bit_recovery_chain #(
     .out_dibit(recovered_dibit),
     .debug_symbol_valid(debug_symbol_valid),
     .debug_symbol_i(debug_symbol_i),
-    .debug_symbol_q(debug_symbol_q)
+    .debug_symbol_q(debug_symbol_q),
+    .timing_mu(timing_mu),
+    .timing_omega(timing_omega),
+    .timing_error(timing_error)
 );
 
 qpsk_ber_counter #(

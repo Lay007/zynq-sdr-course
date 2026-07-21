@@ -87,6 +87,9 @@ wire [INDEX_W-1:0] qpsk_total_bit_errors;
 wire qpsk_symbol_valid_debug;
 wire signed [W-1:0] qpsk_symbol_i_debug;
 wire signed [W-1:0] qpsk_symbol_q_debug;
+wire [15:0] qpsk_timing_mu_debug;
+wire signed [16:0] qpsk_timing_omega_debug;
+wire signed [2:0] qpsk_timing_error_debug;
 wire qpsk_tx_valid;
 wire signed [W-1:0] qpsk_tx_i;
 wire signed [W-1:0] qpsk_tx_q;
@@ -163,6 +166,10 @@ reg [9:0] decision_negative_count_lsb_sample = 10'd0;
 (* ASYNC_REG = "TRUE" *) reg adc_input_reset_sync_ctrl = 1'b0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] capture_debug_meta_ctrl = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] capture_debug_sync_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] timing_debug_meta_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] timing_debug_sync_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [2:0] timing_error_meta_ctrl = 3'd0;
+(* ASYNC_REG = "TRUE" *) reg [2:0] timing_error_sync_ctrl = 3'd0;
 
 wire start_edge = control_sync[0] && !control_sync_d[0];
 wire clear_done_edge = control_sync[1] && !control_sync_d[1];
@@ -262,6 +269,13 @@ wire qpsk_phase_pick_en = control_sync[12];
 // fabric loop (it is combinational zero-latency passthrough then); enable it for a two-board RF
 // link. Validated standalone on hardware in Lab 11.30/11.31.
 wire coarse_cfo_en = control_sync[13];
+
+// gp_ctrl[14]=1 selects the continuous QPSK Gardner timing loop. It bypasses the
+// feedforward phase picker and tracks fractional timing/sample-clock drift. The
+// same bit also exposes {omega[15:0], mu[15:0]} through gp_adc_input_debug and
+// the signed 3-bit TED error through gp_capture_debug (unless BRAM readout bit 7
+// is active), giving the host direct loop observability.
+wire qpsk_timing_recovery_en = control_sync[14];
 
 // gp_ctrl[8]=1 feeds the raw-ADC CDC FIFO from AD9361 RX channel 2 (adc_input2 =
 // adc_data_i1/q1) instead of channel 1. control_sync lives on sample_clk, while
@@ -368,6 +382,7 @@ qpsk_zynq_ber_top #(
     .COSTAS_KP_LOG_TRACK(7),
     .COSTAS_ACQ_SYMBOLS(64),
     .COSTAS_KI_LOG(4),
+    .TIMING_RECOVERY_ENABLE(1),
     .COARSE_ENABLE(1),        // fabric-CFO build: synthesize the pipelined coarse-CFO estimator
     .MEM_FILE(MEM_FILE),
     .COEF_FILE(COEF_FILE)
@@ -383,6 +398,7 @@ qpsk_zynq_ber_top #(
     .coarse_cfo_en(coarse_cfo_en),
     .costas_hold_phase(costas_hold_phase),
     .phase_pick_en(qpsk_phase_pick_en),
+    .timing_recovery_en(qpsk_timing_recovery_en),
     .busy(qpsk_busy),
     .done(qpsk_done),
     .tx_valid(qpsk_tx_valid),
@@ -396,7 +412,10 @@ qpsk_zynq_ber_top #(
     .total_bit_errors(qpsk_total_bit_errors),
     .debug_symbol_valid(qpsk_symbol_valid_debug),
     .debug_symbol_i(qpsk_symbol_i_debug),
-    .debug_symbol_q(qpsk_symbol_q_debug)
+    .debug_symbol_q(qpsk_symbol_q_debug),
+    .timing_mu(qpsk_timing_mu_debug),
+    .timing_omega(qpsk_timing_omega_debug),
+    .timing_error(qpsk_timing_error_debug)
 );
 
 // ---------------------------------------------------------------------------
@@ -625,6 +644,10 @@ always @(posedge ctrl_clk) begin
         adc_input_reset_sync_ctrl <= 1'b0;
         capture_debug_meta_ctrl <= 32'd0;
         capture_debug_sync_ctrl <= 32'd0;
+        timing_debug_meta_ctrl <= 32'd0;
+        timing_debug_sync_ctrl <= 32'd0;
+        timing_error_meta_ctrl <= 3'd0;
+        timing_error_sync_ctrl <= 3'd0;
     end else begin
         status_meta_ctrl <= {16'd0, SPS[7:0], 3'd0, control_sync[4], timeout_sticky_sample, done_sticky_sample, core_busy, control_sync[0]};
         status_sync_ctrl <= status_meta_ctrl;
@@ -658,6 +681,10 @@ always @(posedge ctrl_clk) begin
             capture_peak_abs_sample
         };
         capture_debug_sync_ctrl <= capture_debug_meta_ctrl;
+        timing_debug_meta_ctrl <= {qpsk_timing_omega_debug[15:0], qpsk_timing_mu_debug};
+        timing_debug_sync_ctrl <= timing_debug_meta_ctrl;
+        timing_error_meta_ctrl <= qpsk_timing_error_debug;
+        timing_error_sync_ctrl <= timing_error_meta_ctrl;
         tx_valid_meta_ctrl <= {
             recovered_valid_seen_any_sample,
             recovered_one_seen_any_sample,
@@ -677,7 +704,7 @@ assign gp_total_errors = error_counts_sync_ctrl;
 assign gp_signature = SIGNATURE;
 assign gp_tx_valid_count = tx_valid_sync_ctrl;
 assign gp_rx_valid_count = rx_valid_sync_ctrl;
-assign gp_adc_input_debug = {
+wire [31:0] normal_adc_input_debug = {
     adc_input_debug_sync_ctrl[14],
     adc_input_debug_sync_ctrl[13],
     adc_input_debug_sync_ctrl[12],
@@ -685,9 +712,12 @@ assign gp_adc_input_debug = {
     adc_input_counter_sync_ctrl,
     adc_input_debug_sync_ctrl[11:0]
 };
+assign gp_adc_input_debug = gp_ctrl[14] ? timing_debug_sync_ctrl : normal_adc_input_debug;
 // gp_ctrl[7]=1 -> readout: return the captured RX sample at gp_start_offset;
 // else the normal capture-debug status word.
-assign gp_capture_debug = gp_ctrl[7] ? cap_rdata : capture_debug_sync_ctrl;
+assign gp_capture_debug = gp_ctrl[7] ? cap_rdata :
+                          gp_ctrl[14] ? {{29{timing_error_sync_ctrl[2]}}, timing_error_sync_ctrl} :
+                          capture_debug_sync_ctrl;
 assign tx_path_active = tx_path_active_sample;
 
 // DAC-facing TX stream: the selected modem drives the mux; BPSK mode is

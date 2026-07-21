@@ -67,6 +67,7 @@ QPSK_RX_CHAIN = rtl(
     "qpsk_mf_phase_picker.v",
     "bpsk_rrc_rx_fir.v",
     "bpsk_symbol_timing_sampler.v",
+    "qpsk_symbol_timing_recovery.v",
     "qpsk_coarse_cfo.v",
     "qpsk_costas.v",
     "qpsk_hard_decision.v",
@@ -137,6 +138,23 @@ TESTS = (
     HdlTest("tb_qpsk_costas_multiburst", QPSK_RX_BENCH + (tb("tb_qpsk_costas_multiburst.v"),)),
     HdlTest("tb_qpsk_costas_acq_window", QPSK_RX_BENCH + (tb("tb_qpsk_costas_acq_window.v"),)),
     HdlTest("tb_qpsk_phase_picker", QPSK_RX_BENCH + (tb("tb_qpsk_phase_picker.v"),)),
+    HdlTest(
+        "tb_qpsk_symbol_timing_recovery",
+        rtl("qpsk_symbol_timing_recovery.v")
+        + (tb("tb_qpsk_symbol_timing_recovery.v"),),
+    ),
+    HdlTest(
+        "tb_qpsk_timing_recovery_chain",
+        QPSK_RX_BENCH + (tb("tb_qpsk_timing_recovery_chain.v"),),
+    ),
+    HdlTest(
+        "tb_qpsk_timing_recovery_mux",
+        QPSK_RX_BENCH + (tb("tb_qpsk_timing_recovery_mux.v"),),
+    ),
+    HdlTest(
+        "tb_qpsk_timing_recovery_retained",
+        QPSK_RX_BENCH + (tb("tb_qpsk_timing_recovery_retained.v"),),
+    ),
     HdlTest("tb_qpsk_coarse_cfo", merge(QPSK_RX_BENCH, rtl("qpsk_coarse_cfo.v")) + (tb("tb_qpsk_coarse_cfo.v"),)),
     HdlTest("tb_qpsk_coarse_cfo_chain",
             merge(QPSK_RX_BENCH, rtl("qpsk_coarse_cfo.v", "dc_blocker.v", "bpsk_rrc_rx_fir.v",
@@ -183,6 +201,7 @@ GENERATORS = (
     PY_DIR / "generate_bpsk_rx_bit_recovery_vectors.py",
     PY_DIR / "generate_bpsk_framed_loopback_vectors.py",
     PY_DIR / "generate_bpsk_timing_recovery_vectors.py",
+    PY_DIR / "generate_qpsk_timing_recovery_vectors.py",
 )
 
 REQUIRED_GENERATED_FILES = (
@@ -205,6 +224,10 @@ REQUIRED_GENERATED_FILES = (
     TB_DIR / "bpsk_timing_recovery_mf_input.mem",
     TB_DIR / "bpsk_timing_recovery_model_bits.txt",
     TB_DIR / "bpsk_chain_drift_rx.mem",
+    TB_DIR / "qpsk_timing_recovery_mf_input.mem",
+    TB_DIR / "qpsk_timing_recovery_expected.mem",
+    TB_DIR / "qpsk_timing_recovery_meta.txt",
+    TB_DIR / "qpsk_chain_drift_rx.mem",
     RTL_DIR / "bpsk_rrc_tx_fir_taps.mem",
     RTL_DIR / "bpsk_frame_bits.mem",
 )

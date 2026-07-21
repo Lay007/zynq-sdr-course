@@ -70,6 +70,10 @@ GENERATED_TB_FILENAMES = (
     "bpsk_framed_loopback_input_bits.txt",
     "bpsk_framed_loopback_expected_bits.txt",
     "bpsk_framed_loopback_meta.txt",
+    "qpsk_timing_recovery_mf_input.mem",
+    "qpsk_timing_recovery_expected.mem",
+    "qpsk_timing_recovery_meta.txt",
+    "qpsk_chain_drift_rx.mem",
 )
 
 GENERATED_RTL_FILENAMES = (

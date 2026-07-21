@@ -20,6 +20,9 @@ module qpsk_rx_bit_recovery_chain #(
                                                   // (works 600..1400 on real self-OTA; noise <600, signal >1400)
     parameter integer COARSE_WIN_SYMBOLS = 64,    // 4th-power measurement window (also the derotate delay)
     parameter integer COARSE_SQ_SHIFT = 11,       // per-square right shift, ~log2(|MF symbol|) ~ 2000 -> 11
+    // Compile the continuous Gardner loop alongside the legacy phase picker/sampler.
+    // Runtime timing_recovery_en then selects the loop without changing bitstreams.
+    parameter integer TIMING_RECOVERY_ENABLE = 0,
     // Compile-time coarse-CFO gate. 0 (default) OPTIMIZES THE ESTIMATOR AWAY: the chain is a plain
     // combinational passthrough, so the baseline bitstream keeps its stock timing (the 4th-power
     // multiply-accumulate does not close on the divide-select clock and is not needed unless you are
@@ -38,6 +41,7 @@ module qpsk_rx_bit_recovery_chain #(
     input  wire                     costas_en,     // 1 = carrier tracking (OTA); 0 = passthrough
     input  wire                     coarse_cfo_en, // 1 = strip bulk inter-board CFO before Costas; 0 = passthrough
     input  wire                     phase_pick_en, // 1 = feedforward 8-phase burst timing pick
+    input  wire                     timing_recovery_en, // 1 = continuous Gardner timing loop
     input  wire                     in_valid,
     input  wire signed [W-1:0]      in_i,
     input  wire signed [W-1:0]      in_q,
@@ -51,7 +55,10 @@ module qpsk_rx_bit_recovery_chain #(
     // Observability: the coarse-CFO estimate for the current burst (per-symbol phase increment,
     // full scale 2^24 = 2*pi) and its ready strobe. Leave unconnected if not needed.
     output wire                     cfo_ready,
-    output wire signed [23:0]       cfo_omega
+    output wire signed [23:0]       cfo_omega,
+    output wire [15:0]              timing_mu,
+    output wire signed [16:0]       timing_omega,
+    output wire signed [2:0]        timing_error
 );
 
 // DC blocker on the RX sample front: removes the AD9361 LO-leakage DC offset that
@@ -108,7 +115,9 @@ qpsk_mf_phase_picker #(
 ) phase_picker_i (
     .clk(clk),
     .rst(rst),
-    .enable(phase_pick_en),
+    // The two timing methods are mutually exclusive. With the continuous loop
+    // selected, bypass the feedforward delay/pick and let Gardner see raw MF samples.
+    .enable(phase_pick_en && !(TIMING_RECOVERY_ENABLE && timing_recovery_en)),
     .in_valid(mf_valid),
     .in_i(mf_i),
     .in_q(mf_q),
@@ -119,22 +128,78 @@ qpsk_mf_phase_picker #(
     .phase()
 );
 
-bpsk_symbol_timing_sampler #(
-    .W(W),
-    .SPS(SPS),
-    .INDEX_W(INDEX_W)
-) timing_i (
-    .clk(clk),
-    .rst(rst),
-    .in_valid(picked_valid),
-    .in_i(picked_i),
-    .in_q(picked_q),
-    .start_offset(start_offset),
-    .symbol_count(symbol_count),
-    .out_valid(sym_valid),
-    .out_i(sym_i),
-    .out_q(sym_q)
-);
+generate
+if (TIMING_RECOVERY_ENABLE) begin : g_qpsk_timing_recovery
+    wire fixed_valid;
+    wire signed [W-1:0] fixed_i;
+    wire signed [W-1:0] fixed_q;
+    wire loop_valid;
+    wire signed [W-1:0] loop_i;
+    wire signed [W-1:0] loop_q;
+    wire selected_valid;
+    wire signed [W-1:0] selected_i;
+    wire signed [W-1:0] selected_q;
+    reg selected_valid_r;
+    reg signed [W-1:0] selected_i_r;
+    reg signed [W-1:0] selected_q_r;
+
+    bpsk_symbol_timing_sampler #(
+        .W(W), .SPS(SPS), .INDEX_W(INDEX_W)
+    ) fixed_timing_i (
+        .clk(clk), .rst(rst),
+        .in_valid(picked_valid), .in_i(picked_i), .in_q(picked_q),
+        .start_offset(start_offset), .symbol_count(symbol_count),
+        .out_valid(fixed_valid), .out_i(fixed_i), .out_q(fixed_q)
+    );
+
+    qpsk_symbol_timing_recovery #(
+        .W(W), .SPS(SPS), .INDEX_W(INDEX_W)
+    ) continuous_timing_i (
+        .clk(clk), .rst(rst),
+        .in_valid(picked_valid), .in_i(picked_i), .in_q(picked_q),
+        .start_offset(start_offset), .symbol_count(symbol_count),
+        .out_valid(loop_valid), .out_i(loop_i), .out_q(loop_q),
+        .timing_mu(timing_mu), .timing_omega(timing_omega), .timing_error(timing_error)
+    );
+
+    assign selected_valid = timing_recovery_en ? loop_valid : fixed_valid;
+    assign selected_i = timing_recovery_en ? loop_i : fixed_i;
+    assign selected_q = timing_recovery_en ? loop_q : fixed_q;
+
+    // Register the runtime timing-method mux. Besides keeping valid and I/Q aligned,
+    // this prevents the synchronized control bit from feeding through the mux and
+    // two coarse-CFO DSP levels in one 8 ns divide-select cycle. Both timing sources
+    // are already strobed streams, so the uniform one-clock latency is transparent
+    // to every downstream block.
+    always @(posedge clk) begin
+        if (rst) begin
+            selected_valid_r <= 1'b0;
+            selected_i_r <= {W{1'b0}};
+            selected_q_r <= {W{1'b0}};
+        end else begin
+            selected_valid_r <= selected_valid;
+            selected_i_r <= selected_i;
+            selected_q_r <= selected_q;
+        end
+    end
+
+    assign sym_valid = selected_valid_r;
+    assign sym_i = selected_i_r;
+    assign sym_q = selected_q_r;
+end else begin : g_fixed_timing
+    bpsk_symbol_timing_sampler #(
+        .W(W), .SPS(SPS), .INDEX_W(INDEX_W)
+    ) fixed_timing_i (
+        .clk(clk), .rst(rst),
+        .in_valid(picked_valid), .in_i(picked_i), .in_q(picked_q),
+        .start_offset(start_offset), .symbol_count(symbol_count),
+        .out_valid(sym_valid), .out_i(sym_i), .out_q(sym_q)
+    );
+    assign timing_mu = 16'd0;
+    assign timing_omega = 17'sd0;
+    assign timing_error = 3'sd0;
+end
+endgenerate
 
 // Feedforward coarse-CFO removal, ahead of the Costas loop. Two independent-oscillator boards
 // sit tens of kHz apart -- far outside the Costas pull-in (a few hundred Hz), so the loop alone

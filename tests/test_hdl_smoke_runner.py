@@ -27,6 +27,9 @@ def test_canonical_hdl_suite_has_unique_existing_sources() -> None:
         "tb_qpsk_zynq_ber_top",
         "tb_qpsk_bridge_loopback",
         "tb_qpsk_two_board_residual_cfo",
+        "tb_qpsk_symbol_timing_recovery",
+        "tb_qpsk_timing_recovery_mux",
+        "tb_qpsk_timing_recovery_retained",
         "tb_bridge_rx_lclk_fifo",
         "tb_bpsk_zynq_ber_timing_recovery",
     }.issubset(names)

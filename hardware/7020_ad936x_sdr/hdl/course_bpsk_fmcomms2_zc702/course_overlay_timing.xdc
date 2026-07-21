@@ -13,15 +13,16 @@ if {[llength $ctrl_async_clks] > 0 && [llength $sample_async_clks] > 0} {
     -group $sample_async_clks
 }
 
-# The Gardner symbol timing-recovery loop (bpsk_symbol_timing_recovery) updates its
+# The Gardner symbol timing-recovery loops (BPSK and QPSK) update their
 # NCO / loop-filter / interpolator state once per ADC capture-valid. capture_in_valid
 # is the AD9361 sample strobe (~3.84 MHz) seen inside the ~62.5 MHz sample clock, so
 # those state registers only change roughly every 16 sample-clock cycles. Their
 # recurrence (nco -> interpolate -> sign-Gardner TED -> PI loop -> w_step) is a long
 # combinational path that cannot close in a single 16 ns period, so relax the DATA
-# inputs (D pins only, not the clock enable) by a multicycle. Setup 2 (32 ns) covers
-# the ~21.5 ns path with margin and is safe because the enable is >= ~15 cycles sparse.
-set tr_cells [get_cells -hier -quiet -filter {NAME =~ *g_timing_recovery.timing_i/*}]
+# inputs (not the clock enable) by a multicycle. The QPSK implementation has the same
+# cadence under g_qpsk_timing_recovery/continuous_timing_i and must be included too.
+set tr_cells [get_cells -hier -quiet -filter {NAME =~ *g_timing_recovery.timing_i/* || \
+                                              NAME =~ *g_qpsk_timing_recovery.continuous_timing_i/*}]
 if {[llength $tr_cells] > 0} {
   # Relax the data-carrying input pins (D and the sync set/reset R/S, which the
   # tools may use for the clamp / W_NOMINAL constants) but NOT the clock enable CE:
@@ -51,11 +52,18 @@ if {[llength $tr_cells] > 0} {
 # 8 ns clock, and is safe because updates are >= 8 cycles apart.
 set costas_cells [get_cells -hier -quiet -filter {NAME =~ *costas_i/*}]
 if {[llength $costas_cells] > 0} {
-  # D/R/S catches fabric FFs; A*/B*/C* catches DSP48 data inputs (e.g. the input de-rotate multiply
-  # y_q0/A that a coarse->Costas per-symbol path lands on), which REF_PIN_NAME == D does not.
+  # D/R/S catches fabric FFs. Add A/B/C data inputs only on DSP48 primitives
+  # (e.g. y_q0/A), otherwise C also matches ordinary clock pins.
   set costas_d [get_pins -quiet -of_objects $costas_cells \
-                  -filter {REF_PIN_NAME == D || REF_PIN_NAME == R || REF_PIN_NAME == S || \
-                           REF_PIN_NAME =~ A* || REF_PIN_NAME =~ B* || REF_PIN_NAME =~ C*}]
+                  -filter {REF_PIN_NAME == D || REF_PIN_NAME == R || REF_PIN_NAME == S}]
+  set costas_dsps [get_cells -quiet -filter {REF_NAME =~ DSP48*} $costas_cells]
+  if {[llength $costas_dsps] > 0} {
+    set costas_d [concat $costas_d [get_pins -quiet -of_objects $costas_dsps \
+                                      -filter {DIRECTION == IN && \
+                                               (REF_PIN_NAME =~ A* || REF_PIN_NAME =~ B* || REF_PIN_NAME =~ C*) && \
+                                               REF_PIN_NAME !~ ACIN* && REF_PIN_NAME !~ BCIN* && \
+                                               REF_PIN_NAME !~ CARRY* && REF_PIN_NAME !~ CE* && REF_PIN_NAME != CLK}]]
+  }
   if {[llength $costas_d] > 0} {
     set_multicycle_path -setup 4 -to $costas_d
     set_multicycle_path -hold  3 -to $costas_d
@@ -95,8 +103,15 @@ set coarse_slow [get_cells -hier -quiet -filter {NAME =~ *coarse_cfo_i/acc_i* ||
                                                  NAME =~ *coarse_cfo_i/theta_reg*}]
 if {[llength $coarse_slow] > 0} {
   set coarse_d [get_pins -quiet -of_objects $coarse_slow \
-                  -filter {REF_PIN_NAME == D || REF_PIN_NAME == R || REF_PIN_NAME == S || \
-                           REF_PIN_NAME =~ A* || REF_PIN_NAME =~ B* || REF_PIN_NAME =~ C*}]
+                  -filter {REF_PIN_NAME == D || REF_PIN_NAME == R || REF_PIN_NAME == S}]
+  set coarse_dsps [get_cells -quiet -filter {REF_NAME =~ DSP48*} $coarse_slow]
+  if {[llength $coarse_dsps] > 0} {
+    set coarse_d [concat $coarse_d [get_pins -quiet -of_objects $coarse_dsps \
+                                      -filter {DIRECTION == IN && \
+                                               (REF_PIN_NAME =~ A* || REF_PIN_NAME =~ B* || REF_PIN_NAME =~ C*) && \
+                                               REF_PIN_NAME !~ ACIN* && REF_PIN_NAME !~ BCIN* && \
+                                               REF_PIN_NAME !~ CARRY* && REF_PIN_NAME !~ CE* && REF_PIN_NAME != CLK}]]
+  }
   if {[llength $coarse_d] > 0} {
     set_multicycle_path -setup 4 -to $coarse_d
     set_multicycle_path -hold  3 -to $coarse_d
