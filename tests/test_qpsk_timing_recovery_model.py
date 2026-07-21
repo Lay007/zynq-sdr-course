@@ -25,8 +25,8 @@ def test_float_and_fixed_loops_recover_short_high_drift_frame() -> None:
     matched = matched_waveform(dibits, 8.06)
     matched_i, matched_q = timing.quantize_matched(matched)
 
-    floating = timing.timing_recovery_float(matched, 63, len(dibits))
-    fixed = timing.timing_recovery_fixed(matched_i, matched_q, 63, len(dibits))
+    floating = timing.timing_recovery_float(matched, 64, len(dibits))
+    fixed = timing.timing_recovery_fixed(matched_i, matched_q, 64, len(dibits))
     fixed_phase = timing.fixed_phase_symbols(matched, 68, len(dibits))
 
     assert timing.symbol_errors(floating.symbols, dibits) == (0, len(dibits))

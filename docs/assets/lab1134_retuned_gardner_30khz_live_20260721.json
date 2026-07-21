@@ -1,0 +1,3950 @@
+{
+  "timestamp_utc": "2026-07-21T17:16:46Z",
+  "carrier_hz": 915000000.0,
+  "tx_gain_db": -30.0,
+  "rx_gain_db": 50.0,
+  "symbols": 140,
+  "bits_per_frame": 280,
+  "start_offsets": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "retries_per_offset": 10,
+  "timing_recovery": true,
+  "topology": "board A (vendor Pluto, iio_writedev bit-exact course frame) TX1 -> 30 dB pad -> board B (course fabric RX + coarse) RX1",
+  "points": [
+    {
+      "cfo_hz": 30000.0,
+      "rssi_db": "75.50 dB",
+      "coarse_on": {
+        "locked": true,
+        "reached_zero": true,
+        "best_errors": 0,
+        "best_ber": 0.0,
+        "full_frames": 72,
+        "clean_frames": 22,
+        "attempts": 80,
+        "total_bits_in_full_frames": 20160,
+        "total_errors_in_full_frames": 2149,
+        "aggregate_ber": 0.10659722222222222,
+        "lock_rate": 0.9,
+        "lock_rate_wilson95": [
+          0.8148931119389591,
+          0.9484523844326191
+        ],
+        "clean_attempt_rate": 0.275,
+        "clean_attempt_rate_wilson95": [
+          0.189177571880842,
+          0.38144058641014517
+        ],
+        "clean_given_lock_rate": 0.3055555555555556,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 3,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FD0AC40",
+              "tx": "0x300004E0",
+              "rx": "0x00000751",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1873
+            },
+            "timing_debug": {
+              "mu_q16": 44096,
+              "omega_q16": 16336,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FD83700",
+              "tx": "0x300004E0",
+              "rx": "0x00000A96",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2710
+            },
+            "timing_debug": {
+              "mu_q16": 14080,
+              "omega_q16": 16344,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 144,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4060F920",
+              "tx": "0x300004E0",
+              "rx": "0x000007C7",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1991
+            },
+            "timing_debug": {
+              "mu_q16": 63776,
+              "omega_q16": 16480,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 15,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F60FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x000006E7",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1767
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16224,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FE0AAC0",
+              "tx": "0x300004E0",
+              "rx": "0x00000904",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2308
+            },
+            "timing_debug": {
+              "mu_q16": 43712,
+              "omega_q16": 16352,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FB0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C69",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7273
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16304,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FD07CA0",
+              "tx": "0x300004E0",
+              "rx": "0x00000AE5",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2789
+            },
+            "timing_debug": {
+              "mu_q16": 31904,
+              "omega_q16": 16336,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4010D660",
+              "tx": "0x300004E0",
+              "rx": "0x00000A82",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2690
+            },
+            "timing_debug": {
+              "mu_q16": 54880,
+              "omega_q16": 16400,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 19,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FA0E9E0",
+              "tx": "0x300004E0",
+              "rx": "0x000007CF",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1999
+            },
+            "timing_debug": {
+              "mu_q16": 59872,
+              "omega_q16": 16288,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 1,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FF85980",
+              "tx": "0x300004E0",
+              "rx": "0x00000944",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2372
+            },
+            "timing_debug": {
+              "mu_q16": 22912,
+              "omega_q16": 16376,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FC018A0",
+              "tx": "0x300004E0",
+              "rx": "0x00000AAD",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2733
+            },
+            "timing_debug": {
+              "mu_q16": 6304,
+              "omega_q16": 16320,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 129,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F30BC80",
+              "tx": "0x300004E0",
+              "rx": "0x00000A5F",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2655
+            },
+            "timing_debug": {
+              "mu_q16": 48256,
+              "omega_q16": 16176,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 130,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4000FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00000888",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2184
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16384,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FF8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C67",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7271
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16376,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 7,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4020C9A0",
+              "tx": "0x300004E0",
+              "rx": "0x000009D0",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2512
+            },
+            "timing_debug": {
+              "mu_q16": 51616,
+              "omega_q16": 16416,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 2,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40187360",
+              "tx": "0x300004E0",
+              "rx": "0x00000A90",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2704
+            },
+            "timing_debug": {
+              "mu_q16": 29536,
+              "omega_q16": 16408,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 4,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40B84CE0",
+              "tx": "0x300004E0",
+              "rx": "0x00000926",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2342
+            },
+            "timing_debug": {
+              "mu_q16": 19680,
+              "omega_q16": 16568,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 3,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FD0B3A0",
+              "tx": "0x300004E0",
+              "rx": "0x00000722",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1826
+            },
+            "timing_debug": {
+              "mu_q16": 45984,
+              "omega_q16": 16336,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4008AA80",
+              "tx": "0x300004E0",
+              "rx": "0x00000A36",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2614
+            },
+            "timing_debug": {
+              "mu_q16": 43648,
+              "omega_q16": 16392,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 2,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FF0B9E0",
+              "tx": "0x300004E0",
+              "rx": "0x0000097D",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2429
+            },
+            "timing_debug": {
+              "mu_q16": 47584,
+              "omega_q16": 16368,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FE0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C69",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7273
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16352,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FF039A0",
+              "tx": "0x300004E0",
+              "rx": "0x00000847",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2119
+            },
+            "timing_debug": {
+              "mu_q16": 14752,
+              "omega_q16": 16368,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 111,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4088FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00000AF2",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2802
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16520,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 3,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FC82B60",
+              "tx": "0x300004E0",
+              "rx": "0x000006D6",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1750
+            },
+            "timing_debug": {
+              "mu_q16": 11104,
+              "omega_q16": 16328,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 4,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40B0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x0000090F",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2319
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16560,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 4,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40A855E0",
+              "tx": "0x300004E0",
+              "rx": "0x000008F6",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2294
+            },
+            "timing_debug": {
+              "mu_q16": 21984,
+              "omega_q16": 16552,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4058FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C7A",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7290
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16472,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F68FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6B",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7275
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16232,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FE85680",
+              "tx": "0x300004E0",
+              "rx": "0x000006F7",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1783
+            },
+            "timing_debug": {
+              "mu_q16": 22144,
+              "omega_q16": 16360,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40A84D80",
+              "tx": "0x300004E0",
+              "rx": "0x000009F7",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2551
+            },
+            "timing_debug": {
+              "mu_q16": 19840,
+              "omega_q16": 16552,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 135,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40485980",
+              "tx": "0x300004E0",
+              "rx": "0x000007EE",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2030
+            },
+            "timing_debug": {
+              "mu_q16": 22912,
+              "omega_q16": 16456,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4088FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00000917",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2327
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16520,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4020E560",
+              "tx": "0x300004E0",
+              "rx": "0x0000086F",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2159
+            },
+            "timing_debug": {
+              "mu_q16": 58720,
+              "omega_q16": 16416,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 4,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x406033C0",
+              "tx": "0x300004E0",
+              "rx": "0x000008EE",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2286
+            },
+            "timing_debug": {
+              "mu_q16": 13248,
+              "omega_q16": 16480,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 8,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4048CE40",
+              "tx": "0x300004E0",
+              "rx": "0x00000835",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2101
+            },
+            "timing_debug": {
+              "mu_q16": 52800,
+              "omega_q16": 16456,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 87,
+            "total_bit_errors": 67,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4050FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6B",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7275
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16464,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 12,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40C8EBC0",
+              "tx": "0x300004E0",
+              "rx": "0x000008EA",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2282
+            },
+            "timing_debug": {
+              "mu_q16": 60352,
+              "omega_q16": 16584,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 129,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F709660",
+              "tx": "0x300004E0",
+              "rx": "0x00000812",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2066
+            },
+            "timing_debug": {
+              "mu_q16": 38496,
+              "omega_q16": 16240,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FE809A0",
+              "tx": "0x300004E0",
+              "rx": "0x000009D0",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2512
+            },
+            "timing_debug": {
+              "mu_q16": 2464,
+              "omega_q16": 16360,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 23,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F3854E0",
+              "tx": "0x300004E0",
+              "rx": "0x00000777",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1911
+            },
+            "timing_debug": {
+              "mu_q16": 21728,
+              "omega_q16": 16184,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FE877C0",
+              "tx": "0x300004E0",
+              "rx": "0x00000917",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2327
+            },
+            "timing_debug": {
+              "mu_q16": 30656,
+              "omega_q16": 16360,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 137,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F50FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x0000078E",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1934
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16208,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 3,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40A03F60",
+              "tx": "0x300004E0",
+              "rx": "0x00000729",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1833
+            },
+            "timing_debug": {
+              "mu_q16": 16224,
+              "omega_q16": 16544,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 9,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FA864C0",
+              "tx": "0x300004E0",
+              "rx": "0x00000859",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2137
+            },
+            "timing_debug": {
+              "mu_q16": 25792,
+              "omega_q16": 16296,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FD8E240",
+              "tx": "0x300004E0",
+              "rx": "0x00000928",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2344
+            },
+            "timing_debug": {
+              "mu_q16": 57920,
+              "omega_q16": 16344,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 6,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40B02880",
+              "tx": "0x300004E0",
+              "rx": "0x000008C3",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2243
+            },
+            "timing_debug": {
+              "mu_q16": 10368,
+              "omega_q16": 16560,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 5,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FF8CBC0",
+              "tx": "0x300004E0",
+              "rx": "0x00000B6B",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2923
+            },
+            "timing_debug": {
+              "mu_q16": 52160,
+              "omega_q16": 16376,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 50,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F88DFA0",
+              "tx": "0x300004E0",
+              "rx": "0x000009D4",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2516
+            },
+            "timing_debug": {
+              "mu_q16": 57248,
+              "omega_q16": 16264,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 126,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x407813C0",
+              "tx": "0x300004E0",
+              "rx": "0x00000AFE",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2814
+            },
+            "timing_debug": {
+              "mu_q16": 5056,
+              "omega_q16": 16504,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FF8B180",
+              "tx": "0x300004E0",
+              "rx": "0x00000AF8",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2808
+            },
+            "timing_debug": {
+              "mu_q16": 45440,
+              "omega_q16": 16376,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FF00100",
+              "tx": "0x300004E0",
+              "rx": "0x00000831",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2097
+            },
+            "timing_debug": {
+              "mu_q16": 256,
+              "omega_q16": 16368,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4030FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C7E",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7294
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16432,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 129,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40006A00",
+              "tx": "0x300004E0",
+              "rx": "0x0000077E",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1918
+            },
+            "timing_debug": {
+              "mu_q16": 27136,
+              "omega_q16": 16384,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 1,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FA8CD40",
+              "tx": "0x300004E0",
+              "rx": "0x000008F1",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2289
+            },
+            "timing_debug": {
+              "mu_q16": 52544,
+              "omega_q16": 16296,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 9,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40300560",
+              "tx": "0x300004E0",
+              "rx": "0x000008EF",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2287
+            },
+            "timing_debug": {
+              "mu_q16": 1376,
+              "omega_q16": 16432,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 6,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4098DDA0",
+              "tx": "0x300004E0",
+              "rx": "0x000009A1",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2465
+            },
+            "timing_debug": {
+              "mu_q16": 56736,
+              "omega_q16": 16536,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 111,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40185BA0",
+              "tx": "0x300004E0",
+              "rx": "0x00000B13",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2835
+            },
+            "timing_debug": {
+              "mu_q16": 23456,
+              "omega_q16": 16408,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 25,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40C0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x000009E4",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2532
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16576,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 5,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4000CA80",
+              "tx": "0x300004E0",
+              "rx": "0x000007C3",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1987
+            },
+            "timing_debug": {
+              "mu_q16": 51840,
+              "omega_q16": 16384,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 11,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x404811E0",
+              "tx": "0x300004E0",
+              "rx": "0x000009F3",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2547
+            },
+            "timing_debug": {
+              "mu_q16": 4576,
+              "omega_q16": 16456,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40180D40",
+              "tx": "0x300004E0",
+              "rx": "0x000007D3",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2003
+            },
+            "timing_debug": {
+              "mu_q16": 3392,
+              "omega_q16": 16408,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40083A40",
+              "tx": "0x300004E0",
+              "rx": "0x0000073A",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1850
+            },
+            "timing_debug": {
+              "mu_q16": 14912,
+              "omega_q16": 16392,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 15,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40385AC0",
+              "tx": "0x300004E0",
+              "rx": "0x00000AEC",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2796
+            },
+            "timing_debug": {
+              "mu_q16": 23232,
+              "omega_q16": 16440,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 4,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FA06400",
+              "tx": "0x300004E0",
+              "rx": "0x0000088B",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2187
+            },
+            "timing_debug": {
+              "mu_q16": 25600,
+              "omega_q16": 16288,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 1,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FB86560",
+              "tx": "0x300004E0",
+              "rx": "0x000008E2",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2274
+            },
+            "timing_debug": {
+              "mu_q16": 25952,
+              "omega_q16": 16312,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 120,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FF0E180",
+              "tx": "0x300004E0",
+              "rx": "0x00000870",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2160
+            },
+            "timing_debug": {
+              "mu_q16": 57728,
+              "omega_q16": 16368,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4008CFA0",
+              "tx": "0x300004E0",
+              "rx": "0x00000AA2",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2722
+            },
+            "timing_debug": {
+              "mu_q16": 53152,
+              "omega_q16": 16392,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FF00640",
+              "tx": "0x300004E0",
+              "rx": "0x000008C4",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2244
+            },
+            "timing_debug": {
+              "mu_q16": 1600,
+              "omega_q16": 16368,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 121,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40188940",
+              "tx": "0x300004E0",
+              "rx": "0x00000A26",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2598
+            },
+            "timing_debug": {
+              "mu_q16": 35136,
+              "omega_q16": 16408,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FF07AA0",
+              "tx": "0x300004E0",
+              "rx": "0x00000971",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2417
+            },
+            "timing_debug": {
+              "mu_q16": 31392,
+              "omega_q16": 16368,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 26,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4030E7C0",
+              "tx": "0x300004E0",
+              "rx": "0x000009FF",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2559
+            },
+            "timing_debug": {
+              "mu_q16": 59328,
+              "omega_q16": 16432,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 117,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40185A20",
+              "tx": "0x300004E0",
+              "rx": "0x00000711",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1809
+            },
+            "timing_debug": {
+              "mu_q16": 23072,
+              "omega_q16": 16408,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 7,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4008DAA0",
+              "tx": "0x300004E0",
+              "rx": "0x000007D8",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2008
+            },
+            "timing_debug": {
+              "mu_q16": 55968,
+              "omega_q16": 16392,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 128,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FC8A280",
+              "tx": "0x300004E0",
+              "rx": "0x00000A11",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2577
+            },
+            "timing_debug": {
+              "mu_q16": 41600,
+              "omega_q16": 16328,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 51,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F80FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00000C43",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 3139
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16256,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 129,
+            "total_bit_errors": 69,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4030FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C80",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7296
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16432,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40A8EB60",
+              "tx": "0x300004E0",
+              "rx": "0x000009DB",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2523
+            },
+            "timing_debug": {
+              "mu_q16": 60256,
+              "omega_q16": 16552,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 24,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x402037C0",
+              "tx": "0x300004E0",
+              "rx": "0x00000800",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2048
+            },
+            "timing_debug": {
+              "mu_q16": 14272,
+              "omega_q16": 16416,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 6,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40A8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x000006F6",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1782
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16552,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 4,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40A02B00",
+              "tx": "0x300004E0",
+              "rx": "0x0000081C",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2076
+            },
+            "timing_debug": {
+              "mu_q16": 11008,
+              "omega_q16": 16544,
+              "ted_error": 1
+            }
+          }
+        ]
+      },
+      "coarse_off": {
+        "locked": true,
+        "reached_zero": false,
+        "best_errors": 126,
+        "best_ber": 0.45,
+        "full_frames": 4,
+        "clean_frames": 0,
+        "attempts": 80,
+        "total_bits_in_full_frames": 1120,
+        "total_errors_in_full_frames": 540,
+        "aggregate_ber": 0.48214285714285715,
+        "lock_rate": 0.05,
+        "lock_rate_wilson95": [
+          0.019613554535544288,
+          0.1216227620464301
+        ],
+        "clean_attempt_rate": 0.0,
+        "clean_attempt_rate_wilson95": [
+          0.0,
+          0.0458181295355271
+        ],
+        "clean_given_lock_rate": 0.0,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4050FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C68",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7272
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16464,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4010FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C68",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7272
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16400,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4010FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C7C",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7292
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16400,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4010FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C67",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7271
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16400,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FF8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6C",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7276
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16376,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F80FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C69",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7273
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16256,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 126,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4008FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00000C5B",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 3163
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16392,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4070FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6B",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7275
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16496,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40A0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C69",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7273
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16544,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FE8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C69",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7273
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16360,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F88FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6A",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7274
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16264,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 132,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FD0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00000882",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 2178
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16336,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4080FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6D",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7277
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16512,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4068FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6D",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7277
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16488,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4010FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6D",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7277
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16400,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40C0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C68",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7272
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16576,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4038FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6C",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7276
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16440,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4020FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6A",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7274
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16416,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4008FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6A",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7274
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16392,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4018FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6C",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7276
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16408,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F88FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6B",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7275
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16264,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4028FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6C",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7276
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16424,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FA8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6A",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7274
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16296,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4000FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C60",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7264
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16384,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 68,
+            "total_bit_errors": 64,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3EF8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C76",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7286
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16120,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FB8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C77",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7287
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16312,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4010FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6D",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7277
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16400,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FE0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6E",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7278
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16352,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4018FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6B",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7275
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16408,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4020FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6B",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7275
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16416,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4018FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6D",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7277
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16408,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4068FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6C",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7276
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16488,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4020FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6A",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7274
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16416,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FF8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6A",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7274
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16376,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F48FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6E",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7278
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16200,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F88FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C7A",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7290
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16264,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4018FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6A",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7274
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16408,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4028FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6B",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7275
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16424,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4070FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6D",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7277
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16496,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FE8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6C",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7276
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16360,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4028FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6B",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7275
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16424,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4030FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C71",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7281
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16432,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4078FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C68",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7272
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16504,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FF0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6C",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7276
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16368,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F58FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6E",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7278
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16216,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F68FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6D",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7277
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16232,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FF8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6F",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7279
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16376,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FD0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C70",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7280
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16336,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F68FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C83",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7299
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16232,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4008FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C69",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7273
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16392,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FE8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C70",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7280
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16360,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FE8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6E",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7278
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16360,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FC0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6C",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7276
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16320,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40A8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C72",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7282
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16552,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x40E0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C64",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7268
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16608,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FF0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C70",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7280
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16368,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FC0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6D",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7277
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16320,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4000FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6C",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7276
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16384,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4008FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6C",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7276
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16392,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4028FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6D",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7277
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16424,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FE8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6F",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7279
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16360,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4000FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6C",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7276
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16384,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FB0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C70",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7280
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16304,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F90FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C72",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7282
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16272,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3EE8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C89",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7305
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16104,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FD0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C7F",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7295
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16336,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F90FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C72",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7282
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16272,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4078FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6D",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7277
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16504,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F90FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6F",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7279
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16272,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 143,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F20FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00000BDD",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 3037
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16160,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 139,
+            "timed_out": false,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x00000814",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FD0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00000688",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 1672
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16336,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4028FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C88",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7304
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16424,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4078FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C71",
+              "capture": "0x00000001",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7281
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16504,
+              "ted_error": 1
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F88FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C81",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7297
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16264,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F00FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C81",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7297
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16128,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3F98FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C70",
+              "capture": "0xFFFFFFFF",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7280
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16280,
+              "ted_error": -1
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x4010FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C71",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7281
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16400,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FE8FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C7F",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7295
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16360,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FB0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C6D",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7277
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16304,
+              "ted_error": 0
+            }
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true,
+            "payload_errors": 0,
+            "status": "0x0000081C",
+            "polls": 0,
+            "debug": {
+              "adc_input": "0x3FE0FFFF",
+              "tx": "0x300004E0",
+              "rx": "0x00001C7E",
+              "capture": "0x00000000",
+              "tx_sample_count_lsb": 1248,
+              "recovered_symbol_count_lsb": 0,
+              "rx_valid_count": 7294
+            },
+            "timing_debug": {
+              "mu_q16": 65535,
+              "omega_q16": 16352,
+              "ted_error": 0
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "repository_commit": "6f59406679d4368af996fdc5578f698d86c13c1f",
+  "expected_course_bitstream": {
+    "path": "G:\\Programs\\zynq-sdr-course\\tmp\\snapshot_impl_sweep\\lab1134_retuned_postroute\\system_top.bit",
+    "sha256": "2493b26225b76768ccff985359570761a424a0b6522a70ef4d7e111bbc5ef380",
+    "runtime_core_id": "0x4250534B"
+  },
+  "boards": {
+    "tx": {
+      "host": "192.168.40.1",
+      "role": "vendor-image cyclic-DMA transmitter",
+      "kernel": "Linux 5.15.0 #7 SMP PREEMPT Sun Nov 3 04:49:37 PST 2024 armv7l"
+    },
+    "rx": {
+      "host": "192.168.20.1",
+      "role": "course-bitstream fabric receiver",
+      "kernel": "Linux 5.15.0 #7 SMP PREEMPT Sun Nov 3 04:49:37 PST 2024 armv7l",
+      "runtime_core_id": "0x4250534B"
+    }
+  },
+  "acceptance": {
+    "passed": true,
+    "coarse_on_acquired_points": 1,
+    "total_cfo_points": 1,
+    "coarse_on_clean_attempts": 22,
+    "coarse_on_attempts": 80,
+    "costas_only_acquired_discriminating_points": 0,
+    "discriminating_cfo_points": 1,
+    "costas_only_clean_attempts": 0,
+    "costas_only_attempts": 80,
+    "min_discriminating_cfo_hz": 15000.0,
+    "conclusion": "in-fabric coarse ON acquired at BER=0 at 1/1 CFO points (22/80 clean attempts); Costas-only acquired at BER=0 at 0/1 points with |CFO| >= 15 kHz (0/80 clean attempts)"
+  },
+  "conclusion": "in-fabric coarse ON acquired at BER=0 at 1/1 CFO points (22/80 clean attempts); Costas-only acquired at BER=0 at 0/1 points with |CFO| >= 15 kHz (0/80 clean attempts)"
+}

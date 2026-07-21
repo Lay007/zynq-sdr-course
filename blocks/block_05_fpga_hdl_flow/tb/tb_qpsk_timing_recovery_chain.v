@@ -9,7 +9,7 @@ module tb_qpsk_timing_recovery_chain;
 localparam integer W = 16;
 localparam integer N_RX = 1702;
 localparam integer N_SYM = 140;
-localparam integer TR_OFFSET = 63;
+localparam integer TR_OFFSET = 64;
 localparam integer FP_OFFSET = 68;
 
 reg clk = 1'b0;

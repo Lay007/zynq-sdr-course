@@ -22,7 +22,7 @@ from qpsk_timing_recovery_model import (  # noqa: E402
 
 TB = Path(__file__).resolve().parents[1] / "tb"
 DRIFT_SPS = 8.06
-START_OFFSET = 63
+START_OFFSET = 64
 SYMBOL_COUNT = 140
 
 

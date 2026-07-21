@@ -20,8 +20,12 @@ SPS = 8
 NCO_W = 16
 NCO_ONE = 1 << NCO_W
 W_NOMINAL = (2 * NCO_ONE) // SPS
-K1_TERM = NCO_ONE // 256
-K2_TERM = NCO_ONE // 4096
+# The first live A/B showed useful lock-rate improvement but excessive loop
+# jitter: omega wandered by roughly +/-2.3% on a tens-of-ppm clock mismatch.
+# Halving both PI terms retains the modeled pull-in range while reducing the
+# symbol-to-symbol timing modulation seen by the downstream Costas loop.
+K1_TERM = NCO_ONE // 512
+K2_TERM = NCO_ONE // 8192
 W_MIN = W_NOMINAL - 2048
 W_MAX = W_NOMINAL + 2048
 
@@ -85,8 +89,8 @@ def timing_recovery_float(
     start_offset: int,
     symbol_count: int,
     *,
-    k1: float = 1.0 / 256,
-    k2: float = 1.0 / 4096,
+    k1: float = 1.0 / 512,
+    k2: float = 1.0 / 8192,
 ) -> TimingResult:
     nco, omega, integral = 0.0, 0.25, 0.0
     previous_input = 0j

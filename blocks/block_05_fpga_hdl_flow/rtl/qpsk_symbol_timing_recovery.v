@@ -38,8 +38,12 @@ module qpsk_symbol_timing_recovery #(
 
 localparam integer NCO_ONE   = (1 <<< NCO_W);
 localparam integer W_NOMINAL = ((2 <<< NCO_W) / SPS);
-localparam integer K1_TERM   = (NCO_ONE / 256);
-localparam integer K2_TERM   = (NCO_ONE / 4096);
+// The initial 1/256, 1/4096 gains improved live lock rate but moved omega by
+// roughly +/-2.3% on independent boards whose real clock mismatch is only in
+// the ppm range.  The quieter pair keeps modeled +/-0.75% SPS pull-in while
+// reducing timing jitter delivered to carrier recovery.
+localparam integer K1_TERM   = (NCO_ONE / 512);
+localparam integer K2_TERM   = (NCO_ONE / 8192);
 localparam integer W_MIN     = W_NOMINAL - 2048;
 localparam integer W_MAX     = W_NOMINAL + 2048;
 localparam signed [W-1:0] SAT_MAX = {1'b0, {(W-1){1'b1}}};
