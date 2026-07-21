@@ -174,7 +174,14 @@ def wilson(count: int, total: int, z: float = 1.959963984540054):
     return [max(0.0, c - h), min(1.0, c + h)]
 
 
-def summarize_attempts(rows: list[dict], *, symbol_count: int = SYMBOLS) -> dict:
+def _signed(value: int, width: int) -> int:
+    sign = 1 << (width - 1)
+    return value - (1 << width) if value & sign else value
+
+
+def summarize_attempts(
+    rows: list[dict], *, symbol_count: int = SYMBOLS, timing_recovery: bool = False
+) -> dict:
     """Summarize one equal-budget acquisition experiment without hiding failed attempts.
 
     ``best_ber`` answers whether the receiver acquired at least once.  ``aggregate_ber`` is
@@ -189,16 +196,30 @@ def summarize_attempts(rows: list[dict], *, symbol_count: int = SYMBOLS) -> dict
     best_err = min(errors) if errors else None
     total_errors = sum(errors)
     total_bits = len(full_rows) * symbol_count * 2
-    compact_rows = [
-        {
+    compact_rows = []
+    for row in rows:
+        compact = {
             "start_offset": row.get("start_offset"),
             "received_symbols": int(row.get("received_symbols") or 0),
             "total_bit_errors": int(row.get("total_bit_errors") or 0),
             "timed_out": bool(row.get("timed_out", False)),
             "ok": bool(row.get("ok", False)),
         }
-        for row in rows
-    ]
+        for name in ("payload_errors", "status", "polls", "error"):
+            if name in row:
+                compact[name] = row[name]
+        debug = row.get("debug")
+        if isinstance(debug, dict):
+            compact["debug"] = debug
+            if timing_recovery:
+                adc_word = int(str(debug.get("adc_input", "0")), 0)
+                ted_word = int(str(debug.get("capture", "0")), 0)
+                compact["timing_debug"] = {
+                    "mu_q16": adc_word & 0xFFFF,
+                    "omega_q16": _signed((adc_word >> 16) & 0xFFFF, 16),
+                    "ted_error": _signed(ted_word & 0x7, 3),
+                }
+        compact_rows.append(compact)
     return {
         "locked": bool(full_rows),
         "reached_zero": bool(clean_rows),
@@ -238,7 +259,7 @@ def measure_point(
         for _ in range(retries):
             row = qpsk_ber_once(runner_b, BASE_ADDR, SYMBOLS, off, mode_bits=mode, preamble_bits=PREAMBLE_BITS)
             rows.append(row)
-    return summarize_attempts(rows)
+    return summarize_attempts(rows, timing_recovery=timing_recovery)
 
 
 def summarize_experiment(results: list[dict], *, min_discriminating_cfo_hz: float) -> dict:
@@ -356,6 +377,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
                     help="minimum |CFO| used for the Costas-only rejection gate")
     ap.add_argument("--timing-recovery", action="store_true",
                     help="set gp_ctrl[14] and run the continuous Gardner timing path")
+    ap.add_argument(
+        "--course-bitstream",
+        type=Path,
+        default=COURSE_BITSTREAM,
+        help="local bitstream payload currently loaded on board B; recorded and hashed as evidence",
+    )
     ap.add_argument("--self-test", action="store_true")
     ap.add_argument("--no-plot", action="store_true")
     ap.add_argument("--json-out", type=Path,
@@ -372,6 +399,9 @@ def main() -> int:
 
     offsets = [int(x) for x in args.offsets.split(",")]
     cfos = list(np.arange(args.cfo_start, args.cfo_stop + 1.0, args.cfo_step))
+    course_bitstream = args.course_bitstream.resolve()
+    if not course_bitstream.is_file():
+        raise SystemExit(f"Missing course bitstream evidence file: {course_bitstream}")
     iq = make_cyclic_frame(args.frames)
     n_samples = len(iq) // 2
     print(f"frame: {args.frames} x {SYMBOLS} sym cyclic -> {n_samples} samples "
@@ -409,8 +439,8 @@ def main() -> int:
             raise RuntimeError("board A has no cf-ad9361-dds-core (needs the VENDOR image to stream a continuous TX)")
         payload["repository_commit"] = repository_commit()
         payload["expected_course_bitstream"] = {
-            "path": str(COURSE_BITSTREAM.relative_to(ROOT)).replace("\\", "/"),
-            "sha256": sha256_file(COURSE_BITSTREAM),
+            "path": str(course_bitstream),
+            "sha256": sha256_file(course_bitstream),
             "runtime_core_id": sig,
         }
         payload["boards"] = {

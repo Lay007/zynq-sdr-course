@@ -60,6 +60,25 @@ def test_summarize_attempts_reports_no_lock_without_fake_zero_ber() -> None:
     assert summary["clean_attempt_rate"] == 0.0
 
 
+def test_summarize_attempts_preserves_and_decodes_timing_observability() -> None:
+    row = attempt(3, 140, 0)
+    row["debug"] = {
+        "adc_input": "0x20008000",
+        "capture": "0xFFFFFFFF",
+        "tx": "0x00000001",
+        "rx": "0x00000002",
+    }
+
+    result = summarize_attempts([row], timing_recovery=True)["attempt_results"][0]
+
+    assert result["debug"]["adc_input"] == "0x20008000"
+    assert result["timing_debug"] == {
+        "mu_q16": 0x8000,
+        "omega_q16": 0x2000,
+        "ted_error": -1,
+    }
+
+
 def point(cfo: float, *, on_zero: bool, off_zero: bool) -> dict:
     def side(reached_zero: bool) -> dict:
         return {
