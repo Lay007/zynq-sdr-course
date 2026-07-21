@@ -4,13 +4,14 @@
 // timing NCO requests two interpolated samples per symbol (centre and midpoint).
 // The timing error uses both axes:
 //
-//   e = sign(sign(mid.I) * sign(on.I-prev.I)
-//          + sign(mid.Q) * sign(on.Q-prev.Q))
+//   e = sign(mid.I * (on.I-prev.I) + mid.Q * (on.Q-prev.Q))
 //
-// so the loop is amplitude independent and needs no TED multipliers.  The two
-// linear-interpolator products are the only multipliers.  The PI filter adjusts
-// the NCO step around 2/SPS and therefore follows sample-clock mismatch instead
-// of selecting one fixed phase for the whole burst.
+// The dot product is invariant to a common carrier rotation.  The earlier
+// product-of-signs approximation had phase-dependent detector gain: live paired
+// A/B produced only 12/400 clean attempts near zero injected CFO, but 153/400 at
+// 55 kHz as carrier rotation effectively dithered the detector axes.  Two TED
+// multipliers remove that axis artefact; the sign output keeps the PI update
+// bounded to {-1,0,+1}.
 
 `timescale 1ns/1ps
 
@@ -19,7 +20,9 @@ module qpsk_symbol_timing_recovery #(
     parameter integer SPS = 8,
     parameter integer INDEX_W = 16,
     parameter integer NCO_W = 16,
-    parameter integer INTEG_W = 24
+    parameter integer INTEG_W = 24,
+    parameter integer K1_TERM_VALUE = ((1 <<< NCO_W) / 256),
+    parameter integer K2_TERM_VALUE = 3
 ) (
     input  wire                     clk,
     input  wire                     rst,
@@ -38,12 +41,12 @@ module qpsk_symbol_timing_recovery #(
 
 localparam integer NCO_ONE   = (1 <<< NCO_W);
 localparam integer W_NOMINAL = ((2 <<< NCO_W) / SPS);
-// The initial 1/256, 1/4096 gains improved live lock rate but moved omega by
-// roughly +/-2.3% on independent boards whose real clock mismatch is only in
-// the ppm range.  The quieter pair keeps modeled +/-0.75% SPS pull-in while
-// reducing timing jitter delivered to carrier recovery.
-localparam integer K1_TERM   = (NCO_ONE / 512);
-localparam integer K2_TERM   = (NCO_ONE / 8192);
+// The rotation-invariant detector is active on more symbol transitions than
+// the old axis-sign approximation.  The model's carrier-phase and +/-200 ppm
+// grid selects a strong proportional correction but a four-times quieter
+// integral term, preventing data-dependent integral walk while keeping pull-in.
+localparam integer K1_TERM   = K1_TERM_VALUE;
+localparam integer K2_TERM   = K2_TERM_VALUE;
 localparam integer W_MIN     = W_NOMINAL - 2048;
 localparam integer W_MAX     = W_NOMINAL + 2048;
 localparam signed [W-1:0] SAT_MAX = {1'b0, {(W-1){1'b1}}};
@@ -80,15 +83,12 @@ wire signed [W-1:0] y_q = (y_q32 > SAT_MAX) ? SAT_MAX :
 
 wire signed [W:0] dy_i = $signed(y_i) - $signed(y_on_prev_i);
 wire signed [W:0] dy_q = $signed(y_q) - $signed(y_on_prev_q);
-wire signed [1:0] sign_mid_i = (y_mid_i > 0) ? 2'sd1 : (y_mid_i < 0) ? -2'sd1 : 2'sd0;
-wire signed [1:0] sign_mid_q = (y_mid_q > 0) ? 2'sd1 : (y_mid_q < 0) ? -2'sd1 : 2'sd0;
-wire signed [1:0] sign_dy_i = (dy_i > 0) ? 2'sd1 : (dy_i < 0) ? -2'sd1 : 2'sd0;
-wire signed [1:0] sign_dy_q = (dy_q > 0) ? 2'sd1 : (dy_q < 0) ? -2'sd1 : 2'sd0;
-wire signed [2:0] axis_i = sign_mid_i * sign_dy_i;
-wire signed [2:0] axis_q = sign_mid_q * sign_dy_q;
-wire signed [3:0] axis_sum = axis_i + axis_q;
-wire signed [2:0] e_ted = (axis_sum > 0) ? 3'sd1 :
-                          (axis_sum < 0) ? -3'sd1 : 3'sd0;
+wire signed [2*W:0] ted_product_i = $signed(y_mid_i) * $signed(dy_i);
+wire signed [2*W:0] ted_product_q = $signed(y_mid_q) * $signed(dy_q);
+wire signed [2*W+1:0] ted_dot =
+    {ted_product_i[2*W], ted_product_i} + {ted_product_q[2*W], ted_product_q};
+wire signed [2:0] e_ted = (ted_dot > 0) ? 3'sd1 :
+                          (ted_dot < 0) ? -3'sd1 : 3'sd0;
 
 wire signed [INTEG_W-1:0] integ_next = integ + K2_TERM * e_ted;
 wire signed [31:0] w_unclamped = W_NOMINAL + (K1_TERM * e_ted) + integ_next;

@@ -23,6 +23,8 @@ module qpsk_rx_bit_recovery_chain #(
     // Compile the continuous Gardner loop alongside the legacy phase picker/sampler.
     // Runtime timing_recovery_en then selects the loop without changing bitstreams.
     parameter integer TIMING_RECOVERY_ENABLE = 0,
+    parameter integer TIMING_K1_TERM = 256,
+    parameter integer TIMING_K2_TERM = 3,
     // Compile-time coarse-CFO gate. 0 (default) OPTIMIZES THE ESTIMATOR AWAY: the chain is a plain
     // combinational passthrough, so the baseline bitstream keeps its stock timing (the 4th-power
     // multiply-accumulate does not close on the divide-select clock and is not needed unless you are
@@ -153,7 +155,8 @@ if (TIMING_RECOVERY_ENABLE) begin : g_qpsk_timing_recovery
     );
 
     qpsk_symbol_timing_recovery #(
-        .W(W), .SPS(SPS), .INDEX_W(INDEX_W)
+        .W(W), .SPS(SPS), .INDEX_W(INDEX_W),
+        .K1_TERM_VALUE(TIMING_K1_TERM), .K2_TERM_VALUE(TIMING_K2_TERM)
     ) continuous_timing_i (
         .clk(clk), .rst(rst),
         .in_valid(picked_valid), .in_i(picked_i), .in_q(picked_q),

@@ -10,6 +10,12 @@ localparam integer INDEX_W = 16;
 localparam integer N_SAMPLES = 2600;
 localparam integer FRAME_SYMBOLS = 140;
 localparam integer CHAIN_SYMBOLS = 396;
+`ifndef TIMING_K1
+`define TIMING_K1 256
+`endif
+`ifndef TIMING_K2
+`define TIMING_K2 3
+`endif
 
 reg clk = 1'b0;
 reg rst = 1'b1;
@@ -37,7 +43,8 @@ reg done_seen;
 qpsk_rx_bit_recovery_chain #(
     .W(W), .SPS(8), .INDEX_W(INDEX_W),
     .COSTAS_KP_LOG_TRACK(7), .COSTAS_ACQ_SYMBOLS(64), .COSTAS_KI_LOG(4),
-    .COSTAS_SIG_THRESH(8), .COARSE_ENABLE(1), .TIMING_RECOVERY_ENABLE(1)
+    .COSTAS_SIG_THRESH(8), .COARSE_ENABLE(1), .TIMING_RECOVERY_ENABLE(1),
+    .TIMING_K1_TERM(`TIMING_K1), .TIMING_K2_TERM(`TIMING_K2)
 ) receiver (
     .clk(clk), .rst(rst), .rst_carrier(rst),
     .dc_block_en(1'b1), .costas_en(1'b1), .coarse_cfo_en(1'b1),

@@ -7,7 +7,7 @@ module tb_qpsk_symbol_timing_recovery;
 localparam integer W = 16;
 localparam integer N_MF = 1254;
 localparam integer N_SYM = 140;
-localparam integer START_OFFSET = 64;
+localparam integer START_OFFSET = 65;
 
 reg clk = 1'b0;
 reg rst = 1'b1;

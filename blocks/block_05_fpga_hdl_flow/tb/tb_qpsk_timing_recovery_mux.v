@@ -33,7 +33,7 @@ qpsk_rx_bit_recovery_chain #(
     .dc_block_en(1'b0), .costas_en(1'b0), .coarse_cfo_en(1'b0),
     .phase_pick_en(1'b0), .timing_recovery_en(1'b1),
     .in_valid(in_valid), .in_i(in_i), .in_q(in_q),
-    .start_offset(16'd64), .symbol_count(N_SYM[15:0]),
+    .start_offset(16'd65), .symbol_count(N_SYM[15:0]),
     .out_valid(loop_valid), .out_dibit(loop_dibit),
     .debug_symbol_valid(), .debug_symbol_i(), .debug_symbol_q(),
     .cfo_ready(), .cfo_omega(), .timing_mu(), .timing_omega(), .timing_error()

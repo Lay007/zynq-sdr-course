@@ -25,8 +25,8 @@ def test_float_and_fixed_loops_recover_short_high_drift_frame() -> None:
     matched = matched_waveform(dibits, 8.06)
     matched_i, matched_q = timing.quantize_matched(matched)
 
-    floating = timing.timing_recovery_float(matched, 64, len(dibits))
-    fixed = timing.timing_recovery_fixed(matched_i, matched_q, 64, len(dibits))
+    floating = timing.timing_recovery_float(matched, 65, len(dibits))
+    fixed = timing.timing_recovery_fixed(matched_i, matched_q, 65, len(dibits))
     fixed_phase = timing.fixed_phase_symbols(matched, 68, len(dibits))
 
     assert timing.symbol_errors(floating.symbols, dibits) == (0, len(dibits))
@@ -51,3 +51,38 @@ def test_fixed_loop_tracks_realistic_clock_error_over_long_stream() -> None:
 
         assert timing.symbol_errors(recovered.symbols, dibits) == (0, count)
         assert fixed_phase_best > 1_000
+
+
+def test_dot_product_ted_removes_static_carrier_phase_sensitivity() -> None:
+    dibits = timing.load_frame_dibits()
+    matched = matched_waveform(dibits, 8.06)
+
+    new_errors = []
+    old_errors = []
+    for phase_deg in range(0, 91, 5):
+        rotation = np.exp(1j * np.deg2rad(phase_deg))
+        matched_i, matched_q = timing.quantize_matched(matched * rotation)
+        new_best = len(dibits)
+        old_best = len(dibits)
+        for offset in range(60, 70):
+            new = timing.timing_recovery_fixed(matched_i, matched_q, offset, len(dibits))
+            old = timing.timing_recovery_fixed(
+                matched_i,
+                matched_q,
+                offset,
+                len(dibits),
+                ted=timing._ted_axis_sign,
+            )
+            new_best = min(
+                new_best,
+                timing.symbol_errors(new.symbols * np.conj(rotation), dibits)[0],
+            )
+            old_best = min(
+                old_best,
+                timing.symbol_errors(old.symbols * np.conj(rotation), dibits)[0],
+            )
+        new_errors.append(new_best)
+        old_errors.append(old_best)
+
+    assert max(new_errors) == 0
+    assert max(old_errors) > 0

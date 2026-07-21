@@ -3,7 +3,7 @@
 
 The fixed-point model is the executable specification for
 ``qpsk_symbol_timing_recovery.v``.  Both models use two interpolated strobes per
-symbol, a complex sign-Gardner detector, and a PI-controlled modulo-one NCO.
+symbol, a rotation-invariant complex Gardner detector, and a PI-controlled modulo-one NCO.
 Unlike the burst phase picker, the loop can follow a non-integer and slowly
 changing samples-per-symbol ratio.
 """
@@ -20,12 +20,12 @@ SPS = 8
 NCO_W = 16
 NCO_ONE = 1 << NCO_W
 W_NOMINAL = (2 * NCO_ONE) // SPS
-# The first live A/B showed useful lock-rate improvement but excessive loop
-# jitter: omega wandered by roughly +/-2.3% on a tens-of-ppm clock mismatch.
-# Halving both PI terms retains the modeled pull-in range while reducing the
-# symbol-to-symbol timing modulation seen by the downstream Costas loop.
-K1_TERM = NCO_ONE // 512
-K2_TERM = NCO_ONE // 8192
+# The paired live A/B exposed carrier-phase sensitivity in the old axis-sign
+# detector.  The rotation-invariant dot product is active on more transitions,
+# so the phase/clock grid retains proportional pull-in but reduces the integral
+# term to prevent data-dependent walk.
+K1_TERM = NCO_ONE // 256
+K2_TERM = 3
 W_MIN = W_NOMINAL - 2048
 W_MAX = W_NOMINAL + 2048
 
@@ -77,11 +77,17 @@ def _sgn(value: float | int) -> int:
     return 1 if value > 0 else (-1 if value < 0 else 0)
 
 
-def _ted(mid: complex, current: complex, previous: complex) -> int:
-    """Amplitude-independent complex sign-Gardner error in {-1, 0, +1}."""
+def _ted_axis_sign(mid: complex, current: complex, previous: complex) -> int:
+    """Original multiplier-free detector, retained to reproduce the live phase-sensitivity bug."""
     axis_sum = _sgn(mid.real) * _sgn(current.real - previous.real)
     axis_sum += _sgn(mid.imag) * _sgn(current.imag - previous.imag)
     return _sgn(axis_sum)
+
+
+def _ted(mid: complex, current: complex, previous: complex) -> int:
+    """Sign of the complex Gardner dot product, invariant to a common carrier rotation."""
+    difference = current - previous
+    return _sgn(mid.real * difference.real + mid.imag * difference.imag)
 
 
 def timing_recovery_float(
@@ -89,8 +95,9 @@ def timing_recovery_float(
     start_offset: int,
     symbol_count: int,
     *,
-    k1: float = 1.0 / 512,
-    k2: float = 1.0 / 8192,
+    k1: float = 1.0 / 256,
+    k2: float = 3.0 / NCO_ONE,
+    ted=_ted,
 ) -> TimingResult:
     nco, omega, integral = 0.0, 0.25, 0.0
     previous_input = 0j
@@ -117,7 +124,7 @@ def timing_recovery_float(
             mu = min(nco / omega, 1.0 - 1.0 / NCO_ONE)
             interpolated = previous_input + mu * (current - previous_input)
             if parity == 0:
-                error = _ted(middle, interpolated, previous_on)
+                error = ted(middle, interpolated, previous_on)
                 integral += k2 * error
                 omega = min(max(0.25 + k1 * error + integral, 0.20), 0.30)
                 previous_on = interpolated
@@ -144,6 +151,8 @@ def timing_recovery_fixed(
     matched_q: np.ndarray,
     start_offset: int,
     symbol_count: int,
+    *,
+    ted=_ted,
 ) -> TimingResult:
     """Integer model mirroring ``qpsk_symbol_timing_recovery.v``."""
     nco, omega, integral = 0, W_NOMINAL, 0
@@ -173,7 +182,7 @@ def timing_recovery_fixed(
             interpolated_i = previous_i + ((mu * (current_i - previous_i)) >> NCO_W)
             interpolated_q = previous_q + ((mu * (current_q - previous_q)) >> NCO_W)
             if parity == 0:
-                error = _ted(
+                error = ted(
                     complex(middle_i, middle_q),
                     complex(interpolated_i, interpolated_q),
                     complex(previous_on_i, previous_on_q),
