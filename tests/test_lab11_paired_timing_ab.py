@@ -9,6 +9,7 @@ if str(MODULE_DIR) not in sys.path:
     sys.path.insert(0, str(MODULE_DIR))
 
 from lab_11_35_paired_timing_ab import (  # noqa: E402
+    error_localization,
     is_lock,
     paired_difference,
     summarize,
@@ -106,3 +107,33 @@ def test_timing_telemetry_is_split_by_decode_outcome() -> None:
     assert telemetry["clean"]["omega_q16"]["min"] == 16_300
     assert telemetry["dirty_full"]["omega_q16"]["min"] == 16_400
     assert telemetry["no_lock"]["omega_q16"]["min"] == 16_500
+
+
+def test_error_localization_separates_preamble_from_payload() -> None:
+    rows = [
+        synthetic_row(lock=True, clean=True),
+        synthetic_row(lock=True, clean=False),
+        synthetic_row(lock=True, clean=False),
+        synthetic_row(lock=True, clean=False),
+        synthetic_row(lock=False, clean=False),
+    ]
+    rows[0]["payload_errors"] = 0
+    rows[1]["total_bit_errors"] = 1
+    rows[1]["payload_errors"] = 0
+    rows[2]["total_bit_errors"] = 1
+    rows[2]["payload_errors"] = 1
+    rows[3]["total_bit_errors"] = 3
+    rows[3]["payload_errors"] = 2
+
+    result = error_localization(rows)
+
+    assert result["telemetry_available"] is True
+    assert result["full_frames"] == 4
+    assert result["total_bit_errors"] == 5
+    assert result["preamble_bit_errors"] == 2
+    assert result["payload_bit_errors"] == 3
+    assert result["preamble_only_dirty_frames"] == 1
+    assert result["payload_only_dirty_frames"] == 1
+    assert result["mixed_dirty_frames"] == 1
+    assert result["single_bit_preamble_frames"] == 1
+    assert result["single_bit_payload_frames"] == 1

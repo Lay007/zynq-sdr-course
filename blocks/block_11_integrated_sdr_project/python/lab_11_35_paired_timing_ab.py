@@ -116,6 +116,51 @@ def timing_telemetry(pairs: list[dict]) -> dict:
     }
 
 
+def error_localization(rows: list[dict]) -> dict:
+    """Split full-frame errors between the preamble and payload regions."""
+    full_rows = [row for row in rows if is_lock(row)]
+    telemetry_rows = [row for row in full_rows if row.get("payload_errors") is not None]
+    total_errors = [int(row.get("total_bit_errors") or 0) for row in telemetry_rows]
+    payload_errors = [int(row.get("payload_errors") or 0) for row in telemetry_rows]
+    preamble_errors = [
+        max(total - payload, 0) for total, payload in zip(total_errors, payload_errors)
+    ]
+    payload_bits_per_frame = B.SYMBOLS * 2 - B.PREAMBLE_BITS
+    dirty = [index for index, total in enumerate(total_errors) if total > 0]
+    single = [index for index, total in enumerate(total_errors) if total == 1]
+    return {
+        "telemetry_available": bool(full_rows) and len(telemetry_rows) == len(full_rows),
+        "full_frames": len(full_rows),
+        "telemetry_frames": len(telemetry_rows),
+        "total_bit_errors": sum(total_errors),
+        "preamble_bit_errors": sum(preamble_errors),
+        "payload_bit_errors": sum(payload_errors),
+        "payload_bits": len(telemetry_rows) * payload_bits_per_frame,
+        "aggregate_payload_ber": (
+            sum(payload_errors) / (len(telemetry_rows) * payload_bits_per_frame)
+            if telemetry_rows
+            else None
+        ),
+        "dirty_full_frames": len(dirty),
+        "preamble_only_dirty_frames": sum(
+            payload_errors[index] == 0 for index in dirty
+        ),
+        "payload_only_dirty_frames": sum(
+            payload_errors[index] > 0 and preamble_errors[index] == 0 for index in dirty
+        ),
+        "mixed_dirty_frames": sum(
+            payload_errors[index] > 0 and preamble_errors[index] > 0 for index in dirty
+        ),
+        "single_bit_dirty_frames": len(single),
+        "single_bit_preamble_frames": sum(
+            preamble_errors[index] == 1 for index in single
+        ),
+        "single_bit_payload_frames": sum(
+            payload_errors[index] == 1 for index in single
+        ),
+    }
+
+
 def summarize(pairs: list[dict], *, clean_margin: float, lock_margin: float) -> dict:
     fixed_rows = [pair["fixed"] for pair in pairs]
     gardner_rows = [pair["gardner"] for pair in pairs]
@@ -151,6 +196,10 @@ def summarize(pairs: list[dict], *, clean_margin: float, lock_margin: float) -> 
         "decision": "promote_gardner" if passed else "retain_fixed_baseline",
         "by_cfo": by_cfo,
         "gardner_timing_telemetry": timing_telemetry(pairs),
+        "error_localization": {
+            "fixed": error_localization(fixed_rows),
+            "gardner": error_localization(gardner_rows),
+        },
         "conclusion": (
             "Gardner is clean-rate non-inferior and improves full-frame lock by the declared margin."
             if passed
