@@ -30,7 +30,7 @@ This matrix shows what each course block should contain before it can be conside
 
 ## Interpretation notes
 
-- Block 11 now has a timing-clean QPSK payload, 3/3 external RTL-SDR sessions, and a controlled two-board in-fabric acquisition sweep: 12/12 CFO points acquired, with 75/288 clean attempts. Lab 11.33 accepts a retained-capture Costas fix and rejects a timing-closed picker after worse live A/B results. Lab 11.34 adds a continuous QPSK Gardner candidate with float/fixed equivalence, four RTL regressions, runtime baseline/candidate selection and routed WNS +0.049 ns / WHS +0.031 ns. It remains `🟡` until the candidate wins the controlled live A/B, followed by stable longer-duration BER.
+- Block 11 now has a timing-clean QPSK payload, 3/3 external RTL-SDR sessions and two controlled timing decisions. Lab 11.35 upgrades the live comparison to 1,200 interleaved pairs, identifies an axis-sign detector defect, then rejects the corrected dot-product TED in a focused 400-pair zero-CFO run despite its large lock and aggregate-BER gains. A timing-clean 160-pair instrumentation run localizes all 55 single-bit Gardner misses to payload rather than acquisition preamble; error-position telemetry is the next bounded diagnostic. Block 11 remains `🟡` until a candidate passes the declared clean-frame gate and stable longer-duration BER follows.
 - Block 12 now has a filled dual-modem report with internal and cross-session external RF evidence. It remains below portfolio-ready until controlled-path and longer-duration statistics are measured on a stable capture backend.
 - Blocks 05 and 09 are the strongest automation anchors today: they combine reusable checks, generated artifacts and CI coverage.
 

@@ -23,7 +23,7 @@ PS7 + AXI + AD9361 interface -> placed-and-routed XC7Z020 design -> local bitstr
 | Layer | Evidence | Result | Qualification |
 |---|---|---|---|
 | Reference/model | BPSK package and deterministic QPSK replay | reproducible vectors, plots and metrics | synthetic |
-| RTL | canonical HDL smoke suite | 18/18 tests pass; BPSK/QPSK BER=0 in their deterministic tests | simulation |
+| RTL | canonical HDL smoke suite | 34/34 tests pass; BPSK/QPSK BER=0 in their deterministic tests | simulation |
 | QPSK bridge | dual-modem loopback testbench | 140 symbols / 280 bits, BER=0 | simulation |
 | FPGA implementation | two integrated Vivado 2021.1 flows plus a strategy sweep | hardware-working snapshot is fully routed; selected WNS is +0.096 ns | internal-path signoff candidate |
 | BPSK board path | promoted on-chip PL result | 281 compared bits, BER=0 | measured single promoted result |
