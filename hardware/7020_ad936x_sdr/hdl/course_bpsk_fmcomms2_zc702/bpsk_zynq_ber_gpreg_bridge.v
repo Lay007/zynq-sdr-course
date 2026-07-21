@@ -361,6 +361,13 @@ qpsk_zynq_ber_top #(
     // leading noise and passes the captured-noise Costas stress test at BER 0/280.
     .RX_SIG_THRESH(8),
     .RX_SAMPLE_MARGIN(256),   // OTA frame arrives after the AD9361 round-trip delay
+    // Lab 11.33: the coarse estimator removes the bulk CFO, but a sampling phase next
+    // to the eye centre can leave about 1 kHz residual.  The old KI_LOG=1 loop needed
+    // longer than this burst to absorb it.  KI_LOG=4 plus a 64-symbol acquisition window
+    // recovers the captured failure at BER 0/280; KP_LOG_TRACK=7 then narrows the loop.
+    .COSTAS_KP_LOG_TRACK(7),
+    .COSTAS_ACQ_SYMBOLS(64),
+    .COSTAS_KI_LOG(4),
     .COARSE_ENABLE(1),        // fabric-CFO build: synthesize the pipelined coarse-CFO estimator
     .MEM_FILE(MEM_FILE),
     .COEF_FILE(COEF_FILE)

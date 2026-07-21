@@ -18,6 +18,10 @@ module qpsk_zynq_ber_top #(
     parameter integer LOCK_PREAMBLE_BITS = 8,   // frame-sync correlation window (24 for OTA)
     parameter integer LOCK_ERR_TOL = 0,         // 0 = exact lock; >0 = OTA-robust correlation lock
     parameter integer RX_SIG_THRESH = 1000,     // matched-filter/symbol |I|+|Q| signal gate
+    parameter integer COSTAS_KP_LOG_ACQ = 8,
+    parameter integer COSTAS_KP_LOG_TRACK = 6,
+    parameter integer COSTAS_ACQ_SYMBOLS = 32,
+    parameter integer COSTAS_KI_LOG = 1,
     // Extra symbols the RX sampler emits beyond the frame length. On a real OTA link
     // the frame arrives after the AD9361 TX+RX group delay (hundreds of samples), so
     // a sampler window == frame length misses the late frame. This margin lets the
@@ -119,6 +123,10 @@ qpsk_rx_bit_recovery_chain #(
     .W(W),
     .SPS(SPS),
     .INDEX_W(INDEX_W),
+    .COSTAS_KP_LOG_ACQ(COSTAS_KP_LOG_ACQ),
+    .COSTAS_KP_LOG_TRACK(COSTAS_KP_LOG_TRACK),
+    .COSTAS_ACQ_SYMBOLS(COSTAS_ACQ_SYMBOLS),
+    .COSTAS_KI_LOG(COSTAS_KI_LOG),
     .COSTAS_SIG_THRESH(RX_SIG_THRESH),
     .COARSE_ENABLE(COARSE_ENABLE),
     .COEF_FILE(COEF_FILE)

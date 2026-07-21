@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -141,6 +142,10 @@ TESTS = (
             merge(QPSK_RX_BENCH, rtl("qpsk_coarse_cfo.v", "dc_blocker.v", "bpsk_rrc_rx_fir.v",
                                      "bpsk_rrc_tx_fir.v", "bpsk_symbol_timing_sampler.v"))
             + (tb("tb_qpsk_coarse_cfo_chain.v"),)),
+    HdlTest(
+        "tb_qpsk_two_board_residual_cfo",
+        QPSK_RX_BENCH + (tb("tb_qpsk_two_board_residual_cfo.v"),),
+    ),
     HdlTest("tb_qpsk_rx_dcblock", QPSK_RX_BENCH + (tb("tb_qpsk_rx_dcblock.v"),)),
     HdlTest("tb_qpsk_rx_costas", QPSK_RX_BENCH + (tb("tb_qpsk_rx_costas.v"),)),
     HdlTest("tb_qpsk_costas_stress", QPSK_RX_BENCH + (tb("tb_qpsk_costas_stress.v"),)),
@@ -217,13 +222,14 @@ STATIC_SIM_INPUTS = (
     TB_DIR / "srate_cfo25k_rx.mem",
     TB_DIR / "srate_cfo0_rx.mem",
     TB_DIR / "qpsk_selfota_fresh_rx.mem",
+    TB_DIR / "qpsk_two_board_residual_cfo_rx.mem",
     TB_DIR / "qpsk_selfota_stress_rx.mem",
 )
 
 
-def run(command: list[str], *, cwd: Path = ROOT) -> None:
+def run(command: list[str], *, cwd: Path = ROOT, timeout_s: float | None = None) -> None:
     print(f">>> {' '.join(command)}", flush=True)
-    subprocess.run(command, cwd=cwd, check=True)
+    subprocess.run(command, cwd=cwd, check=True, timeout=timeout_s)
 
 
 # vvp exits 0 even when a testbench $displays a failure and $finishes normally, so a check on the
@@ -233,15 +239,26 @@ def run(command: list[str], *, cwd: Path = ROOT) -> None:
 _FAIL_RE = re.compile(r"\bFAIL\b")
 
 
-def run_sim(command: list[str], *, cwd: Path, name: str) -> None:
+def run_sim(command: list[str], *, cwd: Path, name: str, timeout_s: float) -> None:
     print(f">>> {' '.join(command)}", flush=True)
-    result = subprocess.run(command, cwd=cwd, check=True, capture_output=True, text=True)
+    started = time.monotonic()
+    try:
+        result = subprocess.run(
+            command, cwd=cwd, check=True, capture_output=True, text=True, timeout=timeout_s
+        )
+    except subprocess.TimeoutExpired as exc:
+        if exc.stdout:
+            sys.stdout.write(exc.stdout if isinstance(exc.stdout, str) else exc.stdout.decode(errors="replace"))
+        if exc.stderr:
+            sys.stderr.write(exc.stderr if isinstance(exc.stderr, str) else exc.stderr.decode(errors="replace"))
+        raise RuntimeError(f"{name}: simulation exceeded {timeout_s:g} seconds") from exc
     sys.stdout.write(result.stdout)
     if result.stderr:
         sys.stderr.write(result.stderr)
     hits = [ln for ln in result.stdout.splitlines() if _FAIL_RE.search(ln)]
     if hits:
         raise RuntimeError(f"{name}: testbench reported failure:\n  " + "\n  ".join(hits))
+    print(f"PASS {name} ({time.monotonic() - started:.2f} s)", flush=True)
 
 
 def require_tool(name: str) -> str:
@@ -270,7 +287,17 @@ def populate_simulation_workspace(workspace: Path) -> None:
         shutil.copy2(source, target)
 
 
-def run_tests(*, generate: bool = True) -> None:
+def select_tests(names: list[str] | None) -> tuple[HdlTest, ...]:
+    if not names:
+        return TESTS
+    by_name = {test.name: test for test in TESTS}
+    unknown = [name for name in names if name not in by_name]
+    if unknown:
+        raise ValueError(f"Unknown HDL test(s): {', '.join(unknown)}")
+    return tuple(by_name[name] for name in names)
+
+
+def run_tests(*, generate: bool = True, names: list[str] | None = None, timeout_s: float = 180.0) -> None:
     iverilog = require_tool("iverilog")
     vvp = require_tool("vvp")
     if generate:
@@ -279,14 +306,19 @@ def run_tests(*, generate: bool = True) -> None:
     with tempfile.TemporaryDirectory(prefix="zynq-sdr-hdl-") as temporary_dir:
         workspace = Path(temporary_dir)
         populate_simulation_workspace(workspace)
-        for test in TESTS:
+        selected = select_tests(names)
+        for index, test in enumerate(selected, start=1):
+            print(f"[{index}/{len(selected)}] {test.name}", flush=True)
             missing_sources = [str(path.relative_to(ROOT)) for path in test.sources if not path.is_file()]
             if missing_sources:
                 raise FileNotFoundError(f"{test.name}: missing source(s): {', '.join(missing_sources)}")
             output = workspace / f"{test.name}.out"
-            run([iverilog, "-g2012", "-o", str(output), *(str(path) for path in test.sources)])
-            run_sim([vvp, str(output)], cwd=workspace, name=test.name)
-    print(f"Canonical HDL smoke passed: {len(TESTS)} testbenches.")
+            run(
+                [iverilog, "-g2012", "-o", str(output), *(str(path) for path in test.sources)],
+                timeout_s=timeout_s,
+            )
+            run_sim([vvp, str(output)], cwd=workspace, name=test.name, timeout_s=timeout_s)
+    print(f"Canonical HDL smoke passed: {len(selected)} testbenches.")
 
 
 def main() -> int:
@@ -296,8 +328,20 @@ def main() -> int:
         action="store_true",
         help="Reuse existing generated vectors instead of regenerating them.",
     )
+    parser.add_argument(
+        "--test",
+        action="append",
+        dest="tests",
+        help="Run one named testbench; repeat the option to select several.",
+    )
+    parser.add_argument(
+        "--timeout-s",
+        type=float,
+        default=180.0,
+        help="Per-compile and per-simulation timeout in seconds (default: 180).",
+    )
     args = parser.parse_args()
-    run_tests(generate=not args.no_generate)
+    run_tests(generate=not args.no_generate, names=args.tests, timeout_s=args.timeout_s)
     return 0
 
 

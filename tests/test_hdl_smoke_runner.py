@@ -26,6 +26,7 @@ def test_canonical_hdl_suite_has_unique_existing_sources() -> None:
     assert {
         "tb_qpsk_zynq_ber_top",
         "tb_qpsk_bridge_loopback",
+        "tb_qpsk_two_board_residual_cfo",
         "tb_bridge_rx_lclk_fifo",
         "tb_bpsk_zynq_ber_timing_recovery",
     }.issubset(names)
@@ -38,6 +39,21 @@ def test_all_generated_inputs_have_a_declared_generator() -> None:
     assert runner.GENERATORS
     assert all(generator.is_file() for generator in runner.GENERATORS)
     assert len(runner.REQUIRED_GENERATED_FILES) == len(set(runner.REQUIRED_GENERATED_FILES))
+
+
+def test_select_tests_preserves_requested_order_and_rejects_unknown_names() -> None:
+    runner = load_runner()
+
+    selected = runner.select_tests(["tb_axis_iq_passthrough", "tb_iq_passthrough"])
+
+    assert [test.name for test in selected] == ["tb_axis_iq_passthrough", "tb_iq_passthrough"]
+
+    try:
+        runner.select_tests(["tb_does_not_exist"])
+    except ValueError as exc:
+        assert "tb_does_not_exist" in str(exc)
+    else:
+        raise AssertionError("unknown test name was accepted")
 
 
 def test_simulation_workspace_mirrors_generated_inputs(tmp_path: Path) -> None:
