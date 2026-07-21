@@ -4,8 +4,9 @@
 
 Replace the burst-only fixed-phase sampler with a continuous timing loop that can follow
 sample-clock mismatch, while retaining a runtime-selectable baseline in the same bitstream.
-This lab deliberately stops before claiming a hardware improvement: the boards are offline,
-so the current result is an implementation-qualified candidate plus a written live A/B gate.
+The live experiment is now complete. It demonstrates a large lock-rate gain, but the
+predeclared clean-attempt gate does not pass over the full CFO sweep, so the fixed sampler
+remains the default rather than turning a near-tie into a success claim.
 
 ## Why a loop, after Lab 11.33 rejected a timing change
 
@@ -30,6 +31,12 @@ new integer tap.
 
 5. A PI loop updates `omega`, with explicit clamps around the nominal `2/SPS` step.
 
+The first hardware candidate used `K1=1/256` and `K2=1/4096`. Its live debug telemetry
+showed `omega_q16` spanning 15,600...16,848 around the nominal 16,384, much more movement
+than the physical sample-clock mismatch requires. The retuned candidate halves both gains to
+`K1=1/512` and `K2=1/8192`; it keeps the model's zero-error drift cases and narrows the live
+full-sweep range to 16,088...16,672.
+
 The detector is deliberately amplitude-independent and contains no general divider. With
 `SPS=8`, `mu/omega` reduces to the bounded fixed-point operation used by both the Python model
 and RTL. The model mirrors Verilog nonblocking semantics: an `omega` update affects the NCO on
@@ -50,8 +57,8 @@ registered valid/I/Q boundary. That register is functionally a uniform one-clock
 physically prevents the synchronized control bit from feeding through the mux and two
 coarse-CFO DSP levels in one 8 ns divide-select cycle.
 
-The accepted Lab 11.33 boot image is not overwritten. The Gardner image remains a candidate
-until the live protocol below passes.
+The accepted Lab 11.33 behavior remains the runtime default. Gardner is still selectable for
+diagnostics and follow-up experiments, but the live result below does not promote it.
 
 ## Floating-point and fixed-point evidence
 
@@ -116,36 +123,42 @@ was no longer the Gardner recurrence; it ran from synchronized `gp_ctrl[14]` thr
 runtime mux into the coarse-CFO DSP datapath. Post-route physical optimization improved only
 0.002 ns, so the mux output was registered instead of weakening the timing constraints.
 
-The fresh implementation of the registered boundary closes the physical gate:
+The first registered candidate closed the physical gate at `WNS=+0.049 ns` and was used to
+discover excessive live loop movement. After retuning the PI gains, a fresh implementation
+plus post-route physical optimization closes the final candidate:
 
-- `WNS=+0.049 ns`, `TNS=0.000 ns`;
-- `WHS=+0.031 ns`, `THS=0.000 ns`;
-- all 77,346 routable nets are fully routed, with zero routing errors;
-- utilization is 34,314 LUTs (64.50%), 40,641 registers (38.20%), 8 BRAM tiles (5.71%),
-  and 192 DSP48E1s (87.27%);
+- `WNS=+0.003 ns`, `TNS=0.000 ns`;
+- `WHS=+0.041 ns`, `THS=0.000 ns`;
+- all 77,389 routable nets are fully routed, with zero routing errors;
 - bit generation completed with zero errors and zero critical warnings.
 
-The candidate remains isolated under
-`tmp/snapshot_impl_sweep/lab1134_registered_netdelay/system_top.bit` instead of replacing the
-board-qualified canonical image. Its SHA-256 is
-`b7086465dba213544c5a4c558c6deeafb93cca3b8cefa9e41bb3e494b2984b9c`. Physical closure
-qualifies the image for the live A/B; it does not prove an RF benefit.
+The tested raw boot image is
+`tmp/snapshot_impl_sweep/lab1134_retuned_postroute/system_top.bit`; its SHA-256 is
+`2493b26225b76768ccff985359570761a424a0b6522a70ef4d7e111bbc5ef380`.
+It clean-boots board B, probes the AD9361 successfully, and reports the expected course core
+ID `0x4250534B`.
 
-## Live two-board A/B protocol (pending)
+## Live two-board A/B result
 
-When the stand is available again:
+The conducted stand used board A as the vendor cyclic-DMA transmitter and board B as the
+course receiver at 915 MHz through the 30 dB attenuator, with TX at −30 dB and RX at +50 dB.
+Both modes used the same bitstream, CFO grid, offsets and retry budget; no-lock attempts stayed
+in the denominator.
 
-1. Keep board A on the proven vendor cyclic-DMA transmitter and board B on the candidate
-   course receiver; use the same 915 MHz conducted path, 30 dB attenuator, −30 dB TX and
-   +50 dB RX settings as Labs 11.32–11.33.
-2. At +30 kHz injected CFO, run an equal budget of 10 attempts at each offset 0…7 with
-   `gp_ctrl[14]=0`, then repeat with bit 14 set. No-lock remains in the denominator.
-3. Repeat the 0…55 kHz CFO sweep with three attempts per offset and timing mode.
-4. Save raw per-attempt rows, `mu/omega`, TED error, bitstream SHA-256, repository commit,
-   board roles, and RF settings in the JSON result.
-5. Accept Gardner only if it improves the clean-attempt confidence interval without reducing
-   full-frame lock rate, then run a longer fixed-condition BER campaign and check for cycle
-   slips. A replay or timing-closure win alone is not sufficient.
+| Campaign | Mode | Full frames | BER=0 attempts | Aggregate BER in full frames |
+|---|---|---:|---:|---:|
+| +30 kHz, 80 attempts | fixed | 54/80 (67.5%) | 21/80 (26.25%) | 0.192196 |
+| +30 kHz, 80 attempts | retuned Gardner | 72/80 (90.0%) | 22/80 (27.5%) | 0.106597 |
+| 0…55 kHz, 288 attempts | fixed | 193/288 (67.01%) | 72/288 (25.00%) | 0.137435 |
+| 0…55 kHz, 288 attempts | retuned Gardner | 246/288 (85.42%) | 71/288 (24.65%) | 0.119178 |
+
+The focused +30 kHz gate passes: Gardner improves clean attempts by one and adds 18 full
+frames. The larger sweep is the decisive check. Gardner reaches BER=0 at all 12 CFO points
+and adds 53 full frames, but produces one fewer clean attempt than fixed sampling. Under the
+predeclared point-estimate rule (`clean_rate_improved && lock_rate_preserved`), that is a
+reject. The difference is too small to infer that Gardner is intrinsically worse, but it is
+also not evidence for replacing the baseline. A longer, higher-power comparison would be a
+new experiment with a statistical margin, not a reinterpretation of this one.
 
 The Lab 11.32 hardware runner now has a `--timing-recovery` switch, so the two campaigns use
 the same acquisition code and differ only by `gp_ctrl[14]`. Assemble the evidence with the
@@ -161,8 +174,10 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_34_continuous_qpsk_t
 ```
 
 The post-processor rejects mismatched CFO grids, offsets, or retry budgets and keeps every
-attempt in the reported lock and clean-frame rates.
+attempt in the reported lock and clean-frame rates. Raw attempts, timing telemetry and the
+comparison plots are stored in `docs/assets/lab1134_*_live_20260721.*`.
 
-Until that experiment is complete, the honest conclusion is: **continuous QPSK timing
-recovery is implemented, model/RTL qualified, and timing-closed; its live-RF benefit is not
-yet measured.**
+The honest conclusion is: **continuous QPSK timing recovery is implemented, model/RTL
+qualified, timing-closed and measured on the live conducted link. It substantially improves
+full-frame lock, but does not pass the full-sweep clean-attempt acceptance gate, so the fixed
+sampler remains the default pending stronger evidence.**

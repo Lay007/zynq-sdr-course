@@ -106,7 +106,7 @@ Representative executable labs generate figures and JSON metrics under `docs/ass
 - The evidence map, maturity matrix and completion matrix now point reviewers to current proof artifacts and remaining gaps.
 - Lab 11.32 demonstrates in-fabric coarse-CFO acquisition on a conducted two-board link at 12/12 points over 0–55 kHz, while retaining the measured 75/288 clean-attempt rate as an explicit limitation.
 - Lab 11.33 turns that limitation into an evidence-backed decision: retain the residual-CFO Costas tuning, reject a timing-closed squared-energy picker after worse equal-budget live A/B runs, and promote continuous timing recovery as the next experiment.
-- Lab 11.34 implements that experiment as a runtime-selectable complex sign-Gardner loop with float/fixed equivalence, 12,000-symbol ±100 ppm tests, four new HDL regressions, retained-capture coverage, explicit `mu/omega` observability and physical closure at WNS +0.049 ns / WHS +0.031 ns; live two-board acceptance remains pending.
+- Lab 11.34 implements and measures that experiment as a runtime-selectable complex sign-Gardner loop. After live telemetry exposed excessive loop movement, halved PI gains retain the model/RTL drift results and close implementation at WNS +0.003 ns / WHS +0.041 ns. The full 0–55 kHz A/B raises lock from 193/288 to 246/288 but produces 71/288 clean attempts versus 72/288 for fixed sampling, so the predeclared gate retains the baseline.
 
 ## Acceptance criteria for this release
 
