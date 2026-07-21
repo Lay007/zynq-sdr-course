@@ -1,0 +1,146 @@
+{
+  "carrier_hz": 915000000.0,
+  "unambiguous_hz": 60000.0,
+  "sweep": [
+    {
+      "delta_hz": 0.0,
+      "expected_folded_hz": -237.87222738364187,
+      "intrinsic_hz": -237.87222738364187,
+      "cfo_hz": -237.87222738364187,
+      "cfo_std_hz": 18.393501046452513,
+      "estimator_diff_hz": 0.14966975669813393,
+      "evm_percent": 4.712743919098555,
+      "windows": 30
+    },
+    {
+      "delta_hz": 5000.0,
+      "expected_folded_hz": 4762.127772616358,
+      "intrinsic_hz": -237.87222738364187,
+      "cfo_hz": 4604.917633798316,
+      "cfo_std_hz": 186.64268005459164,
+      "estimator_diff_hz": 0.7815437265957371,
+      "evm_percent": 19.632365464076074,
+      "windows": 30
+    },
+    {
+      "delta_hz": 10000.0,
+      "expected_folded_hz": 9762.127772616359,
+      "intrinsic_hz": -237.87222738364187,
+      "cfo_hz": 9368.175551065198,
+      "cfo_std_hz": 42.13288500702137,
+      "estimator_diff_hz": 1.385740143571517,
+      "evm_percent": 36.34285573244219,
+      "windows": 30
+    },
+    {
+      "delta_hz": 20000.0,
+      "expected_folded_hz": 19762.127772616357,
+      "intrinsic_hz": -237.87222738364187,
+      "cfo_hz": 19217.650297205117,
+      "cfo_std_hz": 415.74583687962223,
+      "estimator_diff_hz": 2.762199154230378,
+      "evm_percent": 43.141924928462,
+      "windows": 30
+    },
+    {
+      "delta_hz": 30000.0,
+      "expected_folded_hz": 29762.127772616357,
+      "intrinsic_hz": -237.87222738364187,
+      "cfo_hz": 29370.54037821506,
+      "cfo_std_hz": 1341.3173101257948,
+      "estimator_diff_hz": 4.533474027307966,
+      "evm_percent": 48.66528199166183,
+      "windows": 30
+    },
+    {
+      "delta_hz": 40000.0,
+      "expected_folded_hz": 39762.12777261636,
+      "intrinsic_hz": -237.87222738364187,
+      "cfo_hz": 39222.12241604326,
+      "cfo_std_hz": 113.34012496069779,
+      "estimator_diff_hz": 2.3855284452811856,
+      "evm_percent": 40.39799372912182,
+      "windows": 30
+    },
+    {
+      "delta_hz": 50000.0,
+      "expected_folded_hz": 49762.12777261636,
+      "intrinsic_hz": -237.87222738364187,
+      "cfo_hz": 49565.11925814096,
+      "cfo_std_hz": 332.48322542335137,
+      "estimator_diff_hz": 1.798021631491186,
+      "evm_percent": 28.84564066700747,
+      "windows": 30
+    },
+    {
+      "delta_hz": -10000.0,
+      "expected_folded_hz": -10237.872227383641,
+      "intrinsic_hz": -237.87222738364187,
+      "cfo_hz": -9897.386942716592,
+      "cfo_std_hz": 92.96046892566731,
+      "estimator_diff_hz": 1.1982207037082238,
+      "evm_percent": 36.801699004937014,
+      "windows": 30
+    },
+    {
+      "delta_hz": -30000.0,
+      "expected_folded_hz": -30237.872227383643,
+      "intrinsic_hz": -237.87222738364187,
+      "cfo_hz": -29563.266889836777,
+      "cfo_std_hz": 306.8305478153386,
+      "estimator_diff_hz": 2.9075764848066075,
+      "evm_percent": 41.53475737001595,
+      "windows": 30
+    },
+    {
+      "delta_hz": -50000.0,
+      "expected_folded_hz": -50237.87222738364,
+      "intrinsic_hz": -237.87222738364187,
+      "cfo_hz": -49994.92023040633,
+      "cfo_std_hz": 616.1126642727334,
+      "estimator_diff_hz": 1.5471921547480936,
+      "evm_percent": 42.41730441533433,
+      "windows": 30
+    },
+    {
+      "delta_hz": 55000.0,
+      "expected_folded_hz": 54762.12777261636,
+      "intrinsic_hz": -237.87222738364187,
+      "cfo_hz": 54623.059450619774,
+      "cfo_std_hz": 323.5789565357043,
+      "estimator_diff_hz": 1.381431077224503,
+      "evm_percent": 29.435872932912165,
+      "windows": 30
+    },
+    {
+      "delta_hz": 60000.0,
+      "expected_folded_hz": 59762.12777261636,
+      "intrinsic_hz": -237.87222738364187,
+      "cfo_hz": 59707.92792422263,
+      "cfo_std_hz": 67.2805475546951,
+      "estimator_diff_hz": 0.245700054068584,
+      "evm_percent": 9.60160856134871,
+      "windows": 30
+    },
+    {
+      "delta_hz": 70000.0,
+      "expected_folded_hz": -50237.87222738365,
+      "intrinsic_hz": -237.87222738364187,
+      "cfo_hz": -50106.3285316858,
+      "cfo_std_hz": 259.12838682221286,
+      "estimator_diff_hz": 1.0744969663804416,
+      "evm_percent": 24.074720610161513,
+      "windows": 30
+    },
+    {
+      "delta_hz": -70000.0,
+      "expected_folded_hz": 49762.12777261635,
+      "intrinsic_hz": -237.87222738364187,
+      "cfo_hz": 49496.35271857322,
+      "cfo_std_hz": 136.19738776138593,
+      "estimator_diff_hz": 1.4528796051740451,
+      "evm_percent": 25.725612227420854,
+      "windows": 30
+    }
+  ]
+}

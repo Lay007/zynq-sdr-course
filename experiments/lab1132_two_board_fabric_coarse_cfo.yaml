@@ -1,0 +1,50 @@
+experiment:
+  id: lab1132_two_board_fabric_coarse_cfo
+  title: Two-board in-fabric coarse-CFO acquisition sweep
+  objective: Measure QPSK acquisition with the FPGA coarse-CFO block enabled versus Costas-only reception over a controlled conducted carrier-offset sweep.
+
+hardware:
+  topology: board A TX1 -> 30 dB attenuator -> SMA cable -> board B RX1
+  transmitter: vendor-image cyclic-DMA QPSK replay
+  receiver: course-bitstream fabric QPSK receiver and BER counter
+  carrier_hz: 915000000
+  tx_gain_db: -30
+  rx_gain_db: 50
+  runtime_core_id: "0x4250534B"
+
+sweep:
+  cfo_hz: [0, 5000, 10000, 15000, 20000, 25000, 30000, 35000, 40000, 45000, 50000, 55000]
+  start_offsets: [0, 1, 2, 3, 4, 5, 6, 7]
+  retries_per_offset: 3
+  attempts_per_cfo_and_mode: 24
+
+metadata_required:
+  - repository_commit
+  - expected_course_bitstream_sha256
+  - runtime_core_id
+  - carrier_hz
+  - tx_gain_db
+  - rx_gain_db
+  - start_offsets
+  - retries_per_offset
+
+metrics:
+  - reached_zero
+  - best_ber
+  - clean_attempt_rate
+  - lock_rate
+  - aggregate_ber_over_full_frames
+  - wilson95_intervals
+
+reports:
+  template: templates/lab_report.template.md
+  lab_page: blocks/block_11_integrated_sdr_project/lab_11_32_two_board_fabric_coarse_cfo.md
+  result_json: docs/assets/lab1132_two_board_fabric_coarse_cfo.json
+  figure: docs/assets/lab1132_two_board_fabric_coarse_cfo.png
+
+acceptance:
+  - coarse_on_reaches_zero_ber_at_every_cfo_point
+  - costas_only_reaches_no_zero_ber_frame_at_or_above_15_khz
+  - all_attempts_are_retained_in_the_canonical_json
+  - acquisition_success_is_not_presented_as_continuous_ber
+  - both_boards_are_quieted_on_exit

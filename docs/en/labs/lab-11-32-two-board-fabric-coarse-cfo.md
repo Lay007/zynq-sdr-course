@@ -1,0 +1,1 @@
+--8<-- "blocks/block_11_integrated_sdr_project/lab_11_32_two_board_fabric_coarse_cfo.md"

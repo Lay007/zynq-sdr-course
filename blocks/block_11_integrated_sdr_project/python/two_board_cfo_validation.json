@@ -1,0 +1,19 @@
+{
+  "timing_mu_samples": 2.875,
+  "windows": 15,
+  "window_symbols": 1024,
+  "corr_ratio_median": 35.76597066961293,
+  "evm_percent_median": 7.463283443745891,
+  "cfo_hz_mean": -279.2709963893758,
+  "cfo_hz_std": 20.581860077696934,
+  "cfo_ppm_at_carrier": -0.30521420370423585,
+  "estimator_diff_hz_mean": 0.1131329085435785,
+  "estimator_diff_hz_max": 0.3440492662923589,
+  "symbols": 15360,
+  "symbol_errors": 0,
+  "ser": 0.0,
+  "periodicity_autocorr": 0.9966092622144264,
+  "carrier_hz": 915000000.0,
+  "tx_gain_db": -30.0,
+  "rx_gain_db": 50.0
+}

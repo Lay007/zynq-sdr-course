@@ -2,7 +2,7 @@
 
 ## Objective
 
-[Lab 11.30](lab_11_30_two_board_cfo_validation.md) proved the `qpsk_coarse_cfo.v` estimator on a
+[Lab 11.30](/zynq-sdr-course/en/labs/lab-11-30-two-board-cfo-validation/) proved the `qpsk_coarse_cfo.v` estimator on a
 live two-board link — but the two AD9361s happened to sit only ~0.3 ppm apart, an inter-board
 carrier offset of about **−290 Hz**. That is *inside* a Costas loop's few-hundred-hertz pull-in,
 so the estimator's whole reason for existing — acquiring the **tens of kHz** a Costas loop cannot
@@ -147,7 +147,7 @@ The estimator is validated end to end on silicon across its full operating range
 precondition for wiring it into the fabric receiver. `qpsk_rx_bit_recovery_chain` can instantiate it
 ahead of the Costas loop behind a `coarse_cfo_en` bit, `qpsk_zynq_ber_top` exposes that bit, and the
 gpreg bridge drives it from **`gp_ctrl[13]`** — so the offset can be stripped in fabric at runtime
-with a single register write. The [Block 05 smoke suite](../block_05_fpga_hdl_flow/) covers the whole
+with a single register write. The [Block 05 smoke suite](/zynq-sdr-course/verification/hdl_smoke/) covers the whole
 path from the bridge down, and the estimator decodes a 25 kHz injected offset to BER 0.
 
 **Timing now closes.** The naive integration missed the fast (8 ns) divide-select clock badly

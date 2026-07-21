@@ -1,0 +1,4735 @@
+{
+  "timestamp_utc": "2026-07-20T19:09:19Z",
+  "repository_commit": "1931213fd0fab6c426805a3c23a79c458d469545",
+  "expected_course_bitstream": {
+    "path": "hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/system.bit.bin",
+    "sha256": "f17a5e1a534b34ef1a97930f336e10512775b83c60c3c759b9624b506d6a718f",
+    "runtime_core_id": "0x4250534B"
+  },
+  "boards": {
+    "tx": {
+      "host": "192.168.40.1",
+      "role": "vendor-image cyclic-DMA transmitter",
+      "kernel": "Linux 5.15.0 #7 SMP PREEMPT Sun Nov 3 04:49:37 PST 2024 armv7l"
+    },
+    "rx": {
+      "host": "192.168.20.1",
+      "role": "course-bitstream fabric receiver",
+      "kernel": "Linux 5.15.0 #7 SMP PREEMPT Sun Nov 3 04:49:37 PST 2024 armv7l",
+      "runtime_core_id": "0x4250534B"
+    }
+  },
+  "carrier_hz": 915000000.0,
+  "tx_gain_db": -30.0,
+  "rx_gain_db": 50.0,
+  "symbols": 140,
+  "bits_per_frame": 280,
+  "start_offsets": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "retries_per_offset": 3,
+  "topology": "board A (vendor Pluto, iio_writedev bit-exact course frame) TX1 -> 30 dB pad -> board B (course fabric RX + coarse) RX1",
+  "points": [
+    {
+      "cfo_hz": 0.0,
+      "rssi_db": "75.50 dB",
+      "coarse_on": {
+        "locked": true,
+        "reached_zero": true,
+        "best_errors": 0,
+        "best_ber": 0.0,
+        "full_frames": 12,
+        "clean_frames": 7,
+        "attempts": 24,
+        "total_bits_in_full_frames": 3360,
+        "total_errors_in_full_frames": 589,
+        "aggregate_ber": 0.17529761904761904,
+        "lock_rate": 0.5,
+        "lock_rate_wilson95": [
+          0.31427425819573357,
+          0.6857257418042664
+        ],
+        "clean_attempt_rate": 0.2916666666666667,
+        "clean_attempt_rate_wilson95": [
+          0.14914648196960875,
+          0.49167693664496637
+        ],
+        "clean_given_lock_rate": 0.5833333333333334,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 130,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 132,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 81,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 145,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 101,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          }
+        ]
+      },
+      "coarse_off": {
+        "locked": true,
+        "reached_zero": true,
+        "best_errors": 0,
+        "best_ber": 0.0,
+        "full_frames": 16,
+        "clean_frames": 8,
+        "attempts": 24,
+        "total_bits_in_full_frames": 4480,
+        "total_errors_in_full_frames": 318,
+        "aggregate_ber": 0.07098214285714285,
+        "lock_rate": 0.6666666666666666,
+        "lock_rate_wilson95": [
+          0.46706316838131745,
+          0.8202780967270223
+        ],
+        "clean_attempt_rate": 0.3333333333333333,
+        "clean_attempt_rate_wilson95": [
+          0.17972190327297752,
+          0.5329368316186824
+        ],
+        "clean_given_lock_rate": 0.5,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 83,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 74,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 14,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 4,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 2,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 64,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 12,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 65,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "cfo_hz": 5000.0,
+      "rssi_db": "75.50 dB",
+      "coarse_on": {
+        "locked": true,
+        "reached_zero": true,
+        "best_errors": 0,
+        "best_ber": 0.0,
+        "full_frames": 17,
+        "clean_frames": 6,
+        "attempts": 24,
+        "total_bits_in_full_frames": 4760,
+        "total_errors_in_full_frames": 1272,
+        "aggregate_ber": 0.2672268907563025,
+        "lock_rate": 0.7083333333333334,
+        "lock_rate_wilson95": [
+          0.5083230633550337,
+          0.8508535180303913
+        ],
+        "clean_attempt_rate": 0.25,
+        "clean_attempt_rate_wilson95": [
+          0.11999366228595004,
+          0.44899444005154004
+        ],
+        "clean_given_lock_rate": 0.35294117647058826,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 168,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 164,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 133,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 131,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 151,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 30,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 130,
+            "total_bit_errors": 125,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 131,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 131,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 166,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 8,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 59,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 135,
+            "total_bit_errors": 121,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          }
+        ]
+      },
+      "coarse_off": {
+        "locked": true,
+        "reached_zero": false,
+        "best_errors": 112,
+        "best_ber": 0.4,
+        "full_frames": 17,
+        "clean_frames": 0,
+        "attempts": 24,
+        "total_bits_in_full_frames": 4760,
+        "total_errors_in_full_frames": 2243,
+        "aggregate_ber": 0.471218487394958,
+        "lock_rate": 0.7083333333333334,
+        "lock_rate_wilson95": [
+          0.5083230633550337,
+          0.8508535180303913
+        ],
+        "clean_attempt_rate": 0.0,
+        "clean_attempt_rate_wilson95": [
+          1.3877787807814457e-17,
+          0.13797620467498017
+        ],
+        "clean_given_lock_rate": 0.0,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 133,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 120,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 127,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 102,
+            "total_bit_errors": 105,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 165,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 112,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 131,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 151,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 122,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 128,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 169,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 153,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 128,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 114,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 130,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 112,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 113,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 135,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 135,
+            "total_bit_errors": 122,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "cfo_hz": 10000.0,
+      "rssi_db": "75.50 dB",
+      "coarse_on": {
+        "locked": true,
+        "reached_zero": true,
+        "best_errors": 0,
+        "best_ber": 0.0,
+        "full_frames": 19,
+        "clean_frames": 6,
+        "attempts": 24,
+        "total_bits_in_full_frames": 5320,
+        "total_errors_in_full_frames": 1604,
+        "aggregate_ber": 0.3015037593984962,
+        "lock_rate": 0.7916666666666666,
+        "lock_rate_wilson95": [
+          0.5952954674681133,
+          0.9075517464714814
+        ],
+        "clean_attempt_rate": 0.25,
+        "clean_attempt_rate_wilson95": [
+          0.11999366228595004,
+          0.44899444005154004
+        ],
+        "clean_given_lock_rate": 0.3157894736842105,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 154,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 137,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 140,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 127,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 129,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 138,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 99,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 149,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 127,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 5,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 122,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 127,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 150,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          }
+        ]
+      },
+      "coarse_off": {
+        "locked": true,
+        "reached_zero": false,
+        "best_errors": 130,
+        "best_ber": 0.4642857142857143,
+        "full_frames": 20,
+        "clean_frames": 0,
+        "attempts": 24,
+        "total_bits_in_full_frames": 5600,
+        "total_errors_in_full_frames": 2800,
+        "aggregate_ber": 0.5,
+        "lock_rate": 0.8333333333333334,
+        "lock_rate_wilson95": [
+          0.6414692935030095,
+          0.9332132367136705
+        ],
+        "clean_attempt_rate": 0.0,
+        "clean_attempt_rate_wilson95": [
+          1.3877787807814457e-17,
+          0.13797620467498017
+        ],
+        "clean_given_lock_rate": 0.0,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 139,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 134,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 118,
+            "total_bit_errors": 110,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 142,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 130,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 101,
+            "total_bit_errors": 106,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 141,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 137,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 134,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 133,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 136,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 157,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 136,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 159,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 141,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 139,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 136,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 142,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 141,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 141,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 141,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 141,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "cfo_hz": 15000.0,
+      "rssi_db": "75.50 dB",
+      "coarse_on": {
+        "locked": true,
+        "reached_zero": true,
+        "best_errors": 0,
+        "best_ber": 0.0,
+        "full_frames": 16,
+        "clean_frames": 5,
+        "attempts": 24,
+        "total_bits_in_full_frames": 4480,
+        "total_errors_in_full_frames": 1096,
+        "aggregate_ber": 0.24464285714285713,
+        "lock_rate": 0.6666666666666666,
+        "lock_rate_wilson95": [
+          0.46706316838131745,
+          0.8202780967270223
+        ],
+        "clean_attempt_rate": 0.20833333333333334,
+        "clean_attempt_rate_wilson95": [
+          0.09244825352851857,
+          0.40470453253188665
+        ],
+        "clean_given_lock_rate": 0.3125,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 114,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 152,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 10,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 131,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 136,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 101,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 134,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 5,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 165,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 3,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 145,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          }
+        ]
+      },
+      "coarse_off": {
+        "locked": true,
+        "reached_zero": false,
+        "best_errors": 138,
+        "best_ber": 0.4928571428571429,
+        "full_frames": 6,
+        "clean_frames": 0,
+        "attempts": 24,
+        "total_bits_in_full_frames": 1680,
+        "total_errors_in_full_frames": 840,
+        "aggregate_ber": 0.5,
+        "lock_rate": 0.25,
+        "lock_rate_wilson95": [
+          0.11999366228595004,
+          0.44899444005154004
+        ],
+        "clean_attempt_rate": 0.0,
+        "clean_attempt_rate_wilson95": [
+          1.3877787807814457e-17,
+          0.13797620467498017
+        ],
+        "clean_given_lock_rate": 0.0,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 138,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 143,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 139,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 139,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 141,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 140,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 24,
+            "total_bit_errors": 19,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 139,
+            "total_bit_errors": 128,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "cfo_hz": 20000.0,
+      "rssi_db": "75.50 dB",
+      "coarse_on": {
+        "locked": true,
+        "reached_zero": true,
+        "best_errors": 0,
+        "best_ber": 0.0,
+        "full_frames": 19,
+        "clean_frames": 9,
+        "attempts": 24,
+        "total_bits_in_full_frames": 5320,
+        "total_errors_in_full_frames": 1082,
+        "aggregate_ber": 0.20338345864661656,
+        "lock_rate": 0.7916666666666666,
+        "lock_rate_wilson95": [
+          0.5952954674681133,
+          0.9075517464714814
+        ],
+        "clean_attempt_rate": 0.375,
+        "clean_attempt_rate_wilson95": [
+          0.21159367559548778,
+          0.5729003755732572
+        ],
+        "clean_given_lock_rate": 0.47368421052631576,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 147,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 145,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 166,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 45,
+            "total_bit_errors": 31,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 135,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 83,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 71,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 85,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 122,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 2,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 75,
+            "total_bit_errors": 61,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 74,
+            "total_bit_errors": 66,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 70,
+            "total_bit_errors": 60,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 126,
+            "timed_out": false,
+            "ok": true
+          }
+        ]
+      },
+      "coarse_off": {
+        "locked": false,
+        "reached_zero": false,
+        "best_errors": null,
+        "best_ber": null,
+        "full_frames": 0,
+        "clean_frames": 0,
+        "attempts": 24,
+        "total_bits_in_full_frames": 0,
+        "total_errors_in_full_frames": 0,
+        "aggregate_ber": null,
+        "lock_rate": 0.0,
+        "lock_rate_wilson95": [
+          1.3877787807814457e-17,
+          0.13797620467498017
+        ],
+        "clean_attempt_rate": 0.0,
+        "clean_attempt_rate_wilson95": [
+          1.3877787807814457e-17,
+          0.13797620467498017
+        ],
+        "clean_given_lock_rate": 0.0,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 35,
+            "total_bit_errors": 27,
+            "timed_out": true,
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "cfo_hz": 25000.0,
+      "rssi_db": "75.50 dB",
+      "coarse_on": {
+        "locked": true,
+        "reached_zero": true,
+        "best_errors": 0,
+        "best_ber": 0.0,
+        "full_frames": 20,
+        "clean_frames": 7,
+        "attempts": 24,
+        "total_bits_in_full_frames": 5600,
+        "total_errors_in_full_frames": 1269,
+        "aggregate_ber": 0.22660714285714287,
+        "lock_rate": 0.8333333333333334,
+        "lock_rate_wilson95": [
+          0.6414692935030095,
+          0.9332132367136705
+        ],
+        "clean_attempt_rate": 0.2916666666666667,
+        "clean_attempt_rate_wilson95": [
+          0.14914648196960875,
+          0.49167693664496637
+        ],
+        "clean_given_lock_rate": 0.35,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 69,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 138,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 15,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 160,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 111,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 118,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 128,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 153,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 114,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 10,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 9,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 131,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 113,
+            "timed_out": false,
+            "ok": true
+          }
+        ]
+      },
+      "coarse_off": {
+        "locked": false,
+        "reached_zero": false,
+        "best_errors": null,
+        "best_ber": null,
+        "full_frames": 0,
+        "clean_frames": 0,
+        "attempts": 24,
+        "total_bits_in_full_frames": 0,
+        "total_errors_in_full_frames": 0,
+        "aggregate_ber": null,
+        "lock_rate": 0.0,
+        "lock_rate_wilson95": [
+          1.3877787807814457e-17,
+          0.13797620467498017
+        ],
+        "clean_attempt_rate": 0.0,
+        "clean_attempt_rate_wilson95": [
+          1.3877787807814457e-17,
+          0.13797620467498017
+        ],
+        "clean_given_lock_rate": 0.0,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "cfo_hz": 30000.0,
+      "rssi_db": "75.50 dB",
+      "coarse_on": {
+        "locked": true,
+        "reached_zero": true,
+        "best_errors": 0,
+        "best_ber": 0.0,
+        "full_frames": 17,
+        "clean_frames": 7,
+        "attempts": 24,
+        "total_bits_in_full_frames": 4760,
+        "total_errors_in_full_frames": 1102,
+        "aggregate_ber": 0.23151260504201682,
+        "lock_rate": 0.7083333333333334,
+        "lock_rate_wilson95": [
+          0.5083230633550337,
+          0.8508535180303913
+        ],
+        "clean_attempt_rate": 0.2916666666666667,
+        "clean_attempt_rate_wilson95": [
+          0.14914648196960875,
+          0.49167693664496637
+        ],
+        "clean_given_lock_rate": 0.4117647058823529,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 129,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 62,
+            "total_bit_errors": 50,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 142,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 159,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 75,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 3,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 148,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 2,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 173,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 103,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 168,
+            "timed_out": false,
+            "ok": true
+          }
+        ]
+      },
+      "coarse_off": {
+        "locked": true,
+        "reached_zero": false,
+        "best_errors": 123,
+        "best_ber": 0.4392857142857143,
+        "full_frames": 3,
+        "clean_frames": 0,
+        "attempts": 24,
+        "total_bits_in_full_frames": 840,
+        "total_errors_in_full_frames": 383,
+        "aggregate_ber": 0.45595238095238094,
+        "lock_rate": 0.125,
+        "lock_rate_wilson95": [
+          0.04344334080123444,
+          0.31003881270500067
+        ],
+        "clean_attempt_rate": 0.0,
+        "clean_attempt_rate_wilson95": [
+          1.3877787807814457e-17,
+          0.13797620467498017
+        ],
+        "clean_given_lock_rate": 0.0,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 130,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 130,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 123,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 76,
+            "total_bit_errors": 72,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 138,
+            "total_bit_errors": 116,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "cfo_hz": 35000.0,
+      "rssi_db": "75.50 dB",
+      "coarse_on": {
+        "locked": true,
+        "reached_zero": true,
+        "best_errors": 0,
+        "best_ber": 0.0,
+        "full_frames": 21,
+        "clean_frames": 8,
+        "attempts": 24,
+        "total_bits_in_full_frames": 5880,
+        "total_errors_in_full_frames": 1621,
+        "aggregate_ber": 0.27568027210884355,
+        "lock_rate": 0.875,
+        "lock_rate_wilson95": [
+          0.6899611872949993,
+          0.9565566591987655
+        ],
+        "clean_attempt_rate": 0.3333333333333333,
+        "clean_attempt_rate_wilson95": [
+          0.17972190327297752,
+          0.5329368316186824
+        ],
+        "clean_given_lock_rate": 0.38095238095238093,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 125,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 130,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 125,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 134,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 130,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 122,
+            "total_bit_errors": 115,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 130,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 130,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 116,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 73,
+            "total_bit_errors": 14,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 130,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 162,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 171,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 5,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 133,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          }
+        ]
+      },
+      "coarse_off": {
+        "locked": true,
+        "reached_zero": false,
+        "best_errors": 131,
+        "best_ber": 0.46785714285714286,
+        "full_frames": 6,
+        "clean_frames": 0,
+        "attempts": 24,
+        "total_bits_in_full_frames": 1680,
+        "total_errors_in_full_frames": 833,
+        "aggregate_ber": 0.49583333333333335,
+        "lock_rate": 0.25,
+        "lock_rate_wilson95": [
+          0.11999366228595004,
+          0.44899444005154004
+        ],
+        "clean_attempt_rate": 0.0,
+        "clean_attempt_rate_wilson95": [
+          1.3877787807814457e-17,
+          0.13797620467498017
+        ],
+        "clean_given_lock_rate": 0.0,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 142,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 144,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 140,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 131,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 136,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 140,
+            "timed_out": false,
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "cfo_hz": 40000.0,
+      "rssi_db": "75.50 dB",
+      "coarse_on": {
+        "locked": true,
+        "reached_zero": true,
+        "best_errors": 0,
+        "best_ber": 0.0,
+        "full_frames": 14,
+        "clean_frames": 2,
+        "attempts": 24,
+        "total_bits_in_full_frames": 3920,
+        "total_errors_in_full_frames": 1548,
+        "aggregate_ber": 0.3948979591836735,
+        "lock_rate": 0.5833333333333334,
+        "lock_rate_wilson95": [
+          0.3883466586522876,
+          0.7553239739018824
+        ],
+        "clean_attempt_rate": 0.08333333333333333,
+        "clean_attempt_rate_wilson95": [
+          0.02315881529704332,
+          0.2584880219321068
+        ],
+        "clean_given_lock_rate": 0.14285714285714285,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 133,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 154,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 159,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 100,
+            "total_bit_errors": 94,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 114,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 161,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 4,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 142,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 44,
+            "total_bit_errors": 21,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 119,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 151,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 112,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 156,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 106,
+            "total_bit_errors": 54,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 143,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          }
+        ]
+      },
+      "coarse_off": {
+        "locked": true,
+        "reached_zero": false,
+        "best_errors": 124,
+        "best_ber": 0.44285714285714284,
+        "full_frames": 4,
+        "clean_frames": 0,
+        "attempts": 24,
+        "total_bits_in_full_frames": 1120,
+        "total_errors_in_full_frames": 518,
+        "aggregate_ber": 0.4625,
+        "lock_rate": 0.16666666666666666,
+        "lock_rate_wilson95": [
+          0.06678676328632951,
+          0.3585307064969906
+        ],
+        "clean_attempt_rate": 0.0,
+        "clean_attempt_rate_wilson95": [
+          1.3877787807814457e-17,
+          0.13797620467498017
+        ],
+        "clean_given_lock_rate": 0.0,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 58,
+            "total_bit_errors": 45,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 136,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 124,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 125,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 133,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 131,
+            "total_bit_errors": 129,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "cfo_hz": 45000.0,
+      "rssi_db": "75.50 dB",
+      "coarse_on": {
+        "locked": true,
+        "reached_zero": true,
+        "best_errors": 0,
+        "best_ber": 0.0,
+        "full_frames": 14,
+        "clean_frames": 3,
+        "attempts": 24,
+        "total_bits_in_full_frames": 3920,
+        "total_errors_in_full_frames": 1417,
+        "aggregate_ber": 0.36147959183673467,
+        "lock_rate": 0.5833333333333334,
+        "lock_rate_wilson95": [
+          0.3883466586522876,
+          0.7553239739018824
+        ],
+        "clean_attempt_rate": 0.125,
+        "clean_attempt_rate_wilson95": [
+          0.04344334080123444,
+          0.31003881270500067
+        ],
+        "clean_given_lock_rate": 0.21428571428571427,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 45,
+            "total_bit_errors": 32,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 116,
+            "total_bit_errors": 120,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 59,
+            "total_bit_errors": 42,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 73,
+            "total_bit_errors": 71,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 131,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 140,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 158,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 150,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 130,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 131,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 125,
+            "total_bit_errors": 143,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 149,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 34,
+            "total_bit_errors": 25,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 2,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 145,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 136,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 145,
+            "timed_out": false,
+            "ok": true
+          }
+        ]
+      },
+      "coarse_off": {
+        "locked": true,
+        "reached_zero": false,
+        "best_errors": 144,
+        "best_ber": 0.5142857142857142,
+        "full_frames": 1,
+        "clean_frames": 0,
+        "attempts": 24,
+        "total_bits_in_full_frames": 280,
+        "total_errors_in_full_frames": 144,
+        "aggregate_ber": 0.5142857142857142,
+        "lock_rate": 0.041666666666666664,
+        "lock_rate_wilson95": [
+          0.007393456165505782,
+          0.20241806478655938
+        ],
+        "clean_attempt_rate": 0.0,
+        "clean_attempt_rate_wilson95": [
+          1.3877787807814457e-17,
+          0.13797620467498017
+        ],
+        "clean_given_lock_rate": 0.0,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 144,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "cfo_hz": 50000.0,
+      "rssi_db": "75.50 dB",
+      "coarse_on": {
+        "locked": true,
+        "reached_zero": true,
+        "best_errors": 0,
+        "best_ber": 0.0,
+        "full_frames": 17,
+        "clean_frames": 10,
+        "attempts": 24,
+        "total_bits_in_full_frames": 4760,
+        "total_errors_in_full_frames": 645,
+        "aggregate_ber": 0.13550420168067226,
+        "lock_rate": 0.7083333333333334,
+        "lock_rate_wilson95": [
+          0.5083230633550337,
+          0.8508535180303913
+        ],
+        "clean_attempt_rate": 0.4166666666666667,
+        "clean_attempt_rate_wilson95": [
+          0.24467602609811764,
+          0.6116533413477124
+        ],
+        "clean_given_lock_rate": 0.5882352941176471,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 6,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 45,
+            "total_bit_errors": 46,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 140,
+            "total_bit_errors": 122,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 119,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 102,
+            "total_bit_errors": 83,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 7,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 124,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 132,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 135,
+            "timed_out": false,
+            "ok": true
+          }
+        ]
+      },
+      "coarse_off": {
+        "locked": true,
+        "reached_zero": false,
+        "best_errors": 127,
+        "best_ber": 0.45357142857142857,
+        "full_frames": 1,
+        "clean_frames": 0,
+        "attempts": 24,
+        "total_bits_in_full_frames": 280,
+        "total_errors_in_full_frames": 127,
+        "aggregate_ber": 0.45357142857142857,
+        "lock_rate": 0.041666666666666664,
+        "lock_rate_wilson95": [
+          0.007393456165505782,
+          0.20241806478655938
+        ],
+        "clean_attempt_rate": 0.0,
+        "clean_attempt_rate_wilson95": [
+          1.3877787807814457e-17,
+          0.13797620467498017
+        ],
+        "clean_given_lock_rate": 0.0,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 127,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          }
+        ]
+      }
+    },
+    {
+      "cfo_hz": 55000.0,
+      "rssi_db": "75.50 dB",
+      "coarse_on": {
+        "locked": true,
+        "reached_zero": true,
+        "best_errors": 0,
+        "best_ber": 0.0,
+        "full_frames": 16,
+        "clean_frames": 5,
+        "attempts": 24,
+        "total_bits_in_full_frames": 4480,
+        "total_errors_in_full_frames": 767,
+        "aggregate_ber": 0.17120535714285715,
+        "lock_rate": 0.6666666666666666,
+        "lock_rate_wilson95": [
+          0.46706316838131745,
+          0.8202780967270223
+        ],
+        "clean_attempt_rate": 0.20833333333333334,
+        "clean_attempt_rate_wilson95": [
+          0.09244825352851857,
+          0.40470453253188665
+        ],
+        "clean_given_lock_rate": 0.3125,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 140,
+            "total_bit_errors": 2,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 63,
+            "total_bit_errors": 54,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 126,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 126,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 140,
+            "total_bit_errors": 3,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 140,
+            "total_bit_errors": 160,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 2,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 140,
+            "total_bit_errors": 83,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 1,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 140,
+            "total_bit_errors": 6,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 20,
+            "total_bit_errors": 11,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 136,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 0,
+            "timed_out": false,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 140,
+            "total_bit_errors": 122,
+            "timed_out": false,
+            "ok": true
+          }
+        ]
+      },
+      "coarse_off": {
+        "locked": false,
+        "reached_zero": false,
+        "best_errors": null,
+        "best_ber": null,
+        "full_frames": 0,
+        "clean_frames": 0,
+        "attempts": 24,
+        "total_bits_in_full_frames": 0,
+        "total_errors_in_full_frames": 0,
+        "aggregate_ber": null,
+        "lock_rate": 0.0,
+        "lock_rate_wilson95": [
+          1.3877787807814457e-17,
+          0.13797620467498017
+        ],
+        "clean_attempt_rate": 0.0,
+        "clean_attempt_rate_wilson95": [
+          1.3877787807814457e-17,
+          0.13797620467498017
+        ],
+        "clean_given_lock_rate": 0.0,
+        "attempt_results": [
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 0,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 1,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 2,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 3,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 4,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 5,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 6,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          },
+          {
+            "start_offset": 7,
+            "received_symbols": 0,
+            "total_bit_errors": 0,
+            "timed_out": true,
+            "ok": true
+          }
+        ]
+      }
+    }
+  ],
+  "acceptance": {
+    "passed": true,
+    "coarse_on_acquired_points": 12,
+    "total_cfo_points": 12,
+    "coarse_on_clean_attempts": 75,
+    "coarse_on_attempts": 288,
+    "costas_only_acquired_discriminating_points": 0,
+    "discriminating_cfo_points": 9,
+    "costas_only_clean_attempts": 0,
+    "costas_only_attempts": 216,
+    "min_discriminating_cfo_hz": 15000.0,
+    "conclusion": "in-fabric coarse ON acquired at BER=0 at 12/12 CFO points (75/288 clean attempts); Costas-only acquired at BER=0 at 0/9 points with |CFO| >= 15 kHz (0/216 clean attempts)"
+  },
+  "conclusion": "in-fabric coarse ON acquired at BER=0 at 12/12 CFO points (75/288 clean attempts); Costas-only acquired at BER=0 at 0/9 points with |CFO| >= 15 kHz (0/216 clean attempts)"
+}

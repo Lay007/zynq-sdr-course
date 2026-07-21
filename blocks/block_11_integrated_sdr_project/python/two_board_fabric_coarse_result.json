@@ -1,0 +1,6 @@
+{
+  "status": "superseded",
+  "reason": "This was a preliminary best-attempt summary and did not report the full attempt budget.",
+  "canonical_result": "../../../docs/assets/lab1132_two_board_fabric_coarse_cfo.json",
+  "canonical_conclusion": "In-fabric coarse-CFO acquired at BER=0 at 12/12 CFO points with 75/288 clean attempts; Costas-only produced 0/216 clean attempts at 15-55 kHz. This proves acquisition range, not a continuous BER=0 link."
+}
