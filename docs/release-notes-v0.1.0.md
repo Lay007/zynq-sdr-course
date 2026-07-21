@@ -104,6 +104,8 @@ Representative executable labs generate figures and JSON metrics under `docs/ass
 - The status pages now track a measured Block 11 internal loopback result rather than the older high-error bring-up blocker.
 - The QPSK replay dataset is generated locally and analyzed by a dedicated workflow.
 - The evidence map, maturity matrix and completion matrix now point reviewers to current proof artifacts and remaining gaps.
+- Lab 11.32 demonstrates in-fabric coarse-CFO acquisition on a conducted two-board link at 12/12 points over 0–55 kHz, while retaining the measured 75/288 clean-attempt rate as an explicit limitation.
+- Lab 11.33 turns that limitation into an evidence-backed decision: retain the residual-CFO Costas tuning, reject a timing-closed squared-energy picker after worse equal-budget live A/B runs, and promote continuous timing recovery as the next experiment.
 
 ## Acceptance criteria for this release
 
@@ -124,6 +126,7 @@ Representative executable labs generate figures and JSON metrics under `docs/ass
 - External measured packages should keep improving through manifests, plots, metrics and limitations.
 - Some advanced labs are roadmap-style and will continue to mature after this first release.
 - The course currently prioritizes deterministic scripts and CI-friendly artifacts over notebook-first interactivity.
+- The two-board coarse-CFO result proves acquisition range, not a continuous BER floor; continuous timing recovery is still required.
 
 ## Next release direction
 

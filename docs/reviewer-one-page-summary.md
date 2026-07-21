@@ -23,7 +23,7 @@ python tools/run_local_ci.py --quick
 | Area | Evidence |
 |---|---|
 | DSP | Executable labs and generated plots |
-| FPGA | 18 HDL tests plus routed integrated timing, utilization and route reports |
+| FPGA | 29 HDL tests plus routed integrated timing, utilization and route reports |
 | Data | IQ manifests and replay commands |
 | Documentation | Bilingual MkDocs course pages |
 | Reviewability | Status matrix, checklist and evidence index |

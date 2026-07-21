@@ -1,0 +1,101 @@
+{
+  "lab": "11.33",
+  "decision": "reject_settled_squared_energy_picker",
+  "conditions": {
+    "topology": "board A vendor cyclic-DMA TX -> 30 dB pad -> board B course fabric RX",
+    "carrier_hz": 915000000,
+    "injected_cfo_hz": 30000,
+    "tx_gain_db": -30,
+    "rx_gain_db": 50,
+    "bits_per_frame": 280
+  },
+  "accepted_receiver": {
+    "source": "tmp\\lab1133_30k_fixed4.json",
+    "cfo_hz": 30000.0,
+    "start_offsets": [
+      4
+    ],
+    "clean_frames": 27,
+    "full_frames": 39,
+    "attempts": 40,
+    "clean_attempt_rate": 0.675,
+    "lock_rate": 0.975,
+    "aggregate_ber_full_frames": 0.03287545787545788
+  },
+  "rejected_picker_runs": [
+    {
+      "source": "tmp\\lab1133_pipeline_30k_fixed1.json",
+      "cfo_hz": 30000.0,
+      "start_offsets": [
+        1
+      ],
+      "clean_frames": 4,
+      "full_frames": 22,
+      "attempts": 40,
+      "clean_attempt_rate": 0.1,
+      "lock_rate": 0.55,
+      "aggregate_ber_full_frames": 0.13717532467532467
+    },
+    {
+      "source": "tmp\\lab1133_pipeline_30k_fixed3.json",
+      "cfo_hz": 30000.0,
+      "start_offsets": [
+        3
+      ],
+      "clean_frames": 12,
+      "full_frames": 31,
+      "attempts": 40,
+      "clean_attempt_rate": 0.3,
+      "lock_rate": 0.775,
+      "aggregate_ber_full_frames": 0.201036866359447
+    },
+    {
+      "source": "tmp\\lab1133_pipeline_30k_fixed5.json",
+      "cfo_hz": 30000.0,
+      "start_offsets": [
+        5
+      ],
+      "clean_frames": 14,
+      "full_frames": 29,
+      "attempts": 40,
+      "clean_attempt_rate": 0.35,
+      "lock_rate": 0.725,
+      "aggregate_ber_full_frames": 0.07204433497536945
+    }
+  ],
+  "best_rejected_picker_run": {
+    "source": "tmp\\lab1133_pipeline_30k_fixed5.json",
+    "cfo_hz": 30000.0,
+    "start_offsets": [
+      5
+    ],
+    "clean_frames": 14,
+    "full_frames": 29,
+    "attempts": 40,
+    "clean_attempt_rate": 0.35,
+    "lock_rate": 0.725,
+    "aggregate_ber_full_frames": 0.07204433497536945
+  },
+  "rtl_evidence": {
+    "retained_capture_old_costas_errors": 124,
+    "retained_capture_tuned_costas_errors": 0,
+    "bits": 280
+  },
+  "implementation_evidence": {
+    "rejected_unpipelined_wns_ns": -2.779,
+    "rejected_unpipelined_tns_ns": -1772.272,
+    "rejected_unpipelined_failing_endpoints": 3113,
+    "pipelined_postroute_wns_ns": 0.01,
+    "pipelined_postroute_tns_ns": 0.0,
+    "pipelined_postroute_failing_endpoints": 0,
+    "pipelined_fully_routed_nets": 75689,
+    "pipelined_routing_errors": 0,
+    "pipelined_raw_bit_sha256": "8055680cd0a5052826c10bfd4fe59f3e8342a1991424da561b5aa7b5d26142ad"
+  },
+  "accepted_artifacts": {
+    "boot_raw_bit_sha256": "584ccd14c53fb381edbf3f37bbcc497a2c68a13431465f5d26a040c4af40b74b",
+    "runtime_bit_bin_sha256": "80841dc40626981563e648543d573f1bd9ef908f3f4efd5f4d0e91896cf67e09"
+  },
+  "passed": true,
+  "conclusion": "The Costas pull-in fix is retained. The settled squared-energy burst picker is rejected: its best 40-attempt live-RF run is worse than the accepted receiver. The next experiment is continuous QPSK timing recovery, not another feedforward phase-score heuristic."
+}

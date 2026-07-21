@@ -23,6 +23,7 @@ This is the main reviewer claim: the course teaches students to treat SDR work a
 | Fixed-point bridge | Block 4 labs and fixed-point workflow notes | Students see why scaling, saturation and quantization matter before RTL. |
 | HDL / FPGA flow | Block 5 labs, Verilog smoke tests and FPGA reports | The course does not stop at floating-point models; selected blocks have hardware-facing checks. |
 | Integrated implementation | Paired Vivado reports, implementation sweep and machine-readable metrics | The CDC-fixed hardware-working snapshot is fully routed; the selected ExtraTiming implementation reaches WNS +0.096 ns and passes fabric board qualification. |
+| Two-board carrier acquisition | Labs 11.32–11.33 scripts, per-attempt JSON and generated plots | In-fabric coarse-CFO acquires all 12 points; a retained capture proves the Costas pull-in fix, while live A/B rejects a timing-closed picker candidate that reduces rather than improves clean-attempt rate. |
 | RF and measurement workflow | Block 6/7 materials, IQ metadata, dataset manifests | RF experiments are framed with gain staging, attenuation, capture metadata and safety notes. |
 | Synchronization and link metrics | Block 8 materials, BER/EVM/SNR terminology and acceptance rules | Digital link quality is judged by recovered bits and constellation quality, not by SNR alone. |
 | Data discipline | `datasets/`, `tools/check_dataset_manifests.py`, Git LFS-aware manifest checks | IQ captures can be reviewed without turning the repository into an uncontrolled data dump. |
@@ -94,6 +95,7 @@ python tools/run_local_ci.py --quick
 | Raw QPSK RF WAV remains local-only | Reviewers can inspect its checksum, manifest, plots and metrics but cannot replay the raw recording from Git | Publish a reviewed small capture or immutable external artifact. |
 | AD9363 gain/overload table is still measurement-pending | RF gain recommendations remain conservative | Measure gain staging, overload signs, clipping thresholds and recommended safe starting values. |
 | External QPSK evidence covers three 30-burst sessions | 0/25,200 bits proves short cross-session repeatability but not a long-duration BER floor; the 2026-07-08 longer attempt was limited by RTL-SDR transport stability | Add a controlled cabled comparison and longer runs on a stable capture backend. |
+| Two-board coarse-CFO is an acquisition result | BER=0 is reached at 12/12 CFO points, but only 75/288 attempts are clean; this is not a continuous BER=0 claim | Add timing recovery, then repeat with long per-point runs and BER-vs-attenuation. |
 
 ## Reviewer conclusion
 

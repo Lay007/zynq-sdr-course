@@ -30,7 +30,7 @@ This matrix shows what each course block should contain before it can be conside
 
 ## Interpretation notes
 
-- Block 11 now has a timing-clean, repeatable QPSK silicon payload, an ExtraTiming implementation selected at WNS +0.096 ns, and 3/3 external RTL-SDR sessions with 90/90 bursts at BER=0. It remains `🟡` because controlled-path evidence, repeat-build/seed robustness and stable longer-duration capture are still pending.
+- Block 11 now has a timing-clean QPSK payload, 3/3 external RTL-SDR sessions, and a controlled two-board in-fabric acquisition sweep: 12/12 CFO points acquired, with 75/288 clean attempts. Lab 11.33 additionally accepts a retained-capture Costas fix and rejects a timing-closed picker after worse live A/B results. It remains `🟡` because continuous timing recovery and stable longer-duration BER are still pending.
 - Block 12 now has a filled dual-modem report with internal and cross-session external RF evidence. It remains below portfolio-ready until controlled-path and longer-duration statistics are measured on a stable capture backend.
 - Blocks 05 and 09 are the strongest automation anchors today: they combine reusable checks, generated artifacts and CI coverage.
 
