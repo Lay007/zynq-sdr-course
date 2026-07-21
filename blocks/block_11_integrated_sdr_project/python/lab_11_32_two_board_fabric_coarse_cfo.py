@@ -82,6 +82,7 @@ PHY = L.PHY
 # gp_ctrl mode bits (see the bridge): QPSK | raw-RX | DC-block | Costas | phase-pick [| coarse]
 RF_MODE = 0x10 | 0x20 | 0x200 | 0x400 | 0x1000
 COARSE_BIT = 0x2000
+TIMING_RECOVERY_BIT = 0x4000
 
 
 # --------------------------------------------------------------------------- #
@@ -218,7 +219,9 @@ def summarize_attempts(rows: list[dict], *, symbol_count: int = SYMBOLS) -> dict
     }
 
 
-def measure_point(runner_b, offsets, retries, coarse: bool) -> dict:
+def measure_point(
+    runner_b, offsets, retries, coarse: bool, *, timing_recovery: bool = False
+) -> dict:
     """Sweep offsets x retries with an EQUAL budget for coarse on/off and report acquisition, not a
     single-offset average. The two AD9361s run on independent clocks, so on top of the carrier CFO
     there is a residual sample-clock offset the fixed-phase RX sampler does not track: the frame's
@@ -228,6 +231,8 @@ def measure_point(runner_b, offsets, retries, coarse: bool) -> dict:
     mean BER at one offset. `reached_zero` answers "can the loop acquire this offset"; `clean_rate`
     answers "how often"."""
     mode = RF_MODE | (COARSE_BIT if coarse else 0)
+    if timing_recovery:
+        mode |= TIMING_RECOVERY_BIT
     rows: list[dict] = []
     for off in offsets:
         for _ in range(retries):
@@ -349,6 +354,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
                     help="attempts for each start offset and coarse setting (default: 3)")
     ap.add_argument("--min-discriminating-cfo", type=float, default=15000.0,
                     help="minimum |CFO| used for the Costas-only rejection gate")
+    ap.add_argument("--timing-recovery", action="store_true",
+                    help="set gp_ctrl[14] and run the continuous Gardner timing path")
     ap.add_argument("--self-test", action="store_true")
     ap.add_argument("--no-plot", action="store_true")
     ap.add_argument("--json-out", type=Path,
@@ -381,6 +388,7 @@ def main() -> int:
                "carrier_hz": args.carrier, "tx_gain_db": args.tx_gain, "rx_gain_db": args.rx_gain,
                "symbols": SYMBOLS, "bits_per_frame": BITS_PER_FRAME,
                "start_offsets": offsets, "retries_per_offset": args.retries_per_offset,
+               "timing_recovery": args.timing_recovery,
                "topology": "board A (vendor Pluto, iio_writedev bit-exact course frame) TX1 -> 30 dB "
                            "pad -> board B (course fabric RX + coarse) RX1",
                "points": results}
@@ -438,8 +446,14 @@ def main() -> int:
         for cfo in cfos:
             sh(run_a, f"echo {int(args.carrier + cfo)} > {PHY}/out_altvoltage1_TX_LO_frequency")
             time.sleep(0.4)
-            on = measure_point(run_b, offsets, args.retries_per_offset, coarse=True)
-            off = measure_point(run_b, offsets, args.retries_per_offset, coarse=False)
+            on = measure_point(
+                run_b, offsets, args.retries_per_offset, coarse=True,
+                timing_recovery=args.timing_recovery,
+            )
+            off = measure_point(
+                run_b, offsets, args.retries_per_offset, coarse=False,
+                timing_recovery=args.timing_recovery,
+            )
             rssi = sh(run_b, f"cat {PHY}/in_voltage0_rssi 2>/dev/null").strip()
             results.append({"cfo_hz": float(cfo), "rssi_db": rssi, "coarse_on": on, "coarse_off": off})
             print(f"CFO {cfo/1e3:+6.1f} kHz | coarse ON best={on['best_ber']} "

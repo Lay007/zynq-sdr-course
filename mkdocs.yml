@@ -269,6 +269,7 @@ nav:
           - "Lab 11.31 — Свип-стресс коарс-CFO оценщика": ru/labs/lab-11-31-coarse-cfo-stress-sweep.md
           - "Lab 11.32 — Двухплатный in-fabric coarse-CFO": ru/labs/lab-11-32-two-board-fabric-coarse-cfo.md
           - "Lab 11.33 — Остаточный CFO и timing-гипотеза": ru/labs/lab-11-33-residual-cfo-timing-hypothesis.md
+          - "Lab 11.34 — Непрерывный QPSK timing recovery": ru/labs/lab-11-34-continuous-qpsk-timing-recovery.md
       - "Проекты Block 12":
           - "Project 12.1 — QPSK modem final project": ru/labs/project-12-1-qpsk-modem-final-project.md
           - "Project 12.2 — RF capture analysis final project": ru/labs/project-12-2-rf-capture-analysis-final-project.md
@@ -408,6 +409,7 @@ nav:
           - "Lab 11.31 — Coarse-CFO estimator stress sweep": en/labs/lab-11-31-coarse-cfo-stress-sweep.md
           - "Lab 11.32 — Two-board in-fabric coarse-CFO": en/labs/lab-11-32-two-board-fabric-coarse-cfo.md
           - "Lab 11.33 — Residual CFO and timing hypothesis": en/labs/lab-11-33-residual-cfo-timing-hypothesis.md
+          - "Lab 11.34 — Continuous QPSK timing recovery": en/labs/lab-11-34-continuous-qpsk-timing-recovery.md
       - "Block 12 projects":
           - "Project 12.1 — QPSK modem final project": en/labs/project-12-1-qpsk-modem-final-project.md
           - "Project 12.2 — RF capture analysis final project": en/labs/project-12-2-rf-capture-analysis-final-project.md
