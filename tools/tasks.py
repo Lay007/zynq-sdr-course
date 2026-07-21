@@ -126,6 +126,47 @@ def remove_tree(path: Path) -> None:
         shutil.rmtree(path)
 
 
+def is_git_tracked(path: Path) -> bool:
+    """Return whether Git tracks path, so clean never deletes repository evidence."""
+    try:
+        relative = path.resolve().relative_to(ROOT).as_posix()
+    except ValueError:
+        raise ValueError(f"Refusing to inspect path outside repository: {path}") from None
+    result = subprocess.run(
+        ["git", "ls-files", "--error-unmatch", "--", relative],
+        cwd=ROOT,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+    return result.returncode == 0
+
+
+def remove_generated_file(path: Path) -> bool:
+    if not path.exists() or is_git_tracked(path):
+        return False
+    path.unlink()
+    return True
+
+
+def remove_untracked_tree(path: Path) -> None:
+    """Remove generated files below path while preserving any tracked evidence."""
+    if not path.exists():
+        return
+    for candidate in sorted(path.rglob("*"), reverse=True):
+        if candidate.is_file() or candidate.is_symlink():
+            remove_generated_file(candidate)
+        elif candidate.is_dir():
+            try:
+                candidate.rmdir()
+            except OSError:
+                pass
+    try:
+        path.rmdir()
+    except OSError:
+        pass
+
+
 def task_install() -> None:
     run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
 
@@ -176,7 +217,7 @@ def task_smoke() -> None:
 
 def task_clean() -> None:
     for directory in GENERATED_ROOT_DIRS:
-        remove_tree(directory)
+        remove_untracked_tree(directory)
 
     for pycache_dir in ROOT.rglob("__pycache__"):
         if pycache_dir.is_dir():
@@ -184,47 +225,41 @@ def task_clean() -> None:
 
     for pattern in ("*.out", "*.vcd"):
         for artifact in TB_DIR.glob(pattern):
-            artifact.unlink()
+            remove_generated_file(artifact)
 
     for pattern in LEGACY_ROOT_TB_PATTERNS:
         for artifact in ROOT.glob(pattern):
-            artifact.unlink()
+            remove_generated_file(artifact)
 
     for filename in GENERATED_TB_FILENAMES:
         artifact = TB_DIR / filename
-        if artifact.exists():
-            artifact.unlink()
+        remove_generated_file(artifact)
 
     for filename in GENERATED_RTL_FILENAMES:
         artifact = RTL_DIR / filename
-        if artifact.exists():
-            artifact.unlink()
+        remove_generated_file(artifact)
 
     if DOCS_ASSETS_DIR.exists():
         for pattern in GENERATED_DOC_ASSET_PATTERNS:
             for artifact in DOCS_ASSETS_DIR.glob(pattern):
-                artifact.unlink()
+                remove_generated_file(artifact)
 
     if DATASET_MANIFESTS_DIR.exists():
         for filename in GENERATED_DATASET_FILENAMES:
             artifact = DATASET_MANIFESTS_DIR / filename
-            if artifact.exists():
-                artifact.unlink()
+            remove_generated_file(artifact)
 
         if not any(DATASET_MANIFESTS_DIR.iterdir()):
             DATASET_MANIFESTS_DIR.rmdir()
 
     for directory in GENERATED_CAPTURE_DIRS:
-        if directory.exists():
-            shutil.rmtree(directory)
+        remove_untracked_tree(directory)
 
     for artifact in GENERATED_CAPTURE_FILENAMES:
-        if artifact.exists():
-            artifact.unlink()
+        remove_generated_file(artifact)
 
     for artifact in GENERATED_PACKAGE_FILENAMES:
-        if artifact.exists():
-            artifact.unlink()
+        remove_generated_file(artifact)
 
     print("Clean completed.")
 
