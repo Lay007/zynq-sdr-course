@@ -9,10 +9,25 @@ if str(MODULE_DIR) not in sys.path:
     sys.path.insert(0, str(MODULE_DIR))
 
 from lab_11_27_runtime_qpsk_digital_loopback import (  # noqa: E402
+    decode_payload_error_position,
     loopback_mode_bits,
     resolve_start_offsets,
     summarize_sweep,
 )
+
+
+def test_decode_payload_error_position_handles_segments_and_no_error_sentinel() -> None:
+    decoded = decode_payload_error_position(0x04030201, 0x00C80006)
+    assert decoded == {
+        "segment_errors": [1, 2, 3, 4],
+        "first_error_index": 6,
+        "last_error_index": 200,
+    }
+
+    clean = decode_payload_error_position(0, 0xFFFFFFFF)
+    assert clean["segment_errors"] == [0, 0, 0, 0]
+    assert clean["first_error_index"] is None
+    assert clean["last_error_index"] is None
 
 
 def test_summarize_sweep_reports_repeatability_by_offset() -> None:

@@ -39,7 +39,7 @@ ROOT = Path(__file__).resolve().parents[3]
 ASSETS = ROOT / "docs" / "assets"
 DEFAULT_JSON = ASSETS / "lab1135_paired_timing_ab_live.json"
 DEFAULT_PNG = ASSETS / "lab1135_paired_timing_ab_live.png"
-FIXED_MODE = B.RF_MODE | B.COARSE_BIT
+FIXED_MODE = B.RF_MODE | B.COARSE_BIT | B.PAYLOAD_POSITION_BIT
 GARDNER_MODE = FIXED_MODE | B.TIMING_RECOVERY_BIT
 
 
@@ -125,6 +125,28 @@ def error_localization(rows: list[dict]) -> dict:
     preamble_errors = [
         max(total - payload, 0) for total, payload in zip(total_errors, payload_errors)
     ]
+    position_rows = [
+        row.get("payload_error_position")
+        for row in telemetry_rows
+        if isinstance(row.get("payload_error_position"), dict)
+    ]
+    segment_totals = [
+        sum(
+            int(position.get("segment_errors", [0, 0, 0, 0])[segment])
+            for position in position_rows
+        )
+        for segment in range(4)
+    ]
+    first_positions = [
+        int(position["first_error_index"])
+        for position in position_rows
+        if position.get("first_error_index") is not None
+    ]
+    last_positions = [
+        int(position["last_error_index"])
+        for position in position_rows
+        if position.get("last_error_index") is not None
+    ]
     payload_bits_per_frame = B.SYMBOLS * 2 - B.PREAMBLE_BITS
     dirty = [index for index, total in enumerate(total_errors) if total > 0]
     single = [index for index, total in enumerate(total_errors) if total == 1]
@@ -141,6 +163,10 @@ def error_localization(rows: list[dict]) -> dict:
             if telemetry_rows
             else None
         ),
+        "position_telemetry_available": bool(full_rows) and len(position_rows) == len(full_rows),
+        "payload_error_segments": segment_totals,
+        "first_payload_error_index": numeric_summary(first_positions),
+        "last_payload_error_index": numeric_summary(last_positions),
         "dirty_full_frames": len(dirty),
         "preamble_only_dirty_frames": sum(
             payload_errors[index] == 0 for index in dirty

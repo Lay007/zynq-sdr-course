@@ -84,6 +84,7 @@ QPSK_MODE_BITS = 0x10          # gp_ctrl[4] selects the QPSK core
 RF_DC_BLOCK_BITS = 0x200       # gp_ctrl[9] removes AD9361 LO-leakage DC
 RF_COSTAS_BITS = 0x400         # gp_ctrl[10] enables QPSK carrier recovery
 RF_PHASE_PICK_BITS = 0x1000    # gp_ctrl[12] picks the strongest matched-filter phase
+QPSK_PAYLOAD_POSITION_BITS = 0x8000  # gp_ctrl[15] multiplexes payload-position telemetry
 DEFAULT_SYMBOL_COUNT = 140     # QPSK symbols == the loopback frame the sim proved
 # The sampler remains fixed-phase downstream of the picker, so RF only needs the
 # eight residual sample phases while coherent legacy paths retain their wider sweep.
@@ -92,6 +93,17 @@ DEFAULT_START_OFFSETS = list(range(96, 132))
 
 def iso_now() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def decode_payload_error_position(segment_word: int, position_word: int) -> dict[str, Any]:
+    """Decode the gp_ctrl[15] QPSK payload-localization readout."""
+    first = position_word & 0xFFFF
+    last = (position_word >> 16) & 0xFFFF
+    return {
+        "segment_errors": [(segment_word >> shift) & 0xFF for shift in (0, 8, 16, 24)],
+        "first_error_index": None if first == 0xFFFF else first,
+        "last_error_index": None if last == 0xFFFF else last,
+    }
 
 
 def default_run_tag() -> str:
@@ -245,6 +257,8 @@ def qpsk_ber_once(runner, base_addr: int, symbol_count: int, offset: int,
         "recovered_symbol_count_lsb": (tx_debug >> 12) & 0xFF,
         "rx_valid_count": rx_debug,
     }
+    if mode_bits & QPSK_PAYLOAD_POSITION_BITS:
+        row["payload_error_position"] = decode_payload_error_position(tx_debug, rx_debug)
     return row
 
 

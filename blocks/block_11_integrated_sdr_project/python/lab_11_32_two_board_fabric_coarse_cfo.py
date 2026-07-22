@@ -62,7 +62,10 @@ from bench_config import (
 )
 import lab_11_30_two_board_cfo_validation as L
 from lab_11_12_runtime_fpga_manager_reload import upload_bytes_via_ssh_cat
-from lab_11_27_runtime_qpsk_digital_loopback import qpsk_ber_once
+from lab_11_27_runtime_qpsk_digital_loopback import (
+    QPSK_PAYLOAD_POSITION_BITS,
+    qpsk_ber_once,
+)
 
 ROOT = Path(__file__).resolve().parents[3]
 FRAME_MEM = ROOT / "blocks" / "block_05_fpga_hdl_flow" / "rtl" / "bpsk_frame_bits.mem"
@@ -83,6 +86,7 @@ PHY = L.PHY
 RF_MODE = 0x10 | 0x20 | 0x200 | 0x400 | 0x1000
 COARSE_BIT = 0x2000
 TIMING_RECOVERY_BIT = 0x4000
+PAYLOAD_POSITION_BIT = QPSK_PAYLOAD_POSITION_BITS
 
 
 # --------------------------------------------------------------------------- #
@@ -205,7 +209,7 @@ def summarize_attempts(
             "timed_out": bool(row.get("timed_out", False)),
             "ok": bool(row.get("ok", False)),
         }
-        for name in ("payload_errors", "status", "polls", "error"):
+        for name in ("payload_errors", "payload_error_position", "status", "polls", "error"):
             if name in row:
                 compact[name] = row[name]
         debug = row.get("debug")

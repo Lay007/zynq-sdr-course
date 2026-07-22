@@ -54,7 +54,10 @@ module qpsk_ber_counter #(
     output wire                     quadrant_swapped, // 1 = branch B won (90/270 deg)
     output reg  [INDEX_W-1:0]       received_symbols,
     output reg  [INDEX_W-1:0]       total_bit_errors,
-    output reg  [INDEX_W-1:0]       payload_bit_errors
+    output reg  [INDEX_W-1:0]       payload_bit_errors,
+    output reg  [31:0]              payload_error_segments,
+    output reg  [INDEX_W-1:0]       first_payload_error_index,
+    output reg  [INDEX_W-1:0]       last_payload_error_index
 );
 
 localparam [1:0] S_IDLE  = 2'd0;
@@ -129,6 +132,9 @@ wire abort_b = abort || (winner_valid && !winner_b);
 
 wire busy_a, busy_b, done_a, done_b;
 wire [INDEX_W-1:0] recv_a, recv_b, err_a, err_b, payload_err_a, payload_err_b;
+wire [31:0] payload_segments_a, payload_segments_b;
+wire [INDEX_W-1:0] first_payload_error_a, first_payload_error_b;
+wire [INDEX_W-1:0] last_payload_error_a, last_payload_error_b;
 
 bpsk_ber_counter #(
     .INDEX_W(INDEX_W),
@@ -150,7 +156,10 @@ bpsk_ber_counter #(
     .lock_acquired(lock_a),
     .received_bits(recv_a),
     .total_errors(err_a),
-    .payload_errors(payload_err_a)
+    .payload_errors(payload_err_a),
+    .payload_error_segments(payload_segments_a),
+    .first_payload_error_index(first_payload_error_a),
+    .last_payload_error_index(last_payload_error_a)
 );
 
 bpsk_ber_counter #(
@@ -173,7 +182,10 @@ bpsk_ber_counter #(
     .lock_acquired(lock_b),
     .received_bits(recv_b),
     .total_errors(err_b),
-    .payload_errors(payload_err_b)
+    .payload_errors(payload_err_b),
+    .payload_error_segments(payload_segments_b),
+    .first_payload_error_index(first_payload_error_b),
+    .last_payload_error_index(last_payload_error_b)
 );
 
 // Before a winner exists neither branch can be `done` on its own, so the only way
@@ -187,6 +199,9 @@ always @(*) begin
     received_symbols = (winner_b ? recv_b : recv_a) >> 1;   // 2 bits/symbol
     total_bit_errors = (winner_b ? err_b : err_a);
     payload_bit_errors = (winner_b ? payload_err_b : payload_err_a);
+    payload_error_segments = (winner_b ? payload_segments_b : payload_segments_a);
+    first_payload_error_index = (winner_b ? first_payload_error_b : first_payload_error_a);
+    last_payload_error_index = (winner_b ? last_payload_error_b : last_payload_error_a);
 end
 
 endmodule

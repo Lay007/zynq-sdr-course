@@ -120,10 +120,30 @@ def test_error_localization_separates_preamble_from_payload() -> None:
     rows[0]["payload_errors"] = 0
     rows[1]["total_bit_errors"] = 1
     rows[1]["payload_errors"] = 0
+    rows[1]["payload_error_position"] = {
+        "segment_errors": [0, 0, 0, 0],
+        "first_error_index": None,
+        "last_error_index": None,
+    }
     rows[2]["total_bit_errors"] = 1
     rows[2]["payload_errors"] = 1
+    rows[2]["payload_error_position"] = {
+        "segment_errors": [1, 0, 0, 0],
+        "first_error_index": 6,
+        "last_error_index": 6,
+    }
     rows[3]["total_bit_errors"] = 3
     rows[3]["payload_errors"] = 2
+    rows[3]["payload_error_position"] = {
+        "segment_errors": [0, 0, 1, 1],
+        "first_error_index": 130,
+        "last_error_index": 250,
+    }
+    rows[0]["payload_error_position"] = {
+        "segment_errors": [0, 0, 0, 0],
+        "first_error_index": None,
+        "last_error_index": None,
+    }
 
     result = error_localization(rows)
 
@@ -137,3 +157,8 @@ def test_error_localization_separates_preamble_from_payload() -> None:
     assert result["mixed_dirty_frames"] == 1
     assert result["single_bit_preamble_frames"] == 1
     assert result["single_bit_payload_frames"] == 1
+    assert result["position_telemetry_available"] is True
+    assert result["payload_error_segments"] == [1, 0, 1, 1]
+    assert result["first_payload_error_index"]["min"] == 6
+    assert result["first_payload_error_index"]["max"] == 130
+    assert result["last_payload_error_index"]["max"] == 250

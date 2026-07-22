@@ -43,7 +43,13 @@ module bpsk_ber_counter #(
     output wire                     lock_acquired,
     output reg [INDEX_W-1:0]        received_bits,
     output reg [INDEX_W-1:0]        total_errors,
-    output reg [INDEX_W-1:0]        payload_errors
+    output reg [INDEX_W-1:0]        payload_errors,
+    // Payload-relative localization. Four byte counters cover consecutive
+    // quarters of the configured payload; 0xffff means that no payload error
+    // has been observed. These diagnostics do not participate in BER control.
+    output reg [31:0]               payload_error_segments,
+    output reg [INDEX_W-1:0]        first_payload_error_index,
+    output reg [INDEX_W-1:0]        last_payload_error_index
 );
 
 localparam integer WIN = (LOCK_PREAMBLE_BITS < 1) ? 1 : LOCK_PREAMBLE_BITS;
@@ -61,6 +67,11 @@ reg acq_invert_bits = 1'b0;
 reg expected_preamble_bit = 1'b0;
 reg start_invert = 1'b0;
 reg [INDEX_W-1:0] next_preamble_limit = {INDEX_W{1'b0}};
+reg [INDEX_W-1:0] next_payload_length = {INDEX_W{1'b0}};
+reg [INDEX_W-1:0] payload_quarter1_reg = {INDEX_W{1'b0}};
+reg [INDEX_W-1:0] payload_quarter2_reg = {INDEX_W{1'b0}};
+reg [INDEX_W-1:0] payload_quarter3_reg = {INDEX_W{1'b0}};
+reg [INDEX_W-1:0] payload_index = {INDEX_W{1'b0}};
 integer idx;
 
 // --- sliding-window correlation lock state (used only when LOCK_ERR_TOL > 0) ---
@@ -109,8 +120,14 @@ always @(posedge clk) begin
         received_bits <= {INDEX_W{1'b0}};
         total_errors <= {INDEX_W{1'b0}};
         payload_errors <= {INDEX_W{1'b0}};
+        payload_error_segments <= 32'd0;
+        first_payload_error_index <= {INDEX_W{1'b1}};
+        last_payload_error_index <= {INDEX_W{1'b1}};
         frame_limit_reg <= {INDEX_W{1'b0}};
         preamble_limit_reg <= {INDEX_W{1'b0}};
+        payload_quarter1_reg <= {INDEX_W{1'b0}};
+        payload_quarter2_reg <= {INDEX_W{1'b0}};
+        payload_quarter3_reg <= {INDEX_W{1'b0}};
         lock_preamble_limit_reg <= {INDEX_W{1'b0}};
         acq_index <= {INDEX_W{1'b0}};
         acquisition_enabled_reg <= 1'b0;
@@ -125,17 +142,26 @@ always @(posedge clk) begin
         expected_preamble_bit = frame_bits[0];
         start_invert = in_bit ^ frame_bits[0];
         next_preamble_limit = preamble_count;
+        next_payload_length = {INDEX_W{1'b0}};
+        payload_index = {INDEX_W{1'b0}};
 
         if (start && !busy && (frame_bit_count != 0)) begin
             if (preamble_count > frame_bit_count) begin
                 next_preamble_limit = frame_bit_count;
             end
+            next_payload_length = frame_bit_count - next_preamble_limit;
             busy <= 1'b1;
             received_bits <= {INDEX_W{1'b0}};
             total_errors <= {INDEX_W{1'b0}};
             payload_errors <= {INDEX_W{1'b0}};
+            payload_error_segments <= 32'd0;
+            first_payload_error_index <= {INDEX_W{1'b1}};
+            last_payload_error_index <= {INDEX_W{1'b1}};
             frame_limit_reg <= frame_bit_count;
             preamble_limit_reg <= next_preamble_limit;
+            payload_quarter1_reg <= next_payload_length >> 2;
+            payload_quarter2_reg <= next_payload_length >> 1;
+            payload_quarter3_reg <= (next_payload_length >> 1) + (next_payload_length >> 2);
             if (next_preamble_limit > LOCK_PREAMBLE_BITS) begin
                 lock_preamble_limit_reg <= LOCK_PREAMBLE_BITS;
             end else begin
@@ -264,6 +290,24 @@ always @(posedge clk) begin
                     total_errors <= total_errors + 1'b1;
                     if (received_bits >= preamble_limit_reg) begin
                         payload_errors <= payload_errors + 1'b1;
+                        payload_index = received_bits - preamble_limit_reg;
+                        if (payload_errors == {INDEX_W{1'b0}}) begin
+                            first_payload_error_index <= payload_index;
+                        end
+                        last_payload_error_index <= payload_index;
+                        if (payload_index < payload_quarter1_reg) begin
+                            if (payload_error_segments[7:0] != 8'hff)
+                                payload_error_segments[7:0] <= payload_error_segments[7:0] + 1'b1;
+                        end else if (payload_index < payload_quarter2_reg) begin
+                            if (payload_error_segments[15:8] != 8'hff)
+                                payload_error_segments[15:8] <= payload_error_segments[15:8] + 1'b1;
+                        end else if (payload_index < payload_quarter3_reg) begin
+                            if (payload_error_segments[23:16] != 8'hff)
+                                payload_error_segments[23:16] <= payload_error_segments[23:16] + 1'b1;
+                        end else begin
+                            if (payload_error_segments[31:24] != 8'hff)
+                                payload_error_segments[31:24] <= payload_error_segments[31:24] + 1'b1;
+                        end
                     end
                 end
 

@@ -13,7 +13,7 @@ module tb_qpsk_bridge_loopback;
 localparam integer W = 16;
 localparam integer INDEX_W = 16;
 localparam integer SYMS = 140;               // QPSK symbols (280 payload bits)
-localparam [31:0]  CTRL_MODE_QPSK = 32'h0000_0010;  // gp_ctrl[4] = QPSK select
+localparam [31:0]  CTRL_MODE_QPSK = 32'h0000_8010;  // QPSK + payload-position readout
 localparam [31:0]  SIGNATURE_BPSK = 32'h4250_534B;  // overlay identity unchanged
 
 reg ctrl_clk = 1'b0;
@@ -43,6 +43,8 @@ integer so, w;
 integer best_err = 32'h7fffffff;
 integer best_so = -1;
 integer best_rx = 0;
+reg [31:0] best_segments = 32'hffff_ffff;
+reg [31:0] best_position = 32'd0;
 
 // The bridge samples gp_* on sample_clk and reports counters on ctrl_clk.
 bpsk_zynq_ber_gpreg_bridge #(
@@ -124,6 +126,8 @@ initial begin
             best_err = gp_total_errors[INDEX_W-1:0];
             best_so  = so;
             best_rx  = gp_received_bits[INDEX_W-1:0];
+            best_segments = gp_tx_valid_count;
+            best_position = gp_rx_valid_count;
         end
 
         // clear sticky done and let the core return to idle before next offset
@@ -140,11 +144,13 @@ initial begin
 
     $display("QPSK bridge loopback sweep: best start_offset=%0d received=%0d/%0d symbols, bit_errors=%0d/%0d",
              best_so, best_rx, SYMS, best_err, 2*SYMS);
-    if (best_so >= 0 && best_err == 0)
+    if (best_so >= 0 && best_err == 0 &&
+        best_segments == 32'd0 && best_position == 32'hffff_ffff)
         $display("PASS: qpsk bridge loopback recovered %0d QPSK symbols at BER=0 (start_offset=%0d)",
                  SYMS, best_so);
     else begin
-        $display("FAIL: no start_offset gave QPSK BER=0 through the bridge (best bit_errors=%0d)", best_err);
+        $display("FAIL: no clean QPSK result with empty payload-position telemetry (best bit_errors=%0d segments=%08x position=%08x)",
+                 best_err, best_segments, best_position);
         $fatal(1);
     end
     $finish;

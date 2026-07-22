@@ -85,6 +85,9 @@ wire qpsk_timed_out;
 wire [INDEX_W-1:0] qpsk_received_symbols;
 wire [INDEX_W-1:0] qpsk_total_bit_errors;
 wire [INDEX_W-1:0] qpsk_payload_bit_errors;
+wire [31:0] qpsk_payload_error_segments;
+wire [INDEX_W-1:0] qpsk_first_payload_error_index;
+wire [INDEX_W-1:0] qpsk_last_payload_error_index;
 wire qpsk_symbol_valid_debug;
 wire signed [W-1:0] qpsk_symbol_i_debug;
 wire signed [W-1:0] qpsk_symbol_q_debug;
@@ -127,6 +130,9 @@ reg timeout_sticky_sample = 1'b0;
 reg [INDEX_W-1:0] received_bits_sample = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] total_errors_sample = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] payload_errors_sample = {INDEX_W{1'b0}};
+reg [31:0] payload_error_segments_sample = 32'd0;
+reg [INDEX_W-1:0] first_payload_error_index_sample = {INDEX_W{1'b1}};
+reg [INDEX_W-1:0] last_payload_error_index_sample = {INDEX_W{1'b1}};
 reg [31:0] tx_valid_count_sample = 32'd0;
 reg [31:0] rx_valid_count_sample = 32'd0;
 reg adc_input_valid_seen_any_sample = 1'b0;
@@ -159,6 +165,10 @@ reg [9:0] decision_negative_count_lsb_sample = 10'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] tx_valid_sync_ctrl = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] rx_valid_meta_ctrl = 32'd0;
 (* ASYNC_REG = "TRUE" *) reg [31:0] rx_valid_sync_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] payload_segments_meta_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] payload_segments_sync_ctrl = 32'd0;
+(* ASYNC_REG = "TRUE" *) reg [31:0] payload_position_meta_ctrl = 32'hFFFFFFFF;
+(* ASYNC_REG = "TRUE" *) reg [31:0] payload_position_sync_ctrl = 32'hFFFFFFFF;
 (* ASYNC_REG = "TRUE" *) reg [14:0] adc_input_debug_meta_ctrl = 15'd0;
 (* ASYNC_REG = "TRUE" *) reg [14:0] adc_input_debug_sync_ctrl = 15'd0;
 (* ASYNC_REG = "TRUE" *) reg [15:0] adc_input_counter_meta_ctrl = 16'd0;
@@ -412,6 +422,9 @@ qpsk_zynq_ber_top #(
     .received_symbols(qpsk_received_symbols),
     .total_bit_errors(qpsk_total_bit_errors),
     .payload_bit_errors(qpsk_payload_bit_errors),
+    .payload_error_segments(qpsk_payload_error_segments),
+    .first_payload_error_index(qpsk_first_payload_error_index),
+    .last_payload_error_index(qpsk_last_payload_error_index),
     .debug_symbol_valid(qpsk_symbol_valid_debug),
     .debug_symbol_i(qpsk_symbol_i_debug),
     .debug_symbol_q(qpsk_symbol_q_debug),
@@ -496,6 +509,9 @@ always @(posedge sample_clk) begin
         received_bits_sample <= {INDEX_W{1'b0}};
         total_errors_sample <= {INDEX_W{1'b0}};
         payload_errors_sample <= {INDEX_W{1'b0}};
+        payload_error_segments_sample <= 32'd0;
+        first_payload_error_index_sample <= {INDEX_W{1'b1}};
+        last_payload_error_index_sample <= {INDEX_W{1'b1}};
         tx_valid_count_sample <= 32'd0;
         rx_valid_count_sample <= 32'd0;
         capture_valid_seen_any_sample <= 1'b0;
@@ -535,6 +551,9 @@ always @(posedge sample_clk) begin
             received_bits_sample <= {INDEX_W{1'b0}};
             total_errors_sample <= {INDEX_W{1'b0}};
             payload_errors_sample <= {INDEX_W{1'b0}};
+            payload_error_segments_sample <= 32'd0;
+            first_payload_error_index_sample <= {INDEX_W{1'b1}};
+            last_payload_error_index_sample <= {INDEX_W{1'b1}};
             tx_valid_count_sample <= 32'd0;
             rx_valid_count_sample <= 32'd0;
             capture_valid_seen_any_sample <= 1'b0;
@@ -622,6 +641,9 @@ always @(posedge sample_clk) begin
             received_bits_sample <= received_bits;
             total_errors_sample <= total_errors;
             payload_errors_sample <= payload_errors;
+            payload_error_segments_sample <= mod_qpsk ? qpsk_payload_error_segments : 32'd0;
+            first_payload_error_index_sample <= mod_qpsk ? qpsk_first_payload_error_index : {INDEX_W{1'b1}};
+            last_payload_error_index_sample <= mod_qpsk ? qpsk_last_payload_error_index : {INDEX_W{1'b1}};
         end
     end
 end
@@ -638,6 +660,10 @@ always @(posedge ctrl_clk) begin
         tx_valid_sync_ctrl <= 32'd0;
         rx_valid_meta_ctrl <= 32'd0;
         rx_valid_sync_ctrl <= 32'd0;
+        payload_segments_meta_ctrl <= 32'd0;
+        payload_segments_sync_ctrl <= 32'd0;
+        payload_position_meta_ctrl <= 32'hFFFFFFFF;
+        payload_position_sync_ctrl <= 32'hFFFFFFFF;
         adc_input_debug_meta_ctrl <= 15'd0;
         adc_input_debug_sync_ctrl <= 15'd0;
         adc_input_counter_meta_ctrl <= 16'd0;
@@ -662,6 +688,13 @@ always @(posedge ctrl_clk) begin
         error_counts_sync_ctrl <= error_counts_meta_ctrl;
         rx_valid_meta_ctrl <= rx_valid_count_sample;
         rx_valid_sync_ctrl <= rx_valid_meta_ctrl;
+        payload_segments_meta_ctrl <= payload_error_segments_sample;
+        payload_segments_sync_ctrl <= payload_segments_meta_ctrl;
+        payload_position_meta_ctrl <= {
+            {{(16-INDEX_W){1'b1}}, last_payload_error_index_sample},
+            {{(16-INDEX_W){1'b1}}, first_payload_error_index_sample}
+        };
+        payload_position_sync_ctrl <= payload_position_meta_ctrl;
         adc_input_debug_meta_ctrl <= {
             adc_input_valid_seen_any_sample,
             adc_input_nonzero_seen_any_sample,
@@ -704,8 +737,13 @@ assign gp_status = status_sync_ctrl;
 assign gp_received_bits = received_sync_ctrl;
 assign gp_total_errors = error_counts_sync_ctrl;
 assign gp_signature = SIGNATURE;
-assign gp_tx_valid_count = tx_valid_sync_ctrl;
-assign gp_rx_valid_count = rx_valid_sync_ctrl;
+// gp_ctrl[15] is a readout-only QPSK payload-position view. It reuses two
+// existing debug gpreg words, so the block design and address map stay stable:
+//   gp_tx_valid_count = {quarter3, quarter2, quarter1, quarter0} error counts;
+//   gp_rx_valid_count = {last_payload_index, first_payload_index}, 0xffff = none.
+wire payload_position_readout = gp_ctrl[4] && gp_ctrl[15];
+assign gp_tx_valid_count = payload_position_readout ? payload_segments_sync_ctrl : tx_valid_sync_ctrl;
+assign gp_rx_valid_count = payload_position_readout ? payload_position_sync_ctrl : rx_valid_sync_ctrl;
 wire [31:0] normal_adc_input_debug = {
     adc_input_debug_sync_ctrl[14],
     adc_input_debug_sync_ctrl[13],
