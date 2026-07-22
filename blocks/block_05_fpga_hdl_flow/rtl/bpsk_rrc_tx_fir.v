@@ -41,6 +41,7 @@ reg signed [CW-1:0] coeff_mem [0:NTAPS-1];
 reg signed [W-1:0] xi [0:NTAPS-2];
 reg signed [W-1:0] xq [0:NTAPS-2];
 
+reg                  pair_valid;
 reg                  stage0_valid;
 reg                  stage1_valid;
 reg                  stage2_valid;
@@ -49,6 +50,10 @@ reg                  stage4_valid;
 reg                  stage5_valid;
 reg                  stage6_valid;
 
+reg signed [W:0] pair_i [0:PAIR_COUNT-1];
+reg signed [W:0] pair_q [0:PAIR_COUNT-1];
+reg signed [W-1:0] center_i;
+reg signed [W-1:0] center_q;
 reg signed [ACC_W-1:0] prod_i [0:PROD_COUNT-1];
 reg signed [ACC_W-1:0] prod_q [0:PROD_COUNT-1];
 reg signed [ACC_W-1:0] sum1_i [0:STAGE1_COUNT-1];
@@ -66,8 +71,6 @@ reg signed [ACC_W-1:0] sum6_q [0:STAGE6_COUNT-1];
 
 reg signed [ACC_W-1:0] rounded_i;
 reg signed [ACC_W-1:0] rounded_q;
-reg signed [W:0] pair_sum_i;
-reg signed [W:0] pair_sum_q;
 
 integer tap;
 integer idx;
@@ -103,6 +106,7 @@ always @(posedge clk) begin
         out_valid <= 1'b0;
         out_i <= {W{1'b0}};
         out_q <= {W{1'b0}};
+        pair_valid <= 1'b0;
         stage0_valid <= 1'b0;
         stage1_valid <= 1'b0;
         stage2_valid <= 1'b0;
@@ -116,6 +120,12 @@ always @(posedge clk) begin
         for (tap = 0; tap < NTAPS - 1; tap = tap + 1) begin
             xi[tap] <= {W{1'b0}};
             xq[tap] <= {W{1'b0}};
+        end
+        center_i <= {W{1'b0}};
+        center_q <= {W{1'b0}};
+        for (tap = 0; tap < PAIR_COUNT; tap = tap + 1) begin
+            pair_i[tap] <= {(W+1){1'b0}};
+            pair_q[tap] <= {(W+1){1'b0}};
         end
         for (tap = 0; tap < PROD_COUNT; tap = tap + 1) begin
             prod_i[tap] <= {ACC_W{1'b0}};
@@ -146,7 +156,8 @@ always @(posedge clk) begin
             sum6_q[tap] <= {ACC_W{1'b0}};
         end
     end else begin
-        stage0_valid <= in_valid;
+        pair_valid <= in_valid;
+        stage0_valid <= pair_valid;
         stage1_valid <= stage0_valid;
         stage2_valid <= stage1_valid;
         stage3_valid <= stage2_valid;
@@ -217,24 +228,37 @@ always @(posedge clk) begin
             out_q <= sat_q15(rounded_q);
         end
 
+        if (pair_valid) begin
+            // Keep the symmetric pre-add separate from the multiplier input.
+            // Vivado otherwise absorbs both into one xi -> DSP-input path that
+            // is marginal on the 125 MHz divide-select clock.
+            prod_i[PAIR_COUNT] <= $signed(center_i) * $signed(coeff_mem[CENTER_TAP]);
+            prod_q[PAIR_COUNT] <= $signed(center_q) * $signed(coeff_mem[CENTER_TAP]);
+            for (tap = 0; tap < PAIR_COUNT; tap = tap + 1) begin
+                prod_i[tap] <= $signed(pair_i[tap]) * $signed(coeff_mem[tap]);
+                prod_q[tap] <= $signed(pair_q[tap]) * $signed(coeff_mem[tap]);
+            end
+        end
+
         if (in_valid) begin
             // The symmetric taps still save multipliers, but the sum reduction
             // now runs through a registered tree so the filter sustains the
             // divided AD9361 clock used by the hardware integration.
-            prod_i[PAIR_COUNT] <= $signed(xi[CENTER_TAP-1]) * $signed(coeff_mem[CENTER_TAP]);
-            prod_q[PAIR_COUNT] <= $signed(xq[CENTER_TAP-1]) * $signed(coeff_mem[CENTER_TAP]);
+            center_i <= xi[CENTER_TAP-1];
+            center_q <= xq[CENTER_TAP-1];
 
             for (tap = 0; tap < PAIR_COUNT; tap = tap + 1) begin
                 if (tap == 0) begin
-                    pair_sum_i = $signed({in_i[W-1], in_i}) + $signed({xi[NTAPS-2][W-1], xi[NTAPS-2]});
-                    pair_sum_q = $signed({in_q[W-1], in_q}) + $signed({xq[NTAPS-2][W-1], xq[NTAPS-2]});
+                    pair_i[tap] <= $signed({in_i[W-1], in_i}) +
+                        $signed({xi[NTAPS-2][W-1], xi[NTAPS-2]});
+                    pair_q[tap] <= $signed({in_q[W-1], in_q}) +
+                        $signed({xq[NTAPS-2][W-1], xq[NTAPS-2]});
                 end else begin
-                    pair_sum_i = $signed({xi[tap-1][W-1], xi[tap-1]}) + $signed({xi[NTAPS-tap-2][W-1], xi[NTAPS-tap-2]});
-                    pair_sum_q = $signed({xq[tap-1][W-1], xq[tap-1]}) + $signed({xq[NTAPS-tap-2][W-1], xq[NTAPS-tap-2]});
+                    pair_i[tap] <= $signed({xi[tap-1][W-1], xi[tap-1]}) +
+                        $signed({xi[NTAPS-tap-2][W-1], xi[NTAPS-tap-2]});
+                    pair_q[tap] <= $signed({xq[tap-1][W-1], xq[tap-1]}) +
+                        $signed({xq[NTAPS-tap-2][W-1], xq[NTAPS-tap-2]});
                 end
-
-                prod_i[tap] <= $signed(pair_sum_i) * $signed(coeff_mem[tap]);
-                prod_q[tap] <= $signed(pair_sum_q) * $signed(coeff_mem[tap]);
             end
 
             for (tap = NTAPS - 2; tap > 0; tap = tap - 1) begin

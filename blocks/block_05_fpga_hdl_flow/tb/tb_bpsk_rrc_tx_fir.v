@@ -10,7 +10,7 @@ module tb_bpsk_rrc_tx_fir;
 localparam integer W = 16;
 localparam integer MAX_VECTORS = 4096;
 localparam integer CLK_PERIOD_NS = 10;
-localparam integer DUT_LATENCY_CYCLES = 8;
+localparam integer DUT_LATENCY_CYCLES = 9;
 
 reg clk = 1'b0;
 reg rst = 1'b1;
