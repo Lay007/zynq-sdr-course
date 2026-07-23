@@ -270,19 +270,92 @@ detector remains available if a larger, placement-independent margin is wanted. 
 pre-telemetry image (`SHA-256 29fb47e0…`, the 160-pair source above) is now **stale** for the
 position experiment and must not be reused.
 
-**Live position experiment — pending.** When the bench is powered on again (board A TX1 → 30 dB
-attenuator → board B RX1), the run is: a short smoke, then at least 160 interleaved fixed/Gardner
-pairs at CFO = 0 with `payload_error_position`, comparing the q0/q1/q2/q3 quarter counts, the
-first- and last-error indices, and clean/lock between the two samplers. Late clustering toward q3
-would implicate residual within-frame timing/carrier drift; a flat q0…q3 distribution would point
-to a uniform decision-margin or noise problem instead.
+**Live position experiment — measured, and neither predeclared hypothesis was right.**
+
+One guard had to be added first. `gp_ctrl[15]` multiplexes two registers that a *pre-telemetry*
+image still drives with their old meaning (a TX sample counter and an RX valid counter), and the
+host decoded them unconditionally. Probed against the old image, a clean frame
+(`payload_errors=0`) reported `segment_errors=[224,4,0,48]`, `first=1843`, `last=0`, and frames
+with 121 and 2 payload errors reported the *same* segment counts — a campaign run in that state
+would have produced confident nonsense. `decode_payload_error_position()` now validates against the
+frame's own payload error count (the quarter counters cannot saturate, so the four counts must sum
+exactly to `payload_errors`, and indices must satisfy `0 ≤ first ≤ last < 256` or both be
+sentinels) and returns None otherwise. Verified on the bench: the same probe returns None on the
+old image and real sentinels (`[0,0,0,0]`, both indices None) on the new one.
+
+The measured run is 160 interleaved pairs at CFO = 0 on the timing-clean image
+(`SHA-256 2d7ed04d…`), eight start offsets × 20 pairs:
+
+| Metric | Fixed | Dot-product Gardner | Paired delta | 95% confidence interval |
+|---|---:|---:|---:|---:|
+| Full-frame lock | 87/160 (54.38%) | 133/160 (83.13%) | +28.75 pp | +20.17…+37.33 pp |
+| BER=0 attempt | 36/160 (22.50%) | 3/160 (1.88%) | −20.62 pp | −27.38…−13.87 pp |
+| Aggregate BER in full frames | 0.106568 | 0.068018 | — | — |
+| Aggregate payload BER | 0.113820 | 0.073132 | — | — |
+
+The quarter counters do not show the predicted shapes. Neither sampler ramps monotonically toward
+the end of the payload, and neither is flat:
+
+| Payload quarter | Fixed | Gardner |
+|---|---:|---:|
+| q0 (bits 0–63) | 530 (20.9%) | 492 (19.8%) |
+| q1 (bits 64–127) | 779 (30.7%) | 529 (21.2%) |
+| q2 (bits 128–191) | 713 (28.1%) | 798 (32.0%) |
+| q3 (bits 192–255) | 513 (20.2%) | 671 (26.9%) |
+
+The sharp answer is in the single-bit frames, where first and last index coincide with the error
+itself:
+
+| Single-payload-bit frames | Fixed | Gardner |
+|---|---:|---:|
+| Count | 7 | 33 |
+| In q0 / q1 / q2 / q3 | 0 / 0 / **7** / 0 | 2 / 0 / **31** / 0 |
+| Error index | 173, then **189 × 6** | 2, 2, then **189 × 31** |
+
+**37 of 40 single-bit misses sit at exactly payload bit 189**, independently for both samplers.
+That index is frame bit 213, i.e. the **Q axis of QPSK symbol 106** — the last symbol of a
+four-symbol Q run before a sign change. Consistently, the aggregate `first_error_index` never
+exceeds 189 for either sampler, and the error span covers bit 189 in 90% of fixed dirty frames and
+98% of Gardner dirty frames. Frames are effectively bimodal: either completely clean, or wrong at
+189.
+
+So the systematic one-bit miss is **not** within-frame drift (no monotonic ramp) and **not** a
+uniform decision-margin loss (not flat). It is one symbol decided at the boundary. The honest
+strength of the evidence differs by claim: the single-bit localization is direct, while the
+90/98% figures are span coverage (`first ≤ 189 ≤ last`) and therefore weaker; the mechanism —
+ISI around that particular run-then-transition pattern leaving symbol 106's Q sample near zero, with
+the Gardner instant pushing it to the wrong side — is a hypothesis consistent with the bimodality,
+not yet a measurement.
+
+This also reinterprets the earlier promotion decision. The clean-frame gate that rejects Gardner is
+in large part a proxy for this single bit: Gardner locks far more often (133 vs 87) and carries a
+markedly lower payload BER (0.0731 vs 0.1138), yet reaches BER=0 only 3 times in 160 because it
+almost always misses bit 189. The gate remains the declared gate and `gp_ctrl[14]=0` remains the
+default, but "Gardner cannot produce clean frames" is more precisely "Gardner cannot get symbol 106
+right".
+
+Evidence: `docs/assets/lab1135_payload_position_live_20260723.json` (and `.png`).
 
 ## Verdict
 
 The dot-product TED is model-correct, timing-clean and hardware-qualified, but fails the focused
 clean-frame gate decisively. `gp_ctrl[14]=0` remains the runtime default and the fixed sampler
-remains the accepted baseline. Live telemetry localizes the systematic one-bit misses to the
-payload, so frame acquisition is no longer the next target. Payload error-position telemetry is now
-implemented, regression-clean and carried by a timing-clean bitstream
-(`SHA-256 2d7ed04d…`, `WNS=+0.020 ns`); the live position run that will separate within-frame drift
-from a uniform decision-margin problem is pending a powered bench.
+remains the accepted baseline.
+
+Position telemetry has now answered the question it was built for, and the answer was neither
+predeclared option. The systematic one-bit misses are not spread across the payload and do not
+accumulate toward its end: 37 of 40 single-bit frames fail at exactly payload bit 189 — the Q axis
+of QPSK symbol 106 — for both samplers independently, and frames are bimodal between fully clean
+and wrong-at-189. Within-frame drift and uniform decision-margin loss are both rejected; the target
+is one symbol decided at the boundary.
+
+That also sharpens what the rejected gate measured. Gardner locks far more often (133/160 vs
+87/160) and carries a lower payload BER (0.0731 vs 0.1138), yet reaches BER=0 three times in 160
+because it almost always misses that one bit. The gate stands, but the conclusion "Gardner cannot
+produce clean frames" is more precisely "Gardner cannot get symbol 106 right".
+
+The next diagnostic is therefore not another PI-gain sweep but the sampled value itself: capture
+symbol 106's Q sample under both timing modes and check how close to zero it lands, and whether the
+run-then-transition ISI around it explains the boundary. Carried by the timing-clean image
+`SHA-256 2d7ed04d…` (`WNS=+0.020 ns`); the host now refuses to report positions from an image that
+does not implement them, so this class of result cannot be faked by a stale bitstream again.
