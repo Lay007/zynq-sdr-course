@@ -16,7 +16,6 @@ import collections
 import sys
 import time
 
-import numpy as np
 
 sys.path.insert(0, "g:/Programs/zynq-sdr-course/blocks/block_11_integrated_sdr_project/python")
 import lab_11_30_two_board_cfo_validation as L
