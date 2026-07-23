@@ -1,0 +1,56 @@
+{
+  "lab": "11.41",
+  "target_bit": 189,
+  "baseline_fixed_k": {
+    "single_bit": {
+      "189": 37,
+      "2": 2,
+      "173": 1
+    },
+    "single_bit_total": 40
+  },
+  "bitstream": {
+    "path": "g:\\Programs\\zynq-sdr-course\\tmp\\vendor_xpr_course_overlay\\zc702\\zc702.runs\\impl_1\\system_top.bit",
+    "sha256": "5fc74c11f7622127c63dce8d28219e3926a192971bf8b94cf6151a457de0ee5f"
+  },
+  "runs": [
+    {
+      "label": "fixed-phase sampler",
+      "attempts": 300,
+      "locked": 272,
+      "clean": 148,
+      "payload_errors": 9403,
+      "payload_ber": 0.1350384880514706,
+      "single_bit_total": 21,
+      "single_bit_at_target": 0,
+      "single_bit_histogram": {
+        "2": 2,
+        "88": 16,
+        "113": 1,
+        "135": 2
+      }
+    },
+    {
+      "label": "Gardner sampler",
+      "attempts": 300,
+      "locked": 300,
+      "clean": 275,
+      "payload_errors": 1999,
+      "payload_ber": 0.026028645833333332,
+      "single_bit_total": 6,
+      "single_bit_at_target": 0,
+      "single_bit_histogram": {
+        "1": 1,
+        "2": 3,
+        "9": 1,
+        "28": 1
+      }
+    }
+  ],
+  "verdict": {
+    "single_bit_total": 27,
+    "single_bit_at_target": 0,
+    "share_at_target": 0.0,
+    "baseline_share_at_target": 0.925
+  }
+}

@@ -147,6 +147,29 @@ arrival phase — the two must be clean on a **common** set, centred on offset 0
 asserted now. The check that the masks *disagree* with the picker bypassed is untouched; without it
 the bench would prove nothing.
 
+## Live validation on hardware
+
+The model made one falsifiable prediction: on the two-board link with the fixed blocker, bit 189 took
+37 of 40 single-bit errors; with the running-average blocker it must stop dominating. If it still
+took the majority, the model was wrong no matter how well it fit the old data.
+`lab_11_41_dc_blocker_live_validation.py` rebuilt, redeployed (cold boot, so the AD9361
+cold-calibrates), and re-ran the campaign over A TX1 → 30 dB → B RX1:
+
+| | fixed K=6 (baseline) | running average (this build) |
+|---|---|---|
+| bit 189 share of single-bit errors | 37/40 = **92%** | 0/27 = **0%** |
+| Gardner clean frames | 4/133 = 3% | 275/300 = **92%** |
+| Gardner payload BER | 7.3×10⁻² | **2.6×10⁻²** |
+
+Bit 189 disappeared from the single-bit histogram entirely, and the production Gardner path went from
+3% to 92% clean frames. The prediction held: the DC blocker was the cause.
+
+The residual single-bit errors are now scattered (Gardner: one each at bits 1, 9, 28, two at bit 2)
+rather than piled on one index — ordinary noise, not a deterministic defect. The fixed-phase sampler
+shows a small cluster at bit 88, but that is the non-production path with the known SPS=8.06 timing
+drift that motivated the Gardner loop ([Lab 11.34](lab_11_34_continuous_qpsk_timing_recovery.md)), not
+a DC-blocker effect. Result: `docs/assets/lab1141_dc_blocker_live_validation.json`.
+
 ## What this lab is really about
 
 Five labs were spent measuring the right quantity in the wrong place. The instrument was correct, the
