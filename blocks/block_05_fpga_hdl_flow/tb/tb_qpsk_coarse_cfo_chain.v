@@ -24,7 +24,7 @@ module tb_qpsk_coarse_cfo_chain;
   integer n, w, so, best_err, best_so, locks, failures;
 
   wire dcv; wire signed [W-1:0] dci,dcq;
-  dc_blocker #(.W(W),.K(6)) dcb (.clk(clk),.rst(rst),.enable(1'b0),
+  dc_blocker #(.W(W),.K_MAX(10)) dcb (.clk(clk),.rst(rst),.enable(1'b0),
     .in_valid(vld),.in_i(ii),.in_q(qq),.out_valid(dcv),.out_i(dci),.out_q(dcq));
   wire mfv; wire signed [W-1:0] mfi,mfq;
   bpsk_rrc_rx_fir mf (.clk(clk),.rst(rst),.in_valid(dcv),.in_i(dci),.in_q(dcq),

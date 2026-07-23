@@ -10,7 +10,7 @@ module qpsk_rx_bit_recovery_chain #(
     parameter integer W = 16,
     parameter integer SPS = 8,
     parameter integer INDEX_W = 16,
-    parameter integer DC_BLOCK_K = 6,
+    parameter integer DC_BLOCK_K_MAX = 10,       // running mean, then leaky at tau = 2^K samples
     parameter integer COSTAS_KP_LOG_ACQ = 8,     // pull-in must finish inside the 12-symbol preamble
     parameter integer COSTAS_KP_LOG_TRACK = 6,   // ... then track quietly, or the loop slips mid-frame
     parameter integer COSTAS_ACQ_SYMBOLS = 32,   // counted from the freeze gate, which opens
@@ -66,12 +66,16 @@ module qpsk_rx_bit_recovery_chain #(
 // DC blocker on the RX sample front: removes the AD9361 LO-leakage DC offset that
 // dominates a real over-the-air capture. Passthrough when dc_block_en=0 keeps the
 // clean fabric-loopback path effectively unchanged (DC-free input -> ~0 subtracted).
+//
+// Note the reset below is rst, which the top level drives as (rst || frame_start): this
+// block reconverges every frame, which is why its estimate starts as a running average
+// rather than a fixed-tau leak. See dc_blocker.v for the measurement that forced this.
 wire dc_valid;
 wire signed [W-1:0] dc_i;
 wire signed [W-1:0] dc_q;
 dc_blocker #(
     .W(W),
-    .K(DC_BLOCK_K)
+    .K_MAX(DC_BLOCK_K_MAX)
 ) dc_blocker_i (
     .clk(clk),
     .rst(rst),

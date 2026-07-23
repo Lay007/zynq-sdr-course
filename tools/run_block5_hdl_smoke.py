@@ -169,6 +169,7 @@ TESTS = (
         "tb_qpsk_two_board_residual_cfo",
         QPSK_RX_BENCH + (tb("tb_qpsk_two_board_residual_cfo.v"),),
     ),
+    HdlTest("tb_dc_blocker_gear", rtl("dc_blocker.v") + (tb("tb_dc_blocker_gear.v"),)),
     HdlTest("tb_qpsk_rx_dcblock", QPSK_RX_BENCH + (tb("tb_qpsk_rx_dcblock.v"),)),
     HdlTest("tb_qpsk_rx_costas", QPSK_RX_BENCH + (tb("tb_qpsk_rx_costas.v"),)),
     HdlTest("tb_qpsk_costas_stress", QPSK_RX_BENCH + (tb("tb_qpsk_costas_stress.v"),)),

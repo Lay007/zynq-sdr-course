@@ -32,7 +32,9 @@ reg [INDEX_W-1:0] rxsyms, errs;
 
 wire dcv;
 wire signed [W-1:0] dci, dcq;
-dc_blocker #(.W(W), .K(6)) dcb (
+// Real-capture regression for the running-average blocker: this bench predates it and
+// asserted BER=0 with the original fixed K=6, so it is exactly the test that must still pass.
+dc_blocker #(.W(W), .K_MAX(10)) dcb (
     .clk(clk), .rst(rst), .enable(dc_en),
     .in_valid(rx_valid), .in_i(rx_i), .in_q(rx_q),
     .out_valid(dcv), .out_i(dci), .out_q(dcq)
