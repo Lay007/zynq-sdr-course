@@ -5,3 +5,5 @@
 
 - [Русский](README_ru.md)
 - [English](README_en.md)
+- [Lab 6.9 — receiver comparison (EN)](lab_6_9_receiver_comparison.md)
+- [Lab 6.9 — сравнение приёмников (RU)](lab_6_9_receiver_comparison_ru.md)
