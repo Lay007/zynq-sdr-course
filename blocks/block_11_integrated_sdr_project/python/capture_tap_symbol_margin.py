@@ -87,7 +87,7 @@ def analyse(rx, tag):
     print(f"    decision errors in this capture: I={errs_i} Q={errs_q}")
     print(f"    symbol {SYM} Q margin = {q_margin[SYM]:+.3f}   (negative = wrong decision)")
     order = np.argsort(q_margin)
-    print(f"    five smallest Q margins: " +
+    print("    five smallest Q margins: " +
           ", ".join(f"sym{int(k)}={q_margin[k]:+.3f}" for k in order[:5]))
     print(f"    symbol {SYM} rank among Q margins: {int(np.where(order == SYM)[0][0]) + 1} of {len(order)}"
           f"   (median margin {np.median(q_margin):+.3f})")
