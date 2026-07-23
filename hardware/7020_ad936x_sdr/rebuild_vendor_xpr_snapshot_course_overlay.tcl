@@ -186,6 +186,18 @@ set run_failed [catch {
     if {[llength $runs_to_reset] != 0} {
       reset_run $runs_to_reset
     }
+    # Close the last-mile setup miss properly rather than by masking it. After the capture-tap peak
+    # detector was pipelined, the worst path became a pre-existing coarse-CFO DSP48->CARRY4 chain at
+    # WNS -0.034 ns -- 34 ps, a real datapath that must not be multicycled. Post-route physical
+    # optimisation closes it: measured on the routed checkpoint, phys_opt -directive Explore takes
+    # this design from -0.034 to +0.016 ns. Enabling it in the impl strategy makes the flow's own
+    # bitstream and XSA the timing-clean artifacts, and makes every future rebuild close the same way
+    # instead of depending on a hand-run pass. adi_project_run only sets its own impl_1 properties
+    # (POWER_OPT) before launch_runs and does not reset the run, so this survives to the launch.
+    foreach impl_run [get_runs -quiet impl_1] {
+      set_property STEPS.POST_ROUTE_PHYS_OPT_DESIGN.IS_ENABLED true $impl_run
+      set_property STEPS.POST_ROUTE_PHYS_OPT_DESIGN.DIRECTIVE Explore $impl_run
+    }
     adi_project_run zc702
   }
 } run_error run_options]
