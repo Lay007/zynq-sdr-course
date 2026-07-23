@@ -396,6 +396,28 @@ rather than at signal quality. Note also that the position index has only ever b
 real error on the RF path: the fabric loopback never produces one, so hardware validation of the
 index itself rests on the RF-path numbers it is being used to interpret.
 
+### The failure does not move
+
+Two cheap invariance checks close the analog branch entirely. Frame alignment does not move it: in
+the 160-pair campaign the single-bit error sits at index 189 at **all eight** start offsets (Gardner
+0–7, fixed at 0, 5 and 7). Neither does the carrier — re-running 100 Gardner bursts at each of three
+frequencies leaves the distribution untouched:
+
+| Carrier | Locked | Dirty | Single-bit frames | Indices | Bit 189 share |
+|---|---:|---:|---:|---|---:|
+| 910 MHz | 100/100 | 90 | 30 | 189 × 30 | 100% |
+| 915 MHz | 100/100 | 89 | 27 | 189 × 26, 2 × 1 | 96% |
+| 920 MHz | 99/100 | 87 | 31 | 189 × 30, 2 × 1 | 97% |
+
+Changing the carrier changes the LO, the DC offset, the filter response and the AGC operating point
+while leaving the frame data and the bit indexing untouched, and the failure is indifferent to all
+of it. Together with the capture measurement — a healthy, mid-ranked decision margin at that symbol
+— the analog path, the channel and the frame alignment are all excluded. The defect is locked to the
+data or to the index, which leaves exactly one fork: either the on-chip decoder genuinely gets bit
+189 wrong for a deterministic reason, or the reported index is not the bit that actually failed.
+Separating those two requires reading the decoded bits themselves, and no register exposes them —
+so that is the next thing the RTL needs, not another tuning pass.
+
 This also reinterprets the earlier promotion decision. The clean-frame gate that rejects Gardner is
 in large part a proxy for this single bit: Gardner locks far more often (133 vs 87) and carries a
 markedly lower payload BER (0.0731 vs 0.1138), yet reaches BER=0 only 3 times in 160 because it
