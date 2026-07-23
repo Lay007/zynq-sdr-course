@@ -26,8 +26,8 @@ Without understanding the RF portion, the student cannot explain overload, noise
 
 The block now includes **RTL-SDR vs AD936x receiver quality and ADC resolution**:
 
-- [lab description](lab_6_9_receiver_comparison.md);
-- [executable analyzer](python/lab_6_9_compare_receivers.py).
+- [lab description](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_06_rf_frontend_and_ad9363/lab_6_9_receiver_comparison.md);
+- [executable analyzer](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_06_rf_frontend_and_ad9363/python/lab_6_9_compare_receivers.py).
 
 The lab separates the complete receiver difference, the effect of reducing one
 AD936x capture to lower bit depths, and an approximate same-resolution comparison
