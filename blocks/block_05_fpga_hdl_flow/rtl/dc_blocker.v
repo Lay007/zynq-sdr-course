@@ -25,7 +25,7 @@
 // END of the run loses the most. That is not hypothetical. On the two-board link it cost
 // 66% of the decision margin at payload bit 189 -- the Q axis of symbol 106, the last of a
 // four-symbol Q run -- making it the WEAKEST of all 256 payload decisions (margin 0.336 vs
-// a 0.99 median) and the site of 74 of 82 observed single-bit errors. The offline model in
+// a 0.99 median) and the site of 37 of 40 observed single-bit errors. The offline model in
 // dc_blocker_margin.py reproduces the whole live histogram: the three indices that ever
 // failed live rank 1, 3 and 23 of 256 by predicted margin, in frequency order.
 //

@@ -72,9 +72,9 @@ at three indices and no others:
 
 | payload index | live frames | rank predicted by the model |
 |---|---|---|
-| 189 | 74 | **1** of 256 |
-| 2 | 6 | **3** of 256 |
-| 173 | 2 | **23** of 256 |
+| 189 | 37 | **1** of 256 |
+| 2 | 2 | **3** of 256 |
+| 173 | 1 | **23** of 256 |
 
 All three sit in the predicted weak tail, ordered by how often they failed. Nothing else about the
 frame distinguishes those three bits.

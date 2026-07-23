@@ -43,7 +43,7 @@ TARGET = 189
 
 # What the on-chip telemetry actually reported over the 160-pair campaign: every burst whose
 # payload held exactly one error, by index. The model has to explain THIS, not just bit 189.
-LIVE_SINGLE_BIT = {189: 74, 2: 6, 173: 2}
+LIVE_SINGLE_BIT = {189: 37, 2: 2, 173: 1}
 
 
 def _slice16(v: int) -> int:
