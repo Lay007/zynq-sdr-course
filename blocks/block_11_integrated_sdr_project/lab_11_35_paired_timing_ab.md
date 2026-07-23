@@ -415,8 +415,36 @@ of it. Together with the capture measurement — a healthy, mid-ranked decision 
 — the analog path, the channel and the frame alignment are all excluded. The defect is locked to the
 data or to the index, which leaves exactly one fork: either the on-chip decoder genuinely gets bit
 189 wrong for a deterministic reason, or the reported index is not the bit that actually failed.
-Separating those two requires reading the decoded bits themselves, and no register exposes them —
-so that is the next thing the RTL needs, not another tuning pass.
+
+### Asking the decoder directly
+
+That fork was unanswerable rather than merely unanswered: the bridge hard-wires its recovered-bit
+debug to zero in QPSK mode, so the QPSK path had no decoded-bit visibility at all. `gp_ctrl[16]` now
+exports it — every recovered dibit shifts into a 288-bit register that freezes when the burst
+completes, read back as nine words plus a bit count (see `decoded_bit_readout.py` and
+`lab_11_40_resolve_decoded_bit_index.py`).
+
+Two implementation choices are load-bearing. A shift register rather than an addressed write,
+because an address decode in the `sample_clk` domain was unaffordable at a +0.020 ns margin. And a
+freeze at the *end* of the burst rather than a capture from its start, because the sampler emits
+`RX_SAMPLE_MARGIN`=256 extra symbols and the frame-sync finds the frame somewhere inside that
+stream — the first 288 bits are pre-frame noise.
+
+The comparison also needs care. The BER counter does **not** compare raw dibits to the ROM: it runs
+two frame-sync branches (A emits `{d0,d1}`, B the 90° de-rotation `{d1,~d0}`) and each resolves its
+own 180° ambiguity, so four constellation rotations are possible while the readout captures the raw
+dibits. Comparing only the identity made 7 of 10 bursts look half-wrong (121–129 mismatches, the
+signature of a wrong comparison rather than a broken decoder); trying all four rotations turned
+3/10 into 10/10, and all four occurred in practice (A ×3, A+invert ×2, B ×1, B+invert ×4).
+
+The result is unambiguous. Across **10 of 10** bursts whose telemetry reported a single payload
+error at index 189, the decoded frame disagrees with the ROM at exactly one bit — frame bit 213,
+which is payload bit 189 — and at no other bit. Three clean frames disagree nowhere.
+
+**The position telemetry is correct, and the receiver really does produce a wrong bit at symbol
+106's Q axis.** Note the index bases differ by the preamble length: the alignment returns FRAME bit
+indices, so frame bit 213 *is* payload bit 189 — comparing the two directly once produced a verdict
+exactly opposite to the data.
 
 This also reinterprets the earlier promotion decision. The clean-frame gate that rejects Gardner is
 in large part a proxy for this single bit: Gardner locks far more often (133 vs 87) and carries a
@@ -452,14 +480,16 @@ bits 89 and 68 fail at 19 and 17 points. Carrier phase discriminates nothing —
 flip within a ~43.6–45° band around QPSK's boundary. The transmitted waveform under timing and
 carrier error does not explain the live result.
 
-That leaves a bounded search rather than a loop-tuning exercise, because the fabric loopback decodes
-the same frame with zero payload errors and clean sentinels: the frame ROM, BER counter and position
-encoding are all sound. The RF path differs from that loopback in exactly two ways — the transmitter
-is the host-streamed waveform instead of the fabric modulator, and the signal crosses the AD9361
-receive chain (DC block, coarse CFO, Costas, phase picker). The next diagnostic must separate those
-two, for example by driving the same host waveform through the AD9361 BIST digital loopback so the
-RF channel is removed while the host transmitter is kept. No PI-gain sweep is justified until that
-question is answered.
+The remaining fork has since been closed by reading the decoder's own output (`gp_ctrl[16]`): across
+10 of 10 flagged bursts the decoded frame differs from the ROM at exactly frame bit 213 — payload
+bit 189 — and nowhere else, while clean frames differ nowhere. The position telemetry is correct and
+the receiver genuinely produces a wrong bit at symbol 106's Q axis.
+
+So the target is now narrow and reproducible: a deterministic wrong decision on one symbol whose
+delivered margin is healthy, invariant to start offset and carrier, with the frame ROM, BER counter
+and index encoding all exonerated. What remains is the path between a good sample and a bad decision
+— Costas, the sampler, the hard decision. Still no PI-gain sweep is justified: the defect is
+deterministic, and a deterministic defect has a cause rather than a tuning.
 
 Carried by the timing-clean image `SHA-256 2d7ed04d…` (`WNS=+0.020 ns`); the host now refuses to
 report positions from an image that does not implement them, so this class of result cannot be faked
