@@ -322,10 +322,40 @@ exceeds 189 for either sampler, and the error span covers bit 189 in 90% of fixe
 So the systematic one-bit miss is **not** within-frame drift (no monotonic ramp) and **not** a
 uniform decision-margin loss (not flat). It is one symbol decided at the boundary. The honest
 strength of the evidence differs by claim: the single-bit localization is direct, while the
-90/98% figures are span coverage (`first ≤ 189 ≤ last`) and therefore weaker; the mechanism —
-ISI around that particular run-then-transition pattern leaving symbol 106's Q sample near zero, with
-the Gardner instant pushing it to the wrong side — is a hypothesis consistent with the bimodality,
-not yet a measurement.
+90/98% figures are span coverage (`first ≤ 189 ≤ last`) and therefore weaker.
+
+**The obvious mechanism was then tested and refuted.** The natural explanation — ISI from that
+run-then-transition pattern leaving symbol 106's Q sample near zero, with the Gardner instant
+pushing it across — is computable offline, because the frame and the course RRC are both
+deterministic. A matched RRC pair is Nyquist, so at the ideal instant every decision carries full
+margin (verified: all 280 bits correct, min |Q| 0.972 of nominal, symbol 106 at 0.976 against a
+frame median of 0.998 — unremarkable). ISI only appears once the sampler moves, so the meaningful
+ranking is which bit flips at the smallest perturbation:
+
+| Perturbation | First payload bits to flip | Bit 189 |
+|---|---|---|
+| Timing offset | 70, 22, 68, 135, 137 at 2.69–2.71 samples (≈0.34 symbol) | never flips inside ±0.5 symbol (rank 121 of the 124 that flip at all) |
+| Carrier phase | 74, 244, 24, 28, 251 at 43.60–43.85° | 44.15° — rank 14 of 256, i.e. unremarkable |
+| Timing × phase grid | 89 (19 points), 68 (17), 24, 88, 137 are the sole failing bit | **0 grid points** |
+
+Carrier phase does not discriminate at all: every one of the 256 payload bits flips inside a
+roughly 43.6–45° band around QPSK's theoretical boundary, so no bit is singled out by phase and
+bit 189 sits unremarkably inside that band. Timing does discriminate, and it exonerates bit 189 —
+it survives to the half-symbol boundary while bits 70, 22 and 68 flip at a third of a symbol. Most
+decisive is the combined grid: bit 189 is the sole failing bit at **zero** grid points, while bits
+89 and 68 are the sole failure at 19 and 17. Live, that same bit takes 37 of 40 single-bit misses.
+The transmitted waveform under timing and carrier error therefore does **not** explain the
+observation, and the ISI hypothesis is withdrawn.
+
+The computation is in `blocks/block_11_integrated_sdr_project/python/frame_bit_timing_sensitivity.py`
+and needs no hardware.
+
+Two further facts bound the search. The fabric loopback (same modem, same reference, no RF) decodes
+the frame with `payload_errors=0` and clean position sentinels, so the frame ROM, the BER counter
+and the position encoding are sound. And the RF path differs from that loopback in exactly two
+respects: the transmitter is the host-streamed waveform rather than the fabric modulator, and the
+signal traverses the AD9361 receive chain (DC block, coarse CFO, Costas, phase picker). The cause
+lies in one of those, not in the frame data or the channel geometry.
 
 This also reinterprets the earlier promotion decision. The clean-frame gate that rejects Gardner is
 in large part a proxy for this single bit: Gardner locks far more often (133 vs 87) and carries a
@@ -354,8 +384,22 @@ That also sharpens what the rejected gate measured. Gardner locks far more often
 because it almost always misses that one bit. The gate stands, but the conclusion "Gardner cannot
 produce clean frames" is more precisely "Gardner cannot get symbol 106 right".
 
-The next diagnostic is therefore not another PI-gain sweep but the sampled value itself: capture
-symbol 106's Q sample under both timing modes and check how close to zero it lands, and whether the
-run-then-transition ISI around it explains the boundary. Carried by the timing-clean image
-`SHA-256 2d7ed04d…` (`WNS=+0.020 ns`); the host now refuses to report positions from an image that
-does not implement them, so this class of result cannot be faked by a stale bitstream again.
+The obvious mechanism has already been tested and withdrawn: offline, on the deterministic frame and
+RRC, bit 189 never flips inside ±0.5 symbol of timing error (while bits 70, 22 and 68 flip at a
+third of a symbol), and it is the sole failing bit at zero points of a timing × phase grid where
+bits 89 and 68 fail at 19 and 17 points. Carrier phase discriminates nothing — all 256 payload bits
+flip within a ~43.6–45° band around QPSK's boundary. The transmitted waveform under timing and
+carrier error does not explain the live result.
+
+That leaves a bounded search rather than a loop-tuning exercise, because the fabric loopback decodes
+the same frame with zero payload errors and clean sentinels: the frame ROM, BER counter and position
+encoding are all sound. The RF path differs from that loopback in exactly two ways — the transmitter
+is the host-streamed waveform instead of the fabric modulator, and the signal crosses the AD9361
+receive chain (DC block, coarse CFO, Costas, phase picker). The next diagnostic must separate those
+two, for example by driving the same host waveform through the AD9361 BIST digital loopback so the
+RF channel is removed while the host transmitter is kept. No PI-gain sweep is justified until that
+question is answered.
+
+Carried by the timing-clean image `SHA-256 2d7ed04d…` (`WNS=+0.020 ns`); the host now refuses to
+report positions from an image that does not implement them, so this class of result cannot be faked
+by a stale bitstream again.
