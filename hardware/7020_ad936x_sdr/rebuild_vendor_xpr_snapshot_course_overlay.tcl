@@ -226,8 +226,14 @@ if {!$skip_run} {
   if {![file exists $verifier]} {
     error "Build post-condition script is missing: $verifier"
   }
+  # Run the verifier under a REAL Python, not Vivado's bundled one. `exec python` inside Vivado
+  # resolves to G:/Xilinx/.../tps/win64/python-3.8.3, whose _sre C module MAGIC mismatches its own
+  # stdlib -- `import re` dies with "SRE module mismatch" before the verifier does anything, and the
+  # guard then fires on a timing-clean, correct artifact. The launcher passes its own interpreter in
+  # COURSE_VERIFY_PYTHON; fall back to "python" only if it is unset.
+  set verify_py [expr {[info exists ::env(COURSE_VERIFY_PYTHON)] ? $::env(COURSE_VERIFY_PYTHON) : "python"}]
   set verify_failed [catch {
-    exec python $verifier --mode $overlay_mode --build-dir $work_project_dir
+    exec $verify_py $verifier --mode $overlay_mode --build-dir $work_project_dir
   } verify_output]
   puts $verify_output
   if {$verify_failed || ![string match "*PASS:*" $verify_output]} {
