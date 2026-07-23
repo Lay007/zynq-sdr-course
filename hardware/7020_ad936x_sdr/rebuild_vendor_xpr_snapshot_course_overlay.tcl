@@ -199,6 +199,31 @@ if {!$skip_run && ![file exists $work_xsa_path]} {
   error "Expected rebuilt XSA was not generated: $work_xsa_path"
 }
 
+# Post-condition: the artifact must match the overlay mode that was asked for.
+#
+# This exists because the failure it catches looked exactly like success. Launched without
+# COURSE_OVERLAY_MODE the flow falls back to `gpreg_only`, finishes with zero errors, exports an
+# XSA, prints the line below, and reports comfortable timing (WNS +0.344 ns, every net routed) --
+# for a design containing no course modem at all. Nothing in the tool output distinguished it; only
+# the shape of the placed design did (13,887 LUTs and no DSPs, against 35,724 LUTs and 176 DSPs).
+#
+# The check is deliberately strict: it must actually run and print PASS, so a missing interpreter
+# fails the build rather than silently disarming the guard.
+if {!$skip_run} {
+  set verifier [file join $bundle_root "verify_course_build.py"]
+  if {![file exists $verifier]} {
+    error "Build post-condition script is missing: $verifier"
+  }
+  set verify_failed [catch {
+    exec python $verifier --mode $overlay_mode --build-dir $work_project_dir
+  } verify_output]
+  puts $verify_output
+  if {$verify_failed || ![string match "*PASS:*" $verify_output]} {
+    error "Course build post-condition FAILED for overlay mode '$overlay_mode' -- the artifact does\
+ not match the requested mode (see the report above)"
+  }
+}
+
 puts "Rebuilt patched snapshot overlay project at: $work_project_dir"
 if {$skip_run} {
   puts "Project smoke completed without synth/impl/export."
