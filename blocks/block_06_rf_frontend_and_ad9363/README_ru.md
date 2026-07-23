@@ -26,8 +26,8 @@
 
 Добавлена работа **«Сравнение RTL-SDR и AD936x: качество приёма и разрядность АЦП»**:
 
-- [описание на русском](lab_6_9_receiver_comparison_ru.md);
-- [исполняемый анализатор](python/lab_6_9_compare_receivers.py).
+- [описание на русском](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_06_rf_frontend_and_ad9363/lab_6_9_receiver_comparison_ru.md);
+- [исполняемый анализатор](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_06_rf_frontend_and_ad9363/python/lab_6_9_compare_receivers.py).
 
 Работа разделяет полную разницу приёмников, влияние разрядности на одной записи
 AD936x и приближённое сравнение аналоговых трактов после приведения обоих потоков
