@@ -357,6 +357,45 @@ respects: the transmitter is the host-streamed waveform rather than the fabric m
 signal traverses the AD9361 receive chain (DC block, coarse CFO, Costas, phase picker). The cause
 lies in one of those, not in the frame data or the channel geometry.
 
+### What the AD9361 actually delivered
+
+The bridge already records `core_rx` into a 4096-sample BRAM on every burst, readable over gpreg
+(`gp_ctrl[7]=1`, address in `gp_start_offset`, `{rx_i, rx_q}` out of `gp_capture_debug`), which is
+precisely the "see what the analog chain delivers versus the known-perfect TX" hook. Two method
+traps are worth recording, because both produced confident nonsense first:
+
+- the frame lands at a *varying* offset inside the buffer (measured starts 844, 917, 2649, 2876), so
+  a short readout window simply misses it — the whole 4096 samples must be read, and a 1536-sample
+  window produced `|corr| ≈ 2` "alignments" with absurd multi-kHz frequency fits;
+- estimating CFO per alignment candidate *before* correlating is worse than correlating first and
+  then fitting the phase line: over 140 symbols the 4th-power estimate is noisy enough to destroy
+  the correlation at the true start, and a wrong start then wins.
+
+With the whole buffer read and correlate-then-fit alignment, every frame instance locks cleanly at
+`|corr| ≈ 11.7` with a CFO of −300…−410 Hz, matching the known intrinsic inter-board offset. For a
+burst whose on-chip telemetry reported exactly one payload error at bit 189:
+
+| Capture | Instance | `|corr|` | CFO | Host decision errors | Symbol 106 Q margin |
+|---|---|---:|---:|---:|---:|
+| failing burst | start 844 | 11.66 | −305.9 Hz | 0 | +0.725 (rank 94/140) |
+| failing burst | start 2876 | 11.38 | −411.7 Hz | 2 (both elsewhere) | +0.741 (rank 114/140) |
+| clean burst | start 917 | 11.66 | −301.9 Hz | 0 | +0.674 (rank 37/140) |
+| clean burst | start 2649 | 11.65 | −299.1 Hz | 0 | +0.710 (rank 75/140) |
+
+Symbol 106's Q decision is healthy in every instance — always positive, between +0.67 and +1.16,
+sitting mid-to-upper in the frame's margin ranking (median ≈ +0.71). Even in the one instance where
+the host decoder does make two errors, symbol 106 is not among them. The signal the AD9361 delivered
+therefore contains no marginal decision at that symbol.
+
+The honest caveat is that the host decoder is idealised — data-aided alignment plus a linear phase
+fit — and therefore more capable than the causal on-chip Costas and fixed sampler, so the chip can
+certainly err where this decoder does not. But a merely weaker receiver should fail at the *weakest*
+decisions, and those are other symbols entirely. A healthy, mid-ranked decision being reported as
+the single error points at the receiver's own processing, or at how the error index is attributed,
+rather than at signal quality. Note also that the position index has only ever been exercised with a
+real error on the RF path: the fabric loopback never produces one, so hardware validation of the
+index itself rests on the RF-path numbers it is being used to interpret.
+
 This also reinterprets the earlier promotion decision. The clean-frame gate that rejects Gardner is
 in large part a proxy for this single bit: Gardner locks far more often (133 vs 87) and carries a
 markedly lower payload BER (0.0731 vs 0.1138), yet reaches BER=0 only 3 times in 160 because it
