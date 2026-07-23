@@ -85,6 +85,10 @@ RF_DC_BLOCK_BITS = 0x200       # gp_ctrl[9] removes AD9361 LO-leakage DC
 RF_COSTAS_BITS = 0x400         # gp_ctrl[10] enables QPSK carrier recovery
 RF_PHASE_PICK_BITS = 0x1000    # gp_ctrl[12] picks the strongest matched-filter phase
 QPSK_PAYLOAD_POSITION_BITS = 0x8000  # gp_ctrl[15] multiplexes payload-position telemetry
+# 280-bit frame minus the 24-bit preamble, split into four 64-bit quarters. Used to validate the
+# position readout: a quarter counter can never saturate, so the four counts must sum exactly to
+# the reported payload error count.
+QPSK_PAYLOAD_BITS_PER_FRAME = 256
 DEFAULT_SYMBOL_COUNT = 140     # QPSK symbols == the loopback frame the sim proved
 # The sampler remains fixed-phase downstream of the picker, so RF only needs the
 # eight residual sample phases while coherent legacy paths retain their wider sweep.
@@ -95,14 +99,49 @@ def iso_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def decode_payload_error_position(segment_word: int, position_word: int) -> dict[str, Any]:
-    """Decode the gp_ctrl[15] QPSK payload-localization readout."""
-    first = position_word & 0xFFFF
-    last = (position_word >> 16) & 0xFFFF
+def decode_payload_error_position(
+    segment_word: int, position_word: int, payload_errors: int | None = None
+) -> dict[str, Any] | None:
+    """Decode the gp_ctrl[15] QPSK payload-localization readout.
+
+    Pass `payload_errors` to have the readout CHECKED, and return None when it cannot be real.
+    This matters because a bitstream built before the position telemetry keeps the OLD meaning of
+    these two registers -- a TX sample counter and an RX valid counter -- and decoding those bytes
+    yields plausible-looking but meaningless output. Measured against such an image, a clean frame
+    (`payload_errors=0`) reported `segment_errors=[224, 4, 0, 48]`, `first=1843`, `last=0`, and two
+    frames with 121 and 2 payload errors reported the *same* segment counts: confident garbage.
+
+    The quarter counters cannot saturate (256-bit payload, four 64-bit quarters, 8-bit counters), so
+    for a genuine readout these invariants are exact:
+
+    - the four quarter counts sum to `payload_errors`;
+    - either both indices are the `0xFFFF` no-error sentinel and `payload_errors == 0`, or both are
+      present with `0 <= first <= last < 256` and `payload_errors > 0`.
+    """
+    first_raw = position_word & 0xFFFF
+    last_raw = (position_word >> 16) & 0xFFFF
+    first = None if first_raw == 0xFFFF else first_raw
+    last = None if last_raw == 0xFFFF else last_raw
+    segments = [(segment_word >> shift) & 0xFF for shift in (0, 8, 16, 24)]
+
+    if payload_errors is not None:
+        if sum(segments) != payload_errors:
+            return None
+        if (first is None) != (last is None):
+            return None
+        if first is None:
+            if payload_errors != 0:
+                return None
+        else:
+            if payload_errors == 0:
+                return None
+            if not 0 <= first <= last < QPSK_PAYLOAD_BITS_PER_FRAME:
+                return None
+
     return {
-        "segment_errors": [(segment_word >> shift) & 0xFF for shift in (0, 8, 16, 24)],
-        "first_error_index": None if first == 0xFFFF else first,
-        "last_error_index": None if last == 0xFFFF else last,
+        "segment_errors": segments,
+        "first_error_index": first,
+        "last_error_index": last,
     }
 
 
@@ -258,7 +297,12 @@ def qpsk_ber_once(runner, base_addr: int, symbol_count: int, offset: int,
         "rx_valid_count": rx_debug,
     }
     if mode_bits & QPSK_PAYLOAD_POSITION_BITS:
-        row["payload_error_position"] = decode_payload_error_position(tx_debug, rx_debug)
+        # Validated against the frame's own payload error count: an image without the position
+        # telemetry still answers with the old TX/RX counters, and those decode into believable
+        # nonsense. None here means "this image does not report positions", not "no errors".
+        row["payload_error_position"] = decode_payload_error_position(
+            tx_debug, rx_debug, row["payload_errors"]
+        )
     return row
 
 

@@ -30,6 +30,34 @@ def test_decode_payload_error_position_handles_segments_and_no_error_sentinel() 
     assert clean["last_error_index"] is None
 
 
+def test_decode_payload_error_position_rejects_pre_telemetry_image_readout() -> None:
+    """An image without gp_ctrl[15] telemetry answers with the OLD TX/RX counters, which decode
+    into believable nonsense. These are values actually measured against such an image."""
+    # tx_valid_count 0x300004E0 -> [224, 4, 0, 48] (sum 276), rx_valid_count 0x733 -> first=1843.
+    assert decode_payload_error_position(0x300004E0, 0x00000733, 121) is None
+    # The same two registers were reported for a frame with 2 payload errors: same counts, so at
+    # most one of them could ever be real.
+    assert decode_payload_error_position(0x300004E0, 0x00000733, 2) is None
+    # Unvalidated calls stay backward compatible (no payload count supplied -> decode only).
+    assert decode_payload_error_position(0x300004E0, 0x00000733) is not None
+
+
+def test_decode_payload_error_position_accepts_consistent_readout() -> None:
+    # Four quarter counts summing to the payload total, ordered indices inside the 256-bit payload.
+    decoded = decode_payload_error_position(0x04030201, 0x00C80006, 10)
+    assert decoded == {
+        "segment_errors": [1, 2, 3, 4],
+        "first_error_index": 6,
+        "last_error_index": 200,
+    }
+    # A clean frame must report both sentinels and zero counts.
+    assert decode_payload_error_position(0, 0xFFFFFFFF, 0) is not None
+    # Contradictions are rejected: sentinels with errors, indices out of range, first > last.
+    assert decode_payload_error_position(0, 0xFFFFFFFF, 3) is None
+    assert decode_payload_error_position(0x00000005, (300 << 16) | 260, 5) is None
+    assert decode_payload_error_position(0x00000005, (6 << 16) | 200, 5) is None
+
+
 def test_summarize_sweep_reports_repeatability_by_offset() -> None:
     sweep = [
         {"start_offset": 100, "received_symbols": 140, "total_bit_errors": 0},
