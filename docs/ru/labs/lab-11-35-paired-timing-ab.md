@@ -210,10 +210,67 @@ counter и индексы первой/последней ошибки. Скоп
 drift, равномерное распределение — на decision margin или noise. Этот результат не обосновывает
 изменение acquisition и ещё один слепой sweep PI gains.
 
+## Позиционная телеметрия ошибок payload: реализована, timing-clean, live pending
+
+Заранее объявленная диагностика теперь есть в RTL и host и имеет timing-clean образ. Но она
+**ещё не запускалась на стенде** — стенд на момент написания выключен, поэтому здесь честно
+разделены реализованное и симулированное от измеренного.
+
+**RTL и host — реализовано.** При `gp_ctrl[4]=1` и `gp_ctrl[15]=1` существующий register map несёт
+позиционную телеметрию без изменения block design и адресной карты, поверх кадра 280 бит
+(24 бита preamble, 256 бит payload, четыре четверти payload по 64 бита):
+
+- `gp_tx_valid_count` = `{quarter3, quarter2, quarter1, quarter0}` — четыре насыщаемых 8-битных
+  счётчика ошибок по четвертям payload;
+- `gp_rx_valid_count` = `{last_payload_error_index[15:0], first_payload_error_index[15:0]}`, где
+  `0xFFFF` означает «ошибок нет».
+
+Отдельный bridge-тест вносит ошибки в известные позиции и проверяет счётчики четвертей и
+sentinel’ы first/last; host возвращает `payload_error_position` и агрегирует availability, четыре
+суммы по сегментам и статистику индексов first/last. `FIXED_MODE` и `GARDNER_MODE` включают
+`gp_ctrl[15]`.
+
+**Симуляция и регрессия — зелёные.** Canonical HDL smoke 34/34; targeted Python-тесты QPSK
+digital-loopback и paired-timing проходят. RRC transmit FIR был **конвейеризован, а не ограничен
+constraint’ом**: его реальный critical path (delay line → symmetric pair-add → materialized DSP
+input register) не допускает multicycle exception, потому что внутренний fabric loopback может
+подавать `valid` каждый такт, и ложный exception испортил бы непрерывный случай. Симметричные
+pre-adds и center tap теперь регистрируются до умножителей (FIR latency 9 вместо 8), а
+преобразование bit-exact на 2312 векторах.
+
+**Timing-clean образ — получен.** С конвейеризованным FIR новый worst path находится вообще не в
+модеме, а в диагностическом capture peak detector
+(`capture_nonzero_seen_* → capture_peak_abs_sample_reg[*]/CE`) — route-heavy телеметрический путь.
+Свежая main-seed реализация закрылась на `WNS=-0,145 нс`; placement `ExtraNetDelay_high` из vendor
+post-opt snapshot довёл до `WNS=-0,076 нс`; один разрешённый post-route `phys_opt_design
+-directive AggressiveExplore` на том же routed checkpoint — без изменения RTL и constraints — закрыл
+timing:
+
+- `WNS=+0,020 нс`, `TNS=0,000 нс` (0 failing endpoints);
+- `WHS=+0,039 нс`, `THS=0,000 нс` (0 failing endpoints);
+- 80 546/80 546 полностью разведённых routable nets, routing errors 0;
+- bitstream записан; SHA-256:
+  `2d7ed04d79a180f6d3a4e97fab5a7b52a5d028b7705c04f79ecdac3be0834296`.
+
+Маржа `+0,020 нс` тонкая и достигнута post-route оптимизацией на диагностическом пути, поэтому
+честная оговорка — стабильность именно этого закрытия по repeat-build/seed; конвейеризация peak
+detector остаётся вариантом, если нужна бо́льшая, независимая от placement маржа. Прежний
+pre-telemetry образ (`SHA-256 29fb47e0…`, источник 160-парного результата выше) теперь **устарел**
+для position experiment и не должен использоваться.
+
+**Live position experiment — pending.** Когда стенд снова включат (плата A TX1 → аттенюатор 30 дБ →
+плата B RX1), прогон такой: короткий smoke, затем не меньше 160 чередующихся fixed/Gardner пар при
+CFO=0 с `payload_error_position`, со сравнением счётчиков четвертей q0/q1/q2/q3, индексов первой и
+последней ошибки и clean/lock между двумя семплерами. Скопление к q3 укажет на остаточный
+within-frame timing/carrier drift; равномерное q0…q3 — на однородную проблему decision margin или
+noise.
+
 ## Вердикт
 
 Dot-product TED корректен в модели, закрывает timing и проверен на железе, но решительно не
 проходит focused clean-frame gate. `gp_ctrl[14]=0` остаётся runtime default, fixed sampler —
 принятым baseline. Live telemetry локализует систематические однобитовые промахи в payload,
-поэтому frame acquisition больше не является следующей целью. Теперь error-position telemetry
-должна отличить within-frame drift от равномерной проблемы decision margin до нового loop tuning.
+поэтому frame acquisition больше не является следующей целью. Позиционная телеметрия ошибок payload
+теперь реализована, чиста по регрессии и несётся timing-clean образом
+(`SHA-256 2d7ed04d…`, `WNS=+0,020 нс`); live-прогон позиции, который отличит within-frame drift от
+однородной проблемы decision margin, ждёт включённого стенда.

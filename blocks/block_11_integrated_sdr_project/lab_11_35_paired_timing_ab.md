@@ -223,10 +223,66 @@ counters plus first/last error index). Late clustering would implicate residual 
 drift; a uniform distribution would point instead at decision margin or noise. Acquisition changes
 and another blind PI-gain sweep are not justified by this result.
 
+## Payload error-position telemetry: implemented, timing-clean, live still pending
+
+The predeclared diagnostic is now in the RTL and host and has a timing-clean bitstream. It has
+**not yet run on the bench** — the stand is powered down at the time of writing, so this section
+separates what is implemented and simulated from what is measured.
+
+**RTL and host — implemented.** With `gp_ctrl[4]=1` and `gp_ctrl[15]=1` the existing register map
+carries positional telemetry with no block-design or address-map change, over the 280-bit frame
+(24-bit preamble, 256-bit payload, four 64-bit payload quarters):
+
+- `gp_tx_valid_count` = `{quarter3, quarter2, quarter1, quarter0}` — four saturating 8-bit
+  payload-quarter error counters;
+- `gp_rx_valid_count` = `{last_payload_error_index[15:0], first_payload_error_index[15:0]}`, where
+  `0xFFFF` means "no error".
+
+A dedicated bridge test injects errors at known positions and checks the quarter counters and the
+first/last sentinels; the host returns `payload_error_position` and aggregates availability, the
+four segment sums, and first/last-index statistics. `FIXED_MODE` and `GARDNER_MODE` set
+`gp_ctrl[15]`.
+
+**Simulation and regression — passing.** Canonical HDL smoke 34/34; the targeted QPSK
+digital-loopback and paired-timing Python tests pass. The RRC transmit FIR was *pipelined rather
+than constrained*: its real critical path (delay line → symmetric pair-add → a
+placement-materialized DSP input register) does not admit a multicycle exception, because the
+internal fabric loopback can present `valid` every cycle, so a false exception would corrupt the
+continuous case. The symmetric pre-adds and centre tap are now registered ahead of the multipliers
+(FIR latency 9 instead of 8), and the transform is bit-exact over 2,312 vectors.
+
+**Timing-clean build — obtained.** With the FIR path pipelined, the new worst path is not in the
+modem at all but in the diagnostic capture peak detector
+(`capture_nonzero_seen_* → capture_peak_abs_sample_reg[*]/CE`), a route-heavy telemetry path. A
+fresh main-seed implementation closed at `WNS=-0.145 ns`; an `ExtraNetDelay_high` placement from the
+vendor post-opt snapshot took it to `WNS=-0.076 ns`; one allowed `AggressiveExplore` post-route
+`phys_opt_design` on that routed checkpoint — no RTL or constraint change — closed it:
+
+- `WNS=+0.020 ns`, `TNS=0.000 ns` (0 failing endpoints);
+- `WHS=+0.039 ns`, `THS=0.000 ns` (0 failing endpoints);
+- 80,546/80,546 routable nets fully routed, zero routing errors;
+- bitstream written; SHA-256:
+  `2d7ed04d79a180f6d3a4e97fab5a7b52a5d028b7705c04f79ecdac3be0834296`.
+
+The `+0.020 ns` margin is thin and was reached by post-route optimization on a diagnostic path, so
+repeat-build/seed stability of this specific closure is the honest caveat; pipelining the peak
+detector remains available if a larger, placement-independent margin is wanted. The earlier
+pre-telemetry image (`SHA-256 29fb47e0…`, the 160-pair source above) is now **stale** for the
+position experiment and must not be reused.
+
+**Live position experiment — pending.** When the bench is powered on again (board A TX1 → 30 dB
+attenuator → board B RX1), the run is: a short smoke, then at least 160 interleaved fixed/Gardner
+pairs at CFO = 0 with `payload_error_position`, comparing the q0/q1/q2/q3 quarter counts, the
+first- and last-error indices, and clean/lock between the two samplers. Late clustering toward q3
+would implicate residual within-frame timing/carrier drift; a flat q0…q3 distribution would point
+to a uniform decision-margin or noise problem instead.
+
 ## Verdict
 
 The dot-product TED is model-correct, timing-clean and hardware-qualified, but fails the focused
 clean-frame gate decisively. `gp_ctrl[14]=0` remains the runtime default and the fixed sampler
 remains the accepted baseline. Live telemetry localizes the systematic one-bit misses to the
-payload, so frame acquisition is no longer the next target. Error-position telemetry must now
-separate within-frame drift from a uniform decision-margin problem before any loop retuning.
+payload, so frame acquisition is no longer the next target. Payload error-position telemetry is now
+implemented, regression-clean and carried by a timing-clean bitstream
+(`SHA-256 2d7ed04d…`, `WNS=+0.020 ns`); the live position run that will separate within-frame drift
+from a uniform decision-margin problem is pending a powered bench.
