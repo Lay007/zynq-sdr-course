@@ -68,6 +68,12 @@ module qpsk_zynq_ber_top #(
     output wire                     debug_symbol_valid,
     output wire signed [W-1:0]      debug_symbol_i,
     output wire signed [W-1:0]      debug_symbol_q,
+    // Decoded dibits, exactly as fed to the BER counter. Without these the QPSK path
+    // has NO decoded-bit visibility (the bridge hard-wires its recovered-bit debug to
+    // zero in QPSK mode), so a reported payload error index cannot be checked against
+    // the bits the receiver actually produced.
+    output wire                     debug_recovered_valid,
+    output wire [1:0]               debug_recovered_dibit,
     output wire [15:0]              timing_mu,
     output wire signed [16:0]       timing_omega,
     output wire signed [2:0]        timing_error
@@ -84,6 +90,9 @@ wire src_busy;
 wire tx_busy;
 wire recovered_valid;
 wire [1:0] recovered_dibit;
+
+assign debug_recovered_valid = recovered_valid;
+assign debug_recovered_dibit = recovered_dibit;
 wire ber_busy;
 wire ber_done;
 reg ber_abort = 1'b0;

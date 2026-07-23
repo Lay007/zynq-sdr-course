@@ -89,6 +89,8 @@ wire [31:0] qpsk_payload_error_segments;
 wire [INDEX_W-1:0] qpsk_first_payload_error_index;
 wire [INDEX_W-1:0] qpsk_last_payload_error_index;
 wire qpsk_symbol_valid_debug;
+wire qpsk_recovered_valid_debug;
+wire [1:0] qpsk_recovered_dibit_debug;
 wire signed [W-1:0] qpsk_symbol_i_debug;
 wire signed [W-1:0] qpsk_symbol_q_debug;
 wire [15:0] qpsk_timing_mu_debug;
@@ -425,6 +427,8 @@ qpsk_zynq_ber_top #(
     .payload_error_segments(qpsk_payload_error_segments),
     .first_payload_error_index(qpsk_first_payload_error_index),
     .last_payload_error_index(qpsk_last_payload_error_index),
+    .debug_recovered_valid(qpsk_recovered_valid_debug),
+    .debug_recovered_dibit(qpsk_recovered_dibit_debug),
     .debug_symbol_valid(qpsk_symbol_valid_debug),
     .debug_symbol_i(qpsk_symbol_i_debug),
     .debug_symbol_q(qpsk_symbol_q_debug),
@@ -457,6 +461,63 @@ always @(posedge sample_clk) begin
         if (cap_wptr == {CAP_AW{1'b1}}) cap_full <= 1'b1;
         else cap_wptr <= cap_wptr + 1'b1;
     end
+end
+
+// ---------------------------------------------------------------------------
+// Decoded-bit readout (diagnostic, gp_ctrl[16]).
+//
+// The QPSK path had NO decoded-bit visibility at all: recovered_*_debug above is
+// hard-wired to zero when mod_qpsk, so a reported payload error index could never be
+// checked against the bits the receiver actually produced. That is exactly the fork the
+// bit-189 investigation ended on -- "the decoder errs" versus "the index is misreported"
+// -- and it is not separable without these bits.
+//
+// A plain shift register is used rather than an addressed write: it costs no address
+// decode in the sample_clk domain, which already closes timing with only +0.020 ns.
+//
+// The shift must run to the END of the frame, not from its start: the sampler emits
+// RX_SAMPLE_MARGIN (256) extra symbols so a latency-delayed OTA frame still fits, and the
+// frame-sync correlator finds the frame somewhere inside that stream. Capturing the FIRST
+// 288 bits would therefore capture pre-frame noise. Instead the register free-runs and
+// freezes when the burst completes, so its 288 bits are the ones ending at the frame's
+// last compared bit -- i.e. they contain the 280-bit frame. Bits arrive I-then-Q per
+// symbol and shift up, so the most recently received bit is bit 0.
+//
+// Read only AFTER done: the register is frozen then, so no CDC handshake is needed (the
+// same assumption the capture BRAM readout already makes).
+reg [287:0] rx_bits_shift = 288'd0;
+reg [9:0]   rx_bits_count = 10'd0;
+
+always @(posedge sample_clk) begin
+    if (!sample_resetn) begin
+        rx_bits_shift <= 288'd0;
+        rx_bits_count <= 10'd0;
+    end else if (start_edge) begin
+        rx_bits_shift <= 288'd0;
+        rx_bits_count <= 10'd0;
+    end else if (qpsk_recovered_valid_debug && !done_sticky_sample) begin
+        rx_bits_shift <= {rx_bits_shift[285:0], qpsk_recovered_dibit_debug[1],
+                                                qpsk_recovered_dibit_debug[0]};
+        if (rx_bits_count != 10'h3ff)
+            rx_bits_count <= rx_bits_count + 10'd2;
+    end
+end
+
+reg [31:0] rx_bits_rdata = 32'd0;
+always @(posedge ctrl_clk) begin
+    case (gp_start_offset[3:0])
+        4'd0: rx_bits_rdata <= rx_bits_shift[31:0];
+        4'd1: rx_bits_rdata <= rx_bits_shift[63:32];
+        4'd2: rx_bits_rdata <= rx_bits_shift[95:64];
+        4'd3: rx_bits_rdata <= rx_bits_shift[127:96];
+        4'd4: rx_bits_rdata <= rx_bits_shift[159:128];
+        4'd5: rx_bits_rdata <= rx_bits_shift[191:160];
+        4'd6: rx_bits_rdata <= rx_bits_shift[223:192];
+        4'd7: rx_bits_rdata <= rx_bits_shift[255:224];
+        4'd8: rx_bits_rdata <= rx_bits_shift[287:256];
+        4'd9: rx_bits_rdata <= {22'd0, rx_bits_count};
+        default: rx_bits_rdata <= 32'd0;
+    endcase
 end
 
 reg [2*W-1:0] cap_rdata = {(2*W){1'b0}};
@@ -755,7 +816,8 @@ wire [31:0] normal_adc_input_debug = {
 assign gp_adc_input_debug = gp_ctrl[14] ? timing_debug_sync_ctrl : normal_adc_input_debug;
 // gp_ctrl[7]=1 -> readout: return the captured RX sample at gp_start_offset;
 // else the normal capture-debug status word.
-assign gp_capture_debug = gp_ctrl[7] ? cap_rdata :
+assign gp_capture_debug = gp_ctrl[16] ? rx_bits_rdata :
+                          gp_ctrl[7] ? cap_rdata :
                           gp_ctrl[14] ? {{29{timing_error_sync_ctrl[2]}}, timing_error_sync_ctrl} :
                           capture_debug_sync_ctrl;
 assign tx_path_active = tx_path_active_sample;

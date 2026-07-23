@@ -22,6 +22,15 @@ reg ctrl_resetn = 1'b0;
 reg sample_resetn = 1'b0;
 
 reg [31:0] gp_ctrl = 32'd0;
+// --- decoded-bit readout check (gp_ctrl[16]) -------------------------------
+// The QPSK path exposes no decoded bits without this, so the readout itself needs a
+// test: on the clean loopback the captured window must CONTAIN the frame ROM exactly.
+reg [0:0] rom_bits [0:511];
+reg [287:0] cap_bits = 288'd0;
+reg [9:0]  cap_count = 10'd0;
+integer wi, off, bi, mism;
+integer match_off;
+
 reg [31:0] gp_frame_bit_count = 32'd0;
 reg [31:0] gp_preamble_count = 32'd0;
 reg [31:0] gp_start_offset = 32'd0;
@@ -137,6 +146,46 @@ initial begin
         w = 0;
         while (gp_status[1] && w < 40000) begin @(posedge sample_clk); w = w + 1; end
         repeat (8) @(posedge sample_clk);
+    end
+
+    // Re-run the winning offset, then read the decoded bits back out.
+    $readmemh("blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bits.mem", rom_bits);
+    gp_start_offset = best_so;
+    gp_ctrl = CTRL_MODE_QPSK;
+    repeat (6) @(posedge sample_clk);
+    gp_ctrl = CTRL_MODE_QPSK | 32'h1;
+    repeat (4) @(posedge sample_clk);
+    gp_ctrl = CTRL_MODE_QPSK;
+    w = 0;
+    while (!gp_status[2] && !gp_status[3] && w < 40000) begin @(posedge ctrl_clk); w = w + 1; end
+    repeat (4) @(posedge ctrl_clk);
+
+    for (wi = 0; wi <= 9; wi = wi + 1) begin
+        gp_start_offset = wi;
+        gp_ctrl = CTRL_MODE_QPSK | 32'h1_0000;   // gp_ctrl[16] = decoded-bit readout
+        repeat (4) @(posedge ctrl_clk);
+        if (wi == 9) cap_count = gp_capture_debug[9:0];
+        else cap_bits[32*wi +: 32] = gp_capture_debug;
+    end
+    gp_ctrl = CTRL_MODE_QPSK;
+
+    // The shift reverses SYMBOL order but keeps I in the lower bit of each pair, so frame
+    // bit i (symbol s = i>>1, axis = i&1) lands at 2*((SYMS-1-s) + soff) + axis, where soff
+    // counts the symbols captured after the frame's last one. Accept any small soff.
+    match_off = -1;
+    for (off = 0; off <= 4; off = off + 1) begin
+        mism = 0;
+        for (bi = 0; bi < 2*SYMS; bi = bi + 1)
+            if (cap_bits[2*((SYMS-1-(bi>>1)) + off) + (bi & 1)] !== rom_bits[bi])
+                mism = mism + 1;
+        if (mism == 0 && match_off < 0) match_off = off;
+    end
+    if (match_off >= 0)
+        $display("PASS: decoded-bit readout reproduced all %0d frame bits (count=%0d, offset=%0d)",
+                 2*SYMS, cap_count, match_off);
+    else begin
+        $display("FAIL: decoded-bit readout did not reproduce the frame (count=%0d)", cap_count);
+        $fatal(1);
     end
 
     if (gp_signature !== SIGNATURE_BPSK)
