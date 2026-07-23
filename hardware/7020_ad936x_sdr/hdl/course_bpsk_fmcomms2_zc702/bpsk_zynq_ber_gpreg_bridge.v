@@ -149,6 +149,14 @@ reg capture_i_negative_seen_any_sample = 1'b0;
 reg capture_q_negative_seen_any_sample = 1'b0;
 reg [12:0] capture_valid_count_lsb_sample = 13'd0;
 reg [13:0] capture_peak_abs_sample = 14'd0;
+// Pipeline stage for the peak-hold telemetry above. Its combinational input is deep -- abs(i),
+// abs(q), max, saturate, then the running-max compare that drives the register enable -- and on
+// sample_clk (8 ns) that whole chain in one cycle was the design's worst path (WNS -0.275 ns).
+// This is diagnostic-only (a peak |sample| read out once at the end of a burst), so registering
+// the abs/max/saturate result and comparing it one cycle later is free of functional cost: the
+// last sample of a multi-thousand-sample burst simply does not update the peak. Not a multicycle.
+reg [13:0] capture_peak_abs_saturated_q = 14'd0;
+reg        capture_peak_upd_q = 1'b0;
 reg recovered_valid_seen_any_sample = 1'b0;
 reg recovered_one_seen_any_sample = 1'b0;
 reg decision_negative_seen_any_sample = 1'b0;
@@ -582,6 +590,8 @@ always @(posedge sample_clk) begin
         capture_q_negative_seen_any_sample <= 1'b0;
         capture_valid_count_lsb_sample <= 13'd0;
         capture_peak_abs_sample <= 14'd0;
+        capture_peak_abs_saturated_q <= 14'd0;
+        capture_peak_upd_q <= 1'b0;
         recovered_valid_seen_any_sample <= 1'b0;
         recovered_one_seen_any_sample <= 1'b0;
         decision_negative_seen_any_sample <= 1'b0;
@@ -661,10 +671,20 @@ always @(posedge sample_clk) begin
             if (tx_path_active_sample) begin
                 capture_valid_while_active_seen_any_sample <= 1'b1;
             end
-            if (capture_peak_abs_sample < capture_peak_abs_saturated) begin
-                capture_peak_abs_sample <= capture_peak_abs_saturated;
+        end
+
+        // Peak-hold telemetry pipeline (registers declared above). Stage 1 registers this cycle's
+        // saturated abs; stage 2 compares it against the running peak one cycle later. Stage 2 is
+        // suppressed on start_edge so the per-burst reset-to-zero is not overwritten by a value
+        // still pending from the previous burst. The start-edge sample itself is dropped, which
+        // is immaterial for a peak over a multi-thousand-sample burst.
+        if (!start_edge) begin
+            if (capture_peak_upd_q && (capture_peak_abs_sample < capture_peak_abs_saturated_q)) begin
+                capture_peak_abs_sample <= capture_peak_abs_saturated_q;
             end
         end
+        capture_peak_abs_saturated_q <= capture_peak_abs_saturated;
+        capture_peak_upd_q <= start_edge ? 1'b0 : capture_in_valid;
 
         if (recovered_valid_debug) begin
             recovered_valid_seen_any_sample <= 1'b1;
