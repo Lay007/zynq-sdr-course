@@ -249,9 +249,18 @@ if {!$skip_run} {
   }
   if {$verify_py eq ""} { error "No non-Vivado Python found to run the build post-condition" }
   puts "post-condition verifier interpreter: $verify_py"
+  # Vivado also exports PYTHONHOME/PYTHONPATH pointing at its bundled python-3.8.3 stdlib, and a real
+  # python-3.14 inherits them and loads the WRONG stdlib -> the same "SRE module mismatch". So clear
+  # those (and PYTHONSTARTUP) for the child, then restore, letting the chosen interpreter use its own
+  # stdlib. This, not the interpreter path, was what actually broke the guard.
+  array set _saved_py {}
+  foreach _v {PYTHONHOME PYTHONPATH PYTHONSTARTUP} {
+    if {[info exists ::env($_v)]} { set _saved_py($_v) $::env($_v); unset ::env($_v) }
+  }
   set verify_failed [catch {
     exec $verify_py $verifier --mode $overlay_mode --build-dir $work_project_dir
   } verify_output]
+  foreach {_v _val} [array get _saved_py] { set ::env($_v) $_val }
   puts $verify_output
   if {$verify_failed || ![string match "*PASS:*" $verify_output]} {
     error "Course build post-condition FAILED for overlay mode '$overlay_mode' -- the artifact does\
