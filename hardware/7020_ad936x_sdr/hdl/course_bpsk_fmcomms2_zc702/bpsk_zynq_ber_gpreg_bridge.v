@@ -389,7 +389,15 @@ qpsk_zynq_ber_top #(
     .PHASE_W(PHASE_W),
     .FLUSH_SYMBOLS(FLUSH_SYMBOLS),
     .LOCK_PREAMBLE_BITS(24),
-    .LOCK_ERR_TOL(3),
+    // LOCK_ERR_TOL=3 let a wrong-rotation branch FALSE-LOCK on the two-board link. The frame-sync
+    // arbitration is first-past-the-post over a sliding 24-bit correlation, and a wrong quadrant
+    // matches each preamble bit with prob ~0.5, so a chance window with <=3/24 errors has
+    // probability C(24,<=3)/2^24 ~= 1.4e-4 per position; over ~140 sliding positions that is ~2%,
+    // which matched the measured ~3% of bursts decoding at ~46% BER from bit 0. Tightening to 1
+    // drops the chance window to C(24,<=1)/2^24 ~= 1.5e-6 (~0.02% over the burst) -- a ~100x cut --
+    // while the true preamble, which matches near-perfectly, still locks: verified at BER 0/280 on
+    // the real self-OTA captures including the 3000-noise-sample Costas stress bench. See Lab 11.42.
+    .LOCK_ERR_TOL(1),
     // The conducted raw-ADC path peaks at only 27..30 counts before the matched
     // filter. 1000 (the self-OTA simulation default) therefore held both the phase
     // picker and Costas loop permanently frozen. TH=8 still rejects the measured
