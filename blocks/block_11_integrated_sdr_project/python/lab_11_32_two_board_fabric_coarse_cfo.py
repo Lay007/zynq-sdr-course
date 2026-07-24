@@ -131,6 +131,46 @@ def frame_symbols(differential: bool = False) -> np.ndarray:
     return (i + 1j * q) / np.sqrt(2.0)
 
 
+# Long-preamble configuration (Lab 11.45). Extending the 12-symbol preamble to 24 lets the RX loops
+# (Costas, DC blocker, Gardner) settle BEFORE the payload, which is what differential decoding needs:
+# it reads the phase DIFFERENCE between consecutive symbols, so any loop still adapting in the early
+# payload corrupts it. The payload stays 256 bits (48-bit preamble + 256), and the frame is just the
+# ROM's first 304 bits -- no bitstream change, only the runtime symbol_count/preamble_count.
+LONG_FRAME_SYMBOLS = 152
+LONG_PREAMBLE_BITS = 48          # 24 symbols; the on-chip correlator still locks on the first 24 bits
+
+
+def long_frame_bits() -> np.ndarray:
+    """First 304 ROM bits = 24-symbol preamble + 256-bit payload. The correlator locks on bits 0..23
+    (unchanged), preamble_count=48 starts the payload at symbol 24, past the acquisition transient."""
+    toks = [t for t in FRAME_MEM.read_text().split() if t.strip() in ("0", "1")]
+    bits = np.array([int(t) for t in toks], dtype=int)
+    need = 2 * LONG_FRAME_SYMBOLS
+    if len(bits) < need:
+        raise RuntimeError(f"{FRAME_MEM} has {len(bits)} bits, need {need}")
+    return bits[:need]
+
+
+def make_long_preamble_frame(n_frames: int, differential: bool = True) -> np.ndarray:
+    """int16 IQ of the 152-symbol long-preamble frame, tiled and RRC-shaped like make_cyclic_frame.
+    Run with symbol_count=LONG_FRAME_SYMBOLS, preamble_bits=LONG_PREAMBLE_BITS."""
+    fb = diff_encode_bits(long_frame_bits()) if differential else long_frame_bits()
+    i = 1.0 - 2.0 * fb[0::2]
+    q = 1.0 - 2.0 * fb[1::2]
+    sym = np.tile((i + 1j * q) / np.sqrt(2.0), n_frames)
+    taps = L.load_rrc_taps()
+    up = np.zeros(len(sym) * L.SPS, dtype=complex)
+    up[:: L.SPS] = sym
+    ker = np.zeros(len(up), dtype=complex)
+    ker[: len(taps)] = taps
+    wave = np.fft.ifft(np.fft.fft(up) * np.fft.fft(ker))
+    wave = wave * (0.70 * 32767 / np.max(np.abs(wave)))
+    iq = np.zeros(len(wave) * 2, dtype=np.int16)
+    iq[0::2] = np.round(wave.real).astype(np.int16)
+    iq[1::2] = np.round(wave.imag).astype(np.int16)
+    return iq
+
+
 def make_cyclic_frame(n_frames: int, differential: bool = False) -> np.ndarray:
     """int16 interleaved IQ of the frame tiled n_frames times, RRC-shaped circularly (seamless
     cyclic replay), scaled to ~3 dB below full scale -- the Lab 11.30 transmit shaping, frame data."""

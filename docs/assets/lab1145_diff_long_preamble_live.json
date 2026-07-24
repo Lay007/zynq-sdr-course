@@ -1,0 +1,27 @@
+{
+  "lab": "11.45",
+  "frame_symbols": 152,
+  "preamble_symbols": 24,
+  "payload_bits": 256,
+  "mode": "differential+gardner",
+  "frames": 800,
+  "locked": 746,
+  "clean": 723,
+  "single_bit": 23,
+  "gross": 0,
+  "clean_pct": 96.92,
+  "gross_pct": 0.0,
+  "payload_ber": 0.0004450821045576408,
+  "single_bit_idx": {
+    "19": 17,
+    "28": 3,
+    "4": 1,
+    "27": 1,
+    "1": 1
+  },
+  "vs_tol1_140_24": {
+    "clean_pct": 98.9,
+    "gross_pct": 0.75,
+    "payload_ber": "~3e-3"
+  }
+}
