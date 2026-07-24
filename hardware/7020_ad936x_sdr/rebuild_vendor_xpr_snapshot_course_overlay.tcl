@@ -186,17 +186,19 @@ set run_failed [catch {
     if {[llength $runs_to_reset] != 0} {
       reset_run $runs_to_reset
     }
-    # Close the last-mile setup miss properly rather than by masking it. After the capture-tap peak
-    # detector was pipelined, the worst path became a pre-existing coarse-CFO DSP48->CARRY4 chain at
-    # WNS -0.034 ns -- 34 ps, a real datapath that must not be multicycled. Post-route physical
-    # optimisation closes it: measured on the routed checkpoint, phys_opt -directive Explore takes
-    # this design from -0.034 to +0.016 ns. Enabling it in the impl strategy makes the flow's own
-    # bitstream and XSA the timing-clean artifacts, and makes every future rebuild close the same way
-    # instead of depending on a hand-run pass. adi_project_run only sets its own impl_1 properties
-    # (POWER_OPT) before launch_runs and does not reset the run, so this survives to the launch.
+    # Close the last-mile setup miss properly rather than by masking it. The worst path is a
+    # pre-existing coarse-CFO DSP48->DSP48 datapath that must not be multicycled, and it is marginal:
+    # across placement seeds it lands anywhere from +0.016 to -0.129 ns. Post-route phys_opt alone is
+    # not enough -- on the -0.129 seed even AggressiveExplore phys_opt could not move it, because the
+    # delay is DSP Tcko (~4.9 ns) plus inter-DSP routing, which is a PLACEMENT problem, not a routing
+    # one. So the strategy drives the placer toward timing (ExtraTimingOpt), routes and phys-opts
+    # aggressively. adi_project_run only sets its own impl_1 properties (POWER_OPT) before launch_runs
+    # and does not reset the run, so these survive to the launch.
     foreach impl_run [get_runs -quiet impl_1] {
+      set_property STEPS.PLACE_DESIGN.DIRECTIVE ExtraTimingOpt $impl_run
+      set_property STEPS.ROUTE_DESIGN.DIRECTIVE AggressiveExplore $impl_run
       set_property STEPS.POST_ROUTE_PHYS_OPT_DESIGN.IS_ENABLED true $impl_run
-      set_property STEPS.POST_ROUTE_PHYS_OPT_DESIGN.DIRECTIVE Explore $impl_run
+      set_property STEPS.POST_ROUTE_PHYS_OPT_DESIGN.DIRECTIVE AggressiveExplore $impl_run
     }
     adi_project_run zc702
   }
@@ -229,9 +231,24 @@ if {!$skip_run} {
   # Run the verifier under a REAL Python, not Vivado's bundled one. `exec python` inside Vivado
   # resolves to G:/Xilinx/.../tps/win64/python-3.8.3, whose _sre C module MAGIC mismatches its own
   # stdlib -- `import re` dies with "SRE module mismatch" before the verifier does anything, and the
-  # guard then fires on a timing-clean, correct artifact. The launcher passes its own interpreter in
-  # COURSE_VERIFY_PYTHON; fall back to "python" only if it is unset.
-  set verify_py [expr {[info exists ::env(COURSE_VERIFY_PYTHON)] ? $::env(COURSE_VERIFY_PYTHON) : "python"}]
+  # guard then fires on a timing-clean, correct artifact. COURSE_VERIFY_PYTHON is the explicit channel,
+  # but it does not always survive into Vivado's Tcl ::env, so the search below is the real safety net:
+  # take the first interpreter that exists and is NOT under the Xilinx tree.
+  set verify_candidates {}
+  if {[info exists ::env(COURSE_VERIFY_PYTHON)]} {
+    lappend verify_candidates $::env(COURSE_VERIFY_PYTHON)
+  }
+  foreach root {C:/Python314 C:/Python313 C:/Python312 C:/Python311 C:/Python310 C:/Python39} {
+    lappend verify_candidates [file join $root python.exe]
+  }
+  lappend verify_candidates py python
+  set verify_py ""
+  foreach cand $verify_candidates {
+    if {[string match -nocase *xilinx* $cand]} { continue }
+    if {$cand eq "py" || $cand eq "python" || [file exists $cand]} { set verify_py $cand; break }
+  }
+  if {$verify_py eq ""} { error "No non-Vivado Python found to run the build post-condition" }
+  puts "post-condition verifier interpreter: $verify_py"
   set verify_failed [catch {
     exec $verify_py $verifier --mode $overlay_mode --build-dir $work_project_dir
   } verify_output]
