@@ -27,7 +27,7 @@ module tb_qpsk_two_board_residual_cfo;
       .COSTAS_SIG_THRESH(8), .COARSE_ENABLE(1)
   ) old_rx (
       .clk(clk), .rst(rst), .rst_carrier(rst),
-      .dc_block_en(1'b1), .costas_en(1'b1), .coarse_cfo_en(1'b1), .phase_pick_en(1'b0),
+      .dc_block_en(1'b1), .costas_en(1'b1), .diff_en(1'b0), .coarse_cfo_en(1'b1), .phase_pick_en(1'b0),
       .in_valid(in_valid), .in_i(in_i), .in_q(in_q),
       .start_offset(16'd2), .symbol_count(CHAIN_SYMS[15:0]),
       .out_valid(old_valid), .out_dibit(old_dibit),
@@ -40,7 +40,7 @@ module tb_qpsk_two_board_residual_cfo;
       .COSTAS_SIG_THRESH(8), .COARSE_ENABLE(1)
   ) tuned_rx (
       .clk(clk), .rst(rst), .rst_carrier(rst),
-      .dc_block_en(1'b1), .costas_en(1'b1), .coarse_cfo_en(1'b1), .phase_pick_en(1'b0),
+      .dc_block_en(1'b1), .costas_en(1'b1), .diff_en(1'b0), .coarse_cfo_en(1'b1), .phase_pick_en(1'b0),
       .in_valid(in_valid), .in_i(in_i), .in_q(in_q),
       .start_offset(16'd2), .symbol_count(CHAIN_SYMS[15:0]),
       .out_valid(tuned_valid), .out_dibit(tuned_dibit),

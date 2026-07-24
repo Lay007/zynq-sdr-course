@@ -192,6 +192,7 @@ qpsk_rx_bit_recovery_chain #(
     .coarse_cfo_en(coarse_cfo_en),
     .phase_pick_en(phase_pick_en),
     .timing_recovery_en(timing_recovery_en),
+    .diff_en(diff_en),
     .in_valid(rx_valid),
     .in_i(rx_i),
     .in_q(rx_q),

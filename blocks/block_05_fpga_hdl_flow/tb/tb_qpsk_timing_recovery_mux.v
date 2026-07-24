@@ -30,7 +30,7 @@ qpsk_rx_bit_recovery_chain #(
     .W(W), .SPS(8), .INDEX_W(16), .TIMING_RECOVERY_ENABLE(1)
 ) loop_rx (
     .clk(clk), .rst(rst), .rst_carrier(rst),
-    .dc_block_en(1'b0), .costas_en(1'b0), .coarse_cfo_en(1'b0),
+    .dc_block_en(1'b0), .costas_en(1'b0), .diff_en(1'b0), .coarse_cfo_en(1'b0),
     .phase_pick_en(1'b0), .timing_recovery_en(1'b1),
     .in_valid(in_valid), .in_i(in_i), .in_q(in_q),
     .start_offset(16'd65), .symbol_count(N_SYM[15:0]),
@@ -43,7 +43,7 @@ qpsk_rx_bit_recovery_chain #(
     .W(W), .SPS(8), .INDEX_W(16), .TIMING_RECOVERY_ENABLE(1)
 ) fixed_rx (
     .clk(clk), .rst(rst), .rst_carrier(rst),
-    .dc_block_en(1'b0), .costas_en(1'b0), .coarse_cfo_en(1'b0),
+    .dc_block_en(1'b0), .costas_en(1'b0), .diff_en(1'b0), .coarse_cfo_en(1'b0),
     .phase_pick_en(1'b0), .timing_recovery_en(1'b0),
     .in_valid(in_valid), .in_i(in_i), .in_q(in_q),
     .start_offset(16'd68), .symbol_count(N_SYM[15:0]),

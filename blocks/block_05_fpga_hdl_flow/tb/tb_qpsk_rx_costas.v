@@ -11,7 +11,7 @@ module tb_qpsk_rx_costas #(parameter integer KP=8, parameter integer KI=1);
   reg [INDEX_W-1:0] rxsyms, errs;
   wire rxdv; wire [1:0] rxdibit;
   qpsk_rx_bit_recovery_chain #(.W(W),.SPS(8),.INDEX_W(INDEX_W),.COSTAS_KP_LOG_ACQ(KP),.COSTAS_KP_LOG_TRACK(KP),.COSTAS_KI_LOG(KI)) rxc (
-    .clk(clk),.rst(rst),.rst_carrier(rst), .dc_block_en(dc_en),.costas_en(cos_en),
+    .clk(clk),.rst(rst),.rst_carrier(rst), .dc_block_en(dc_en),.costas_en(cos_en), .diff_en(1'b0),
     .coarse_cfo_en(1'b0), .phase_pick_en(1'b0),
     .in_valid(rx_valid),.in_i(rx_i),.in_q(rx_q),
     .start_offset(start_offset),.symbol_count(CHAIN_SYMS[INDEX_W-1:0]),

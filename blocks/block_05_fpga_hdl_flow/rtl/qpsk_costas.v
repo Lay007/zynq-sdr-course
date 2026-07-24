@@ -68,6 +68,14 @@ module qpsk_costas #(
     // pulling in from zero. Harmless when the phase does drift -- the loop just re-acquires.
     input  wire                 rst_phase,
     input  wire                 enable,      // 1 = carrier tracking; 0 = pass-through
+    // 1 = skip the aggressive acquisition gear (KP_LOG_ACQ) and run the quiet KP_LOG_TRACK from the
+    // first symbol. The long acquisition exists to slew the constellation onto the right 90-degree
+    // branch before the frame sync latches (see tb_qpsk_costas_acq_window) -- but DIFFERENTIAL mode
+    // is rotation-invariant, so it does not need that, and the acquisition's fast per-symbol phase
+    // slews corrupt the early-payload differential decisions (measured: a cluster at payload symbol
+    // 14). With force_track the frequency integrator still pulls in the CFO, but the phase stays
+    // smooth. 0 = ordinary behaviour (absolute QPSK).
+    input  wire                 force_track,
     input  wire                 in_valid,
     input  wire signed [W-1:0]  in_i,
     input  wire signed [W-1:0]  in_q,
@@ -367,9 +375,11 @@ wire signed [W:0]   e_raw  = term_a - term_b;           // one guard bit; e ~ A*
 // the KP_LOG_* pair sets the proportional gain, KI_LOG the slow integral / frequency term.
 wire signed [PHASE_W-1:0] e_ext  = {{(PHASE_W-(W+1)){e_raw[W]}}, e_raw};
 
-// Gear shift: wide loop while acquiring, quiet loop once the preamble is behind us.
+// Gear shift: wide loop while acquiring, quiet loop once the preamble is behind us. force_track
+// (differential mode) skips the wide gear entirely -- the phase does not need slewing onto a
+// particular branch, and its slews would corrupt the differential decisions.
 reg [15:0] acq_cnt = 16'd0;
-wire acquiring = (acq_cnt < ACQ_SYMBOLS[15:0]);
+wire acquiring = (acq_cnt < ACQ_SYMBOLS[15:0]) && !force_track;
 wire signed [PHASE_W-1:0] kp_step = acquiring ? (e_ext <<< KP_LOG_ACQ)
                                               : (e_ext <<< KP_LOG_TRACK);
 wire signed [PHASE_W-1:0] ki_step = e_ext <<< KI_LOG;

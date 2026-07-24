@@ -38,7 +38,7 @@ module tb_qpsk_coarse_cfo_chain;
     .clk(clk),.rst(rst),.enable(cfo_en),.in_valid(sv),.in_i(si),.in_q(sq),
     .out_valid(cvo),.out_i(ci),.out_q(cq),.cfo_ready(crdy),.cfo_omega(omega));
   wire svo; wire signed [W-1:0] xi,xq;
-  qpsk_costas #(.W(W)) cos_i (.clk(clk),.rst(rst),.rst_phase(rst),.enable(1'b1),
+  qpsk_costas #(.W(W)) cos_i (.clk(clk),.rst(rst),.rst_phase(rst),.enable(1'b1),.force_track(1'b0),
     .in_valid(cvo),.in_i(ci),.in_q(cq),.out_valid(svo),.out_i(xi),.out_q(xq));
   wire dvo; wire [1:0] dib;
   qpsk_hard_decision dec (.clk(clk),.rst(rst),.in_valid(svo),.in_i(xi),.in_q(xq),

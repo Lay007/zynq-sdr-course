@@ -64,7 +64,7 @@ module tb_qpsk_phase_picker;
   wire cv;
   wire signed [W-1:0] ci, cq;
   qpsk_costas #(.W(W)) costas_i (
-      .clk(clk), .rst(rst), .rst_phase(rst), .enable(1'b1),
+      .clk(clk), .rst(rst), .rst_phase(rst), .enable(1'b1), .force_track(1'b0),
       .in_valid(sv), .in_i(si), .in_q(sq),
       .out_valid(cv), .out_i(ci), .out_q(cq));
 

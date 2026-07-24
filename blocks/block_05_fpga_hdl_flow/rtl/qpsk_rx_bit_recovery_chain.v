@@ -44,6 +44,8 @@ module qpsk_rx_bit_recovery_chain #(
     input  wire                     coarse_cfo_en, // 1 = strip bulk inter-board CFO before Costas; 0 = passthrough
     input  wire                     phase_pick_en, // 1 = feedforward 8-phase burst timing pick
     input  wire                     timing_recovery_en, // 1 = continuous Gardner timing loop
+    input  wire                     diff_en,       // 1 = differential mode: run Costas in quiet track
+                                                   //     gain only (no aggressive phase acquisition)
     input  wire                     in_valid,
     input  wire signed [W-1:0]      in_i,
     input  wire signed [W-1:0]      in_q,
@@ -268,6 +270,7 @@ qpsk_costas #(
     .rst(rst),
     .rst_phase(rst_carrier),
     .enable(costas_en),
+    .force_track(diff_en),
     .in_valid(cfo_out_valid),
     .in_i(cfo_out_i),
     .in_q(cfo_out_q),

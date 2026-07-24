@@ -38,7 +38,7 @@ module tb_qpsk_coarse_cfo;
   wire svo;
   wire signed [W-1:0] si, sq;
   qpsk_costas #(.W(W)) costas_i (
-      .clk(clk), .rst(rst), .rst_phase(rst), .enable(1'b1),
+      .clk(clk), .rst(rst), .rst_phase(rst), .enable(1'b1), .force_track(1'b0),
       .in_valid(cvo), .in_i(ci), .in_q(cq),
       .out_valid(svo), .out_i(si), .out_q(sq));
 

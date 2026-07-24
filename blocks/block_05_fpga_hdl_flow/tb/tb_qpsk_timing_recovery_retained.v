@@ -47,7 +47,7 @@ qpsk_rx_bit_recovery_chain #(
     .TIMING_K1_TERM(`TIMING_K1), .TIMING_K2_TERM(`TIMING_K2)
 ) receiver (
     .clk(clk), .rst(rst), .rst_carrier(rst),
-    .dc_block_en(1'b1), .costas_en(1'b1), .coarse_cfo_en(1'b1),
+    .dc_block_en(1'b1), .costas_en(1'b1), .diff_en(1'b0), .coarse_cfo_en(1'b1),
     .phase_pick_en(1'b0), .timing_recovery_en(1'b1),
     .in_valid(in_valid), .in_i(in_i), .in_q(in_q),
     .start_offset(start_offset), .symbol_count(CHAIN_SYMBOLS[15:0]),
