@@ -50,6 +50,10 @@ module qpsk_zynq_ber_top #(
     // restarting the loop at zero. Sound when the RF path phase is quasi-static (a single
     // board talking to itself); harmless otherwise, the loop simply re-acquires.
     input  wire                     costas_hold_phase,
+    // 1 = differential QPSK: the TX phase-accumulates and the RX phase-differences, so a whole-burst
+    // rotation cancels and the frame-sync quadrant ambiguity disappears. 0 = ordinary absolute QPSK
+    // (bit-identical, for the coherent loopback). See qpsk_diff_encoder/decoder, Lab 11.43.
+    input  wire                     diff_en,
     output wire                     busy,
     output reg                      done,
     output wire                     tx_valid,
@@ -88,6 +92,14 @@ wire src_last;
 wire src_ready;
 wire src_busy;
 wire tx_busy;
+// Differential encoder output (absolute symbol dibit) into the TX chain.
+wire enc_valid;
+wire [1:0] enc_dibit;
+wire enc_last;
+wire tx_src_ready;      // qpsk_framed_tx_chain.s_ready, fed back to the encoder's m_ready
+// Raw absolute dibit out of the RX chain, before differential decoding.
+wire rx_raw_valid;
+wire [1:0] rx_raw_dibit;
 wire recovered_valid;
 wire [1:0] recovered_dibit;
 
@@ -117,6 +129,22 @@ qpsk_frame_dibit_source #(
     .done()
 );
 
+// Differential encoder: phase-accumulates the info dibits into absolute symbols. Combinational and
+// handshake-transparent, so it drops into the backpressured source->TX path with no added latency.
+qpsk_diff_encoder diff_encoder_i (
+    .clk(clk),
+    .rst(rst || frame_start),
+    .enable(diff_en),
+    .s_valid(src_valid),
+    .s_dibit(src_dibit),
+    .s_last(src_last),
+    .s_ready(src_ready),
+    .m_valid(enc_valid),
+    .m_dibit(enc_dibit),
+    .m_last(enc_last),
+    .m_ready(tx_src_ready)
+);
+
 qpsk_framed_tx_chain #(
     .W(W),
     .SPS(SPS),
@@ -127,10 +155,10 @@ qpsk_framed_tx_chain #(
 ) tx_chain_i (
     .clk(clk),
     .rst(rst),
-    .s_valid(src_valid),
-    .s_dibit(src_dibit),
-    .s_last(src_last),
-    .s_ready(src_ready),
+    .s_valid(enc_valid),
+    .s_dibit(enc_dibit),
+    .s_last(enc_last),
+    .s_ready(tx_src_ready),
     .m_valid(tx_valid),
     .m_i(tx_i),
     .m_q(tx_q),
@@ -170,14 +198,28 @@ qpsk_rx_bit_recovery_chain #(
     .start_offset(start_offset),
     // sampler emits margin extra symbols so a latency-delayed OTA frame still fits
     .symbol_count(symbol_count + RX_SAMPLE_MARGIN[INDEX_W-1:0]),
-    .out_valid(recovered_valid),
-    .out_dibit(recovered_dibit),
+    .out_valid(rx_raw_valid),
+    .out_dibit(rx_raw_dibit),
     .debug_symbol_valid(debug_symbol_valid),
     .debug_symbol_i(debug_symbol_i),
     .debug_symbol_q(debug_symbol_q),
     .timing_mu(timing_mu),
     .timing_omega(timing_omega),
     .timing_error(timing_error)
+);
+
+// Differential decoder: recovers info from consecutive-symbol phase differences, so a whole-burst
+// rotation cancels before the frame sync ever sees it. Runs continuously through the burst (reset
+// once at frame_start, so the first symbol -- pre-frame noise -- is the only one without a
+// reference). enable=0 passes the absolute dibit through unchanged.
+qpsk_diff_decoder diff_decoder_i (
+    .clk(clk),
+    .rst(rst || frame_start),
+    .enable(diff_en),
+    .in_valid(rx_raw_valid),
+    .in_dibit(rx_raw_dibit),
+    .out_valid(recovered_valid),
+    .out_dibit(recovered_dibit)
 );
 
 qpsk_ber_counter #(

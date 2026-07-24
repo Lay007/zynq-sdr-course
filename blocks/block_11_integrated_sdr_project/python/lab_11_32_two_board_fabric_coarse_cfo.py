@@ -100,18 +100,41 @@ def frame_bits() -> np.ndarray:
     return bits[:BITS_PER_FRAME]
 
 
-def frame_symbols() -> np.ndarray:
-    """140 QPSK symbols mapped exactly like qpsk_symbol_mapper.v (0 -> +A, 1 -> -A)."""
-    fb = frame_bits()
+def diff_encode_bits(bits: np.ndarray) -> np.ndarray:
+    """Info dibits -> differentially-encoded absolute symbol dibits, matching qpsk_diff_encoder.v.
+
+    Phase index p = {d1, d0^d1}; transmitted p[k] = (p[k-1] + p_of(info[k])) mod 4; the emitted dibit
+    is dibit_of_p(p[k]). Encoding ONE frame (p starts at 0) then tiling is seamless because the frame's
+    total increment is 0 mod 4, so info[0] of the next copy still decodes right at the wrap.
+    """
+    out = np.empty_like(bits)
+    p_acc = 0
+    for k in range(len(bits) // 2):
+        d0, d1 = int(bits[2 * k]), int(bits[2 * k + 1])
+        inc = (d1 << 1) | (d0 ^ d1)              # p_of_dibit
+        p_acc = (p_acc + inc) & 3
+        p1, p0 = (p_acc >> 1) & 1, p_acc & 1
+        out[2 * k] = p0 ^ p1                      # dibit_of_p: d0 = p0^p1
+        out[2 * k + 1] = p1                       #             d1 = p1
+    return out
+
+
+def frame_symbols(differential: bool = False) -> np.ndarray:
+    """140 QPSK symbols mapped exactly like qpsk_symbol_mapper.v (0 -> +A, 1 -> -A).
+
+    differential=True phase-accumulates the frame first (DQPSK), so board B's qpsk_diff_decoder
+    recovers the info independent of any whole-burst carrier rotation (Lab 11.43).
+    """
+    fb = diff_encode_bits(frame_bits()) if differential else frame_bits()
     i = 1.0 - 2.0 * fb[0::2]   # bit[2k]   -> I
     q = 1.0 - 2.0 * fb[1::2]   # bit[2k+1] -> Q
     return (i + 1j * q) / np.sqrt(2.0)
 
 
-def make_cyclic_frame(n_frames: int) -> np.ndarray:
+def make_cyclic_frame(n_frames: int, differential: bool = False) -> np.ndarray:
     """int16 interleaved IQ of the frame tiled n_frames times, RRC-shaped circularly (seamless
     cyclic replay), scaled to ~3 dB below full scale -- the Lab 11.30 transmit shaping, frame data."""
-    sym = np.tile(frame_symbols(), n_frames)
+    sym = np.tile(frame_symbols(differential), n_frames)
     taps = L.load_rrc_taps()
     up = np.zeros(len(sym) * L.SPS, dtype=complex)
     up[:: L.SPS] = sym

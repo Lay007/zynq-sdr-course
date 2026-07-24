@@ -298,6 +298,13 @@ wire coarse_cfo_en = control_sync[13];
 // is active), giving the host direct loop observability.
 wire qpsk_timing_recovery_en = control_sync[14];
 
+// gp_ctrl[17]=1 selects differential QPSK: the fabric TX phase-accumulates and the RX
+// phase-differences, so a whole-burst carrier rotation cancels and the frame-sync quadrant
+// ambiguity -- the residual ~1% floor after the lock-tolerance fix -- disappears. 0 keeps ordinary
+// absolute QPSK (the coherent loopback and every existing lab are bit-identical). On the two-board
+// link the host transmitter emits an already-differential frame, so only the RX bit matters there.
+wire qpsk_diff_en = control_sync[17];
+
 // gp_ctrl[8]=1 feeds the raw-ADC CDC FIFO from AD9361 RX channel 2 (adc_input2 =
 // adc_data_i1/q1) instead of channel 1. control_sync lives on sample_clk, while
 // this mux feeds memory written on adc_input_clk; synchronize the quasi-static
@@ -428,6 +435,7 @@ qpsk_zynq_ber_top #(
     .costas_hold_phase(costas_hold_phase),
     .phase_pick_en(qpsk_phase_pick_en),
     .timing_recovery_en(qpsk_timing_recovery_en),
+    .diff_en(qpsk_diff_en),
     .busy(qpsk_busy),
     .done(qpsk_done),
     .tx_valid(qpsk_tx_valid),
