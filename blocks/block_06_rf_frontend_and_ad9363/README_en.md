@@ -18,15 +18,32 @@ Without understanding the RF portion, the student cannot explain overload, noise
 - building a level table across the chain;
 - experiments with gain and bandwidth;
 - analyzing overload signatures in the spectrum;
-- relating AD9363 settings to the observed signal.
+- relating AD9363 settings to the observed signal;
+- comparing RTL-SDR and AD936x using SNR, SINAD, SFDR, ENOB and clipping;
+- requantizing the same AD936x capture to 6/8/10/12 bits to estimate the quantization contribution.
+
+## Lab 6.9
+
+The block now includes **RTL-SDR vs AD936x receiver quality and ADC resolution**:
+
+- [lab description](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_06_rf_frontend_and_ad9363/lab_6_9_receiver_comparison.md);
+- [executable analyzer](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_06_rf_frontend_and_ad9363/python/lab_6_9_compare_receivers.py).
+
+The lab separates the complete receiver difference, the effect of reducing one
+AD936x capture to lower bit depths, and an approximate same-resolution comparison
+after both paths are represented with 8-bit samples. The modulated extension must
+check EVM and BER in addition to spectral SNR.
 
 ## Tooling for the block
-The main toolset is: AD9363 configuration tools, HDSDR, MATLAB, Python.
+The main toolset is: AD9363 configuration tools, HDSDR, MATLAB, Python, RTL-SDR, NanoVNA and tinySA.
 
 ## Expected outputs
 - RF chain level map;
 - AD9363 settings description;
 - screenshots of overload and normal modes;
+- RTL-SDR vs AD936x comparison table;
+- SINAD and noise-density figures;
+- system ENOB and native-to-8-bit penalty estimate;
 - RF-stand report.
 
 ## Folder structure
@@ -55,10 +72,11 @@ block_06_rf_frontend_and_ad9363/
 - `reports/` — reports and report templates.
 
 ## Recommended work order
-1. review the RF-chain structure.
-2. document levels and bandwidths.
-3. observe overload and noise behavior.
-4. prepare safe-configuration recommendations.
+1. review the RF-chain structure;
+2. document levels and bandwidths;
+3. observe overload and noise behavior;
+4. calibrate the passive path and complete Lab 6.9;
+5. prepare safe-configuration recommendations.
 
 ## Next step
 After finishing this block, the student should be ready to reuse its results as the starting point for the next stage of the course and the related practical experiment.
