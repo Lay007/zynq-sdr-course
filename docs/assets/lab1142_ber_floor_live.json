@@ -1,0 +1,43 @@
+{
+  "lab": "11.42",
+  "timestamp_utc": "2026-07-24T06:17:12.136208+00:00",
+  "bitstream_sha256": "44ef2aac01f016a9cb0e4fd305e9b4aec78ee5cb5d665ae66b2d3d01bb7a9f64",
+  "lock_err_tol": 1,
+  "carrier_hz": 915000000,
+  "tx_gain_db": -30.0,
+  "rx_gain": 50,
+  "runs": [
+    {
+      "frames": 400,
+      "locked": 397,
+      "clean": 394,
+      "single_bit": 2,
+      "gross": 1
+    },
+    {
+      "frames": 800,
+      "locked": 798,
+      "clean": 788,
+      "single_bit": 2,
+      "gross": 8
+    }
+  ],
+  "combined": {
+    "frames": 1200,
+    "locked": 1195,
+    "clean": 1182,
+    "single_bit": 4,
+    "gross": 9,
+    "clean_pct": 98.9,
+    "gross_pct": 0.75,
+    "lock_pct": 99.6
+  },
+  "baseline_tol3": {
+    "clean_pct": 92.0,
+    "gross_pct": 3.0,
+    "lock_pct": 100.0
+  },
+  "gross_anatomy": "all gross frames wrong from payload bit 0 (quarter 0), i.e. whole-burst 90-degree rotation",
+  "residual_mechanism": "not spurious sliding-lock (removed) and not preamble self-similarity (12/24 under 90deg); a genuine carrier-marginal rotation event that tracks the inter-board CFO phase drift (rate wandered 0.3-1.0% between runs)",
+  "verdict": "LOCK_ERR_TOL 3->1 cut the floor ~4x (clean 92%->98.9%); pushing below ~1% needs differential encoding or a payload-consistency gate, not a lock-tolerance change"
+}

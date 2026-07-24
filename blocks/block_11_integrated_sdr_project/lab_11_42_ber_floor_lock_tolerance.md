@@ -62,7 +62,7 @@ A wrong quadrant matches each preamble bit with probability ~½, so at any one o
 positions the chance of a window with `≤ LOCK_ERR_TOL` mismatches is `C(24, ≤tol) / 2²⁴`. Over the
 burst:
 
-```
+```text
 python lab_11_42_ber_floor_lock_tolerance.py --predict
    LOCK_ERR_TOL=3: per-position 1.4e-4 -> per-burst 1.9e-2
    LOCK_ERR_TOL=2: per-position 1.8e-5 -> per-burst 2.5e-3
@@ -92,7 +92,37 @@ by the arithmetic above and by the stress bench, not by a guess.
 
 ## Hardware validation
 
-_Pending the tol=1 rebuild and cold-boot redeploy; to be filled with the measured gross-failure rate._
+Rebuilt at `LOCK_ERR_TOL=1`, redeployed on a cold boot, and re-run over A TX1 → 30 dB → B RX1
+(1200 bursts across two runs):
+
+| | tol=3 (baseline) | tol=1 (this build) |
+|---|---|---|
+| clean frames | ~92% | **98.9%** (1182/1195) |
+| gross (whole-burst rotation) | ~3% | **0.75%** (9/1195) |
+| single-bit noise | ~2% | ~0.3% |
+| lock rate | ~100% | 99.6% (5 lost of 1200) |
+
+The floor fell ~3–4× and the clean rate rose from ~92% to ~99%. The five lost frames are the intended
+trade: a burst whose true preamble carried ≥2 noise errors is now *rejected* rather than mis-decoded,
+and a lost frame contributes zero errors where a gross frame contributed ~117.
+
+**But the arithmetic promised ~100×, and hardware delivered ~4×** — so the model was incomplete, and it
+is worth saying why rather than rounding it away. The ~2% *spurious sliding-lock* component did drop
+as predicted (to ~0.02%); what remains is a **different** wrong-rotation mechanism that `LOCK_ERR_TOL`
+cannot touch. Two candidates were checked:
+
+- **preamble self-similarity under rotation** — refuted offline: the 24-bit preamble mismatches its
+  90° and 270° rotations by exactly 12/24 and its 180° by 24/24, i.e. no easier-than-random wrong
+  lock;
+- **carrier-marginal bursts** — the residual rate wandered 0.3%→1.0% between runs, tracking the slow
+  inter-board CFO phase drift, which points at bursts where Costas settles near a 45° boundary and the
+  preamble locks on the correct rotation but the payload rotates. That is a genuine acquisition event,
+  not a false lock, and tightening the correlation does nothing to it.
+
+So the honest result is a solid, well-understood **~4× reduction to a ~1% floor**, not the 100× a
+single-mechanism model suggested. Pushing below ~1% would need a different tool — differential
+encoding or a payload-consistency gate — not another turn of the lock tolerance. Result:
+`docs/assets/lab1142_ber_floor_live.json`.
 
 ## What this lab is really about
 
