@@ -43,3 +43,11 @@ Prepare a complete measurement-driven SDR report that combines modeling, impleme
 The full SDR measurement project achieved ______. The key measured results were ______.
 The project meets / does not meet the defined success criteria because ______.
 ```
+
+## Reference implementation (Block 11)
+
+[Lab 11.4 — Final Measurement Report](../block_11_integrated_sdr_project/lab_11_4_final_measurement_report.md)
+is a completed instance of exactly this deliverable: a full, hardware-validated SDR measurement report
+for the two-board QPSK link (architecture, setup, filled pass/fail table, honest limitations,
+reproducibility). Use it as a worked exemplar of the structure and the standard of evidence — the
+figures, metric units, attached metadata and reproducible commands — not as the project you must copy.
