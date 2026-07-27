@@ -5,6 +5,14 @@ testpaths = ["tests"]
 target-version = "py312"
 extend-exclude = ["hardware"]
 
+[tool.ruff.lint]
+# Pin the rule selection explicitly. Without this, ruff enforces whatever its
+# current release ships as the default set, so a version bump can silently widen
+# what CI checks (ruff 0.16 did exactly that, adding I/UP/EXE and ~500 findings).
+# This is the classic default set that 0.15 enforced with zero errors; adopting
+# new rule families should be a deliberate, separate change.
+select = ["E4", "E7", "E9", "F"]
+
 [tool.ruff.lint.per-file-ignores]
 # These scripts intentionally extend sys.path before importing course-local lab
 # helpers because they are designed to run both as standalone bench tools and
