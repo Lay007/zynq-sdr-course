@@ -46,7 +46,7 @@ The project meets / does not meet the defined success criteria because ______.
 
 ## Reference implementation (Block 11)
 
-[Lab 11.4 — Final Measurement Report](lab-11-4-final-measurement-report.md)
+[Lab 11.4 — Final Measurement Report](/zynq-sdr-course/en/labs/lab-11-4-final-measurement-report/)
 is a completed instance of exactly this deliverable: a full, hardware-validated SDR measurement report
 for the two-board QPSK link (architecture, setup, filled pass/fail table, honest limitations,
 reproducibility). Use it as a worked exemplar of the structure and the standard of evidence — the
