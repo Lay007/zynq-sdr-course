@@ -5,7 +5,7 @@
 Find why the receiver deterministically produces a wrong bit at payload index 189, when every
 measurement of the delivered signal at that symbol says it is healthy — and fix it.
 
-Prerequisites: [Lab 11.35](lab_11_35_paired_timing_ab.md), which localised the failure and proved
+Prerequisites: [Lab 11.35](lab-11-35-paired-timing-ab.md), which localised the failure and proved
 the reported index is correct.
 
 ## Where the previous five labs went wrong
@@ -167,7 +167,7 @@ Bit 189 disappeared from the single-bit histogram entirely, and the production G
 The residual single-bit errors are now scattered (Gardner: one each at bits 1, 9, 28, two at bit 2)
 rather than piled on one index — ordinary noise, not a deterministic defect. The fixed-phase sampler
 shows a small cluster at bit 88, but that is the non-production path with the known SPS=8.06 timing
-drift that motivated the Gardner loop ([Lab 11.34](lab_11_34_continuous_qpsk_timing_recovery.md)), not
+drift that motivated the Gardner loop ([Lab 11.34](lab-11-34-continuous-qpsk-timing-recovery.md)), not
 a DC-blocker effect. Result: `docs/assets/lab1141_dc_blocker_live_validation.json`.
 
 ## What this lab is really about

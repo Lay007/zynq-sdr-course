@@ -2,7 +2,7 @@
 
 ## Goal
 
-With the DC blocker fixed ([Lab 11.41](lab_11_41_dc_blocker_data_tracking.md)) the two-board Gardner
+With the DC blocker fixed ([Lab 11.41](lab-11-41-dc-blocker-data-tracking.md)) the two-board Gardner
 link is ~92% clean. Find what the remaining ~6–8% of frames are, and close it — or prove it cannot be
 closed without an RTL change.
 

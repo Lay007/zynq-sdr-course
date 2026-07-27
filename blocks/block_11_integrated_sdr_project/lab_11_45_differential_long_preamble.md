@@ -5,8 +5,8 @@
 Eliminate the residual whole-burst rotation failures that survived the lock-tolerance fix, and beat
 the absolute `tol=1` image on BER — without giving up a clean two-board link.
 
-Prerequisites: [Lab 11.42](lab_11_42_ber_floor_lock_tolerance.md) (the false-lock fix that left a
-~1% rotation floor) and [Lab 11.43](lab_11_43_dqpsk_model.py) (the differential codec that removes the
+Prerequisites: [Lab 11.42](lab-11-42-ber-floor-lock-tolerance.md) (the false-lock fix that left a
+~1% rotation floor) and Lab 11.43 — the differential codec `lab_11_43_dqpsk_model.py` — that removes the
 rotation ambiguity at the source).
 
 ## The arc

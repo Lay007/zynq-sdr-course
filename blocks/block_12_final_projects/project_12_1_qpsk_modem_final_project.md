@@ -47,7 +47,7 @@ of exactly this project — an in-fabric QPSK modem on the Zynq-7020 + AD9361, c
 915 MHz RF link. Treat it as a worked exemplar of what "meets the criteria" looks like, not as the
 answer you must copy; your own track, impairment model and targets are still yours to define.
 
-- **Final measurement report:** [Lab 11.4](../block_11_integrated_sdr_project/lab_11_4_final_measurement_report.md)
+- **Final measurement report:** [Lab 11.4](lab-11-4-final-measurement-report.md)
   — architecture, setup, pass/fail table, reproducibility.
 - **Synchronization chain:** DC blocker → matched RRC → feedforward phase pick → Gardner timing →
   coarse CFO → Costas carrier recovery → hard decision → differential decoder → quadrant-resolving BER
