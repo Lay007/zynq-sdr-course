@@ -64,7 +64,7 @@ After the common CFO/phase/timing chain, choose one of three executable routes:
 
 1. [QPSK impairments and BER](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-8-qpsk-modem-impairments/) → [QPSK carrier recovery](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-9-qpsk-carrier-recovery/).
 2. [OFDM mini-link](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-5-ofdm-mini-link/) → [PAPR, clipping and spectral regrowth](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-10-ofdm-papr-clipping/).
-3. [CSS waveform](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-20-css-waveform/) → [CSS dechirp/FFT detector](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-21-css-dechirp-fft/).
+3. [CSS waveform](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-20-css-waveform/) → [CSS dechirp/FFT detector](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-21-css-dechirp-fft/) → [packet synchronization and PER](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-22-css-packet-sync-per/).
 
 ## Expected result
 

@@ -72,6 +72,10 @@ jobs:
         run: |
           python blocks/block_08_modulation_and_synchronization/python/lab_8_21_css_dechirp_fft.py
 
+      - name: Run Lab 8.22 CSS packet synchronization model
+        run: |
+          python blocks/block_08_modulation_and_synchronization/python/lab_8_22_css_packet_sync_per.py
+
       - name: Validate generated artifacts
         shell: bash
         run: |
@@ -114,6 +118,10 @@ jobs:
             docs/assets/lab821_css_ser_vs_cfo.png
             docs/assets/lab821_css_example_fft.png
             docs/assets/lab821_css_detector_metrics.json
+            docs/assets/lab822_css_timing_metric.png
+            docs/assets/lab822_css_per_vs_snr.png
+            docs/assets/lab822_css_sro_sensitivity.png
+            docs/assets/lab822_css_packet_metrics.json
           )
 
           for file in "${expected[@]}"; do
@@ -164,6 +172,18 @@ jobs:
           assert detector_metrics["ser_at_lowest_snr"] >= 0.10, detector_metrics
           assert detector_metrics["worst_cfo_ser"] > detector_metrics["best_cfo_ser"], detector_metrics
           assert detector_metrics["symbol_count_per_point"] >= 500, detector_metrics
+
+          packet = json.loads((assets / "lab822_css_packet_metrics.json").read_text())
+          packet_metrics = packet["metrics"]
+          assert packet_metrics["packets_per_snr_point"] >= 1000, packet_metrics
+          assert packet_metrics["false_alarm_trials"] >= 1000, packet_metrics
+          assert packet_metrics["false_alarm_rate"] <= 0.01, packet_metrics
+          assert packet_metrics["example_start_symbol"] == packet["config"]["prefix_symbols"], packet_metrics
+          assert packet_metrics["example_sync_word_ok"], packet_metrics
+          assert packet_metrics["example_downchirps_ok"], packet_metrics
+          assert abs(packet_metrics["example_cfo_error_bins"]) < 0.05, packet_metrics
+          assert packet_metrics["reference_per_corrected"] < packet_metrics["reference_per_uncorrected"], packet_metrics
+          assert packet_metrics["highest_snr_per_corrected"] <= 0.01, packet_metrics
           PY
 
       - name: Upload generated Block 8 artifacts
@@ -187,4 +207,6 @@ jobs:
             docs/assets/lab820_*.json
             docs/assets/lab821_*.png
             docs/assets/lab821_*.json
+            docs/assets/lab822_*.png
+            docs/assets/lab822_*.json
           if-no-files-found: error

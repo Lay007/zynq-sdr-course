@@ -64,7 +64,7 @@ flowchart LR
 
 1. [Искажения QPSK и BER](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-8-qpsk-modem-impairments/) → [восстановление несущей QPSK](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-9-qpsk-carrier-recovery/).
 2. [OFDM mini-link](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-5-ofdm-mini-link/) → [PAPR, clipping и спектральное расширение](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-10-ofdm-papr-clipping/).
-3. [CSS chirp-сигнал](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-20-css-waveform/) → [CSS dechirp/FFT-детектор](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-21-css-dechirp-fft/).
+3. [CSS chirp-сигнал](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-20-css-waveform/) → [CSS dechirp/FFT-детектор](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-21-css-dechirp-fft/) → [пакетная синхронизация и PER](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-22-css-packet-sync-per/).
 
 ## Что должно получиться
 
