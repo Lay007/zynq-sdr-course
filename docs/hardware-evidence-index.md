@@ -33,7 +33,7 @@ Use the status values below:
 | Stock-shell Zynq OTA tone observation | `datasets/lab6_8_zynq_ota_tone_observation/` | reviewed | measured `915 MHz / 700 kHz` tone package with manifest, FFT plot, metrics JSON and conservative TX/RX settings |
 | AD9361 conducted tone loopback | `reports/hardware/ad9361-conducted-loopback-20260715.md` | measured | TX1-to-RX1 through a marked 30 dB attenuator passes at 15.54 dB SNR with zero clipping; passive-path NanoVNA `S21` remains pending |
 | AD9361 conducted gain table | `reports/hardware/ad9361-gain-overload-table-20260715.md` | measured | RX 0–40 dB and TX -70…-30 dB relative sweeps show monotonic response and zero clipping through the nominal 30 dB path |
-| Synthetic QPSK replay dataset | `datasets/demo_qpsk_capture/manifest.yaml` | synthetic | deterministic generator, checksum, analyzer and CI thresholds provide replay evidence; measured RF capture remains open |
+| Synthetic QPSK replay dataset | `datasets/demo_qpsk_capture/` | synthetic/public | 64 KiB Git LFS payload, deterministic generator, SHA256, zero-BER/SER analyzer and CI thresholds provide direct replay evidence; publication of the separate measured RF WAV remains open |
 | QPSK dual-modem HDL path | `blocks/block_05_fpga_hdl_flow/tb/tb_qpsk_bridge_loopback.v` | synthetic | 140 QPSK symbols / 280 bits cross the course gpreg bridge at BER=0 |
 | Runtime QPSK fabric qualification | `reports/hardware/qpsk-fabric-loopback-qualification-20260707.md` | measured | CDC-fixed payload reaches BER=0 across 4/4 boots and 13/13 selected-offset attempts; selected ExtraTiming payload passes 10/10 fabric attempts |
 | Runtime QPSK external RF qualification | `reports/hardware/qpsk-rtl-sdr-qualification-20260707.md` | measured | independent RTL-SDR validates 3/3 OTA baseline sessions and 90/90 bursts with 0/25,200 bit errors; 2026-07-08 longer attempt is recorded as a transport limitation |
@@ -76,7 +76,7 @@ Minimum files for one experiment:
 The strongest next artifacts are:
 
 1. Issue #25 remainder: NanoVNA `S21` evidence for the cable and marked 30 dB attenuator used by the measured conducted-loopback report.
-2. Issue #26: a small validated QPSK dataset package.
+2. Measured QPSK raw-data publication review; the small synthetic replay package for issue #26 is complete.
 3. Issue #29: an AD9363 gain and large-signal characterization table.
 4. Repeat-build or seed evidence that the selected WNS +0.096 ns snapshot keeps useful positive timing margin.
 

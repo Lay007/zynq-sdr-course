@@ -33,5 +33,5 @@ python tools/run_local_ci.py --quick
 | Gap | Expected improvement |
 |---|---|
 | Board repeatability | Extend the selected RTL-SDR frame to per-burst BER/EVM success statistics. |
-| Measured QPSK dataset | Publish or externally archive the local-only raw WAV already backed by a manifest and SHA256. |
+| Measured QPSK dataset | The synthetic zero-BER replay fixture is now public through Git LFS; publish or externally archive the separate local-only measured WAV already backed by a manifest and SHA256. |
 | Final project | Add a controlled cabled comparison and timing-margin repeat builds. |

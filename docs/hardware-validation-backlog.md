@@ -7,7 +7,7 @@ This page separates documentation work from tasks that require real hardware acc
 | Priority | Issue | Task | Evidence to collect |
 |---|---:|---|---|
 | P0 | #25 | Complete safe cabled loopback validation | conducted capture/report are measured; add NanoVNA `S21` for the cable and marked 30 dB attenuator |
-| P1 | #26 | Publish and repeat QPSK demo IQ | measured local manifest/plots/metrics exist; add raw-data access and per-burst statistics |
+| Done | #26 | Publish and repeat QPSK demo IQ | public 64 KiB synthetic Git LFS payload, SHA256, deterministic rebuild, zero-BER replay and report assets are committed; measured OTA raw-data review remains separate |
 | P2 | #29 | Extend AD9363 gain table | first 915 MHz relative RX/TX sweeps are measured; add calibrated multi-frequency and large-signal points |
 | P2 | #25/#26 | Add final hardware report | report page, figures, limitations |
 
@@ -24,7 +24,7 @@ This page separates documentation work from tasks that require real hardware acc
 | Issue | Done when |
 |---:|---|
 | #25 | The safe cabled tone run now has nominal attenuation, gain settings, capture metadata, FFT/metrics and a short conclusion in `reports/hardware/ad9361-conducted-loopback-20260715.md`. Full closure still requires NanoVNA `S21` evidence for the cable and marked 30 dB attenuator. |
-| #26 | A small QPSK IQ dataset has a manifest, checksum or external immutable link, replay command, constellation plot and EVM/SNR summary. |
+| #26 | Complete for the synthetic replay scope: the public QPSK IQ fixture has a Git LFS payload, manifest, checksum, deterministic rebuild, replay command, zero BER/SER, constellation plot and EVM/SNR summary. This does not close publication review for the separate measured OTA WAV. |
 | #29 | The first relative table is recorded in `reports/hardware/ad9361-gain-overload-table-20260715.md` with safe starting values and limitations. Full closure requires calibrated passive-path loss, multiple frequencies and a controlled large-signal boundary. |
 
 ## NanoVNA pre-check for safe cabled loopback

@@ -191,7 +191,7 @@ The repository already contains:
 The next major proof points are:
 
 - repeat-build/seed timing robustness for the selected board-qualified integrated bitstream;
-- a publication-cleared raw QPSK IQ dataset beside the committed measured plots and metrics;
+- publication review or external archival for the measured raw QPSK IQ WAV; the synthetic 64 KiB zero-BER replay fixture is already public through Git LFS;
 - longer-duration and controlled-cable RTL-SDR QPSK statistics;
 - complete QPSK or tone model-to-measurement final report.
 

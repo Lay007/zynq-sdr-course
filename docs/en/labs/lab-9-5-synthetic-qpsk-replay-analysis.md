@@ -4,7 +4,7 @@
 
 In this lab, the student follows a fully reproducible IQ-data workflow without the publication risks of real off-air content:
 
-1. generate a synthetic QPSK dataset;
+1. replay the published synthetic QPSK dataset or regenerate it byte-for-byte;
 2. read CI16 IQ samples;
 3. build constellation and spectrum previews;
 4. produce JSON metrics;
@@ -17,6 +17,7 @@ This lab complements the real RTL-SDR/Zynq observations. Real captures prove the
 | Artifact | Purpose |
 |---|---|
 | `datasets/demo_qpsk_capture/manifest.yaml` | dataset and signal-parameter description |
+| `datasets/demo_qpsk_capture/demo_qpsk_capture.ci16` | public 64 KiB Git LFS replay payload |
 | `datasets/demo_qpsk_capture/metrics.json` | generator metrics snapshot |
 | `tools/generate_demo_qpsk_dataset.py` | deterministic CI16 QPSK generator |
 | `tools/analyze_demo_qpsk_dataset.py` | dataset analyzer and preview asset generator |
@@ -41,8 +42,8 @@ python tools/analyze_demo_qpsk_dataset.py --generate-if-missing
 
 | File | What to check |
 |---|---|
-| `datasets/demo_qpsk_capture/demo_qpsk_capture.ci16` | locally generated IQ payload, not committed |
-| `datasets/demo_qpsk_capture/analysis_summary.json` | sample count, EVM, CFO and bandwidth metrics |
+| `datasets/demo_qpsk_capture/demo_qpsk_capture.ci16` | published IQ payload; SHA256 must match the manifest |
+| `datasets/demo_qpsk_capture/analysis_summary.json` | checksum, BER/SER, sample count, EVM, CFO and bandwidth metrics |
 | `docs/assets/demo_qpsk_constellation.svg` | four compact QPSK clusters |
 | `docs/assets/demo_qpsk_spectrum.svg` | synthetic QPSK spectrum preview |
 
@@ -54,6 +55,9 @@ Minimal acceptance criteria:
 |---|---:|
 | `num_samples` | `16384` |
 | `num_symbols` | `2048` |
+| `compared_bits` | `4096` |
+| `bit_errors` / `symbol_errors` | `0` / `0` |
+| `ber` / `ser` | `0.0` / `0.0` |
 | `sample_rate_hz` | `2400000` |
 | `evm_rms_percent` | `< 0.01` |
 | `abs(cfo_estimate_hz)` | `< 1.0` |
@@ -65,6 +69,7 @@ If the metrics pass the thresholds, then:
 - the CI16 format is read correctly;
 - the I/Q order is not swapped;
 - symbol sampling is consistent with `samples_per_symbol`;
+- the recovered known payload has zero bit and symbol errors;
 - the constellation has the expected QPSK structure;
 - the analyzer can be used as a baseline smoke test for future real-capture analyzers.
 
@@ -110,7 +115,7 @@ This lab is covered by:
 .github/workflows/qpsk_demo_analysis.yml
 ```
 
-The CI workflow checks that the dataset is generated, the analyzer runs, output files are created and key metrics stay within thresholds.
+The CI workflow fetches the Git LFS payload, verifies its manifest and SHA256, replays it, checks zero BER/SER and regenerates it to confirm deterministic provenance.
 
 ## Next step
 

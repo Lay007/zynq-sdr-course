@@ -4,7 +4,7 @@
 
 В этой лабораторной работе студент проходит полный воспроизводимый цикл работы с IQ-данными без риска публикации реального эфира:
 
-1. сгенерировать synthetic QPSK dataset;
+1. воспроизвести опубликованный synthetic QPSK dataset или побайтово пересоздать его;
 2. прочитать CI16 IQ samples;
 3. построить constellation и spectrum preview;
 4. получить JSON-метрики;
@@ -17,6 +17,7 @@
 | Артефакт | Назначение |
 |---|---|
 | `datasets/demo_qpsk_capture/manifest.yaml` | описание dataset и параметров сигнала |
+| `datasets/demo_qpsk_capture/demo_qpsk_capture.ci16` | публичный Git LFS replay payload размером 64 КиБ |
 | `datasets/demo_qpsk_capture/metrics.json` | базовые метрики генератора |
 | `tools/generate_demo_qpsk_dataset.py` | deterministic генератор CI16 QPSK |
 | `tools/analyze_demo_qpsk_dataset.py` | анализатор dataset и генератор preview assets |
@@ -41,8 +42,8 @@ python tools/analyze_demo_qpsk_dataset.py --generate-if-missing
 
 | Файл | Что проверять |
 |---|---|
-| `datasets/demo_qpsk_capture/demo_qpsk_capture.ci16` | локально сгенерированный IQ payload, не коммитится |
-| `datasets/demo_qpsk_capture/analysis_summary.json` | sample count, EVM, CFO, bandwidth metrics |
+| `datasets/demo_qpsk_capture/demo_qpsk_capture.ci16` | опубликованный IQ payload; SHA256 должен совпадать с manifest |
+| `datasets/demo_qpsk_capture/analysis_summary.json` | checksum, BER/SER, sample count, EVM, CFO и bandwidth metrics |
 | `docs/assets/demo_qpsk_constellation.svg` | четыре компактных QPSK-кластера |
 | `docs/assets/demo_qpsk_spectrum.svg` | спектр synthetic QPSK сигнала |
 
@@ -54,6 +55,9 @@ python tools/analyze_demo_qpsk_dataset.py --generate-if-missing
 |---|---:|
 | `num_samples` | `16384` |
 | `num_symbols` | `2048` |
+| `compared_bits` | `4096` |
+| `bit_errors` / `symbol_errors` | `0` / `0` |
+| `ber` / `ser` | `0.0` / `0.0` |
 | `sample_rate_hz` | `2400000` |
 | `evm_rms_percent` | `< 0.01` |
 | `abs(cfo_estimate_hz)` | `< 1.0` |
@@ -65,6 +69,7 @@ python tools/analyze_demo_qpsk_dataset.py --generate-if-missing
 - формат CI16 читается корректно;
 - I/Q порядок не перепутан;
 - выборка символов согласована с `samples_per_symbol`;
+- известная последовательность восстановлена без битовых и символьных ошибок;
 - constellation имеет ожидаемую структуру QPSK;
 - analyzer может быть использован как базовый smoke test для будущих real-capture анализаторов.
 
@@ -114,7 +119,7 @@ python tools/analyze_demo_qpsk_dataset.py --generate-if-missing
 .github/workflows/qpsk_demo_analysis.yml
 ```
 
-CI проверяет, что dataset генерируется, анализатор выполняется, выходные файлы создаются, а ключевые метрики проходят пороги.
+CI загружает Git LFS payload, проверяет manifest и SHA256, выполняет replay, контролирует нулевые BER/SER и пересоздаёт dataset для подтверждения детерминированного происхождения.
 
 ## Следующий шаг
 

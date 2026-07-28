@@ -33,7 +33,7 @@
 | 06 | RF frontend и AD9363 | Measured | RX-only, OTA tone, защищённый conducted-tone baseline, первая относительная gain table и измеренный аттенюатор 30 дБ с ровной характеристикой 50 МГц–1 ГГц | Отдельно измерить потери кабеля, повторить таблицу по частоте и определить connector-to-connector large-signal limit. |
 | 07 | TX/RX тракты | Executable | DUC/DDC demos и loopback models | Добавить пакет измерений. |
 | 08 | Модуляция и синхронизация | Executable | CFO, phase/timing и BER/EVM demos | Добавить sweeps по искажениям и дашборды BER/EVM. |
-| 09 | Инструменты записи и анализа | Measured | CI16/CU8/CF32/WAV readers, fail-closed manifest CI и QPSK multi-burst BER/EVM/CFO analysis | Опубликовать либо внешне архивировать raw QPSK WAV. |
+| 09 | Инструменты записи и анализа | Measured | CI16/CU8/CF32/WAV readers, fail-closed manifest CI, публичный synthetic QPSK Git LFS fixture размером 64 КиБ с zero-BER replay и измеренный QPSK multi-burst BER/EVM/CFO analysis | Завершить publication review или внешнее архивирование отдельного измеренного raw QPSK WAV. |
 | 10 | KiCad и базовая электроника | Draft | Calculators и templates | Добавить фото макета и экспорты из KiCad. |
 | 11 | Интегрированный SDR-проект | Portfolio-ready (двухплатный канал закрыт) | In-fabric QPSK-модем закрыт на двухплатном RF-канале 915 МГц. Бит 189 сведён к тому, что RX DC-блокер следил за модуляцией (фикс — скользящее среднее, Lab 11.41); остаточный ~1% пол разворотов всего бёрста — к ложному захвату frame-sync (LOCK_ERR_TOL 3→1, Lab 11.42), затем к самой четырёхветочной резолюции (снята дифференциальным QPSK + 24-символьной преамбулой, Lab 11.43–11.45). Результат: grubые развороты 0, payload BER ~4×10⁻⁴, инвариантен к повороту; fabric loopback BER < 5,34×10⁻⁷ на 5,6 млн бит. Lab 11.4 — финальный измерительный отчёт. | Дожимать остаточный дифф-штраф только если нужно приложению — это врождённый ~3 дБ дифференциального приёма, а не разворот. |
 | 12 | Итоговые проекты | Готовый фреймворк + референс-реализация | Фреймворк финального проекта: брифы 12.1–12.4 (QPSK-модем, RF-захват, FPGA-DSP-блок, полный SDR-отчёт), README по инструментам, шаблоны отчётов и рубрика оценки. Project 12.1 (QPSK-модем) опирается на завершённый двухплатный модем Блока 11 как референс-эталон (Lab 11.4). | Учащийся выбирает трек и делает свой proposal, набор проверок и отчёт. |
@@ -52,7 +52,7 @@
 | `docs/final-project-dual-modem-implementation-report.md` | Заполненный отчёт, связывающий модель, RTL, routed implementation и текущие аппаратные доказательства. |
 | `docs/hardware-validation-backlog.md` | Разделение чисто документальных задач и задач, требующих железо. |
 | `docs/iq-demo-dataset-manifest.md` | Контракт на датасеты для QPSK replay/capture работ. |
-| `datasets/demo_qpsk_capture/manifest.yaml` | Первый manifest-only пакет QPSK-датасета. |
+| `datasets/demo_qpsk_capture/` | Публичный 64-КиБ synthetic QPSK Git LFS dataset: CI16 payload, manifest, SHA256, zero-BER replay, EVM/CFO и детерминированная пересборка. |
 | `datasets/lab1_0_rtl_sdr_observation/` | Реальные пассивные RTL-SDR off-air записи из первой сессии SDR++, сохраненные как WAV IQ через Git LFS вместе с manifest, SHA256, параметрами приема и командами повтора. |
 | `datasets/lab11_24_dds_tone_rtl_monitor/manifest_live_20260624_stock_dds_tone_ref_a.yaml` | Первый управляемый Zynq-to-RTL-SDR WAV IQ датасет для Block 1 с известным stock-shell DDS-тоном `915 MHz + 200 kHz` и прямыми командами повтора для WAV-анализатора. |
 | `blocks/block_11_integrated_sdr_project/python/lab_11_24_capture_dds_tone_rtl_monitor_wav.py` | Helper, который записывает внешний RTL-SDR WAV monitor при передаче DDS-тона платой в режимах `stock` и `runtime`, а затем сразу пишет manifest для офлайн-анализа. |
@@ -170,7 +170,7 @@
 
 ## Главные пробелы, которые нужно закрыть
 
-1. Заменить manifest-only QPSK-датасет на маленький подтвержденный файл или внешнюю ссылку.
+1. ✔ Manifest-only QPSK-датасет заменён публичным 64-КиБ Git LFS payload с SHA256, BER/SER, EVM/CFO и детерминированной пересборкой.
 2. ✔ Двухплатный QPSK-модем — повторяемый low-BER сценарий: cold-boot fabric loopback BER < 5,34×10⁻⁷ на 5,6 млн бит, двухплатный RF payload BER ~4×10⁻⁴ без разворотов бёрста (Lab 11.4).
 3. ✔ Routed bitstream интегрированного дизайна сопоставлен с повторяемой clean-boot работой на плате: 50/50 холодных загрузок декодируют чисто; текущий образ платы Б — дифференциальный, WNS +0.036.
 4. Держать RU/EN страницы синхронными при добавлении новых лабораторных.
@@ -179,9 +179,9 @@
 
 ## Приоритетные улучшения
 
-1. Поднять один полный сценарий `Model -> FPGA -> RF -> Measurement` до статуса portfolio-ready, используя новый post-reinit runtime BPSK receive path как кратчайший аппаратный маршрут.
-2. Добавить небольшой публичный или синтетический IQ-датасет для лабораторных по записи и replay.
-3. Использовать routed timing/resource как baseline для bitstream-to-board correlation.
+1. Завершить publication review или внешнее архивирование отдельного измеренного OTA QPSK WAV; synthetic replay fixture эту запись не заменяет.
+2. Проверить repeat-build/seed stability выбранного timing-clean Block 5 snapshot.
+3. Поднять Block 10 из Draft с помощью проверяемого KiCad-проекта, экспортов и фотографий стенда.
 4. Использовать рубрику оценивания итоговых проектов в преподавательской оценке.
 5. Синхронизировать русскую и английскую навигацию при каждом повышении зрелости блока.
 

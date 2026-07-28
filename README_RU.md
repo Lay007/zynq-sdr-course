@@ -190,7 +190,7 @@ python tools/run_local_ci.py
 Следующие важные proof points:
 
 - повторяемая clean-boot квалификация BPSK/QPSK с отчётом по доле успешных запусков;
-- небольшой прошедший publication review измеренный QPSK dataset рядом с generated replay fixture;
+- publication review или внешнее архивирование измеренного raw QPSK WAV; synthetic zero-BER replay fixture размером 64 КиБ уже опубликован через Git LFS;
 - routed top-level Vivado implementation reports для интегрированного Zynq-дизайна;
 - полный QPSK или tone model-to-measurement отчёт.
 
