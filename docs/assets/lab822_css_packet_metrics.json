@@ -1,0 +1,142 @@
+{
+  "config": {
+    "spreading_factor": 7,
+    "bandwidth_hz": 125000.0,
+    "preamble_symbols": 8,
+    "sync_word": [
+      18,
+      52
+    ],
+    "downchirp_symbols": 2,
+    "payload_symbols": 16,
+    "prefix_symbols": 4,
+    "suffix_symbols": 2,
+    "packets_per_point": 1000,
+    "false_alarm_trials": 1000,
+    "snr_db_values": [
+      -15.0,
+      -12.0,
+      -9.0,
+      -6.0,
+      -3.0
+    ],
+    "cfo_bins": 1.25,
+    "detection_threshold": 3.5,
+    "sro_ppm_values": [
+      0.0,
+      50.0,
+      100.0,
+      250.0,
+      500.0
+    ],
+    "sro_snr_db": -3.0,
+    "seed": 822
+  },
+  "metrics": {
+    "packets_per_snr_point": 1000,
+    "false_alarm_trials": 1000,
+    "false_alarm_rate": 0.0,
+    "example_start_symbol": 4,
+    "example_timing_metric": 24.338271827085002,
+    "example_sync_word_ok": true,
+    "example_downchirps_ok": true,
+    "example_cfo_true_bins": 1.25,
+    "example_cfo_estimate_bins": 1.2445565391429745,
+    "example_cfo_error_bins": -0.005443460857025517,
+    "reference_snr_db": -6.0,
+    "reference_per_uncorrected": 1.0,
+    "reference_per_corrected": 0.0,
+    "reference_ser_corrected": 0.0,
+    "lowest_snr_missed_detection_rate": 0.948,
+    "highest_snr_per_corrected": 0.0
+  },
+  "snr_sweep": [
+    {
+      "snr_db": -15.0,
+      "packet_count": 1000,
+      "compared_payload_symbols": 16000,
+      "missed_detection_rate": 0.948,
+      "per_uncorrected": 1.0,
+      "per_corrected": 1.0,
+      "ser_corrected": 0.6094375
+    },
+    {
+      "snr_db": -12.0,
+      "packet_count": 1000,
+      "compared_payload_symbols": 16000,
+      "missed_detection_rate": 0.419,
+      "per_uncorrected": 1.0,
+      "per_corrected": 0.93,
+      "ser_corrected": 0.1394375
+    },
+    {
+      "snr_db": -9.0,
+      "packet_count": 1000,
+      "compared_payload_symbols": 16000,
+      "missed_detection_rate": 0.013,
+      "per_uncorrected": 1.0,
+      "per_corrected": 0.045,
+      "ser_corrected": 0.004125
+    },
+    {
+      "snr_db": -6.0,
+      "packet_count": 1000,
+      "compared_payload_symbols": 16000,
+      "missed_detection_rate": 0.0,
+      "per_uncorrected": 1.0,
+      "per_corrected": 0.0,
+      "ser_corrected": 0.0
+    },
+    {
+      "snr_db": -3.0,
+      "packet_count": 1000,
+      "compared_payload_symbols": 16000,
+      "missed_detection_rate": 0.0,
+      "per_uncorrected": 1.0,
+      "per_corrected": 0.0,
+      "ser_corrected": 0.0
+    }
+  ],
+  "sro_sweep": [
+    {
+      "sro_ppm": 0.0,
+      "packet_count": 200,
+      "per_uncorrected": 0.0,
+      "per_corrected": 0.0,
+      "ser_uncorrected": 0.0,
+      "ser_corrected": 0.0
+    },
+    {
+      "sro_ppm": 50.0,
+      "packet_count": 200,
+      "per_uncorrected": 0.0,
+      "per_corrected": 0.0,
+      "ser_uncorrected": 0.0,
+      "ser_corrected": 0.0
+    },
+    {
+      "sro_ppm": 100.0,
+      "packet_count": 200,
+      "per_uncorrected": 0.0,
+      "per_corrected": 0.0,
+      "ser_uncorrected": 0.0,
+      "ser_corrected": 0.0
+    },
+    {
+      "sro_ppm": 250.0,
+      "packet_count": 200,
+      "per_uncorrected": 1.0,
+      "per_corrected": 0.0,
+      "ser_uncorrected": 0.78,
+      "ser_corrected": 0.0
+    },
+    {
+      "sro_ppm": 500.0,
+      "packet_count": 200,
+      "per_uncorrected": 1.0,
+      "per_corrected": 0.2,
+      "ser_uncorrected": 0.9978125,
+      "ser_corrected": 0.0134375
+    }
+  ]
+}

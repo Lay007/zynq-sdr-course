@@ -1,0 +1,48 @@
+experiment:
+  id: lab822_css_packet_sync_per
+  title: Packet-level CSS synchronization and PER
+  objective: Detect a repeated-chirp preamble, correct CFO, verify sync/downchirps, and measure packet reliability.
+
+signal:
+  waveform: generic_css_packet
+  expected_outputs:
+    - timing_metric_plot
+    - per_vs_snr_plot
+    - sro_sensitivity_plot
+    - packet_metrics_json
+
+metadata_required:
+  - spreading_factor
+  - bandwidth_hz
+  - preamble_symbols
+  - sync_word
+  - payload_symbols
+  - normalized_cfo
+  - sample_rate_offset_sweep
+  - packets_per_point
+  - random_seed
+
+metrics:
+  - packet_error_rate
+  - symbol_error_rate
+  - missed_detection_rate
+  - false_alarm_rate
+  - coarse_and_fine_cfo_error
+  - compared_packet_and_symbol_count
+
+reports:
+  template: docs/lab-report-template.md
+  figures:
+    - docs/assets/lab822_css_timing_metric.png
+    - docs/assets/lab822_css_per_vs_snr.png
+    - docs/assets/lab822_css_sro_sensitivity.png
+  expected_artifacts:
+    - docs/assets/lab822_css_packet_metrics.json
+
+acceptance:
+  - at_least_1000_packets_per_snr_point
+  - synchronization_and_cfo_correction_improve_per
+  - sync_word_and_downchirps_are_verified
+  - missed_detection_and_false_alarm_rates_are_reported
+  - sample_rate_offset_sensitivity_is_reported
+  - css_lo_ra_compatibility_boundary_is_explicit
