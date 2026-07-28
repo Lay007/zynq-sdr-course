@@ -1,0 +1,27 @@
+{
+  "lab": "11.44",
+  "diff_off": {
+    "label": "diff OFF",
+    "frames": 400,
+    "locked": 399,
+    "lost": 1,
+    "clean": 393,
+    "single": 4,
+    "gross": 2,
+    "clean_pct": 98.49624060150376,
+    "gross_pct": 0.5012531328320802,
+    "payload_ber": 0.002506265664160401
+  },
+  "diff_on": {
+    "label": "diff ON",
+    "frames": 400,
+    "locked": 400,
+    "lost": 0,
+    "clean": 385,
+    "single": 15,
+    "gross": 0,
+    "clean_pct": 96.25,
+    "gross_pct": 0.0,
+    "payload_ber": 0.00029296875
+  }
+}

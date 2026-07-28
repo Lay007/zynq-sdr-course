@@ -60,7 +60,14 @@ mod 4).
 **The rotation floor is gone — gross is 0 across every run** — and BER drops an order of magnitude
 because no burst decodes at ~46% any more. The clean-frame rate is comparable: a residual intermittent
 single-bit cluster (now near payload index 19) remains, which is the inherent ~3 dB differential
-penalty, not a rotation failure. Result: `docs/assets/lab1145_diff_long_preamble_live.json`.
+penalty, not a rotation failure.
+
+Machine-readable evidence is preserved in two stages:
+
+- `docs/assets/lab1144_diff_qpsk_live.json` — the 400+400-frame absolute/differential A/B that removes
+  gross rotations but exposes the early-payload differential transient;
+- `docs/assets/lab1145_diff_long_preamble_live.json` — the final 800-frame, 24-symbol-preamble run
+  with zero gross rotations and payload BER `4.45×10⁻⁴`.
 
 Longer still is worse: a 32-symbol preamble dropped the lock rate (the frame plus its
 `RX_SAMPLE_MARGIN` ran past the sampler window). 24 symbols is the operating point.
