@@ -1,0 +1,41 @@
+experiment:
+  id: lab813_dsss_processing_gain
+  title: DSSS acquisition and processing gain
+  objective: Generate a PN sequence, acquire it by correlation and measure BER with AWGN and narrowband interference.
+
+signal:
+  waveform: dsss_bpsk
+  expected_outputs:
+    - pn_autocorrelation_plot
+    - acquisition_plot
+    - ber_plot
+    - metrics_json
+
+metadata_required:
+  - lfsr_order
+  - code_length
+  - ebn0_sweep
+  - narrowband_interferer_level
+  - compared_bits
+  - random_seed
+
+metrics:
+  - acquisition_error_chips
+  - processing_gain_db
+  - narrowband_interference_suppression_db
+  - bit_error_rate
+
+reports:
+  template: docs/lab-report-template.md
+  figures:
+    - docs/assets/lab813_dsss_autocorrelation.png
+    - docs/assets/lab813_dsss_acquisition.png
+    - docs/assets/lab813_dsss_ber.png
+  expected_artifacts:
+    - docs/assets/lab813_dsss_metrics.json
+
+acceptance:
+  - maximal_length_sequence_has_two_level_autocorrelation
+  - acquisition_peak_matches_true_start
+  - processing_gain_is_reported
+  - awgn_and_narrowband_interference_ber_are_reported

@@ -1,0 +1,42 @@
+experiment:
+  id: lab811_16qam_tradeoffs
+  title: Gray 16-QAM implementation trade-offs
+  objective: Measure BER/EVM, IQ-imbalance sensitivity, fixed-point saturation and OFDM payload density.
+
+signal:
+  waveform: gray_16qam
+  expected_outputs:
+    - ber_plot
+    - imbalance_plot
+    - fixed_point_plot
+    - metrics_json
+
+metadata_required:
+  - symbols_per_point
+  - ebn0_sweep
+  - gain_phase_imbalance_sweep
+  - fixed_point_formats
+  - random_seed
+
+metrics:
+  - bit_error_rate
+  - error_vector_magnitude
+  - saturation_count
+  - ofdm_bits_per_symbol
+  - papr
+
+reports:
+  template: docs/lab-report-template.md
+  figures:
+    - docs/assets/lab811_16qam_ber.png
+    - docs/assets/lab811_16qam_imbalance.png
+    - docs/assets/lab811_16qam_fixed_point.png
+  expected_artifacts:
+    - docs/assets/lab811_16qam_metrics.json
+
+acceptance:
+  - gray_mapper_round_trip_is_exact
+  - constellation_power_is_normalized
+  - ber_and_evm_are_reported
+  - fixed_point_saturation_is_explicit
+  - ofdm_payload_comparison_is_reported

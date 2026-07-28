@@ -1,0 +1,160 @@
+{
+  "config": {
+    "symbols_per_point": 50000,
+    "ebn0_db_values": [
+      0.0,
+      4.0,
+      8.0,
+      12.0,
+      16.0
+    ],
+    "imbalance_gain_db": [
+      -2.0,
+      -1.0,
+      0.0,
+      1.0,
+      2.0
+    ],
+    "imbalance_phase_deg": [
+      0.0,
+      2.0,
+      5.0,
+      8.0,
+      12.0
+    ],
+    "fixed_total_bits": [
+      4,
+      6,
+      8,
+      10
+    ],
+    "ofdm_symbols": 1000,
+    "seed": 811
+  },
+  "metrics": {
+    "normalization_rms": 1.0,
+    "decision_thresholds_normalized": [
+      -0.6324555320336759,
+      0.0,
+      0.6324555320336759
+    ],
+    "compared_bits_per_ber_point": 200000,
+    "ber_at_highest_ebn0": 0.0,
+    "worst_imbalance_evm_percent": 26.865789513269885,
+    "minimum_fixed_point_evm_percent": 8.085399130620326
+  },
+  "ber_evm_sweep": [
+    {
+      "ebn0_db": 0.0,
+      "compared_bits": 200000,
+      "bit_errors": 28371,
+      "ber": 0.141855,
+      "evm_percent": 50.10707964927541
+    },
+    {
+      "ebn0_db": 4.0,
+      "compared_bits": 200000,
+      "bit_errors": 11749,
+      "ber": 0.058745,
+      "evm_percent": 31.58258782360008
+    },
+    {
+      "ebn0_db": 8.0,
+      "compared_bits": 200000,
+      "bit_errors": 1825,
+      "ber": 0.009125,
+      "evm_percent": 19.913996890817955
+    },
+    {
+      "ebn0_db": 12.0,
+      "compared_bits": 200000,
+      "bit_errors": 31,
+      "ber": 0.000155,
+      "evm_percent": 12.464599144914237
+    },
+    {
+      "ebn0_db": 16.0,
+      "compared_bits": 200000,
+      "bit_errors": 0,
+      "ber": 0.0,
+      "evm_percent": 7.9173656145963704
+    }
+  ],
+  "imbalance_sweep": [
+    {
+      "gain_imbalance_db": -2.0,
+      "phase_imbalance_deg": 0.0,
+      "bit_errors": 0,
+      "ber": 0.0,
+      "evm_percent": 23.384169187482264
+    },
+    {
+      "gain_imbalance_db": -1.0,
+      "phase_imbalance_deg": 2.0,
+      "bit_errors": 0,
+      "ber": 0.0,
+      "evm_percent": 11.844200947961372
+    },
+    {
+      "gain_imbalance_db": 0.0,
+      "phase_imbalance_deg": 5.0,
+      "bit_errors": 0,
+      "ber": 0.0,
+      "evm_percent": 6.1712841643422545
+    },
+    {
+      "gain_imbalance_db": 1.0,
+      "phase_imbalance_deg": 8.0,
+      "bit_errors": 0,
+      "ber": 0.0,
+      "evm_percent": 14.86193151891434
+    },
+    {
+      "gain_imbalance_db": 2.0,
+      "phase_imbalance_deg": 12.0,
+      "bit_errors": 0,
+      "ber": 0.0,
+      "evm_percent": 26.865789513269885
+    }
+  ],
+  "fixed_point_sweep": [
+    {
+      "total_bits": 4,
+      "fractional_bits": 2,
+      "saturation_count": 50144,
+      "ber": 0.0,
+      "evm_percent": 23.818669645890665
+    },
+    {
+      "total_bits": 6,
+      "fractional_bits": 4,
+      "saturation_count": 50144,
+      "ber": 0.0,
+      "evm_percent": 11.011691070053722
+    },
+    {
+      "total_bits": 8,
+      "fractional_bits": 6,
+      "saturation_count": 50144,
+      "ber": 0.0,
+      "evm_percent": 8.62679057719754
+    },
+    {
+      "total_bits": 10,
+      "fractional_bits": 8,
+      "saturation_count": 50144,
+      "ber": 0.0,
+      "evm_percent": 8.085399130620326
+    }
+  ],
+  "ofdm_payload_comparison": {
+    "active_subcarriers": 52,
+    "qpsk_bits_per_ofdm_symbol": 104,
+    "qam16_bits_per_ofdm_symbol": 208,
+    "spectral_efficiency_ratio": 2.0,
+    "qpsk_median_papr_db": 6.634254868042866,
+    "qam16_median_papr_db": 6.6204404472029585,
+    "qpsk_papr_99_db": 9.296106002291502,
+    "qam16_papr_99_db": 9.055415042509484
+  }
+}

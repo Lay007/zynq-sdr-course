@@ -1,0 +1,41 @@
+experiment:
+  id: lab812_gfsk_bt_ber
+  title: GFSK BT and discriminator BER trade-off
+  objective: Compare Gaussian pulse-shaping bandwidth, constant envelope and discriminator decisions.
+
+signal:
+  waveform: gfsk
+  expected_outputs:
+    - bt_waveform_plot
+    - occupied_bandwidth_plot
+    - ber_plot
+    - metrics_json
+
+metadata_required:
+  - samples_per_symbol
+  - modulation_index
+  - bt_sweep
+  - ebn0_sweep
+  - compared_bits
+  - random_seed
+
+metrics:
+  - occupied_bandwidth
+  - constant_envelope_error
+  - papr
+  - bit_error_rate
+
+reports:
+  template: docs/lab-report-template.md
+  figures:
+    - docs/assets/lab812_gfsk_bt_waveforms.png
+    - docs/assets/lab812_gfsk_bandwidth.png
+    - docs/assets/lab812_gfsk_ber.png
+  expected_artifacts:
+    - docs/assets/lab812_gfsk_metrics.json
+
+acceptance:
+  - gaussian_bt_tradeoff_is_reported
+  - constant_envelope_error_is_negligible
+  - discriminator_ber_uses_compared_bit_count
+  - ofdm_and_css_comparison_is_explicit

@@ -1,0 +1,91 @@
+{
+  "config": {
+    "samples_per_symbol": 8,
+    "modulation_index": 0.5,
+    "bt_values": [
+      0.3,
+      0.5,
+      1.0
+    ],
+    "filter_span_symbols": 4,
+    "bandwidth_bits": 8000,
+    "ber_bits_per_point": 40000,
+    "ebn0_db_values": [
+      0.0,
+      8.0,
+      16.0,
+      24.0,
+      32.0,
+      40.0
+    ],
+    "seed": 812
+  },
+  "metrics": {
+    "compared_bits_per_point": 39992,
+    "ber_at_lowest_ebn0": 0.46649329865973194,
+    "ber_at_highest_ebn0": 0.008426685337067414,
+    "maximum_constant_envelope_error": 2.220446049250313e-16,
+    "maximum_papr_db": 1.928654933106574e-15,
+    "narrowest_bt": 0.3,
+    "ofdm_comparison": "GFSK has approximately 0 dB PAPR; OFDM requires peak back-off.",
+    "css_comparison": "GFSK trades bandwidth through BT; CSS trades symbol duration for processing gain."
+  },
+  "bt_sweep": [
+    {
+      "bt": 0.3,
+      "occupied_bandwidth_99_normalized": 0.078887939453125,
+      "constant_envelope_error": 2.220446049250313e-16,
+      "papr_db": 1.928654933106574e-15
+    },
+    {
+      "bt": 0.5,
+      "occupied_bandwidth_99_normalized": 0.09906005859375,
+      "constant_envelope_error": 2.220446049250313e-16,
+      "papr_db": 1.928654933106574e-15
+    },
+    {
+      "bt": 1.0,
+      "occupied_bandwidth_99_normalized": 0.1229248046875,
+      "constant_envelope_error": 2.220446049250313e-16,
+      "papr_db": 1.928654933106574e-15
+    }
+  ],
+  "ber_sweep": [
+    {
+      "ebn0_db": 0.0,
+      "compared_bits": 39992,
+      "bit_errors": 18656,
+      "ber": 0.46649329865973194
+    },
+    {
+      "ebn0_db": 8.0,
+      "compared_bits": 39992,
+      "bit_errors": 13216,
+      "ber": 0.33046609321864373
+    },
+    {
+      "ebn0_db": 16.0,
+      "compared_bits": 39992,
+      "bit_errors": 5206,
+      "ber": 0.1301760352070414
+    },
+    {
+      "ebn0_db": 24.0,
+      "compared_bits": 39992,
+      "bit_errors": 3219,
+      "ber": 0.08049109821964393
+    },
+    {
+      "ebn0_db": 32.0,
+      "compared_bits": 39992,
+      "bit_errors": 1374,
+      "ber": 0.03435687137427486
+    },
+    {
+      "ebn0_db": 40.0,
+      "compared_bits": 39992,
+      "bit_errors": 337,
+      "ber": 0.008426685337067414
+    }
+  ]
+}

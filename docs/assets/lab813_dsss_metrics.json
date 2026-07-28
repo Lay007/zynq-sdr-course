@@ -1,0 +1,80 @@
+{
+  "config": {
+    "lfsr_order": 7,
+    "bits_per_point": 20000,
+    "ebn0_db_values": [
+      -6.0,
+      -3.0,
+      0.0,
+      3.0,
+      6.0,
+      9.0
+    ],
+    "interferer_js_db": 10.0,
+    "interferer_frequency_cycles_per_chip": 0.073,
+    "acquisition_prefix_chips": 73,
+    "acquisition_snr_db": -8.0,
+    "seed": 813
+  },
+  "metrics": {
+    "code_length": 127,
+    "processing_gain_db": 21.03803720955957,
+    "maximum_off_peak_autocorrelation": 0.007874015748031496,
+    "true_acquisition_start": 73,
+    "detected_acquisition_start": 73,
+    "acquisition_error_chips": 0,
+    "narrowband_interference_suppression_db": 38.15095762693899,
+    "compared_bits_per_point": 20000,
+    "ber_at_highest_ebn0_with_interference": 5e-05
+  },
+  "ber_sweep": [
+    {
+      "ebn0_db": -6.0,
+      "compared_bits": 20000,
+      "awgn_bit_errors": 4808,
+      "awgn_ber": 0.2404,
+      "narrowband_interference_bit_errors": 4875,
+      "narrowband_interference_ber": 0.24375
+    },
+    {
+      "ebn0_db": -3.0,
+      "compared_bits": 20000,
+      "awgn_bit_errors": 3073,
+      "awgn_ber": 0.15365,
+      "narrowband_interference_bit_errors": 3174,
+      "narrowband_interference_ber": 0.1587
+    },
+    {
+      "ebn0_db": 0.0,
+      "compared_bits": 20000,
+      "awgn_bit_errors": 1585,
+      "awgn_ber": 0.07925,
+      "narrowband_interference_bit_errors": 1534,
+      "narrowband_interference_ber": 0.0767
+    },
+    {
+      "ebn0_db": 3.0,
+      "compared_bits": 20000,
+      "awgn_bit_errors": 497,
+      "awgn_ber": 0.02485,
+      "narrowband_interference_bit_errors": 492,
+      "narrowband_interference_ber": 0.0246
+    },
+    {
+      "ebn0_db": 6.0,
+      "compared_bits": 20000,
+      "awgn_bit_errors": 60,
+      "awgn_ber": 0.003,
+      "narrowband_interference_bit_errors": 53,
+      "narrowband_interference_ber": 0.00265
+    },
+    {
+      "ebn0_db": 9.0,
+      "compared_bits": 20000,
+      "awgn_bit_errors": 0,
+      "awgn_ber": 0.0,
+      "narrowband_interference_bit_errors": 1,
+      "narrowband_interference_ber": 5e-05
+    }
+  ]
+}
