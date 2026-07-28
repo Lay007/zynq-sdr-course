@@ -66,6 +66,7 @@ block_08_modulation_and_synchronization/
 |---|---|---|
 | QPSK-модем | [8.8 — искажения и BER](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-8-qpsk-modem-impairments/) → [8.9 — восстановление несущей](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-9-qpsk-carrier-recovery/) | Gray mapping, BER и коррекция CFO/фазы |
 | OFDM | [8.5 — mini-link](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-5-ofdm-mini-link/) → [8.10 — PAPR и clipping](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-10-ofdm-papr-clipping/) | Сквозной канал, цифровой back-off и спектральное расширение |
+| Сравнение сигналов | [8.11 — 16-QAM](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-11-16qam-tradeoffs/) → [8.12 — GFSK](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-12-gfsk-bt-ber/) → [8.13 — DSSS](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-13-dsss-processing-gain/) | Спектральная эффективность, огибающая, синхронизация и FPGA-cost |
 | CSS | [8.20 — chirp-сигнал](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-20-css-waveform/) → [8.21 — dechirp/FFT](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-21-css-dechirp-fft/) → [8.22 — packet sync/PER](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-22-css-packet-sync-per/) | Chirp mapping, FFT-bin detection, пакетный захват и PER |
 
 Нумерация группирует расширения намеренно: `8.8–8.9` продолжают QPSK, `8.10` расширяет OFDM, а `8.20–8.22` образуют CSS-маршрут.

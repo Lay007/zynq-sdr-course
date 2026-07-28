@@ -64,6 +64,18 @@ jobs:
         run: |
           python blocks/block_08_modulation_and_synchronization/python/lab_8_10_ofdm_papr_clipping.py
 
+      - name: Run Lab 8.11 16-QAM trade-off model
+        run: |
+          python blocks/block_08_modulation_and_synchronization/python/lab_8_11_16qam_tradeoffs.py
+
+      - name: Run Lab 8.12 GFSK BT and BER model
+        run: |
+          python blocks/block_08_modulation_and_synchronization/python/lab_8_12_gfsk_bt_ber.py
+
+      - name: Run Lab 8.13 DSSS processing-gain model
+        run: |
+          python blocks/block_08_modulation_and_synchronization/python/lab_8_13_dsss_processing_gain.py
+
       - name: Run Lab 8.20 CSS waveform model
         run: |
           python blocks/block_08_modulation_and_synchronization/python/lab_8_20_css_waveform.py
@@ -110,6 +122,18 @@ jobs:
             docs/assets/lab810_ofdm_clipping_tradeoff.png
             docs/assets/lab810_ofdm_spectral_regrowth.png
             docs/assets/lab810_ofdm_papr_metrics.json
+            docs/assets/lab811_16qam_ber.png
+            docs/assets/lab811_16qam_imbalance.png
+            docs/assets/lab811_16qam_fixed_point.png
+            docs/assets/lab811_16qam_metrics.json
+            docs/assets/lab812_gfsk_bt_waveforms.png
+            docs/assets/lab812_gfsk_bandwidth.png
+            docs/assets/lab812_gfsk_ber.png
+            docs/assets/lab812_gfsk_metrics.json
+            docs/assets/lab813_dsss_autocorrelation.png
+            docs/assets/lab813_dsss_acquisition.png
+            docs/assets/lab813_dsss_ber.png
+            docs/assets/lab813_dsss_metrics.json
             docs/assets/lab820_css_upchirp_frequency.png
             docs/assets/lab820_css_symbol_spectrogram.png
             docs/assets/lab820_css_dechirped_fft.png
@@ -157,6 +181,29 @@ jobs:
           assert papr_metrics["strongest_clipping_ber"] > 0.0, papr_metrics
           assert papr_metrics["compared_bits_per_point"] >= 30000, papr_metrics
 
+          qam = json.loads((assets / "lab811_16qam_metrics.json").read_text())
+          qam_metrics = qam["metrics"]
+          assert abs(qam_metrics["normalization_rms"] - 1.0) < 1e-9, qam_metrics
+          assert qam_metrics["compared_bits_per_ber_point"] >= 100000, qam_metrics
+          assert qam_metrics["ber_at_highest_ebn0"] <= 1e-3, qam_metrics
+          assert qam["ofdm_payload_comparison"]["spectral_efficiency_ratio"] == 2.0, qam
+          assert max(item["saturation_count"] for item in qam["fixed_point_sweep"]) > 0, qam
+
+          gfsk = json.loads((assets / "lab812_gfsk_metrics.json").read_text())
+          gfsk_metrics = gfsk["metrics"]
+          assert gfsk_metrics["compared_bits_per_point"] >= 30000, gfsk_metrics
+          assert gfsk_metrics["maximum_constant_envelope_error"] < 1e-12, gfsk_metrics
+          assert abs(gfsk_metrics["maximum_papr_db"]) < 1e-9, gfsk_metrics
+          assert gfsk_metrics["ber_at_highest_ebn0"] < gfsk_metrics["ber_at_lowest_ebn0"], gfsk_metrics
+
+          dsss = json.loads((assets / "lab813_dsss_metrics.json").read_text())
+          dsss_metrics = dsss["metrics"]
+          assert dsss_metrics["code_length"] == 127, dsss_metrics
+          assert dsss_metrics["acquisition_error_chips"] == 0, dsss_metrics
+          assert dsss_metrics["processing_gain_db"] > 20.0, dsss_metrics
+          assert dsss_metrics["narrowband_interference_suppression_db"] > 20.0, dsss_metrics
+          assert dsss_metrics["compared_bits_per_point"] >= 10000, dsss_metrics
+
           waveform = json.loads((assets / "lab820_css_metrics.json").read_text())
           waveform_cfg = waveform["config"]
           waveform_metrics = waveform["metrics"]
@@ -203,6 +250,12 @@ jobs:
             docs/assets/lab85_*.json
             docs/assets/lab810_*.png
             docs/assets/lab810_*.json
+            docs/assets/lab811_*.png
+            docs/assets/lab811_*.json
+            docs/assets/lab812_*.png
+            docs/assets/lab812_*.json
+            docs/assets/lab813_*.png
+            docs/assets/lab813_*.json
             docs/assets/lab820_*.png
             docs/assets/lab820_*.json
             docs/assets/lab821_*.png
