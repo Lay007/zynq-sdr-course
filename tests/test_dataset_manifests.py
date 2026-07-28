@@ -16,6 +16,7 @@ from check_dataset_manifests import (  # noqa: E402
     ManifestError,
     iter_manifest_paths,
     manifest_kind,
+    validate_git_lfs_manifest,
     validate_manifest,
 )
 
@@ -57,3 +58,17 @@ def test_template_kind_is_inferred_from_filename() -> None:
     path = Path("capture.template.yaml")
 
     assert manifest_kind(path, {"status": "template"}) == "template"
+
+
+def test_git_lfs_manifest_rejects_wrong_byte_size(tmp_path: Path) -> None:
+    payload = tmp_path / "fixture.ci16"
+    payload.write_bytes(b"1234")
+    path = tmp_path / "manifest.yaml"
+    data = {
+        "file_name": payload.name,
+        "sha256": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+        "byte_size": 5,
+    }
+
+    with pytest.raises(ManifestError, match="byte_size does not match"):
+        validate_git_lfs_manifest(path, data)

@@ -1,5 +1,7 @@
 {
   "dataset_id": "demo_qpsk_capture",
+  "dataset_version": "1.0",
+  "deterministic_seed": 7020,
   "sample_rate_hz": 2400000,
   "symbol_rate_sps": 300000,
   "samples_per_symbol": 8,
@@ -12,5 +14,6 @@
   "rms_normalized": 0.9999999403953552,
   "peak_normalized": 0.9999999403953552,
   "sha256": "d8a4cb8bc3e609a9143936bd923e906f930ea77b72a35eb2d9b48887a25be3b3",
-  "synthetic": true
+  "synthetic": true,
+  "publication_status": "synthetic-public"
 }

@@ -1,14 +1,15 @@
 dataset_id: demo_qpsk_capture
-version: 0.2
-status: generated-local
+version: 1.0
+status: git-lfs
 title: Deterministic synthetic QPSK CI16 replay dataset
 description: >-
-  Small deterministic QPSK IQ dataset for replay, constellation analysis,
-  EVM/SNR checks and CI-safe recording-tool validation.
-storage: generated-local
+  Small public deterministic QPSK IQ dataset for replay, constellation analysis,
+  BER/EVM/SNR checks and CI-safe recording-tool validation.
+storage: git-lfs
 url: null
 file_name: demo_qpsk_capture.ci16
 sha256: d8a4cb8bc3e609a9143936bd923e906f930ea77b72a35eb2d9b48887a25be3b3
+byte_size: 65536
 format: ci16
 endianness: little
 i_first: true
@@ -28,25 +29,30 @@ hardware:
   rx_gain_db: null
 signal:
   modulation: QPSK
+  deterministic_seed: 7020
+  symbol_count: 2048
   symbol_rate_sps: 300000
   samples_per_symbol: 8
   pulse_shape: rectangular
   rolloff: null
-  constellation: Gray-like quadrant mapping, normalized before CI16 scaling
+  constellation: Gray-coded quadrant mapping, normalized before CI16 scaling
 analysis_targets:
   - constellation plot
+  - symbol error rate
+  - bit error rate
   - EVM estimate
   - SNR estimate
   - frequency offset estimate
   - report-ready metric table
 quality_checks:
   checksum_verified: true
+  deterministic_rebuild_verified: true
   clipping_observed: false
   overload_observed: false
   dc_offset_checked: true
 license: MIT-compatible synthetic course fixture
 notes:
   - Generated data is synthetic and contains no off-air content.
-  - The CI16 file is intentionally generated locally rather than committed as raw binary.
-  - Run python tools/generate_demo_qpsk_dataset.py to refresh the file and metrics.
-  - Expected generated file size is 65536 bytes.
+  - The 64 KiB CI16 payload is published through Git LFS for direct replay.
+  - Run python tools/generate_demo_qpsk_dataset.py to reproduce the exact payload and metadata.
+  - The measured OTA QPSK capture remains a separate local-only hardware artifact.

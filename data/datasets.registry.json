@@ -3,6 +3,21 @@
   "description": "Dataset registry for Zynq SDR Course IQ captures and synthetic fixtures.",
   "datasets": [
     {
+      "id": "demo_qpsk_capture",
+      "status": "git-lfs",
+      "signal_type": "deterministic_synthetic_qpsk",
+      "hardware_source": "synthetic",
+      "iq_format": "ci16",
+      "sample_rate_hz": 2400000,
+      "center_frequency_hz": null,
+      "expected_signal_offset_hz": 0,
+      "external_url": null,
+      "metadata_path": "datasets/demo_qpsk_capture/manifest.yaml",
+      "analysis_command": "python tools/analyze_demo_qpsk_dataset.py",
+      "intended_labs": ["9.5"],
+      "notes": "Public 64 KiB Git LFS fixture with SHA256, deterministic rebuild and zero-BER/SER replay checks; not a measured RF capture."
+    },
+    {
       "id": "lab92_synthetic_ci16_tone",
       "status": "synthetic",
       "signal_type": "single_tone",

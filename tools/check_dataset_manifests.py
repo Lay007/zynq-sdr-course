@@ -177,6 +177,14 @@ def validate_git_lfs_manifest(path: Path, data: dict[str, Any]) -> None:
         )
     if size <= 0:
         raise ManifestError(f"{path}: referenced data size must be positive")
+    expected_size = data.get("byte_size")
+    if expected_size is not None:
+        require_positive_number(path, expected_size, "byte_size")
+        if int(expected_size) != size:
+            raise ManifestError(
+                f"{path}: manifest byte_size does not match {source} "
+                f"({expected_size} != {size})"
+            )
 
 
 def validate_generated_local_manifest(path: Path, data: dict[str, Any]) -> None:

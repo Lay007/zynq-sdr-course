@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import subprocess
@@ -17,6 +18,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import yaml
+
+from generate_demo_qpsk_dataset import (
+    NUM_SYMBOLS,
+    QPSK_BIT_LABELS,
+    QPSK_MAPPING,
+    generate_qpsk_symbol_indices,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -60,6 +68,15 @@ def ensure_dataset_file(generate_if_missing: bool) -> None:
     )
 
 
+def verify_checksum(path: Path, expected_sha256: str) -> str:
+    actual_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
+    if actual_sha256.lower() != expected_sha256.lower():
+        raise ValueError(
+            f"Dataset checksum mismatch: manifest={expected_sha256}, file={actual_sha256}"
+        )
+    return actual_sha256
+
+
 def read_ci16(path: Path) -> np.ndarray:
     raw = np.fromfile(path, dtype="<i2")
     if raw.size % 2 != 0:
@@ -73,11 +90,34 @@ def rms(x: np.ndarray) -> float:
     return float(np.sqrt(np.mean(np.abs(x) ** 2)))
 
 
-def analyze(samples_ci16: np.ndarray, sample_rate_hz: int, sps: int, ci16_amplitude: float) -> tuple[dict[str, Any], np.ndarray, np.ndarray, np.ndarray]:
+def count_label_bit_errors(expected_labels: np.ndarray, recovered_labels: np.ndarray) -> int:
+    xor = np.bitwise_xor(expected_labels, recovered_labels)
+    return int(np.count_nonzero(xor & 0b01) + np.count_nonzero(xor & 0b10))
+
+
+def analyze(
+    samples_ci16: np.ndarray,
+    sample_rate_hz: int,
+    sps: int,
+    ci16_amplitude: float,
+) -> tuple[dict[str, Any], np.ndarray, np.ndarray, np.ndarray]:
     samples = samples_ci16 / ci16_amplitude
     symbols = samples[sps // 2 :: sps]
 
-    ideal = (np.sign(np.real(symbols)) + 1j * np.sign(np.imag(symbols))) / math.sqrt(2.0)
+    distances = np.abs(symbols[:, None] - QPSK_MAPPING[None, :])
+    recovered_indices = np.argmin(distances, axis=1)
+    ideal = QPSK_MAPPING[recovered_indices]
+    expected_indices = generate_qpsk_symbol_indices(NUM_SYMBOLS)
+    if symbols.size != expected_indices.size:
+        raise ValueError(
+            f"Expected {expected_indices.size} symbols from the manifest contract, "
+            f"recovered {symbols.size}"
+        )
+    symbol_errors = int(np.count_nonzero(recovered_indices != expected_indices))
+    expected_labels = QPSK_BIT_LABELS[expected_indices]
+    recovered_labels = QPSK_BIT_LABELS[recovered_indices]
+    bit_errors = count_label_bit_errors(expected_labels, recovered_labels)
+    compared_bits = int(expected_indices.size * 2)
     evm_vec = symbols - ideal
     evm_rms = math.sqrt(float(np.mean(np.abs(evm_vec) ** 2) / np.mean(np.abs(ideal) ** 2)))
     evm_peak = float(np.max(np.abs(evm_vec)) / math.sqrt(np.mean(np.abs(ideal) ** 2)))
@@ -110,6 +150,11 @@ def analyze(samples_ci16: np.ndarray, sample_rate_hz: int, sps: int, ci16_amplit
         "samples_per_symbol": int(sps),
         "num_samples": int(samples.size),
         "num_symbols": int(symbols.size),
+        "compared_bits": compared_bits,
+        "symbol_errors": symbol_errors,
+        "bit_errors": bit_errors,
+        "ser": float(symbol_errors / symbols.size),
+        "ber": float(bit_errors / compared_bits),
         "ci16_amplitude": float(ci16_amplitude),
         "mean_i_normalized": float(np.mean(np.real(samples))),
         "mean_q_normalized": float(np.mean(np.imag(samples))),
@@ -167,6 +212,7 @@ def main() -> int:
     metrics = load_json(METRICS_FILE)
 
     ensure_dataset_file(args.generate_if_missing)
+    verified_sha256 = verify_checksum(DATA_FILE, str(manifest["sha256"]))
     samples_ci16 = read_ci16(DATA_FILE)
 
     sample_rate_hz = int(manifest["sample_rate_hz"])
@@ -174,6 +220,7 @@ def main() -> int:
     ci16_amplitude = float(metrics["ci16_amplitude"])
 
     summary, symbols, freq, psd_db = analyze(samples_ci16, sample_rate_hz, sps, ci16_amplitude)
+    summary["sha256"] = verified_sha256
 
     ANALYSIS_JSON.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     save_constellation(symbols)
