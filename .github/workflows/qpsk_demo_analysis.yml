@@ -25,7 +25,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
         with:
-          lfs: false
+          lfs: true
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -35,11 +35,16 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements-dev.txt
 
-      - name: Generate demo dataset
-        run: python tools/generate_demo_qpsk_dataset.py
+      - name: Validate published dataset manifest and payload
+        run: python tools/check_dataset_manifests.py
 
-      - name: Analyze demo dataset
+      - name: Replay and analyze published demo dataset
         run: python tools/analyze_demo_qpsk_dataset.py
+
+      - name: Rebuild deterministic dataset
+        run: |
+          python tools/generate_demo_qpsk_dataset.py
+          git diff --exit-code -- datasets/demo_qpsk_capture/manifest.yaml datasets/demo_qpsk_capture/metrics.json
 
       - name: Check analysis outputs exist
         run: |
@@ -57,6 +62,11 @@ jobs:
           assert data['dataset_id'] == 'demo_qpsk_capture'
           assert data['num_samples'] == 16384
           assert data['num_symbols'] == 2048
+          assert data['compared_bits'] == 4096
+          assert data['symbol_errors'] == 0
+          assert data['bit_errors'] == 0
+          assert data['ser'] == 0.0
+          assert data['ber'] == 0.0
           assert abs(data['sample_rate_hz'] - 2400000) == 0
           assert data['evm_rms_percent'] < 0.01
           assert abs(data['cfo_estimate_hz']) < 1.0
