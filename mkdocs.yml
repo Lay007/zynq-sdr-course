@@ -220,6 +220,8 @@ nav:
           - "Lab 8.5 — OFDM mini link": ru/labs/lab-8-5-ofdm-mini-link.md
           - "Lab 8.6 — Channel coding BER comparison": ru/labs/lab-8-6-channel-coding-ber-comparison.md
           - "Lab 8.7 — SNR vs BER traps": ru/labs/lab-8-7-snr-vs-ber-traps.md
+          - "Lab 8.8 — QPSK: искажения и BER": ru/labs/lab-8-8-qpsk-modem-impairments.md
+          - "Lab 8.9 — Восстановление несущей QPSK": ru/labs/lab-8-9-qpsk-carrier-recovery.md
           - "Lab 8.10 — OFDM: PAPR, clipping и спектральный рост": ru/labs/lab-8-10-ofdm-papr-clipping.md
           - "Lab 8.20 — CSS: chirp-сигнал и кодирование символа": ru/labs/lab-8-20-css-waveform.md
           - "Lab 8.21 — CSS: dechirp и FFT-детектор": ru/labs/lab-8-21-css-dechirp-fft.md
@@ -364,6 +366,8 @@ nav:
           - "Lab 8.4 — End-to-end sync chain": en/labs/lab-8-4-end-to-end-sync-chain.md
           - "Lab 8.5 — OFDM mini link": en/labs/lab-8-5-ofdm-mini-link.md
           - "Lab 8.6 — Channel coding BER comparison": en/labs/lab-8-6-channel-coding-ber-comparison.md
+          - "Lab 8.8 — QPSK impairments and BER": en/labs/lab-8-8-qpsk-modem-impairments.md
+          - "Lab 8.9 — QPSK carrier recovery": en/labs/lab-8-9-qpsk-carrier-recovery.md
           - "Lab 8.10 — OFDM PAPR, clipping and spectral regrowth": en/labs/lab-8-10-ofdm-papr-clipping.md
           - "Lab 8.20 — CSS waveform and symbol mapping": en/labs/lab-8-20-css-waveform.md
           - "Lab 8.21 — CSS dechirp and FFT detector": en/labs/lab-8-21-css-dechirp-fft.md

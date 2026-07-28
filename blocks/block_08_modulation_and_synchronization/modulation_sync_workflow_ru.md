@@ -58,6 +58,14 @@ flowchart LR
 | phase error | остаточный поворот созвездия |
 | decision margin | запас до границ решений |
 
+## Развитие по типам сигналов
+
+После общей цепочки коррекции CFO/фазы/тайминга выберите один из трёх исполняемых маршрутов:
+
+1. [Искажения QPSK и BER](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-8-qpsk-modem-impairments/) → [восстановление несущей QPSK](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-9-qpsk-carrier-recovery/).
+2. [OFDM mini-link](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-5-ofdm-mini-link/) → [PAPR, clipping и спектральное расширение](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-10-ofdm-papr-clipping/).
+3. [CSS chirp-сигнал](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-20-css-waveform/) → [CSS dechirp/FFT-детектор](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-21-css-dechirp-fft/).
+
 ## Что должно получиться
 
 После блока студент должен уметь:

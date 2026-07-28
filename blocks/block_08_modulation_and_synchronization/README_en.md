@@ -60,6 +60,16 @@ block_08_modulation_and_synchronization/
 3. inject synchronization errors and compensate them.
 4. formulate limits and conclusions.
 
+## Learning routes
+
+| Route | Labs | Engineering result |
+|---|---|---|
+| QPSK modem | [8.8 — impairments and BER](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-8-qpsk-modem-impairments/) → [8.9 — carrier recovery](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-9-qpsk-carrier-recovery/) | Gray mapping, BER and CFO/phase recovery |
+| OFDM | [8.5 — mini link](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-5-ofdm-mini-link/) → [8.10 — PAPR and clipping](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-10-ofdm-papr-clipping/) | End-to-end link plus implementation back-off and spectral-regrowth trade-offs |
+| CSS | [8.20 — waveform](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-20-css-waveform/) → [8.21 — dechirp/FFT](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-21-css-dechirp-fft/) | Chirp symbol mapping and coherent FFT-bin detection |
+
+The numbering groups related extensions intentionally: `8.8–8.9` continue QPSK, `8.10` extends OFDM, and `8.20–8.21` start the CSS track.
+
 ## Real hardware BPSK — spectrum, constellation & SNR/EVM
 
 Real measured BPSK from the course board (Zynq-7020 + AD9361): the same three quantities you

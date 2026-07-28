@@ -60,6 +60,16 @@ block_08_modulation_and_synchronization/
 3. ввести ошибки синхронизации и компенсировать их.
 4. сформулировать ограничения и выводы.
 
+## Учебные маршруты
+
+| Маршрут | Лабораторные | Инженерный результат |
+|---|---|---|
+| QPSK-модем | [8.8 — искажения и BER](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-8-qpsk-modem-impairments/) → [8.9 — восстановление несущей](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-9-qpsk-carrier-recovery/) | Gray mapping, BER и коррекция CFO/фазы |
+| OFDM | [8.5 — mini-link](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-5-ofdm-mini-link/) → [8.10 — PAPR и clipping](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-10-ofdm-papr-clipping/) | Сквозной канал, цифровой back-off и спектральное расширение |
+| CSS | [8.20 — chirp-сигнал](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-20-css-waveform/) → [8.21 — dechirp/FFT](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-21-css-dechirp-fft/) | Кодирование символа chirp-сигналом и детектирование по FFT-bin |
+
+Нумерация группирует расширения намеренно: `8.8–8.9` продолжают QPSK, `8.10` расширяет OFDM, а `8.20–8.21` открывают CSS-маршрут.
+
 ## Реальный BPSK на железе — спектр, созвездие и SNR/EVM
 
 Реально измеренный BPSK с курсовой платы (Zynq-7020 + AD9361): те же три величины, что вы
