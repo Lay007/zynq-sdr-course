@@ -186,14 +186,14 @@ The repository already contains:
 - real passive RTL-SDR air captures from the first SDR++ bring-up session, stored through Git LFS with manifests;
 - dataset manifest consistency checking for Git LFS-backed captures;
 - experiment manifests;
-- report templates and final-project structure.
+- report templates and final-project structure;
+- a complete in-fabric QPSK modem on Zynq-7020 + AD9361, closed on a two-board 915 MHz RF link (zero whole-burst rotation failures, payload BER ~4×10⁻⁴) with a final measurement report (Lab 11.4).
 
-The next major proof points are:
+The remaining proof points are optional hardening rather than blockers:
 
 - repeat-build/seed timing robustness for the selected board-qualified integrated bitstream;
 - publication review or external archival for the measured raw QPSK IQ WAV; the synthetic 64 KiB zero-BER replay fixture is already public through Git LFS;
-- longer-duration and controlled-cable RTL-SDR QPSK statistics;
-- complete QPSK or tone model-to-measurement final report.
+- longer-duration RTL-SDR QPSK statistics.
 
 ---
 

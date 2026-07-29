@@ -11,6 +11,7 @@ This page summarizes the maturity of the 12-block course track. The detailed sta
 | `measured` | Real hardware or real IQ evidence exists. |
 | `draft` | Structure exists, but the block still needs stronger examples or reports. |
 | `portfolio-target` | The block is close to a complete reviewer-facing result but still needs final packaging. |
+| `portfolio-ready` | The block has a complete, reviewer-facing result with reproducible artifacts and honest limitations. |
 
 ## Block-level maturity
 
@@ -20,13 +21,13 @@ This page summarizes the maturity of the 12-block course track. The detailed sta
 | 02 | Signals and sampling | executable | Python labs, generated figures, sampling/aliasing tasks | Add C++ bridge and metadata-mistake replay examples. |
 | 03 | DSP basics | executable | FFT, FIR, mixing, decimation, MATLAB/C++ links | Add direct-vs-FFT convolution threshold demo and more fixed-point tables. |
 | 04 | Simulink and fixed-point | executable | Fixed-point references and BPSK Simulink models | Tighten the HDL Coder handoff constraints. |
-| 05 | FPGA / HDL flow | measured / signoff-target | 34-test canonical HDL suite; Lab 11.35's payload-telemetry image closes at WNS +0.009 ns / WHS +0.028 ns, clean-boots on hardware and records a live preamble/payload error split | Add within-payload error-position telemetry, then demonstrate repeat-build/seed timing robustness. |
+| 05 | FPGA / HDL flow | measured / signoff-target | 36-test canonical HDL suite; the payload-telemetry image closes at WNS +0.009 ns / WHS +0.028 ns and records a live preamble/payload error split; the shipped differential-QPSK modem image closes at WNS +0.036 ns | Demonstrate repeat-build/seed timing robustness of the routed image. |
 | 06 | RF frontend and AD9363 | measured | RX-only observation, zero-IF lab, controlled tone evidence | Add gain/overload table and cabled measurement package. |
 | 07 | TX/RX chains | executable | DUC/DDC demos, loopback metrics models | Add measurement package and report-ready examples. |
 | 08 | Modulation and synchronization | executable | CFO, phase, timing, BER/EVM demos, OFDM mini-link | Add impairment sweeps and dashboard-style metric summaries. |
 | 09 | Recording and analysis tools | executable | CI16/CU8/CF32 readers, WAV IQ path, QPSK replay analysis | Keep dataset manifests and analyzer thresholds synchronized. |
 | 10 | KiCad and basic electronics | draft | RF safety, attenuator and schematic templates | Add measured bench photos and exported KiCad artifacts. |
-| 11 | Integrated SDR project | measured / portfolio-target | Lab 11.35 adds a 1,200-pair statistical A/B and a 400-pair focused retest. The dot-product TED improves zero-CFO lock by 26.75 pp and halves aggregate BER but loses exact-zero frames by 24.25 pp, so the fixed sampler remains baseline. | Localize one-bit misses with payload telemetry before changing the receiver, then collect long-duration BER-vs-attenuation statistics. |
+| 11 | Integrated SDR project | measured / portfolio-ready | The in-fabric QPSK modem is closed on a two-board 915 MHz RF link: differential coding plus a 24-symbol preamble remove every whole-burst rotation failure (gross 0) at payload BER ~4×10⁻⁴, with fabric loopback BER < 5.34×10⁻⁷ over 5.6 M bits. Lab 11.4 is the final measurement report; Labs 11.41–11.45 carry the DC-blocker, false-lock and differential investigation. | The residual differential single-bit rate is the inherent ~3 dB penalty, not a rotation failure; repeat-build/seed timing robustness and longer BER-vs-attenuation statistics remain optional next steps. |
 | 12 | Final projects | measured / portfolio-target | Filled report with internal and external QPSK evidence | Add repeatable cabled/OTA measurement statistics on a stable capture backend. |
 
 ## Review rule

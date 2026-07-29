@@ -25,12 +25,12 @@ This matrix shows what each course block should contain before it can be conside
 | 08. Modulation and synchronization | 🟡 | 🟡 | 🟡 | ⬜ | 🟡 | ⬜ | ⬜ | 🟡 | 🟡 |
 | 09. Recording and analysis tools | 🟡 | ✅ | 🟡 | ⬜ | N/A | N/A | 🟡 | ✅ | 🟡 |
 | 10. KiCad and basic electronics | 🟡 | N/A | N/A | N/A | N/A | N/A | 🟡 | ⬜ | 🟡 |
-| 11. Integrated SDR project | 🟡 | ✅ | 🟡 | ⬜ | 🟡 | 🟡 | 🟡 | 🟡 | 🟡 |
+| 11. Integrated SDR project | 🟡 | ✅ | 🟡 | ⬜ | 🟡 | ✅ | 🟡 | 🟡 | ✅ |
 | 12. Final projects | 🟡 | N/A | N/A | N/A | N/A | 🟡 | 🟡 | ⬜ | 🟡 |
 
 ## Interpretation notes
 
-- Block 11 now has a timing-clean QPSK payload, 3/3 external RTL-SDR sessions and two controlled timing decisions. Lab 11.35 upgrades the live comparison to 1,200 interleaved pairs, identifies an axis-sign detector defect, then rejects the corrected dot-product TED in a focused 400-pair zero-CFO run despite its large lock and aggregate-BER gains. A timing-clean 160-pair instrumentation run localizes all 55 single-bit Gardner misses to payload rather than acquisition preamble; error-position telemetry is the next bounded diagnostic. Block 11 remains `🟡` until a candidate passes the declared clean-frame gate and stable longer-duration BER follows.
+- Block 11 is closed: the in-fabric QPSK modem runs over a two-board 915 MHz RF link. Lab 11.35's payload telemetry localized the single-bit misses to payload; Labs 11.41–11.45 then traced and removed the causes — the DC blocker tracking the modulation, a frame-sync false lock, and finally the four-branch rotation ambiguity itself, removed by differential coding plus a 24-symbol preamble. The final link has zero whole-burst rotation failures and payload BER ~4×10⁻⁴ (fabric loopback BER < 5.34×10⁻⁷ over 5.6 M bits); Lab 11.4 is the final measurement report. The residual differential single-bit rate is the inherent ~3 dB penalty, not an open rotation failure.
 - Block 12 now has a filled dual-modem report with internal and cross-session external RF evidence. It remains below portfolio-ready until controlled-path and longer-duration statistics are measured on a stable capture backend.
 - Blocks 05 and 09 are the strongest automation anchors today: they combine reusable checks, generated artifacts and CI coverage.
 

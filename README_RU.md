@@ -185,14 +185,14 @@ python tools/run_local_ci.py
 - реальные пассивные RTL-SDR записи эфира из первой SDR++ bring-up сессии, сохранённые через Git LFS с manifest-файлами;
 - проверка согласованности dataset manifests и Git LFS pointer-файлов;
 - manifest-файлы экспериментов;
-- шаблоны отчётов и структура итогового проекта.
+- шаблоны отчётов и структура итогового проекта;
+- завершённый in-fabric QPSK-модем на Zynq-7020 + AD9361, закрытый на двухплатном RF-канале 915 МГц (ноль разворотов бёрста, payload BER ~4×10⁻⁴), с финальным измерительным отчётом (Lab 11.4).
 
-Следующие важные proof points:
+Оставшиеся proof points — это опциональное упрочнение, а не блокеры:
 
-- повторяемая clean-boot квалификация BPSK/QPSK с отчётом по доле успешных запусков;
+- repeat-build/seed timing robustness выбранного board-qualified интегрированного bitstream;
 - publication review или внешнее архивирование измеренного raw QPSK WAV; synthetic zero-BER replay fixture размером 64 КиБ уже опубликован через Git LFS;
-- routed top-level Vivado implementation reports для интегрированного Zynq-дизайна;
-- полный QPSK или tone model-to-measurement отчёт.
+- более длинные RTL-SDR QPSK-статистики.
 
 ---
 
