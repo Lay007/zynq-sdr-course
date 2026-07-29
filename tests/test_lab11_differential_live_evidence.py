@@ -53,3 +53,25 @@ def test_lab1145_preserves_the_final_long_preamble_result() -> None:
     assert evidence["gross"] == 0
     assert evidence["payload_ber"] < 5e-4
     assert sum(evidence["single_bit_idx"].values()) == evidence["single_bit"]
+
+
+def test_final_evidence_json_stays_wired_into_source_docs() -> None:
+    # The final differential-link JSONs must stay referenced by the source-of-truth
+    # docs, so a documentation edit cannot silently orphan the machine-readable
+    # evidence. This checks that the filename is present, not any prose around it.
+    references = {
+        "lab1145_diff_long_preamble_live.json": (
+            "blocks/block_11_integrated_sdr_project/lab_11_45_differential_long_preamble.md",
+            "blocks/block_11_integrated_sdr_project/lab_11_4_final_measurement_report.md",
+            "docs/hardware-evidence-index.md",
+        ),
+        "lab1144_diff_qpsk_live.json": (
+            "blocks/block_11_integrated_sdr_project/lab_11_45_differential_long_preamble.md",
+            "docs/hardware-evidence-index.md",
+        ),
+    }
+    for asset, docs in references.items():
+        assert (ASSETS / asset).exists(), f"missing evidence asset {asset}"
+        for doc in docs:
+            text = (ROOT / doc).read_text(encoding="utf-8")
+            assert asset in text, f"{doc} no longer references {asset}"
