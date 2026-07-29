@@ -45,7 +45,7 @@ If a local environment cannot run all tasks, document which checks were run and 
 | Evidence | Evidence index, evidence map and validation backlog are synchronized. |
 | Completion matrix | Block 11 and Block 12 reflect current evidence, not the older empty state. |
 | Reviewer path | A reviewer can find commands, evidence and open gaps within a few clicks. |
-| Final project | At least one report skeleton exists; a filled flagship report is the next milestone. |
+| Final project | A filled, hardware-validated flagship report exists (Lab 11.4); the Block 12 framework packages it into learner tracks. |
 | Release notes | `docs/release-notes-v0.1.0.md` mentions current promoted evidence and remaining limitations. |
 
 ## 5. Reviewer-facing release package

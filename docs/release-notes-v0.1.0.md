@@ -107,7 +107,8 @@ Representative executable labs generate figures and JSON metrics under `docs/ass
 - Lab 11.32 demonstrates in-fabric coarse-CFO acquisition on a conducted two-board link at 12/12 points over 0–55 kHz, while retaining the measured 75/288 clean-attempt rate as an explicit limitation.
 - Lab 11.33 turns that limitation into an evidence-backed decision: retain the residual-CFO Costas tuning, reject a timing-closed squared-energy picker after worse equal-budget live A/B runs, and promote continuous timing recovery as the next experiment.
 - Lab 11.34 implements and measures that experiment as a runtime-selectable complex sign-Gardner loop. After live telemetry exposed excessive loop movement, halved PI gains retain the model/RTL drift results and close implementation at WNS +0.003 ns / WHS +0.041 ns. The full 0–55 kHz A/B raises lock from 193/288 to 246/288 but produces 71/288 clean attempts versus 72/288 for fixed sampling, so the predeclared gate retains the baseline.
-- Lab 11.35 replaces the unpaired point-estimate gate with 1,200 AB/BA pairs and confidence-bound margins. The result exposes a strong CFO dependence in the axis-sign TED, but a rotation-invariant dot-product replacement still fails the focused zero-CFO clean gate: lock rises from 247/400 to 354/400 and aggregate BER nearly halves, while BER=0 attempts fall from 108/400 to 11/400. A timing-clean 160-pair telemetry run then localizes every one of 55 single-bit Gardner misses to payload rather than acquisition preamble. The fixed sampler remains baseline; within-payload error position is the next diagnostic before any further loop tuning.
+- Lab 11.35 replaces the unpaired point-estimate gate with 1,200 AB/BA pairs and confidence-bound margins. The result exposes a strong CFO dependence in the axis-sign TED, but a rotation-invariant dot-product replacement still fails the focused zero-CFO clean gate: lock rises from 247/400 to 354/400 and aggregate BER nearly halves, while BER=0 attempts fall from 108/400 to 11/400. A timing-clean 160-pair telemetry run then localizes every one of 55 single-bit Gardner misses to payload rather than acquisition preamble.
+- Labs 11.41–11.45 close the Block 11 modem on the two-board RF link. Lab 11.41 traces payload bit 189 to the RX DC blocker tracking the modulation and fixes it with a running-average estimator; Lab 11.42 removes the residual whole-burst rotation floor as a frame-sync false lock (LOCK_ERR_TOL 3→1); Labs 11.43–11.45 replace the four-branch quadrant resolution with differential QPSK plus a 24-symbol preamble. The final link has zero whole-burst rotation failures at payload BER 4.45×10⁻⁴ over 800 frames, on top of fabric loopback BER < 5.34×10⁻⁷ over 5.6 M bits. Lab 11.4 is the final measurement report, and CI preserves the machine-readable differential evidence.
 
 ## Acceptance criteria for this release
 
@@ -124,19 +125,19 @@ Representative executable labs generate figures and JSON metrics under `docs/ass
 
 ## Known limitations
 
-- The filled Block 11/12 implementation report still needs repeatable board and external RF results.
+- The flagship Block 11 report (Lab 11.4) is filled and hardware-validated; repeat-build/seed timing robustness and publication of the measured raw QPSK WAV remain optional hardening.
 - External measured packages should keep improving through manifests, plots, metrics and limitations.
 - Some advanced labs are roadmap-style and will continue to mature after this first release.
 - The course currently prioritizes deterministic scripts and CI-friendly artifacts over notebook-first interactivity.
-- The two-board coarse-CFO result proves acquisition range, not a continuous BER floor; continuous timing recovery is still required.
+- Differential detection carries the inherent ~3 dB penalty: a residual intermittent single-bit rate keeps the two-board clean-frame count at ~97–99 % rather than 100 %. It is a known limitation, not a rotation failure. SNR/EVM are not separately instrumented; BER is the reported end-to-end quality metric.
 
 ## Next release direction
 
 The next milestone should focus on:
 
-- clean-boot BPSK/QPSK success-rate evidence linked from the filled implementation report;
-- bitstream-to-board correlation for the routed integrated design;
-- real or generated dataset manifests with analyzer outputs kept in sync;
+- repeat-build/seed timing robustness for the selected routed integrated bitstream;
+- publication review or external archival for the measured raw QPSK WAV;
+- separate EVM/SNR instrumentation and uncertainty budgets on the two-board link;
 - model-vs-RTL comparison for CIC or another multirate DSP block;
-- more complete measurement reports with EVM, SNR, BER and uncertainty budgets;
+- packet-level and LoRa-interoperability layers beyond the current QPSK/CSS models;
 - polished final project examples.
