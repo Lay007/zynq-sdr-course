@@ -4,6 +4,11 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    open-pull-requests-limit: 5
+    cooldown:
+      semver-major-days: 30
+      semver-minor-days: 7
+      semver-patch-days: 3
     groups:
       python-minor-and-patch:
         patterns:
@@ -11,6 +16,8 @@ updates:
         update-types:
           - minor
           - patch
+    commit-message:
+      prefix: "build(deps)"
     labels:
       - dependencies
       - python
@@ -19,10 +26,15 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    open-pull-requests-limit: 3
+    cooldown:
+      default-days: 7
     groups:
       github-actions:
         patterns:
           - "*"
+    commit-message:
+      prefix: "ci(deps)"
     labels:
       - dependencies
       - ci
