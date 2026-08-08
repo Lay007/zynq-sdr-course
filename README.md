@@ -67,6 +67,10 @@ The hardware-oriented part of the course is built around:
 
 The course can still be studied in simulation-only mode, because many labs have synthetic data, reproducible scripts and CI-backed checks.
 
+### Related LoRa project
+
+For the next step beyond the Block 8 CSS/LoRa-like labs, see **[zynq-lora-phy-positioning](https://github.com/Lay007/zynq-lora-phy-positioning)** — a dedicated Zynq SDR project for LoRa PHY implementation, synchronization and positioning experiments.
+
 ---
 
 ## Repository structure
