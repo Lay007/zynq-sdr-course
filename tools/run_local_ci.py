@@ -10,6 +10,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
+PYTEST_BASETEMP = ROOT / ".pytest-tmp-local-ci"
 
 
 def run(cmd: list[str]) -> None:
@@ -31,7 +32,19 @@ def main() -> int:
     args = parser.parse_args()
 
     run([sys.executable, "-m", "ruff", "check", "blocks", "tools", "tests"])
-    run([sys.executable, "-m", "pytest", "-q"])
+    # Keep pytest's numbered temporary directories inside the repository. On
+    # Windows the shared user temp root can retain a locked ``pytest-current``
+    # junction and turn a successful test run into a cleanup failure.
+    run(
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "-q",
+            "--basetemp",
+            str(PYTEST_BASETEMP),
+        ]
+    )
 
     if not args.quick:
         run([sys.executable, "-m", "mkdocs", "build", "--strict"])
