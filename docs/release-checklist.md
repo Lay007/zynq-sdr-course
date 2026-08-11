@@ -63,7 +63,7 @@ Before tagging the release, prepare a compact reviewer path:
 Suggested release summary:
 
 ```text
-v0.1.0 introduces a bilingual DSP/FPGA/SDR course that connects theory, modeling, fixed-point design, HDL simulation, data capture and engineering analysis. The release includes CI-backed executable labs, dataset discipline, evidence pages and a clear roadmap toward one portfolio-ready model-to-measurement report.
+v0.1.0 introduces a bilingual DSP/FPGA/SDR course that connects theory, modeling, fixed-point design, HDL simulation, data capture and engineering analysis. The release includes CI-backed executable labs, dataset discipline, evidence pages and a hardware-validated portfolio-ready model-to-measurement report.
 ```
 
 ## 7. Final checks
@@ -74,3 +74,26 @@ v0.1.0 introduces a bilingual DSP/FPGA/SDR course that connects theory, modeling
 - No private data, credentials or local machine paths are committed.
 - Open validation issues are either still valid or have comments explaining what part was already promoted into evidence pages.
 - Open Dependabot PRs are either merged, closed as obsolete, or left with a clear reason.
+
+## 8. Publish and verify
+
+Run these commands only from the reviewed release commit and only after every required check above
+is green:
+
+```bash
+git tag -a v0.1.0 -m "zynq-sdr-course v0.1.0"
+git push origin v0.1.0
+gh release create v0.1.0 --title "zynq-sdr-course v0.1.0" --notes-file docs/release-notes-v0.1.0.md
+```
+
+After publication:
+
+- Confirm that the tag resolves to the reviewed commit.
+- Confirm that the GitHub Release renders the release notes correctly.
+- Confirm that GitHub Pages still serves the expected course version.
+- Record the release URL in the project handoff notes.
+
+Stop the release before pushing the tag if the worktree is dirty, the local commit differs from the
+green CI commit, a required check is missing, or the status/evidence pages disagree. If an incorrect
+tag was published, do not silently move it: mark the release as withdrawn, document the reason and
+publish a corrected patch version.

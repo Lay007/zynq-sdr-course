@@ -64,4 +64,4 @@ Detailed bring-up logs should live on dedicated evidence pages rather than insid
 
 ## Current release focus
 
-The next public milestone should be `v0.1.0`: a reviewed, reproducible course snapshot with a clean learner route, green CI, compact status pages and one flagship model-to-measurement hardware story. The synthetic QPSK replay package is publication-ready; publication review of the separate measured OTA WAV remains open.
+The `v0.1.0` release candidate is content-complete: it has a clean learner route, green CI, compact status pages and one flagship model-to-measurement hardware story. The remaining release action is to verify the final commit, create the annotated tag and publish the GitHub Release. The synthetic QPSK replay package is publication-ready; publication review of the separate measured OTA WAV remains open.
