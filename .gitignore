@@ -123,3 +123,22 @@ hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/ip/
 # Local reproducibility summaries
 docs/assets/course_reproducibility_summary.json
 docs/assets/course_reproducibility_summary.md
+
+# Deterministic outputs produced by tools/run_all_labs.py
+blocks/block_09_recording_and_analysis_tools/assets/lab93_multiformat/
+datasets/manifests/end_to_end_tone_demo_v1.yml
+docs/assets/end_to_end_tone_*.json
+docs/assets/end_to_end_tone_*.png
+docs/assets/lab21_*
+docs/assets/lab22_*
+docs/assets/lab23_*
+docs/assets/lab35_*
+docs/assets/lab36_*
+docs/assets/lab37_*
+docs/assets/lab43_*
+docs/assets/lab64_*
+docs/assets/lab73_*
+docs/assets/lab75_*
+docs/assets/lab84_*
+docs/assets/lab93_*
+docs/assets/lab117_axi_lite_bringup_mock.json
