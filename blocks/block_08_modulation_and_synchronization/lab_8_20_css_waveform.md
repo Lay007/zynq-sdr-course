@@ -10,7 +10,7 @@ Build the signal-level foundation used by chirp spread spectrum (CSS) systems:
 - dechirp the received symbol with a conjugate reference chirp;
 - verify that the symbol becomes a single FFT peak.
 
-This lab intentionally implements a **generic educational CSS waveform**. It is not yet a complete LoRa-compatible packet PHY: preamble, header, whitening, interleaving, coding and CRC are outside this step.
+This lab intentionally implements a **generic educational CSS waveform**. It is not yet a complete LoRa-compatible packet PHY: preamble, header, whitening, interleaving, coding and CRC are outside this step. The complete LoRa-compatible PHY — packet framing, hard/soft decoding validated against recorded SX1262 IQ, and time-of-arrival/TDoA positioning with an FPGA path — is developed in the companion project [zynq-lora-phy-positioning](https://github.com/Lay007/zynq-lora-phy-positioning).
 
 ## Key relations
 

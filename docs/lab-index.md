@@ -22,7 +22,7 @@ This page provides a compact index of course labs. It is intentionally shorter t
 | 05 | 5.1-5.11 | streaming interfaces, RTL mapping, self-checking tests and routed evidence | ci / executable | correlate implementation with board runs |
 | 06 | 6.1-6.9 | frontend setup, calibration, zero-IF artifacts and RTL-SDR/AD936x receiver comparison | executable + manual bench | record a reviewed two-receiver measurement package |
 | 07 | 7.1-7.5 | chain architecture and link-level metrics | partial ci / executable | add measured examples |
-| 08 | 8.1-8.10, 8.20-8.21 | synchronization, QPSK, OFDM mini-link, OFDM PAPR/clipping, coding, SNR/BER traps and executable CSS waveform/detector | ci / executable | add packet-level CSS/LoRa-like synchronization and FPGA mapping |
+| 08 | 8.1-8.10, 8.20-8.21 | synchronization, QPSK, OFDM mini-link, OFDM PAPR/clipping, coding, SNR/BER traps and executable CSS waveform/detector | ci / executable | add packet-level CSS synchronization and FPGA mapping; real LoRa PHY continues in the external zynq-lora-phy-positioning project |
 | 09 | 9.1-9.5 | metadata, file readers and replay analysis | ci / executable | keep manifests and thresholds synchronized |
 | 10 | 10.1-10.6 | electronics, RF safety, attenuators, NanoVNA/S-parameters and schematic mini-project | manual / measured | add real NanoVNA CSV/Touchstone exports and final edited photos |
 | 11 | 11.1-11.45 | integrated project workflow, bring-up, BER/CFO/timing evidence and the final differential two-board QPSK modem (gross rotation 0, payload BER ~4×10⁻⁴) | measured / portfolio-ready | seed/rebuild timing robustness and long-duration statistics remain optional |

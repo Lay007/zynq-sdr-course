@@ -142,5 +142,5 @@ The next milestone should focus on:
 - publication review or external archival for the measured raw QPSK WAV;
 - separate EVM/SNR instrumentation and uncertainty budgets on the two-board link;
 - model-vs-RTL comparison for CIC or another multirate DSP block;
-- packet-level and LoRa-interoperability layers beyond the current QPSK/CSS models;
+- packet-level CSS framing and an FPGA CSS accelerator beyond the current models (real LoRa PHY/interoperability continues in the external zynq-lora-phy-positioning project);
 - polished final project examples.
