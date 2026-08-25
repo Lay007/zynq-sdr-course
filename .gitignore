@@ -100,6 +100,10 @@ blocks/block_05_fpga_hdl_flow/tb/*.mem
 blocks/block_05_fpga_hdl_flow/rtl/*_taps.mem
 blocks/block_05_fpga_hdl_flow/rtl/*_bits.mem
 
+# Generated Block 8 CSS detector vectors and twiddle tables
+blocks/block_08_modulation_and_synchronization/tb/vectors/css_sf7_detector_*.txt
+blocks/block_08_modulation_and_synchronization/tb/vectors/css_sf7_twiddle_*_q15.hex
+
 # Large data / downloads
 *.iq
 *.cfile
