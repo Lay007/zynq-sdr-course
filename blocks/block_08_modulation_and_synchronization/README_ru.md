@@ -71,6 +71,10 @@ block_08_modulation_and_synchronization/
 
 Нумерация группирует расширения намеренно: `8.8–8.9` продолжают QPSK, `8.10` расширяет OFDM, а `8.20–8.22` образуют CSS-маршрут.
 
+CSS-маршрут теперь включает компактный bit-exact
+[SF7 RTL baseline](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/css_accelerator_contract.md). Он намеренно отделён от полного
+LoRa PHY в сопутствующем проекте.
+
 ## Реальный BPSK на железе — спектр, созвездие и SNR/EVM
 
 Реально измеренный BPSK с курсовой платы (Zynq-7020 + AD9361): те же три величины, что вы

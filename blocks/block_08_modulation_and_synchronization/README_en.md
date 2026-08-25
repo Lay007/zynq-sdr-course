@@ -71,6 +71,10 @@ block_08_modulation_and_synchronization/
 
 The numbering groups related extensions intentionally: `8.8–8.9` continue QPSK, `8.10` extends OFDM, and `8.20–8.22` form the CSS track.
 
+The CSS track now includes a compact, bit-exact
+[SF7 RTL accelerator baseline](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/css_accelerator_contract.md). It is intentionally
+separate from the complete LoRa PHY in the companion project.
+
 ## Real hardware BPSK — spectrum, constellation & SNR/EVM
 
 Real measured BPSK from the course board (Zynq-7020 + AD9361): the same three quantities you

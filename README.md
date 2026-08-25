@@ -67,9 +67,15 @@ The hardware-oriented part of the course is built around:
 
 The course can still be studied in simulation-only mode, because many labs have synthetic data, reproducible scripts and CI-backed checks.
 
-### Related LoRa project
+### Companion repositories
 
-For the next step beyond the Block 8 CSS/LoRa-like labs, see **[zynq-lora-phy-positioning](https://github.com/Lay007/zynq-lora-phy-positioning)** — a dedicated Zynq SDR project for LoRa PHY implementation, synchronization and positioning experiments.
+- For the next step beyond the Block 8 CSS/LoRa-like labs, see
+  **[zynq-lora-phy-positioning](https://github.com/Lay007/zynq-lora-phy-positioning)** —
+  a dedicated Zynq SDR project for LoRa PHY implementation, synchronization and
+  positioning experiments.
+- Published bitstreams, boot sets and board backups live in the private
+  `zynq-sdr-course-artifacts` repository. The source repository keeps manifests,
+  measurements and rebuild instructions, but not large or board-specific binaries.
 
 ---
 
@@ -118,7 +124,7 @@ Useful commands:
 | `python tools/tasks.py docs` | Build the MkDocs site in strict mode |
 | `python tools/tasks.py serve` | Start a local documentation preview |
 | `python tools/tasks.py labs` | Run representative executable Python labs |
-| `python tools/tasks.py hdl` | Run Block 5 Verilog smoke tests |
+| `python tools/tasks.py hdl` | Run the Block 5 and Block 8 CSS Verilog regressions |
 | `python tools/tasks.py smoke` | Run docs + labs + HDL checks |
 | `python tools/run_local_ci.py` | Run lint + pytest + docs + labs + canonical HDL smoke |
 | `python tools/run_local_ci.py --quick` | Run lint + pytest + canonical HDL smoke |

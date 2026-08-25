@@ -130,6 +130,8 @@ nav:
       - "Release checklist": release-checklist.md
       - "Release notes v0.1.0": release-notes-v0.1.0.md
       - "ADR 0001: AI-assisted engineering workflow": adr/0001-ai-assisted-engineering-workflow.md
+      - "ADR 0002: CSS/LoRa project boundary": adr/0002-css-lora-project-boundary.md
+      - "ADR 0003: Binary artifact repository boundary": adr/0003-binary-artifact-repository-boundary.md
   - "Demo (IEEE figures)": demo.md
   - "GitHub demo notes": demo_readme.md
   - "IEEE-style guide": ieee_style_guide.md

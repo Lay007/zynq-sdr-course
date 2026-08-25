@@ -67,9 +67,16 @@
 
 При этом курс можно проходить и без железа: многие лабораторные имеют синтетические данные, воспроизводимые скрипты и CI-проверки.
 
-### Связанный проект по LoRa
+### Связанные репозитории
 
-Как следующий шаг после CSS/LoRa-like лабораторных блока 8 см. **[zynq-lora-phy-positioning](https://github.com/Lay007/zynq-lora-phy-positioning)** — отдельный SDR-проект на Zynq по реализации LoRa PHY, синхронизации и экспериментам по определению местоположения.
+- Следующий шаг после CSS/LoRa-like лабораторных блока 8 —
+  **[zynq-lora-phy-positioning](https://github.com/Lay007/zynq-lora-phy-positioning)**,
+  отдельный SDR-проект на Zynq по реализации LoRa PHY, синхронизации и
+  экспериментам по определению местоположения.
+- Опубликованные bitstream, загрузочные наборы и резервные копии плат находятся
+  в приватном репозитории `zynq-sdr-course-artifacts`. В исходном репозитории
+  остаются manifest-файлы, измерения и инструкции по воспроизведению, но не
+  крупные или привязанные к конкретной плате бинарные файлы.
 
 ---
 
@@ -118,7 +125,7 @@ python tools/run_local_ci.py
 | `python tools/tasks.py docs` | Собрать сайт MkDocs в строгом режиме |
 | `python tools/tasks.py serve` | Запустить локальный просмотр документации |
 | `python tools/tasks.py labs` | Запустить представительные Python-лабораторные |
-| `python tools/tasks.py hdl` | Запустить Verilog smoke-тесты блока 5 |
+| `python tools/tasks.py hdl` | Запустить Verilog-регрессии блоков 5 и 8 CSS |
 | `python tools/tasks.py smoke` | Выполнить проверку docs + labs + HDL |
 | `python tools/run_local_ci.py` | Выполнить lint + pytest + docs + labs + canonical HDL smoke |
 | `python tools/run_local_ci.py --quick` | Выполнить lint + pytest + canonical HDL smoke |
