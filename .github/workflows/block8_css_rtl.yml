@@ -1,0 +1,44 @@
+name: Block 8 CSS RTL
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "blocks/block_08_modulation_and_synchronization/rtl/**"
+      - "blocks/block_08_modulation_and_synchronization/tb/**"
+      - ".github/workflows/block8_css_rtl.yml"
+  pull_request:
+    paths:
+      - "blocks/block_08_modulation_and_synchronization/rtl/**"
+      - "blocks/block_08_modulation_and_synchronization/tb/**"
+      - ".github/workflows/block8_css_rtl.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  css-rtl-smoke:
+    name: CSS RTL self-checking regressions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install Icarus Verilog
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog
+          iverilog -V
+
+      - name: Compile and run CSS dechirp multiplier regression
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_css_dechirp_mul \
+            -o /tmp/tb_css_dechirp_mul.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/css_dechirp_mul.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_css_dechirp_mul.sv
+          vvp /tmp/tb_css_dechirp_mul.vvp
