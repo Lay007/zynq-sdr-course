@@ -42,3 +42,15 @@ jobs:
             blocks/block_08_modulation_and_synchronization/rtl/css_dechirp_mul.v \
             blocks/block_08_modulation_and_synchronization/tb/tb_css_dechirp_mul.sv
           vvp /tmp/tb_css_dechirp_mul.vvp
+
+      - name: Compile and run full SF7 dechirp regression
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_css_sf7_dechirp_frontend \
+            -o /tmp/tb_css_sf7_dechirp_frontend.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/css_dechirp_mul.v \
+            blocks/block_08_modulation_and_synchronization/rtl/css_sf7_ref_rom.v \
+            blocks/block_08_modulation_and_synchronization/rtl/css_sf7_dechirp_frontend.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_css_sf7_dechirp_frontend.sv
+          vvp /tmp/tb_css_sf7_dechirp_frontend.vvp
