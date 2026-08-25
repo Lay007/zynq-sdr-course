@@ -17,6 +17,7 @@ labs:
 
 hdl:
 	$(PYTHON) tools/run_block5_hdl_smoke.py
+	$(PYTHON) tools/run_block8_css_rtl.py
 
 test:
 	$(PYTHON) -m pytest -q

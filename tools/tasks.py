@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 TB_DIR = ROOT / "blocks" / "block_05_fpga_hdl_flow" / "tb"
 RTL_DIR = ROOT / "blocks" / "block_05_fpga_hdl_flow" / "rtl"
+CSS_VECTOR_DIR = ROOT / "blocks" / "block_08_modulation_and_synchronization" / "tb" / "vectors"
 DOCS_ASSETS_DIR = ROOT / "docs" / "assets"
 DATASET_MANIFESTS_DIR = ROOT / "datasets" / "manifests"
 
@@ -79,6 +80,14 @@ GENERATED_TB_FILENAMES = (
 GENERATED_RTL_FILENAMES = (
     "bpsk_rrc_tx_fir_taps.mem",
     "bpsk_frame_bits.mem",
+)
+
+GENERATED_CSS_VECTOR_FILENAMES = (
+    "css_sf7_detector_input.txt",
+    "css_sf7_detector_expected.txt",
+    "css_sf7_detector_meta.txt",
+    "css_sf7_twiddle_i_q15.hex",
+    "css_sf7_twiddle_q_q15.hex",
 )
 
 LEGACY_ROOT_TB_PATTERNS = (
@@ -189,6 +198,7 @@ def task_labs() -> None:
 
 def task_hdl() -> None:
     run([sys.executable, "tools/run_block5_hdl_smoke.py"])
+    run([sys.executable, "tools/run_block8_css_rtl.py"])
 
 
 def task_test() -> None:
@@ -241,6 +251,10 @@ def task_clean() -> None:
 
     for filename in GENERATED_RTL_FILENAMES:
         artifact = RTL_DIR / filename
+        remove_generated_file(artifact)
+
+    for filename in GENERATED_CSS_VECTOR_FILENAMES:
+        artifact = CSS_VECTOR_DIR / filename
         remove_generated_file(artifact)
 
     if DOCS_ASSETS_DIR.exists():
