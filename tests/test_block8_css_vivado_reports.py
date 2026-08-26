@@ -55,6 +55,16 @@ Logic Levels: 12
         "bram_tiles": 2.0,
         "dsp": 8,
     }
+    assert metrics["latency_cycles"] == {
+        "dft_transform": 16640,
+        "final_input_to_done": 16644,
+        "first_input_to_done": 16771,
+        "symbol_initiation_interval": 16772,
+    }
+    assert metrics["throughput_at_target_clock"] == {
+        "symbol_decisions_per_second": 5962.318,
+        "sustained_input_samples_per_second": 763176.723,
+    }
     assert metrics["timing"] == {
         "wns_ns": 0.25,
         "tns_ns": 0.0,

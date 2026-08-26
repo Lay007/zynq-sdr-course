@@ -18,6 +18,10 @@ DEFAULT_OUTPUT_DIR = ROOT / "reports" / "fpga" / "block8_css_vivado_ooc_raw"
 DEFAULT_PART = "xc7z020clg400-2"
 DEFAULT_CLOCK_PERIOD_NS = 10.0
 TOP_NAME = "css_sf7_sequential_detector"
+DFT_TRANSFORM_CYCLES = 16_640
+FINAL_INPUT_TO_DONE_CYCLES = 16_644
+FIRST_INPUT_TO_DONE_CYCLES = 127 + FINAL_INPUT_TO_DONE_CYCLES
+SYMBOL_INITIATION_INTERVAL_CYCLES = FIRST_INPUT_TO_DONE_CYCLES + 1
 
 
 def _search(pattern: str, text: str) -> re.Match[str] | None:
@@ -89,6 +93,8 @@ def parse_metrics(
         else None
     )
 
+    target_clock_frequency_hz = 1_000_000_000.0 / clock_period_ns
+
     return {
         "tool_version": tool.group(1).strip() if tool else None,
         "device": device.group(1).strip() if device else None,
@@ -97,6 +103,24 @@ def parse_metrics(
         "flow": "out_of_context_post_synthesis",
         "target_clock_period_ns": clock_period_ns,
         "target_clock_frequency_mhz": round(1000.0 / clock_period_ns, 3),
+        "latency_cycles": {
+            "dft_transform": DFT_TRANSFORM_CYCLES,
+            "final_input_to_done": FINAL_INPUT_TO_DONE_CYCLES,
+            "first_input_to_done": FIRST_INPUT_TO_DONE_CYCLES,
+            "symbol_initiation_interval": SYMBOL_INITIATION_INTERVAL_CYCLES,
+        },
+        "throughput_at_target_clock": {
+            "symbol_decisions_per_second": round(
+                target_clock_frequency_hz / SYMBOL_INITIATION_INTERVAL_CYCLES,
+                3,
+            ),
+            "sustained_input_samples_per_second": round(
+                128.0
+                * target_clock_frequency_hz
+                / SYMBOL_INITIATION_INTERVAL_CYCLES,
+                3,
+            ),
+        },
         "utilization": {
             "lut": int(lut.group(1)) if lut else None,
             "ff": int(ff.group(1)) if ff else None,
@@ -156,6 +180,11 @@ def main() -> int:
     parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT_DIR))
     parser.add_argument("--part", default=DEFAULT_PART)
     parser.add_argument(
+        "--reuse",
+        action="store_true",
+        help="Parse and normalize an existing report directory without rerunning Vivado.",
+    )
+    parser.add_argument(
         "--clock-period-ns",
         type=float,
         default=DEFAULT_CLOCK_PERIOD_NS,
@@ -166,7 +195,8 @@ def main() -> int:
     output_dir = Path(args.output_dir).resolve()
     print(f"Vivado: {vivado_bin}")
     print(f"Output directory: {output_dir}")
-    run_vivado(vivado_bin, output_dir, args.part, args.clock_period_ns)
+    if not args.reuse:
+        run_vivado(vivado_bin, output_dir, args.part, args.clock_period_ns)
     normalize_reports(output_dir)
     metrics = parse_metrics(output_dir, args.part, args.clock_period_ns)
     validate_metrics(metrics)
