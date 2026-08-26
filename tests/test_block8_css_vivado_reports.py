@@ -49,9 +49,19 @@ Logic Levels: 12
         )
     (tmp_path / f"{top}_post_route_status.rpt").write_text(
         """
-# of Fully Routed Nets             : 4567
-# of Unrouted Nets                 : 0
-# of Nets with Routing Errors      : 0
+Design Route Status
+       # of routable nets..................... :        4567 :
+           # of fully routed nets............. :        4567 :
+       # of nets with routing errors.......... :           0 :
+""",
+        encoding="utf-8",
+    )
+    (tmp_path / f"{top}_post_route_drc.rpt").write_text(
+        """
+| Design State : Fully Routed
+Violations found: 2
+| Rule   | Severity | Description | Violations |
+| DPOP-1 | Warning  | Pipelining  | 2          |
 """,
         encoding="utf-8",
     )
@@ -94,10 +104,17 @@ Logic Levels: 12
         "utilization": expected_utilization,
         "timing": expected_timing,
         "route_status": {
+            "design_state": "Fully Routed",
+            "routable_nets": 4567,
             "fully_routed_nets": 4567,
             "unrouted_nets": 0,
             "nets_with_routing_errors": 0,
             "fully_routed": True,
+        },
+        "drc": {
+            "violations": 2,
+            "error_violations": 0,
+            "errors_present": False,
         },
     }
     validate_metrics(metrics)
@@ -113,6 +130,7 @@ def test_validation_rejects_incomplete_metrics() -> None:
             "utilization": {"lut": 1, "ff": 1, "bram_tiles": 0.0, "dsp": 0},
             "timing": {"wns_ns": 0.1, "total_endpoints": 1},
             "route_status": {},
+            "drc": {},
         },
     }
 
@@ -134,10 +152,17 @@ def test_validation_rejects_unrouted_implementation() -> None:
         "post_route": {
             **complete_stage,
             "route_status": {
+                "design_state": "Fully Routed",
+                "routable_nets": 10,
                 "fully_routed_nets": 9,
                 "unrouted_nets": 1,
                 "nets_with_routing_errors": 0,
                 "fully_routed": False,
+            },
+            "drc": {
+                "violations": 0,
+                "error_violations": 0,
+                "errors_present": False,
             },
         },
     }

@@ -141,14 +141,34 @@ def parse_metrics(
     route_status_text = (output_dir / f"{TOP_NAME}_post_route_status.rpt").read_text(
         encoding="utf-8", errors="ignore"
     )
+    drc_text = (output_dir / f"{TOP_NAME}_post_route_drc.rpt").read_text(
+        encoding="utf-8", errors="ignore"
+    )
 
     tool = _search(r"\| Tool Version : ([^\r\n]+)", utilization_text)
     device = _search(r"\| Device\s*: ([^\r\n]+)", utilization_text)
-    unrouted = _search(r"# of Unrouted Nets\s*:\s*([0-9]+)", route_status_text)
+    routable = _search(r"# of routable nets\.+\s*:\s*([0-9]+)", route_status_text)
     routing_errors = _search(
-        r"# of Nets with Routing Errors\s*:\s*([0-9]+)", route_status_text
+        r"# of nets with routing errors\.+\s*:\s*([0-9]+)", route_status_text
     )
-    fully_routed = _search(r"# of Fully Routed Nets\s*:\s*([0-9]+)", route_status_text)
+    fully_routed = _search(
+        r"# of fully routed nets\.+\s*:\s*([0-9]+)", route_status_text
+    )
+    design_state = _search(r"\| Design State\s*:\s*([^\r\n]+)", drc_text)
+    drc_violations = _search(r"Violations found:\s*([0-9]+)", drc_text)
+    drc_errors = sum(
+        int(count)
+        for count in re.findall(
+            r"^\|\s*\S+\s*\|\s*Error\s*\|.*?\|\s*([0-9]+)\s*\|\s*$",
+            drc_text,
+            re.MULTILINE,
+        )
+    )
+    unrouted_nets = (
+        int(routable.group(1)) - int(fully_routed.group(1))
+        if routable is not None and fully_routed is not None
+        else None
+    )
 
     target_clock_frequency_hz = 1_000_000_000.0 / clock_period_ns
 
@@ -186,17 +206,25 @@ def parse_metrics(
             "utilization": post_route_utilization,
             "timing": post_route_timing,
             "route_status": {
+                "design_state": design_state.group(1).strip() if design_state else None,
+                "routable_nets": int(routable.group(1)) if routable else None,
                 "fully_routed_nets": int(fully_routed.group(1)) if fully_routed else None,
-                "unrouted_nets": int(unrouted.group(1)) if unrouted else None,
+                "unrouted_nets": unrouted_nets,
                 "nets_with_routing_errors": (
                     int(routing_errors.group(1)) if routing_errors else None
                 ),
                 "fully_routed": (
-                    unrouted is not None
+                    design_state is not None
+                    and design_state.group(1).strip() == "Fully Routed"
+                    and unrouted_nets == 0
                     and routing_errors is not None
-                    and int(unrouted.group(1)) == 0
                     and int(routing_errors.group(1)) == 0
                 ),
+            },
+            "drc": {
+                "violations": int(drc_violations.group(1)) if drc_violations else None,
+                "error_violations": drc_errors,
+                "errors_present": drc_errors > 0,
             },
         },
     }
@@ -232,7 +260,13 @@ def validate_metrics(metrics: dict[str, object]) -> None:
     assert isinstance(route_status, dict)
     missing_route_status = [
         name
-        for name in ("fully_routed_nets", "unrouted_nets", "nets_with_routing_errors")
+        for name in (
+            "design_state",
+            "routable_nets",
+            "fully_routed_nets",
+            "unrouted_nets",
+            "nets_with_routing_errors",
+        )
         if route_status.get(name) is None
     ]
     if missing_route_status:
@@ -241,6 +275,12 @@ def validate_metrics(metrics: dict[str, object]) -> None:
         )
     if not route_status.get("fully_routed"):
         raise ValueError("Vivado implementation is not fully routed")
+    drc = post_route["drc"]
+    assert isinstance(drc, dict)
+    if drc.get("violations") is None:
+        raise ValueError("Missing post_route DRC violation count")
+    if drc.get("errors_present"):
+        raise ValueError("Vivado post-route DRC contains errors")
 
 
 def main() -> int:
