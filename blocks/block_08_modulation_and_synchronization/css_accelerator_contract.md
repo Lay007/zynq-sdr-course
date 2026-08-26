@@ -29,6 +29,8 @@ control and reset behavior are independently regression-tested.
 
 Measured Vivado OOC evidence is summarized in the
 [Block 8 CSS accelerator report](../../reports/fpga/block8-css-accelerator-evidence.md).
+The [AXI integration guide](css_axi_integration.md) defines the PS/PL-facing
+stream packets and register map.
 
 ## Interface and arithmetic
 
@@ -88,17 +90,18 @@ operation on hardware.
 
 The next datapath step is to replace `css_dft128_core` with a reusable FFT while
 preserving the symbol-buffer read contract, the bin stream, and the independent
-peak detector. Issue #46 still requires AXI-Stream data, AXI-Lite
-control/status, a PS-side bring-up helper, and integrated timing evidence. The
-OOC report records the current latency, architectural 100 MHz throughput,
-resource use, post-synthesis timing, and post-route timing without claiming
-board completion.
+peak detector. The checked-in integration wrapper now provides AXI-Stream data,
+AXI-Lite control/status, result counters, and IRQ. Issue #46 still requires a
+PS-side bring-up helper and integrated timing evidence. The OOC report records
+the current latency, architectural 100 MHz throughput, resource use,
+post-synthesis timing, and post-route timing without claiming board completion.
 
 ## Companion-project boundary
 
 The complete LoRa-compatible, oversampled two-FFT correlator and the packet,
 timestamp, ToA/TDoA and Zynq integration paths belong to
 [`zynq-lora-phy-positioning`](https://github.com/Lay007/zynq-lora-phy-positioning).
-See [ADR 0002](../../docs/adr/0002-css-lora-project-boundary.md). The two paths
+See [ADR 0002](../../docs/adr/0002-css-lora-project-boundary.md) and
+[ADR 0003](../../docs/adr/0003-css-accelerator-axi-boundary.md). The two paths
 must not be compared without accounting for their different goals and input
 scaling.

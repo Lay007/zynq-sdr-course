@@ -74,6 +74,8 @@ block_08_modulation_and_synchronization/
 CSS-маршрут теперь включает компактный bit-exact
 [SF7 RTL baseline](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/css_accelerator_contract_ru.md). Он намеренно отделён от полного
 LoRa PHY в сопутствующем проекте.
+[Руководство по AXI-интеграции](css_axi_integration_ru.md) задаёт потоковые
+пакеты, регистры AXI-Lite, IRQ и оставшуюся работу на уровне платы.
 
 ## Реальный BPSK на железе — спектр, созвездие и SNR/EVM
 
