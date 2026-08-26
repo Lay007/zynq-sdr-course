@@ -1,5 +1,7 @@
 # Educational CSS accelerator contract
 
+[Русская версия](css_accelerator_contract_ru.md)
+
 Issue [#46](https://github.com/Lay007/zynq-sdr-course/issues/46) is implemented
 incrementally. The current course increment is a readable SF7 baseline:
 
@@ -19,6 +21,11 @@ Its `start`, `busy`, and one-cycle `done` signals form the control boundary;
 `start_rejected` pulses if another start is requested while a transform is
 active. Reset aborts an in-flight transform and returns the core to idle. The
 core has no dependency on the detector's storage or peak-search state.
+
+`css_peak_detector.v` owns the peak and second-peak search. It consumes only the
+bin index and magnitude stream, keeps the first occurrence when magnitudes are
+equal, and publishes held result registers with a one-cycle `done` pulse. Its
+control and reset behavior are independently regression-tested.
 
 ## Interface and arithmetic
 
@@ -58,8 +65,10 @@ The standalone DFT regression checks reset/abort/restart behavior, start
 rejection, all 128 bin events and indices, one-cycle valid pulses, X/Z-free
 outputs, and every complex bin and magnitude against the shared Python
 fixed-point reference. Its deterministic dechirped symbol-37 tone peaks at bin
-37. The integrated detector regression covers all 128 noiseless SF7 symbols plus
-deterministic CFO and noise cases. CI regenerates the detector inputs and
+37. The standalone peak-detector regression checks frame control, valid gaps,
+equal-magnitude tie breaking, reset/abort/restart behavior, and X/Z-free result
+outputs. The integrated detector regression covers all 128 noiseless SF7 symbols
+plus deterministic CFO and noise cases. CI regenerates the detector inputs and
 twiddle tables from the checked-in Python reference before simulation.
 
 ## Current limitations and next boundary
