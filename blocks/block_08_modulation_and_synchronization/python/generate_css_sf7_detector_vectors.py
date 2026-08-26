@@ -24,6 +24,14 @@ def _hex16(value: int) -> str:
     return format(value & 0xFFFF, "04x")
 
 
+def _hex32(value: int) -> str:
+    return format(value & 0xFFFFFFFF, "08x")
+
+
+def _hex64(value: int) -> str:
+    return format(value & 0xFFFFFFFFFFFFFFFF, "016x")
+
+
 def _write_mem(path: Path, values: list[int]) -> None:
     path.write_text("\n".join(_hex16(v) for v in values) + "\n", encoding="utf-8")
 
@@ -36,6 +44,27 @@ def main() -> None:
 
     _write_mem(VECTOR_DIR / "css_sf7_twiddle_i_q15.hex", tw_i)
     _write_mem(VECTOR_DIR / "css_sf7_twiddle_q_q15.hex", tw_q)
+
+    dft_rx_i, dft_rx_q = ref.symbol_samples_fixed(37)
+    dft_i, dft_q, _ = ref.dechirp_fixed(dft_rx_i, dft_rx_q, ref_i, ref_q)
+    dft_bins = ref.dft_bins_fixed(dft_i, dft_q, tw_i, tw_q)
+    _write_mem(VECTOR_DIR / "css_dft128_input_i_q15.hex", dft_i)
+    _write_mem(VECTOR_DIR / "css_dft128_input_q_q15.hex", dft_q)
+    (VECTOR_DIR / "css_dft128_expected_i_s32.hex").write_text(
+        "\n".join(_hex32(dft_bin.value_i) for dft_bin in dft_bins) + "\n",
+        encoding="utf-8",
+    )
+    (VECTOR_DIR / "css_dft128_expected_q_s32.hex").write_text(
+        "\n".join(_hex32(dft_bin.value_q) for dft_bin in dft_bins) + "\n",
+        encoding="utf-8",
+    )
+    (VECTOR_DIR / "css_dft128_expected_mag2_s64.hex").write_text(
+        "\n".join(
+            _hex64(dft_bin.magnitude_squared) for dft_bin in dft_bins
+        )
+        + "\n",
+        encoding="utf-8",
+    )
 
     rng = random.Random(NOISE_SEED)
     samples: list[tuple[int, int]] = []

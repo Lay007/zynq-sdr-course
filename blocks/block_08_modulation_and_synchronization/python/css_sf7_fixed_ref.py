@@ -112,6 +112,33 @@ class PeakResult:
     overflow_count: int = 0
 
 
+@dataclass(frozen=True)
+class DftBin:
+    index: int
+    value_i: int
+    value_q: int
+    magnitude_squared: int
+
+
+def dft_bins_fixed(
+    d_i: list[int],
+    d_q: list[int],
+    tw_i: list[int],
+    tw_q: list[int],
+) -> list[DftBin]:
+    """Return every sequential fixed-point DFT bin produced by the RTL core."""
+    bins = []
+    for k in range(N):
+        acc_i = 0
+        acc_q = 0
+        for n_index in range(N):
+            idx = (k * n_index) % N
+            acc_i += (d_i[n_index] * tw_i[idx] - d_q[n_index] * tw_q[idx]) >> SHIFT
+            acc_q += (d_i[n_index] * tw_q[idx] + d_q[n_index] * tw_i[idx]) >> SHIFT
+        bins.append(DftBin(k, acc_i, acc_q, acc_i * acc_i + acc_q * acc_q))
+    return bins
+
+
 def dft_peak_fixed(
     d_i: list[int],
     d_q: list[int],
@@ -125,19 +152,12 @@ def dft_peak_fixed(
     """
     peak_mag2, peak_bin = -1, 0
     second_mag2, second_bin = -1, 0
-    for k in range(N):
-        acc_i = 0
-        acc_q = 0
-        for n_index in range(N):
-            idx = (k * n_index) % N
-            acc_i += (d_i[n_index] * tw_i[idx] - d_q[n_index] * tw_q[idx]) >> SHIFT
-            acc_q += (d_i[n_index] * tw_q[idx] + d_q[n_index] * tw_i[idx]) >> SHIFT
-        mag2 = acc_i * acc_i + acc_q * acc_q
-        if mag2 > peak_mag2:
+    for dft_bin in dft_bins_fixed(d_i, d_q, tw_i, tw_q):
+        if dft_bin.magnitude_squared > peak_mag2:
             second_mag2, second_bin = peak_mag2, peak_bin
-            peak_mag2, peak_bin = mag2, k
-        elif mag2 > second_mag2:
-            second_mag2, second_bin = mag2, k
+            peak_mag2, peak_bin = dft_bin.magnitude_squared, dft_bin.index
+        elif dft_bin.magnitude_squared > second_mag2:
+            second_mag2, second_bin = dft_bin.magnitude_squared, dft_bin.index
     return PeakResult(peak_bin, second_bin, peak_mag2, max(second_mag2, 0))
 
 
