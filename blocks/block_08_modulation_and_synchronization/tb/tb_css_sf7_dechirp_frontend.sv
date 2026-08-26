@@ -109,19 +109,32 @@ module tb_css_sf7_dechirp_frontend;
         #1;
         check_bit("valid gap produces no output", valid_out, 1'b0);
 
-        // Stream the complete SF7 symbol without gaps. The expected file is an
+        // Prime the registered ROM/IQ stage. The expected file is an
         // independently generated fixed-point golden vector for symbol 37.
-        for (i = 0; i < N; i = i + 1) begin
+        @(negedge clk);
+        sample_index = 7'd0;
+        valid_in = 1'b1;
+        @(posedge clk);
+        #1;
+        check_bit("front-end pipeline fill", valid_out, 1'b0);
+
+        // Continue without gaps. One result is produced per clock after the
+        // initial pipeline fill.
+        for (i = 1; i < N; i = i + 1) begin
             @(negedge clk);
             sample_index = i[6:0];
             valid_in = 1'b1;
             @(posedge clk);
             #1;
-            check_sample(i);
+            check_sample(i - 1);
         end
 
         @(negedge clk);
         valid_in = 1'b0;
+        @(posedge clk);
+        #1;
+        check_sample(N - 1);
+
         @(posedge clk);
         #1;
         check_bit("valid pulse clears after full symbol", valid_out, 1'b0);

@@ -4,7 +4,7 @@ module tb_css_sf7_sequential_detector;
 
     localparam integer N = 128;
     localparam integer MAX_RESULT_CYCLES = 17000;
-    localparam integer EXPECTED_RESULT_CYCLES = 16643;
+    localparam integer EXPECTED_RESULT_CYCLES = 16644;
 
     reg clk = 1'b0;
     reg resetn = 1'b0;
