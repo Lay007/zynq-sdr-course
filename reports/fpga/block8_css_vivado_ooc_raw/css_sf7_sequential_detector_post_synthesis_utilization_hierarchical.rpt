@@ -1,13 +1,13 @@
 Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
 | Date         : normalized
 | Host         : normalized
-| Command      : report_utilization -hierarchical -hierarchical_depth 4 -file <output_dir>/css_sf7_sequential_detector_utilization_hierarchical.rpt
+| Command      : report_utilization -hierarchical -hierarchical_depth 4 -file <output_dir>/css_sf7_sequential_detector_post_synthesis_utilization_hierarchical.rpt
 | Design       : css_sf7_sequential_detector
 | Device       : 7z020clg400-2
 | Design State : Synthesized
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Utilization Design Information
 

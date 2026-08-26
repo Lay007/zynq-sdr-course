@@ -1,14 +1,14 @@
 Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
 | Date         : normalized
 | Host         : normalized
-| Command      : report_clock_utilization -file <output_dir>/css_sf7_sequential_detector_clock_utilization.rpt
+| Command      : report_clock_utilization -file <output_dir>/css_sf7_sequential_detector_post_route_clock_utilization.rpt
 | Design       : css_sf7_sequential_detector
 | Device       : 7z020-clg400
 | Speed File   : -2  PRODUCTION 1.12 2019-11-22
-| Design State : Synthesized
----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Design State : Routed
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Clock Utilization Report
 

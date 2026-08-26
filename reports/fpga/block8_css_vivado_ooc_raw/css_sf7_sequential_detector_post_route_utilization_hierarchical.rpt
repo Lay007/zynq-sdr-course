@@ -1,0 +1,33 @@
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
+| Date         : normalized
+| Host         : normalized
+| Command      : report_utilization -hierarchical -hierarchical_depth 4 -file <output_dir>/css_sf7_sequential_detector_post_route_utilization_hierarchical.rpt
+| Design       : css_sf7_sequential_detector
+| Device       : 7z020clg400-2
+| Design State : Routed
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++---------------------------------+--------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+|             Instance            |          Module          | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
++---------------------------------+--------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+| css_sf7_sequential_detector     |                    (top) |        631 |        543 |      88 |    0 | 421 |      0 |      3 |         16 |
+|   (css_sf7_sequential_detector) |                    (top) |         11 |         11 |       0 |    0 |  23 |      0 |      1 |          0 |
+|   u_dechirp_frontend            | css_sf7_dechirp_frontend |         60 |         60 |       0 |    0 |  35 |      0 |      0 |          4 |
+|     (u_dechirp_frontend)        | css_sf7_dechirp_frontend |          0 |          0 |       0 |    0 |   1 |      0 |      0 |          0 |
+|     u_dechirp                   |          css_dechirp_mul |         60 |         60 |       0 |    0 |  34 |      0 |      0 |          4 |
+|   u_dft_core                    |          css_dft128_core |        391 |        391 |       0 |    0 | 201 |      0 |      2 |         12 |
+|   u_peak_detector               |        css_peak_detector |        104 |        104 |       0 |    0 | 145 |      0 |      0 |          0 |
+|   u_symbol_buffer               |        css_symbol_buffer |        128 |         40 |      88 |    0 |  17 |      0 |      0 |          0 |
++---------------------------------+--------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+* Note: The sum of lower-level cells may be larger than their parent cells total, due to cross-hierarchy LUT combining

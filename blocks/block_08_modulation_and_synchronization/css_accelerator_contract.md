@@ -79,17 +79,20 @@ twiddle tables from the checked-in Python reference before simulation.
 
 This implementation is a sequential educational DFT, not a
 throughput-optimized FFT. RTL simulation proves the checked fixed-point and
-control behavior. Vivado 2021.1 OOC post-synthesis evidence for
-`xc7z020clg400-2` reports 693 LUT, 421 FF, 1.5 BRAM tiles, 16 DSPs, and
-`+1.006 ns` WNS at 100 MHz. This is not placed-and-routed timing closure and
-does not prove operation on hardware.
+control behavior. Vivado 2021.1 OOC implementation evidence for
+`xc7z020clg400-2` reports 631 LUT, 421 FF, 1.5 BRAM tiles, 16 DSPs, and
+`+0.526 ns` post-route WNS at 100 MHz. All 1,562 routable nets are fully routed
+and the final DRC has no error-severity violations. This closes routed timing
+for the isolated RTL, not for an integrated board design, and does not prove
+operation on hardware.
 
 The next datapath step is to replace `css_dft128_core` with a reusable FFT while
 preserving the symbol-buffer read contract, the bin stream, and the independent
-peak detector. Issue #46 still requires placed-and-routed/integrated timing
-evidence, AXI-Stream data, AXI-Lite control/status, and a PS-side bring-up helper.
-The OOC report records the current latency, architectural 100 MHz throughput,
-resource use, and post-synthesis timing without claiming board completion.
+peak detector. Issue #46 still requires AXI-Stream data, AXI-Lite
+control/status, a PS-side bring-up helper, and integrated timing evidence. The
+OOC report records the current latency, architectural 100 MHz throughput,
+resource use, post-synthesis timing, and post-route timing without claiming
+board completion.
 
 ## Companion-project boundary
 

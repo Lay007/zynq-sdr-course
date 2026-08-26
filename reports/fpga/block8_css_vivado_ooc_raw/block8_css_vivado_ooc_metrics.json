@@ -3,7 +3,7 @@
   "device": "7z020clg400-2",
   "part": "xc7z020clg400-2",
   "top": "css_sf7_sequential_detector",
-  "flow": "out_of_context_post_synthesis",
+  "flow": "out_of_context_implementation",
   "target_clock_period_ns": 10.0,
   "target_clock_frequency_mhz": 100.0,
   "latency_cycles": {
@@ -16,22 +16,57 @@
     "symbol_decisions_per_second": 5962.318,
     "sustained_input_samples_per_second": 763176.723
   },
-  "utilization": {
-    "lut": 693,
-    "ff": 421,
-    "bram_tiles": 1.5,
-    "dsp": 16
+  "post_synthesis": {
+    "utilization": {
+      "lut": 693,
+      "ff": 421,
+      "bram_tiles": 1.5,
+      "dsp": 16
+    },
+    "timing": {
+      "wns_ns": 1.006,
+      "tns_ns": 0.0,
+      "failing_endpoints": 0,
+      "total_endpoints": 2142,
+      "timing_met": true,
+      "clock_name": "clk",
+      "clock_period_ns": 10.0,
+      "data_path_delay_ns": 8.888,
+      "logic_levels": 5,
+      "fmax_est_mhz": 111.185
+    }
   },
-  "timing": {
-    "wns_ns": 1.006,
-    "tns_ns": 0.0,
-    "failing_endpoints": 0,
-    "total_endpoints": 2142,
-    "timing_met": true,
-    "clock_name": "clk",
-    "clock_period_ns": 10.0,
-    "data_path_delay_ns": 8.888,
-    "logic_levels": 5,
-    "post_synthesis_fmax_est_mhz": 111.185
+  "post_route": {
+    "utilization": {
+      "lut": 631,
+      "ff": 421,
+      "bram_tiles": 1.5,
+      "dsp": 16
+    },
+    "timing": {
+      "wns_ns": 0.526,
+      "tns_ns": 0.0,
+      "failing_endpoints": 0,
+      "total_endpoints": 2142,
+      "timing_met": true,
+      "clock_name": "clk",
+      "clock_period_ns": 10.0,
+      "data_path_delay_ns": 9.412,
+      "logic_levels": 5,
+      "fmax_est_mhz": 105.552
+    },
+    "route_status": {
+      "design_state": "Fully Routed",
+      "routable_nets": 1562,
+      "fully_routed_nets": 1562,
+      "unrouted_nets": 0,
+      "nets_with_routing_errors": 0,
+      "fully_routed": true
+    },
+    "drc": {
+      "violations": 46,
+      "error_violations": 0,
+      "errors_present": false
+    }
   }
 }
