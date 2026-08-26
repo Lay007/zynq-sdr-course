@@ -50,6 +50,7 @@ module css_dft128_core #(
     localparam [1:0] S_EMIT = 2'd2;
 
     reg [1:0] state;
+    reg [6:0] current_bin;
     reg [6:0] sample_index;
     reg [6:0] twiddle_index;
     reg signed [31:0] accumulator_re;
@@ -97,6 +98,7 @@ module css_dft128_core #(
     always @(posedge clk) begin
         if (!resetn) begin
             state               <= S_IDLE;
+            current_bin         <= 7'd0;
             sample_index        <= 7'd0;
             twiddle_index       <= 7'd0;
             accumulator_re      <= 32'sd0;
@@ -123,7 +125,7 @@ module css_dft128_core #(
                         twiddle_index   <= 7'd0;
                         accumulator_re  <= 32'sd0;
                         accumulator_im  <= 32'sd0;
-                        bin_index       <= 7'd0;
+                        current_bin     <= 7'd0;
                         state           <= S_MAC;
                     end
                 end
@@ -131,7 +133,7 @@ module css_dft128_core #(
                 S_MAC: begin
                     accumulator_re <= next_accumulator_re[31:0];
                     accumulator_im <= next_accumulator_im[31:0];
-                    twiddle_index  <= twiddle_index + bin_index;
+                    twiddle_index  <= twiddle_index + current_bin;
                     if (sample_index == 7'd127) begin
                         state <= S_EMIT;
                     end else begin
@@ -141,6 +143,7 @@ module css_dft128_core #(
 
                 S_EMIT: begin
                     bin_valid         <= 1'b1;
+                    bin_index         <= current_bin;
                     bin_re            <= accumulator_re;
                     bin_im            <= accumulator_im;
                     magnitude_squared <= accumulator_magnitude_squared;
@@ -149,12 +152,12 @@ module css_dft128_core #(
                     twiddle_index   <= 7'd0;
                     accumulator_re  <= 32'sd0;
                     accumulator_im  <= 32'sd0;
-                    if (bin_index == 7'd127) begin
+                    if (current_bin == 7'd127) begin
                         done  <= 1'b1;
                         state <= S_IDLE;
                     end else begin
-                        bin_index <= bin_index + 1'b1;
-                        state     <= S_MAC;
+                        current_bin <= current_bin + 1'b1;
+                        state       <= S_MAC;
                     end
                 end
 
