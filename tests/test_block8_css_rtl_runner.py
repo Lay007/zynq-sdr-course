@@ -30,6 +30,7 @@ def test_css_rtl_suite_has_unique_existing_sources() -> None:
         "tb_css_peak_detector",
         "tb_css_sf7_sequential_detector",
         "tb_css_sf7_axis_detector",
+        "tb_css_sf7_axi_accelerator",
     ]
     assert len(names) == len(set(names))
     assert runner.GENERATOR.is_file()

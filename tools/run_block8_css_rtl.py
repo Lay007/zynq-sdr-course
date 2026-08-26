@@ -95,6 +95,23 @@ TESTS = (
         ),
         timeout_s=60.0,
     ),
+    HdlTest(
+        "tb_css_sf7_axi_accelerator",
+        (
+            RTL_DIR / "css_dechirp_mul.v",
+            RTL_DIR / "css_sf7_ref_rom.v",
+            RTL_DIR / "css_sf7_dechirp_frontend.v",
+            RTL_DIR / "css_q15_rom.v",
+            RTL_DIR / "css_symbol_buffer.v",
+            RTL_DIR / "css_dft128_core.v",
+            RTL_DIR / "css_peak_detector.v",
+            RTL_DIR / "css_sf7_sequential_detector.v",
+            RTL_DIR / "css_sf7_axis_detector.v",
+            RTL_DIR / "css_sf7_axi_accelerator.v",
+            TB_DIR / "tb_css_sf7_axi_accelerator.sv",
+        ),
+        timeout_s=60.0,
+    ),
 )
 
 
