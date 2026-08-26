@@ -34,11 +34,11 @@ module css_sf7_sequential_detector #(
     input  wire signed [15:0]      iq_im,
 
     output wire                    busy,
-    output reg                     done,
-    output reg  [6:0]              peak_bin,
-    output reg  [6:0]              second_bin,
-    output reg  signed [63:0]      peak_magnitude_squared,
-    output reg  signed [63:0]      second_magnitude_squared,
+    output wire                    done,
+    output wire [6:0]              peak_bin,
+    output wire [6:0]              second_bin,
+    output wire signed [63:0]      peak_magnitude_squared,
+    output wire signed [63:0]      second_magnitude_squared,
     output reg  [15:0]             dechirp_overflow_count
 );
 
@@ -92,11 +92,8 @@ module css_sf7_sequential_detector #(
 
     wire dft_busy;
     wire dft_done;
-    wire dft_start_rejected;
     wire dft_bin_valid;
     wire [6:0] dft_bin_index;
-    wire signed [31:0] dft_bin_re;
-    wire signed [31:0] dft_bin_im;
     wire signed [63:0] dft_magnitude_squared;
 
     css_dft128_core #(
@@ -108,36 +105,48 @@ module css_sf7_sequential_detector #(
         .start             (buffer_complete),
         .busy              (dft_busy),
         .done              (dft_done),
-        .start_rejected    (dft_start_rejected),
+        .start_rejected    (),
         .sample_addr       (buffer_read_addr),
         .sample_re         (buffer_read_re),
         .sample_im         (buffer_read_im),
         .bin_valid         (dft_bin_valid),
         .bin_index         (dft_bin_index),
-        .bin_re            (dft_bin_re),
-        .bin_im            (dft_bin_im),
+        .bin_re            (),
+        .bin_im            (),
         .magnitude_squared (dft_magnitude_squared)
+    );
+
+    wire peak_busy;
+
+    css_peak_detector u_peak_detector (
+        .clk                       (clk),
+        .resetn                    (resetn),
+        .start                     (buffer_complete),
+        .busy                      (peak_busy),
+        .done                      (done),
+        .start_rejected            (),
+        .bin_valid                 (dft_bin_valid),
+        .bin_index                 (dft_bin_index),
+        .magnitude_squared         (dft_magnitude_squared),
+        .peak_bin                  (peak_bin),
+        .second_bin                (second_bin),
+        .peak_magnitude_squared    (peak_magnitude_squared),
+        .second_magnitude_squared  (second_magnitude_squared)
     );
 
     assign ready = buffer_ready;
     assign busy = (input_index != 7'd0) ||
                   (buffer_accepted_count != 8'd0) ||
                   buffer_full ||
-                  dft_busy;
+                  dft_busy ||
+                  peak_busy;
     assign buffer_release = dft_done;
 
     always @(posedge clk) begin
         if (!resetn) begin
             input_index                 <= 7'd0;
-            done                        <= 1'b0;
-            peak_bin                    <= 7'd0;
-            second_bin                  <= 7'd0;
-            peak_magnitude_squared      <= 64'sd0;
-            second_magnitude_squared    <= 64'sd0;
             dechirp_overflow_count      <= 16'd0;
         end else begin
-            done <= 1'b0;
-
             if (valid_in && ready) begin
                 if (input_index == 7'd0)
                     dechirp_overflow_count <= 16'd0;
@@ -149,31 +158,6 @@ module css_sf7_sequential_detector #(
 
             if (dechirp_valid && dechirp_overflow)
                 dechirp_overflow_count <= dechirp_overflow_count + 1'b1;
-
-            if (buffer_complete) begin
-                peak_bin                   <= 7'd0;
-                second_bin                 <= 7'd0;
-                peak_magnitude_squared     <= 64'sd0;
-                second_magnitude_squared  <= 64'sd0;
-            end
-
-            if (dft_bin_valid) begin
-                if (dft_bin_index == 7'd0) begin
-                    peak_magnitude_squared <= dft_magnitude_squared;
-                    peak_bin <= 7'd0;
-                end else if (dft_magnitude_squared > peak_magnitude_squared) begin
-                    second_magnitude_squared <= peak_magnitude_squared;
-                    second_bin <= peak_bin;
-                    peak_magnitude_squared <= dft_magnitude_squared;
-                    peak_bin <= dft_bin_index;
-                end else if (dft_magnitude_squared > second_magnitude_squared) begin
-                    second_magnitude_squared <= dft_magnitude_squared;
-                    second_bin <= dft_bin_index;
-                end
-            end
-
-            if (dft_done)
-                done <= 1'b1;
         end
     end
 

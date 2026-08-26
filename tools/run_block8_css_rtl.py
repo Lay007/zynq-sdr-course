@@ -73,6 +73,7 @@ TESTS = (
             RTL_DIR / "css_q15_rom.v",
             RTL_DIR / "css_symbol_buffer.v",
             RTL_DIR / "css_dft128_core.v",
+            RTL_DIR / "css_peak_detector.v",
             RTL_DIR / "css_sf7_sequential_detector.v",
             TB_DIR / "tb_css_sf7_sequential_detector.sv",
         ),
