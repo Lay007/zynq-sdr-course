@@ -10,7 +10,7 @@ module tb_css_symbol_buffer;
     reg valid_in = 1'b0;
     reg signed [15:0] iq_re = 16'sd0;
     reg signed [15:0] iq_im = 16'sd0;
-    reg release = 1'b0;
+    reg release_buffer = 1'b0;
     reg [ADDR_WIDTH-1:0] read_addr = {ADDR_WIDTH{1'b0}};
 
     wire ready;
@@ -35,7 +35,7 @@ module tb_css_symbol_buffer;
         .ready(ready),
         .iq_re(iq_re),
         .iq_im(iq_im),
-        .release(release),
+        .release_buffer(release_buffer),
         .symbol_complete(symbol_complete),
         .full(full),
         .accepted_count(accepted_count),
@@ -92,11 +92,11 @@ module tb_css_symbol_buffer;
     task automatic pulse_release;
         begin
             @(negedge clk);
-            release = 1'b1;
+            release_buffer = 1'b1;
             @(posedge clk);
             #1;
             @(negedge clk);
-            release = 1'b0;
+            release_buffer = 1'b0;
         end
     endtask
 

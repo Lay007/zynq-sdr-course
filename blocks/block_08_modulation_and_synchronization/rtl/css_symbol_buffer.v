@@ -27,7 +27,7 @@ module css_symbol_buffer #(
     input  wire signed [15:0]           iq_re,
     input  wire signed [15:0]           iq_im,
 
-    input  wire                         release,
+    input  wire                         release_buffer,
     output reg                          symbol_complete,
     output reg                          full,
     output reg  [ADDR_WIDTH:0]          accepted_count,
@@ -54,7 +54,7 @@ module css_symbol_buffer #(
         end else begin
             symbol_complete <= 1'b0;
 
-            if (release && full) begin
+            if (release_buffer && full) begin
                 write_index    <= {ADDR_WIDTH{1'b0}};
                 full           <= 1'b0;
                 accepted_count <= {(ADDR_WIDTH+1){1'b0}};
