@@ -50,6 +50,14 @@ TESTS = (
         ),
     ),
     HdlTest(
+        "tb_css_dft128_core",
+        (
+            RTL_DIR / "css_q15_rom.v",
+            RTL_DIR / "css_dft128_core.v",
+            TB_DIR / "tb_css_dft128_core.sv",
+        ),
+    ),
+    HdlTest(
         "tb_css_sf7_sequential_detector",
         (
             RTL_DIR / "css_dechirp_mul.v",

@@ -25,6 +25,8 @@ def test_css_rtl_suite_has_unique_existing_sources() -> None:
     assert names == [
         "tb_css_dechirp_mul",
         "tb_css_sf7_dechirp_frontend",
+        "tb_css_symbol_buffer",
+        "tb_css_dft128_core",
         "tb_css_sf7_sequential_detector",
     ]
     assert len(names) == len(set(names))
