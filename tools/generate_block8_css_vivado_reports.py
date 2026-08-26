@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate reproducible Vivado OOC evidence for the Block 8 CSS detector."""
+"""Generate reproducible Vivado OOC implementation evidence for Block 8 CSS."""
 
 from __future__ import annotations
 
@@ -26,6 +26,78 @@ SYMBOL_INITIATION_INTERVAL_CYCLES = FIRST_INPUT_TO_DONE_CYCLES + 1
 
 def _search(pattern: str, text: str) -> re.Match[str] | None:
     return re.search(pattern, text, re.MULTILINE | re.DOTALL)
+
+
+def _parse_stage_metrics(
+    output_dir: Path,
+    stage: str,
+    clock_period_ns: float,
+) -> tuple[dict[str, object], dict[str, object], str]:
+    utilization = (
+        output_dir / f"{TOP_NAME}_{stage}_utilization.rpt"
+    ).read_text(encoding="utf-8", errors="ignore")
+    timing = (
+        output_dir / f"{TOP_NAME}_{stage}_timing_summary.rpt"
+    ).read_text(encoding="utf-8", errors="ignore")
+
+    lut = _search(r"\| Slice LUTs\*?\s*\|\s*([0-9<>.]+)\s*\|", utilization)
+    ff = _search(r"\| Slice Registers\s*\|\s*([0-9<>.]+)\s*\|", utilization)
+    bram = _search(r"\| Block RAM Tile\s*\|\s*([0-9<>.]+)\s*\|", utilization)
+    dsp = _search(r"\| DSPs\s*\|\s*([0-9<>.]+)\s*\|", utilization)
+    summary = _search(
+        r"Design Timing Summary.*?\n\s*WNS\(ns\).*?\n\s*[- ]+\n\s*"
+        r"([A-Z0-9.\-<>]+)\s+([A-Z0-9.\-<>]+)\s+"
+        r"([A-Z0-9.\-<>]+)\s+([A-Z0-9.\-<>]+)",
+        timing,
+    )
+    clock = _search(r"\n(\w+)\s+\{[^}]+\}\s+([0-9.]+)\s+([0-9.]+)", timing)
+    data_path = _search(r"Data Path Delay:\s+([0-9.]+)ns", timing)
+    logic_levels = _search(r"Logic Levels:\s+([0-9]+)", timing)
+
+    wns_ns = (
+        None if summary is None or summary.group(1) == "NA" else float(summary.group(1))
+    )
+    period_ns = float(clock.group(2)) if clock else clock_period_ns
+    critical_period_ns = period_ns - wns_ns if wns_ns is not None else None
+    fmax_est_mhz = (
+        round(1000.0 / critical_period_ns, 3)
+        if critical_period_ns is not None and critical_period_ns > 0
+        else None
+    )
+
+    return (
+        {
+            "lut": int(lut.group(1)) if lut else None,
+            "ff": int(ff.group(1)) if ff else None,
+            "bram_tiles": float(bram.group(1)) if bram else None,
+            "dsp": int(dsp.group(1)) if dsp else None,
+        },
+        {
+            "wns_ns": wns_ns,
+            "tns_ns": (
+                None
+                if summary is None or summary.group(2) == "NA"
+                else float(summary.group(2))
+            ),
+            "failing_endpoints": (
+                None
+                if summary is None or summary.group(3) == "NA"
+                else int(summary.group(3))
+            ),
+            "total_endpoints": (
+                None
+                if summary is None or summary.group(4) == "NA"
+                else int(summary.group(4))
+            ),
+            "timing_met": wns_ns is not None and wns_ns >= 0.0,
+            "clock_name": clock.group(1) if clock else None,
+            "clock_period_ns": period_ns,
+            "data_path_delay_ns": float(data_path.group(1)) if data_path else None,
+            "logic_levels": int(logic_levels.group(1)) if logic_levels else None,
+            "fmax_est_mhz": fmax_est_mhz,
+        },
+        utilization,
+    )
 
 
 def run_vivado(
@@ -59,39 +131,24 @@ def parse_metrics(
     part_name: str,
     clock_period_ns: float,
 ) -> dict[str, object]:
-    """Extract stable resource and post-synthesis timing metrics."""
-    utilization = (output_dir / f"{TOP_NAME}_utilization.rpt").read_text(
+    """Extract stable post-synthesis and post-route implementation metrics."""
+    post_synth_utilization, post_synth_timing, utilization_text = (
+        _parse_stage_metrics(output_dir, "post_synthesis", clock_period_ns)
+    )
+    post_route_utilization, post_route_timing, _ = _parse_stage_metrics(
+        output_dir, "post_route", clock_period_ns
+    )
+    route_status_text = (output_dir / f"{TOP_NAME}_post_route_status.rpt").read_text(
         encoding="utf-8", errors="ignore"
     )
-    timing = (output_dir / f"{TOP_NAME}_timing_summary.rpt").read_text(
-        encoding="utf-8", errors="ignore"
-    )
 
-    tool = _search(r"\| Tool Version : ([^\r\n]+)", utilization)
-    device = _search(r"\| Device\s*: ([^\r\n]+)", utilization)
-    lut = _search(r"\| Slice LUTs\*?\s*\|\s*([0-9<>.]+)\s*\|", utilization)
-    ff = _search(r"\| Slice Registers\s*\|\s*([0-9<>.]+)\s*\|", utilization)
-    bram = _search(r"\| Block RAM Tile\s*\|\s*([0-9<>.]+)\s*\|", utilization)
-    dsp = _search(r"\| DSPs\s*\|\s*([0-9<>.]+)\s*\|", utilization)
-
-    summary = _search(
-        r"Design Timing Summary.*?\n\s*WNS\(ns\).*?\n\s*[- ]+\n\s*"
-        r"([A-Z0-9.\-<>]+)\s+([A-Z0-9.\-<>]+)\s+"
-        r"([A-Z0-9.\-<>]+)\s+([A-Z0-9.\-<>]+)",
-        timing,
+    tool = _search(r"\| Tool Version : ([^\r\n]+)", utilization_text)
+    device = _search(r"\| Device\s*: ([^\r\n]+)", utilization_text)
+    unrouted = _search(r"# of Unrouted Nets\s*:\s*([0-9]+)", route_status_text)
+    routing_errors = _search(
+        r"# of Nets with Routing Errors\s*:\s*([0-9]+)", route_status_text
     )
-    clock = _search(r"\n(\w+)\s+\{[^}]+\}\s+([0-9.]+)\s+([0-9.]+)", timing)
-    data_path = _search(r"Data Path Delay:\s+([0-9.]+)ns", timing)
-    logic_levels = _search(r"Logic Levels:\s+([0-9]+)", timing)
-
-    wns_ns = None if summary is None or summary.group(1) == "NA" else float(summary.group(1))
-    period_ns = float(clock.group(2)) if clock else clock_period_ns
-    critical_period_ns = period_ns - wns_ns if wns_ns is not None else None
-    fmax_est_mhz = (
-        round(1000.0 / critical_period_ns, 3)
-        if critical_period_ns is not None and critical_period_ns > 0
-        else None
-    )
+    fully_routed = _search(r"# of Fully Routed Nets\s*:\s*([0-9]+)", route_status_text)
 
     target_clock_frequency_hz = 1_000_000_000.0 / clock_period_ns
 
@@ -100,7 +157,7 @@ def parse_metrics(
         "device": device.group(1).strip() if device else None,
         "part": part_name,
         "top": TOP_NAME,
-        "flow": "out_of_context_post_synthesis",
+        "flow": "out_of_context_implementation",
         "target_clock_period_ns": clock_period_ns,
         "target_clock_frequency_mhz": round(1000.0 / clock_period_ns, 3),
         "latency_cycles": {
@@ -121,58 +178,69 @@ def parse_metrics(
                 3,
             ),
         },
-        "utilization": {
-            "lut": int(lut.group(1)) if lut else None,
-            "ff": int(ff.group(1)) if ff else None,
-            "bram_tiles": float(bram.group(1)) if bram else None,
-            "dsp": int(dsp.group(1)) if dsp else None,
+        "post_synthesis": {
+            "utilization": post_synth_utilization,
+            "timing": post_synth_timing,
         },
-        "timing": {
-            "wns_ns": wns_ns,
-            "tns_ns": (
-                None
-                if summary is None or summary.group(2) == "NA"
-                else float(summary.group(2))
-            ),
-            "failing_endpoints": (
-                None
-                if summary is None or summary.group(3) == "NA"
-                else int(summary.group(3))
-            ),
-            "total_endpoints": (
-                None
-                if summary is None or summary.group(4) == "NA"
-                else int(summary.group(4))
-            ),
-            "timing_met": wns_ns is not None and wns_ns >= 0.0,
-            "clock_name": clock.group(1) if clock else None,
-            "clock_period_ns": period_ns,
-            "data_path_delay_ns": float(data_path.group(1)) if data_path else None,
-            "logic_levels": int(logic_levels.group(1)) if logic_levels else None,
-            "post_synthesis_fmax_est_mhz": fmax_est_mhz,
+        "post_route": {
+            "utilization": post_route_utilization,
+            "timing": post_route_timing,
+            "route_status": {
+                "fully_routed_nets": int(fully_routed.group(1)) if fully_routed else None,
+                "unrouted_nets": int(unrouted.group(1)) if unrouted else None,
+                "nets_with_routing_errors": (
+                    int(routing_errors.group(1)) if routing_errors else None
+                ),
+                "fully_routed": (
+                    unrouted is not None
+                    and routing_errors is not None
+                    and int(unrouted.group(1)) == 0
+                    and int(routing_errors.group(1)) == 0
+                ),
+            },
         },
     }
 
 
 def validate_metrics(metrics: dict[str, object]) -> None:
     """Reject incomplete evidence packages while allowing an honest timing miss."""
-    utilization = metrics["utilization"]
-    timing = metrics["timing"]
-    assert isinstance(utilization, dict)
-    assert isinstance(timing, dict)
+    for stage_name in ("post_synthesis", "post_route"):
+        stage = metrics[stage_name]
+        assert isinstance(stage, dict)
+        utilization = stage["utilization"]
+        timing = stage["timing"]
+        assert isinstance(utilization, dict)
+        assert isinstance(timing, dict)
 
-    missing_utilization = [
-        name for name in ("lut", "ff", "bram_tiles", "dsp")
-        if utilization.get(name) is None
+        missing_utilization = [
+            name for name in ("lut", "ff", "bram_tiles", "dsp")
+            if utilization.get(name) is None
+        ]
+        if missing_utilization:
+            raise ValueError(
+                f"Missing {stage_name} utilization metrics: "
+                + ", ".join(missing_utilization)
+            )
+        if timing.get("wns_ns") is None:
+            raise ValueError(f"Missing {stage_name} WNS")
+        if timing.get("total_endpoints") is None:
+            raise ValueError(f"Missing {stage_name} timing endpoint count")
+
+    post_route = metrics["post_route"]
+    assert isinstance(post_route, dict)
+    route_status = post_route["route_status"]
+    assert isinstance(route_status, dict)
+    missing_route_status = [
+        name
+        for name in ("fully_routed_nets", "unrouted_nets", "nets_with_routing_errors")
+        if route_status.get(name) is None
     ]
-    if missing_utilization:
+    if missing_route_status:
         raise ValueError(
-            "Missing utilization metrics: " + ", ".join(missing_utilization)
+            "Missing route status metrics: " + ", ".join(missing_route_status)
         )
-    if timing.get("wns_ns") is None:
-        raise ValueError("Missing post-synthesis WNS")
-    if timing.get("total_endpoints") is None:
-        raise ValueError("Missing timing endpoint count")
+    if not route_status.get("fully_routed"):
+        raise ValueError("Vivado implementation is not fully routed")
 
 
 def main() -> int:

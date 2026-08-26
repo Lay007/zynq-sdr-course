@@ -40,16 +40,36 @@ synth_design \
     -flatten_hierarchy rebuilt
 
 report_utilization \
-    -file [file join $output_dir "${top_name}_utilization.rpt"]
+    -file [file join $output_dir "${top_name}_post_synthesis_utilization.rpt"]
 report_utilization \
     -hierarchical \
     -hierarchical_depth 4 \
-    -file [file join $output_dir "${top_name}_utilization_hierarchical.rpt"]
+    -file [file join $output_dir "${top_name}_post_synthesis_utilization_hierarchical.rpt"]
 report_timing_summary \
     -delay_type max \
     -max_paths 10 \
-    -file [file join $output_dir "${top_name}_timing_summary.rpt"]
+    -file [file join $output_dir "${top_name}_post_synthesis_timing_summary.rpt"]
+
+opt_design
+place_design
+phys_opt_design
+route_design
+
+report_utilization \
+    -file [file join $output_dir "${top_name}_post_route_utilization.rpt"]
+report_utilization \
+    -hierarchical \
+    -hierarchical_depth 4 \
+    -file [file join $output_dir "${top_name}_post_route_utilization_hierarchical.rpt"]
+report_timing_summary \
+    -delay_type max \
+    -max_paths 10 \
+    -file [file join $output_dir "${top_name}_post_route_timing_summary.rpt"]
+report_route_status \
+    -file [file join $output_dir "${top_name}_post_route_status.rpt"]
 report_clock_utilization \
-    -file [file join $output_dir "${top_name}_clock_utilization.rpt"]
+    -file [file join $output_dir "${top_name}_post_route_clock_utilization.rpt"]
+report_drc \
+    -file [file join $output_dir "${top_name}_post_route_drc.rpt"]
 
 close_project
