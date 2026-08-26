@@ -1,0 +1,32 @@
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
+| Date         : normalized
+| Host         : normalized
+| Command      : report_utilization -hierarchical -hierarchical_depth 4 -file <output_dir>/css_sf7_sequential_detector_utilization_hierarchical.rpt
+| Design       : css_sf7_sequential_detector
+| Device       : 7z020clg400-2
+| Design State : Synthesized
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++---------------------------------+--------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+|             Instance            |          Module          | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
++---------------------------------+--------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+| css_sf7_sequential_detector     |                    (top) |        693 |        605 |      88 |    0 | 421 |      0 |      3 |         16 |
+|   (css_sf7_sequential_detector) |                    (top) |         13 |         13 |       0 |    0 |  23 |      0 |      1 |          0 |
+|   u_dechirp_frontend            | css_sf7_dechirp_frontend |         61 |         61 |       0 |    0 |  35 |      0 |      0 |          4 |
+|     (u_dechirp_frontend)        | css_sf7_dechirp_frontend |          0 |          0 |       0 |    0 |   1 |      0 |      0 |          0 |
+|     u_dechirp                   |          css_dechirp_mul |         61 |         61 |       0 |    0 |  34 |      0 |      0 |          4 |
+|   u_dft_core                    |          css_dft128_core |        429 |        429 |       0 |    0 | 201 |      0 |      2 |         12 |
+|   u_peak_detector               |        css_peak_detector |        105 |        105 |       0 |    0 | 145 |      0 |      0 |          0 |
+|   u_symbol_buffer               |        css_symbol_buffer |        147 |         59 |      88 |    0 |  17 |      0 |      0 |          0 |
++---------------------------------+--------------------------+------------+------------+---------+------+-----+--------+--------+------------+

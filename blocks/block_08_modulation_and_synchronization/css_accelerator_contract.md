@@ -27,6 +27,9 @@ bin index and magnitude stream, keeps the first occurrence when magnitudes are
 equal, and publishes held result registers with a one-cycle `done` pulse. Its
 control and reset behavior are independently regression-tested.
 
+Measured Vivado OOC evidence is summarized in the
+[Block 8 CSS accelerator report](../../reports/fpga/block8-css-accelerator-evidence.md).
+
 ## Interface and arithmetic
 
 - A sample transfers when `valid_in && ready`.
@@ -49,10 +52,11 @@ control and reset behavior are independently regression-tested.
 - Equal magnitudes use first-occurrence tie breaking.
 - `done` is a one-cycle result pulse; result registers remain stable afterward.
 
-The sequential DFT needs `128 * (128 + 1) = 16,512` MAC/finish cycles per
-symbol, plus input/drain/done overhead. This is suitable for teaching fixed-point
-behavior and establishing a bit-exact baseline, not a substitute for a reusable
-streaming SF5–SF12 FFT.
+The timing-pipelined sequential DFT needs `128 * (128 + 2) = 16,640` clocks per
+symbol. The integrated result appears 16,644 clocks after the final accepted
+input sample. This is suitable for teaching fixed-point behavior and
+establishing a bit-exact baseline, not a substitute for a reusable streaming
+SF5–SF12 FFT.
 
 ## Reproduction
 
@@ -75,15 +79,17 @@ twiddle tables from the checked-in Python reference before simulation.
 
 This implementation is a sequential educational DFT, not a
 throughput-optimized FFT. RTL simulation proves the checked fixed-point and
-control behavior; it does not prove Zynq-7020 timing closure, resource use, or
-operation on hardware. No latency/sample-rate claim beyond simulated clock
-cycles should be converted into a hardware rate without Vivado evidence.
+control behavior. Vivado 2021.1 OOC post-synthesis evidence for
+`xc7z020clg400-2` reports 693 LUT, 421 FF, 1.5 BRAM tiles, 16 DSPs, and
+`+1.006 ns` WNS at 100 MHz. This is not placed-and-routed timing closure and
+does not prove operation on hardware.
 
 The next datapath step is to replace `css_dft128_core` with a reusable FFT while
 preserving the symbol-buffer read contract, the bin stream, and the independent
-peak detector. Issue #46 still requires measured latency/throughput,
-LUT/FF/BRAM/DSP utilization, timing and maximum sample-rate reports, AXI-Stream
-data, AXI-Lite control/status, and a PS-side bring-up helper.
+peak detector. Issue #46 still requires placed-and-routed/integrated timing
+evidence, AXI-Stream data, AXI-Lite control/status, and a PS-side bring-up helper.
+The OOC report records the current latency, architectural 100 MHz throughput,
+resource use, and post-synthesis timing without claiming board completion.
 
 ## Companion-project boundary
 

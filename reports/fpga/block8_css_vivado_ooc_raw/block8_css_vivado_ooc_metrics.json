@@ -1,0 +1,37 @@
+{
+  "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+  "device": "7z020clg400-2",
+  "part": "xc7z020clg400-2",
+  "top": "css_sf7_sequential_detector",
+  "flow": "out_of_context_post_synthesis",
+  "target_clock_period_ns": 10.0,
+  "target_clock_frequency_mhz": 100.0,
+  "latency_cycles": {
+    "dft_transform": 16640,
+    "final_input_to_done": 16644,
+    "first_input_to_done": 16771,
+    "symbol_initiation_interval": 16772
+  },
+  "throughput_at_target_clock": {
+    "symbol_decisions_per_second": 5962.318,
+    "sustained_input_samples_per_second": 763176.723
+  },
+  "utilization": {
+    "lut": 693,
+    "ff": 421,
+    "bram_tiles": 1.5,
+    "dsp": 16
+  },
+  "timing": {
+    "wns_ns": 1.006,
+    "tns_ns": 0.0,
+    "failing_endpoints": 0,
+    "total_endpoints": 2142,
+    "timing_met": true,
+    "clock_name": "clk",
+    "clock_period_ns": 10.0,
+    "data_path_delay_ns": 8.888,
+    "logic_levels": 5,
+    "post_synthesis_fmax_est_mhz": 111.185
+  }
+}
