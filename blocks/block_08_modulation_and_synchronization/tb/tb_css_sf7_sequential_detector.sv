@@ -4,6 +4,7 @@ module tb_css_sf7_sequential_detector;
 
     localparam integer N = 128;
     localparam integer MAX_RESULT_CYCLES = 17000;
+    localparam integer EXPECTED_RESULT_CYCLES = 16643;
 
     reg clk = 1'b0;
     reg resetn = 1'b0;
@@ -138,6 +139,15 @@ module tb_css_sf7_sequential_detector;
                 $display("FAIL detector timeout on case=%0d", case_index);
                 $fatal(1);
             end
+            if (wait_cycles != EXPECTED_RESULT_CYCLES) begin
+                $display(
+                    "FAIL case=%0d result cycles actual=%0d expected=%0d",
+                    case_index,
+                    wait_cycles,
+                    EXPECTED_RESULT_CYCLES
+                );
+                errors = errors + 1;
+            end
 
             scan_count = $fscanf(
                 expected_file,
@@ -194,9 +204,10 @@ module tb_css_sf7_sequential_detector;
 
         if (errors == 0) begin
             $display(
-                "PASS tb_css_sf7_sequential_detector cases=%0d samples=%0d",
+                "PASS tb_css_sf7_sequential_detector cases=%0d samples=%0d result_cycles=%0d",
                 case_count,
-                case_count * N
+                case_count * N,
+                EXPECTED_RESULT_CYCLES
             );
         end else begin
             $display("FAIL tb_css_sf7_sequential_detector errors=%0d", errors);

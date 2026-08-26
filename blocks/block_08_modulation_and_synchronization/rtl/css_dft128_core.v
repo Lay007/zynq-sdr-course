@@ -2,9 +2,10 @@
 
 // Reusable educational 128-point complex DFT core for the Block 8 CSS path.
 //
-// One buffered Q1.15 sample is read and accumulated per clock. Each bin takes
-// 128 MAC clocks followed by one output clock; this is deliberately a readable
-// sequential DFT, not a throughput-optimized FFT.
+// One buffered Q1.15 sample is read per clock. A pipeline register separates
+// the complex multiply/scale path from the accumulator recurrence. Each bin
+// takes 128 term clocks, one accumulator-drain clock, and one output clock; this
+// is deliberately a readable sequential DFT, not a throughput-optimized FFT.
 //
 // Fixed-point contract, preserved from css_sf7_sequential_detector:
 //   * sample_re/sample_im and twiddles are signed 16-bit Q1.15;
@@ -45,14 +46,18 @@ module css_dft128_core #(
     output reg  signed [63:0]      magnitude_squared
 );
 
-    localparam [1:0] S_IDLE = 2'd0;
-    localparam [1:0] S_MAC  = 2'd1;
-    localparam [1:0] S_EMIT = 2'd2;
+    localparam [1:0] S_IDLE  = 2'd0;
+    localparam [1:0] S_MAC   = 2'd1;
+    localparam [1:0] S_DRAIN = 2'd2;
+    localparam [1:0] S_EMIT  = 2'd3;
 
     reg [1:0] state;
     reg [6:0] current_bin;
     reg [6:0] sample_index;
     reg [6:0] twiddle_index;
+    reg term_valid;
+    reg signed [32:0] term_pipe_re;
+    reg signed [32:0] term_pipe_im;
     reg signed [31:0] accumulator_re;
     reg signed [31:0] accumulator_im;
 
@@ -84,9 +89,9 @@ module css_dft128_core #(
     wire signed [32:0] term_im = full_term_im >>> 15;
 
     wire signed [32:0] next_accumulator_re =
-        {accumulator_re[31], accumulator_re} + term_re;
+        {accumulator_re[31], accumulator_re} + term_pipe_re;
     wire signed [32:0] next_accumulator_im =
-        {accumulator_im[31], accumulator_im} + term_im;
+        {accumulator_im[31], accumulator_im} + term_pipe_im;
 
     wire signed [63:0] accumulator_re_squared =
         accumulator_re * accumulator_re;
@@ -101,6 +106,9 @@ module css_dft128_core #(
             current_bin         <= 7'd0;
             sample_index        <= 7'd0;
             twiddle_index       <= 7'd0;
+            term_valid           <= 1'b0;
+            term_pipe_re         <= 33'sd0;
+            term_pipe_im         <= 33'sd0;
             accumulator_re      <= 32'sd0;
             accumulator_im      <= 32'sd0;
             done                <= 1'b0;
@@ -123,6 +131,9 @@ module css_dft128_core #(
                     if (start) begin
                         sample_index    <= 7'd0;
                         twiddle_index   <= 7'd0;
+                        term_valid       <= 1'b0;
+                        term_pipe_re     <= 33'sd0;
+                        term_pipe_im     <= 33'sd0;
                         accumulator_re  <= 32'sd0;
                         accumulator_im  <= 32'sd0;
                         current_bin     <= 7'd0;
@@ -131,14 +142,27 @@ module css_dft128_core #(
                 end
 
                 S_MAC: begin
-                    accumulator_re <= next_accumulator_re[31:0];
-                    accumulator_im <= next_accumulator_im[31:0];
+                    term_pipe_re   <= term_re;
+                    term_pipe_im   <= term_im;
                     twiddle_index  <= twiddle_index + current_bin;
+                    if (term_valid) begin
+                        accumulator_re <= next_accumulator_re[31:0];
+                        accumulator_im <= next_accumulator_im[31:0];
+                    end else begin
+                        term_valid <= 1'b1;
+                    end
                     if (sample_index == 7'd127) begin
-                        state <= S_EMIT;
+                        state <= S_DRAIN;
                     end else begin
                         sample_index <= sample_index + 1'b1;
                     end
+                end
+
+                S_DRAIN: begin
+                    accumulator_re <= next_accumulator_re[31:0];
+                    accumulator_im <= next_accumulator_im[31:0];
+                    term_valid     <= 1'b0;
+                    state          <= S_EMIT;
                 end
 
                 S_EMIT: begin
@@ -150,6 +174,8 @@ module css_dft128_core #(
 
                     sample_index    <= 7'd0;
                     twiddle_index   <= 7'd0;
+                    term_pipe_re    <= 33'sd0;
+                    term_pipe_im    <= 33'sd0;
                     accumulator_re  <= 32'sd0;
                     accumulator_im  <= 32'sd0;
                     if (current_bin == 7'd127) begin
