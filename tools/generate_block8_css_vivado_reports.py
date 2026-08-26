@@ -32,12 +32,13 @@ def _parse_stage_metrics(
     output_dir: Path,
     stage: str,
     clock_period_ns: float,
+    top_name: str = TOP_NAME,
 ) -> tuple[dict[str, object], dict[str, object], str]:
     utilization = (
-        output_dir / f"{TOP_NAME}_{stage}_utilization.rpt"
+        output_dir / f"{top_name}_{stage}_utilization.rpt"
     ).read_text(encoding="utf-8", errors="ignore")
     timing = (
-        output_dir / f"{TOP_NAME}_{stage}_timing_summary.rpt"
+        output_dir / f"{top_name}_{stage}_timing_summary.rpt"
     ).read_text(encoding="utf-8", errors="ignore")
 
     lut = _search(r"\| Slice LUTs\*?\s*\|\s*([0-9<>.]+)\s*\|", utilization)
@@ -105,6 +106,7 @@ def run_vivado(
     output_dir: Path,
     part_name: str,
     clock_period_ns: float,
+    top_name: str = TOP_NAME,
 ) -> None:
     """Run the source-only batch flow without creating a persistent project."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -122,6 +124,7 @@ def run_vivado(
         str(output_dir),
         part_name,
         f"{clock_period_ns:.3f}",
+        top_name,
     ]
     subprocess.run(command, cwd=ROOT, check=True)
 
@@ -130,18 +133,19 @@ def parse_metrics(
     output_dir: Path,
     part_name: str,
     clock_period_ns: float,
+    top_name: str = TOP_NAME,
 ) -> dict[str, object]:
     """Extract stable post-synthesis and post-route implementation metrics."""
     post_synth_utilization, post_synth_timing, utilization_text = (
-        _parse_stage_metrics(output_dir, "post_synthesis", clock_period_ns)
+        _parse_stage_metrics(output_dir, "post_synthesis", clock_period_ns, top_name)
     )
     post_route_utilization, post_route_timing, _ = _parse_stage_metrics(
-        output_dir, "post_route", clock_period_ns
+        output_dir, "post_route", clock_period_ns, top_name
     )
-    route_status_text = (output_dir / f"{TOP_NAME}_post_route_status.rpt").read_text(
+    route_status_text = (output_dir / f"{top_name}_post_route_status.rpt").read_text(
         encoding="utf-8", errors="ignore"
     )
-    drc_text = (output_dir / f"{TOP_NAME}_post_route_drc.rpt").read_text(
+    drc_text = (output_dir / f"{top_name}_post_route_drc.rpt").read_text(
         encoding="utf-8", errors="ignore"
     )
 
@@ -176,7 +180,7 @@ def parse_metrics(
         "tool_version": tool.group(1).strip() if tool else None,
         "device": device.group(1).strip() if device else None,
         "part": part_name,
-        "top": TOP_NAME,
+        "top": top_name,
         "flow": "out_of_context_implementation",
         "target_clock_period_ns": clock_period_ns,
         "target_clock_frequency_mhz": round(1000.0 / clock_period_ns, 3),
@@ -304,9 +308,9 @@ def main() -> int:
     print(f"Vivado: {vivado_bin}")
     print(f"Output directory: {output_dir}")
     if not args.reuse:
-        run_vivado(vivado_bin, output_dir, args.part, args.clock_period_ns)
+        run_vivado(vivado_bin, output_dir, args.part, args.clock_period_ns, TOP_NAME)
     normalize_reports(output_dir)
-    metrics = parse_metrics(output_dir, args.part, args.clock_period_ns)
+    metrics = parse_metrics(output_dir, args.part, args.clock_period_ns, TOP_NAME)
     validate_metrics(metrics)
 
     metrics_path = output_dir / "block8_css_vivado_ooc_metrics.json"

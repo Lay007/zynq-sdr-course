@@ -1,12 +1,12 @@
-if {[llength $argv] != 3} {
-    error "usage: vivado_block8_css_ooc.tcl <output_dir> <part> <clock_period_ns>"
+if {[llength $argv] != 4} {
+    error "usage: vivado_block8_css_ooc.tcl <output_dir> <part> <clock_period_ns> <top_name>"
 }
 
 set output_dir [file normalize [lindex $argv 0]]
 set part_name [lindex $argv 1]
 set clock_period_ns [lindex $argv 2]
 set root_dir [file normalize [file join [file dirname [info script]] ".."]]
-set top_name css_sf7_sequential_detector
+set top_name [lindex $argv 3]
 
 set rtl_relpaths {
     blocks/block_08_modulation_and_synchronization/rtl/css_dechirp_mul.v
@@ -17,6 +17,8 @@ set rtl_relpaths {
     blocks/block_08_modulation_and_synchronization/rtl/css_dft128_core.v
     blocks/block_08_modulation_and_synchronization/rtl/css_peak_detector.v
     blocks/block_08_modulation_and_synchronization/rtl/css_sf7_sequential_detector.v
+    blocks/block_08_modulation_and_synchronization/rtl/css_sf7_axis_detector.v
+    blocks/block_08_modulation_and_synchronization/rtl/css_sf7_axi_accelerator.v
 }
 
 file mkdir $output_dir

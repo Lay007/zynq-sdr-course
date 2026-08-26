@@ -173,3 +173,47 @@ def test_validation_rejects_unrouted_implementation() -> None:
         assert str(error) == "Vivado implementation is not fully routed"
     else:
         raise AssertionError("unrouted CSS implementation was accepted")
+
+
+def test_parse_metrics_accepts_an_explicit_top_name(tmp_path: Path) -> None:
+    top = "css_sf7_axi_accelerator"
+    utilization = """
+| Tool Version : Vivado v.2021.1 (win64)
+| Device       : 7z020-clg400
+| Slice LUTs*        | 10 | 53200 | 0.02 |
+| Slice Registers    | 20 | 106400 | 0.02 |
+| Block RAM Tile     | 1.5 | 140 | 1.07 |
+| DSPs               | 16 | 220 | 7.27 |
+"""
+    timing = """
+Design Timing Summary
+WNS(ns) TNS(ns) TNS Failing Endpoints TNS Total Endpoints
+------- ------- --------------------- -------------------
+0.500 0.000 0 100
+clk {0.000 5.000} 10.000 100.000
+Data Path Delay: 9.400ns
+Logic Levels: 5
+"""
+    for stage in ("post_synthesis", "post_route"):
+        (tmp_path / f"{top}_{stage}_utilization.rpt").write_text(
+            utilization, encoding="utf-8"
+        )
+        (tmp_path / f"{top}_{stage}_timing_summary.rpt").write_text(
+            timing, encoding="utf-8"
+        )
+    (tmp_path / f"{top}_post_route_status.rpt").write_text(
+        "# of routable nets... : 20 :\n"
+        "# of fully routed nets... : 20 :\n"
+        "# of nets with routing errors... : 0 :\n",
+        encoding="utf-8",
+    )
+    (tmp_path / f"{top}_post_route_drc.rpt").write_text(
+        "| Design State : Fully Routed\nViolations found: 0\n",
+        encoding="utf-8",
+    )
+
+    metrics = parse_metrics(tmp_path, "xc7z020clg400-2", 10.0, top)
+
+    assert metrics["top"] == top
+    assert metrics["post_route"]["route_status"]["fully_routed"] is True
+    validate_metrics(metrics)
