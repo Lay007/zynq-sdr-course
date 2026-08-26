@@ -43,6 +43,13 @@ TESTS = (
         ),
     ),
     HdlTest(
+        "tb_css_symbol_buffer",
+        (
+            RTL_DIR / "css_symbol_buffer.v",
+            TB_DIR / "tb_css_symbol_buffer.sv",
+        ),
+    ),
+    HdlTest(
         "tb_css_sf7_sequential_detector",
         (
             RTL_DIR / "css_dechirp_mul.v",
