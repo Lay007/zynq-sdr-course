@@ -11,6 +11,7 @@ if str(TOOLS_DIR) not in sys.path:
 
 from generate_block8_css_vivado_reports import (  # noqa: E402
     parse_metrics,
+    run_vivado,
     validate_metrics,
 )
 
@@ -217,3 +218,27 @@ Logic Levels: 5
     assert metrics["top"] == top
     assert metrics["post_route"]["route_status"]["fully_routed"] is True
     validate_metrics(metrics)
+
+
+def test_run_vivado_passes_top_and_clock_port(tmp_path: Path, monkeypatch) -> None:
+    captured: dict[str, object] = {}
+
+    def fake_run(command, cwd, check):
+        captured["command"] = command
+        captured["cwd"] = cwd
+        captured["check"] = check
+
+    monkeypatch.setattr("generate_block8_css_vivado_reports.subprocess.run", fake_run)
+    run_vivado(
+        Path("G:/Xilinx/Vivado/2021.1/bin/vivado.bat"),
+        tmp_path,
+        "xc7z020clg400-2",
+        10.0,
+        "css_sf7_axi_accelerator",
+        "aclk",
+    )
+
+    command = captured["command"]
+    assert isinstance(command, list)
+    assert command[-2:] == ["css_sf7_axi_accelerator", "aclk"]
+    assert captured["check"] is True

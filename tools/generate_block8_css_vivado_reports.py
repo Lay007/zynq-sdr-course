@@ -33,7 +33,6 @@ def _parse_stage_metrics(
     stage: str,
     clock_period_ns: float,
     top_name: str = TOP_NAME,
-    clock_port: str = "clk",
 ) -> tuple[dict[str, object], dict[str, object], str]:
     utilization = (
         output_dir / f"{top_name}_{stage}_utilization.rpt"
@@ -108,6 +107,7 @@ def run_vivado(
     part_name: str,
     clock_period_ns: float,
     top_name: str = TOP_NAME,
+    clock_port: str = "clk",
 ) -> None:
     """Run the source-only batch flow without creating a persistent project."""
     output_dir.mkdir(parents=True, exist_ok=True)
