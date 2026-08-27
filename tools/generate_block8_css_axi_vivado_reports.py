@@ -45,6 +45,7 @@ def main() -> int:
             args.part,
             args.clock_period_ns,
             TOP_NAME,
+            "aclk",
         )
     normalize_reports(output_dir)
     metrics = parse_metrics(

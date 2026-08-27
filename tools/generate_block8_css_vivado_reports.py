@@ -33,6 +33,7 @@ def _parse_stage_metrics(
     stage: str,
     clock_period_ns: float,
     top_name: str = TOP_NAME,
+    clock_port: str = "clk",
 ) -> tuple[dict[str, object], dict[str, object], str]:
     utilization = (
         output_dir / f"{top_name}_{stage}_utilization.rpt"
@@ -125,6 +126,7 @@ def run_vivado(
         part_name,
         f"{clock_period_ns:.3f}",
         top_name,
+        clock_port,
     ]
     subprocess.run(command, cwd=ROOT, check=True)
 
