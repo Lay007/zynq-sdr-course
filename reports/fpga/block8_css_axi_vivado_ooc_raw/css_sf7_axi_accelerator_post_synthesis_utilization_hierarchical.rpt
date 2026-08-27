@@ -1,0 +1,36 @@
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
+| Date         : normalized
+| Host         : normalized
+| Command      : report_utilization -hierarchical -hierarchical_depth 4 -file <output_dir>/css_sf7_axi_accelerator_post_synthesis_utilization_hierarchical.rpt
+| Design       : css_sf7_axi_accelerator
+| Device       : 7z020clg400-2
+| Design State : Synthesized
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++------------------------------+-----------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+|           Instance           |            Module           | Total LUTs | Logic LUTs | LUTRAMs | SRLs | FFs | RAMB36 | RAMB18 | DSP Blocks |
++------------------------------+-----------------------------+------------+------------+---------+------+-----+--------+--------+------------+
+| css_sf7_axi_accelerator      |                       (top) |        849 |        761 |      88 |    0 | 867 |      0 |      3 |         16 |
+|   (css_sf7_axi_accelerator)  |                       (top) |        124 |        124 |       0 |    0 | 278 |      0 |      1 |          0 |
+|   u_axis_detector            |       css_sf7_axis_detector |        725 |        637 |      88 |    0 | 589 |      0 |      2 |         16 |
+|     (u_axis_detector)        |       css_sf7_axis_detector |         29 |         29 |       0 |    0 | 168 |      0 |      0 |          0 |
+|     u_detector               | css_sf7_sequential_detector |        696 |        608 |      88 |    0 | 421 |      0 |      2 |         16 |
+|       (u_detector)           | css_sf7_sequential_detector |         15 |         15 |       0 |    0 |  23 |      0 |      0 |          0 |
+|       u_dechirp_frontend     |    css_sf7_dechirp_frontend |         59 |         59 |       0 |    0 |  35 |      0 |      0 |          4 |
+|         (u_dechirp_frontend) |    css_sf7_dechirp_frontend |          0 |          0 |       0 |    0 |   1 |      0 |      0 |          0 |
+|         u_dechirp            |             css_dechirp_mul |         59 |         59 |       0 |    0 |  34 |      0 |      0 |          4 |
+|       u_dft_core             |             css_dft128_core |        432 |        432 |       0 |    0 | 201 |      0 |      2 |         12 |
+|       u_peak_detector        |           css_peak_detector |        108 |        108 |       0 |    0 | 145 |      0 |      0 |          0 |
+|       u_symbol_buffer        |           css_symbol_buffer |        146 |         58 |      88 |    0 |  17 |      0 |      0 |          0 |
++------------------------------+-----------------------------+------------+------------+---------+------+-----+--------+--------+------------+

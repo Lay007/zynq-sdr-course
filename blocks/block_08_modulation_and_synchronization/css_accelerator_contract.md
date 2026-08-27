@@ -31,6 +31,8 @@ Measured Vivado OOC evidence is summarized in the
 [Block 8 CSS accelerator report](../../reports/fpga/block8-css-accelerator-evidence.md).
 The [AXI integration guide](css_axi_integration.md) defines the PS/PL-facing
 stream packets and register map.
+Its [Vivado report](../../reports/fpga/block8-css-axi-evidence.md) records routed
+100 MHz evidence for the complete AXI RTL top level.
 
 ## Interface and arithmetic
 
@@ -92,7 +94,7 @@ The next datapath step is to replace `css_dft128_core` with a reusable FFT while
 preserving the symbol-buffer read contract, the bin stream, and the independent
 peak detector. The checked-in integration wrapper now provides AXI-Stream data,
 AXI-Lite control/status, result counters, and IRQ. Issue #46 still requires a
-PS-side bring-up helper and integrated timing evidence. The OOC report records
+PS-side bring-up helper and full PS7/block-design timing evidence. The OOC reports record
 the current latency, architectural 100 MHz throughput, resource use,
 post-synthesis timing, and post-route timing without claiming board completion.
 

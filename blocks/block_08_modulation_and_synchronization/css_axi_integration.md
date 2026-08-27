@@ -17,6 +17,9 @@ AXI4-Stream 32-bit Q:I samples
 use `aclk` and active-low synchronous `aresetn`; clock-domain crossing belongs
 outside this module.
 
+The [Vivado AXI implementation report](../../reports/fpga/block8-css-axi-evidence.md)
+records fully routed 100 MHz OOC evidence for this top level.
+
 ## Stream contract
 
 The input transfer condition is `s_axis_tvalid && s_axis_tready`.
@@ -76,7 +79,8 @@ undefined register address.
 
 ## Remaining board work
 
-The wrapper is RTL-verified but has not been integrated into a PS7 block design.
+The wrapper is RTL-verified and closes OOC routed timing at 100 MHz, but has not
+been integrated into a PS7 block design.
 The next step is to connect the input and result streams through DMA or suitable
 stream infrastructure, map AXI-Lite in the PS address space, rerun complete
 implementation timing, and execute a hardware smoke test. A 256-bit result
