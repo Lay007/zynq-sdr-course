@@ -1,6 +1,6 @@
 # CSS accelerator AXI integration
 
-[Русская версия](css_axi_integration_ru.md)
+[Русская версия](https://lay007.github.io/zynq-sdr-course/ru/blocks/css_axi_integration_ru/)
 
 The course CSS detector now has a shared-clock PS/PL integration boundary:
 
@@ -17,7 +17,7 @@ AXI4-Stream 32-bit Q:I samples
 use `aclk` and active-low synchronous `aresetn`; clock-domain crossing belongs
 outside this module.
 
-The [Vivado AXI implementation report](../../reports/fpga/block8-css-axi-evidence.md)
+The [Vivado AXI implementation report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-css-axi-evidence.md)
 records fully routed 100 MHz OOC evidence for this top level.
 
 ## Stream contract

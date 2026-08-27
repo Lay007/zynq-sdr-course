@@ -159,6 +159,7 @@ nav:
           - "07A. TX/RX chain workflow": ru/blocks/07-tx-rx-chain-workflow.md
           - "08. Modulation and synchronization": ru/blocks/08-modulation-and-synchronization.md
           - "08A. Modulation sync workflow": ru/blocks/08-modulation-sync-workflow.md
+          - "08B. AXI-интеграция CSS": ru/blocks/css_axi_integration_ru.md
           - "09. Recording and analysis tools": ru/blocks/09-recording-and-analysis-tools.md
           - "09A. IQ recording and analysis workflow": ru/blocks/09-recording-analysis-workflow.md
           - "10. KiCad and basic electronics": ru/blocks/10-kicad-and-basic-electronics.md
@@ -311,6 +312,7 @@ nav:
           - "07A. TX/RX chain workflow": en/blocks/07-tx-rx-chain-workflow.md
           - "08. Modulation and synchronization": en/blocks/08-modulation-and-synchronization.md
           - "08A. Modulation sync workflow": en/blocks/08-modulation-sync-workflow.md
+          - "08B. CSS AXI integration": en/blocks/css_axi_integration.md
           - "09. Recording and analysis tools": en/blocks/09-recording-and-analysis-tools.md
           - "09A. IQ recording and analysis workflow": en/blocks/09-recording-analysis-workflow.md
           - "10. KiCad and basic electronics": en/blocks/10-kicad-and-basic-electronics.md

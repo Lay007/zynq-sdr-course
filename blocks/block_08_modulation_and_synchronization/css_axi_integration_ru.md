@@ -1,6 +1,6 @@
 # AXI-интеграция CSS-ускорителя
 
-[English version](css_axi_integration.md)
+[English version](https://lay007.github.io/zynq-sdr-course/en/blocks/css_axi_integration/)
 
 Учебный CSS-детектор получил общую для PS/PL границу с единым тактовым доменом:
 
@@ -17,7 +17,7 @@ AXI4-Stream, 32-битные Q:I-отсчёты
 работают от `aclk` и синхронного активного-низкого `aresetn`; переход между
 тактовыми доменами должен выполняться вне этого модуля.
 
-[Отчёт о реализации AXI top-level в Vivado](../../reports/fpga/block8-css-axi-evidence_ru.md)
+[Отчёт о реализации AXI top-level в Vivado](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-css-axi-evidence_ru.md)
 содержит полностью маршрутизированные OOC-результаты на 100 МГц.
 
 ## Потоковый контракт
