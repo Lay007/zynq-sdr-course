@@ -77,6 +77,53 @@ and TLAST mismatch detection. The integration test covers ID/version, status,
 the complete result snapshot, counters, sticky flags, IRQ, W1P clears, and an
 undefined register address.
 
+## PS-side bring-up helper
+
+`tools/css_axi_bringup.py` provides a small software-side view of the AXI-Lite
+register window. It supports a real `/dev/mem` mapping on Zynq Linux and an
+offline JSON-backed mock for development and CI.
+
+Use the physical base address assigned to the accelerator in the Vivado address
+editor; do not copy a placeholder address from an example. Typical first checks
+on the target are:
+
+```bash
+sudo python3 tools/css_axi_bringup.py --base 0x<assigned-base> probe
+sudo python3 tools/css_axi_bringup.py --base 0x<assigned-base> status
+sudo python3 tools/css_axi_bringup.py --base 0x<assigned-base> result
+sudo python3 tools/css_axi_bringup.py --base 0x<assigned-base> irq on
+sudo python3 tools/css_axi_bringup.py --base 0x<assigned-base> clear all
+```
+
+`probe` rejects an unexpected core ID. `result` decodes peak/second bins,
+saturation count, frame-error status, and both 64-bit magnitude-squared values.
+Because the 256-bit snapshot is read through eight 32-bit registers, the helper
+reads `COMPLETED_COUNT` before and after the result words and retries if the
+counter changed; this avoids accepting a torn software snapshot while a new RTL
+result arrives.
+
+For an offline smoke test, create for example:
+
+```json
+{
+  "0x00": "0x43535337",
+  "0x04": "0x00010000",
+  "0x0c": "0x00000002",
+  "0x30": 0
+}
+```
+
+and run:
+
+```bash
+python3 tools/css_axi_bringup.py --mock-json css-registers.json probe
+python3 tools/css_axi_bringup.py --mock-json css-registers.json status
+```
+
+The helper covers AXI-Lite control/status/result bring-up only. It does not
+configure PS7, AXI DMA, clock/reset infrastructure, or the AXI-Stream sample
+path.
+
 ## Remaining board work
 
 The wrapper is RTL-verified and closes OOC routed timing at 100 MHz, but has not

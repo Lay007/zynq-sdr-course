@@ -80,6 +80,53 @@ python3 tools/run_block8_css_rtl.py --test tb_css_sf7_axi_accelerator
 ID/version, status, полный снимок результата, счётчики, sticky-флаги, IRQ,
 W1P-очистку и неопределённый адрес регистра.
 
+## Утилита первичного запуска со стороны PS
+
+`tools/css_axi_bringup.py` даёт небольшой программный интерфейс к окну
+регистров AXI-Lite. Она умеет работать с реальным отображением `/dev/mem` в
+Linux на Zynq и с JSON-backed mock для разработки и CI без платы.
+
+На плате необходимо использовать физический базовый адрес, который реально
+назначен ускорителю в Vivado Address Editor; адрес из примера нельзя считать
+готовым адресом проекта. Первые проверки выглядят так:
+
+```bash
+sudo python3 tools/css_axi_bringup.py --base 0x<assigned-base> probe
+sudo python3 tools/css_axi_bringup.py --base 0x<assigned-base> status
+sudo python3 tools/css_axi_bringup.py --base 0x<assigned-base> result
+sudo python3 tools/css_axi_bringup.py --base 0x<assigned-base> irq on
+sudo python3 tools/css_axi_bringup.py --base 0x<assigned-base> clear all
+```
+
+`probe` отклоняет неожиданное значение ID ядра. `result` декодирует основной и
+второй бин, количество насыщений, ошибку кадра и оба 64-битных квадрата
+магнитуды. Поскольку 256-битный снимок читается через восемь 32-битных
+регистров, утилита читает `COMPLETED_COUNT` до и после `RESULT0...RESULT7` и
+повторяет операцию, если счётчик изменился. Это не позволяет принять «рваный»
+программный снимок, если новый RTL-результат появился прямо во время чтения.
+
+Для offline smoke test можно создать, например, файл:
+
+```json
+{
+  "0x00": "0x43535337",
+  "0x04": "0x00010000",
+  "0x0c": "0x00000002",
+  "0x30": 0
+}
+```
+
+и выполнить:
+
+```bash
+python3 tools/css_axi_bringup.py --mock-json css-registers.json probe
+python3 tools/css_axi_bringup.py --mock-json css-registers.json status
+```
+
+Утилита охватывает только первичный запуск AXI-Lite control/status/result. Она
+не настраивает PS7, AXI DMA, тактирование/сброс и входной или выходной
+AXI4-Stream тракт.
+
 ## Оставшаяся работа с платой
 
 Обвязка проверена на уровне RTL и закрывает OOC routed timing на 100 МГц, но ещё
