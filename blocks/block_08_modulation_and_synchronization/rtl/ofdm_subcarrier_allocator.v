@@ -49,7 +49,7 @@ module ofdm_subcarrier_allocator (
     localparam STATE_EMIT    = 1'b1;
 
     localparam signed [15:0] PILOT_POS = 16'sd32767;
-    localparam signed [15:0] PILOT_NEG = -16'sd32768;
+    localparam signed [15:0] PILOT_NEG = 16'sh8000;
 
     reg state;
     reg [5:0] data_count;
