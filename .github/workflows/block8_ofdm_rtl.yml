@@ -6,11 +6,13 @@ on:
     paths:
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
+      - "verification/vectors/block08_ofdm_ifft_*.mem"
       - ".github/workflows/block8_ofdm_rtl.yml"
   pull_request:
     paths:
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
+      - "verification/vectors/block08_ofdm_ifft_*.mem"
       - ".github/workflows/block8_ofdm_rtl.yml"
   workflow_dispatch:
 
@@ -62,3 +64,14 @@ jobs:
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v \
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_ifft_butterfly.sv
           vvp /tmp/tb_ofdm_ifft_butterfly.vvp
+
+      - name: Compile and run sequential OFDM IFFT regression
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_ifft64_sequential \
+            -o /tmp/tb_ofdm_ifft64_sequential.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_ifft64_sequential.sv
+          vvp /tmp/tb_ofdm_ifft64_sequential.vvp
