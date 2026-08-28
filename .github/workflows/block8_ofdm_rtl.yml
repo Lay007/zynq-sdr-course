@@ -42,3 +42,13 @@ jobs:
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_qpsk_mapper.v \
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_qpsk_mapper.sv
           vvp /tmp/tb_ofdm_qpsk_mapper.vvp
+
+      - name: Compile and run OFDM subcarrier allocator regression
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_subcarrier_allocator \
+            -o /tmp/tb_ofdm_subcarrier_allocator.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_subcarrier_allocator.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_subcarrier_allocator.sv
+          vvp /tmp/tb_ofdm_subcarrier_allocator.vvp
