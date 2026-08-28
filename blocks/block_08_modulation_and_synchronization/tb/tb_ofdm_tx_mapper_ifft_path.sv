@@ -74,39 +74,29 @@ module tb_ofdm_tx_mapper_ifft_path;
         end
     endfunction
 
-    task send_48_data_pairs;
+    task send_pair;
+        input integer data_index;
         begin
-            accepted_pairs = 0;
+            @(negedge clk);
+            bits_in = cycle4_bits(data_index);
             bits_valid = 1'b1;
-            bits_in = cycle4_bits(0);
 
-            while (accepted_pairs < 48) begin
-                @(posedge clk);
-                #1;
-                if (bits_ready) begin
-                    // bits_ready observed after the edge describes the next
-                    // cycle, so drive the current pair on the following
-                    // negedge and count its handshake at the next posedge.
-                    @(negedge clk);
-                    bits_in = cycle4_bits(accepted_pairs);
-                    @(posedge clk);
-                    if (bits_ready) begin
-                        accepted_pairs = accepted_pairs + 1;
-                    end else begin
-                        $display("FAIL ready changed before advertised input handshake");
-                        errors = errors + 1;
-                    end
-                    #1;
-                end
+            // Hold valid/data stable until the cycle whose rising edge sees
+            // ready high. Count the transfer at that edge, not after NBA state
+            // updates have changed ready for the following cycle.
+            while (!bits_ready)
+                @(negedge clk);
+
+            @(posedge clk);
+            if (bits_valid && bits_ready) begin
+                accepted_pairs = accepted_pairs + 1;
+            end else begin
+                $display("FAIL advertised ready did not produce input handshake");
+                errors = errors + 1;
             end
 
-            expect_int(accepted_pairs, 48, "exactly 48 QPSK data pairs accepted");
-
-            // Keep a 49th candidate asserted. frame_locked must keep it from
-            // being accepted until the current time-domain frame completes.
             @(negedge clk);
-            bits_in = 2'b00;
-            bits_valid = 1'b1;
+            bits_valid = 1'b0;
         end
     endtask
 
@@ -140,14 +130,19 @@ module tb_ofdm_tx_mapper_ifft_path;
 
         @(negedge clk);
         resetn = 1'b1;
-        @(posedge clk);
         #1;
         expect_int(bits_ready, 1, "released reset opens first QPSK input slot");
 
-        send_48_data_pairs();
+        accepted_pairs = 0;
+        for (idx = 0; idx < 48; idx = idx + 1)
+            send_pair(idx);
+        expect_int(accepted_pairs, 48, "exactly 48 QPSK data pairs accepted");
 
-        // A continuously asserted 49th candidate must remain blocked while
-        // mapper/allocator/IFFT finish the locked frame.
+        // Keep a 49th candidate continuously asserted. frame_locked must keep
+        // it from being accepted until sample 63 of this frame is consumed.
+        bits_in = 2'b00;
+        bits_valid = 1'b1;
+
         wait_cycles = 0;
         while (!sample_valid && (wait_cycles < 600)) begin
             @(posedge clk);
@@ -189,19 +184,18 @@ module tb_ofdm_tx_mapper_ifft_path;
         end
 
         sample_ready = 1'b0;
-        // The pending 49th candidate was never handshaken. Drop it now and
-        // verify that the completed frame reopens a clean new input frame.
+        // sample63 cleared frame_locked after its handshake. Drop the held
+        // 49th candidate before another rising edge can accept it.
         @(negedge clk);
         bits_valid = 1'b0;
-        @(posedge clk);
         #1;
         expect_int(sample_valid, 0, "sample 63 handshake completes mapped TX frame");
         expect_int(bits_ready, 1, "completed mapped TX frame rearms input");
         expect_int(ifft_busy, 0, "completed mapped TX frame leaves IFFT idle");
+        expect_int(accepted_pairs, 48, "held 49th candidate was never accepted");
 
         // Reset with a newly launched mapper item must discard all partial
         // state across mapper, bridge, allocator and IFFT.
-        @(negedge clk);
         bits_valid = 1'b1;
         bits_in = 2'b11;
         @(posedge clk);
