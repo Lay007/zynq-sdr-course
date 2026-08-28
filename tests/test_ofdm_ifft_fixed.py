@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import numpy as np
 import pytest
 
@@ -7,6 +9,11 @@ from tools.ofdm_ifft_fixed import (
     Q_MIN,
     ifft64_q15,
     quantize_q15,
+)
+
+ROOT = Path(__file__).resolve().parents[1]
+CANONICAL_BIN1_VECTOR = (
+    ROOT / "verification" / "vectors" / "block08_ofdm_ifft_bin1_expected.mem"
 )
 
 
@@ -47,6 +54,26 @@ def _numpy_ifft_q15(freq_bins: tuple[tuple[int, int], ...]) -> np.ndarray:
     )
 
 
+def _signed16(value: int) -> int:
+    return value - 0x10000 if value & 0x8000 else value
+
+
+def _load_packed_complex_q15(path: Path) -> tuple[tuple[int, int], ...]:
+    samples = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        packed = int(stripped, 16)
+        samples.append(
+            (
+                _signed16((packed >> 16) & 0xFFFF),
+                _signed16(packed & 0xFFFF),
+            )
+        )
+    return tuple(samples)
+
+
 def test_q15_endpoint_quantization() -> None:
     assert quantize_q15(1.0) == Q_MAX
     assert quantize_q15(-1.0) == Q_MIN
@@ -76,6 +103,18 @@ def test_dc_bin_gives_constant_time_domain_output() -> None:
     assert result.samples == ((512, 0),) * FFT_SIZE
     assert result.stage_saturations == (0, 0, 0, 0, 0, 0)
     assert result.total_saturations == 0
+
+
+def test_bin1_canonical_rtl_vector_matches_fixed_reference_exactly() -> None:
+    bins = [(0, 0) for _ in range(FFT_SIZE)]
+    bins[1] = (Q_MAX, 0)
+
+    result = ifft64_q15(tuple(bins))
+    canonical = _load_packed_complex_q15(CANONICAL_BIN1_VECTOR)
+
+    assert len(canonical) == FFT_SIZE
+    assert result.samples == canonical
+    assert result.stage_saturations == (0, 0, 0, 0, 0, 0)
 
 
 def test_lab85_vector_matches_numpy_within_two_output_lsbs() -> None:
