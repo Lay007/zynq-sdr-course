@@ -52,3 +52,13 @@ jobs:
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_subcarrier_allocator.v \
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_subcarrier_allocator.sv
           vvp /tmp/tb_ofdm_subcarrier_allocator.vvp
+
+      - name: Compile and run OFDM IFFT butterfly regression
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_ifft_butterfly \
+            -o /tmp/tb_ofdm_ifft_butterfly.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_ifft_butterfly.sv
+          vvp /tmp/tb_ofdm_ifft_butterfly.vvp
