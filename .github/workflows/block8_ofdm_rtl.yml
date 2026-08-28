@@ -1,0 +1,44 @@
+name: Block 8 OFDM RTL
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
+      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
+      - ".github/workflows/block8_ofdm_rtl.yml"
+  pull_request:
+    paths:
+      - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
+      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
+      - ".github/workflows/block8_ofdm_rtl.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ofdm-rtl-smoke:
+    name: OFDM RTL self-checking regressions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install Icarus Verilog
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog
+          iverilog -V
+
+      - name: Compile and run OFDM QPSK mapper regression
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_qpsk_mapper \
+            -o /tmp/tb_ofdm_qpsk_mapper.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_qpsk_mapper.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_qpsk_mapper.sv
+          vvp /tmp/tb_ofdm_qpsk_mapper.vvp
