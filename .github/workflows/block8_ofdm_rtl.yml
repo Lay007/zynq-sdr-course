@@ -6,13 +6,13 @@ on:
     paths:
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
-      - "verification/vectors/block08_ofdm_ifft_*.mem"
+      - "verification/vectors/block08_ofdm_*.mem"
       - ".github/workflows/block8_ofdm_rtl.yml"
   pull_request:
     paths:
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
-      - "verification/vectors/block08_ofdm_ifft_*.mem"
+      - "verification/vectors/block08_ofdm_*.mem"
       - ".github/workflows/block8_ofdm_rtl.yml"
   workflow_dispatch:
 
@@ -75,3 +75,17 @@ jobs:
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v \
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_ifft64_sequential.sv
           vvp /tmp/tb_ofdm_ifft64_sequential.vvp
+
+      - name: Compile and run mapped OFDM TX path regression
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_tx_mapper_ifft_path \
+            -o /tmp/tb_ofdm_tx_mapper_ifft_path.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_qpsk_mapper.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_subcarrier_allocator.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_tx_mapper_ifft_path.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_mapper_ifft_path.sv
+          vvp /tmp/tb_ofdm_tx_mapper_ifft_path.vvp
