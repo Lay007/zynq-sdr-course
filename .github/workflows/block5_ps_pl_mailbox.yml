@@ -1,0 +1,41 @@
+name: Block 5 PS PL Mailbox
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_axi_lite.v"
+      - "blocks/block_05_fpga_hdl_flow/tb/tb_zynq_message_mailbox_axi_lite.sv"
+      - ".github/workflows/block5_ps_pl_mailbox.yml"
+  pull_request:
+    paths:
+      - "blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_axi_lite.v"
+      - "blocks/block_05_fpga_hdl_flow/tb/tb_zynq_message_mailbox_axi_lite.sv"
+      - ".github/workflows/block5_ps_pl_mailbox.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mailbox-rtl:
+    name: PS PL mailbox RTL regression
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install Icarus Verilog
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog
+
+      - name: Compile and run PS PL mailbox echo regression
+        run: |
+          iverilog -g2012 -Wall \
+            -s tb_zynq_message_mailbox_axi_lite \
+            -o /tmp/tb_zynq_message_mailbox_axi_lite.vvp \
+            blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_axi_lite.v \
+            blocks/block_05_fpga_hdl_flow/tb/tb_zynq_message_mailbox_axi_lite.sv
+          vvp /tmp/tb_zynq_message_mailbox_axi_lite.vvp
