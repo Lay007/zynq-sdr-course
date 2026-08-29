@@ -99,3 +99,19 @@ jobs:
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_tx_mapper_ifft_path.v \
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_mapper_ifft_path.sv
           vvp /tmp/tb_ofdm_tx_mapper_ifft_path.vvp
+
+      - name: Compile and run complete OFDM TX CP16 regression
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_tx_cp16_path \
+            -o /tmp/tb_ofdm_tx_cp16_path.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_qpsk_mapper.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_subcarrier_allocator.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_tx_mapper_ifft_path.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_cp16_inserter.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_tx_cp16_path.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_cp16_path.sv
+          vvp /tmp/tb_ofdm_tx_cp16_path.vvp
