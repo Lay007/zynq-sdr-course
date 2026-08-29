@@ -14,7 +14,9 @@ def test_release_surfaces_point_to_the_final_differential_modem() -> None:
     assert "11.41–11.45" in release_notes
     assert "Portfolio-ready (two-board link complete)" in status
     assert "11.1-11.45" in lab_index
+    assert "11.1-11.46" in lab_index
     assert "gross rotation 0" in lab_index
+    assert "not claimed as completed hardware evidence yet" in lab_index
 
 
 def test_release_surfaces_do_not_restore_the_pre_report_roadmap_claim() -> None:
