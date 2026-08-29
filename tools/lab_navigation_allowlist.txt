@@ -7,5 +7,7 @@
 # strict navigation checks.
 en/labs/lab-5-12-zynq-ps-pl-mailbox.md
 ru/labs/lab-5-12-zynq-ps-pl-mailbox.md
+en/labs/lab-11-44-hardware-tx-iq-capture-offline-rx.md
+ru/labs/lab-11-44-hardware-tx-iq-capture-offline-rx.md
 en/labs/lab-11-46-two-board-console-message.md
 ru/labs/lab-11-46-two-board-console-message.md
