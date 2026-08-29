@@ -28,6 +28,8 @@ This page provides a compact index of course labs. It is intentionally shorter t
 | 11 | 11.1-11.46 | integrated project workflow, bring-up, BER/CFO/timing evidence, two-board QPSK and the user-visible PS→PL→RF→PL→PS message goal | measured / message integration pending | pass a text message between two boards and print it in the receiving console |
 | 12 | 12.1-12.4 | final project briefs, rubric, templates and filled implementation report | reviewable / hardware pending | complete the open measurement gates |
 
+The released differential-QPSK baseline remains the **11.1-11.45** course surface. Lab 11.46 is the next application-level capstone that turns the existing modem evidence into a visible PS→PL→RF→PL→PS message exchange; it is not claimed as completed hardware evidence yet.
+
 ## Block 5 PS/PL bridge
 
 Lab 5.12 adds the missing system-level bridge between HDL exercises and RF bring-up:
