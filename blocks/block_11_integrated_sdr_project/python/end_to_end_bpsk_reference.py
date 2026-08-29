@@ -31,6 +31,11 @@ MANIFEST_DIR = ROOT / "datasets" / "manifests"
 Q15_SCALE = 32767.0
 
 
+def write_utf8_lf(path: Path, content: str) -> None:
+    """Write deterministic UTF-8 text without platform newline translation."""
+    path.write_text(content, encoding="utf-8", newline="\n")
+
+
 @dataclass(frozen=True)
 class BpskConfig:
     dataset_id: str = "end_to_end_bpsk_reference_v1"
@@ -349,9 +354,9 @@ notes:
   - Use Zynq RX as the main BER receiver path for the first hardware implementation.
   - Use RTL-SDR as an independent monitor receiver, not as the primary BER reference.
 """
-    manifest_path.write_text(content, encoding="utf-8")
+    write_utf8_lf(manifest_path, content)
     package_manifest_path = PACKAGE_DIR / "manifest.yml"
-    package_manifest_path.write_text(content, encoding="utf-8")
+    write_utf8_lf(package_manifest_path, content)
     return manifest_path
 
 
@@ -432,7 +437,7 @@ def main() -> int:
     )
 
     config_path = PACKAGE_DIR / "config.json"
-    config_path.write_text(json.dumps(asdict(cfg), indent=2), encoding="utf-8")
+    write_utf8_lf(config_path, json.dumps(asdict(cfg), indent=2))
 
     tx_bits_path = PACKAGE_DIR / "tx_bits.txt"
     tx_symbols_float_path = PACKAGE_DIR / "tx_symbols_float.txt"
@@ -453,7 +458,8 @@ def main() -> int:
     )
     write_vector(rrc_taps_float_path, taps)
     write_int_vector(rrc_taps_q15_path, quantize_q15(taps))
-    sample_plan_path.write_text(
+    write_utf8_lf(
+        sample_plan_path,
         json.dumps(
             {
                 "matched_filter_sample_start": int(sample_start),
@@ -465,9 +471,9 @@ def main() -> int:
             },
             indent=2,
         ),
-        encoding="utf-8",
     )
-    handoff_path.write_text(
+    write_utf8_lf(
+        handoff_path,
         json.dumps(
             {
                 "config": relative_path(config_path),
@@ -482,7 +488,6 @@ def main() -> int:
             },
             indent=2,
         ),
-        encoding="utf-8",
     )
 
     save_spectrum(
@@ -510,9 +515,9 @@ def main() -> int:
         len(tx_symbols),
         "End-to-end BPSK reference - matched filter and symbol sampling",
     )
-    (DOC_ASSET_DIR / "end_to_end_bpsk_reference_metrics.json").write_text(
+    write_utf8_lf(
+        DOC_ASSET_DIR / "end_to_end_bpsk_reference_metrics.json",
         json.dumps(asdict(metrics), indent=2),
-        encoding="utf-8",
     )
 
     write_manifest(
