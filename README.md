@@ -113,6 +113,7 @@ python tools/tasks.py smoke
 Run a CI-like local preflight before pushing larger changes:
 
 ```bash
+python tools/tasks.py install-dev
 python tools/run_local_ci.py
 ```
 
@@ -121,6 +122,7 @@ Useful commands:
 | Command | Purpose |
 |---|---|
 | `python tools/tasks.py install` | Install Python dependencies |
+| `python tools/tasks.py install-dev` | Install runtime plus lint/test dependencies |
 | `python tools/tasks.py docs` | Build the MkDocs site in strict mode |
 | `python tools/tasks.py serve` | Start a local documentation preview |
 | `python tools/tasks.py labs` | Run representative executable Python labs |
@@ -128,6 +130,7 @@ Useful commands:
 | `python tools/tasks.py smoke` | Run docs + labs + HDL checks |
 | `python tools/run_local_ci.py` | Run lint + pytest + docs + labs + canonical HDL smoke |
 | `python tools/run_local_ci.py --quick` | Run lint + pytest + canonical HDL smoke |
+| `python tools/check_lab_id_registry.py` | Validate canonical ownership of late Block 11 lab IDs |
 | `python tools/check_dataset_manifests.py` | Validate dataset manifests and Git LFS pointer checksums |
 | `python tools/tasks.py clean` | Remove generated local artifacts |
 

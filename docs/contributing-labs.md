@@ -70,7 +70,7 @@ A lab is reproducible when another learner can run it from a clean checkout usin
 At minimum, provide:
 
 ```bash
-python tools/tasks.py install
+python tools/tasks.py install-dev
 python tools/tasks.py docs
 python tools/tasks.py labs
 ```
@@ -140,6 +140,7 @@ templates/iq_dataset_manifest.template.yml
 - [ ] RF safety notes are present when needed.
 - [ ] IQ metadata is present when needed.
 - [ ] The page is linked from `mkdocs.yml`.
+- [ ] Block 11 IDs 11.36-11.46 are registered in `tools/lab_id_registry.yml`.
 - [ ] The lab does not require large binary files in normal Git history.
 
 ## Recommended lab report ending

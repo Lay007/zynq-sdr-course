@@ -46,3 +46,15 @@ def test_remove_generated_file_deletes_untracked_file(tmp_path: Path, monkeypatc
 
     assert removed is True
     assert not artifact.exists()
+
+
+def test_install_dev_uses_the_development_requirements(monkeypatch) -> None:
+    tasks = load_tasks()
+    commands: list[list[str]] = []
+    monkeypatch.setattr(tasks, "run", lambda command: commands.append(command))
+
+    tasks.task_install_dev()
+
+    assert commands == [
+        [sys.executable, "-m", "pip", "install", "-r", "requirements-dev.txt"]
+    ]

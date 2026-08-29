@@ -7,7 +7,7 @@ Thank you for improving the Zynq SDR Course. This repository is structured as a 
 Run the local smoke path when possible:
 
 ```bash
-python tools/tasks.py install
+python tools/tasks.py install-dev
 python tools/tasks.py docs
 python tools/tasks.py labs
 ```
@@ -40,6 +40,7 @@ A new lab should usually include:
 - a Russian MkDocs wrapper under `docs/ru/labs/`;
 - an English MkDocs wrapper under `docs/en/labs/`;
 - navigation update in `mkdocs.yml`;
+- a `tools/lab_id_registry.yml` update for Block 11 IDs 11.36-11.46;
 - executable script or clear manual procedure when applicable;
 - generated artifacts or expected report artifacts;
 - a report checklist.

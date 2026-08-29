@@ -184,6 +184,10 @@ def task_install() -> None:
     run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
 
 
+def task_install_dev() -> None:
+    run([sys.executable, "-m", "pip", "install", "-r", "requirements-dev.txt"])
+
+
 def task_docs() -> None:
     run([sys.executable, "-m", "mkdocs", "build", "--strict"])
 
@@ -286,13 +290,26 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Run local course tasks.")
     parser.add_argument(
         "task",
-        choices=("install", "docs", "serve", "labs", "hdl", "test", "lint", "matlab-bpsk", "smoke", "clean"),
+        choices=(
+            "install",
+            "install-dev",
+            "docs",
+            "serve",
+            "labs",
+            "hdl",
+            "test",
+            "lint",
+            "matlab-bpsk",
+            "smoke",
+            "clean",
+        ),
         help="Task to execute.",
     )
     args = parser.parse_args()
 
     actions = {
         "install": task_install,
+        "install-dev": task_install_dev,
         "docs": task_docs,
         "serve": task_serve,
         "labs": task_labs,

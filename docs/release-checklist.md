@@ -5,7 +5,7 @@ Use this checklist before publishing a public release of `zynq-sdr-course`.
 ## 1. Documentation build
 
 ```bash
-python tools/tasks.py install
+python tools/tasks.py install-dev
 python tools/tasks.py docs
 ```
 
@@ -18,6 +18,7 @@ python tools/tasks.py labs
 python tools/tasks.py hdl
 python tools/tasks.py smoke
 python tools/run_local_ci.py --quick
+python tools/check_lab_id_registry.py
 python tools/check_dataset_manifests.py
 ```
 

@@ -1,10 +1,13 @@
-.PHONY: install docs serve labs hdl test lint smoke clean
+.PHONY: install install-dev docs serve labs hdl test lint smoke clean
 
 PYTHON ?= python
 PIP ?= pip
 
 install:
 	$(PIP) install -r requirements.txt
+
+install-dev:
+	$(PIP) install -r requirements-dev.txt
 
 docs:
 	mkdocs build --strict

@@ -114,6 +114,7 @@ python tools/tasks.py smoke
 Локальная CI-проверка перед большим push:
 
 ```bash
+python tools/tasks.py install-dev
 python tools/run_local_ci.py
 ```
 
@@ -122,6 +123,7 @@ python tools/run_local_ci.py
 | Команда | Назначение |
 |---|---|
 | `python tools/tasks.py install` | Установить Python-зависимости |
+| `python tools/tasks.py install-dev` | Установить runtime-, lint- и test-зависимости |
 | `python tools/tasks.py docs` | Собрать сайт MkDocs в строгом режиме |
 | `python tools/tasks.py serve` | Запустить локальный просмотр документации |
 | `python tools/tasks.py labs` | Запустить представительные Python-лабораторные |
@@ -129,6 +131,7 @@ python tools/run_local_ci.py
 | `python tools/tasks.py smoke` | Выполнить проверку docs + labs + HDL |
 | `python tools/run_local_ci.py` | Выполнить lint + pytest + docs + labs + canonical HDL smoke |
 | `python tools/run_local_ci.py --quick` | Выполнить lint + pytest + canonical HDL smoke |
+| `python tools/check_lab_id_registry.py` | Проверить владельцев ID поздних лабораторных Block 11 |
 | `python tools/check_dataset_manifests.py` | Проверить dataset manifests и SHA256 в Git LFS pointer-файлах |
 | `python tools/tasks.py clean` | Удалить локальные сгенерированные артефакты |
 
