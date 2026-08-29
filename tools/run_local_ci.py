@@ -33,6 +33,7 @@ def main() -> int:
     args = parser.parse_args()
 
     run([sys.executable, "-m", "ruff", "check", "blocks", "tools", "tests"])
+    run([sys.executable, "tools/check_lab_id_registry.py"])
     # Keep pytest's numbered temporary directories inside the repository. On
     # Windows the shared user temp root can retain a locked ``pytest-current``
     # junction and turn a successful test run into a cleanup failure.

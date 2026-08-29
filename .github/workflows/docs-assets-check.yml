@@ -40,3 +40,6 @@ jobs:
 
       - name: Check lab navigation coverage
         run: python tools/check_lab_navigation.py
+
+      - name: Check canonical lab ID ownership
+        run: python tools/check_lab_id_registry.py

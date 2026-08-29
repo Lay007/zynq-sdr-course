@@ -1,0 +1,71 @@
+version: 1
+block: 11
+id_range: [36, 46]
+scan_roots:
+  - blocks/block_11_integrated_sdr_project
+  - docs/assets
+  - docs/en/labs
+  - docs/ru/labs
+
+# Canonical ownership for the late Block 11 investigation and capstone IDs.
+# Every filename carrying one of these IDs must be listed here. This keeps a
+# documentation page from silently reusing an ID already owned by a script or
+# a machine-readable evidence artifact.
+labs:
+  "11.36":
+    topic: dot-ted-paired-evidence
+    artifacts:
+      - docs/assets/lab1136_dot_ted_paired_0hz_live_20260721.json
+      - docs/assets/lab1136_dot_ted_paired_0hz_live_20260721.png
+  "11.37":
+    topic: payload-split-evidence
+    artifacts:
+      - docs/assets/lab1137_payload_split_0hz_live_20260722.json
+      - docs/assets/lab1137_payload_split_0hz_live_20260722.png
+  "11.38":
+    topic: hardware-tx-iq-capture-offline-rx
+    artifacts:
+      - docs/en/labs/lab-11-38-hardware-tx-iq-capture-offline-rx.md
+      - docs/ru/labs/lab-11-38-hardware-tx-iq-capture-offline-rx.md
+  "11.40":
+    topic: resolve-decoded-bit-index
+    artifacts:
+      - blocks/block_11_integrated_sdr_project/python/lab_11_40_resolve_decoded_bit_index.py
+  "11.41":
+    topic: dc-blocker-data-tracking
+    artifacts:
+      - blocks/block_11_integrated_sdr_project/lab_11_41_dc_blocker_data_tracking.md
+      - blocks/block_11_integrated_sdr_project/python/lab_11_41_dc_blocker_live_validation.py
+      - docs/assets/lab1141_dc_blocker_live_validation.json
+      - docs/en/labs/lab-11-41-dc-blocker-data-tracking.md
+      - docs/ru/labs/lab-11-41-dc-blocker-data-tracking.md
+  "11.42":
+    topic: ber-floor-lock-tolerance
+    artifacts:
+      - blocks/block_11_integrated_sdr_project/lab_11_42_ber_floor_lock_tolerance.md
+      - blocks/block_11_integrated_sdr_project/python/lab_11_42_ber_floor_lock_tolerance.py
+      - docs/assets/lab1142_ber_floor_live.json
+      - docs/en/labs/lab-11-42-ber-floor-lock-tolerance.md
+      - docs/ru/labs/lab-11-42-ber-floor-lock-tolerance.md
+  "11.43":
+    topic: dqpsk-model
+    artifacts:
+      - blocks/block_11_integrated_sdr_project/python/lab_11_43_dqpsk_model.py
+  "11.44":
+    topic: differential-qpsk-live-validation
+    artifacts:
+      - blocks/block_11_integrated_sdr_project/python/lab_11_44_diff_qpsk_live_validation.py
+      - docs/assets/lab1144_diff_qpsk_live.json
+  "11.45":
+    topic: differential-qpsk-long-preamble
+    artifacts:
+      - blocks/block_11_integrated_sdr_project/lab_11_45_differential_long_preamble.md
+      - blocks/block_11_integrated_sdr_project/python/lab_11_45_differential_long_preamble.py
+      - docs/assets/lab1145_diff_long_preamble_live.json
+      - docs/en/labs/lab-11-45-differential-long-preamble.md
+      - docs/ru/labs/lab-11-45-differential-long-preamble.md
+  "11.46":
+    topic: two-board-console-message
+    artifacts:
+      - docs/en/labs/lab-11-46-two-board-console-message.md
+      - docs/ru/labs/lab-11-46-two-board-console-message.md

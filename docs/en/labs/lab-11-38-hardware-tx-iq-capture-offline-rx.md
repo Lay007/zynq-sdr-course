@@ -1,4 +1,4 @@
-# Lab 11.44 — ZynqSDR TX → IQ capture → offline receiver
+# Lab 11.38 — ZynqSDR TX → IQ capture → offline receiver
 
 ## Idea
 

@@ -1,13 +1,5 @@
 # Temporary learner-navigation debt.
 # Remove each entry as soon as the page is added to mkdocs.yml.
 #
-# These PS/PL and message-path pages are linked from student-path.md and
-# lab-index.md, but the large hand-maintained MkDocs nav still needs the
-# corresponding bilingual entries. Keep this debt explicit rather than
-# weakening the navigation checker.
-en/labs/lab-5-12-zynq-ps-pl-mailbox.md
-ru/labs/lab-5-12-zynq-ps-pl-mailbox.md
-en/labs/lab-11-44-hardware-tx-iq-capture-offline-rx.md
-ru/labs/lab-11-44-hardware-tx-iq-capture-offline-rx.md
-en/labs/lab-11-46-two-board-console-message.md
-ru/labs/lab-11-46-two-board-console-message.md
+# Keep this file for temporary, explicitly reviewed exceptions only.
+# The current learner navigation has no known debt.

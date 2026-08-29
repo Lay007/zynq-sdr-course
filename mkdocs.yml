@@ -200,6 +200,9 @@ nav:
           - "Lab 5.9 — BPSK framed TX/RX loopback top-level": ru/labs/lab-5-9-bpsk-framed-loopback.md
           - "Lab 5.10 — Zynq-ready BPSK BER top-level": ru/labs/lab-5-10-bpsk-zynq-ready-top.md
           - "Lab 5.11 — AXI-Lite control wrapper for the BPSK BER top-level": ru/labs/lab-5-11-bpsk-axi-lite-control.md
+          - "Zynq — где заканчивается PS и начинается PL": ru/zynq-ps-pl-architecture.md
+          - "Lab 5.12 — Zynq PS/PL AXI-Lite mailbox": ru/labs/lab-5-12-zynq-ps-pl-mailbox.md
+          - "Vivado — запуск PS/PL mailbox на плате": ru/zynq-ps-pl-mailbox-vivado-bringup.md
       - "Лаборатории Block 6":
           - "Lab 6.1 — RF frequency plan": ru/labs/lab-6-1-frequency-plan.md
           - "Lab 6.2 — Gain staging and overload": ru/labs/lab-6-2-gain-staging-and-overload.md
@@ -281,9 +284,11 @@ nav:
           - "Lab 11.33 — Остаточный CFO и timing-гипотеза": ru/labs/lab-11-33-residual-cfo-timing-hypothesis.md
           - "Lab 11.34 — Непрерывный QPSK timing recovery": ru/labs/lab-11-34-continuous-qpsk-timing-recovery.md
           - "Lab 11.35 — Парный timing A/B и фазоинвариантный TED": ru/labs/lab-11-35-paired-timing-ab.md
+          - "Lab 11.38 — ZynqSDR TX → запись IQ → офлайн-приёмник": ru/labs/lab-11-38-hardware-tx-iq-capture-offline-rx.md
           - "Lab 11.41 — DC-блокер следил за данными": ru/labs/lab-11-41-dc-blocker-data-tracking.md
           - "Lab 11.42 — Ложный захват frame-sync": ru/labs/lab-11-42-ber-floor-lock-tolerance.md
           - "Lab 11.45 — Дифференциальный QPSK + длинная преамбула": ru/labs/lab-11-45-differential-long-preamble.md
+          - "Lab 11.46 — Сообщение из одной Zynq-консоли в другую": ru/labs/lab-11-46-two-board-console-message.md
       - "Проекты Block 12":
           - "Project 12.1 — QPSK modem final project": ru/labs/project-12-1-qpsk-modem-final-project.md
           - "Project 12.2 — RF capture analysis final project": ru/labs/project-12-2-rf-capture-analysis-final-project.md
@@ -353,6 +358,9 @@ nav:
           - "Lab 5.9 — BPSK framed TX/RX loopback top-level": en/labs/lab-5-9-bpsk-framed-loopback.md
           - "Lab 5.10 — Zynq-ready BPSK BER top-level": en/labs/lab-5-10-bpsk-zynq-ready-top.md
           - "Lab 5.11 — AXI-Lite control wrapper for the BPSK BER top-level": en/labs/lab-5-11-bpsk-axi-lite-control.md
+          - "Zynq — where PS ends and PL begins": zynq-ps-pl-architecture.md
+          - "Lab 5.12 — Zynq PS/PL AXI-Lite mailbox": en/labs/lab-5-12-zynq-ps-pl-mailbox.md
+          - "Vivado — bring up the PS/PL mailbox on hardware": zynq-ps-pl-mailbox-vivado-bringup.md
       - "Block 6 labs":
           - "Lab 6.1 — RF frequency plan": en/labs/lab-6-1-frequency-plan.md
           - "Lab 6.2 — Gain staging and overload": en/labs/lab-6-2-gain-staging-and-overload.md
@@ -433,9 +441,11 @@ nav:
           - "Lab 11.33 — Residual CFO and timing hypothesis": en/labs/lab-11-33-residual-cfo-timing-hypothesis.md
           - "Lab 11.34 — Continuous QPSK timing recovery": en/labs/lab-11-34-continuous-qpsk-timing-recovery.md
           - "Lab 11.35 — Paired timing A/B and rotation-invariant TED": en/labs/lab-11-35-paired-timing-ab.md
+          - "Lab 11.38 — ZynqSDR TX → IQ capture → offline receiver": en/labs/lab-11-38-hardware-tx-iq-capture-offline-rx.md
           - "Lab 11.41 — The DC blocker was following the data": en/labs/lab-11-41-dc-blocker-data-tracking.md
           - "Lab 11.42 — A frame-sync false lock": en/labs/lab-11-42-ber-floor-lock-tolerance.md
           - "Lab 11.45 — Differential QPSK + a longer preamble": en/labs/lab-11-45-differential-long-preamble.md
+          - "Lab 11.46 — A message from one Zynq console to another": en/labs/lab-11-46-two-board-console-message.md
       - "Block 12 projects":
           - "Project 12.1 — QPSK modem final project": en/labs/project-12-1-qpsk-modem-final-project.md
           - "Project 12.2 — RF capture analysis final project": en/labs/project-12-2-rf-capture-analysis-final-project.md
