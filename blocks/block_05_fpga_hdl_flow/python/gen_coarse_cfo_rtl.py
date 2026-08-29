@@ -14,7 +14,7 @@ ATAN = m._CORDIC_ATAN
 lut_cos = [int(round(32767 * np.cos(2 * np.pi * k / 256))) & 0xFFFF for k in range(256)]
 lut_sin = [int(round(32767 * np.sin(2 * np.pi * k / 256))) & 0xFFFF for k in range(256)]
 
-OUT = Path(r"g:/Programs/zynq-sdr-course/blocks/block_05_fpga_hdl_flow/rtl/qpsk_coarse_cfo.v")
+OUT = Path(__file__).resolve().parents[1] / "rtl" / "qpsk_coarse_cfo.v"
 
 
 def lut_lines():

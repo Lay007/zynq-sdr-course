@@ -10,12 +10,10 @@ host: matched filter, frame alignment against the known symbols, data-aided remo
 AND CFO (a 140-symbol frame at ~300 Hz accumulates ~30 degrees, so a constant-phase fit would smear
 the very margin we are measuring), and finally symbol 106's Q against every other symbol's margin.
 """
-import sys
 import time
 
 import numpy as np
 
-sys.path.insert(0, "g:/Programs/zynq-sdr-course/blocks/block_11_integrated_sdr_project/python")
 import lab_11_30_two_board_cfo_validation as L
 import lab_11_32_two_board_fabric_coarse_cfo as B
 from lab_11_12_runtime_fpga_manager_reload import upload_bytes_via_ssh_cat

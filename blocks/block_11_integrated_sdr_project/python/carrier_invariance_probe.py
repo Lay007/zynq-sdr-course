@@ -13,11 +13,8 @@ Gardner (gp_ctrl[14]) is used as the probe because it yields ~5x more single-bit
 RF-safe: TX -30 dB behind the 30 dB pad, both boards quieted on exit.
 """
 import collections
-import sys
 import time
 
-
-sys.path.insert(0, "g:/Programs/zynq-sdr-course/blocks/block_11_integrated_sdr_project/python")
 import lab_11_30_two_board_cfo_validation as L
 import lab_11_32_two_board_fabric_coarse_cfo as B
 from lab_11_12_runtime_fpga_manager_reload import upload_bytes_via_ssh_cat

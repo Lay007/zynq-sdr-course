@@ -18,11 +18,8 @@ differential penalty -- one symbol error becomes two info-dibit errors.
 """
 from __future__ import annotations
 
-import sys
-
 import numpy as np
 
-sys.path.insert(0, "g:/Programs/zynq-sdr-course/blocks/block_11_integrated_sdr_project/python")
 import lab_11_32_two_board_fabric_coarse_cfo as B
 
 # phase index <-> dibit (d0,d1)

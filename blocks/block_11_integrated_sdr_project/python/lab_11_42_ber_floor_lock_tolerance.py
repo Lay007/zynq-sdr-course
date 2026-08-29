@@ -25,11 +25,8 @@ Bench: A TX1 -> 30 dB -> B RX1. RF-safe: TX -30 dB, both quieted on exit.
 from __future__ import annotations
 
 import argparse
-import sys
 from collections import Counter
 from math import comb
-
-sys.path.insert(0, "g:/Programs/zynq-sdr-course/blocks/block_11_integrated_sdr_project/python")
 
 BASE = 0x79040000
 RF_MODE = 0x10 | 0x20 | 0x200 | 0x400 | 0x1000

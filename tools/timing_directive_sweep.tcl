@@ -16,9 +16,10 @@
 # It OVERWRITES impl_1 with the last directive's placement -- convert/keep the shipped bitstream
 # first, and re-run the normal build to restore the shipped placement afterward.
 #
-# Configure the project path if your checkout differs.
-
-set xpr {g:/Programs/zynq-sdr-course/tmp/vendor_xpr_course_overlay/zc702/zc702.xpr}
+# Resolve the generated project from the checkout containing this script.
+set script_dir [file dirname [file normalize [info script]]]
+set repo_root [file dirname $script_dir]
+set xpr [file join $repo_root tmp vendor_xpr_course_overlay zc702 zc702.xpr]
 if {![file exists $xpr]} {
     error "project not found: $xpr -- run the normal overlay build first"
 }
