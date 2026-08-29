@@ -19,7 +19,7 @@ Linux/Python в PS
 3. как PS видит PL-регистры в адресном пространстве;
 4. почему control plane и sample datapath — разные интерфейсы.
 
-Перед работой прочитайте [Zynq: где заканчивается PS и начинается PL](../../ru/zynq-ps-pl-architecture.md).
+Перед работой прочитайте [Zynq: где заканчивается PS и начинается PL](../../docs/ru/zynq-ps-pl-architecture.md).
 
 ## Почему здесь нет DMA
 
