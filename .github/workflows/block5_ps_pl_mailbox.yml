@@ -5,11 +5,13 @@ on:
     branches: [ main ]
     paths:
       - "blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_axi_lite.v"
+      - "blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_vivado_wrapper.v"
       - "blocks/block_05_fpga_hdl_flow/tb/tb_zynq_message_mailbox_axi_lite.sv"
       - ".github/workflows/block5_ps_pl_mailbox.yml"
   pull_request:
     paths:
       - "blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_axi_lite.v"
+      - "blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_vivado_wrapper.v"
       - "blocks/block_05_fpga_hdl_flow/tb/tb_zynq_message_mailbox_axi_lite.sv"
       - ".github/workflows/block5_ps_pl_mailbox.yml"
   workflow_dispatch:
@@ -39,3 +41,11 @@ jobs:
             blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_axi_lite.v \
             blocks/block_05_fpga_hdl_flow/tb/tb_zynq_message_mailbox_axi_lite.sv
           vvp /tmp/tb_zynq_message_mailbox_axi_lite.vvp
+
+      - name: Elaborate Vivado-facing 32-bit AXI wrapper
+        run: |
+          iverilog -g2012 -Wall \
+            -s zynq_message_mailbox_vivado_wrapper \
+            -o /tmp/zynq_message_mailbox_vivado_wrapper.vvp \
+            blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_axi_lite.v \
+            blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_vivado_wrapper.v
