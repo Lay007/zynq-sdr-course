@@ -19,14 +19,30 @@ This page provides a compact index of course labs. It is intentionally shorter t
 | 02 | 2.1-2.3 | sampling axis, aliasing and I/Q interpretation | ci / executable | add C++ bridge and metadata-error examples |
 | 03 | 3.1-3.7 | FFT, FIR, mixing, decimation, convolution and windows | partial ci / executable | add more canonical outputs |
 | 04 | 4.1-4.4 | fixed-point workflow and model handoff | partial ci / executable | tighten implementation handoff constraints |
-| 05 | 5.1-5.11 | streaming interfaces, RTL mapping, self-checking tests and routed evidence | ci / executable | correlate implementation with board runs |
+| 05 | 5.1-5.12 | streaming interfaces, RTL mapping, self-checking tests, AXI-Lite control and the Zynq PS/PL mailbox boundary | ci / executable + board step pending | complete the physical PS→PL→PS mailbox echo on Zynq |
 | 06 | 6.1-6.9 | frontend setup, calibration, zero-IF artifacts and RTL-SDR/AD936x receiver comparison | executable + manual bench | record a reviewed two-receiver measurement package |
 | 07 | 7.1-7.5 | chain architecture and link-level metrics | partial ci / executable | add measured examples |
-| 08 | 8.1-8.10, 8.20-8.21 | synchronization, QPSK, OFDM mini-link, OFDM PAPR/clipping, coding, SNR/BER traps and executable CSS waveform/detector | ci / executable | add packet-level CSS synchronization and FPGA mapping; real LoRa PHY continues in the external zynq-lora-phy-positioning project |
+| 08 | 8.1-8.10, 8.20-8.21 | synchronization, QPSK, OFDM mini-link, OFDM PAPR/clipping, coding, SNR/BER traps and executable CSS waveform/detector | ci / executable | keep advanced waveform work secondary to the core educational path; real LoRa PHY continues in zynq-lora-phy-positioning |
 | 09 | 9.1-9.5 | metadata, file readers and replay analysis | ci / executable | keep manifests and thresholds synchronized |
 | 10 | 10.1-10.6 | electronics, RF safety, attenuators, NanoVNA/S-parameters and schematic mini-project | manual / measured | add real NanoVNA CSV/Touchstone exports and final edited photos |
-| 11 | 11.1-11.45 | integrated project workflow, bring-up, BER/CFO/timing evidence and the final differential two-board QPSK modem (gross rotation 0, payload BER ~4×10⁻⁴) | measured / portfolio-ready | seed/rebuild timing robustness and long-duration statistics remain optional |
+| 11 | 11.1-11.46 | integrated project workflow, bring-up, BER/CFO/timing evidence, two-board QPSK and the user-visible PS→PL→RF→PL→PS message goal | measured / message integration pending | pass a text message between two boards and print it in the receiving console |
 | 12 | 12.1-12.4 | final project briefs, rubric, templates and filled implementation report | reviewable / hardware pending | complete the open measurement gates |
+
+## Block 5 PS/PL bridge
+
+Lab 5.12 adds the missing system-level bridge between HDL exercises and RF bring-up:
+
+- [Zynq PS/PL architecture](zynq-ps-pl-architecture.md)
+- [English Lab 5.12](en/labs/lab-5-12-zynq-ps-pl-mailbox.md)
+- [Russian Lab 5.12](ru/labs/lab-5-12-zynq-ps-pl-mailbox.md)
+
+The first executable step is board-independent:
+
+```bash
+python tools/zynq_message_console.py --mock demo "Hello Zynq" --sequence 17
+```
+
+The first hardware step is deliberately not DMA. It is a small AXI-Lite mailbox and a PL echo so the learner can directly observe the PS→AXI→PL→AXI→PS transaction before the same software-facing contract is connected to the QPSK radio path.
 
 ## Block 6 receiver-comparison extension
 
@@ -51,7 +67,8 @@ Block 8 uses `8.10-8.19` for OFDM/QAM implementation labs. The CSS track starts 
 
 1. Run `python tools/tasks.py labs`.
 2. Run `python tools/tasks.py hdl` if Icarus Verilog is installed.
-3. Run the Lab 6.9 synthetic baseline or analyze matched real IQ captures.
-4. Review generated artifacts in `docs/assets`.
-5. Fill the lab report template from `templates/lab_report.template.md`.
-6. Use Block 11 to combine selected results into a final project.
+3. Run `python tools/zynq_message_console.py --mock demo "Hello Zynq" --sequence 17` and explain the PS/PL register contract.
+4. Run the Lab 6.9 synthetic baseline or analyze matched real IQ captures.
+5. Review generated artifacts in `docs/assets`.
+6. Fill the lab report template from `templates/lab_report.template.md`.
+7. Use Block 11 to combine selected results into a final project, preferably ending with a visible two-board message exchange.
