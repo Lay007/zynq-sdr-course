@@ -19,7 +19,7 @@ After this lab a student should be able to explain:
 3. how PS sees PL registers in the memory map;
 4. why the control plane and the sample datapath use different interfaces.
 
-Read [Zynq: where PS ends and PL begins](../../zynq-ps-pl-architecture.md) first.
+Read [Zynq: where PS ends and PL begins](../../docs/zynq-ps-pl-architecture.md) first.
 
 ## Why there is no DMA yet
 
