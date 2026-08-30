@@ -138,6 +138,68 @@ optional rational resampler
 
 Do not hide this conversion inside later DSP. The learner should see that `cu8`, `ci16`, and model complex samples are different numerical representations of the same waveform.
 
+### Executable Python baseline
+
+The first deterministic receiver is now implemented in:
+
+```text
+blocks/block_11_integrated_sdr_project/python/lab_11_38_offline_qpsk_rx.py
+```
+
+Run its no-hardware self-test first:
+
+```bash
+python blocks/block_11_integrated_sdr_project/python/lab_11_38_offline_qpsk_rx.py --self-test
+```
+
+The self-test deliberately puts one known course frame inside a longer recording, then adds an unknown sample offset, carrier phase, CFO, DC offset and AWGN. A PASS proves that the **offline algorithm** can acquire and decode that reference recording. It does not prove a ZynqSDR or RTL-SDR hardware reception.
+
+For a real ZynqSDR `ci16` recording:
+
+```bash
+python blocks/block_11_integrated_sdr_project/python/lab_11_38_offline_qpsk_rx.py \
+  measurements/qpsk_hw_tx_capture_001.ci16 \
+  --output measurements/qpsk_hw_tx_capture_001_rx.json
+```
+
+The matching metadata file is automatically taken from:
+
+```text
+measurements/qpsk_hw_tx_capture_001.json
+```
+
+The same command works for an RTL-SDR `.cu8` capture when the sidecar declares `"iq_format": "cu8"`. The receiver uses the **actual** `sampling.sample_rate_hz` from the sidecar. For example, a 2.4 MS/s RTL-SDR recording is converted explicitly to the 3.84 MS/s course-model rate with the rational ratio `8/5`; the code does not silently pretend that the two clocks are equal.
+
+The current Python baseline performs these executable stages:
+
+```text
+raw ci16/cu8/cf32 + JSON metadata
+  ↓
+explicit numeric format conversion
+  ↓
+DC removal + RMS normalization
+  ↓
+rational sample-rate conversion, if required
+  ↓
+committed 65-tap course RRC matched filter
+  ↓
+scan all 8 integer sample phases
+  ↓
+4th-power QPSK coarse CFO acquisition
+  ↓
+normalized preamble correlation / automatic frame start
+  ↓
+residual carrier phase/CFO fit on the preamble
+  ↓
+QPSK hard decisions
+  ↓
+BER + EVM + CFO + sync metric JSON
+```
+
+For the 480 kSym/s QPSK baseline, the fourth-power coarse estimator has an unambiguous acquisition interval of approximately ±60 kHz. A real RTL-SDR capture outside that interval needs better RF tuning or a future wider-range coarse-CFO stage; do not hide that limitation by manually rotating the final constellation.
+
+The current v1 receiver decodes the committed **140-symbol / 280-bit known course frame**. Packet-v1 parsing, sequence extraction and CRC belong to the later Lab 11.46 packet bridge and are intentionally not claimed here yet.
+
 ## Stage 4 — reference RX pipeline
 
 Recommended order:
@@ -158,6 +220,8 @@ Recommended order:
 Keep at least one diagnostic result from every important stage rather than only the final BER.
 
 Useful minimum plots include spectrum before correction, constellation before/after carrier correction, matched-filter output, timing result, recovered constellation, and packet/frame-sync metric.
+
+The executable Python baseline above currently writes machine-readable metrics. Diagnostic plot export is the next software step; it should expose these intermediate stages rather than replacing them with one final BER number.
 
 ## Stage 5 — message decoding
 
@@ -231,6 +295,8 @@ Minimum hardware/offline PASS:
 7. the result can be reproduced without making a new RF recording.
 
 This is **hardware TX + real RF/IQ capture + offline model evidence**. It is not yet evidence of a real-time PL receiver.
+
+A CI/self-test PASS of `lab_11_38_offline_qpsk_rx.py` satisfies only the software/reference part of items 3–6. The lab itself remains hardware-pending until a real capture is processed successfully.
 
 ## Next step
 
