@@ -113,6 +113,21 @@ QPSK_BRIDGE = merge(
     ),
 )
 
+QPSK_PACKET_LOOPBACK = merge(
+    QPSK_RX_CHAIN,
+    rtl(
+        "qpsk_symbol_mapper.v",
+        "bpsk_upsampler_8x.v",
+        "bpsk_rrc_tx_fir.v",
+        "qpsk_framed_tx_chain.v",
+        "bpsk_ber_counter.v",
+        "qpsk_ber_counter.v",
+        "qpsk_packet_v1_codec.v",
+        "qpsk_packet_frame_bridge.v",
+        "qpsk_packet_digital_loopback.v",
+    ),
+)
+
 TESTS = (
     HdlTest("tb_iq_passthrough", rtl("iq_passthrough.v") + (tb("tb_iq_passthrough.v"),)),
     HdlTest("tb_fir_iq_4tap", rtl("fir_iq_4tap.v") + (tb("tb_fir_iq_4tap.v"),)),
@@ -122,6 +137,10 @@ TESTS = (
     HdlTest(
         "tb_qpsk_packet_v1_codec",
         rtl("qpsk_packet_v1_codec.v") + (tb("tb_qpsk_packet_v1_codec.sv"),),
+    ),
+    HdlTest(
+        "tb_qpsk_packet_digital_loopback",
+        QPSK_PACKET_LOOPBACK + (tb("tb_qpsk_packet_digital_loopback.sv"),),
     ),
     HdlTest("tb_bpsk_upsampler_8x", rtl("bpsk_upsampler_8x.v") + (tb("tb_bpsk_upsampler_8x.v"),)),
     HdlTest("tb_bpsk_rrc_tx_fir", rtl("bpsk_rrc_tx_fir.v") + (tb("tb_bpsk_rrc_tx_fir.v"),)),

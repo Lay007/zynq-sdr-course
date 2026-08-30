@@ -52,6 +52,10 @@ module qpsk_ber_counter #(
     output wire                     busy,
     output wire                     done,
     output wire                     quadrant_swapped, // 1 = branch B won (90/270 deg)
+    // Serial, normalized payload bits after preamble lock. Bit 0 of each
+    // recovered dibit appears first, matching the course ROM/bus convention.
+    output wire                     payload_out_valid,
+    output wire                     payload_out_bit,
     output reg  [INDEX_W-1:0]       received_symbols,
     output reg  [INDEX_W-1:0]       total_bit_errors,
     output reg  [INDEX_W-1:0]       payload_bit_errors,
@@ -109,6 +113,8 @@ wire [INDEX_W-1:0] frame_bit_count = symbol_count << 1;   // 2 bits per QPSK sym
 // The first branch to acquire the preamble owns the burst; the loser is aborted so
 // it stops counting and releases `busy`. Cleared on rst/start.
 wire lock_a, lock_b;
+wire payload_valid_a, payload_valid_b;
+wire payload_bit_a, payload_bit_b;
 reg  winner_valid = 1'b0;
 reg  winner_b     = 1'b0;   // 0 = branch A, 1 = branch B
 
@@ -154,6 +160,8 @@ bpsk_ber_counter #(
     .busy(busy_a),
     .done(done_a),
     .lock_acquired(lock_a),
+    .payload_out_valid(payload_valid_a),
+    .payload_out_bit(payload_bit_a),
     .received_bits(recv_a),
     .total_errors(err_a),
     .payload_errors(payload_err_a),
@@ -180,6 +188,8 @@ bpsk_ber_counter #(
     .busy(busy_b),
     .done(done_b),
     .lock_acquired(lock_b),
+    .payload_out_valid(payload_valid_b),
+    .payload_out_bit(payload_bit_b),
     .received_bits(recv_b),
     .total_errors(err_b),
     .payload_errors(payload_err_b),
@@ -194,6 +204,11 @@ bpsk_ber_counter #(
 assign busy = winner_valid ? (winner_b ? busy_b : busy_a) : (busy_a || busy_b);
 assign done = winner_valid ? (winner_b ? done_b : done_a) : (done_a && done_b);
 assign quadrant_swapped = winner_valid && winner_b;
+// winner_valid is registered one clock after a branch raises lock. During that
+// first payload bit, select directly from the lock wires so no bit is lost.
+wire payload_select_b = winner_valid ? winner_b : (!lock_a && lock_b);
+assign payload_out_valid = payload_select_b ? payload_valid_b : payload_valid_a;
+assign payload_out_bit = payload_select_b ? payload_bit_b : payload_bit_a;
 
 always @(*) begin
     received_symbols = (winner_b ? recv_b : recv_a) >> 1;   // 2 bits/symbol
