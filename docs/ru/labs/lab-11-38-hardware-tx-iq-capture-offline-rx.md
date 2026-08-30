@@ -156,7 +156,7 @@ optional rational resampler
 
 ### Исполняемый Python baseline
 
-Первый детерминированный приёмник теперь реализован в:
+Первый детерминированный приёмник реализован в:
 
 ```text
 blocks/block_11_integrated_sdr_project/python/lab_11_38_offline_qpsk_rx.py
@@ -216,7 +216,7 @@ BER + EVM + CFO + sync metric в JSON
 
 Текущая версия v1 декодирует сохранённый в репозитории **известный кадр 140 symbols / 280 bits**. Разбор packet-v1, sequence и CRC относится к будущему packet bridge Lab 11.46 и пока намеренно не заявляется как реализованный.
 
-## Этап 4 — последовательный reference RX
+## Этап 4 — последовательный reference RX и диагностика
 
 Рекомендуемый порядок:
 
@@ -235,16 +235,39 @@ BER + EVM + CFO + sync metric в JSON
 
 На каждом этапе сохранять хотя бы один диагностический результат, а не только финальный BER.
 
-Минимально полезные графики:
+Отдельный диагностический инструмент использует те же функции приёмника:
 
-- spectrum до коррекции;
-- constellation до/после carrier correction;
-- matched-filter output;
-- timing error / selected sample phase;
-- recovered constellation;
-- packet correlation / frame-sync metric.
+```text
+blocks/block_11_integrated_sdr_project/python/offline_qpsk_diagnostics.py
+```
 
-Текущий исполняемый Python baseline уже выдаёт machine-readable metrics. Экспорт диагностических графиков — следующий программный шаг; он должен показать промежуточные этапы, а не заменить весь анализ одной цифрой BER.
+Сначала проверить его на synthetic/reference записи:
+
+```bash
+python blocks/block_11_integrated_sdr_project/python/offline_qpsk_diagnostics.py \
+  --self-test \
+  --plot-dir measurements/lab1138_selftest_plots
+```
+
+Для реального capture:
+
+```bash
+python blocks/block_11_integrated_sdr_project/python/offline_qpsk_diagnostics.py \
+  measurements/qpsk_hw_tx_capture_001.ci16 \
+  --plot-dir measurements/qpsk_hw_tx_capture_001_plots
+```
+
+Инструмент сохраняет пять независимых PNG:
+
+```text
+spectrum.png
+sync-metric.png
+constellation-before-carrier-correction.png
+constellation-after-carrier-correction.png
+matched-filter-timing.png
+```
+
+Plotter намеренно вызывает тот же format adapter, rational resampler, RRC, CFO estimator и frame-acquisition code, что и числовой receiver. Поэтому графики показывают работу настоящей reference-цепочки, а не отдельного упрощённого анализатора. CI проверяет создание всех пяти PNG из необрезанной synthetic/reference записи.
 
 ## Этап 5 — декодирование сообщения
 
@@ -319,7 +342,7 @@ real-time two-board RX
 
 Это **hardware TX + real RF/IQ capture + offline model evidence**. Это ещё не доказательство real-time PL RX.
 
-CI/self-test `lab_11_38_offline_qpsk_rx.py` закрывает только программную/reference часть пунктов 3–6. Лаборатория остаётся hardware-pending, пока этим приёмником не обработана настоящая RF/IQ запись.
+CI/self-test `lab_11_38_offline_qpsk_rx.py` и diagnostic plotter закрывают только программную/reference часть пунктов 3–6. Лаборатория остаётся hardware-pending, пока этой цепочкой не обработана настоящая RF/IQ запись.
 
 ## Следующий шаг
 
