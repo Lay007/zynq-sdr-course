@@ -198,7 +198,7 @@ BER + EVM + CFO + sync metric JSON
 
 For the 480 kSym/s QPSK baseline, the fourth-power coarse estimator has an unambiguous acquisition interval of approximately ±60 kHz. A real RTL-SDR capture outside that interval needs better RF tuning or a future wider-range coarse-CFO stage; do not hide that limitation by manually rotating the final constellation.
 
-The current v1 receiver decodes the committed **140-symbol / 280-bit known course frame**. Packet-v1 parsing, sequence extraction and CRC belong to the later Lab 11.46 packet bridge and are intentionally not claimed here yet.
+The current v1 receiver decodes the committed **140-symbol / 280-bit known course frame**. The Lab 11.46 packet-v1 codec and digital loopback now exist, but packet parsing, sequence extraction and CRC are not yet integrated into this offline receiver and are intentionally not claimed here.
 
 ## Stage 4 — reference RX pipeline and diagnostics
 
@@ -255,7 +255,7 @@ The plotter deliberately calls the same format adapter, rational resampler, RRC,
 
 ## Stage 5 — message decoding
 
-Once the packet bridge exists, reuse the Lab 11.46 application packet:
+Use the Lab 11.46 application packet for the next integration step:
 
 ```text
 byte 0      : payload length

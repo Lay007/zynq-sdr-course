@@ -214,7 +214,7 @@ BER + EVM + CFO + sync metric в JSON
 
 Для baseline QPSK 480 kSym/s однозначный диапазон захвата fourth-power CFO estimator составляет примерно ±60 кГц. Если реальный RTL-SDR даёт большую частотную ошибку, нужно точнее настроить RF или позже добавить отдельный wide-range coarse-CFO stage. Нельзя маскировать это ручным поворотом уже готового constellation.
 
-Текущая версия v1 декодирует сохранённый в репозитории **известный кадр 140 symbols / 280 bits**. Разбор packet-v1, sequence и CRC относится к будущему packet bridge Lab 11.46 и пока намеренно не заявляется как реализованный.
+Текущая версия v1 декодирует сохранённый в репозитории **известный кадр 140 symbols / 280 bits**. Codec packet-v1 и цифровой loopback Lab 11.46 уже существуют, но разбор packet, sequence и CRC пока не интегрирован в этот offline receiver и намеренно не заявляется здесь как реализованный.
 
 ## Этап 4 — последовательный reference RX и диагностика
 
@@ -271,7 +271,7 @@ Plotter намеренно вызывает тот же format adapter, rational
 
 ## Этап 5 — декодирование сообщения
 
-После появления packet bridge использовать тот же application packet, что и в Lab 11.46:
+На следующем шаге интеграции использовать тот же application packet, что и в Lab 11.46:
 
 ```text
 byte 0      : payload length

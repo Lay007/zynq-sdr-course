@@ -87,7 +87,24 @@ bytes 30..31: CRC-16/CCITT over bytes 0..29
 
 То есть максимальное пользовательское сообщение v1 — **27 bytes**. Этого достаточно для учебного demo и оставляет packet metadata/CRC внутри уже существующего payload размера.
 
-На первом этапе packet assembly/CRC удобно делать в **PS**. PL получает готовые 32 payload bytes и отвечает за их детерминированную передачу как bits/symbols/samples. На RX PS проверяет CRC и печатает сообщение.
+Численные соглашения зафиксированы явно:
+
+| Параметр | Соглашение packet-v1 |
+|---|---|
+| Вариант CRC | CRC-16/CCITT-FALSE |
+| Полином | `0x1021` |
+| Начальное значение | `0xffff` |
+| `refin` / `refout` | `false` / `false` |
+| Финальный XOR | `0x0000` |
+| Стандартная проверка | `CRC("123456789") = 0x29b1` |
+| Порядок байтов sequence и CRC | little-endian |
+| Байтовые линии 256-bit bus | packet byte `n` отображается в `payload[8*n +: 8]` |
+| Сериализация битов | сначала младший бит каждого байта |
+
+Mailbox уже упаковывает байты little-endian в 32-битные слова, поэтому на
+границе PS/PL не требуется дополнительный word swap.
+
+В первой реализации на плате packet assembly и окончательное решение по CRC можно оставить в **PS**. Синтезируемый codec служит исполняемой перекрёстной проверкой и позволяет собрать автономный RTL loopback из mailbox fields; при AXI-интеграции нужно выбрать одну границу и не кодировать уже собранный packet повторно. PL детерминированно передаёт итоговые 32 payload bytes как bits/symbols/samples.
 
 Это специально подчёркивает архитектурное разделение, а не переносит всю систему в FPGA.
 
@@ -129,6 +146,38 @@ PS → mailbox → packet bytes → QPSK TX → digital loopback → QPSK RX →
 ```
 
 Здесь RF ещё нет, но уже проверяется правильность packet framing поверх реального modem datapath.
+
+В репозитории теперь есть исполняемый baseline этапа 3:
+
+- `qpsk_packet_v1.py` — независимый Python reference для packet/CRC;
+- `qpsk_packet_v1_codec.v` — синтезируемый ready/valid packet codec;
+- `qpsk_packet_frame_bridge.v` — добавляет существующую 24-битную преамбулу и
+  собирает нормализованные 256 payload bits после существующего frame sync;
+- `qpsk_packet_digital_loopback.v` — переиспользует существующие mapper, RRC TX,
+  matched filter, timing sampler, hard decision и quadrant-resolving frame sync;
+- `tb_qpsk_packet_digital_loopback.sv` — передаёт `"Hello from board A"`,
+  sequence `17` и требует тот же payload с `CRC=OK`.
+
+Запуск сфокусированной регрессии:
+
+```bash
+python tools/run_block5_hdl_smoke.py --no-generate \
+  --test tb_qpsk_packet_v1_codec \
+  --test tb_qpsk_packet_digital_loopback
+```
+
+Корректная формулировка результата:
+
+```text
+packet digital loopback PASS
+```
+
+Все новые packet-блоки используют один clock, синхронный active-high reset и
+ready/valid transfer. Producer удерживает payload стабильным при `valid=1` и
+`ready=0`; этот baseline не добавляет CDC.
+
+Этот результат **не доказывает** AXI/Vivado integration, FPGA synthesis/timing,
+RF transport или двухплатный link.
 
 ## Этап 4 — две платы
 
