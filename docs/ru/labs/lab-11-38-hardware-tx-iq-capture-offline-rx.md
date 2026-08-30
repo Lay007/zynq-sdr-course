@@ -154,6 +154,68 @@ optional rational resampler
 
 Нельзя скрывать этот этап внутри последующего DSP. Студент должен видеть, что `cu8`, `ci16` и модельные complex samples — это разные представления одного сигнала.
 
+### Исполняемый Python baseline
+
+Первый детерминированный приёмник теперь реализован в:
+
+```text
+blocks/block_11_integrated_sdr_project/python/lab_11_38_offline_qpsk_rx.py
+```
+
+Сначала обязательно запустить self-test без аппаратуры:
+
+```bash
+python blocks/block_11_integrated_sdr_project/python/lab_11_38_offline_qpsk_rx.py --self-test
+```
+
+Self-test помещает один известный кадр курса внутрь более длинной записи и добавляет неизвестный sample offset, начальную фазу, CFO, DC offset и AWGN. Его PASS означает, что **офлайн-алгоритм** умеет самостоятельно захватить и декодировать эталонную запись. Это не является доказательством приёма реального сигнала ZynqSDR или RTL-SDR.
+
+Для реальной записи ZynqSDR в `ci16`:
+
+```bash
+python blocks/block_11_integrated_sdr_project/python/lab_11_38_offline_qpsk_rx.py \
+  measurements/qpsk_hw_tx_capture_001.ci16 \
+  --output measurements/qpsk_hw_tx_capture_001_rx.json
+```
+
+Metadata sidecar автоматически берётся из файла:
+
+```text
+measurements/qpsk_hw_tx_capture_001.json
+```
+
+Та же команда работает для записи RTL-SDR `.cu8`, если в sidecar указано `"iq_format": "cu8"`. Приёмник использует **реальный** `sampling.sample_rate_hz` из JSON. Например, запись RTL-SDR 2.4 MS/s явно преобразуется в рабочие 3.84 MS/s модели курса рациональным отношением `8/5`; код не делает вид, что тактовые частоты двух трактов одинаковы.
+
+Текущий Python baseline выполняет следующую исполняемую цепочку:
+
+```text
+raw ci16/cu8/cf32 + JSON metadata
+  ↓
+явное преобразование числового формата
+  ↓
+DC removal + RMS normalization
+  ↓
+rational sample-rate conversion при необходимости
+  ↓
+совпадающий с курсом 65-tap RRC matched filter
+  ↓
+перебор всех 8 целочисленных sample phases
+  ↓
+4th-power coarse CFO acquisition для QPSK
+  ↓
+normalized preamble correlation / автоматический frame start
+  ↓
+оценка residual carrier phase/CFO по преамбуле
+  ↓
+QPSK hard decisions
+  ↓
+BER + EVM + CFO + sync metric в JSON
+```
+
+Для baseline QPSK 480 kSym/s однозначный диапазон захвата fourth-power CFO estimator составляет примерно ±60 кГц. Если реальный RTL-SDR даёт большую частотную ошибку, нужно точнее настроить RF или позже добавить отдельный wide-range coarse-CFO stage. Нельзя маскировать это ручным поворотом уже готового constellation.
+
+Текущая версия v1 декодирует сохранённый в репозитории **известный кадр 140 symbols / 280 bits**. Разбор packet-v1, sequence и CRC относится к будущему packet bridge Lab 11.46 и пока намеренно не заявляется как реализованный.
+
 ## Этап 4 — последовательный reference RX
 
 Рекомендуемый порядок:
@@ -181,6 +243,8 @@ optional rational resampler
 - timing error / selected sample phase;
 - recovered constellation;
 - packet correlation / frame-sync metric.
+
+Текущий исполняемый Python baseline уже выдаёт machine-readable metrics. Экспорт диагностических графиков — следующий программный шаг; он должен показать промежуточные этапы, а не заменить весь анализ одной цифрой BER.
 
 ## Этап 5 — декодирование сообщения
 
@@ -254,6 +318,8 @@ real-time two-board RX
 7. результат можно повторить, не выполняя новую RF-запись.
 
 Это **hardware TX + real RF/IQ capture + offline model evidence**. Это ещё не доказательство real-time PL RX.
+
+CI/self-test `lab_11_38_offline_qpsk_rx.py` закрывает только программную/reference часть пунктов 3–6. Лаборатория остаётся hardware-pending, пока этим приёмником не обработана настоящая RF/IQ запись.
 
 ## Следующий шаг
 
