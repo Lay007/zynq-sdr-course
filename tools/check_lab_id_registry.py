@@ -16,6 +16,8 @@ ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "tools" / "lab_id_registry.yml"
 SEPARATED_ID = re.compile(r"(?:^|/)lab[-_]11[-_](\d+)")
 COMPACT_ID = re.compile(r"(?:^|/)lab11(\d+)")
+PYTHON_CACHE_DIR = "__pycache__"
+PYTHON_CACHE_SUFFIXES = {".pyc", ".pyo"}
 
 
 @dataclass(frozen=True)
@@ -42,6 +44,10 @@ def _artifact_id(path: str) -> str | None:
     if match is None:
         return None
     return f"11.{int(match.group(1))}"
+
+
+def _is_transient_python_cache(path: Path) -> bool:
+    return PYTHON_CACHE_DIR in path.parts or path.suffix in PYTHON_CACHE_SUFFIXES
 
 
 def check_registry(
@@ -74,7 +80,7 @@ def check_registry(
         if not base.exists():
             continue
         for candidate in base.rglob("*"):
-            if not candidate.is_file():
+            if not candidate.is_file() or _is_transient_python_cache(candidate):
                 continue
             relative = candidate.relative_to(root).as_posix()
             lab_id = _artifact_id(relative)
