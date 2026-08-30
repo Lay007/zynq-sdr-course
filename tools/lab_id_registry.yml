@@ -25,6 +25,7 @@ labs:
   "11.38":
     topic: hardware-tx-iq-capture-offline-rx
     artifacts:
+      - blocks/block_11_integrated_sdr_project/python/lab_11_38_offline_qpsk_rx.py
       - docs/en/labs/lab-11-38-hardware-tx-iq-capture-offline-rx.md
       - docs/ru/labs/lab-11-38-hardware-tx-iq-capture-offline-rx.md
   "11.40":
