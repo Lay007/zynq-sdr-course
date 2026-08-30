@@ -119,6 +119,10 @@ TESTS = (
     HdlTest("tb_nco_mixer_iq", rtl("nco_mixer_iq.v") + (tb("tb_nco_mixer_iq.v"),)),
     HdlTest("tb_bpsk_symbol_mapper", rtl("bpsk_symbol_mapper.v") + (tb("tb_bpsk_symbol_mapper.v"),)),
     HdlTest("tb_qpsk_symbol_mapper", rtl("qpsk_symbol_mapper.v") + (tb("tb_qpsk_symbol_mapper.v"),)),
+    HdlTest(
+        "tb_qpsk_packet_v1_codec",
+        rtl("qpsk_packet_v1_codec.v") + (tb("tb_qpsk_packet_v1_codec.sv"),),
+    ),
     HdlTest("tb_bpsk_upsampler_8x", rtl("bpsk_upsampler_8x.v") + (tb("tb_bpsk_upsampler_8x.v"),)),
     HdlTest("tb_bpsk_rrc_tx_fir", rtl("bpsk_rrc_tx_fir.v") + (tb("tb_bpsk_rrc_tx_fir.v"),)),
     HdlTest(
