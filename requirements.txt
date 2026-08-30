@@ -3,6 +3,6 @@ numpy==2.5.2
 matplotlib==3.11.1
 mkdocs==1.6.1
 mkdocs-material==9.7.7
-pymdown-extensions==11.0.1
+pymdown-extensions==11.0.2
 pyyaml==6.0.3
 paramiko==5.0.0
