@@ -140,7 +140,7 @@ Do not hide this conversion inside later DSP. The learner should see that `cu8`,
 
 ### Executable Python baseline
 
-The first deterministic receiver is now implemented in:
+The first deterministic receiver is implemented in:
 
 ```text
 blocks/block_11_integrated_sdr_project/python/lab_11_38_offline_qpsk_rx.py
@@ -200,7 +200,7 @@ For the 480 kSym/s QPSK baseline, the fourth-power coarse estimator has an unamb
 
 The current v1 receiver decodes the committed **140-symbol / 280-bit known course frame**. Packet-v1 parsing, sequence extraction and CRC belong to the later Lab 11.46 packet bridge and are intentionally not claimed here yet.
 
-## Stage 4 — reference RX pipeline
+## Stage 4 — reference RX pipeline and diagnostics
 
 Recommended order:
 
@@ -219,9 +219,39 @@ Recommended order:
 
 Keep at least one diagnostic result from every important stage rather than only the final BER.
 
-Useful minimum plots include spectrum before correction, constellation before/after carrier correction, matched-filter output, timing result, recovered constellation, and packet/frame-sync metric.
+The companion diagnostic tool reuses the exact same receiver functions:
 
-The executable Python baseline above currently writes machine-readable metrics. Diagnostic plot export is the next software step; it should expose these intermediate stages rather than replacing them with one final BER number.
+```text
+blocks/block_11_integrated_sdr_project/python/offline_qpsk_diagnostics.py
+```
+
+First verify it on the synthetic/reference recording:
+
+```bash
+python blocks/block_11_integrated_sdr_project/python/offline_qpsk_diagnostics.py \
+  --self-test \
+  --plot-dir measurements/lab1138_selftest_plots
+```
+
+For a real capture:
+
+```bash
+python blocks/block_11_integrated_sdr_project/python/offline_qpsk_diagnostics.py \
+  measurements/qpsk_hw_tx_capture_001.ci16 \
+  --plot-dir measurements/qpsk_hw_tx_capture_001_plots
+```
+
+It writes five independent PNG artifacts:
+
+```text
+spectrum.png
+sync-metric.png
+constellation-before-carrier-correction.png
+constellation-after-carrier-correction.png
+matched-filter-timing.png
+```
+
+The plotter deliberately calls the same format adapter, rational resampler, RRC, CFO estimator and frame-acquisition code as the numeric receiver. The plots therefore expose the receiver rather than forming a second, easier analysis path. CI checks that all five PNGs are generated from an uncropped synthetic/reference capture.
 
 ## Stage 5 — message decoding
 
@@ -296,7 +326,7 @@ Minimum hardware/offline PASS:
 
 This is **hardware TX + real RF/IQ capture + offline model evidence**. It is not yet evidence of a real-time PL receiver.
 
-A CI/self-test PASS of `lab_11_38_offline_qpsk_rx.py` satisfies only the software/reference part of items 3–6. The lab itself remains hardware-pending until a real capture is processed successfully.
+A CI/self-test PASS of `lab_11_38_offline_qpsk_rx.py` and its diagnostic plotter satisfies only the software/reference part of items 3–6. The lab itself remains hardware-pending until a real capture is processed successfully.
 
 ## Next step
 
