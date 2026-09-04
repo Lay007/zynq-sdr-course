@@ -1,0 +1,53 @@
+name: Block 8 OFDM RX FFT
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_fft64_sequential.v"
+      - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v"
+      - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v"
+      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_fft64_sequential.sv"
+      - "verification/vectors/block08_ofdm_fft_bin1_expected.mem"
+      - "verification/vectors/block08_ofdm_ifft_bin1_expected.mem"
+      - ".github/workflows/block8_ofdm_rx_fft.yml"
+  pull_request:
+    paths:
+      - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_fft64_sequential.v"
+      - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v"
+      - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v"
+      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_fft64_sequential.sv"
+      - "verification/vectors/block08_ofdm_fft_bin1_expected.mem"
+      - "verification/vectors/block08_ofdm_ifft_bin1_expected.mem"
+      - ".github/workflows/block8_ofdm_rx_fft.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fft-rtl:
+    name: Scaled 64-point RX FFT regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install Icarus Verilog
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog
+
+      - name: Compile and run scaled FFT regression
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_fft64_sequential \
+            -o /tmp/tb_ofdm_fft64_sequential.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_fft64_sequential.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_fft64_sequential.sv
+          vvp /tmp/tb_ofdm_fft64_sequential.vvp
