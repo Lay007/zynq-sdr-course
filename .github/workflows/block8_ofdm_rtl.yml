@@ -96,6 +96,17 @@ jobs:
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_cp16_remover.sv
           vvp /tmp/tb_ofdm_cp16_remover.vvp
 
+      - name: Compile and run OFDM CP insertion/removal loopback
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_cp16_loopback \
+            -o /tmp/tb_ofdm_cp16_loopback.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_cp16_inserter.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_cp16_remover.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_cp16_loopback.sv
+          vvp /tmp/tb_ofdm_cp16_loopback.vvp
+
       - name: Compile and run mapped OFDM TX path regression
         run: |
           set -euo pipefail
