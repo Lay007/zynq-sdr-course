@@ -64,6 +64,12 @@ measurements/
 }
 ```
 
+For the hardware-TX / IQ-capture workflow in Lab 11.38, start from the committed
+[`lab_11_38_capture_metadata_template.json`](assets/lab_11_38_capture_metadata_template.json).
+Copy it next to the raw IQ file, rename it to the same basename, and replace every placeholder
+or `null` value with the settings from the actual measurement. In particular, update
+`sampling.sample_count` after the recording is complete rather than leaving the template value.
+
 ## Required fields
 
 | Group | Field | Why it is needed |
