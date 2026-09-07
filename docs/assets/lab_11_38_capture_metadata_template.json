@@ -1,0 +1,45 @@
+{
+  "recording_id": "qpsk_hw_tx_capture_001",
+  "description": "Lab 11.38 hardware QPSK TX capture for offline reference RX",
+  "created_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "operator": "",
+  "hardware": {
+    "tx_board": "ZynqSDR A / xc7z020 + AD936x",
+    "tx_build_commit": "<git-commit-sha>",
+    "rx_device": "ZynqSDR B or RTL-SDR",
+    "rf_path": "coax + attenuator or OTA",
+    "attenuation_db": null
+  },
+  "rf": {
+    "tx_center_frequency_hz": 868100000,
+    "rx_center_frequency_hz": 868100000,
+    "tx_gain_db": null,
+    "rx_gain_mode": "manual",
+    "rx_gain_db": null,
+    "rf_bandwidth_hz": null
+  },
+  "sampling": {
+    "sample_rate_hz": 3840000,
+    "sample_count": 0,
+    "iq_format": "ci16",
+    "endianness": "little",
+    "i_first": true
+  },
+  "signal": {
+    "modulation": "QPSK",
+    "symbol_rate_hz": 480000,
+    "samples_per_symbol_tx": 8,
+    "frame_symbols": 140
+  },
+  "packet": {
+    "format": "known-course-frame",
+    "sequence": null,
+    "expected_payload_utf8": null,
+    "expected_prbs_seed": null
+  },
+  "quality_notes": {
+    "clipping_observed": false,
+    "overload_warning": false,
+    "comments": ""
+  }
+}
