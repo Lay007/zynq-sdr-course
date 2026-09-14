@@ -1,0 +1,78 @@
+name: Block 8 OFDM RX Chain
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
+      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_subcarrier_extractor.sv"
+      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_qpsk_demapper.sv"
+      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_digital_loopback.sv"
+      - ".github/workflows/block8_ofdm_rx_chain.yml"
+  pull_request:
+    paths:
+      - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
+      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_subcarrier_extractor.sv"
+      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_qpsk_demapper.sv"
+      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_digital_loopback.sv"
+      - ".github/workflows/block8_ofdm_rx_chain.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rx-chain:
+    name: OFDM RX chain self-checking regressions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install Icarus Verilog
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog
+          iverilog -V
+
+      - name: Check subcarrier extractor
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_subcarrier_extractor \
+            -o /tmp/tb_ofdm_subcarrier_extractor.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_subcarrier_extractor.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_subcarrier_extractor.sv
+          vvp /tmp/tb_ofdm_subcarrier_extractor.vvp
+
+      - name: Check QPSK demapper
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_qpsk_demapper \
+            -o /tmp/tb_ofdm_qpsk_demapper.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_qpsk_demapper.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_qpsk_demapper.sv
+          vvp /tmp/tb_ofdm_qpsk_demapper.vvp
+
+      - name: Check complete OFDM TX to RX digital loopback
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_tx_rx_digital_loopback \
+            -o /tmp/tb_ofdm_tx_rx_digital_loopback.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_qpsk_mapper.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_subcarrier_allocator.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_tx_mapper_ifft_path.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_cp16_inserter.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_tx_cp16_path.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_cp16_remover.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_fft64_sequential.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_subcarrier_extractor.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_qpsk_demapper.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_digital_loopback.sv
+          vvp /tmp/tb_ofdm_tx_rx_digital_loopback.vvp
