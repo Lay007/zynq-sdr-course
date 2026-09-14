@@ -36,6 +36,11 @@ def test_rounding_is_half_lsb_away_from_zero() -> None:
     assert negative.sample == (-1, 0)
 
 
-def test_out_of_range_input_is_rejected() -> None:
+def test_out_of_range_sample_is_rejected() -> None:
     with pytest.raises(ValueError):
         equalize_q15((32768, 0), (16384, 0))
+
+
+def test_out_of_range_coefficient_is_rejected() -> None:
+    with pytest.raises(ValueError):
+        equalize_q15((1000, -1000), (32768, 0))
