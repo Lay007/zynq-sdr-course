@@ -5,16 +5,12 @@ on:
     branches: [ main ]
     paths:
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
-      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_subcarrier_extractor.sv"
-      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_qpsk_demapper.sv"
-      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_digital_loopback.sv"
+      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
       - ".github/workflows/block8_ofdm_rx_chain.yml"
   pull_request:
     paths:
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
-      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_subcarrier_extractor.sv"
-      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_qpsk_demapper.sv"
-      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_digital_loopback.sv"
+      - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
       - ".github/workflows/block8_ofdm_rx_chain.yml"
   workflow_dispatch:
 
@@ -46,6 +42,16 @@ jobs:
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_subcarrier_extractor.v \
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_subcarrier_extractor.sv
           vvp /tmp/tb_ofdm_subcarrier_extractor.vvp
+
+      - name: Check one-tap equalizer
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_one_tap_equalizer \
+            -o /tmp/tb_ofdm_one_tap_equalizer.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_one_tap_equalizer.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_one_tap_equalizer.sv
+          vvp /tmp/tb_ofdm_one_tap_equalizer.vvp
 
       - name: Check QPSK demapper
         run: |
