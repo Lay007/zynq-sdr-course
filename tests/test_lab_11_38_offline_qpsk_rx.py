@@ -87,6 +87,53 @@ def test_ci16_and_cu8_adapters_make_numerical_representation_explicit(tmp_path: 
     )
 
 
+def test_default_self_test_frame_reports_packet_decode_honestly() -> None:
+    """The committed reference frame is not a packet-v1 frame; CRC must say so, not lie."""
+    result = RX.run_self_test()
+
+    assert result["self_test_pass"] is True
+    packet = result["packet"]
+    assert packet["packet_size_bytes"] == 32
+    assert packet["crc_ok"] is False
+    assert packet["payload_text"] is None
+
+
+def test_payload_bits_to_packet_round_trips_with_qpsk_packet_v1() -> None:
+    packet = RX.encode_packet(b"unit test payload", 4242)
+    bits = np.unpackbits(np.frombuffer(packet, dtype=np.uint8), bitorder="little")
+
+    rebuilt = RX.payload_bits_to_packet(bits)
+    assert rebuilt == packet
+
+    decoded_via_lab = RX.decode_payload_packet(bits)
+    decoded_direct = RX.decode_packet(packet)
+    assert decoded_via_lab["sequence"] == decoded_direct.sequence
+    assert decoded_via_lab["crc_ok"] is True
+    assert decoded_via_lab["frame_error"] is False
+    assert decoded_via_lab["payload_text"] == "unit test payload"
+    assert bytes.fromhex(decoded_via_lab["payload_hex"]) == decoded_direct.payload
+
+
+def test_payload_bits_to_packet_rejects_wrong_bit_count() -> None:
+    with pytest.raises(ValueError, match="256"):
+        RX.payload_bits_to_packet(np.zeros(255, dtype=np.uint8))
+
+
+def test_packet_self_test_survives_the_full_offline_rx_chain() -> None:
+    """Packet-v1 round trip through resample/DC/RRC/timing/CFO/frame-sync/demap, no hardware."""
+    result = RX.run_packet_self_test()
+
+    assert result["packet_self_test_pass"] is True
+    assert result["hardware_rx_claimed"] is False
+    assert result["evidence_scope"] == "offline-reference-rx-only"
+    packet = result["packet"]
+    assert packet["crc_ok"] is True
+    assert packet["frame_error"] is False
+    assert packet["sequence"] == result["packet_self_test_injected_sequence"]
+    assert packet["payload_hex"] == result["packet_self_test_injected_payload_hex"]
+    assert packet["payload_text"] == "Hello from board A"
+
+
 def test_metadata_contract_rejects_sample_count_drift(tmp_path: Path) -> None:
     capture = tmp_path / "capture.ci16"
     np.array([100, -100, 200, -200], dtype="<i2").tofile(capture)

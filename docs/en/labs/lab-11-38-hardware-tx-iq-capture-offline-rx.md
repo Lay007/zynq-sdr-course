@@ -198,7 +198,7 @@ BER + EVM + CFO + sync metric JSON
 
 For the 480 kSym/s QPSK baseline, the fourth-power coarse estimator has an unambiguous acquisition interval of approximately ±60 kHz. A real RTL-SDR capture outside that interval needs better RF tuning or a future wider-range coarse-CFO stage; do not hide that limitation by manually rotating the final constellation.
 
-The current v1 receiver decodes the committed **140-symbol / 280-bit known course frame**. The Lab 11.46 packet-v1 codec and digital loopback now exist, but packet parsing, sequence extraction and CRC are not yet integrated into this offline receiver and are intentionally not claimed here.
+The current v1 receiver decodes the committed **140-symbol / 280-bit known course frame**, and the 256 payload bits recovered after the preamble are also decoded as a Lab 11.46 packet-v1 frame (length, sequence, CRC-16/CCITT, UTF-8 payload). `--packet-self-test` proves that round trip end to end, offline: it encodes a real packet-v1 frame, pushes it through the same resample → DC removal → RRC → timing/CFO acquisition → frame sync chain as any other capture, and checks that the decoded packet matches what was sent, `crc_ok=True` included. That is still an offline/no-hardware proof — the reference-RX counterpart of the RTL `tb_qpsk_packet_digital_loopback` regression, not a hardware capture.
 
 ## Stage 4 — reference RX pipeline and diagnostics
 
@@ -255,7 +255,7 @@ The plotter deliberately calls the same format adapter, rational resampler, RRC,
 
 ## Stage 5 — message decoding
 
-Use the Lab 11.46 application packet for the next integration step:
+The Lab 11.46 application packet is already wired into this receiver: every `analyse_reference_capture`/`analyse_capture_file` result carries a `packet` field decoded from the 256 payload bits.
 
 ```text
 byte 0      : payload length
@@ -264,7 +264,13 @@ bytes 3..29 : application bytes
 bytes 30..31: CRC-16/CCITT
 ```
 
-Then the acceptance result becomes application-visible:
+No-hardware proof that this survives the full offline chain (resample → DC removal → RRC → timing/CFO acquisition → frame sync → demap → packet decode):
+
+```bash
+python blocks/block_11_integrated_sdr_project/python/lab_11_38_offline_qpsk_rx.py --packet-self-test
+```
+
+On a real capture, the acceptance result becomes application-visible directly from the JSON `packet` field:
 
 ```text
 capture: qpsk_hw_tx_capture_017.cu8
@@ -273,7 +279,7 @@ crc: OK
 payload: "Hello from board A"
 ```
 
-Before the packet bridge is available, a known PRBS or fixed payload with BER comparison is acceptable.
+`crc_ok` reports exactly what the captured payload was, nothing more: a capture that does not carry a packet-v1 frame (for example the committed course reference pattern used by `--self-test`) legitimately decodes with `crc_ok=false`. Only a real capture with `crc_ok=true` is packet-level hardware evidence.
 
 ## Stage 6 — compare the two RX devices
 

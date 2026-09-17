@@ -13,11 +13,15 @@ Supported capture formats follow docs/iq-recording-metadata.md:
 
 The first executable target is the existing course QPSK frame: 140 symbols at 480 kSym/s,
 8 samples/symbol and the committed Q1.15 RRC taps.  The receiver finds that frame inside a
-longer recording; it does not require the user to crop a packet by hand.  Packet/CRC decoding
-is intentionally a later layer once the Lab 11.46 packet bridge exists.
+longer recording; it does not require the user to crop a packet by hand.  The 256 payload
+bits recovered after the preamble are also decoded as a Lab 11.46 packet-v1 frame
+(``qpsk_packet_v1``); ``crc_ok``/``frame_error`` simply report whether the captured payload
+really was a valid packet-v1 frame, so a non-packet reference capture legitimately shows
+``crc_ok: false`` -- that is not a bug, it is an honest report of what was captured.
 
-Important evidence boundary: a successful ``--self-test`` proves the offline algorithm on a
-synthetic/reference capture.  It is NOT evidence of a ZynqSDR or RTL-SDR hardware reception.
+Important evidence boundary: a successful ``--self-test`` (or ``--packet-self-test``) proves
+the offline algorithm on a synthetic/reference capture.  It is NOT evidence of a ZynqSDR or
+RTL-SDR hardware reception.
 """
 from __future__ import annotations
 
@@ -30,6 +34,14 @@ import numpy as np
 
 
 ROOT = Path(__file__).resolve().parents[3]
+BLOCK11_PYTHON_DIR = ROOT / "blocks" / "block_11_integrated_sdr_project" / "python"
+import sys
+
+if str(BLOCK11_PYTHON_DIR) not in sys.path:
+    sys.path.insert(0, str(BLOCK11_PYTHON_DIR))
+
+from qpsk_packet_v1 import PACKET_SIZE, decode_packet, encode_packet  # noqa: E402
+
 REFERENCE_DIR = (
     ROOT
     / "blocks"
@@ -46,6 +58,7 @@ MODEL_SAMPLE_RATE_HZ = SPS * SYMBOL_RATE_HZ
 FRAME_SYMBOLS = 140
 PREAMBLE_BITS = 24
 PREAMBLE_SYMBOLS = PREAMBLE_BITS // 2
+PACKET_PAYLOAD_BITS = PACKET_SIZE * 8
 SUPPORTED_FORMATS = {"ci16", "cu8", "cf32"}
 
 
@@ -327,6 +340,60 @@ def hard_bits(symbols: np.ndarray) -> np.ndarray:
     return result
 
 
+def _bits_to_qpsk_symbols(bits: np.ndarray) -> np.ndarray:
+    """Inverse of ``hard_bits``: the same course TX mapping used by ``load_course_reference``."""
+    bits = np.asarray(bits, dtype=np.float64)
+    i = 1.0 - 2.0 * bits[0::2]
+    q = 1.0 - 2.0 * bits[1::2]
+    return (i + 1j * q) / np.sqrt(2.0)
+
+
+def payload_bits_to_packet(bits: np.ndarray) -> bytes:
+    """Pack 256 hard-decision payload bits into one packet-v1 frame (32 bytes).
+
+    Bit ``j`` of the payload maps to packet byte ``j // 8``, bit position
+    ``j % 8`` -- the least-significant-bit-of-each-byte-first convention
+    ``qpsk_packet_frame_source``/``qpsk_packet_v1_codec.v`` already use. No
+    reordering is needed beyond slicing off the 24-bit preamble: the mapper
+    convention (``dibit[0]`` -> I, ``dibit[1]`` -> Q) and ``hard_bits`` already
+    place symbol ``k``'s two bits at payload index ``2*(k-PREAMBLE_SYMBOLS)``
+    and ``+1``, matching ``qpsk_packet_frame_source``'s
+    ``out_dibit = {packet[2s+1], packet[2s]}`` bit-for-bit.
+    """
+    bits = np.asarray(bits, dtype=np.uint8)
+    if bits.size != PACKET_PAYLOAD_BITS:
+        raise ValueError(f"expected {PACKET_PAYLOAD_BITS} payload bits, got {bits.size}")
+    return np.packbits(bits, bitorder="little").tobytes()
+
+
+def decode_payload_packet(bits: np.ndarray) -> dict:
+    """Decode 256 recovered payload bits as a Lab 11.46 packet-v1 frame.
+
+    This reports whatever the captured payload actually contains. ``crc_ok``
+    is true only when the payload really was a valid packet-v1 frame; it is
+    never assumed or forced, so a generic/non-packet reference frame (such as
+    the committed ``tx_bits.txt`` pattern) legitimately decodes with
+    ``crc_ok=False``.
+    """
+    packet_bytes = payload_bits_to_packet(bits)
+    decoded = decode_packet(packet_bytes)
+    payload_text = None
+    if decoded.crc_ok and not decoded.frame_error:
+        try:
+            payload_text = decoded.payload.decode("utf-8")
+        except UnicodeDecodeError:
+            payload_text = None
+    return {
+        "packet_size_bytes": PACKET_SIZE,
+        "declared_length": int(packet_bytes[0]),
+        "sequence": decoded.sequence,
+        "payload_hex": decoded.payload.hex(),
+        "payload_text": payload_text,
+        "crc_ok": bool(decoded.crc_ok),
+        "frame_error": bool(decoded.frame_error),
+    }
+
+
 def analyse_reference_capture(
     samples: np.ndarray,
     source_sample_rate_hz: float,
@@ -355,6 +422,11 @@ def analyse_reference_capture(
         * 100.0
     )
 
+    payload_bits = recovered_bits[PREAMBLE_BITS : PREAMBLE_BITS + PACKET_PAYLOAD_BITS]
+    packet_info = (
+        decode_payload_packet(payload_bits) if payload_bits.size == PACKET_PAYLOAD_BITS else None
+    )
+
     return {
         "evidence_scope": "offline-reference-rx-only",
         "hardware_rx_claimed": False,
@@ -375,6 +447,7 @@ def analyse_reference_capture(
         "bit_errors": bit_errors,
         "compared_bits": compared_bits,
         "ber": bit_errors / compared_bits,
+        "packet": packet_info,
     }
 
 
@@ -401,9 +474,25 @@ def synthetic_reference_capture(
     suffix_samples: int = 700,
     snr_db: float = 34.0,
     seed: int = 1138,
+    symbols: np.ndarray | None = None,
 ) -> np.ndarray:
-    """Create a longer-than-one-frame reference recording for ``--self-test``."""
-    _, symbols, taps = load_course_reference()
+    """Create a longer-than-one-frame reference recording for ``--self-test``.
+
+    ``symbols`` defaults to the committed course reference frame. Passing an
+    explicit array (see ``packet_frame_symbols``) builds the same TX/channel
+    pipeline around a different 140-symbol frame, which is how
+    ``synthetic_packet_capture`` proves packet-v1 survives the full offline
+    chain without touching the default self-test's frame at all.
+    """
+    _, default_symbols, taps = load_course_reference()
+    if symbols is None:
+        symbols = default_symbols
+    else:
+        symbols = np.asarray(symbols, dtype=np.complex128)
+        if symbols.size != default_symbols.size:
+            raise ValueError(
+                f"symbols must have {default_symbols.size} entries (preamble+payload), got {symbols.size}"
+            )
     upsampled = np.zeros(symbols.size * SPS, dtype=np.complex128)
     upsampled[::SPS] = symbols
     tx = np.convolve(upsampled, taps, mode="full")
@@ -425,6 +514,81 @@ def synthetic_reference_capture(
         rng.normal(size=recording.size) + 1j * rng.normal(size=recording.size)
     )
     return recording + noise
+
+
+def packet_frame_symbols(packet: bytes) -> np.ndarray:
+    """Build the full 140-symbol course frame carrying one packet-v1 payload.
+
+    The 24-bit preamble is the committed course preamble (unchanged, so frame
+    sync locks exactly as it does for the default reference frame); the 256
+    payload bits are the packet, QPSK-mapped with the same convention
+    ``load_course_reference`` uses for the rest of the frame.
+    """
+    if len(packet) != PACKET_SIZE:
+        raise ValueError(f"packet-v1 frame must be exactly {PACKET_SIZE} bytes, got {len(packet)}")
+    preamble_bits, _, _ = load_course_reference()
+    preamble_bits = preamble_bits[:PREAMBLE_BITS]
+    payload_bits = np.unpackbits(np.frombuffer(packet, dtype=np.uint8), bitorder="little")
+    full_bits = np.concatenate([preamble_bits, payload_bits])
+    return _bits_to_qpsk_symbols(full_bits)
+
+
+def synthetic_packet_capture(packet: bytes, **kwargs) -> np.ndarray:
+    """``synthetic_reference_capture`` around one packet-v1 frame instead of the default pattern."""
+    return synthetic_reference_capture(symbols=packet_frame_symbols(packet), **kwargs)
+
+
+def run_packet_self_test(
+    *,
+    payload: bytes = b"Hello from board A",
+    sequence: int = 17,
+    cfo_hz: float = 18_000.0,
+    phase_rad: float = 0.73,
+    snr_db: float = 34.0,
+    seed: int = 1146,
+) -> dict:
+    """No-hardware proof that a packet-v1 frame survives the full offline RX chain.
+
+    This is the reference-RX counterpart of the RTL
+    ``tb_qpsk_packet_digital_loopback`` proof: same packet-v1 codec and the
+    same 256-bit payload convention, but pushed through resampling, DC
+    removal, the RRC matched filter, blind timing/CFO acquisition and frame
+    sync instead of a synchronous digital loopback. It is still entirely
+    synthetic -- no hardware TX/RX is involved.
+
+    ``cfo_hz``/``phase_rad`` intentionally match ``run_self_test``'s proven
+    acquisition conditions rather than exploring a new operating point: the
+    residual-CFO fit in ``acquire_frame`` is estimated from the 12-symbol
+    preamble alone and then extrapolated across the whole 140-symbol frame, so
+    its small estimation error is amplified roughly ten-fold by the time it
+    reaches the last payload symbols (the packet-v1 CRC bytes). Some
+    (cfo, phase) combinations were observed to leave enough residual slope
+    error to flip a tail bit even at 45 dB SNR -- a genuine acquisition-margin
+    property of the existing chain, not a noise effect and not specific to
+    packet-v1. Characterizing that margin across the full CFO range is a
+    separate concern from proving packet-v1 itself round-trips correctly, so
+    this test deliberately stays inside the already-validated operating
+    point.
+    """
+    packet = encode_packet(payload, sequence)
+    capture = synthetic_packet_capture(
+        packet, cfo_hz=cfo_hz, phase_rad=phase_rad, snr_db=snr_db, seed=seed
+    )
+    result = analyse_reference_capture(
+        capture, MODEL_SAMPLE_RATE_HZ, source_format="synthetic-packet-complex"
+    )
+    packet_info = result.get("packet") or {}
+    passed = (
+        bool(packet_info.get("crc_ok"))
+        and not bool(packet_info.get("frame_error"))
+        and packet_info.get("sequence") == sequence
+        and packet_info.get("payload_hex") == payload.hex()
+        and float(result["sync_metric"]) >= 0.80
+    )
+    result["packet_self_test_injected_payload_hex"] = payload.hex()
+    result["packet_self_test_injected_sequence"] = sequence
+    result["packet_self_test_pass"] = passed
+    return result
 
 
 def run_self_test() -> dict:
@@ -457,12 +621,20 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--metadata", type=Path, help="JSON sidecar; defaults to capture basename + .json")
     parser.add_argument("--output", type=Path, help="optional JSON analysis report")
     parser.add_argument("--self-test", action="store_true", help="run a no-hardware deterministic acquisition test")
+    parser.add_argument(
+        "--packet-self-test",
+        action="store_true",
+        help="run a no-hardware packet-v1 CRC round trip through the full offline RX chain",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    if args.self_test:
+    if args.packet_self_test:
+        result = run_packet_self_test()
+        rc = 0 if result["packet_self_test_pass"] else 1
+    elif args.self_test:
         result = run_self_test()
         rc = 0 if result["self_test_pass"] else 1
     else:

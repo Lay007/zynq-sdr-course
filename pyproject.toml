@@ -19,6 +19,7 @@ select = ["E4", "E7", "E9", "F"]
 # from the repository root.
 "blocks/block_11_integrated_sdr_project/python/lab_11_14_stock_shell_bpsk_ota.py" = ["E402"]
 "blocks/block_11_integrated_sdr_project/python/lab_11_21_capture_rtl_sdr_monitor_wav.py" = ["E402"]
+"blocks/block_11_integrated_sdr_project/python/lab_11_38_offline_qpsk_rx.py" = ["E402"]
 
 # Runtime bench scripts keep hardware buffer handles alive until measurement
 # and cleanup are complete. Ruff sees those handles as unused, but removing them

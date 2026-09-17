@@ -214,7 +214,7 @@ BER + EVM + CFO + sync metric в JSON
 
 Для baseline QPSK 480 kSym/s однозначный диапазон захвата fourth-power CFO estimator составляет примерно ±60 кГц. Если реальный RTL-SDR даёт большую частотную ошибку, нужно точнее настроить RF или позже добавить отдельный wide-range coarse-CFO stage. Нельзя маскировать это ручным поворотом уже готового constellation.
 
-Текущая версия v1 декодирует сохранённый в репозитории **известный кадр 140 symbols / 280 bits**. Codec packet-v1 и цифровой loopback Lab 11.46 уже существуют, но разбор packet, sequence и CRC пока не интегрирован в этот offline receiver и намеренно не заявляется здесь как реализованный.
+Текущая версия v1 декодирует сохранённый в репозитории **известный кадр 140 symbols / 280 bits**, а 256 payload-бит, восстановленных после преамбулы, дополнительно декодируются как packet-v1-кадр Lab 11.46 (length, sequence, CRC-16/CCITT, UTF-8 payload). Флаг `--packet-self-test` доказывает этот round trip целиком офлайн: кодирует настоящий packet-v1 кадр, прогоняет его через ту же цепочку resample → DC removal → RRC → timing/CFO acquisition → frame sync, что и любой другой capture, и проверяет, что декодированный packet совпадает с отправленным, включая `crc_ok=True`. Это по-прежнему offline/no-hardware доказательство — программный аналог RTL-регрессии `tb_qpsk_packet_digital_loopback`, а не аппаратная запись.
 
 ## Этап 4 — последовательный reference RX и диагностика
 
@@ -271,7 +271,7 @@ Plotter намеренно вызывает тот же format adapter, rational
 
 ## Этап 5 — декодирование сообщения
 
-На следующем шаге интеграции использовать тот же application packet, что и в Lab 11.46:
+Application packet Lab 11.46 уже встроен в приёмник: каждый результат `analyse_reference_capture`/`analyse_capture_file` содержит поле `packet`, декодированное из 256 payload-бит.
 
 ```text
 byte 0      : payload length
@@ -280,7 +280,13 @@ bytes 3..29 : application bytes
 bytes 30..31: CRC-16/CCITT
 ```
 
-Тогда acceptance result становится понятным без анализа битовых массивов:
+Offline-доказательство того, что это переживает всю цепочку (resample → DC removal → RRC → timing/CFO acquisition → frame sync → demap → packet decode), без аппаратуры:
+
+```bash
+python blocks/block_11_integrated_sdr_project/python/lab_11_38_offline_qpsk_rx.py --packet-self-test
+```
+
+На реальной записи acceptance result становится понятным прямо из поля `packet` в JSON:
 
 ```text
 capture: qpsk_hw_tx_capture_017.cu8
@@ -289,7 +295,7 @@ crc: OK
 payload: "Hello from board A"
 ```
 
-До появления packet bridge допускается известный PRBS/payload с BER-сравнением.
+`crc_ok` честно отражает то, что реально было в payload: capture без валидного packet-v1 кадра (например, эталонный курсовой паттерн, который использует `--self-test`) законно декодируется с `crc_ok=false`. Аппаратным доказательством на уровне packet является только реальная запись с `crc_ok=true`.
 
 ## Этап 6 — сравнение двух RX устройств
 
