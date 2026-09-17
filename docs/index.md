@@ -1,4 +1,4 @@
-<div class="hero">
+<div class="hero" markdown="1">
 
 # Zynq SDR Course
 

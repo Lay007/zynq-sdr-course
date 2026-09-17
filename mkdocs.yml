@@ -80,9 +80,13 @@ plugins:
 
 markdown_extensions:
   - admonition
+  - md_in_html
   - tables
   - toc:
       permalink: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.snippets:
@@ -90,6 +94,8 @@ markdown_extensions:
         - .
   - pymdownx.tabbed:
       alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid

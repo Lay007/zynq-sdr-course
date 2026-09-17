@@ -26,10 +26,19 @@ LANGUAGES = ("ru", "en")
 
 
 class MkDocsLoader(yaml.SafeLoader):
-    """Safe YAML loader that tolerates MkDocs Python-name extension tags."""
+    """Safe YAML loader that tolerates MkDocs Python extension tags.
+
+    ``markdown_extensions`` config (e.g. pymdown-extensions' ``superfences``
+    custom fence format, or ``toc``'s unicode ``slugify``) references Python
+    callables directly in YAML via ``!!python/name:`` and
+    ``!!python/object/apply:``. MkDocs' own loader resolves these for real;
+    this checker only reads the ``nav`` tree, so it is enough to accept the
+    tag without importing or calling anything -- the placeholder text is
+    never inspected.
+    """
 
 
-def _python_name_as_text(
+def _python_tag_as_text(
     loader: MkDocsLoader,
     suffix: str,
     node: yaml.Node,
@@ -38,10 +47,11 @@ def _python_name_as_text(
     return suffix
 
 
-MkDocsLoader.add_multi_constructor(
+for _tag_prefix in (
     "tag:yaml.org,2002:python/name:",
-    _python_name_as_text,
-)
+    "tag:yaml.org,2002:python/object/apply:",
+):
+    MkDocsLoader.add_multi_constructor(_tag_prefix, _python_tag_as_text)
 
 
 @dataclass(frozen=True)

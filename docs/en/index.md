@@ -1,10 +1,10 @@
-<div class="hero">
+<div class="hero" markdown="1">
 
 # Course Overview
 
 **A bilingual SDR course from theory to board-level implementation.**
 
-This is the English learning path: the same course pipeline as the [main page](../), navigated block by block.
+This is the English learning path: the same course pipeline as the [main page](../index.md), navigated block by block.
 
 <div class="hero-actions">
 <a class="hero-button" href="../model-to-measurement/">Start with the system pipeline</a>
