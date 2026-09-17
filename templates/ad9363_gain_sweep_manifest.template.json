@@ -1,0 +1,22 @@
+[
+  {
+    "test_id": "GAIN-001",
+    "rx_tx_path": "TX1->30dB cable->RX1 / cabled",
+    "tx_setting": "-30 dB",
+    "rx_gain_db": "10 dB manual",
+    "external_attenuation_db": "30",
+    "capture_path": "GAIN-001.ci16",
+    "iq_format": "ci16",
+    "notes": "replace with the real capture filename and settings"
+  },
+  {
+    "test_id": "GAIN-002",
+    "rx_tx_path": "TX1->30dB cable->RX1 / cabled",
+    "tx_setting": "-30 dB",
+    "rx_gain_db": "20 dB manual",
+    "external_attenuation_db": "30",
+    "capture_path": "GAIN-002.ci16",
+    "iq_format": "ci16",
+    "notes": ""
+  }
+]
