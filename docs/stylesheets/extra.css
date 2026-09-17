@@ -1,15 +1,35 @@
+/* Course-specific components layered on top of Material's own design tokens.
+   Every color here is either a Material CSS variable (so it already adapts
+   to the light/dark toggle) or an explicit --hero-* token redefined once per
+   scheme below -- nothing is hardcoded to a single theme. */
+
+:root {
+  --hero-gradient-start: #e0f2fe;
+  --hero-gradient-mid: #f8fafc;
+  --hero-gradient-end: #dcfce7;
+  --hero-border: rgba(2, 132, 199, 0.18);
+}
+
+[data-md-color-scheme="slate"] {
+  --hero-gradient-start: #0b2a3a;
+  --hero-gradient-mid: #10151c;
+  --hero-gradient-end: #0b2e28;
+  --hero-border: rgba(45, 212, 191, 0.28);
+}
+
 .hero {
   padding: 2.5rem 1.5rem;
   border-radius: 1.2rem;
-  background: linear-gradient(135deg, #e0f2fe 0%, #f8fafc 48%, #dcfce7 100%);
-  border: 1px solid rgba(2, 132, 199, 0.18);
+  background: linear-gradient(135deg, var(--hero-gradient-start) 0%, var(--hero-gradient-mid) 48%, var(--hero-gradient-end) 100%);
+  border: 1px solid var(--hero-border);
   margin-bottom: 2rem;
 }
 
 .hero h1 {
   margin-top: 0;
   font-size: 2.4rem;
-  line-height: 1.1;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
 }
 
 .hero p {
@@ -31,17 +51,31 @@
 
 .hero-button {
   display: inline-block;
-  padding: 0.65rem 1rem;
+  padding: 0.65rem 1.1rem;
   border-radius: 999px;
-  background: #0284c7;
-  color: white !important;
+  background: var(--md-accent-fg-color);
+  color: var(--md-accent-bg-color, #fff) !important;
   font-weight: 700;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+  box-shadow: var(--md-shadow-z1);
+}
+
+.hero-button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--md-shadow-z2);
+  opacity: 0.92;
 }
 
 .hero-button.secondary {
-  background: white;
-  color: #0f172a !important;
-  border: 1px solid #cbd5e1;
+  background: var(--md-default-bg-color);
+  color: var(--md-default-fg-color) !important;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  box-shadow: none;
+}
+
+.hero-button.secondary:hover {
+  border-color: var(--md-accent-fg-color);
+  box-shadow: var(--md-shadow-z1);
 }
 
 .card-grid {
@@ -52,15 +86,23 @@
 }
 
 .course-card {
-  padding: 1rem;
-  border-radius: 1rem;
-  border: 1px solid #e2e8f0;
-  background: #ffffff;
-  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+  padding: 1.1rem 1.2rem;
+  border-radius: 0.9rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  background: var(--md-default-bg-color);
+  box-shadow: var(--md-shadow-z1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.course-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--md-shadow-z2);
+  border-color: var(--md-accent-fg-color--transparent);
 }
 
 .course-card h3 {
   margin-top: 0;
+  color: var(--md-accent-fg-color);
 }
 
 .figure-strip {
@@ -70,9 +112,15 @@
 }
 
 .figure-strip img {
-  border-radius: 0.8rem;
-  border: 1px solid #e2e8f0;
-  background: white;
+  border-radius: 0.7rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  background: var(--md-default-bg-color);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.figure-strip img:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--md-shadow-z2);
 }
 
 .badge-line {
@@ -83,10 +131,11 @@
 }
 
 .badge-soft {
-  padding: 0.35rem 0.65rem;
+  padding: 0.35rem 0.75rem;
   border-radius: 999px;
-  background: #f1f5f9;
-  color: #0f172a;
-  font-size: 0.85rem;
+  background: var(--md-accent-fg-color--transparent);
+  color: var(--md-accent-fg-color);
+  font-size: 0.82rem;
   font-weight: 700;
+  letter-spacing: 0.01em;
 }
