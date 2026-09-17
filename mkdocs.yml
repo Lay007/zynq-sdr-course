@@ -4,6 +4,7 @@ site_url: https://lay007.github.io/zynq-sdr-course/
 repo_url: https://github.com/Lay007/zynq-sdr-course
 repo_name: Lay007/zynq-sdr-course
 edit_uri: edit/main/
+copyright: "&copy; 2026 Alexander Lyubko &mdash; MIT License"
 
 docs_dir: docs
 site_dir: site
@@ -500,3 +501,12 @@ nav:
           - "Project 12.2 — RF capture analysis final project": en/labs/project-12-2-rf-capture-analysis-final-project.md
           - "Project 12.3 — FPGA DSP block final project": en/labs/project-12-3-fpga-dsp-block-final-project.md
           - "Project 12.4 — Full SDR measurement report": en/labs/project-12-4-full-sdr-measurement-report.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Lay007/zynq-sdr-course
+      name: GitHub
+    - icon: fontawesome/brands/linkedin
+      link: https://ru.linkedin.com/in/alexander-lyubko-dsp
+      name: LinkedIn
