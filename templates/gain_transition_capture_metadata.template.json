@@ -1,0 +1,43 @@
+{
+  "recording_id": "YYYYMMDD_device_agc_transition_samplerate_format",
+  "description": "Fixed-gain baseline or AGC/LNA gain-state transition capture for issue #58",
+  "created_utc": "YYYY-MM-DDTHH:MM:SSZ",
+  "sampling": {
+    "sample_rate_hz": 3840000,
+    "iq_format": "ci16",
+    "endianness": "little",
+    "i_first": true,
+    "sample_count": 0
+  },
+  "receiver": {
+    "device": "AD9361 / AD9363",
+    "gain_control_mode": "manual | slow_attack | fast_attack | hybrid",
+    "gain_before_db": 0,
+    "gain_after_db": 0,
+    "rf_bandwidth_hz": 0,
+    "center_frequency_hz": 915000000
+  },
+  "input_level_control": {
+    "device": "digital attenuator / fixed pad swap / TX level step",
+    "level_before_db": 0,
+    "level_after_db": 0,
+    "step_method": "describe exactly how and when the input level was changed"
+  },
+  "gain_transitions": [
+    {
+      "sample_index": 0,
+      "trigger": "digital attenuator step | AGC gain-table region change | manual gain command",
+      "gain_mode_before": "TBD",
+      "gain_mode_after": "TBD",
+      "gain_before_db": 0,
+      "gain_after_db": 0,
+      "notes": "one entry per observed transition in this capture"
+    }
+  ],
+  "quality_expectations": {
+    "max_clipping_fraction": 0.001,
+    "min_pre_transition_samples": 256,
+    "min_post_transition_samples": 512
+  },
+  "license_or_access": "state dataset license or private access conditions"
+}
