@@ -131,6 +131,49 @@ PS → AXI → PL → AXI → PS
 
 без RF и без DSP.
 
+### Конкретная Vivado-процедура (подготовлена, но не выполнена в этом репозитории)
+
+RTL-часть этого шага уже закоммичена и проверяется в CI (`zynq_message_mailbox_axi_lite.v`, `zynq_message_mailbox_vivado_wrapper.v`, `tb_zynq_message_mailbox_axi_lite.sv`, workflow `block5_ps_pl_mailbox.yml`). Чтобы собрать из этого Zynq Block Design, всё равно нужен сам Vivado, а он доступен не в каждом окружении разработки (в момент написания этого раздела его не было). Шаги ниже — точная, проверяемая процедура для запуска, когда Vivado доступен, а не отчёт об уже полученном результате.
+
+```tcl
+# 1. Создать новый BD в существующем Zynq-7020 проекте (или в проекте курса).
+create_bd_design "mailbox_echo_bd"
+
+# 2. Добавить Zynq7 Processing System и запустить block automation
+#    (включает один AXI clock, подключает стандартную processor-system-reset IP).
+create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0
+apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 \
+    -config {make_external "FIXED_IO, DDR" apply_board_preset "1"} \
+    [get_bd_cells processing_system7_0]
+
+# 3. Добавить mailbox как Verilog module reference (не как упакованный IP -- это
+#    тот же zynq_message_mailbox_vivado_wrapper.v, который iverilog уже
+#    elaborate'ит в CI, так что отдельного «только для железа» RTL не появляется).
+create_bd_cell -type module -reference zynq_message_mailbox_vivado_wrapper mailbox_0
+
+# 4. Соединить M_AXI_GP0 с S_AXI mailbox через automation, которая заодно
+#    вставляет AXI Interconnect/SmartConnect и подключает clock/reset.
+apply_bd_automation -rule xilinx.com:bd_rule:axi4 \
+    -config {Master "/processing_system7_0/M_AXI_GP0" Clk "Auto"} \
+    [get_bd_intf_pins mailbox_0/S_AXI]
+
+# 5. Провалидировать design перед назначением адресов.
+validate_bd_design
+
+# 6. Дать Vivado самому назначить base address (не выбирать вручную); диапазон
+#    4K покрывает карту регистров 0x00-0xAC с запасом под слова RX_DATA.
+assign_bd_address [get_bd_addr_segs mailbox_0/S_AXI/reg0]
+set_property range 4K [get_bd_addr_segs {processing_system7_0/Data/SEG_mailbox_0_reg0}]
+
+# 7. Сгенерировать wrapper, прогнать synthesis/implementation, экспортировать
+#    bitstream и XSA, затем прочитать *реально* назначенный адрес для отчёта:
+report_property [get_bd_addr_segs] -class {} | grep -i offset
+```
+
+В отчёт записывается ровно то, что реально вернул шаг 7 — не адрес с другой платы, не адрес из прошлого прогона синтеза и не адрес из этого текста. Карта регистров, разрядность полей и контракт «RX держится до ACK» выше — это фиксированная часть; base address — факт конкретной сборки.
+
+Не придумывать «physical base address» без реального запуска. `TBD` в отчёте лабораторной — честное и допустимое состояние, пока сборка выше не выполнена на самом деле.
+
 ## Часть C — переход к радиолинии
 
 После hardware echo software API не меняется. Меняется только PL между TX и RX mailbox:
