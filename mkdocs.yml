@@ -272,7 +272,7 @@ nav:
           - "Lab 8.2 — Phase offset correction": ru/labs/lab-8-2-phase-offset-correction.md
           - "Lab 8.3 — Timing recovery": ru/labs/lab-8-3-timing-recovery.md
           - "Lab 8.4 — End-to-end sync chain": ru/labs/lab-8-4-end-to-end-sync-chain.md
-          - "Lab 8.5 — OFDM mini link": ru/labs/lab-8-5-ofdm-mini-link.md
+          - "Lab 8.5 — OFDM: CP, пилоты, синхронизация и эквализация": ru/labs/lab-8-5-ofdm-mini-link.md
           - "Lab 8.6 — Channel coding BER comparison": ru/labs/lab-8-6-channel-coding-ber-comparison.md
           - "Lab 8.7 — SNR vs BER traps": ru/labs/lab-8-7-snr-vs-ber-traps.md
           - "Lab 8.8 — QPSK: искажения и BER": ru/labs/lab-8-8-qpsk-modem-impairments.md
@@ -281,6 +281,7 @@ nav:
           - "Lab 8.11 — 16-QAM: BER, EVM и fixed-point": ru/labs/lab-8-11-16qam-tradeoffs.md
           - "Lab 8.12 — GFSK: BT, полоса и BER": ru/labs/lab-8-12-gfsk-bt-ber.md
           - "Lab 8.13 — DSSS: acquisition и processing gain": ru/labs/lab-8-13-dsss-processing-gain.md
+          - "Lab 8.14 — OFDM RTL: от mapper до эквализированного loopback": ru/labs/lab-8-14-ofdm-rtl-chain.md
           - "Lab 8.20 — CSS: chirp-сигнал и кодирование символа": ru/labs/lab-8-20-css-waveform.md
           - "Lab 8.21 — CSS: dechirp и FFT-детектор": ru/labs/lab-8-21-css-dechirp-fft.md
           - "Lab 8.22 — Пакетная CSS-синхронизация и PER": ru/labs/lab-8-22-css-packet-sync-per.md
@@ -439,6 +440,7 @@ nav:
           - "Lab 8.11 — 16-QAM BER, EVM and fixed-point": en/labs/lab-8-11-16qam-tradeoffs.md
           - "Lab 8.12 — GFSK BT, bandwidth and BER": en/labs/lab-8-12-gfsk-bt-ber.md
           - "Lab 8.13 — DSSS acquisition and processing gain": en/labs/lab-8-13-dsss-processing-gain.md
+          - "Lab 8.14 — OFDM RTL: mapper to equalized loopback": en/labs/lab-8-14-ofdm-rtl-chain.md
           - "Lab 8.20 — CSS waveform and symbol mapping": en/labs/lab-8-20-css-waveform.md
           - "Lab 8.21 — CSS dechirp and FFT detector": en/labs/lab-8-21-css-dechirp-fft.md
           - "Lab 8.22 — Packet-level CSS synchronization and PER": en/labs/lab-8-22-css-packet-sync-per.md
