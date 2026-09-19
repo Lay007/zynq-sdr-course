@@ -1,4 +1,4 @@
-# Lab 6.7 - dBm vs dBFS power calibration
+# Lab 6.11 - dBm vs dBFS power calibration
 
 ## Goal
 
@@ -29,6 +29,11 @@ The table produced here lets later labs (6.8, 7.x, 11.x) set TX attenuation to a
 point within the RTL-SDR dynamic range without risking overload. It also makes
 it explicit that `dBFS` is not an absolute RF power unit unless a calibration
 reference is recorded.
+
+> **Status:** this is a procedure with empty result tables. No calibrated `dBm` reference or
+> measured sweep is committed for it yet, so it contains no measured numbers and the course makes
+> no calibrated power claim from it. It was previously numbered 6.7, which collided with the
+> site's *Zero-IF artifacts* lab, and is now Lab 6.11.
 
 ## Key definitions
 
@@ -74,7 +79,7 @@ integration method, center frequency, cables, attenuators or antenna geometry.
 | `blocks/block_06_rf_frontend_and_ad9363/python/lab_6_3_probe_iio_context.py` | confirm IIO device list before enabling TX |
 | `blocks/block_06_rf_frontend_and_ad9363/python/lab_6_8_capture_zynq_ota_tone.py` | used in sweep mode with `--tx-attenuation-db` argument |
 
-No dedicated `lab_6_7_*.py` script is required: the sweep reuses `lab_6_8` with a
+No dedicated `lab_6_11_*.py` script is required: the sweep reuses `lab_6_8` with a
 fixed DDS tone and varied TX attenuation. If a calibrated RF source or power
 meter is available, record the reference point in the same report table.
 
@@ -113,11 +118,16 @@ meter is available, record the reference point in the same report table.
    python blocks/block_06_rf_frontend_and_ad9363/python/lab_6_8_capture_zynq_ota_tone.py \
      --uri ip:192.168.40.1 \
      --center-frequency-hz 915000000 \
-     --tx-attenuation-db <VALUE> \
      --tone-offset-hz 50000 \
-     --capture-duration-s 2.0 \
-     --run-tag tx_cal_<VALUE>dB
+     --tx-hardwaregain-db <VALUE> \
+     --out-iq datasets/lab6_8_zynq_ota_tone_observation/raw/tx_cal_<VALUE>dB.ci16 \
+     --manifest-out datasets/lab6_8_zynq_ota_tone_observation/manifest_tx_cal_<VALUE>dB.yaml \
+     --dataset-id lab6_11_tx_cal_<VALUE>dB
    ```
+
+   In this script the TX level is the AD9361 `hardwaregain` of the TX channel:
+   `0 dB` is maximum output and `-89.75 dB` is the minimum. The column called "TX
+   attenuation" in the tables below is that value.
 
 6. Read the RTL-SDR FFT peak for each run and record the received level in
    `dBFS`. If a valid reference point exists, estimate the corresponding `dBm`
@@ -149,8 +159,8 @@ calibration only.
 
 ## Safety rules
 
-- Never set TX attenuation above -30 dB without confirmed antenna separation of
-  at least 2 m and no reflective enclosures.
+- Never raise the TX level above `--tx-hardwaregain-db -30` without confirmed antenna
+  separation of at least 2 m and no reflective enclosures.
 - Prefer an external attenuator for any conducted or near-field measurement.
 - Always restore TX to the safe state (`TX LO powerdown = 1`,
   `TX attenuation = -89.75 dB`) after the sweep.
@@ -164,14 +174,14 @@ calibration only.
 | Output | Content |
 |---|---|
 | TX calibration table (JSON or Markdown) | TX attenuation vs RTL-SDR peak power (`dBFS`) and optional estimated `dBm` |
-| `docs/assets/lab67_tx_power_calibration_table.json` | machine-readable calibration reference |
+| `docs/assets/lab611_tx_power_calibration_table.json` | machine-readable calibration reference |
 | Report conclusion | valid receiver settings, safe TX attenuation range and calibration limitations |
 
 Suggested JSON shape:
 
 ```json
 {
-  "lab": "6.7",
+  "lab": "6.11",
   "title": "dBm vs dBFS power calibration",
   "center_frequency_hz": 915000000,
   "tone_offset_hz": 50000,

@@ -262,6 +262,7 @@ nav:
           - "Lab 6.8 — Zynq stock-shell OTA DDS tone observation": ru/labs/lab-6-8-zynq-ota-tone-observation.md
           - "Lab 6.9 — Сравнение приёмников RTL-SDR и AD936x": ru/labs/lab-6-9-receiver-comparison.md
           - "Lab 6.10 — AGC/LNA phase-discontinuity analysis": ru/labs/lab-6-10-agc-phase-transition.md
+          - "Lab 6.11 — Калибровка мощности dBm / dBFS": ru/labs/lab-6-11-tx-power-calibration.md
       - "Лаборатории Block 7":
           - "Lab 7.1 — TX/RX chain architecture": ru/labs/lab-7-1-tx-rx-chain-architecture.md
           - "Lab 7.2 — DUC/DDC frequency translation": ru/labs/lab-7-2-duc-ddc-frequency-translation.md
@@ -424,6 +425,7 @@ nav:
           - "Lab 6.8 — Zynq stock-shell OTA DDS tone observation": en/labs/lab-6-8-zynq-ota-tone-observation.md
           - "Lab 6.9 — RTL-SDR vs AD936x receiver comparison": en/labs/lab-6-9-receiver-comparison.md
           - "Lab 6.10 — AGC/LNA phase-discontinuity analysis": en/labs/lab-6-10-agc-phase-transition.md
+          - "Lab 6.11 — dBm vs dBFS power calibration": en/labs/lab-6-11-tx-power-calibration.md
       - "Block 7 labs":
           - "Lab 7.1 — TX/RX chain architecture": en/labs/lab-7-1-tx-rx-chain-architecture.md
           - "Lab 7.2 — DUC/DDC frequency translation": en/labs/lab-7-2-duc-ddc-frequency-translation.md

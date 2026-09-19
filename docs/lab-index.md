@@ -61,7 +61,7 @@ bandwidth.
 
 ## Numbering note
 
-The MkDocs-visible Lab 6.7 is **Zero-IF artifacts**. The separate power-scale material is tracked as a Block 6 extension and Lab 6.9 is the receiver-comparison experiment, so the navigation numbering remains unambiguous.
+Lab 6.7 is **Zero-IF artifacts**. The dBm-versus-dBFS power-scale procedure, previously tracked without a number of its own, is Lab 6.11, and Lab 6.9 is the receiver-comparison experiment, so the navigation numbering is unambiguous.
 
 In Block 8, the SNR-versus-BER traps lab is 8.7 and the real-hardware BPSK walkthrough is 8.15 (it was briefly also numbered 8.7). Block 8 uses `8.10-8.19` for OFDM/QAM implementation labs. The CSS track starts at `8.20` so that waveform families remain easy to identify without renumbering the existing synchronization and hardware evidence pages.
 
