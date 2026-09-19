@@ -2,7 +2,7 @@
 
 ## Goal
 
-[Lab 8.8](lab_8_8_qpsk_modem_and_impairments.md) ended with the open problem: an uncorrected
+[Lab 8.8](/zynq-sdr-course/en/labs/lab-8-8-qpsk-modem-impairments/) ended with the open problem: an uncorrected
 **carrier frequency offset (CFO)** rotates every QPSK symbol by a growing phase, smearing the
 four constellation points into a **ring** that the hard decision cannot read (BER ≈ 0.5). This
 lab closes it with a **carrier-recovery loop** that de-rotates the ring back into four points,
@@ -28,7 +28,7 @@ nearest one otherwise, so the loop drives the ring onto the constellation grid. 
 term `freq` accumulates into a constant slope that **matches the CFO ramp** — the bottom-left
 panel below shows the NCO phase climbing along exactly that ramp.
 
-![QPSK carrier recovery](https://lay007.github.io/zynq-sdr-course/assets/qpsk_carrier_recovery.png)
+![QPSK carrier recovery](/zynq-sdr-course/assets/qpsk_carrier_recovery.png)
 
 - **Received (ring)** — QPSK + CFO, BER ≈ 0.5, undecodable.
 - **After Costas + preamble de-rotation** — four clean clouds; CFO gone.
@@ -45,8 +45,8 @@ even though the *constellation* looks perfect. This is why a raw Costas BER-vs-C
 around.
 
 The fix is the same **known preamble / unique word** the BPSK modem already uses for frame sync
-(the 8-bit lock word of [Lab 8.8](lab_8_8_qpsk_modem_and_impairments.md) /
-[Block 11](../block_11_integrated_sdr_project/README_en.md)): try the four rotations, keep the
+(the 8-bit lock word of [Lab 8.8](/zynq-sdr-course/en/labs/lab-8-8-qpsk-modem-impairments/) /
+[Block 11](/zynq-sdr-course/en/blocks/11-integrated-sdr-project/)): try the four rotations, keep the
 one that matches the preamble. That is what turns the noisy curve into the flat **BER = 0** line
 above. (Differential QPSK encoding is the alternative — it removes the ambiguity without a
 preamble, at a ~2× BER penalty.)
@@ -60,9 +60,13 @@ python blocks/block_08_modulation_and_synchronization/python/qpsk_carrier_recove
 
 ## Next steps
 
-- **RTL**: port this loop to `qpsk_costas_carrier_recovery.v` (NCO + PI + the same
-  decision-directed detector, complex de-rotate via CORDIC / sin-cos LUT) so over-the-air QPSK
-  de-rotates on-chip, mirroring how the Gardner timing loop ported.
-- **Hardware**: drop the QPSK modem into the runtime AD9361 bridge for QPSK BER = 0 in digital
-  loopback (no CFO there, so carrier recovery is bypassed), then enable this loop for the
-  over-the-air four-point constellation of [Lab 8.15](lab_8_15_real_hardware_bpsk_metrics.md).
+- **RTL**: this loop is ported to `blocks/block_05_fpga_hdl_flow/rtl/qpsk_costas.v` (NCO + PI +
+  the same decision-directed detector, a complex de-rotate at symbol rate), placed between the
+  symbol sampler and the hard decision. It de-rotates the four-point constellation on-chip and is
+  exercised by the `tb_qpsk_rx_costas` and `tb_qpsk_costas_stress` testbenches, mirroring how the
+  Gardner timing loop ported.
+- **Hardware**: the loop is part of the in-fabric receiver validated over the air in
+  [Lab 11.4](/zynq-sdr-course/en/labs/lab-11-4-final-measurement-report/), where differential QPSK plus a preamble
+  removes the `90°` ambiguity ([Lab 11.45](/zynq-sdr-course/en/labs/lab-11-45-differential-long-preamble/)).
+  For the raw over-the-air constellation seen from an independent receiver, compare with
+  [Lab 8.15](/zynq-sdr-course/en/labs/lab-8-15-real-hardware-bpsk-metrics/).
