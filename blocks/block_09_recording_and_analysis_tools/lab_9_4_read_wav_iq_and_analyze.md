@@ -4,6 +4,17 @@
 
 Read a real or private `WAV IQ` recording through a manifest, convert the stereo WAV channels into normalized complex samples, run basic quality checks, and generate report-ready plots and metrics JSON.
 
+## Why this lab matters
+
+Most "real" SDR data you will meet is not a tidy course `.ci16` file but a WAV
+recording written by an SDR application (HDSDR, SDR#, SDR++ and similar), with the left
+channel as I and the right channel as Q. Before analysing anything you must be sure you
+read such a file correctly: channel order, sample width, sample rate and centre
+frequency. A mistake here (swapped I and Q mirror the spectrum) is invisible on the plots and
+silently corrupts everything after it. That is why reading goes through a **manifest**
+rather than guesses from the file name, and why the output is a set of reproducible
+metrics.
+
 ## Executable files
 
 | Environment | File | Output |
@@ -68,6 +79,38 @@ If the recording uses a different channel order, set `i_first: false` in the man
 | `dc_offset_magnitude` | magnitude of the average complex sample |
 | `clipping_fraction` | fraction of samples close to full-scale |
 | `quality_pass` | quick pass/fail based on optional manifest thresholds |
+
+## What to expect
+
+The repository carries two short RTL-SDR recordings (about 50 MB each, stored with Git
+LFS, checksums in the manifests), so the commands above run as-is. For the narrowband
+capture at 220.86 MHz the script prints:
+
+```text
+Samples read: 12741632
+Sample rate: 2400000 Hz
+Center frequency: 220860000 Hz
+Expected offset: 0.000 Hz
+Measured peak: 0.000 Hz
+Frequency error: 0.000 Hz
+SNR estimate: 39.58 dB
+DC offset magnitude: 0.004375
+Clipping fraction: 0.000000e+00
+Quality pass: True
+```
+
+How to read it:
+
+- **12 741 632 samples at 2.4 MS/s is about 5.3 s of recording.**
+- **A peak at exactly 0 Hz with "SNR 39.6 dB".** The manifest expects the signal at the
+  centre of the band (`expected_signal_offset_hz: 0`). One spectrum cannot tell a true
+  narrowband carrier from the receiver's own DC spike (see
+  [Lab 6.5](/zynq-sdr-course/en/labs/lab-6-5-rf-impairment-calibration/)); the honest
+  test is to record again with a shifted centre frequency: a real signal moves, a DC
+  artefact stays at zero. Also remember that `snr_db` here is the peak over the median
+  noise floor, not the quality of a communication link.
+- **DC offset 0.0044 and zero clipping** mean the recording is not overloaded, so it is
+  usable for further analysis.
 
 ## Transition to real captures
 
