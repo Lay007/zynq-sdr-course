@@ -126,6 +126,54 @@ extension*) and `rtl/bpsk_symbol_timing_recovery.v`. There, gating only the fixe
 phase search of this lab leaves a ~40 % BER floor on a drifted AD9361 burst, while the
 Gardner loop recovers it at BER 0.
 
+## What to expect
+
+With the defaults (4096 QPSK symbols, 8 samples per symbol, rectangular pulses, a 3-sample
+timing delay, noise 0.045 rms) a correct run prints:
+
+```text
+True timing offset: 3 samples
+Estimated best phase: 7 samples
+EVM before: 6856.845 % (36.72 dB)
+EVM after: 6.308 % (-24.00 dB)
+BER before: 4.932861e-01 (4041/8192)
+BER after: 0.000000e+00 (0/8192)
+```
+
+The most instructive result is the whole EVM-versus-phase curve (`lab83_timing_phase_search.png`),
+not just its minimum:
+
+| Sampling phase | EVM |
+|---:|---:|
+| 0 | 6,856.85 % |
+| 1 | 6,521.08 % |
+| 2 | 6,533.21 % |
+| 3 | 6.40 % |
+| 4 | 6.34 % |
+| 5 | 6.39 % |
+| 6 | 6.48 % |
+| 7 | 6.31 % |
+
+Read it carefully:
+
+- **Phases 0, 1 and 2 are catastrophic (EVM about 6500-6900 %, BER about 0.49).** The signal is
+  delayed by 3 samples, so the first three samples of every symbol slot still belong to
+  the *previous* symbol. Sampling there reads the wrong symbol: there is no signal to
+  align against, so the scalar alignment blows the "gain" up and EVM leaves the
+  meaningful 0-100 % range. **An EVM far above 100 % means "wrong symbol", not "a bit
+  noisy".**
+- **Phases 3 to 7 are all good and almost equal (about 6.3-6.5 %).** With rectangular
+  pulses the symbol is flat for 8 samples, so any phase inside the plateau reads the
+  right value. The number of bad phases (3) equals the injected delay.
+- **So "estimated best phase 7 vs true offset 3" is not an error.** The search returns
+  the argmin among five phases that differ only by noise; phase 3, 4, 5, 6 or 7 would
+  all give BER 0. With a real root-raised-cosine pulse the good region shrinks to the eye
+  opening around one sharp optimum, and the difference between the best and a bad phase
+  is gradual rather than a cliff; that is where a tracking loop (Gardner, below) earns
+  its keep.
+- **The residual 6.3 % EVM is the noise floor** (`noise_rms = 0.045` on unit-amplitude
+  symbols), not a timing leftover.
+
 ## Metrics
 
 | Metric | Meaning |

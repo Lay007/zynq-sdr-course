@@ -1,0 +1,69 @@
+{
+  "config": {
+    "snr_db_points": [
+      0.0,
+      2.0,
+      4.0,
+      6.0,
+      8.0
+    ],
+    "frames": 80,
+    "info_bits_per_frame": 240,
+    "burst_probability": 0.012,
+    "burst_length": 10,
+    "burst_gain": 6.0,
+    "ldpc_k": 24,
+    "ldpc_m": 12,
+    "ldpc_max_iter": 14,
+    "seed": 86
+  },
+  "snr_db_points": [
+    0.0,
+    2.0,
+    4.0,
+    6.0,
+    8.0
+  ],
+  "ber_curves": {
+    "uncoded": [
+      0.19244791666666666,
+      0.13932291666666666,
+      0.09203125,
+      0.06692708333333333,
+      0.043333333333333335
+    ],
+    "conv_no_interleaver": [
+      0.23505208333333333,
+      0.1196875,
+      0.06458333333333334,
+      0.03755208333333333,
+      0.028697916666666667
+    ],
+    "conv_with_interleaver": [
+      0.2675,
+      0.14473958333333334,
+      0.05859375,
+      0.017447916666666667,
+      0.008385416666666666
+    ],
+    "ldpc_no_interleaver": [
+      0.19765625,
+      0.13859375,
+      0.08802083333333334,
+      0.05859375,
+      0.04447916666666667
+    ],
+    "ldpc_with_interleaver": [
+      0.19755208333333332,
+      0.1428125,
+      0.0871875,
+      0.05875,
+      0.04666666666666667
+    ]
+  },
+  "notes": {
+    "channel_model": "AWGN plus random burst noise with fixed average SNR",
+    "convolutional_code": "rate 1/2, K=3, generators (7,5) octal, hard Viterbi",
+    "ldpc_like_code": "systematic sparse parity-check block code with hard bit-flip decoder"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "config": {
+    "symbol_count": 4096,
+    "samples_per_symbol": 8,
+    "timing_offset_samples": 3,
+    "noise_rms": 0.045,
+    "seed": 83
+  },
+  "metrics": {
+    "true_timing_offset_samples": 3,
+    "estimated_best_phase_samples": 7,
+    "evm_before_percent": 6856.845481850107,
+    "evm_after_percent": 6.308335433901796,
+    "evm_before_db": 36.722487256083156,
+    "evm_after_db": -24.00170443869696,
+    "ber_before": 0.4932861328125,
+    "ber_after": 0.0,
+    "bit_errors_before": 4041,
+    "bit_errors_after": 0,
+    "compared_bits": 8192
+  },
+  "evm_by_phase_percent": [
+    6856.845481850107,
+    6521.075920650974,
+    6533.21330872376,
+    6.398247756798881,
+    6.340551350900063,
+    6.3906454298037225,
+    6.484840111003018,
+    6.308335433901796
+  ]
+}

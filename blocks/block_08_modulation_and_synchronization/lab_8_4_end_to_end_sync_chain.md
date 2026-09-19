@@ -56,6 +56,37 @@ The educational receiver applies synchronization in this order:
 4. **Hard decisions** - convert corrected symbols to bits.
 5. **Metrics** - compute EVM and BER before and after synchronization.
 
+## What to expect
+
+The default run (deterministic, as printed by the script) gives:
+
+```text
+Timing offset true/estimated: 3/6 samples
+CFO true/estimated/error: 1350.000/1349.996/-0.004 Hz
+Phase true/estimated/error: 0.550000/0.600344/0.050344 rad
+EVM raw/timing/CFO/final: 3413.163/19524.022/4.857/4.857 %
+BER raw/final: 4.843750e-01/0.000000e+00
+```
+
+How to read the stage table:
+
+- **The first two EVM values (3413 % and 19524 %) are not "errors of 34x and 195x".** Both
+  are far above 100 %, which means the constellation is still rotating (CFO not yet
+  removed) and the scalar alignment has nothing stable to lock to. The EVM number only
+  becomes meaningful after the CFO stage (4.857 %). The interesting drop is BER, from
+  0.484 (a coin flip) to 0.
+- **The estimated timing phase (6) differs from the injected offset (3) and that is
+  fine.** As in [Lab 8.3](/zynq-sdr-course/en/labs/lab-8-3-timing-recovery/), with
+  rectangular pulses every phase inside the flat part of the symbol is correct; the
+  stage only has to avoid the samples belonging to the neighbouring symbol.
+- **CFO error is -0.004 Hz on 1350 Hz**: a fit over thousands of known symbols is very
+  precise in a synthetic model with a flat symbol. Real captures will not be this good.
+- **"EVM after CFO" and "EVM final" are identical (4.857 %).** The EVM is computed
+  after a scalar gain/phase alignment, which already absorbs any *constant* phase error,
+  so the phase-correction stage cannot change it. It still matters for the decisions: the
+  estimated phase is off by 0.05 rad (about 2.9 degrees), and the phase stage is what
+  keeps the constellation aligned with the decision boundaries.
+
 ## Impairments in the model
 
 | Impairment | Meaning |
