@@ -32,7 +32,7 @@ class PacketConfig:
     payload_symbols: int = 256
     noise_rms: float = 0.22
     threshold: float = 0.20
-    tolerance_samples: int = 220
+    tolerance_samples: int = 16
     seed: int = 74
 
 
@@ -96,7 +96,8 @@ def agc_normalize(x: np.ndarray, target_rms: float = 1.0) -> np.ndarray:
 
 
 def detection_metric(x: np.ndarray, preamble: np.ndarray) -> np.ndarray:
-    matched = np.correlate(x, np.conj(preamble[::-1]), mode="valid")
+    # np.correlate conjugates its second argument: this is the matched filter for `preamble`.
+    matched = np.correlate(x, preamble, mode="valid")
     pre_norm = np.sqrt(np.sum(np.abs(preamble) ** 2))
     energy = np.convolve(np.abs(x) ** 2, np.ones(len(preamble)), mode="valid")
     return np.abs(matched) / np.maximum(pre_norm * np.sqrt(energy), 1e-12)

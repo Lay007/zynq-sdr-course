@@ -1,0 +1,66 @@
+{
+  "config": {
+    "sample_rate_hz": 1000000.0,
+    "samples_per_symbol": 4,
+    "packet_count": 12,
+    "gap_symbols": 500,
+    "preamble_symbols": 64,
+    "payload_symbols": 256,
+    "noise_rms": 0.22,
+    "threshold": 0.2,
+    "tolerance_samples": 16,
+    "seed": 74
+  },
+  "metrics": {
+    "true_positives": 12,
+    "false_positives": 0,
+    "misses": 0,
+    "detection_probability": 1.0,
+    "miss_rate": 0.0,
+    "false_alarm_rate": 0.0,
+    "mean_timing_error_samples": 0.0,
+    "std_timing_error_samples": 0.0
+  },
+  "detected_starts": [
+    2000,
+    5280,
+    8560,
+    11840,
+    15120,
+    18400,
+    21680,
+    24960,
+    28240,
+    31520,
+    34800,
+    38080
+  ],
+  "true_starts": [
+    2000,
+    5280,
+    8560,
+    11840,
+    15120,
+    18400,
+    21680,
+    24960,
+    28240,
+    31520,
+    34800,
+    38080
+  ],
+  "timing_errors_samples": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ]
+}

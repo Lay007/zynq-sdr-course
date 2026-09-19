@@ -71,6 +71,37 @@ This lab is intentionally compact:
 - TX reference constellation;
 - RX constellation after DDC and scalar alignment.
 
+## What to expect
+
+With the default configuration (4096 QPSK symbols, 4 samples/symbol, 100 kHz TX offset) a
+correct run prints:
+
+```text
+Symbols: 4096
+Samples per symbol: 4
+TX offset: 100000.000 Hz
+DDC shift: -100000.000 Hz
+Estimated offset before DDC: 99908.589 Hz
+Estimated offset after DDC: 91.568 Hz
+Residual frequency error: 91.568 Hz
+EVM: 8.526 % (-21.39 dB)
+SNR estimate: 21.39 dB
+BER: 0.000000e+00 (0/8192)
+```
+
+Read these together:
+
+- **The DDC removes the offset.** The estimator sees about 99.9 kHz before the
+  downconversion and about 92 Hz after it: the residual is under 0.1 % of the original
+  offset. The remaining ~92 Hz is the estimator's own bias, not a channel effect.
+- **EVM 8.5 % corresponds to SNR ≈ 21.4 dB** through `SNR ≈ −EVM_dB`, which is the
+  approximation this simplified model uses. It is an estimate of SNR from the
+  constellation, not an independent measurement.
+- **BER = 0 over 8192 bits, but EVM is not zero.** This is the normal picture for QPSK
+  at ~21 dB: decisions are still correct while the constellation clouds already have a
+  visible spread. BER alone would hide the noise level, which is why the metric set
+  always includes EVM (compare [Lab 8.7](/zynq-sdr-course/en/labs/lab-8-7-snr-vs-ber-traps/)).
+
 ## Why this lab matters
 
 This lab connects several earlier course blocks:
