@@ -43,9 +43,9 @@ Detailed bring-up logs should live on dedicated evidence pages rather than insid
 
 ## Language coverage
 
-Every lab page in Blocks 1-10 and Block 12 has a full Russian version. In Block 11, 22 of the
-hardware-experiment logs (Labs 11.7-11.26, 11.28, 11.30, 11.31) are still English-only in the Russian
-edition; each such page says so at the top and links to the
+Every lab page in Blocks 1-10 and Block 12 has a full Russian version. In Block 11, four of the
+longest hardware-experiment logs (Labs 11.8, 11.26, 11.30 and 11.31) are still English-only in the
+Russian edition; each such page says so at the top and links to the
 [Block 11 lab map](en/blocks/11-integrated-sdr-project.md), which also tells you which labs to do
 and which to read as case studies.
 
