@@ -32,7 +32,7 @@ def test_self_test_separates_a_real_discontinuity_from_cfo_rotation() -> None:
     assert result["evidence_scope"] == "synthetic-self-test-only"
     assert result["detected_discontinuity_error_rad"] < 0.05
     assert result["control_false_positive_error_rad"] < 0.05
-    assert result["with_glitch"]["recovery_samples"] is not None
+    assert result["with_glitch"]["recovery_samples"] is None
 
 
 def test_analyze_transition_reports_zero_discontinuity_for_pure_cfo() -> None:
@@ -90,7 +90,26 @@ def test_analyze_capture_file_reads_metadata_driven_transitions(tmp_path: Path) 
     )
 
     result = AGC.analyze_capture_file(capture_path, metadata_path, fit_window=128)
-    assert result["hardware_measurement_claimed"] is True
-    assert result["evidence_scope"] == "draft-from-real-capture"
+    assert result["hardware_measurement_claimed"] is False
+    assert result["evidence_scope"] == "unverified-capture-analysis"
     assert len(result["transitions"]) == 1
     assert result["transitions"][0]["sample_index"] == index
+
+
+def test_permanent_phase_step_never_recovers_to_the_original_trend() -> None:
+    x = 0.4 * np.exp(1j * (0.02 * np.arange(2048) + np.r_[np.zeros(1024), np.ones(1024)]))
+    assert AGC.analyze_transition(x, 1024).recovery_samples is None
+
+
+def test_decay_recovers_after_known_threshold_crossing() -> None:
+    transient = np.exp(-np.arange(1024) / 20.0)
+    x = 0.4 * np.exp(1j * (0.02 * np.arange(2048) + np.r_[np.zeros(1024), transient]))
+    result = AGC.analyze_transition(x, 1024, recovery_threshold_rad=0.15)
+    assert result.recovery_samples == 38  # ceil(-20 * log(0.15))
+
+
+def test_one_sample_crossing_is_not_sustained_recovery() -> None:
+    phase = np.ones(1024)
+    phase[10] = 0
+    x = 0.4 * np.exp(1j * np.r_[np.zeros(1024), phase])
+    assert AGC.analyze_transition(x, 1024).recovery_samples is None
