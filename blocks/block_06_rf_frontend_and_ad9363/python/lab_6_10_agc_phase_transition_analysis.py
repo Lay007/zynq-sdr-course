@@ -90,6 +90,7 @@ def analyze_transition(
     fit_window: int = 256,
     recovery_search: int = 512,
     recovery_threshold_rad: float = 0.15,
+    recovery_hold_samples: int = 16,
     full_scale: float = 1.0,
 ) -> TransitionResult:
     """Characterize one gain transition at ``sample_index`` inside ``x``.
@@ -103,6 +104,14 @@ def analyze_transition(
     amplitude) cannot bias the phase-discontinuity estimate.
     """
     x = np.asarray(x, dtype=np.complex128)
+    if x.ndim != 1 or not np.all(np.isfinite(x)):
+        raise ValueError("IQ must be a finite one-dimensional array")
+    if fit_window < 2 or recovery_search < 1 or recovery_hold_samples < 1:
+        raise ValueError("fit_window >= 2 and positive recovery windows are required")
+    if not np.isfinite(full_scale) or full_scale <= 0:
+        raise ValueError("full_scale must be positive and finite")
+    if not np.isfinite(recovery_threshold_rad) or not 0 < recovery_threshold_rad < np.pi:
+        raise ValueError("recovery_threshold_rad must be between zero and pi")
     if sample_index - fit_window < 0 or sample_index + 1 >= x.size:
         raise ValueError(
             f"sample_index={sample_index} needs at least {fit_window} samples before it "
@@ -128,11 +137,17 @@ def analyze_transition(
     tail = x[sample_index:tail_end]
     tail_phase = _unwrap(np.angle(tail))
     tail_index = np.arange(tail.size, dtype=np.float64)
-    predicted_tail = intercept + slope * tail_index + discontinuity
+    # Recovery means returning to the PRE-event CFO trend. Subtracting the
+    # measured discontinuity here forced the first residual to zero even for
+    # a permanent phase step. Require sustained recovery, not one crossing.
+    predicted_tail = intercept + slope * tail_index
     residual = np.abs(_wrap_pi(tail_phase - predicted_tail))
-    settled = np.where(residual < recovery_threshold_rad)[0]
-    if settled.size > 0:
-        recovery_samples = int(settled[0])
+    if tail.size >= recovery_hold_samples:
+        below = (residual < recovery_threshold_rad).astype(int)
+        runs = np.convolve(below, np.ones(recovery_hold_samples, dtype=int), mode="valid")
+        settled = np.flatnonzero(runs == recovery_hold_samples)
+        if settled.size > 0:
+            recovery_samples = int(settled[0])
 
     return TransitionResult(
         sample_index=int(sample_index),
@@ -205,8 +220,8 @@ def run_self_test() -> dict:
         and control_error_rad < 0.05
         and amplitude_step_error_db < 0.2
         and cfo_error < 1e-3
-        and result_with.recovery_samples is not None
-        and result_with.recovery_samples < 10
+        and result_with.recovery_samples is None
+        and result_without.recovery_samples == 0
     )
 
     return {
@@ -246,8 +261,11 @@ def analyze_capture_file(capture_path: Path, metadata_path: Path, *, fit_window:
         asdict(analyze_transition(x, int(t["sample_index"]), fit_window=fit_window)) for t in transitions
     ]
     return {
-        "evidence_scope": "draft-from-real-capture",
-        "hardware_measurement_claimed": True,
+        "evidence_scope": "unverified-capture-analysis",
+        "hardware_measurement_claimed": False,
+        "limitations": "Provenance requires review. Phase analysis assumes a tone or data-wiped IQ; "
+        "raw QPSK phase is not a CFO trend. Recovery is return to the pre-event phase trend, "
+        "not measured carrier-loop recovery.",
         "capture": str(capture_path),
         "metadata": str(metadata_path),
         "transitions": results,
