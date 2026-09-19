@@ -10,6 +10,17 @@ This lab closes the Simulink part of the route:
 Block 11 handoff files -> Simulink fixed-point chain -> ideal BER/SNR baseline -> HDL stage
 ```
 
+## Why this lab matters
+
+Every BER number you measure later on the board needs a yardstick. "BER = 1e-3" is
+meaningless until you know what the *best possible* receiver would achieve at the
+same signal-to-noise ratio. Coherent BPSK over AWGN has a closed-form answer, and
+Simulink lets you check that your fixed-point chain, sample by sample, reaches it.
+If your simulated curve sits far to the right of theory, the implementation is
+losing decibels somewhere (timing, quantization, filter mismatch); if a hardware
+measurement is far to the right of *this* curve, the loss is in the RF chain or the
+synchronization, not in the modem maths.
+
 ## Executable MATLAB files
 
 | File | Role |
@@ -62,6 +73,25 @@ BER_theory = 0.5 * erfc(sqrt(10^(Eb/N0_dB / 10)))
 ```
 
 The Simulink sweep overlays Monte Carlo points on top of that theory curve.
+
+Reference points of the theory curve, so you can sanity-check your plot:
+
+| Eb/N0 | ideal BPSK BER |
+|---:|---:|
+| 0 dB | 7.86e-02 |
+| 2 dB | 3.75e-02 |
+| 4 dB | 1.25e-02 |
+| 6 dB | 2.39e-03 |
+| 8 dB | 1.91e-04 |
+| 9.6 dB | 9.74e-06 |
+
+The curve steepens with SNR: 2 dB buys about a factor of 2 in BER between 0 and 2 dB, but
+about a factor of 12 between 6 and 8 dB. A run of
+`N` bits can only resolve BERs down to about `1/N`: to see 1e-5 you need well over
+100 000 bits per point, otherwise the Monte Carlo points at high SNR read as zero.
+
+> This lab requires MATLAB/Simulink, which is not part of the automated CI. The
+> reference values above are from the closed-form formula, not from a Simulink run.
 
 ## Report checklist
 

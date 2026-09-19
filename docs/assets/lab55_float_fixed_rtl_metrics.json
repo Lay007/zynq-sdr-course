@@ -1,0 +1,11 @@
+{
+  "metrics": {
+    "samples_compared": 8,
+    "rmse_float_vs_rtl": 0.27775607554111215,
+    "rmse_fixed_vs_rtl": 0.0,
+    "max_abs_float_vs_rtl": 0.375,
+    "max_abs_fixed_vs_rtl": 0.0,
+    "pass_float_within_1_lsb": true,
+    "pass_fixed_exact_match": true
+  }
+}

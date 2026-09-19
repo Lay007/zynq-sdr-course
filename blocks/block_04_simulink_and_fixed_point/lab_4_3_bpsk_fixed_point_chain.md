@@ -12,6 +12,18 @@ The lab answers the practical question:
 
 > Can the same BPSK frame be carried through Q1.15 pulse shaping and matched filtering with acceptable error before moving to Simulink and RTL?
 
+## Why this lab matters
+
+A floating-point Python model tells you what the algorithm *should* do. An FPGA
+does not have floats: every wire has a fixed number of bits, every multiplier
+produces a wider result that must be rounded back, and every sum can overflow.
+The fixed-point stage is where "the maths works" turns into "the hardware will
+work" — or into a subtle bug that only shows up on the board. This lab makes the
+translation in one controlled place: the same BPSK frame goes through a
+floating-point chain and a Q1.15 chain, and you compare them number by number
+before any RTL is written. If the fixed-point model disagrees with the float
+model here, you find out in seconds, in Python, instead of after a Vivado build.
+
 ## Executable files
 
 | Environment | File | Output |
@@ -109,6 +121,39 @@ docs/assets/lab43_bpsk_fixed_point_constellation_matlab.png
 | `ber_payload_fixed` | payload BER after fixed-point RX filtering |
 | `rx_fixed_evm_percent` | symbol-quality penalty of the fixed-point RX path |
 | saturation counts | whether Q1.15 needs extra headroom at any stage |
+
+## What to expect
+
+With the committed Block 11 reference package, a correct run prints:
+
+```text
+TX rebuild RMSE vs exported CI16: 1.55e-05
+TX fixed RMS error: 4.75e-05
+TX fixed EVM: 0.0091 %
+RX float/fixed payload BER: 0.000000e+00 / 0.000000e+00
+RX float/fixed EVM: 2.1538 / 1.5303 %
+FIR guard bits: 7
+```
+
+Read these together:
+
+- **TX fixed-vs-float error is tiny** (RMS `4.7e-05`, EVM `0.009 %`): Q1.15 taps and
+  a 39-bit accumulator reproduce the transmit pulse shaping to well below 16-bit
+  resolution. The transmit side has no headroom problem (both TX saturation counters
+  are `0`).
+- **Payload BER is zero for both float and fixed** — the fixed-point receive path
+  still decodes the frame.
+- **The RX saturation counter is not zero.** `rx_filter_saturation_count` in
+  `lab43_bpsk_fixed_point_metrics.json` is `1663`: at the receive matched filter the
+  Q1.15 output clips on 1663 samples. BER stays zero, so this is a *warning*, not a
+  failure — but it is exactly the kind of finding this lab exists to surface. The
+  fix belongs in the RTL design: give the receive filter output extra headroom (or
+  scale the input down) instead of silently clipping.
+- **Do not read "fixed EVM (1.53 %) is lower than float EVM (2.15 %)" as an
+  improvement.** A fixed-point chain cannot be more accurate than the float chain
+  it approximates; the difference comes from the analysis (scalar alignment and the
+  clipped samples), so treat the saturation count as the actionable number and the
+  EVM gap as a reason to look closer, not as a result.
 
 ## Simulink import route
 
