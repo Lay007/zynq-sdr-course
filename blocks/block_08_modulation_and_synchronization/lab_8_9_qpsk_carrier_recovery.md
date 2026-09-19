@@ -65,4 +65,4 @@ python blocks/block_08_modulation_and_synchronization/python/qpsk_carrier_recove
   de-rotates on-chip, mirroring how the Gardner timing loop ported.
 - **Hardware**: drop the QPSK modem into the runtime AD9361 bridge for QPSK BER = 0 in digital
   loopback (no CFO there, so carrier recovery is bypassed), then enable this loop for the
-  over-the-air four-point constellation of [Lab 8.7](lab_8_7_real_hardware_bpsk_metrics.md).
+  over-the-air four-point constellation of [Lab 8.15](lab_8_15_real_hardware_bpsk_metrics.md).

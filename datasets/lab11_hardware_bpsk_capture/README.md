@@ -8,7 +8,7 @@ one burst, read back from the in-fabric debug tap (Block 11) in AD9361 digital l
 - `tx_i`, `tx_q` — the core's recovered decision sample (`symbol_i_debug`) captured in the
   same run; not used by the figure script.
 
-Used by [Lab 8.7](../../blocks/block_08_modulation_and_synchronization/lab_8_7_real_hardware_bpsk_metrics.md)
+Used by [Lab 8.15](../../blocks/block_08_modulation_and_synchronization/lab_8_15_real_hardware_bpsk_metrics.md)
 to plot the real spectrum + constellation and measure SNR/EVM (≈ 36 dB / 1.6 %). Regenerate
 the figure:
 

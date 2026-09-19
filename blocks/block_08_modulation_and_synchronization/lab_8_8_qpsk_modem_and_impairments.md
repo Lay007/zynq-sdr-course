@@ -70,4 +70,4 @@ python blocks/block_08_modulation_and_synchronization/python/qpsk_impairments_be
 - **Hardware**: drop the QPSK modem into the runtime AD9361 bridge (same DAC-mux / ADC-tap /
   gpreg plane as the BPSK bridge in [Lab 11.26](../block_11_integrated_sdr_project/lab_11_26_runtime_dds_bypass_bpsk_ota.md))
   for QPSK BER = 0 in digital loopback, then the real-hardware constellation of
-  [Lab 8.7](lab_8_7_real_hardware_bpsk_metrics.md) with four points instead of two.
+  [Lab 8.15](lab_8_15_real_hardware_bpsk_metrics.md) with four points instead of two.

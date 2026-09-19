@@ -1,0 +1,97 @@
+{
+  "config": {
+    "symbol_count": 4096,
+    "samples_per_symbol": 8,
+    "sample_rate_hz": 3840000.0,
+    "rrc_alpha": 0.35,
+    "rrc_span_symbols": 8,
+    "seed": 8701
+  },
+  "metrics": [
+    {
+      "scenario": "awgn_reference",
+      "snr_db": 18.0,
+      "evm_percent": 4.7161389813037555,
+      "evm_db": -26.528268100699556,
+      "ber": 0.0,
+      "bit_errors": 0,
+      "compared_bits": 8192,
+      "cfo_hz": 0.0,
+      "phase_deg": 0.0,
+      "timing_offset_samples": 0,
+      "frame_slip_symbols": 0,
+      "conclusion": "Baseline: with only AWGN, SNR and BER are consistent."
+    },
+    {
+      "scenario": "high_snr_cfo",
+      "snr_db": 25.0,
+      "evm_percent": 76303.65352607434,
+      "evm_db": 57.65090666164704,
+      "ber": 0.5010986328125,
+      "bit_errors": 4105,
+      "compared_bits": 8192,
+      "cfo_hz": 25000.0,
+      "phase_deg": 0.0,
+      "timing_offset_samples": 0,
+      "frame_slip_symbols": 0,
+      "conclusion": "Carrier-frequency offset rotates the constellation; SNR alone misses this failure."
+    },
+    {
+      "scenario": "timing_error",
+      "snr_db": 25.0,
+      "evm_percent": 66.79952993349151,
+      "evm_db": -3.5045318726474854,
+      "ber": 0.0533447265625,
+      "bit_errors": 437,
+      "compared_bits": 8192,
+      "cfo_hz": 0.0,
+      "phase_deg": 0.0,
+      "timing_offset_samples": 3,
+      "frame_slip_symbols": 0,
+      "conclusion": "The signal is strong, but symbol decisions are made away from the best sampling instant."
+    },
+    {
+      "scenario": "qpsk_90deg_ambiguity",
+      "snr_db": 25.0,
+      "evm_percent": 2.584290112014772,
+      "evm_db": -31.753174682154793,
+      "ber": 0.5,
+      "bit_errors": 4096,
+      "compared_bits": 8192,
+      "cfo_hz": 0.0,
+      "phase_deg": 90.0,
+      "timing_offset_samples": 0,
+      "frame_slip_symbols": 0,
+      "conclusion": "QPSK needs preamble-based quadrant resolution or differential coding before BER is trusted."
+    },
+    {
+      "scenario": "clipping_overload",
+      "snr_db": 25.0,
+      "evm_percent": 8.113399289237808,
+      "evm_db": -21.815943006399916,
+      "ber": 0.0,
+      "bit_errors": 0,
+      "compared_bits": 8192,
+      "cfo_hz": 0.0,
+      "phase_deg": 0.0,
+      "timing_offset_samples": 0,
+      "frame_slip_symbols": 0,
+      "conclusion": "Overload is a nonlinear impairment; it is not captured by a simple noise-only SNR view."
+    },
+    {
+      "scenario": "wrong_frame_alignment",
+      "snr_db": 25.0,
+      "evm_percent": 4126.3526727567305,
+      "evm_db": 32.311326873550435,
+      "ber": 0.512087912087912,
+      "bit_errors": 4194,
+      "compared_bits": 8190,
+      "cfo_hz": 0.0,
+      "phase_deg": 0.0,
+      "timing_offset_samples": 0,
+      "frame_slip_symbols": 1,
+      "conclusion": "A clean packet is useless when the receiver compares the wrong symbol boundary or frame."
+    }
+  ],
+  "acceptance_rule": "For digital links, SNR alone is not sufficient; report BER/FER and compared bit/frame count."
+}

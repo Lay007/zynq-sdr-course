@@ -99,7 +99,7 @@ The internal loopback isolates the *modem* — two tight clusters at I = ±1, Q 
 Over the air the *radio channel* spreads the clusters with noise and rotates them with the
 carrier frequency offset (Lab 8.1 / 8.2 seen on real hardware), yet at close range it still
 decodes at BER 0. The visual gap between the two constellations *is* the RF channel. Full
-walkthrough, numbers and reproduction: **[Lab 8.7 — Real-hardware BPSK metrics](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_7_real_hardware_bpsk_metrics.md)**.
+walkthrough, numbers and reproduction: **[Lab 8.15 — Real-hardware BPSK metrics](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_15_real_hardware_bpsk_metrics.md)**.
 
 ## QPSK — two bits per symbol, impairments & BER
 
@@ -156,7 +156,7 @@ search, an RRC matched filter, preamble frame-sync, and a four-way 90° quadrant
 Four razor-tight dots in loopback (the *modem* isolated) become four noise-spread, carrier-rotated clouds
 over the air (the *radio channel*), yet both decode at **BER = 0** through the same synchronization chain
 the simulations model. The visual gap between the two constellations *is* the RF channel — exactly the
-BPSK story of Lab 8.7, now at two bits per symbol.
+BPSK story of Lab 8.15, now at two bits per symbol.
 
 ## Next step
 After finishing this block, the student should be ready to reuse its results as the starting point for the next stage of the course and the related practical experiment.

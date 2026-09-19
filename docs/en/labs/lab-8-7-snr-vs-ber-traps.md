@@ -1,0 +1,3 @@
+# Lab 8.7 — SNR is not enough: BER/EVM traps
+
+--8<-- "blocks/block_08_modulation_and_synchronization/lab_8_7_snr_vs_ber_traps.md"

@@ -296,7 +296,7 @@ def main() -> None:
     save_constellation(
         ASSET_DIR / "lab87_constellation_qpsk_phase_ambiguity.png",
         constellation_examples["qpsk_90deg_ambiguity"],
-        "Lab 8.7 — high SNR with unresolved QPSK phase ambiguity",
+        "Lab 8.7 — high SNR, unresolved QPSK ambiguity",
     )
 
     metrics_path = ASSET_DIR / "lab87_snr_vs_ber_metrics.json"
