@@ -50,8 +50,8 @@ The first hardware step is deliberately not DMA. It is a small AXI-Lite mailbox 
 
 Lab 6.9 adds a reproducible offline analyzer and a conducted-bench procedure:
 
-- [English lab description](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_06_rf_frontend_and_ad9363/lab_6_9_receiver_comparison.md)
-- [Russian lab description](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_06_rf_frontend_and_ad9363/lab_6_9_receiver_comparison_ru.md)
+- [English lab page](en/labs/lab-6-9-receiver-comparison.md)
+- [Russian lab page](ru/labs/lab-6-9-receiver-comparison.md)
 - [Python analyzer](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_06_rf_frontend_and_ad9363/python/lab_6_9_compare_receivers.py)
 
 The executable synthetic mode is suitable for unit tests. The final engineering
@@ -63,7 +63,7 @@ bandwidth.
 
 The MkDocs-visible Lab 6.7 is **Zero-IF artifacts**. The separate power-scale material is tracked as a Block 6 extension and Lab 6.9 is the receiver-comparison experiment, so the navigation numbering remains unambiguous.
 
-Block 8 uses `8.10-8.19` for OFDM/QAM implementation labs. The CSS track starts at `8.20` so that waveform families remain easy to identify without renumbering the existing synchronization and hardware evidence pages.
+In Block 8, the SNR-versus-BER traps lab is 8.7 and the real-hardware BPSK walkthrough is 8.15 (it was briefly also numbered 8.7). Block 8 uses `8.10-8.19` for OFDM/QAM implementation labs. The CSS track starts at `8.20` so that waveform families remain easy to identify without renumbering the existing synchronization and hardware evidence pages.
 
 ## Recommended assessment path
 
