@@ -1,0 +1,27 @@
+{
+  "config": {
+    "packets": 800,
+    "samples_per_packet": 4096,
+    "sample_rate_hz": 2400000.0,
+    "input_buffer_pkts": 10,
+    "output_buffer_pkts": 10,
+    "dma_in_mean_us": 135.0,
+    "dma_in_jitter_us": 22.0,
+    "fpga_proc_mean_us": 95.0,
+    "fpga_proc_jitter_us": 14.0,
+    "dma_out_mean_us": 145.0,
+    "dma_out_jitter_us": 24.0,
+    "seed": 115
+  },
+  "metrics": {
+    "processed_packets": 800,
+    "dropped_packets": 0,
+    "drop_ratio": 0.0,
+    "mean_latency_us": 373.5502487359174,
+    "p95_latency_us": 430.194234715763,
+    "p99_latency_us": 453.33022441365637,
+    "latency_jitter_std_us": 33.809654837715115,
+    "throughput_msample_per_s": 2.402289091946303
+  },
+  "inter_arrival_us": 1706.6666666666667
+}

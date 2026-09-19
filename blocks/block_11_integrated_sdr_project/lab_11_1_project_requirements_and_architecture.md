@@ -8,6 +8,15 @@ Define the final SDR project requirements and convert them into a clear system a
 
 > What exactly should the integrated SDR project do, and which blocks are required to prove that it works?
 
+## Why this lab matters
+
+Most failed integration projects fail before any code is written: the goal was vague ("make a
+modem"), the success criteria were missing, or nobody wrote down the sample rate the FPGA runs
+at versus the rate the RF chip captures at. Writing the requirements first forces the choices
+that are painful to change later (signal type, rate plan, control plane) and turns "does it
+work?" into a numeric pass/fail question. It also fixes the *order of risk*: the first
+hardware experiment should be the smallest one that can fail informatively.
+
 ## Required decisions
 
 | Decision | Description |

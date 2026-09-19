@@ -8,6 +8,13 @@ Create a reproducible simulation package that connects the signal model, impairm
 
 > Can another engineer reproduce the complete simulation and obtain the same figures and metrics?
 
+## Why this lab matters
+
+A simulation that only its author can run is a demonstration, not evidence. The value of the
+package is that a second person, on another machine, gets the same figures and the same
+numbers from one command, and can prove it by comparing a checksum. That is also what later
+lets a hardware result be compared against a model, stage by stage.
+
 ## Package structure
 
 ```text
@@ -56,6 +63,27 @@ python blocks/block_11_integrated_sdr_project/python/end_to_end_bpsk_reference.p
 ```
 
 This package already exports Q1.15 symbols and RRC taps, so it can be used as the bridge into Simulink fixed-point and the first Verilog block.
+
+## What to expect
+
+The reference generator is fully deterministic. Running it prints the paths it wrote and
+stores its summary in `docs/assets/end_to_end_bpsk_reference_metrics.json`, which for the
+committed configuration contains:
+
+| Quantity | Value |
+|---|---|
+| Frame | 281 bits (25 preamble + 256 payload), 8 samples per symbol at 1 MS/s (125 kSym/s) |
+| Injected impairments | 2-sample timing offset, 650 Hz frequency offset, 0.31 rad phase offset |
+| RRC filter | 65 taps |
+| Payload BER / total BER | 0 / 0 (0 errors) |
+| EVM | 2.15 % |
+| Peak / RMS level | -1.6 dBFS / -7.3 dBFS |
+| Capture SHA-256 | `8b2121ee3fc3946a0064cfd2cc5b5a70eb0813a36937ce82485f91a3f425f113` |
+
+Two habits to take from this: **compare the SHA-256** of your regenerated capture with the
+one above (a different hash on the same seed means the environment, not the science,
+changed), and note that the **peak is only 1.6 dB below full scale**, so this reference already
+sits close to the clipping limit a real ADC would impose.
 
 ## Report checklist
 

@@ -1,0 +1,60 @@
+{
+  "nominal_evm_percent": 3.8,
+  "type_a_samples_percent": [
+    3.72,
+    3.91,
+    3.85,
+    3.77,
+    3.88,
+    3.81,
+    3.79,
+    3.86
+  ],
+  "entries": [
+    {
+      "name": "repeatability (Type A)",
+      "distribution": "normal",
+      "divisor": 1.0,
+      "value": 0.02219535826634542
+    },
+    {
+      "name": "instrument amplitude accuracy",
+      "distribution": "rectangular",
+      "divisor": 1.7320508075688772,
+      "value": 0.2
+    },
+    {
+      "name": "reference clock tolerance",
+      "distribution": "rectangular",
+      "divisor": 1.7320508075688772,
+      "value": 0.08
+    },
+    {
+      "name": "cable + connector drift",
+      "distribution": "rectangular",
+      "divisor": 1.7320508075688772,
+      "value": 0.12
+    },
+    {
+      "name": "temperature effect",
+      "distribution": "normal",
+      "divisor": 1.0,
+      "value": 0.1
+    }
+  ],
+  "standard_contributions": [
+    0.02219535826634542,
+    0.11547005383792516,
+    0.046188021535170064,
+    0.06928203230275509,
+    0.1
+  ],
+  "summary": {
+    "combined_standard_uncertainty": 0.17538329622640264,
+    "expanded_uncertainty_k2": 0.3507665924528053,
+    "coverage_factor_k": 2.0,
+    "nominal_measurement": 3.8,
+    "interval_low": 3.4492334075471947,
+    "interval_high": 4.150766592452805
+  }
+}
