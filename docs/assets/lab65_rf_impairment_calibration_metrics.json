@@ -1,0 +1,30 @@
+{
+  "config": {
+    "sample_rate_hz": 2400000.0,
+    "sample_count": 65536,
+    "tone_offset_hz": 180000.0,
+    "tone_amplitude": 0.72,
+    "dc_i": 0.085,
+    "dc_q": -0.052,
+    "iq_gain_mismatch_db": 1.7,
+    "iq_phase_skew_deg": 6.5,
+    "lo_leakage_amplitude": 0.14,
+    "lo_leakage_phase_deg": -30.0,
+    "noise_rms": 0.015,
+    "seed": 65
+  },
+  "before": {
+    "dc_offset_rms": 0.2396289403443882,
+    "iq_gain_mismatch_db": -1.6421160855857373,
+    "iq_cross_correlation": 0.11310920242268208,
+    "image_rejection_db": 19.162724845570807,
+    "lo_leakage_dbfs": -10.233365204445192
+  },
+  "after": {
+    "dc_offset_rms": 1.6158679676894866e-17,
+    "iq_gain_mismatch_db": 0.0,
+    "iq_cross_correlation": 2.2192451417509026e-17,
+    "image_rejection_db": 78.77367674985926,
+    "lo_leakage_dbfs": -86.09130636875224
+  }
+}
