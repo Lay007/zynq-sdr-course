@@ -32,5 +32,204 @@
 - вывод о корректности decimation chain.
 
 ## Подробная техническая часть
+### Связь с приёмником SDR
 
---8<-- "blocks/block_03_dsp_basics/lab_3_4_decimation.md"
+Работа связывает теорию многоскоростной обработки с реализацией приёмника SDR и будущими блоками смены частоты в FPGA.
+
+### Теория
+
+Децимация в `M` раз оставляет каждый `M`-й отсчёт:
+
+```text
+y[k] = x[kM]
+```
+
+Однако прямое прореживание вызывает наложение спектров, если сигнал предварительно не отфильтрован низкочастотным антиалиасинговым фильтром.
+
+Важные понятия:
+
+- коэффициент децимации;
+- новая частота дискретизации `Fs_out = Fs_in / M`;
+- антиалиасинговый фильтр;
+- переходная полоса;
+- защитная полоса;
+- полифазная реализация FIR;
+- компромисс FPGA между ресурсами и задержкой.
+
+### Эксперимент
+
+Сгенерируйте или загрузите комплексные IQ-данные с:
+
+- полезным сигналом вблизи DC;
+- нежелательным сигналом вне будущей полосы Найквиста;
+- необязательным шумом.
+
+Затем сравните:
+
+1. прямое прореживание без антиалиасинга;
+2. низкочастотную фильтрацию FIR с последующим прореживанием;
+3. спектры до и после децимации;
+4. положение и подавление алиаса.
+
+### Реализация на Python
+
+Минимальная ожидаемая структура скрипта:
+
+```python
+import numpy as np
+import matplotlib.pyplot as plt
+
+fs = 2.4e6
+M = 4
+fs_out = fs / M
+n = 65536
+t = np.arange(n) / fs
+
+wanted = np.exp(1j * 2*np.pi*80e3*t)
+interferer = 0.5 * np.exp(1j * 2*np.pi*520e3*t)
+x = wanted + interferer
+
+# Bad path: no anti-aliasing
+y_bad = x[::M]
+
+# Good path: FIR anti-aliasing before decimation
+num_taps = 129
+cutoff = 0.40 * fs_out
+m = np.arange(num_taps) - (num_taps - 1) / 2
+h = 2 * cutoff / fs * np.sinc(2 * cutoff / fs * m)
+h *= np.blackman(num_taps)
+h /= np.sum(h)
+
+x_filt = np.convolve(x, h, mode="same")
+y_good = x_filt[::M]
+
+freq_in = np.fft.fftshift(np.fft.fftfreq(n, d=1/fs))
+freq_out = np.fft.fftshift(np.fft.fftfreq(len(y_good), d=1/fs_out))
+
+X = np.fft.fftshift(np.fft.fft(x * np.hanning(n)))
+Y_bad = np.fft.fftshift(np.fft.fft(y_bad * np.hanning(len(y_bad))))
+Y_good = np.fft.fftshift(np.fft.fft(y_good * np.hanning(len(y_good))))
+
+plt.figure()
+plt.plot(freq_out/1e3, 20*np.log10(np.maximum(np.abs(Y_bad), 1e-12)), label="bad: no anti-alias")
+plt.plot(freq_out/1e3, 20*np.log10(np.maximum(np.abs(Y_good), 1e-12)), label="good: FIR + decimate")
+plt.grid(True)
+plt.xlabel("Frequency, kHz")
+plt.ylabel("Magnitude, dB")
+plt.legend()
+plt.show()
+```
+
+### Реализация на MATLAB
+
+Минимальная ожидаемая структура скрипта:
+
+```matlab
+fs = 2.4e6;
+M = 4;
+fsOut = fs / M;
+N = 65536;
+t = (0:N-1).' / fs;
+
+wanted = exp(1j*2*pi*80e3*t);
+interferer = 0.5 * exp(1j*2*pi*520e3*t);
+x = wanted + interferer;
+
+% Bad path: no anti-aliasing
+yBad = x(1:M:end);
+
+% Good path: FIR anti-aliasing before decimation
+numTaps = 129;
+cutoff = 0.40 * fsOut;
+m = (0:numTaps-1).' - (numTaps-1)/2;
+h = 2*cutoff/fs * sinc(2*cutoff/fs * m);
+h = h .* blackman(numTaps);
+h = h ./ sum(h);
+
+xFilt = conv(x, h, 'same');
+yGood = xFilt(1:M:end);
+
+freqOut = fftshift((-floor(numel(yGood)/2):ceil(numel(yGood)/2)-1).' * fsOut / numel(yGood));
+YBad = fftshift(fft(yBad .* hann(numel(yBad))));
+YGood = fftshift(fft(yGood .* hann(numel(yGood))));
+
+figure; hold on;
+plot(freqOut/1e3, 20*log10(max(abs(YBad), 1e-12)), 'DisplayName', 'bad: no anti-alias');
+plot(freqOut/1e3, 20*log10(max(abs(YGood), 1e-12)), 'DisplayName', 'good: FIR + decimate');
+grid on;
+xlabel('Frequency, kHz');
+ylabel('Magnitude, dB');
+legend('Location', 'best');
+```
+
+### Мост к C++
+
+Будущий дециматор на C++ должен делать антиалиасинговый фильтр явным:
+
+```cpp
+std::vector<std::complex<float>> decimate_fir(
+    const std::vector<std::complex<float>>& x,
+    const std::vector<float>& taps,
+    int factor);
+```
+
+Проверочные тесты:
+
+- выходная частота дискретизации верна;
+- выходная длина верна;
+- тон в полосе пропускания сохраняется;
+- тон вне полосы подавляется до прореживания;
+- воспроизводим случай отказа прямого прореживания.
+
+### Мост к FPGA / Verilog
+
+Аппаратный дециматор можно реализовать как:
+
+```text
+входной поток -> антиалиасинговый FIR -> разрешение прореживания в M раз -> выходной поток
+```
+
+Более эффективная реализация:
+
+```text
+полифазный FIR-дециматор
+```
+
+Вопросы к железу:
+
+- Каков коэффициент децимации?
+- Какое подавление в полосе заграждения требуется?
+- Может ли FIR работать на входной частоте дискретизации?
+- Нужно ли полифазное разложение?
+- Каков шаблон выходного valid?
+- Какова задержка?
+
+### Ожидаемые графики
+
+Постройте как минимум:
+
+1. входной спектр;
+2. выходной спектр без антиалиасинга;
+3. выходной спектр с антиалиасинговым FIR;
+4. необязательное увеличение вокруг наложенной компоненты;
+5. необязательная АЧХ FIR.
+
+### Чек-лист отчёта (расширенный)
+
+- [ ] Указаны `Fs_in`, коэффициент децимации и `Fs_out`.
+- [ ] Определена новая полоса Найквиста.
+- [ ] Показано, почему прямое прореживание не работает.
+- [ ] Спроектирован антиалиасинговый фильтр.
+- [ ] Сравнены спектры до/после децимации.
+- [ ] Оценено подавление алиаса.
+- [ ] Объяснено преимущество полифазного дециматора.
+- [ ] Описано поведение valid-частоты в FPGA.
+
+### Шаблон инженерного вывода
+
+```text
+Прямое прореживание накладывает компоненту ____ кГц в выходную полосу.
+Антиалиасинговый FIR подавляет её примерно на ____ дБ до понижения частоты.
+В FPGA этот блок следует реализовать как FIR-дециматор или полифазный дециматор,
+в зависимости от ограничений по ресурсам и частоте дискретизации.
+```
