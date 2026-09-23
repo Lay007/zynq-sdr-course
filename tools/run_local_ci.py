@@ -21,6 +21,7 @@ def run(cmd: list[str]) -> None:
 def run_hdl() -> None:
     run([sys.executable, "tools/run_block5_hdl_smoke.py"])
     run([sys.executable, "tools/run_block8_css_rtl.py"])
+    run([sys.executable, "tools/run_ofdm_rtl.py"])
 
 
 def main() -> int:
