@@ -75,6 +75,13 @@ python tools/run_block5_hdl_smoke.py      # -> PASS: qpsk_zynq_ber_top loopback 
 python blocks/block_08_modulation_and_synchronization/python/qpsk_impairments_ber.py
 ```
 
+## Exercises
+
+1. At 8 dB the table shows 2.2e-4 against a theory of 1.91e-4. Convert both to error counts out of 400 000 bits (88 and about 76) and decide whether the difference is significant, using the Poisson standard deviation (about the square root of the count).
+2. At Eb/N0 = 6 dB, what is Es/N0 for QPSK? Explain why the per-bit BER still equals BPSK at the same Eb/N0 although the QPSK points are closer together for the same symbol energy.
+3. Replace the Gray mapping with a natural one (dibits 00, 01, 10, 11 on consecutive quadrants). Predict the BER ratio before you run it. A quick simulation of this change gave about 1.4-1.5 times the Gray BER at 0, 4 and 8 dB (for example 1.89e-2 against 1.27e-2 at 4 dB): with natural mapping one of the two neighbouring quadrants differs in both bits, so an average symbol error costs 1.5 bits instead of 1.
+4. The HDL loopback prints `PASS: qpsk_zynq_ber_top loopback recovered 140 QPSK symbols at BER=0 (start_offset=62)`. How many bits is that, and what is the smallest BER this single run can claim?
+
 ## Next steps
 
 - **Carrier recovery** — a decision-directed Costas loop de-rotates the CFO ring back into four
