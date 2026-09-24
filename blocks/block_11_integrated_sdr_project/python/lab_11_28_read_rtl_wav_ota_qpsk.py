@@ -69,6 +69,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--burst-window-samples", type=int, default=4096)
     parser.add_argument("--normalized-correlation-threshold", type=float, default=0.8)
     parser.add_argument("--run-tag", default=None)
+    parser.add_argument(
+        "--no-update-manifest",
+        action="store_true",
+        help="do not write analysis results back into the YAML manifest",
+    )
     return parser.parse_args()
 
 
@@ -783,7 +788,16 @@ def main() -> int:
             all_burst_symbols,
             "RTL-SDR OTA QPSK - all detected bursts",
         )
-    if manifest_path is not None and manifest_path.suffix.lower() in {".yaml", ".yml"}:
+    # Writing back is how a fresh capture session records its analysis. Never do it
+    # when the outputs live outside the repository: the committed manifest would then
+    # point at one person's temporary files.
+    outputs_in_repo = out_dir.resolve().is_relative_to(ROOT.resolve())
+    if (
+        manifest_path is not None
+        and manifest_path.suffix.lower() in {".yaml", ".yml"}
+        and not args.no_update_manifest
+        and outputs_in_repo
+    ):
         manifest["sha256"] = capture_sha256
         manifest.setdefault("quality_checks", {})["offline_analysis_completed"] = True
         analysis_meta = manifest.setdefault("analysis", {})
