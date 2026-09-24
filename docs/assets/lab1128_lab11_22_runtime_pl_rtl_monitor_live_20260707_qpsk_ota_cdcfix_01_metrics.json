@@ -5,6 +5,21 @@
   "dataset_id": "lab11_22_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_cdcfix_01",
   "iq_path": "G:\\Programs\\zynq-sdr-course\\tmp\\lab1122_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_cdcfix_01.wav",
   "capture_sha256": "5712a774cba0b9ddad164fbda4252a1b62f09d76c8ca03a8e0b0774d36ae1557",
+  "session": {
+    "run_tag": "live_20260707_qpsk_ota_cdcfix_01",
+    "capture_report": "docs/assets/lab1122_runtime_pl_rtl_monitor_live_20260707_qpsk_ota_cdcfix_01.json",
+    "bitstream_md5": "414eca88fe628de06c9bef09cf73e30e",
+    "bitstream_size_bytes": 2505796,
+    "center_frequency_hz": 868300000,
+    "transmitter_sample_rate_hz": 3840000,
+    "rtl_sample_rate_hz": 2400000,
+    "tx_attenuation_db": -55.0,
+    "rtl_tuner_gain_db10": 300,
+    "runtime_repeat_count": 40,
+    "reboot_to_stock_ok": true,
+    "stock_tx_attenuation_db_ch0": "-89.750000 dB",
+    "stock_tx_lo_powerdown": "1"
+  },
   "manifest_path": "G:\\Programs\\zynq-sdr-course\\datasets\\lab11_22_runtime_pl_rtl_monitor\\manifest_live_20260707_qpsk_ota_cdcfix_01.yaml",
   "capture_sample_rate_hz": 2400000.0,
   "analysis_sample_rate_hz": 2400000.0,
@@ -64,6 +79,18 @@
       "capture_window_samples": 4096
     },
     "summary": {
+      "scoring": "reference-aided: CFO/phase/gain fitted over the whole known frame",
+      "receiver": {
+        "scoring": "sync-word CFO/phase + decision-directed PLL, payload bits only",
+        "compared_bits_total": 9920,
+        "bit_errors_total": 39,
+        "aggregate_ber": 0.0039314516129032254,
+        "aggregate_ber_wilson_95": [
+          0.0028773901957969187,
+          0.005369563280868135
+        ],
+        "zero_error_burst_count": 18
+      },
       "commanded_burst_count": 40,
       "energy_candidate_count": 40,
       "detected_burst_count": 40,
@@ -96,25 +123,25 @@
         "min": 32.76010948079412,
         "median": 35.683639522002615,
         "mean": 35.89589280600013,
-        "p95": 40.24120542866716,
-        "max": 42.62754519680903,
-        "std": 2.090595893054324
+        "p95": 40.24120542866715,
+        "max": 42.627545196809045,
+        "std": 2.0905958930543247
       },
       "snr_from_evm_db": {
-        "min": 7.406193529171599,
+        "min": 7.4061935291715955,
         "median": 8.950630222851393,
         "mean": 8.913245777350864,
         "p95": 9.48789298364697,
         "max": 9.693093110866503,
-        "std": 0.49078117118049586
+        "std": 0.49078117118049613
       },
       "frequency_shift_hz": {
-        "min": 1875.451931352315,
-        "median": 1963.875711640199,
+        "min": 1875.4519313523147,
+        "median": 1963.8757116401991,
         "mean": 1962.306798742939,
-        "p95": 2020.653634108698,
+        "p95": 2020.6536341086974,
         "max": 2064.1748811253897,
-        "std": 41.91883124627063
+        "std": 41.918831246270685
       },
       "normalized_correlation": {
         "min": 0.8978150459493226,
@@ -139,10 +166,13 @@
         "frame_error": true,
         "evm_percent": 35.4694307477558,
         "snr_from_evm_db": 9.002915630105722,
-        "residual_cfo_hz": 1952.0267866737022,
-        "total_frequency_shift_hz": 1952.0267866737022,
+        "residual_cfo_hz": 1952.0267866737024,
+        "total_frequency_shift_hz": 1952.0267866737024,
         "sample_phase": 1,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 4,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 45.301332889322495
       },
       {
         "burst_index": 1,
@@ -160,7 +190,10 @@
         "residual_cfo_hz": 1903.8803802660716,
         "total_frequency_shift_hz": 1903.8803802660716,
         "sample_phase": 3,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 1,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 38.170222640264484
       },
       {
         "burst_index": 2,
@@ -178,7 +211,10 @@
         "residual_cfo_hz": 1957.6136774167437,
         "total_frequency_shift_hz": 1957.6136774167437,
         "sample_phase": 0,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 1,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 39.03863284462184
       },
       {
         "burst_index": 3,
@@ -196,7 +232,10 @@
         "residual_cfo_hz": 1995.9934738761901,
         "total_frequency_shift_hz": 1995.9934738761901,
         "sample_phase": 4,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 34.754854632395634
       },
       {
         "burst_index": 4,
@@ -209,12 +248,15 @@
         "bit_errors": 0,
         "ber": 0.0,
         "frame_error": false,
-        "evm_percent": 37.55564701381815,
-        "snr_from_evm_db": 8.506495030692951,
-        "residual_cfo_hz": 1988.10321859034,
-        "total_frequency_shift_hz": 1988.10321859034,
+        "evm_percent": 37.55564701381814,
+        "snr_from_evm_db": 8.506495030692953,
+        "residual_cfo_hz": 1988.1032185903402,
+        "total_frequency_shift_hz": 1988.1032185903402,
         "sample_phase": 3,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 40.89516842957477
       },
       {
         "burst_index": 5,
@@ -227,12 +269,15 @@
         "bit_errors": 1,
         "ber": 0.0035714285714285713,
         "frame_error": true,
-        "evm_percent": 36.55934495674627,
-        "snr_from_evm_db": 8.740031884704525,
-        "residual_cfo_hz": 1904.2821193549173,
-        "total_frequency_shift_hz": 1904.2821193549173,
+        "evm_percent": 36.559344956746266,
+        "snr_from_evm_db": 8.740031884704527,
+        "residual_cfo_hz": 1904.2821193549169,
+        "total_frequency_shift_hz": 1904.2821193549169,
         "sample_phase": 1,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 35.85040324355445
       },
       {
         "burst_index": 6,
@@ -250,7 +295,10 @@
         "residual_cfo_hz": 1970.4976857464326,
         "total_frequency_shift_hz": 1970.4976857464326,
         "sample_phase": 1,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 2,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 37.58940020000938
       },
       {
         "burst_index": 7,
@@ -265,10 +313,13 @@
         "frame_error": false,
         "evm_percent": 35.93389431186376,
         "snr_from_evm_db": 8.889914277390806,
-        "residual_cfo_hz": 1979.9040593957661,
-        "total_frequency_shift_hz": 1979.9040593957661,
+        "residual_cfo_hz": 1979.904059395766,
+        "total_frequency_shift_hz": 1979.904059395766,
         "sample_phase": 3,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 35.187424709100114
       },
       {
         "burst_index": 8,
@@ -283,10 +334,13 @@
         "frame_error": true,
         "evm_percent": 35.62168421975649,
         "snr_from_evm_db": 8.965711012416428,
-        "residual_cfo_hz": 2004.4896718665834,
-        "total_frequency_shift_hz": 2004.4896718665834,
+        "residual_cfo_hz": 2004.4896718665836,
+        "total_frequency_shift_hz": 2004.4896718665836,
         "sample_phase": 3,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 2,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 41.48705140605002
       },
       {
         "burst_index": 9,
@@ -299,12 +353,15 @@
         "bit_errors": 0,
         "ber": 0.0,
         "frame_error": false,
-        "evm_percent": 34.229835611513096,
-        "snr_from_evm_db": 9.311903731051505,
-        "residual_cfo_hz": 1937.213006265302,
-        "total_frequency_shift_hz": 1937.213006265302,
+        "evm_percent": 34.2298356115131,
+        "snr_from_evm_db": 9.311903731051503,
+        "residual_cfo_hz": 1937.2130062653025,
+        "total_frequency_shift_hz": 1937.2130062653025,
         "sample_phase": 1,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 1,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 36.53827297891951
       },
       {
         "burst_index": 10,
@@ -317,12 +374,15 @@
         "bit_errors": 1,
         "ber": 0.0035714285714285713,
         "frame_error": true,
-        "evm_percent": 37.52806332776275,
-        "snr_from_evm_db": 8.512876943962201,
-        "residual_cfo_hz": 1934.9804278612041,
-        "total_frequency_shift_hz": 1934.9804278612041,
+        "evm_percent": 37.528063327762766,
+        "snr_from_evm_db": 8.512876943962196,
+        "residual_cfo_hz": 1934.980427861204,
+        "total_frequency_shift_hz": 1934.980427861204,
         "sample_phase": 4,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 2,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 41.48557561781106
       },
       {
         "burst_index": 11,
@@ -340,7 +400,10 @@
         "residual_cfo_hz": 1993.4161320170751,
         "total_frequency_shift_hz": 1993.4161320170751,
         "sample_phase": 0,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 34.48711649624913
       },
       {
         "burst_index": 12,
@@ -358,7 +421,10 @@
         "residual_cfo_hz": 1967.139379549326,
         "total_frequency_shift_hz": 1967.139379549326,
         "sample_phase": 4,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 2,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 38.84131886662737
       },
       {
         "burst_index": 13,
@@ -371,12 +437,15 @@
         "bit_errors": 0,
         "ber": 0.0,
         "frame_error": false,
-        "evm_percent": 34.90363264600024,
-        "snr_from_evm_db": 9.142587417256356,
-        "residual_cfo_hz": 1893.1018962177943,
-        "total_frequency_shift_hz": 1893.1018962177943,
+        "evm_percent": 34.90363264600023,
+        "snr_from_evm_db": 9.142587417256358,
+        "residual_cfo_hz": 1893.101896217795,
+        "total_frequency_shift_hz": 1893.101896217795,
         "sample_phase": 2,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 40.65944002948871
       },
       {
         "burst_index": 14,
@@ -394,7 +463,10 @@
         "residual_cfo_hz": 1937.2364045630623,
         "total_frequency_shift_hz": 1937.2364045630623,
         "sample_phase": 4,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 34.63291674099785
       },
       {
         "burst_index": 15,
@@ -412,7 +484,10 @@
         "residual_cfo_hz": 1951.8201893382673,
         "total_frequency_shift_hz": 1951.8201893382673,
         "sample_phase": 1,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 2,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 34.69650156300985
       },
       {
         "burst_index": 16,
@@ -430,7 +505,10 @@
         "residual_cfo_hz": 1994.2307248364903,
         "total_frequency_shift_hz": 1994.2307248364903,
         "sample_phase": 3,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 1,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 35.43863334912653
       },
       {
         "burst_index": 17,
@@ -448,7 +526,10 @@
         "residual_cfo_hz": 1891.7257738011238,
         "total_frequency_shift_hz": 1891.7257738011238,
         "sample_phase": 2,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 34.93191383834681
       },
       {
         "burst_index": 18,
@@ -466,7 +547,10 @@
         "residual_cfo_hz": 1905.7405959911193,
         "total_frequency_shift_hz": 1905.7405959911193,
         "sample_phase": 4,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 3,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 41.097620545686745
       },
       {
         "burst_index": 19,
@@ -481,10 +565,13 @@
         "frame_error": true,
         "evm_percent": 36.70225298285554,
         "snr_from_evm_db": 8.706145511693991,
-        "residual_cfo_hz": 1875.451931352315,
-        "total_frequency_shift_hz": 1875.451931352315,
+        "residual_cfo_hz": 1875.4519313523147,
+        "total_frequency_shift_hz": 1875.4519313523147,
         "sample_phase": 1,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 1,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 39.46536274373598
       },
       {
         "burst_index": 20,
@@ -499,10 +586,13 @@
         "frame_error": false,
         "evm_percent": 36.448149221544654,
         "snr_from_evm_db": 8.766490391242458,
-        "residual_cfo_hz": 1928.6009297087448,
-        "total_frequency_shift_hz": 1928.6009297087448,
+        "residual_cfo_hz": 1928.600929708745,
+        "total_frequency_shift_hz": 1928.600929708745,
         "sample_phase": 4,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 36.18209287566507
       },
       {
         "burst_index": 21,
@@ -520,7 +610,10 @@
         "residual_cfo_hz": 2015.3231104912675,
         "total_frequency_shift_hz": 2015.3231104912675,
         "sample_phase": 2,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 1,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 36.50596442773002
       },
       {
         "burst_index": 22,
@@ -538,7 +631,10 @@
         "residual_cfo_hz": 1929.0545643589962,
         "total_frequency_shift_hz": 1929.0545643589962,
         "sample_phase": 3,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 34.93023734632054
       },
       {
         "burst_index": 23,
@@ -556,7 +652,10 @@
         "residual_cfo_hz": 2012.4204026016625,
         "total_frequency_shift_hz": 2012.4204026016625,
         "sample_phase": 1,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 38.18436910745212
       },
       {
         "burst_index": 24,
@@ -571,10 +670,13 @@
         "frame_error": true,
         "evm_percent": 39.73281631750764,
         "snr_from_evm_db": 8.017013009084579,
-        "residual_cfo_hz": 1978.5602199273233,
-        "total_frequency_shift_hz": 1978.5602199273233,
+        "residual_cfo_hz": 1978.5602199273235,
+        "total_frequency_shift_hz": 1978.5602199273235,
         "sample_phase": 2,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 3,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 35.10869893600604
       },
       {
         "burst_index": 25,
@@ -587,12 +689,15 @@
         "bit_errors": 1,
         "ber": 0.0035714285714285713,
         "frame_error": true,
-        "evm_percent": 34.36356716535686,
-        "snr_from_evm_db": 9.27803519727043,
-        "residual_cfo_hz": 2023.3114268500785,
-        "total_frequency_shift_hz": 2023.3114268500785,
+        "evm_percent": 34.36356716535685,
+        "snr_from_evm_db": 9.278035197270434,
+        "residual_cfo_hz": 2023.3114268500788,
+        "total_frequency_shift_hz": 2023.3114268500788,
         "sample_phase": 1,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 2,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 36.50926750217127
       },
       {
         "burst_index": 26,
@@ -610,7 +715,10 @@
         "residual_cfo_hz": 1998.890916064611,
         "total_frequency_shift_hz": 1998.890916064611,
         "sample_phase": 3,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 36.71335912990508
       },
       {
         "burst_index": 27,
@@ -623,12 +731,15 @@
         "bit_errors": 0,
         "ber": 0.0,
         "frame_error": false,
-        "evm_percent": 34.158857199104496,
-        "snr_from_evm_db": 9.329933345389525,
-        "residual_cfo_hz": 1909.794104824148,
-        "total_frequency_shift_hz": 1909.794104824148,
+        "evm_percent": 34.15885719910449,
+        "snr_from_evm_db": 9.329933345389529,
+        "residual_cfo_hz": 1909.7941048241464,
+        "total_frequency_shift_hz": 1909.7941048241464,
         "sample_phase": 3,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 37.25909316373779
       },
       {
         "burst_index": 28,
@@ -646,7 +757,10 @@
         "residual_cfo_hz": 2064.1748811253897,
         "total_frequency_shift_hz": 2064.1748811253897,
         "sample_phase": 4,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 2,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 35.56786864001259
       },
       {
         "burst_index": 29,
@@ -661,10 +775,13 @@
         "frame_error": false,
         "evm_percent": 36.5384609505831,
         "snr_from_evm_db": 8.744994993389328,
-        "residual_cfo_hz": 1926.956942285487,
-        "total_frequency_shift_hz": 1926.956942285487,
+        "residual_cfo_hz": 1926.9569422854872,
+        "total_frequency_shift_hz": 1926.9569422854872,
         "sample_phase": 4,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 1,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 37.52598222316511
       },
       {
         "burst_index": 30,
@@ -682,7 +799,10 @@
         "residual_cfo_hz": 1967.9300199735958,
         "total_frequency_shift_hz": 1967.9300199735958,
         "sample_phase": 0,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 41.47484734180888
       },
       {
         "burst_index": 31,
@@ -700,7 +820,10 @@
         "residual_cfo_hz": 1997.3199986550403,
         "total_frequency_shift_hz": 1997.3199986550403,
         "sample_phase": 2,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 35.27692361622496
       },
       {
         "burst_index": 32,
@@ -713,12 +836,15 @@
         "bit_errors": 0,
         "ber": 0.0,
         "frame_error": false,
-        "evm_percent": 42.62754519680903,
-        "snr_from_evm_db": 7.406193529171599,
-        "residual_cfo_hz": 1947.2030720867933,
-        "total_frequency_shift_hz": 1947.2030720867933,
+        "evm_percent": 42.627545196809045,
+        "snr_from_evm_db": 7.4061935291715955,
+        "residual_cfo_hz": 1947.203072086793,
+        "total_frequency_shift_hz": 1947.203072086793,
         "sample_phase": 0,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 2,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 39.98715000153274
       },
       {
         "burst_index": 33,
@@ -733,10 +859,13 @@
         "frame_error": false,
         "evm_percent": 34.2836274191383,
         "snr_from_evm_db": 9.298264665682423,
-        "residual_cfo_hz": 1960.6120437310722,
-        "total_frequency_shift_hz": 1960.6120437310722,
+        "residual_cfo_hz": 1960.6120437310724,
+        "total_frequency_shift_hz": 1960.6120437310724,
         "sample_phase": 3,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 34.98355582222732
       },
       {
         "burst_index": 34,
@@ -749,12 +878,15 @@
         "bit_errors": 1,
         "ber": 0.0035714285714285713,
         "frame_error": true,
-        "evm_percent": 38.09949692613761,
-        "snr_from_evm_db": 8.381615176064969,
-        "residual_cfo_hz": 1994.515428125349,
-        "total_frequency_shift_hz": 1994.515428125349,
+        "evm_percent": 38.0994969261376,
+        "snr_from_evm_db": 8.381615176064972,
+        "residual_cfo_hz": 1994.5154281253501,
+        "total_frequency_shift_hz": 1994.5154281253501,
         "sample_phase": 1,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 2,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 39.375610068814794
       },
       {
         "burst_index": 35,
@@ -772,7 +904,10 @@
         "residual_cfo_hz": 1978.531753764427,
         "total_frequency_shift_hz": 1978.531753764427,
         "sample_phase": 1,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 37.019620611691764
       },
       {
         "burst_index": 36,
@@ -790,7 +925,10 @@
         "residual_cfo_hz": 1954.9024254787173,
         "total_frequency_shift_hz": 1954.9024254787173,
         "sample_phase": 2,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 1,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 31.99299113346661
       },
       {
         "burst_index": 37,
@@ -803,12 +941,15 @@
         "bit_errors": 1,
         "ber": 0.0035714285714285713,
         "frame_error": true,
-        "evm_percent": 40.227796135305866,
-        "snr_from_evm_db": 7.909475188740295,
-        "residual_cfo_hz": 2020.5137502802042,
-        "total_frequency_shift_hz": 2020.5137502802042,
+        "evm_percent": 40.22779613530586,
+        "snr_from_evm_db": 7.909475188740296,
+        "residual_cfo_hz": 2020.5137502802036,
+        "total_frequency_shift_hz": 2020.5137502802036,
         "sample_phase": 1,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 2,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 39.55100280276959
       },
       {
         "burst_index": 38,
@@ -823,10 +964,13 @@
         "frame_error": true,
         "evm_percent": 35.915844566036334,
         "snr_from_evm_db": 8.894278332319846,
-        "residual_cfo_hz": 1995.5872713728177,
-        "total_frequency_shift_hz": 1995.5872713728177,
+        "residual_cfo_hz": 1995.5872713728181,
+        "total_frequency_shift_hz": 1995.5872713728181,
         "sample_phase": 1,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 1,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 42.153722155430565
       },
       {
         "burst_index": 39,
@@ -844,7 +988,10 @@
         "residual_cfo_hz": 1949.2211530320046,
         "total_frequency_shift_hz": 1949.2211530320046,
         "sample_phase": 0,
-        "conjugated": false
+        "conjugated": false,
+        "receiver_bit_errors": 0,
+        "receiver_payload_bits": 248,
+        "receiver_evm_percent": 38.404495622827305
       }
     ]
   }
