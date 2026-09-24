@@ -93,6 +93,27 @@ about a factor of 12 between 6 and 8 dB. A run of
 > This lab requires MATLAB/Simulink, which is not part of the automated CI. The
 > reference values above are from the closed-form formula, not from a Simulink run.
 
+## What to expect
+
+`docs/assets/lab44_bpsk_simulink_metrics.json` holds the result of a MATLAB/Simulink run committed on 2026-06-25. It was not re-run for this page (MATLAB is not part of CI):
+
+| Eb/N0 | 0 dB | 2 dB | 4 dB | 6 dB | 8 dB | 9 dB | 10 dB |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Simulink BER | 7.69e-2 | 3.80e-2 | 1.24e-2 | 2.46e-3 | 1.9e-4 | 3.0e-5 | 5e-6 |
+| theory | 7.86e-2 | 3.75e-2 | 1.25e-2 | 2.39e-3 | 1.91e-4 | 3.36e-5 | 3.9e-6 |
+
+- The fixed-point chain reproduces the Block 11 waveforms with TX RMSE 0 and RX RMSE 6.1e-5 (about 2 LSB of Q1.15).
+- The largest BER difference from theory is 1.7e-3, at 0 dB, where the BER itself is 7.9e-2.
+- Every simulated value is a multiple of 5e-6, which fits 200 000 bits per point. The 10 dB point is then **one** bit error, and the 9 dB point six: those two points carry almost no statistical weight.
+
+Without MATLAB, the same yardstick is available in Python: [Lab 8.8](/zynq-sdr-course/en/labs/lab-8-8-qpsk-modem-impairments/) simulates Gray QPSK, whose per-bit BER is this same curve, and [Lab 4.3](/zynq-sdr-course/en/labs/lab-4-3-bpsk-fixed-point-chain/) runs the fixed-point BPSK chain on the same Block 11 handoff files.
+
+## Exercises
+
+1. Compute the 95 % interval for the 10 dB point (1 error in 200 000 bits) and for the 8 dB point (38 errors). Does either contradict the theory value?
+2. How many bits per point would you need so that the 10 dB point has at least 100 errors? How long would that take at the 240 kSym/s of the hardware frame?
+3. The RX RMSE is 6.1e-5 while the TX RMSE is exactly 0. Which blocks sit between the two measurement points, and which of them rounds?
+
 ## Report checklist
 
 - [ ] Show the Simulink TX overlay against the MATLAB reference.
