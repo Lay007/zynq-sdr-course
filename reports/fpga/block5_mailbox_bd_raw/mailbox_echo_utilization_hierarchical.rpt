@@ -1,0 +1,36 @@
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
+| Date         : normalized
+| Host         : normalized
+| Command      : report_utilization -hierarchical -hierarchical_depth 3 -file <output_dir>/mailbox_echo_utilization_hierarchical.rpt
+| Design       : mailbox_echo_bd_wrapper
+| Device       : 7z020clg400-2
+| Design State : Routed
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++--------------------------+-----------------------------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+|         Instance         |                                       Module                                      | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | DSP Blocks |
++--------------------------+-----------------------------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+| mailbox_echo_bd_wrapper  |                                                                             (top) |       1060 |       1000 |       0 |   60 | 1844 |      0 |      0 |          0 |
+|   mailbox_echo_bd_i      |                                                                   mailbox_echo_bd |       1060 |       1000 |       0 |   60 | 1844 |      0 |      0 |          0 |
+|     (mailbox_echo_bd_i)  |                                                                   mailbox_echo_bd |          0 |          0 |       0 |    0 |    0 |      0 |      0 |          0 |
+|     mailbox_0            |                                                       mailbox_echo_bd_mailbox_0_0 |        636 |        636 |       0 |    0 | 1265 |      0 |      0 |          0 |
+|       inst               |                   mailbox_echo_bd_mailbox_0_0_zynq_message_mailbox_vivado_wrapper |        636 |        636 |       0 |    0 | 1265 |      0 |      0 |          0 |
+|     processing_system7_0 |                                            mailbox_echo_bd_processing_system7_0_0 |          0 |          0 |       0 |    0 |    0 |      0 |      0 |          0 |
+|       inst               | mailbox_echo_bd_processing_system7_0_0_processing_system7_v5_5_processing_system7 |          0 |          0 |       0 |    0 |    0 |      0 |      0 |          0 |
+|     ps7_0_axi_periph     |                                                mailbox_echo_bd_ps7_0_axi_periph_0 |        407 |        348 |       0 |   59 |  546 |      0 |      0 |          0 |
+|       s00_couplers       |                                                           s00_couplers_imp_PFD1D3 |        407 |        348 |       0 |   59 |  546 |      0 |      0 |          0 |
+|     rst_ps7_0_100M       |                                                  mailbox_echo_bd_rst_ps7_0_100M_0 |         17 |         16 |       0 |    1 |   33 |      0 |      0 |          0 |
+|       U0                 |                                   mailbox_echo_bd_rst_ps7_0_100M_0_proc_sys_reset |         17 |         16 |       0 |    1 |   33 |      0 |      0 |          0 |
++--------------------------+-----------------------------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+* Note: The sum of lower-level cells may be larger than their parent cells total, due to cross-hierarchy LUT combining

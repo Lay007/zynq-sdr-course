@@ -1,0 +1,23 @@
+{
+  "segment": "SEG_mailbox_0_reg0",
+  "offset": "0x40000000",
+  "range": "0x00001000",
+  "fclk0_requested_mhz": "100",
+  "fclk0_actual_mhz": "100.000000",
+  "ps7_params_written": 876,
+  "ps7_params_write_errors": 0,
+  "bitstream": "impl_1/mailbox_echo_bd_wrapper.bit",
+  "vivado": "2021.1",
+  "ps7_params_rejected_read_only": [
+    "PCW_M_AXI_GP0_FREQMHZ",
+    "PCW_M_AXI_GP1_FREQMHZ",
+    "PCW_NUM_F2P_INTR_INPUTS",
+    "PCW_S_AXI_ACP_FREQMHZ",
+    "PCW_S_AXI_GP0_FREQMHZ",
+    "PCW_S_AXI_GP1_FREQMHZ",
+    "PCW_S_AXI_HP0_FREQMHZ",
+    "PCW_S_AXI_HP1_FREQMHZ",
+    "PCW_S_AXI_HP2_FREQMHZ",
+    "PCW_S_AXI_HP3_FREQMHZ"
+  ]
+}
