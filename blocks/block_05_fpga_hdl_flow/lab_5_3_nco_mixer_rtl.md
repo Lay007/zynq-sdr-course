@@ -134,6 +134,8 @@ The course runner generates the vectors, compiles, simulates and turns any `FAIL
 python tools/run_block5_hdl_smoke.py --test tb_nco_mixer_iq
 ```
 
+On the course FPGA (Vivado 2021.1 out-of-context synthesis, `xc7z020clg400-2`, 100 MHz; `python tools/generate_block5_vivado_reports.py`) this mixer takes 110 LUT, 37 FF and 4 DSP48E1, and misses 100 MHz: WNS -0.807 ns, 16 of 36 endpoints failing, 15 logic levels, an estimate of about 92.6 MHz. The LUT lookup, the complex multiply, the rounding and the saturation all happen in one clock, the same pattern as the FIR of Lab 5.2 (see its exercise 4 for what pipelining that pattern does).
+
 ## Exercises
 
 Each exercise below is a deliberate one-line RTL mutation. Make it, run the bench, read the messages, then restore the file (`git checkout -- <file>`). The quoted outputs were observed with Icarus Verilog 12.0.
