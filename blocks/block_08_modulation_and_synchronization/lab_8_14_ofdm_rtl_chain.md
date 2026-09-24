@@ -100,6 +100,20 @@ iverilog -g2012 -o /tmp/tb_ofdm_loop.vvp \
 vvp /tmp/tb_ofdm_loop.vvp
 ```
 
+The loopback through a +90-degree channel and the one-tap equalizer is a separate testbench:
+
+```bash
+iverilog -g2012 -o /tmp/tb_ofdm_eq_loop.vvp \
+  $RTL/ofdm_qpsk_mapper.v $RTL/ofdm_subcarrier_allocator.v \
+  $RTL/ofdm_ifft_butterfly.v $RTL/ofdm_ifft64_sequential.v \
+  $RTL/ofdm_tx_mapper_ifft_path.v $RTL/ofdm_cp16_inserter.v \
+  $RTL/ofdm_tx_cp16_path.v $RTL/ofdm_cp16_remover.v \
+  $RTL/ofdm_fft64_sequential.v $RTL/ofdm_subcarrier_extractor.v \
+  $RTL/ofdm_one_tap_equalizer.v $RTL/ofdm_qpsk_demapper.v \
+  $TB/tb_ofdm_tx_rx_equalized_loopback.sv
+vvp /tmp/tb_ofdm_eq_loop.vvp
+```
+
 Or run the whole Block 8 OFDM suite the same way CI does:
 
 ```bash
@@ -139,6 +153,15 @@ It does **not** claim:
 - automatic, pilot-driven channel estimation or phase tracking in RTL (the pilot stream exists; nothing yet consumes it the way Lab 8.5's Python receiver does);
 - Verification stages 3-5 (PL/fabric loopback on Zynq, safe attenuated AD9361/AD9363 cabled loopback, an independent SDR capture) -- these need the physical board and RF path, neither of which was available while writing this lab;
 - resource, latency or timing reports from real synthesis -- those need Vivado, which was likewise not available here. The per-block header comments do state cycle-level latency and clock counts explicitly (for example the IFFT's `384 compute clocks after input collection`), which is real design information, but it is not a substitute for a post-implementation report.
+
+## Exercises
+
+Each exercise changes the equalizer coefficient on line `.coeff_re(16'sd0), .coeff_im(-16'sd16384)` of `tb_ofdm_tx_rx_equalized_loopback.sv` (Q2.14, so 16384 = 1.0). The outputs below were observed with Icarus Verilog 12.0.
+
+1. Use the wrong sign, `W = +j` (`.coeff_im(16'sd16384)`). The channel and the equalizer now add up to 180 degrees: `FAIL BER nonzero: 96/96 bit errors`. Every bit is inverted.
+2. Turn the equalizer off, `W = 1` (`.coeff_re(16'sd16384), .coeff_im(16'sd0)`), or use `W = -1`. The residual rotation is +90 or -90 degrees: `48/96 bit errors` in both cases. With Gray QPSK a quarter turn flips exactly one of the two bits of every symbol.
+3. Correct only half of the rotation, `W = exp(-j pi/4)` (`.coeff_re(16'sd11585), .coeff_im(-16'sd11585)`). The residual is 45 degrees and the points land on the axes (the first failing value is `EQ=(513,1)`): `22/96 bit errors`. Explain why this is the worst case for a hard decision and why the count is not exactly 48.
+4. In a real receiver the coefficient is not given by the testbench. Which OFDM symbols or subcarriers would you use to estimate it, and how does Lab 8.5 do it in Python?
 
 ## Report checklist
 
