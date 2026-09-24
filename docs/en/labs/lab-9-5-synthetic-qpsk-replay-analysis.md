@@ -96,6 +96,15 @@ Minimal experiment sequence:
 
 This connects Block 9 to the synchronization and RF-calibration parts of the course. The same dataset first acts as a clean reference and then becomes a controlled test signal for compensation algorithms.
 
+## Exercises
+
+The analyzer on the committed dataset reports `evm_rms_percent = 0.00332`, `evm_peak_percent = 0.00332`, `snr_estimate_db = 89.59`, `mean_i_normalized = 0.0214` and a CFO estimate of the order of 1e-14 Hz.
+
+1. Derive the EVM from the CI16 amplitude. Each QPSK component is 12000 / sqrt(2) = 8485.28, stored as 8485. Show that the rounding error gives exactly 0.00332 % and that 20 log10(1 / 3.32e-5) is the 89.6 dB SNR estimate.
+2. Why is the peak EVM equal to the RMS EVM? (All four constellation points round the same way.) What would you expect on a real capture?
+3. `mean_i_normalized` is 0.0214, not 0. Is that a DC offset? Count the +I and -I symbols in the payload and explain the value; then describe how you would tell data imbalance from a real receiver DC offset.
+4. The CFO estimate is at the floating-point noise level and changes between runs in the last digits. Why must a real-capture analyzer report it with a stated resolution instead of printing it raw?
+
 ## What to include in the lab report
 
 The lab report should include:
