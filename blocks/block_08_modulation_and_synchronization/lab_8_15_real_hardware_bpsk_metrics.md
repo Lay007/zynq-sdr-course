@@ -50,7 +50,10 @@ constellation tells the channel story:
   [Lab 8.1](/zynq-sdr-course/en/labs/lab-8-1-cfo-estimation-correction/) and the phase of
   [Lab 8.2](/zynq-sdr-course/en/labs/lab-8-2-phase-offset-correction/), seen on real hardware).
 - Despite all that, at 10 cm the link still decodes at **BER = 0** — a real, if short-range,
-  radio link.
+  radio link. The 10.6 % EVM and the BER come from the reader's reference-aided scoring
+  (gain/phase fitted over the known frame). Its receiver scoring (preamble + phase-tracking
+  loop, payload only) gives the same verdict: **0 / 256 payload bit errors, EVM 9.97 %**
+  (see [Lab 11.20](/zynq-sdr-course/en/labs/lab-11-20-read-rtl-wav-ota-bpsk-ber/)).
 
 ## Side-by-side
 
@@ -106,7 +109,8 @@ board and what the gap to the ideal is made of.
    then check it against the EVM values (1.6 % vs 10.6 %). How many dB apart are
    they, and does that match the SNR difference in the table (~16.5 dB)?
 2. The OTA capture shows a small +Q component in both clusters. Convert the
-   +2.7 kHz frequency offset into a phase rotation per symbol at 480 kSym/s.
+   +2.7 kHz frequency offset into a phase rotation per symbol at the OTA frame's
+   240 kSym/s (16 samples per symbol at 3.84 MS/s).
    Why does the reader still slice correctly?
 3. BER = 0 in both columns. How many bits were compared in each case (the board frame is
    281 symbols; for the OTA case read the Lab 11.20 report output)? What is the 95 % upper bound on BER if zero errors were seen in

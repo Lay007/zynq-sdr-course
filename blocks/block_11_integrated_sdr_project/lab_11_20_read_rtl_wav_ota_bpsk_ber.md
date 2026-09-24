@@ -28,26 +28,30 @@ The RTL-SDR external monitor approach was adopted because:
 ## Run
 
 ```bash
-python blocks/block_11_integrated_sdr_project/python/\
-lab_11_20_read_rtl_wav_ota_bpsk_ber.py \
-  --wav-path datasets/lab11_21_rtl_monitor/capture_live_20260623.wav \
-  --manifest-path datasets/lab11_21_rtl_monitor/manifest_live_20260623.yaml \
-  --run-tag rtl_ota_bpsk_ber_live
+python blocks/block_11_integrated_sdr_project/python/lab_11_20_read_rtl_wav_ota_bpsk_ber.py \
+  --manifest datasets/lab11_20_rtl_sdr_ota_bpsk/manifest_live_20260624a.yaml
 ```
+
+The WAV files are not in git (they are hundreds of megabytes). The manifest's `local_path_hint_windows` names the file the analyzer looks for; pass `--iq-path` to point at your own copy.
 
 ## Processing chain
 
 ```
-WAV file (int16 I/Q interleaved)
-  → normalize to complex float
-  → frequency-shift to baseband (if center offset in manifest)
-  → matched filter (RRC, 16 sps)
-  → timing recovery (Gardner or threshold peak)
-  → differential or coherent BPSK decision
-  → frame search (preamble correlation)
-  → BER and EVM against reference bits
-  → plots and JSON metrics
+WAV file (int16 I/Q) -> complex float, global DC removed
+  -> coarse frequency candidates: spectrum peaks near the expected offset
+  -> for each candidate: mix to baseband, resample to the reference rate,
+     crop the active window, RRC matched filter
+  -> fine-frequency grid x 16 sampling phases: correlate with the 25-bit preamble
+  -> two scorings of the best frame:
+       reference-aided: gain/phase fitted over the whole known frame,
+                        candidate with the fewest bit errors kept
+       receiver:        candidate with the highest normalised preamble correlation,
+                        gain/phase from the preamble, decision-directed PLL,
+                        BER on the 256 payload bits only
+  -> plots and JSON metrics
 ```
+
+The reference-aided numbers use the known payload, which no receiver has. They are an upper bound on link quality. The receiver scoring is what a real demodulator of this frame could achieve.
 
 ## WAV format expected
 
@@ -76,7 +80,21 @@ layout      = I[0] Q[0] I[1] Q[1] ...
 | EVM | record and compare against the matched baseline; no universal pass threshold is used until amplitude/timing normalization is calibrated |
 | Frame detected | yes |
 
+## Re-scored captures — 2026-09-24
+
+Both 2026-06-24 captures whose WAVs are available locally, analysed with the current script:
+
+| Capture | Reference-aided bit errors | Reference-aided EVM | Receiver bit errors (payload) | Receiver EVM |
+|---|---:|---:|---:|---:|
+| `manifest_live_20260624_stock_10cm_ref` | 0 / 281 | 10.60 % | 0 / 256 | 9.97 % |
+| `manifest_live_20260624a` | 0 / 281 | 20.64 % | 0 / 256 | 9.47 % |
+
+- **BER = 0 holds for a real receiver** on both captures (256 payload bits each, so the claim is only "below about 1 %", see the rule of three in [Lab 8.7](/zynq-sdr-course/en/labs/lab-8-7-snr-vs-ber-traps/)).
+- **The reference-aided EVM can be worse than the receiver's.** On `20260624a` the selected frequency correction is exactly 2600.000 Hz, a point of the fine search grid. The small residual offset keeps rotating the constellation across the frame. One gain/phase coefficient for the whole frame cannot follow that rotation, so the EVM is 20.6 %; the PLL tracks it and gets 9.5 %. EVM measured without phase tracking includes the estimator's own error, not only the channel.
+
 ## Live result on 2026-06-23
+
+This result is reference-aided and was not re-scored: its WAV is not available locally.
 
 Applied to a WAV recording captured during the stock-shell BPSK OTA run
 (Lab 11.21), the offline demodulator detected the preamble, recovered
