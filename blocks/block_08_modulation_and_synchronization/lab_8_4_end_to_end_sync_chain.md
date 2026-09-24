@@ -63,9 +63,9 @@ The default run (deterministic, as printed by the script) gives:
 ```text
 Timing offset true/estimated: 3/6 samples
 CFO true/estimated/error: 1350.000/1349.996/-0.004 Hz
-Phase true/estimated/error: 0.550000/0.600344/0.050344 rad
+Phase true/estimated/error: 0.550000/0.600344/-0.000550 rad
 EVM raw/timing/CFO/final: 3413.163/19524.022/4.857/4.857 %
-BER raw/final: 4.843750e-01/0.000000e+00
+BER raw/final: 5.141602e-01/0.000000e+00
 ```
 
 How to read the stage table:
@@ -74,18 +74,20 @@ How to read the stage table:
   are far above 100 %, which means the constellation is still rotating (CFO not yet
   removed) and the scalar alignment has nothing stable to lock to. The EVM number only
   becomes meaningful after the CFO stage (4.857 %). The interesting drop is BER, from
-  0.484 (a coin flip) to 0.
+  0.514 (a coin flip) to 0.
 - **The estimated timing phase (6) differs from the injected offset (3) and that is
   fine.** As in [Lab 8.3](/zynq-sdr-course/en/labs/lab-8-3-timing-recovery/), with
   rectangular pulses every phase inside the flat part of the symbol is correct; the
   stage only has to avoid the samples belonging to the neighbouring symbol.
 - **CFO error is -0.004 Hz on 1350 Hz**: a fit over thousands of known symbols is very
   precise in a synthetic model with a flat symbol. Real captures will not be this good.
-- **"EVM after CFO" and "EVM final" are identical (4.857 %).** The EVM is computed
-  after a scalar gain/phase alignment, which already absorbs any *constant* phase error,
-  so the phase-correction stage cannot change it. It still matters for the decisions: the
-  estimated phase is off by 0.05 rad (about 2.9 degrees), and the phase stage is what
-  keeps the constellation aligned with the decision boundaries.
+- **"EVM after CFO" and "EVM final" are identical (4.857 %).** These EVM values are computed
+  after a scalar gain/phase alignment to the reference, which absorbs any *constant* phase, so
+  the phase stage cannot change them. BER, however, is scored on the receiver's own output with
+  no such alignment, so a wrong phase estimate would show up there as bit errors.
+- **The estimated phase is 0.600 rad, not the injected 0.55, and that is correct.** The receiver
+  samples at phase 6, and the 1350 Hz CFO rotates the signal by `2*pi*1350*6/1e6 = 0.051 rad` over
+  those 6 samples. Referenced to the sampling instant, the phase error is only -0.0006 rad.
 
 ## Impairments in the model
 

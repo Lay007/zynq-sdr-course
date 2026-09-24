@@ -202,7 +202,8 @@ def main() -> None:
     raw_symbols = sample_symbols(rx_samples, cfg.samples_per_symbol, 0, cfg.symbol_count)
     raw_aligned = scalar_align(tx_symbols, raw_symbols)
     evm_raw_percent, _ = evm(tx_symbols, raw_aligned)
-    ber_raw, err_raw, compared = ber(bits, raw_aligned)
+    # BER is scored on the receiver's own symbols (no genie alignment to the reference).
+    ber_raw, err_raw, compared = ber(bits, raw_symbols)
 
     best_phase, energy_by_phase = estimate_timing_phase(rx_samples, cfg.samples_per_symbol, cfg.symbol_count)
     timing_symbols = sample_symbols(rx_samples, cfg.samples_per_symbol, best_phase, cfg.symbol_count)
@@ -220,7 +221,7 @@ def main() -> None:
     final_symbols = cfo_corrected * np.exp(-1j * estimated_phase)
     final_aligned = scalar_align(tx_symbols, final_symbols)
     evm_final_percent, _ = evm(tx_symbols, final_aligned)
-    ber_final, err_final, _ = ber(bits, final_aligned)
+    ber_final, err_final, _ = ber(bits, final_symbols)
 
     metrics = SyncChainMetrics(
         true_timing_offset_samples=cfg.timing_offset_samples,
@@ -230,7 +231,13 @@ def main() -> None:
         cfo_error_hz=estimated_cfo_hz - cfg.cfo_hz,
         true_phase_offset_rad=cfg.phase_offset_rad,
         estimated_phase_rad=estimated_phase,
-        phase_error_rad=wrap_pi(estimated_phase - cfg.phase_offset_rad),
+        # The phase seen at the chosen sampling instant also includes the CFO rotation
+        # accumulated over best_phase samples; compare against that, not the bare offset.
+        phase_error_rad=wrap_pi(
+            estimated_phase
+            - cfg.phase_offset_rad
+            - 2.0 * np.pi * cfg.cfo_hz * best_phase / cfg.sample_rate_hz
+        ),
         evm_raw_percent=evm_raw_percent,
         evm_after_timing_percent=evm_after_timing_percent,
         evm_after_cfo_percent=evm_after_cfo_percent,
