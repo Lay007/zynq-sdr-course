@@ -46,6 +46,14 @@ The metadata sidecar follows `templates/gain_transition_capture_metadata.templat
 
 ## Procedure
 
+The phase fit requires a tone or IQ with the known symbol modulation removed.
+Do not fit a straight CFO trend to raw QPSK data phase. `recovery_samples` is
+the first run of 16 samples within 0.15 rad of the **pre-event** phase trend;
+`null` means no such run was observed within the search window. A permanent
+phase step does not recover. This measures signal-phase return, not carrier-loop
+recovery; modem recovery needs the separate demodulator experiment. File input
+is labelled `unverified-capture-analysis` until its provenance is reviewed.
+
 1. **Baseline with fixed RX gain.** Reproduce the existing two-board cabled QPSK link (or a simpler tone/loopback bench). Record RX gain, attenuation, RSSI/dBFS, CFO, EVM and BER, and save a reference IQ capture with no gain transitions.
 2. **Enable AD9361/AD9363 AGC.** Document the selected gain-control mode and relevant register/`iio_attr` settings. Apply controlled input-level changes with a digital or fixed attenuator to force transitions across gain-table regions/LNA states where practical.
 3. **Capture the transition.** Save raw complex IQ before, during and after each gain change, with enough samples on each side for the CFO fit (`--fit-window`, 256 samples by default). Record the actual `sample_index` of each transition in the metadata.

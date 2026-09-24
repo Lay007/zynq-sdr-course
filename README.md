@@ -26,6 +26,14 @@ theory -> DSP model -> fixed-point design -> HDL/FPGA -> Zynq/AD9363 -> RF path 
 
 The repository is designed not only as a set of learning notes, but as a reproducible engineering workspace. It combines documentation, executable labs, HDL smoke checks, IQ metadata discipline, measurement templates and final-project structure.
 
+### Engineering collaboration
+
+The same workflow is applicable to focused R&D and consulting work around SDR,
+DSP, fixed-point design, MATLAB/Simulink-to-RTL transitions, Zynq/AD936x
+integration, test vectors, and RF/IQ measurement methodology. For project
+collaboration, see the [engineering portfolio](https://lay007.github.io/) or
+[GitHub profile](https://github.com/Lay007).
+
 ---
 
 ## Who is this course for?
