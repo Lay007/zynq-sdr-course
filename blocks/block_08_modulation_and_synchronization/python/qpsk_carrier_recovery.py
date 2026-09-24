@@ -151,7 +151,7 @@ def main():
     fig.suptitle("QPSK carrier recovery (decision-directed Costas loop)", fontsize=13)
     fig.tight_layout(rect=[0, 0, 1, 0.97])
     args.out.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(args.out, dpi=120)
+    fig.savefig(args.out, dpi=120, metadata={"Software": None})
     _, rec_ber = resolve_90deg_ambiguity(y[500:], dibits[500:])
     print("wrote", args.out)
     print("raw BER @ CFO=0.01:", round(float(np.mean(demod(rx) != dibits)), 4),

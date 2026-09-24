@@ -37,6 +37,10 @@ ANALYSIS_JSON = DATASET_DIR / "analysis_summary.json"
 ASSETS_DIR = ROOT / "docs" / "assets"
 CONSTELLATION_SVG = ASSETS_DIR / "demo_qpsk_constellation.svg"
 SPECTRUM_SVG = ASSETS_DIR / "demo_qpsk_spectrum.svg"
+# Committed figures: leave out the creation date and Matplotlib version, and use a
+# fixed id salt, so re-running the analysis does not show up as a change in git.
+SVG_METADATA = {"Date": None, "Creator": None}
+matplotlib.rcParams["svg.hashsalt"] = "zynq-sdr-course"
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -182,7 +186,7 @@ def save_constellation(symbols: np.ndarray) -> None:
     plt.grid(True)
     plt.axis("equal")
     plt.tight_layout()
-    plt.savefig(CONSTELLATION_SVG, format="svg")
+    plt.savefig(CONSTELLATION_SVG, format="svg", metadata=SVG_METADATA)
     plt.close()
 
 
@@ -195,7 +199,7 @@ def save_spectrum(freq: np.ndarray, psd_db: np.ndarray) -> None:
     plt.title("Synthetic QPSK Spectrum")
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(SPECTRUM_SVG, format="svg")
+    plt.savefig(SPECTRUM_SVG, format="svg", metadata=SVG_METADATA)
     plt.close()
 
 

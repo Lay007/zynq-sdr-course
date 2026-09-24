@@ -231,7 +231,7 @@ def save_spectrum(path: Path, x: np.ndarray, fs: float, title: str) -> None:
     plt.ylabel("Magnitude, dBFS")
     plt.title(title)
     plt.tight_layout()
-    plt.savefig(path, dpi=180)
+    plt.savefig(path, dpi=180, metadata={"Software": None})
     plt.close()
 
 
@@ -246,7 +246,7 @@ def save_constellation(path: Path, symbols: np.ndarray, title: str) -> None:
     plt.axis("equal")
     plt.title(title)
     plt.tight_layout()
-    plt.savefig(path, dpi=180)
+    plt.savefig(path, dpi=180, metadata={"Software": None})
     plt.close()
 
 
@@ -275,7 +275,7 @@ def save_matched_filter_trace(
     plt.title(title)
     plt.legend(loc="best")
     plt.tight_layout()
-    plt.savefig(path, dpi=180)
+    plt.savefig(path, dpi=180, metadata={"Software": None})
     plt.close()
 
 

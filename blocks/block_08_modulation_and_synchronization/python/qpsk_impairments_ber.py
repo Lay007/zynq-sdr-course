@@ -74,7 +74,7 @@ def plot_ber(out: Path):
     ax.legend()
     fig.tight_layout()
     out.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(out, dpi=130)
+    fig.savefig(out, dpi=130, metadata={"Software": None})
     print("wrote", out, "| sim BER:", dict(zip(ebn0.tolist(), np.round(sim, 5).tolist())))
 
 
@@ -105,7 +105,7 @@ def plot_constellations(out: Path):
         ax.grid(alpha=0.3)
     fig.suptitle("Gray QPSK constellation under impairments", fontsize=13)
     fig.tight_layout(rect=[0, 0, 1, 0.97])
-    fig.savefig(out, dpi=120)
+    fig.savefig(out, dpi=120, metadata={"Software": None})
     print("wrote", out)
 
 
