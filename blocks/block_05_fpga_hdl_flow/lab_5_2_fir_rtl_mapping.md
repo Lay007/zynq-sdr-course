@@ -192,6 +192,17 @@ Latency must be stated explicitly:
 | Latency |  |  | clocks |
 | Fmax |  |  | MHz |
 
+Reference result for this RTL, Vivado 2021.1 out-of-context synthesis on the course part `xc7z020clg400-2` with a 100 MHz clock (`python tools/generate_block5_vivado_reports.py`, raw reports in [`reports/fpga/vivado_ooc_raw`](https://github.com/Lay007/zynq-sdr-course/tree/main/reports/fpga/vivado_ooc_raw)):
+
+| Resource | Synthesized | Comment |
+|---|---:|---|
+| LUT | 117 | adders, rounding and saturation |
+| FF | 129 | shift register, outputs, valid |
+| DSP48E1 | 4 | constant multiplications mapped to DSP slices |
+| BRAM | 0 | coefficients are constants |
+| Latency | 1 clock | from `in_valid` to `out_valid` |
+| Timing at 100 MHz | WNS -0.125 ns | misses by a narrow margin: 20 logic levels, estimate about 98.8 MHz |
+
 ## What to expect
 
 ```text
@@ -213,6 +224,7 @@ Each exercise below is a deliberate one-line RTL mutation. Make it, run the benc
 1. Replace rounding with truncation: `round_q15 = value >>> SHIFT;`. The bench reports 6 errors, each exactly 1 LSB low, for example `out=(4095,0) expected=(4096,0)` and `out=(12287,4095) expected=(12288,4096)`. Truncation is a -0.5 LSB bias; a floating-point comparison with a 1e-3 tolerance would never see it, a bit-exact bench does.
 2. Change `H1` from `16'sd12288` to `16'sd12289` (one coefficient LSB). The bench reports only 4 errors, for example `out=(12289,4096) expected=(12288,4096)`. The other outputs are unchanged because the extra `x * 2^-15` did not cross a rounding boundary. What does that say about how many vectors a coefficient check needs?
 3. The coefficients sum to exactly 1.0. Compute the worst-case accumulator width for 16-bit inputs and justify (or shrink) `ACC_W = 40`.
+4. The critical path at 100 MHz is not where it looks. Put a register after the multipliers (latency 2) and synthesize again: WNS stays at -0.125 ns. The timing report shows why: the path now starts at the product registers and still runs through the 40-bit sum, the rounding adder and the saturation compare in one clock (20 levels, 15 of them CARRY4). Register the sum as well and do rounding and saturation in a third clock: WNS becomes +5.35 ns with 12 logic levels (70 LUT, 67 FF, 6 DSP48E1). Both variants were checked bit-exact against this RTL on 2000 random samples, just 1 and 2 clocks later. Which change would you keep in a real design, and what does it cost in latency?
 
 ## Report checklist
 
