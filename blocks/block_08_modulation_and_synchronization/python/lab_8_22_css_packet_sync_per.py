@@ -428,7 +428,7 @@ def save_plots(
     plt.title("Lab 8.22 - CSS packet-start timing metric")
     plt.legend()
     plt.tight_layout()
-    plt.savefig(ASSET_DIR / "lab822_css_timing_metric.png", dpi=180)
+    plt.savefig(ASSET_DIR / "lab822_css_timing_metric.png", dpi=180, metadata={"Software": None})
     plt.close()
 
     plt.figure(figsize=(7.8, 4.4))
@@ -461,7 +461,7 @@ def save_plots(
     plt.title("Lab 8.22 - CSS PER and missed detection")
     plt.legend()
     plt.tight_layout()
-    plt.savefig(ASSET_DIR / "lab822_css_per_vs_snr.png", dpi=180)
+    plt.savefig(ASSET_DIR / "lab822_css_per_vs_snr.png", dpi=180, metadata={"Software": None})
     plt.close()
 
     plt.figure(figsize=(7.8, 4.4))
@@ -483,7 +483,7 @@ def save_plots(
     plt.title(f"Lab 8.22 - SRO sensitivity at {cfg.sro_snr_db:.0f} dB")
     plt.legend()
     plt.tight_layout()
-    plt.savefig(ASSET_DIR / "lab822_css_sro_sensitivity.png", dpi=180)
+    plt.savefig(ASSET_DIR / "lab822_css_sro_sensitivity.png", dpi=180, metadata={"Software": None})
     plt.close()
 
 
