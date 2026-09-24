@@ -51,7 +51,7 @@ a controllable supply, pass a command that cycles the board's power and the camp
 place of the soft reboot, then waits for the board to return:
 
 ```bash
-python .../lab_11_29_cold_boot_ber_campaign.py --runs 50 \
+python blocks/block_11_integrated_sdr_project/python/lab_11_29_cold_boot_ber_campaign.py --runs 50 \
   --power-cycle-cmd "your-smart-plug-cli --off && sleep 3 && your-smart-plug-cli --on"
 ```
 

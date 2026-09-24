@@ -60,7 +60,7 @@ RTL-изменения закрыть нельзя.
 скользящих позиций шанс окна с `≤ LOCK_ERR_TOL` промахами равен `C(24, ≤tol) / 2²⁴`. По бёрсту:
 
 ```text
-python lab_11_42_ber_floor_lock_tolerance.py --predict
+python blocks/block_11_integrated_sdr_project/python/lab_11_42_ber_floor_lock_tolerance.py --predict
    LOCK_ERR_TOL=3: per-position 1.4e-4 -> per-burst 1.9e-2
    LOCK_ERR_TOL=2: per-position 1.8e-5 -> per-burst 2.5e-3
    LOCK_ERR_TOL=1: per-position 1.5e-6 -> per-burst 2.1e-4

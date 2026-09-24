@@ -112,7 +112,7 @@ downstream loop is what turns these into decodable symbols (and did, at BER 0, i
 ## Self-test (no radio)
 
 ```
-python python/lab_11_31_coarse_cfo_stress_sweep.py --self-test
+python blocks/block_11_integrated_sdr_project/python/lab_11_31_coarse_cfo_stress_sweep.py --self-test
 ```
 
 Applies each Δ to the *generated* waveform in software (`×e^{j2πΔn/fs}`) and runs the identical
@@ -124,7 +124,7 @@ the ±60 kHz singularity (where the estimate may legitimately take either sign) 
 ## Run it on hardware
 
 ```
-python python/lab_11_31_coarse_cfo_stress_sweep.py \
+python blocks/block_11_integrated_sdr_project/python/lab_11_31_coarse_cfo_stress_sweep.py \
     --host-a 192.168.40.1 --host-b 192.168.20.1 --carrier 915e6
 ```
 

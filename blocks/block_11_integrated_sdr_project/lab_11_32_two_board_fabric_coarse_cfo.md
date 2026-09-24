@@ -80,7 +80,7 @@ recovery or a disciplined burst-phase search.
 First check the bit-exact host waveform without radio:
 
 ```bash
-python python/lab_11_32_two_board_fabric_coarse_cfo.py --self-test
+python blocks/block_11_integrated_sdr_project/python/lab_11_32_two_board_fabric_coarse_cfo.py --self-test
 ```
 
 Then run the measured sweep from the repository root:

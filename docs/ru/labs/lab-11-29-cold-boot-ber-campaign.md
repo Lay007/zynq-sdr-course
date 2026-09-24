@@ -36,7 +36,7 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_29_cold_boot_ber_cam
 «Холодная загрузка» по умолчанию — мягкая перезагрузка, то, что можно автоматизировать без управляемого питания. С управляемым источником передайте команду, циклически включающую питание платы; кампания выполнит её вместо мягкой перезагрузки, а затем дождётся возвращения платы:
 
 ```bash
-python .../lab_11_29_cold_boot_ber_campaign.py --runs 50 \
+python blocks/block_11_integrated_sdr_project/python/lab_11_29_cold_boot_ber_campaign.py --runs 50 \
   --power-cycle-cmd "your-smart-plug-cli --off && sleep 3 && your-smart-plug-cli --on"
 ```
 

@@ -70,7 +70,7 @@ CFO вводится исключительно **расстройкой пер�
 ## Самотест (без радио)
 
 ```
-python python/lab_11_31_coarse_cfo_stress_sweep.py --self-test
+python blocks/block_11_integrated_sdr_project/python/lab_11_31_coarse_cfo_stress_sweep.py --self-test
 ```
 
 Применяет каждую Δ к *сгенерированной* форме сигнала программно (`×e^{j2πΔn/fs}`) и запускает то же восстановление. Без радио собственный сдвиг нулевой, поэтому оценщик должен отслеживать каждую Δ с точностью до нескольких сотен герц и чисто сворачиваться на границе; сама ошибка тоже сворачивается в ±60 кГц, чтобы сингулярность ±60 кГц (где оценка законно может принять любой знак) не читалась как промах на 120 кГц. Запускайте его перед любой аппаратной сессией, если вы меняли анализ на стороне хоста.
@@ -78,7 +78,7 @@ python python/lab_11_31_coarse_cfo_stress_sweep.py --self-test
 ## Запуск на железе
 
 ```
-python python/lab_11_31_coarse_cfo_stress_sweep.py \
+python blocks/block_11_integrated_sdr_project/python/lab_11_31_coarse_cfo_stress_sweep.py \
     --host-a 192.168.40.1 --host-b 192.168.20.1 --carrier 915e6
 ```
 

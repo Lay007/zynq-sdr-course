@@ -95,9 +95,8 @@ Runtime-переключатели функций находятся в `gp_ctrl
 
 ```text
 # плата A (вендорский Pluto) передаёт дифференциальный кадр с длинной преамбулой; плата B (курс) оценивает его
-cd blocks/block_11_integrated_sdr_project/python
-python lab_11_45_differential_long_preamble.py            # -> docs/assets/lab1145_diff_long_preamble_live.json
-python lab_11_42_ber_floor_lock_tolerance.py --predict     # арифметика ложного захвата, без стенда
+python blocks/block_11_integrated_sdr_project/python/lab_11_45_differential_long_preamble.py            # -> docs/assets/lab1145_diff_long_preamble_live.json
+python blocks/block_11_integrated_sdr_project/python/lab_11_42_ber_floor_lock_tolerance.py --predict     # арифметика ложного захвата, без стенда
 python tools/run_block5_hdl_smoke.py                       # набор RTL, 36/36
 ```
 

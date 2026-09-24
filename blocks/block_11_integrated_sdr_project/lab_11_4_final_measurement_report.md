@@ -126,9 +126,8 @@ stationary through the frame.
 
 ```text
 # board A (vendor Pluto) streams the long-preamble differential frame; board B (course) scores it
-cd blocks/block_11_integrated_sdr_project/python
-python lab_11_45_differential_long_preamble.py            # -> docs/assets/lab1145_diff_long_preamble_live.json
-python lab_11_42_ber_floor_lock_tolerance.py --predict     # false-lock arithmetic, no bench
+python blocks/block_11_integrated_sdr_project/python/lab_11_45_differential_long_preamble.py            # -> docs/assets/lab1145_diff_long_preamble_live.json
+python blocks/block_11_integrated_sdr_project/python/lab_11_42_ber_floor_lock_tolerance.py --predict     # false-lock arithmetic, no bench
 python tools/run_block5_hdl_smoke.py                       # RTL suite, 36/36
 ```
 
