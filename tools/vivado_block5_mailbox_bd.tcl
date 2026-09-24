@@ -110,7 +110,4 @@ puts $out "  \"bitstream\": \"[file tail [get_property DIRECTORY [get_runs impl_
 puts $out "  \"vivado\": \"[version -short]\""
 puts $out "}"
 close $out
-set skip_out [open [file join $report_dir mailbox_echo_ps7_skipped_params.txt] w]
-puts $skip_out [join $skipped "\n"]
-close $skip_out
 puts "MAILBOX_SEGMENT [get_property NAME $seg] OFFSET $seg_offset RANGE $seg_range"
