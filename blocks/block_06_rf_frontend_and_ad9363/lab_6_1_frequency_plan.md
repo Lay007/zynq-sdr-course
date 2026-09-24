@@ -98,6 +98,30 @@ Possible contributors:
 - sign convention mistakes;
 - wrong IQ swap or conjugation.
 
+## What to expect (calculated, before measuring)
+
+These are the sizes of the error terms for the example plan, computed from the formulas above. They are not measurements; fill the measured column of your report from the board.
+
+| Error source | Size at 915 MHz, +100 kHz offset, 2.4 MS/s |
+|---|---:|
+| LO reference error of 1 ppm (TX or RX) | 915 Hz |
+| LO reference error of 10 ppm | 9.15 kHz |
+| TX at +10 ppm and RX at -10 ppm | 18.3 kHz |
+| Sample-rate error of 1 ppm, applied to the 100 kHz offset | 0.1 Hz |
+| FFT bin, 4096 points | 586 Hz |
+| FFT bin, 65 536 points | 36.6 Hz |
+
+- **The LO reference dominates.** The same ppm error is multiplied by 915 MHz in the LO but only by 100 kHz in the sample clock, a factor of 9150.
+- **A 10 ppm receiver (a typical crystal without TCXO) moves the tone by about 9 kHz.** The plan variants above differ by 50 kHz or more, so they stay distinguishable; a plan with tones 10 kHz apart would not.
+- **An error smaller than one FFT bin is not a measured error.** State the bin width next to every frequency you report.
+
+## Exercises
+
+1. You set both LOs to 915 MHz and a +100 kHz tone, and see the peak at +108.9 kHz. Which ppm error on which side explains it? What single measurement tells you whether it is the TX or the RX?
+2. Move the digital tone to +1.3 MHz with the receiver still at 2.4 MS/s. Where does it appear? (It aliases to -1.1 MHz.) Why is that especially confusing with a complex receiver?
+3. The peak appears at -100 kHz instead of +100 kHz. List two causes from the list above and a quick test that separates them.
+4. How long a capture do you need for a 1 Hz FFT bin at 2.4 MS/s, and what limits the frequency resolution before you reach it?
+
 ## Report checklist
 
 - [ ] State TX center frequency.
