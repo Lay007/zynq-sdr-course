@@ -302,7 +302,7 @@ def run_sim(command: list[str], *, cwd: Path, name: str, timeout_s: float) -> No
     started = time.monotonic()
     try:
         result = subprocess.run(
-            command, cwd=cwd, check=True, capture_output=True, text=True, timeout=timeout_s
+            command, cwd=cwd, check=False, capture_output=True, text=True, timeout=timeout_s
         )
     except subprocess.TimeoutExpired as exc:
         if exc.stdout:
@@ -316,6 +316,10 @@ def run_sim(command: list[str], *, cwd: Path, name: str, timeout_s: float) -> No
     hits = [ln for ln in result.stdout.splitlines() if _FAIL_RE.search(ln)]
     if hits:
         raise RuntimeError(f"{name}: testbench reported failure:\n  " + "\n  ".join(hits))
+    # $fatal makes vvp exit non-zero. Check the code only after the output above has
+    # been printed, so a failing bench shows its ERROR lines instead of a bare traceback.
+    if result.returncode != 0:
+        raise RuntimeError(f"{name}: simulation exited with code {result.returncode}")
     print(f"PASS {name} ({time.monotonic() - started:.2f} s)", flush=True)
 
 
