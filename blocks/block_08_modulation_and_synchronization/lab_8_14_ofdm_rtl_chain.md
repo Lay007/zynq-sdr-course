@@ -43,7 +43,7 @@ flowchart LR
     CPR --> FFT[ofdm_fft64_sequential]
     FFT --> EXT[ofdm_subcarrier_extractor]
     EXT -->|data| EQ[ofdm_one_tap_equalizer]
-    EXT -.->|pilot| PILOT["pilot stream (unconsumed here)"]
+    EXT -.->|pilot| PILOT["pilot phase tracker (coefficient not yet wired to EQ)"]
     EQ --> DEMAP[ofdm_qpsk_demapper]
     DEMAP --> BITS["recovered bit pairs"]
 ```
@@ -53,6 +53,7 @@ flowchart LR
 | `ofdm_cp16_remover.v` | Drops the 16-sample prefix, forwards samples 16..79 unchanged | fully backpressured on the 64 useful samples |
 | `ofdm_fft64_sequential.v` | Scaled forward FFT, built by reusing the IFFT core via `FFT(x)/N = conj(IFFT(conj(x)))` | rare Q1.15 endpoint clips from conjugating `-32768` are counted, not hidden |
 | `ofdm_subcarrier_extractor.v` | Splits the 64 bins into 48 data, 4 pilot and 12 null/guard carriers -- the exact inverse of the allocator's layout | data and pilot are independently backpressured sinks; a stalled pilot sink cannot stall data (or vice versa) |
+| `ofdm_pilot_phase_tracker.v` | Turns each symbol's four pilots into a Q2.14 phase-correction coefficient (vectoring + rotation CORDIC) | sign-only pilot references, 14 CORDIC iterations, `pilot_ready` low for 31 cycles per symbol; bit-exact with `tools/ofdm_pilot_phase_tracker_fixed.py`; not yet wired to the equalizer |
 | `ofdm_one_tap_equalizer.v` | Multiplies each data symbol by an externally supplied Q2.14 correction coefficient | Q1.15 x Q2.14 -> Q3.29, rounded to Q15 (nearest, half-LSB away from zero), then saturated; `saturation_count` is cumulative from reset |
 | `ofdm_qpsk_demapper.v` | Hard-decision inverse of the mapper | transparent ready/valid, zero maps to bit `0` exactly like the Python reference |
 
@@ -70,7 +71,25 @@ Every block uses one clock, synchronous active-low reset, and a single-register 
 
 ## Pilots: what exists and what does not yet
 
-The allocator/extractor pair already does real pilot **insertion and extraction**: the allocator writes the four fixed pilot values into their bins on TX, and the extractor produces a *separate* pilot stream on RX (`pilot_re`/`pilot_im`/`pilot_slot`/`pilot_ref_re`) alongside the data stream, exactly mirroring Lab 8.5's `pilot_k`/`pilot_ref`. What does not exist yet in RTL is a block that *consumes* that pilot stream to estimate and correct residual phase drift the way Lab 8.5's Python receiver does (`pilot_phase = angle(vdot(pilot_ref, y_eq[pilots]))`, applied per OFDM symbol). The loopback tests below prove the equalizer's arithmetic against a **flat** channel (one shared correction coefficient for every subcarrier); they do not yet exercise a frequency-selective channel or automatic per-subcarrier channel estimation in hardware. Closing that gap -- a pilot-phase-tracking block plus a per-subcarrier coefficient feed for the equalizer -- is real, well-scoped future work, not something this lab claims to have finished.
+The allocator/extractor pair does real pilot **insertion and extraction**: the allocator writes the four fixed pilot values into their bins on TX, and the extractor produces a *separate* pilot stream on RX (`pilot_re`/`pilot_im`/`pilot_slot`/`pilot_ref_re`) alongside the data stream, exactly mirroring Lab 8.5's `pilot_k`/`pilot_ref`.
+
+`ofdm_pilot_phase_tracker.v` consumes that pilot stream. Per OFDM symbol it forms `P = sum(sign(pilot_ref) * pilot)` (the references are +-1, so no multipliers), finds `angle(P)` with a 14-iteration vectoring CORDIC, and turns it into the correction coefficient `16384 * exp(-j * angle(P))` in Q2.14 with a rotation CORDIC, which is the input format of `ofdm_one_tap_equalizer`. It is the fixed-point form of Lab 8.5's `pilot_phase = angle(vdot(pilot_ref, y_eq[pilots]))`. `pilot_ready` drops for the 31 cycles of computation, and an all-zero pilot sum returns the identity coefficient with a `zero_energy` flag.
+
+It is verified like the rest of the chain: `tools/ofdm_pilot_phase_tracker_fixed.py` is the bit-exact model, `tools/generate_ofdm_pilot_tracker_vectors.py` writes 49 test symbols (every 15 degrees, the +-90 and +-180 degree edges, amplitudes 300 to 32000, zero energy, and noisy symbols whose four pilots disagree), and `tb_ofdm_pilot_phase_tracker.sv` requires a bit-exact match while holding `pilot_valid` high through the busy cycles:
+
+```bash
+python -m pytest tests/test_ofdm_pilot_phase_tracker_fixed.py
+python -m tools.generate_ofdm_pilot_tracker_vectors   # regenerate the committed vectors
+python tools/run_ofdm_rtl.py                          # all OFDM benches, including the tracker
+```
+
+```text
+PASS: ofdm_pilot_phase_tracker matched the fixed-point model on 49 symbols (backpressure cycles 1490)
+```
+
+Against the ideal `exp(-j * theta)`, the coefficient is within 7 LSB of 16384 (0.04 %) and the phase within 3 units of pi/2^15 (about 3e-4 rad) at every whole degree.
+
+What is still **not** in RTL: the coefficient belongs to the symbol whose pilots produced it, but that symbol's data has already streamed past by the time the last pilot (bin 57) arrives. Applying it to the same symbol needs a one-symbol data buffer; applying it to the next symbol gives tracking with a one-symbol lag. Neither wiring exists yet, the loopback tests below still give the equalizer a fixed coefficient, and there is no per-subcarrier channel estimate for a frequency-selective channel.
 
 ## Verification stage 1: float model vs. fixed-point model vs. RTL
 
@@ -150,7 +169,7 @@ This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarri
 It does **not** claim:
 
 - AXI4-Stream/AXI4-Lite packaging (signal-compatible ready/valid exists; the AXI naming, an AXI4-Lite control/status block and Vivado integration do not);
-- automatic, pilot-driven channel estimation or phase tracking in RTL (the pilot stream exists; nothing yet consumes it the way Lab 8.5's Python receiver does);
+- automatic pilot-driven correction in the RTL datapath: `ofdm_pilot_phase_tracker.v` computes the per-symbol phase coefficient (bit-exact with its model), but it is not yet wired into the equalizer, and there is no per-subcarrier channel estimate;
 - Verification stages 3-5 (PL/fabric loopback on Zynq, safe attenuated AD9361/AD9363 cabled loopback, an independent SDR capture) -- these need the physical board and RF path, neither of which was available while writing this lab;
 - resource, latency or timing reports from real synthesis -- those need Vivado, which was likewise not available here. The per-block header comments do state cycle-level latency and clock counts explicitly (for example the IFFT's `384 compute clocks after input collection`), which is real design information, but it is not a substitute for a post-implementation report.
 
@@ -170,7 +189,8 @@ Each exercise changes the equalizer coefficient on line `.coeff_re(16'sd0), .coe
 - [x] Self-checking RTL equalized loopback through a real complex channel, BER=0, reproducible.
 - [x] Every saturation/overflow counter asserted zero at the tested back-off.
 - [ ] AXI4-Stream/AXI4-Lite packaging.
-- [ ] Pilot-driven channel estimation/phase tracking in RTL.
+- [x] Pilot phase tracker in RTL, bit-exact with its fixed-point model (49 symbols).
+- [ ] Tracker coefficient wired into the equalizer; per-subcarrier channel estimation.
 - [ ] PL/fabric loopback on Zynq.
 - [ ] Safe attenuated AD9361/AD9363 cabled loopback with attenuation/gain metadata.
 - [ ] Resource, latency and timing report from real synthesis.
