@@ -83,6 +83,20 @@ The 2026-07-08 timing-sweep payload (`Performance_ExtraTimingOpt`, runtime `.bit
 
 The compact diagnostic record is `docs/assets/lab1128_rtl_sdr_transport_limit_20260708.json`. The detected bursts were still zero-error, so this points at the monitor/capture path rather than a demonstrated modem BER regression. The next external qualification should reset or replug the RTL-SDR, try a different USB controller/cable/hub, or move capture to a stable `rtl_sdr`/WSL/usbipd backend before running long strict series.
 
+## Addendum 2026-09-24: reference-aided versus receiver scoring
+
+The bit counts above are **reference-aided**: the analyzer fits CFO, phase and gain over the whole known 140-symbol frame and, among candidate sampling phases and correlation peaks, keeps the one with the fewest bit errors. That is an upper bound on link quality, not what a receiver achieves, because a receiver does not know the payload.
+
+The analyzer now also reports **receiver scoring**: candidate chosen by sync-word correlation only, CFO/phase/gain from the 16 sync symbols, a decision-directed phase-locked loop over the payload, and BER on the 124 payload symbols (248 bits). The same WAV captures (capture SHA256 unchanged) were re-analysed and the metrics files regenerated:
+
+| Run | Reference-aided: zero-error bursts, bit errors | Receiver: zero-error bursts, payload bit errors |
+|---|---:|---:|
+| `-55 dB` | 23 / 40, 18 / 11,200 | 18 / 40, 39 / 9,920 |
+| `-50 dB` | 30 / 30, 0 / 8,400 | 30 / 30, 0 / 7,440 |
+| Cross-session 01-03 combined | 90 / 90, 0 / 25,200 | 90 / 90, 0 / 22,320 |
+
+The `-50 dB` qualification stands under receiver scoring; its rule-of-three bound becomes `BER < 1.344e-4` on 22,320 payload bits. At `-55 dB` the reference-aided method understated the BER by about 2.4 times (receiver: `3.93e-3`, Wilson 95% `2.88e-3…5.37e-3`). The 2026-07-08 attempts were not re-scored: their manifests are not in the repository. `tools/run_lab11_28_long_series.py` now also requires zero receiver bit errors.
+
 ## Reproduction
 
 Capture:
