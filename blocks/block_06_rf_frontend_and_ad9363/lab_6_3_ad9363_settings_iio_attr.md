@@ -157,6 +157,31 @@ iio_attr -c ad9361-phy voltage0 gain_control_mode manual
 iio_attr -c ad9361-phy voltage0 hardwaregain 10
 ```
 
+## What to expect (a real probe of the course board)
+
+`docs/assets/lab63_zynq_iio_probe_live.json` is the committed output of `lab_6_3_probe_iio_context.py` against the course board at `ip:192.168.40.1`, taken before any lab configuration:
+
+| Attribute (probe JSON) | Value | Meaning |
+|---|---|---|
+| `hw_model` | FISH Ball PlutoSDR Rev.A (Z7020-AD9361) | the course board, stock Linux 5.15 |
+| devices | `ad9361-phy`, `xadc`, `cf-ad9361-dds-core-lpc`, `cf-ad9361-lpc` | PHY control, on-chip temperature/voltage monitor, TX DMA/DDS core, RX DMA core |
+| `altvoltage0` (RX LO) frequency | 2 400 000 000 | 2.4 GHz |
+| `altvoltage1` (TX LO) frequency / `powerdown` | 2 400 000 000 / **1** | TX LO is switched off |
+| `voltage0` in: `sampling_frequency` / `rf_bandwidth` | 30 720 000 / 18 000 000 | 30.72 MS/s, 18 MHz |
+| `voltage0` in: `gain_control_mode` / `hardwaregain` | slow_attack / 71 dB | AGC at maximum gain: no signal present |
+| `voltage0` out: `hardwaregain` | -89.75 dB | maximum TX attenuation |
+| RX / TX port | A_BALANCED / A | |
+
+- **This is a safe idle state, not a working one.** TX is at maximum attenuation and its LO is powered down; RX is on AGC. Every setting in the checklist above has to be written explicitly.
+- **`TX LO powerdown = 1` is the classic silent failure.** With the LO off, the DDS or DMA can run and the TX gain can be changed without anything leaving the antenna. The course's own hardware bring-up hit exactly this; [Lab 6.11](/zynq-sdr-course/en/labs/lab-6-11-tx-power-calibration/) restores it to 1 at the end of every run on purpose.
+- **An AGC reading of 71 dB is not a measurement setting.** Switch to `manual` before recording anything, or two captures of the same signal will not be comparable.
+
+## Exercises
+
+1. `voltage0` exists as both an input and an output channel of `ad9361-phy`, with different `hardwaregain` values. Check the `iio_attr` help: how do you make a command address only the RX or only the TX channel, and what does the example session above address?
+2. Write the minimum sequence of attribute writes that turns this idle state into the RX setting of Lab 6.1 (915 MHz, 2.4 MS/s, 2 MHz, manual gain). Which of them must come before the others?
+3. Which attributes must you write, and in which order, to make the TX actually radiate, and which ones must you restore afterwards to return to this safe state?
+
 ## What to include in the report
 
 - exact commands used;
