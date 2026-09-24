@@ -85,6 +85,28 @@ This first RX recovery lab intentionally uses known reference values rather than
 
 That makes the chain simple enough to verify before later blocks introduce timing and carrier recovery loops.
 
+## What to expect
+
+```text
+PASS: bpsk_rx_bit_recovery completed without errors (281 bits, payload errors 0)
+```
+
+`tb/bpsk_rx_bit_recovery_meta.txt` holds the contract: `start_offset = 450` samples, `sps = 8`, 281 frame bits of which the first 25 are preamble, so 256 payload bits are scored.
+
+The course runner generates the vectors, compiles, simulates and turns any `FAIL` line or non-zero simulator exit into an error:
+
+```bash
+python tools/run_block5_hdl_smoke.py --test tb_bpsk_rx_bit_recovery
+```
+
+## Exercises
+
+Each exercise below is a deliberate one-line RTL mutation. Make it, run the bench, read the messages, then restore the file (`git checkout -- <file>`). The quoted outputs were observed with Icarus Verilog 12.0.
+
+1. Flip the hard-decision polarity in `bpsk_hard_decision.v`: `out_bit <= (in_i >= 0);`. Every bit is wrong: `FAIL: bpsk_rx_bit_recovery completed with total/payload errors = 281 / 256`. Keep this mutation in mind: Lab 5.10 shows a top-level that survives it.
+2. The sampler takes one sample per symbol at a fixed offset. Edit `start_offset` in `tb/bpsk_rx_bit_recovery_meta.txt` and rerun with `--no-generate` (so the file is not regenerated). Observed: 451 (one sample late) still passes; 454 gives `total/payload errors = 68 / 64` and 446 gives `72 / 64`. Half a symbol off, about a quarter of the bits are wrong. Explain both results from the eye diagram of an RRC-filtered BPSK signal: how wide is the open part of the eye?
+3. Why can the matched filter use the same taps as the TX filter? What would change if the channel added a phase rotation (compare with Lab 8.2)?
+
 ## Report checklist
 
 - [ ] State that the RX matched filter reuses the same `rrc_taps_q15.txt` as the TX FIR.

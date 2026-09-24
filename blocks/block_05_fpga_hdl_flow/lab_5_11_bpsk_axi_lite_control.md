@@ -113,6 +113,28 @@ Use the existing repository tools as the bring-up path:
 
 This keeps the discovery run small and deterministic before moving to longer bursts or quantitative BER measurement.
 
+## What to expect
+
+```text
+PASS: bpsk_zynq_ber_axi_lite completed without errors
+```
+
+The bench acts as the PS: it reads the ID register, checks that control/status resets to zero, writes and reads back the frame bit count, preamble count and start offset, starts a run with bit 0, polls until it has seen both `busy` (bit 1) and `done` (bit 2), checks `received_bits` and zero total/payload errors, clears the sticky `done` by writing bit 2, and confirms that TX samples were produced.
+
+The course runner generates the vectors, compiles, simulates and turns any `FAIL` line or non-zero simulator exit into an error:
+
+```bash
+python tools/run_block5_hdl_smoke.py --test tb_bpsk_zynq_ber_axi_lite
+```
+
+## Exercises
+
+Each exercise below is a deliberate one-line RTL mutation. Make it, run the bench, read the messages, then restore the file (`git checkout -- <file>`). The quoted outputs were observed with Icarus Verilog 12.0.
+
+1. Make `done` impossible to clear: in `bpsk_zynq_ber_axi_lite.v` replace `if (wstrb_latched[0] && wdata_latched[2]) begin` with `if (1'b0) begin`. The bench reports `ERROR: done sticky bit did not clear`. On hardware, software polling `done` would see every later run as already finished.
+2. Swap the `busy` and `done` bits in the status read (`{29'd0, core_busy, done_sticky, 1'b0}`). The bench reports `ERROR: busy bit was never observed during the AXI-Lite controlled run`. The datapath is untouched and the design would synthesize, so only a check of the register map catches this kind of error.
+3. Write the same sequence as a short C function using `devmem`-style 32-bit reads and writes, with a poll timeout. Which register do you read to decide that the run finished, and what happens if you read it only once?
+
 ## Report checklist
 
 - [ ] Include the register map.

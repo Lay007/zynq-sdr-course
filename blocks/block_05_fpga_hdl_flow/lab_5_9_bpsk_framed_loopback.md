@@ -92,6 +92,28 @@ This is the missing bridge between unit-style HDL checks and an actual board-lev
 3. the RX chain is wired to the same timing and BER contract;
 4. the end-to-end HDL route can now be promoted to a Zynq top-level with DMA or RF I/O.
 
+## What to expect
+
+```text
+PASS: bpsk_framed_loopback completed without errors (281 bits, payload errors 0)
+```
+
+`tb/bpsk_framed_loopback_meta.txt`: `start_offset = 62`, `sps = 8`, 281 bits, 25 preamble bits, `flush_symbols = 16`. Here the TX chain inside the same top-level produces the samples, so the offset is set by the internal pipeline, not by the stored input vectors of Lab 5.8.
+
+The course runner generates the vectors, compiles, simulates and turns any `FAIL` line or non-zero simulator exit into an error:
+
+```bash
+python tools/run_block5_hdl_smoke.py --test tb_bpsk_framed_loopback
+```
+
+## Exercises
+
+Each exercise below is a deliberate one-line RTL mutation. Make it, run the bench, read the messages, then restore the file (`git checkout -- <file>`). The quoted outputs were observed with Icarus Verilog 12.0.
+
+1. Apply the polarity flip from Lab 5.8 (`out_bit <= (in_i >= 0);`). This bench fails the same way: `total/payload errors = 281 / 256`. Nothing in this top-level knows what the preamble should look like.
+2. Why must the TX keep sending `flush_symbols = 16` zero symbols after the last frame bit? Relate the number to the group delay of the TX and RX RRC filters (65 taps each, 8 samples per symbol).
+3. Which single signal in the waveform would you watch first to find the frame start, and why is `start_offset` a fragile way to find it on real hardware?
+
 ## Report checklist
 
 - [ ] Show that `s_ready` throttles the framed source to the 8x upsampler rate.

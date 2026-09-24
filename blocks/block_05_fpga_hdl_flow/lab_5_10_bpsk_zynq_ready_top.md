@@ -107,6 +107,28 @@ frame source / control -> TX samples -> AD9363 TX -> RF path -> AD9363 RX -> RX 
 
 That is the correct place to attach AXI-Lite registers, DMA, BRAM control or board-specific clock/reset logic in the next step.
 
+## What to expect
+
+```text
+PASS: bpsk_zynq_ber_top completed without errors (281 bits, payload errors 0)
+```
+
+Unlike Labs 5.8 and 5.9, the top-level contains `bpsk_ber_counter`, which finds the frame by correlating the received bits with the known preamble instead of trusting a fixed offset.
+
+The course runner generates the vectors, compiles, simulates and turns any `FAIL` line or non-zero simulator exit into an error:
+
+```bash
+python tools/run_block5_hdl_smoke.py --test tb_bpsk_zynq_ber_top
+```
+
+## Exercises
+
+Each exercise below is a deliberate one-line RTL mutation. Make it, run the bench, read the messages, then restore the file (`git checkout -- <file>`). The quoted outputs were observed with Icarus Verilog 12.0.
+
+1. Apply the same polarity flip as in Labs 5.8 and 5.9 (`out_bit <= (in_i >= 0);` in `bpsk_hard_decision.v`). Those two benches fail with 281 / 256 errors, but this one still **passes** with `payload errors 0`. Find the reason in `bpsk_ber_counter.v`: it counts preamble matches against both the true pattern (`m_noninv`) and the inverted one (`m_inv`), and on an inverted lock it flips the payload. This is 180-degree ambiguity resolution, and a real receiver needs it because a BPSK carrier loop can lock at 0 or 180 degrees.
+2. The same mechanism would also hide a real polarity bug. Which register or signal should the PS read to know that the lock was inverted, and why is that worth logging on hardware?
+3. What is the probability that 8 random bits match an 8-bit preamble exactly? Relate it to `LOCK_PREAMBLE_BITS` and `LOCK_ERR_TOL`.
+
 ## Report checklist
 
 - [ ] State the meaning of `start`, `busy` and `done`.

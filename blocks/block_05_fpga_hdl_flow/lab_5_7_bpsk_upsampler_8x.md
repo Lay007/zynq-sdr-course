@@ -68,6 +68,28 @@ The Python generator reuses:
 | `tx_symbols_q15.txt` | exact symbol sequence from the shared BPSK package |
 | `config.json` | provides `samples_per_symbol = 8` |
 
+## What to expect
+
+```text
+PASS: bpsk_upsampler_8x test completed without errors (281 symbols, 2248 samples)
+```
+
+2248 = 281 x 8. The block zero-stuffs: the symbol appears on phase 0 and the next 7 output samples are zero, with `in_ready` low for those 7 cycles. The RRC filter of Lab 5.6 turns the zero-stuffed impulses into the shaped waveform.
+
+The course runner generates the vectors, compiles, simulates and turns any `FAIL` line or non-zero simulator exit into an error:
+
+```bash
+python tools/run_block5_hdl_smoke.py --test tb_bpsk_upsampler_8x
+```
+
+## Exercises
+
+Each exercise below is a deliberate one-line RTL mutation. Make it, run the bench, read the messages, then restore the file (`git checkout -- <file>`). The quoted outputs were observed with Icarus Verilog 12.0.
+
+1. Make the counter one short: `if (phase == SPS - 2)`. The bench reports 786 errors. The first is `out=(32767,0) expected=(0,0) idx=7` (the next symbol arrives one sample early), and the last is `out_valid=0 expected=1 idx=2247` (the stream ends early). An off-by-one in a counter shows up as a periodic misalignment, not as a random error.
+2. Why zero-stuffing and not sample-and-hold (repeating the symbol 8 times)? Describe what holding does to the spectrum before the RRC filter.
+3. With zero-stuffing, the average power per output sample drops by a factor of 8. The 65 TX taps in `rtl/bpsk_rrc_tx_fir_taps.mem` sum to about 2.85 (close to the square root of 8), and the largest tap is 0.387. Explain where that scaling comes from and how much headroom it leaves below Q1.15 full scale.
+
 ## Report checklist
 
 - [ ] Explain why the mapper-to-FIR boundary is a multi-rate interface.

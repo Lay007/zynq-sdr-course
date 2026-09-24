@@ -160,6 +160,28 @@ flowchart LR
     CMP --> PASS[Pass / fail]
 ```
 
+## What to expect
+
+```text
+PASS: iq_passthrough test completed without errors
+```
+
+The bench drives 8 vectors, two of them with `in_valid = 0`, and includes the full-scale values +32767 and -32768. After reset it checks every clock: `out_valid` must equal `in_valid` delayed by one cycle, and `out_i`/`out_q` must equal the delayed input whenever the delayed valid is 1. Data is not compared on idle cycles: the contract says it is "don't care" there.
+
+The course runner generates the vectors, compiles, simulates and turns any `FAIL` line or non-zero simulator exit into an error:
+
+```bash
+python tools/run_block5_hdl_smoke.py --test tb_iq_passthrough
+```
+
+## Exercises
+
+Each exercise below is a deliberate one-line RTL mutation. Make it, run the bench, read the messages, then restore the file (`git checkout -- <file>`). The quoted outputs were observed with Icarus Verilog 12.0.
+
+1. Break the valid contract: replace `out_valid <= in_valid;` with `out_valid <= 1'b1;`. The bench reports `ERROR at 45000: out_valid=1 expected=0` on every idle cycle and ends with `FAIL: iq_passthrough test completed with 5 errors`.
+2. Remove the `if (in_valid)` around the data registers so `out_i`/`out_q` load on every clock. The bench still **passes**. Explain why this is correct under the valid-only contract, and name one situation where holding the last valid sample is still worth the clock-enable (a downstream block that ignores `valid`, a waveform that is easier to read, or switching power).
+3. Add a second register stage (latency 2). Before touching the bench, predict which check fires first; then change the reference model's delay so the bench passes again. Record the new latency in the report.
+
 ## Minimal report
 
 The lab report should contain:

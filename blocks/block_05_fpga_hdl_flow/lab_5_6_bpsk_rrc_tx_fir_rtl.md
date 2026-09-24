@@ -88,6 +88,28 @@ This lab reuses the exact same taps and symbol stream, so the next integration s
 2. RTL simulation output;
 3. eventual Zynq TX sample capture.
 
+## What to expect
+
+```text
+PASS: bpsk_rrc_tx_fir test completed without errors (2312 vectors, latency 9 cycles)
+```
+
+2312 = 281 symbols x 8 samples + 64 flush samples (NTAPS - 1), so the whole filter tail is checked. The 9-cycle latency is the pipeline: symmetric pre-add (1), multiply (1), a 6-stage adder tree that reduces 33 products (33 -> 17 -> 9 -> 5 -> 3 -> 2 -> 1), and the round/saturate register (1).
+
+The course runner generates the vectors, compiles, simulates and turns any `FAIL` line or non-zero simulator exit into an error:
+
+```bash
+python tools/run_block5_hdl_smoke.py --test tb_bpsk_rrc_tx_fir
+```
+
+## Exercises
+
+Each exercise below is a deliberate one-line RTL mutation. Make it, run the bench, read the messages, then restore the file (`git checkout -- <file>`). The quoted outputs were observed with Icarus Verilog 12.0.
+
+1. Replace rounding with truncation: `round_q15 = value >>> SHIFT;`. The bench reports `FAIL: bpsk_rrc_tx_fir test completed with 1084 errors`, each 1 LSB low, for example `out=(23,0) expected=(24,0)`. Why is it close to half of the 2312 outputs?
+2. Using the RTL, confirm the 9-cycle latency stage by stage, and say which number changes if `NTAPS` grows from 65 to 129.
+3. The filter is symmetric, so it needs 33 multipliers instead of 65. How many DSP48 slices would a Zynq-7020 use for I and Q together, and what would a time-multiplexed (folded) version at 8 clocks per sample need?
+
 ## Report checklist
 
 - [ ] Show that the same `rrc_taps_q15.txt` file feeds both Simulink and RTL.

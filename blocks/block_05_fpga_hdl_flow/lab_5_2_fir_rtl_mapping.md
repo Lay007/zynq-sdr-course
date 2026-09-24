@@ -192,6 +192,28 @@ Latency must be stated explicitly:
 | Latency |  |  | clocks |
 | Fmax |  |  | MHz |
 
+## What to expect
+
+```text
+PASS: fir_iq_4tap test completed without errors
+```
+
+The comparison is bit-exact: the Python generator computes the same `h = [0.125, 0.375, 0.375, 0.125]` filter in integers with round-half-up and saturation, and every output sample must match exactly. The DC gain is 1.0, so a constant input comes out unchanged once the four taps are filled.
+
+The course runner generates the vectors, compiles, simulates and turns any `FAIL` line or non-zero simulator exit into an error:
+
+```bash
+python tools/run_block5_hdl_smoke.py --test tb_fir_iq_4tap
+```
+
+## Exercises
+
+Each exercise below is a deliberate one-line RTL mutation. Make it, run the bench, read the messages, then restore the file (`git checkout -- <file>`). The quoted outputs were observed with Icarus Verilog 12.0.
+
+1. Replace rounding with truncation: `round_q15 = value >>> SHIFT;`. The bench reports 6 errors, each exactly 1 LSB low, for example `out=(4095,0) expected=(4096,0)` and `out=(12287,4095) expected=(12288,4096)`. Truncation is a -0.5 LSB bias; a floating-point comparison with a 1e-3 tolerance would never see it, a bit-exact bench does.
+2. Change `H1` from `16'sd12288` to `16'sd12289` (one coefficient LSB). The bench reports only 4 errors, for example `out=(12289,4096) expected=(12288,4096)`. The other outputs are unchanged because the extra `x * 2^-15` did not cross a rounding boundary. What does that say about how many vectors a coefficient check needs?
+3. The coefficients sum to exactly 1.0. Compute the worst-case accumulator width for 16-bit inputs and justify (or shrink) `ACC_W = 40`.
+
 ## Report checklist
 
 - [ ] State FIR format and number of taps.

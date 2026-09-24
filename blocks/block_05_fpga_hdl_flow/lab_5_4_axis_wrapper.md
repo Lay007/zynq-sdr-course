@@ -121,6 +121,28 @@ The testbench verifies:
 | no side-channel metadata | `tuser`, `tkeep`, frame counters, timestamps |
 | educational simulation | AXI VIP, cocotb or SystemVerilog verification |
 
+## What to expect
+
+```text
+PASS: axis_iq_passthrough test completed without errors
+```
+
+The bench sends 6 IQ beats with `tlast` on selected beats, toggles `m_axis_tready` to create backpressure, and checks that all 6 beats arrive in order with the right data and `tlast`, and nothing more.
+
+The course runner generates the vectors, compiles, simulates and turns any `FAIL` line or non-zero simulator exit into an error:
+
+```bash
+python tools/run_block5_hdl_smoke.py --test tb_axis_iq_passthrough
+```
+
+## Exercises
+
+Each exercise below is a deliberate one-line RTL mutation. Make it, run the bench, read the messages, then restore the file (`git checkout -- <file>`). The quoted outputs were observed with Icarus Verilog 12.0.
+
+1. Ignore backpressure: `assign s_axis_tready = 1'b1;`. The bench reports `ERROR: received 4 samples, expected 6`. Two beats were overwritten in the output register while the downstream stalled. In hardware nothing flags this: the stream is simply shorter.
+2. Use the simpler ready rule `assign s_axis_tready = m_axis_tready;`. The bench still **passes**. Explain why this version never loses or duplicates data, and what it gives up: an empty output register cannot be filled while the downstream is not ready. Design a check (for example, count cycles for a fixed number of beats under a fixed `tready` pattern) that would tell the two versions apart.
+3. AXI-Stream forbids a source from waiting for `tready` before asserting `tvalid`. Find the line in the RTL that guarantees this for `m_axis_tvalid`.
+
 ## Report checklist
 
 - [ ] Explain `tvalid/tready` handshake.

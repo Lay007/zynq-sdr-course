@@ -120,6 +120,28 @@ The testbench verifies:
 | compact unpipelined multiplier | pipelined DSP-slice complex multiplier |
 | vector testbench | constrained/random and file-based regression |
 
+## What to expect
+
+```text
+PASS: nco_mixer_iq test completed without errors
+```
+
+The NCO uses a 16-entry sine table and `PHASE_INC = 1`, so the mixer rotates the input by +22.5 degrees per valid sample (a shift of +fs/16). The Python reference uses the same table, rounding and saturation, so the comparison is bit-exact.
+
+The course runner generates the vectors, compiles, simulates and turns any `FAIL` line or non-zero simulator exit into an error:
+
+```bash
+python tools/run_block5_hdl_smoke.py --test tb_nco_mixer_iq
+```
+
+## Exercises
+
+Each exercise below is a deliberate one-line RTL mutation. Make it, run the bench, read the messages, then restore the file (`git checkout -- <file>`). The quoted outputs were observed with Icarus Verilog 12.0.
+
+1. Conjugate the mixer (rotate the other way): `acc_i = I*cos + Q*sin`, `acc_q = -I*sin + Q*cos`. The bench reports 8 errors with the Q sign flipped, for example `out=(11087,-4592) expected=(11087,4592)`. This is the same wrong-sign error as in Lab 3.3: the signal lands at -fs/16 instead of +fs/16.
+2. Replace rounding with truncation: `round_q15 = value >>> SHIFT;`. The bench reports 8 errors, for example `out=(11999,0) expected=(12000,0)`. Note that the first one happens at phase 0, where cos = 32767, not 32768: 12000 * 32767 / 32768 = 11999.63, which rounds to 12000 but truncates to 11999. Q1.15 cannot represent +1.0 exactly.
+3. Estimate the spurious-free dynamic range of a 16-entry, 16-bit table and compare with the "about 6 dB per phase-address bit" rule measured in Lab 3.3. What would you change first to improve it: table length or table word width?
+
 ## Report checklist
 
 - [ ] State input, LUT, product, accumulator and output formats.
