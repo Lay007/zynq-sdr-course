@@ -171,7 +171,7 @@ It does **not** claim:
 - AXI4-Stream/AXI4-Lite packaging (signal-compatible ready/valid exists; the AXI naming, an AXI4-Lite control/status block and Vivado integration do not);
 - automatic pilot-driven correction in the RTL datapath: `ofdm_pilot_phase_tracker.v` computes the per-symbol phase coefficient (bit-exact with its model), but it is not yet wired into the equalizer, and there is no per-subcarrier channel estimate;
 - Verification stages 3-5 (PL/fabric loopback on Zynq, safe attenuated AD9361/AD9363 cabled loopback, an independent SDR capture) -- these need the physical board and RF path, neither of which was available while writing this lab;
-- resource, latency or timing reports from real synthesis -- those need Vivado, which was likewise not available here. The per-block header comments do state cycle-level latency and clock counts explicitly (for example the IFFT's `384 compute clocks after input collection`), which is real design information, but it is not a substitute for a post-implementation report.
+- that the transforms run at 100 MHz. A Vivado 2021.1 out-of-context implementation on `xc7z020clg400-2` ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md)) routes every OFDM block without DRC errors, and the equalizer, pilot tracker and CP remover meet 100 MHz comfortably. But `ofdm_tx_cp16_path` and `ofdm_fft64_sequential` miss it by about 10 ns (post-route WNS -10.2 / -10.8 ns, roughly 49 / 48 MHz, about 8.8k LUT each): the shared butterfly multiplies, rounds, saturates and updates its saturation counter in one clock (28 logic levels), and the 64-point working memory sits in fabric logic, not block RAM. Pipelining the butterfly changes the IFFT schedule and is not done yet. The per-block header comments state cycle-level latency (for example the IFFT's `384 compute clocks after input collection`).
 
 ## Exercises
 
@@ -193,4 +193,5 @@ Each exercise changes the equalizer coefficient on line `.coeff_re(16'sd0), .coe
 - [ ] Tracker coefficient wired into the equalizer; per-subcarrier channel estimation.
 - [ ] PL/fabric loopback on Zynq.
 - [ ] Safe attenuated AD9361/AD9363 cabled loopback with attenuation/gain metadata.
-- [ ] Resource, latency and timing report from real synthesis.
+- [x] Resource and timing report from Vivado OOC implementation (all blocks routed; the IFFT/FFT paths miss 100 MHz).
+- [ ] Pipelined butterfly and block-RAM working memory that meet 100 MHz.
