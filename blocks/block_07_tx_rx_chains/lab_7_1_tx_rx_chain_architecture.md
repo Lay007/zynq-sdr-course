@@ -79,6 +79,25 @@ After DDC, the useful signal should be near DC.
 4. RF cable loopback with attenuation.
 5. External receiver observation.
 
+## Worked example: where each stage is verified in this course
+
+Every stage of the architecture table already has a lab in which its behaviour was measured by running code. Use them as the reference numbers for your own design:
+
+| Stage | Lab | Verified result |
+|---|---|---|
+| TX / RX FIR | [Lab 3.2](/zynq-sdr-course/en/labs/lab-3-2-fir-low-pass/), [Lab 5.6](/zynq-sdr-course/en/labs/lab-5-6-bpsk-rrc-tx-fir-rtl/) | 129-tap low-pass: -3 dB at 240.3 kHz, Q1.15 stopband -71.0 dB (float -89.7 dB); RRC TX FIR RTL latency 9 cycles |
+| Mixer / DUC / DDC | [Lab 3.3](/zynq-sdr-course/en/labs/lab-3-3-digital-mixing/), [Lab 4.2](/zynq-sdr-course/en/labs/lab-4-2-fixed-point-digital-mixer/) | wrong shift sign puts the tone at 840 kHz instead of 0 Hz; 24-bit NCO error of 0.0286 Hz is already 0.14 % EVM over 13.7 ms |
+| Decimator | [Lab 3.4](/zynq-sdr-course/en/labs/lab-3-4-decimation/) | M = 4 without a filter aliases an interferer at -6.0 dBc; with the FIR it is -111.8 dBc |
+| Frequency plan | [Lab 6.1](/zynq-sdr-course/en/labs/lab-6-1-frequency-plan/) | 10 ppm LO error = 9.15 kHz at 915 MHz, 9150 times the effect of the same ppm error in the sample clock |
+| Digital loopback | [Lab 5.10](/zynq-sdr-course/en/labs/lab-5-10-bpsk-zynq-ready-top/) | 281 bits, 0 payload errors in RTL simulation |
+| Metrics | [Lab 8.9](/zynq-sdr-course/en/labs/lab-8-9-qpsk-carrier-recovery/), [Lab 11.28](/zynq-sdr-course/en/labs/lab-11-28-rtl-sdr-ota-qpsk/) | the table's "wrong reference alignment" risk in practice: at -55 dB the reference-aided BER counted 18 errors, a receiver that does not know the payload makes 39 |
+
+## Exercises
+
+1. For your chosen signal, fill the sample-rate plan and name, for every rate change, the lab above that shows what happens without the anti-aliasing or anti-imaging filter.
+2. Which stages can be validated at step 1 (pure simulation) of the validation order, and which only at step 4 or 5? Give one failure mode for each that the earlier steps cannot reveal.
+3. Write down how your metrics block will get its phase and timing reference. If it uses the known transmitted symbols, say which ones (preamble only, or the whole frame) and what that does to the BER you report.
+
 ## Report checklist
 
 - [ ] Draw TX/RX chain diagram.
