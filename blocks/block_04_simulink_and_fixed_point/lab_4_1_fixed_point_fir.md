@@ -143,6 +143,30 @@ Implementation options:
 | Time-multiplexed MAC | fewer resources | lower throughput / more control logic |
 | Symmetric FIR | fewer multipliers | only for symmetric coefficients |
 
+## What to expect
+
+```text
+FIR taps: 129
+Cutoff: 250.0 kHz
+Input/coefficient format: Q1.15
+Recommended FIR guard bits: 8
+RMS error: 3.975029e-05
+Max abs error: 7.540183e-05
+SQNR: 83.51 dB
+Saturation count: 0
+```
+
+- **SQNR 83.5 dB** is the whole fixed-point path (input, coefficient and output rounding) against the floating-point filter. The max error of 7.5e-5 is about 2.5 LSB of Q1.15 (1 LSB = 3.05e-5).
+- **Zero saturations**: the input is normalised to a peak of 0.85 and the taps are normalised to a DC gain of 1, so the output cannot exceed full scale.
+- **8 guard bits** = ceil(log2(129)). With these taps the sum of |h| is 1.81, so the true worst-case growth is under 1 bit; the rule is a safe upper bound and costs nothing in a DSP48 with a 48-bit accumulator.
+- The coefficient quantization sets the stopband: the Q1.15 response peaks at **-71.0 dB** from 400 kHz up, against -89.7 dB for the float taps (the same filter as Lab 3.2).
+
+## Exercises
+
+1. Change `q_fractional_bits` and rerun. With `sample_count = 8192` (to keep the pure-Python loop fast) the SQNR was 83.5, 80.7, 75.9, 66.4 and 63.9 dB for 15, 14, 13, 12 and 11 bits, and 49.3 dB at 9. Quantizing only the taps (float data) gives almost the same numbers (84.1 dB at 15 bits), so the coefficients dominate. That is also why the steps are irregular instead of 6.02 dB per bit: a coefficient error is one fixed, deterministic change of the filter, not white noise added to every sample.
+2. Quantize only the taps and plot the stopband. Observed peaks from 400 kHz up: -71.0 dB (15 fractional bits), -59.6 dB (13), -47.9 dB (11), -35.3 dB (9), again about 6 dB per bit. Count the taps that round to zero (115, 107, 93, 73 non-zero of 129). Which is the cheaper fix for a -80 dB requirement: more coefficient bits or a shorter filter with larger taps?
+3. Scale the input up until the saturation counter becomes non-zero. What happens to the SQNR, and why is a few saturations much worse than a few LSB of rounding error?
+
 ## Report checklist
 
 - [ ] State input, coefficient, product, accumulator and output formats.

@@ -178,6 +178,33 @@ flowchart LR
     SCALE --> OUT[Output IQ]
 ```
 
+## What to expect
+
+```text
+Input tone: 120.0 kHz
+Requested shift: -120.0 kHz
+Actual NCO shift: -120.000029 kHz
+Phase bits: 24
+NCO frequency resolution: 0.143051 Hz
+Measured output peak: 0.000 Hz
+Frequency shift error: 0.000 Hz
+RMS error: 1.086899e-03
+EVM: 0.1417 %
+Largest spur estimate: -70.12 dBc
+Saturation count: 0
+```
+
+Two of these numbers do not mean what they seem to mean:
+
+- **The 0.14 % EVM is not Q1.15 rounding.** The 24-bit phase increment gives -120 000.0286 Hz instead of -120 000 Hz. Over 32 768 samples (13.7 ms) that 0.0286 Hz error accumulates about 0.0025 rad of phase against the ideal floating-point reference, and that drift is the EVM. With `phase_bits = 32` the EVM drops to 0.0027 %. The spectrum cannot show this: 0.0286 Hz is far inside one 73 Hz FFT bin, which is why "Frequency shift error: 0.000 Hz".
+- **The -70.12 dBc "spur" is the highest noise bin**, not a mixer spur. The input carries `noise_rms = 0.01`. With `noise_rms = 0` the largest spur is -98.2 dBc, the real Q1.15 limit of this mixer.
+
+## Exercises
+
+1. Set `phase_bits = 16`. The frequency error becomes -7.32 Hz and the EVM 35.9 %, while the largest spur is still -69.1 dBc and the peak still lands in the 0 Hz bin. Explain why a spectrum-only check would accept this NCO, and what an EVM against a reference measures that a spectrum does not.
+2. Set `noise_rms = 0` and `q_fractional_bits = 11`. The largest spur rises from -98.2 to -79.6 dBc. Is that close to 6 dB per bit? Which part of the mixer (data words or the sine/cosine words) would you widen first?
+3. For a shift that must stay phase-coherent over a 100 ms burst, how many phase bits keep the accumulated phase error below 0.01 rad at 2.4 MS/s?
+
 ## Report checklist
 
 - [ ] State sample rate, input tone frequency and shift frequency.
