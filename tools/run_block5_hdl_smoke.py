@@ -399,8 +399,10 @@ def main() -> int:
     parser.add_argument(
         "--timeout-s",
         type=float,
-        default=180.0,
-        help="Per-compile and per-simulation timeout in seconds (default: 180).",
+        # The slowest bench (tb_qpsk_quadrant_resolve) took ~325 s on a development laptop;
+        # a tighter default fails student runs for reasons unrelated to the RTL.
+        default=600.0,
+        help="Per-compile and per-simulation timeout in seconds (default: 600).",
     )
     args = parser.parse_args()
     run_tests(generate=not args.no_generate, names=args.tests, timeout_s=args.timeout_s)
