@@ -113,3 +113,13 @@ def test_analyze_manifest_rejects_empty_list(tmp_path: Path) -> None:
     manifest_path.write_text("[]", encoding="utf-8")
     with pytest.raises(ValueError, match="non-empty"):
         SWEEP.analyze_manifest(manifest_path)
+
+
+def test_sfdr_sees_clipping_that_the_median_snr_misses() -> None:
+    # Clipping puts power into a few harmonic bins. The peak-over-median SNR barely
+    # notices (it even rises with the tone level); SFDR collapses.
+    clean = SWEEP.analyze_iq(SWEEP.synthetic_capture(30.0))
+    clipped = SWEEP.analyze_iq(SWEEP.synthetic_capture(34.0))
+    assert clean["clipping_count"] == 0 and clipped["clipping_count"] > 0
+    assert clipped["snr_db"] > clean["snr_db"]
+    assert clipped["sfdr_db"] < clean["sfdr_db"] - 30.0

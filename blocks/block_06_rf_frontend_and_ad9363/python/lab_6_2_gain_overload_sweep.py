@@ -67,6 +67,7 @@ class GainPointResult:
     peak_dbfs: float
     rms_dbfs: float
     snr_db: float
+    sfdr_db: float
     clipping_fraction: float
     clipping_count: int
     overload: bool
@@ -75,7 +76,12 @@ class GainPointResult:
 
 
 def analyze_iq(x: np.ndarray, *, full_scale: float = 1.0) -> dict:
-    """Peak/RMS dBFS, a clipping fraction and a simple tone-vs-noise-floor SNR."""
+    """Peak/RMS dBFS, a clipping fraction, a simple tone-vs-noise-floor SNR and SFDR.
+
+    The SNR compares the tone bin with the *median* bin, so it is blind to a few
+    strong spurs: clipping harmonics barely move the median. SFDR compares the tone
+    with the *largest* bin outside it, which is where clipping shows up.
+    """
     x = np.asarray(x, dtype=np.complex128)
     if x.size == 0:
         raise ValueError("capture has zero samples")
@@ -101,6 +107,7 @@ def analyze_iq(x: np.ndarray, *, full_scale: float = 1.0) -> dict:
     noise_mask[lo:hi] = False
     noise_floor_db = float(np.median(mag_db[noise_mask])) if np.any(noise_mask) else float(np.min(mag_db))
     snr_db = float(mag_db[peak_bin] - noise_floor_db)
+    sfdr_db = float(mag_db[peak_bin] - np.max(mag_db[noise_mask])) if np.any(noise_mask) else 0.0
 
     overload = bool(clipping_count > 0 or peak_dbfs > OVERLOAD_PEAK_DBFS or snr_db < OVERLOAD_MIN_SNR_DB)
 
@@ -108,6 +115,7 @@ def analyze_iq(x: np.ndarray, *, full_scale: float = 1.0) -> dict:
         "peak_dbfs": peak_dbfs,
         "rms_dbfs": rms_dbfs,
         "snr_db": snr_db,
+        "sfdr_db": sfdr_db,
         "clipping_fraction": clipping_fraction,
         "clipping_count": clipping_count,
         "overload": overload,
@@ -136,7 +144,7 @@ def synthetic_capture(sim_gain_db: float, *, n: int = 8192, seed: int = 29) -> n
 
 def run_self_test() -> dict:
     """Sweep synthetic gain points and confirm clipping/overload tracks amplitude."""
-    sim_gains_db = [-20.0, -10.0, 0.0, 20.0, 34.0]
+    sim_gains_db = [-20.0, -10.0, 0.0, 20.0, 30.0, 34.0]
     rows: list[GainPointResult] = []
     for index, gain_db in enumerate(sim_gains_db, start=1):
         x = synthetic_capture(gain_db)
@@ -223,7 +231,7 @@ def render_markdown_table(rows: list[dict]) -> str:
         lines.append(
             f"| {row['test_id']} | {row['rx_tx_path']} | {row['tx_setting']} | {row['rx_gain_db']} "
             f"| {row['external_attenuation_db']} | {row['peak_dbfs']:.2f} dBFS "
-            f"| SNR {row['snr_db']:.1f} dB | {overload_sign} | {recommended} | {note} |"
+            f"| SNR {row['snr_db']:.1f} dB, SFDR {row['sfdr_db']:.1f} dB | {overload_sign} | {recommended} | {note} |"
         )
     return "\n".join(lines)
 
