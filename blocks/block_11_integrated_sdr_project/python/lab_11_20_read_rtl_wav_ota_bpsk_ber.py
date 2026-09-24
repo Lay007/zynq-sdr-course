@@ -90,6 +90,7 @@ class RtlWavBerMetrics:
     rms_level_dbfs: float
     clipping_fraction: float
     detection: dict[str, Any]
+    receiver: dict[str, Any] | None = None
 
 
 def parse_args() -> argparse.Namespace:
@@ -452,6 +453,48 @@ def crop_active_window(x: np.ndarray, window_samples: int) -> tuple[np.ndarray, 
     return x[start:stop], start
 
 
+def receiver_decode_bpsk(
+    frame: np.ndarray,
+    *,
+    tx_bits: np.ndarray,
+    tx_symbols: np.ndarray,
+    preamble_len: int,
+    kp: float = 0.1,
+    ki: float = 0.005,
+) -> dict[str, Any]:
+    """Decode one frame the way a receiver could: without the payload.
+
+    Gain and phase come from the known preamble only; a decision-directed
+    phase-locked loop then tracks the phase over the payload, and BER is counted on
+    the payload bits only. The main metrics of this script instead fit gain/phase
+    over the whole known frame and keep the candidate with the fewest bit errors,
+    which is an upper bound on link quality, not a receiver BER.
+    """
+    preamble = tx_symbols[:preamble_len]
+    gain = np.vdot(preamble, frame[:preamble_len]) / max(float(np.vdot(preamble, preamble).real), 1e-15)
+    z = frame / gain
+    out = np.empty_like(z)
+    theta = 0.0
+    freq = 0.0
+    for i, value in enumerate(z):
+        y = value * np.exp(-1j * theta)
+        out[i] = y
+        ref = preamble[i] if i < preamble_len else (1.0 if y.real >= 0.0 else -1.0)
+        err = float(np.angle(y * np.conj(ref)))
+        freq += ki * err
+        theta += freq + kp * err
+    rx_bits = np.where(np.real(out) >= 0.0, 0, 1).astype(np.uint8)
+    errors = int(np.sum(rx_bits[preamble_len:] != tx_bits[preamble_len:]))
+    payload_bits = int(len(tx_bits) - preamble_len)
+    return {
+        "scoring": "preamble gain/phase + decision-directed PLL, payload bits only",
+        "bit_errors_payload": errors,
+        "payload_bits": payload_bits,
+        "ber_payload": float(errors / max(payload_bits, 1)),
+        "evm_percent": float(evm_percent(tx_symbols[preamble_len:], out[preamble_len:])),
+    }
+
+
 def detect_frame_from_matched_filter(
     *,
     matched: np.ndarray,
@@ -466,6 +509,9 @@ def detect_frame_from_matched_filter(
     preamble_symbols = bits_to_bpsk(preamble_bits).astype(np.complex128)
     sampled_by_phase = [matched[phase::sps] for phase in range(sps)]
     best: dict[str, Any] | None = None
+    # The receiver may only choose by what it can observe: the preamble correlation.
+    receiver_pick: tuple[float, np.ndarray] | None = None
+    preamble_energy = float(np.vdot(preamble_symbols, preamble_symbols).real)
 
     for fine_frequency_hz in fine_frequency_offsets_hz:
         phase_step_rad = 2.0 * np.pi * fine_frequency_hz * sps / sample_rate_hz
@@ -486,6 +532,13 @@ def detect_frame_from_matched_filter(
                 frame = sampled_used[symbol_index : symbol_index + len(tx_symbols)]
                 if len(frame) < len(tx_symbols):
                     continue
+                head = frame[: len(preamble_symbols)]
+                norm_corr = float(
+                    abs(np.vdot(preamble_symbols, head))
+                    / np.sqrt(max(preamble_energy * float(np.vdot(head, head).real), 1e-30))
+                )
+                if receiver_pick is None or norm_corr > receiver_pick[0]:
+                    receiver_pick = (norm_corr, frame)
                 aligned = scalar_align(tx_symbols, frame)
                 rx_bits = np.where(np.real(aligned) >= 0.0, 0, 1).astype(np.uint8)
                 total_errors = int(np.sum(rx_bits != tx_bits))
@@ -517,8 +570,12 @@ def detect_frame_from_matched_filter(
                 ):
                     best = candidate
 
-    if best is None:
+    if best is None or receiver_pick is None:
         raise RuntimeError("Unable to find a full BPSK frame in the WAV capture.")
+    best["receiver_norm_corr"] = receiver_pick[0]
+    best["receiver"] = receiver_decode_bpsk(
+        receiver_pick[1], tx_bits=tx_bits, tx_symbols=tx_symbols, preamble_len=len(preamble_bits)
+    )
     return best
 
 
@@ -551,6 +608,7 @@ def analyze_capture(
     best_result: dict[str, Any] | None = None
     best_analysis_window: np.ndarray | None = None
     best_window_start = 0
+    best_receiver: tuple[float, dict[str, Any]] | None = None
 
     for coarse_frequency_hz in coarse_candidates:
         shifted = mix_frequency(x, capture_sample_rate_hz, coarse_frequency_hz)
@@ -580,6 +638,8 @@ def analyze_capture(
 
         detection["coarse_frequency_hz"] = float(coarse_frequency_hz)
         detection["analysis_window_start_sample"] = int(analysis_start)
+        if best_receiver is None or detection["receiver_norm_corr"] > best_receiver[0]:
+            best_receiver = (detection["receiver_norm_corr"], detection["receiver"])
         if best_result is None:
             best_result = detection
             best_analysis_window = analysis_capture
@@ -598,8 +658,9 @@ def analyze_capture(
             best_analysis_window = analysis_capture
             best_window_start = analysis_start
 
-    if best_result is None or best_analysis_window is None:
+    if best_result is None or best_analysis_window is None or best_receiver is None:
         raise RuntimeError("Unable to demodulate a BPSK frame from the WAV capture.")
+    best_result["receiver"] = best_receiver[1]
     return best_analysis_window, best_window_start, best_result, coarse_candidates
 
 
@@ -699,6 +760,7 @@ def main() -> int:
         rms_level_dbfs=rms_level_dbfs,
         clipping_fraction=clipping_fraction,
         detection=asdict(detection),
+        receiver=detection_payload["receiver"],
     )
 
     metrics_path = save_metrics_json(metrics, output_prefix_token, out_dir)
@@ -754,6 +816,13 @@ def main() -> int:
     print(f"Bit errors total: {detection.bit_errors_total}")
     print(f"Bit errors payload: {detection.bit_errors_payload}")
     print(f"EVM: {detection.evm_percent:.3f} %")
+    print("  (the lines above are reference-aided: gain/phase fitted over the whole known frame)")
+    receiver = detection_payload["receiver"]
+    print(
+        "Receiver scoring (preamble + PLL, payload only): "
+        f"bit errors {receiver['bit_errors_payload']}/{receiver['payload_bits']}, "
+        f"EVM {receiver['evm_percent']:.3f} %"
+    )
     print(f"Raw peak level: {raw_peak_level_dbfs:.2f} dBFS")
     print(f"Raw RMS level: {raw_rms_level_dbfs:.2f} dBFS")
     print(f"Raw clipping fraction: {raw_clipping_fraction:.6e}")
