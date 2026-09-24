@@ -73,6 +73,32 @@ The next packet-level CSS laboratory should add:
 - sync-word and downchirp handling;
 - BER/PER and false-alarm measurements.
 
+## What to expect
+
+SER against SNR (800 symbols per point, `SF = 7`):
+
+| SNR | −18 dB | −15 dB | −12 dB | −9 dB | −6 dB | −3 dB | 0 dB |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| SER | 0.853 | 0.636 | 0.245 | 0.010 | 0 | 0 | 0 |
+
+SER against normalized CFO (fraction of one bin spacing):
+
+| CFO | −0.45 | −0.30 | −0.15 | 0 | +0.15 | +0.30 | +0.45 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| SER | 0.405 | 0.078 | 0.015 | 0.011 | 0.019 | 0.080 | 0.431 |
+
+- **The detector works below the noise floor** (SER 1 % at −9 dB SNR): dechirping and a 128-point FFT
+  collect the whole symbol's energy into one bin, a processing gain of `10*log10(128) = 21 dB`.
+- **Half a bin of CFO nearly destroys it**: at ±0.45 bin the energy splits between two bins and SER
+  exceeds 40 %. This is why Lab 8.22 estimates and removes CFO before payload decisions.
+
+## Exercises
+
+1. Repeat the SNR sweep with `SF = 9`. By how many dB does the curve move, and does it match
+   `10*log10(512/128)`?
+2. At what CFO (in hertz) does a 125 kHz, `SF = 7` link lose half a bin? Compare with a 0.3 ppm
+   oscillator offset at 868 MHz.
+
 ## Report checklist
 
 - [ ] Include the SER-versus-SNR curve.

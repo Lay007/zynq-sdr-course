@@ -41,6 +41,29 @@ python tools/run_all_labs.py
 3. How would the choice change for an FPGA streaming design?
 4. What memory and latency trade-offs appear when moving from a script to RTL?
 
+## What to expect
+
+```text
+DFT/FFT ratio at N=65536: 4096.0
+FFT/selected-bin ratio at N=65536: 4.0
+```
+
+- The operation counts are normalised models: a direct DFT costs `N^2`, an FFT `N/2 * log2(N)`,
+  and evaluating `K` selected bins costs `K * N`.
+- **At N = 65 536 the direct DFT is 4096 times more work than the FFT** (`2N / log2 N`). This ratio
+  grows without bound, which is why nobody computes a full spectrum with a direct DFT.
+- **Four selected bins are still 4 times cheaper than the full FFT** at that size. The break-even is
+  `K = log2(N) / 2 = 8` bins: above that, the full FFT wins even if you only need a few frequencies.
+  That is exactly the Goertzel-versus-FFT decision you make for pilot or tone detection.
+
+## Exercises
+
+1. Compute the DFT/FFT ratio for N = 64, 1024 and 65 536 by hand and check against the plot.
+2. How many selected bins can you afford at N = 4096 before a full FFT becomes cheaper?
+3. The counts ignore memory. A streaming FFT needs `N` complex words of buffer; a Goertzel detector
+   needs two per bin. Which would you choose for detecting 3 known pilots in an FPGA with little
+   block RAM, and why?
+
 ## Report checklist
 
 - Include both generated plots.

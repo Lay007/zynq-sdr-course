@@ -118,6 +118,36 @@ f_ddc_shift = -f_rx_obs
 | sample rate mismatch | peak appears at wrong FFT bin | check metadata sample rate |
 | IQ conjugation | spectrum mirrored | check I/Q ordering and sign convention |
 
+## What to expect
+
+```text
+TX LO: 915.000000 MHz
+RX LO: 915.000000 MHz
+TX DUC shift: 100000.000 Hz
+TX RF frequency: 915100000.000 Hz
+RX observed offset: 100000.000 Hz
+DDC shift: -100000.000 Hz
+RX peak: 100012.207 Hz
+Final peak after DDC: 0.000 Hz
+Final frequency error: 0.000 Hz
+SNR estimate after DDC: 78.94 dB
+```
+
+- The frequency plan is pure arithmetic: `915.000 + 0.100 − 915.000 = +0.100 MHz` observed, so a
+  DDC shift of −100 kHz brings the tone to 0 Hz.
+- The "RX peak 100 012 Hz" is bin quantization (12 Hz), and after the DDC the tone lands exactly
+  on bin 0. A real link would add the oscillator offsets of both boards, which is what the CFO
+  estimators of Block 8 remove.
+
+## Exercises
+
+1. Flip the sign of the DDC shift. Where does the tone land, and would you notice the mistake if
+   you only looked at the spectrum shape?
+2. Set the RX LO to 915.030 MHz. Compute the observed offset and the DDC shift you need, then
+   check.
+3. On real hardware the two LOs differ by about 0.3 ppm (see Lab 11.30). How many hertz of residual
+   offset does that leave at 915 MHz after the DDC?
+
 ## Report checklist
 
 - [ ] State TX LO and RX LO.

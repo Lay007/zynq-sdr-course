@@ -64,3 +64,31 @@ The zero-error points are finite tests, not proof of an arbitrarily low PER. Wit
 - at least 1000 packets are evaluated per SNR point;
 - missed-detection and false-alarm statistics are present;
 - the SRO sweep shows both degradation and the benefit/limit of resampling correction.
+
+## What to expect
+
+Packet results against SNR (1000 packets per point, 1.25-bin CFO injected):
+
+| SNR | Missed detection | PER uncorrected | PER corrected | SER corrected |
+|---:|---:|---:|---:|---:|
+| −15 dB | 0.948 | 1.0 | 1.0 | 0.609 |
+| −12 dB | 0.419 | 1.0 | 0.93 | 0.139 |
+| −9 dB | 0.013 | 1.0 | 0.045 | 0.004 |
+| −6 dB | 0 | 1.0 | 0 | 0 |
+| −3 dB | 0 | 1.0 | 0 | 0 |
+
+Sample-rate offset (200 packets per point): up to 100 ppm nothing fails; at 250 ppm every uncorrected
+packet fails and correction recovers all of them; at 500 ppm even the corrected receiver loses 20 %
+of packets. No false alarms in 1000 noise-only trials.
+
+- **Without CFO correction nothing gets through at any SNR**: a 1.25-bin offset shifts every symbol
+  by one bin plus a quarter, which is exactly the failure Lab 8.21 predicts.
+- **Missed detection dominates below −9 dB.** The packet is lost before the payload detector sees
+  it, so PER rises faster than SER.
+
+## Exercises
+
+1. What is the 95 % upper bound on PER at −6 dB given 0 failures in 1000 packets? What would you
+   need to claim PER below 1e-4?
+2. Convert 250 ppm of sample-rate offset into how far a 16-symbol payload drifts, in samples, by its
+   last symbol. Why does even the corrected receiver start losing packets at 500 ppm?

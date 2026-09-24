@@ -86,6 +86,29 @@ Usually no additional scaling is required, but amplitude convention must still b
 | missing gain | level cannot be reproduced | save gain settings |
 | no expected offset | cannot validate frequency plan | add expected signal offset |
 
+## What to expect
+
+The executable check writes the same 65 536-sample tone in three formats and reads each back
+through its metadata:
+
+```text
+[PASS] CI16   peak=+100012 Hz  error=12.2 Hz  missing=none  size=262144 B
+[PASS] CU8    peak=+100012 Hz  error=12.2 Hz  missing=none  size=131072 B
+[PASS] CF32   peak=+100012 Hz  error=12.2 Hz  missing=none  size=524288 B
+```
+
+- **File size is a free consistency check**: `samples x 2 x bytes per component`, so 4, 2 and 8
+  bytes per complex sample for CI16, CU8 and CF32. A size that does not match the metadata means
+  a wrong format, a truncated file or a header you forgot about.
+- All three formats give the same peak, because the reader applies the right scaling to each.
+
+## Exercises
+
+1. Read the CU8 file as CI16 by editing only its metadata. What does the spectrum look like, and
+   which metadata check could have caught it?
+2. Swap `endianness` for the CI16 file. Describe the result.
+3. A colleague sends a 10 MB `.cf32` file recorded at 2.4 MS/s. How long is the recording?
+
 ## Report checklist
 
 - [ ] Attach metadata JSON.

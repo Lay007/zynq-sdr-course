@@ -72,6 +72,31 @@ The manifest-driven mode accepts either:
 - the original Lab 9.2 metadata JSON format; or
 - a dataset-style YAML manifest with `file_name`, `sample_rate_hz`, `center_frequency_hz`, `endianness` and `i_first`.
 
+## What to expect
+
+```text
+Samples read: 262144
+Sample rate: 2400000 Hz
+Center frequency: 915000000 Hz
+Expected offset: 100000.000 Hz
+Measured peak: 100012.207 Hz
+Frequency error: 12.207 Hz
+SNR estimate: 74.09 dB
+DC offset magnitude: 0.011674
+Clipping fraction: 0.000000e+00
+Quality pass: True
+```
+
+- The synthetic capture carries a small deliberate DC offset (0.0117 of full scale). On a zero-IF
+  receiver this is the spike at 0 Hz that Lab 6.5 calibrates out.
+- As in Lab 6.4, the 12 Hz error is bin quantization and "SNR" is peak over median bin.
+
+## Exercises
+
+1. Run the reader on `datasets/lab6_6_zynq_rx_observation/manifest_fm_103119454.yaml` (a real
+   capture). Which quality numbers change most compared with the synthetic file, and why?
+2. What `quality_pass` thresholds would you choose for DC offset and clipping for your own bench?
+
 ## Report checklist
 
 - [ ] Attach metadata JSON.

@@ -101,6 +101,37 @@ The same metadata fields should remain valid:
 - external attenuation;
 - overload notes.
 
+## What to expect
+
+```text
+Expected offset: 100000.000 Hz
+Measured peak: 100012.207 Hz
+Frequency error: 12.207 Hz
+Peak level: -5.82 dBFS
+Noise floor: -79.88 dBFS
+SNR estimate: 74.06 dB
+Clipping count: 0
+Overload flag: False
+```
+
+- **The 12.2 Hz error is the FFT bin quantization**, not an RF error: the analysis uses a 65 536-point FFT,
+  so at 2.4 MS/s the bins are 36.6 Hz apart and the peak is read at the nearest bin. On a real capture
+  the same analysis would report the transmitter and receiver oscillator offset on top of this.
+- **"SNR 74 dB" is peak over median FFT bin**, so it includes the FFT processing gain of a long
+  record. It is not the SNR per sample and not comparable with an SNR computed from EVM. State the
+  definition whenever you report it.
+- **Peak level −5.8 dBFS with zero clipping** means the synthetic capture uses about half of full
+  scale; on hardware you would read this number to set RX gain.
+
+## Exercises
+
+1. Change `processing.fft_length` in the metadata to 16 384 and rerun. How do the frequency error
+   and the "SNR" change, and why does the SNR change although the signal did not?
+2. Raise the tone amplitude until the clipping counter becomes non-zero. What happens to the
+   spectrum (harmonics, raised floor)?
+3. Write down the expected offset for a real capture where the TX LO is 915.000 MHz, the digital
+   tone is +100 kHz and the RX LO is 914.950 MHz.
+
 ## Report checklist
 
 - [ ] Attach or reference metadata JSON.

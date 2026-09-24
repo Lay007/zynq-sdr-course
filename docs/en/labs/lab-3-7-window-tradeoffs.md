@@ -45,6 +45,29 @@ python tools/run_all_labs.py
 4. Why does ENBW matter for noise-floor measurements?
 5. Which window would you choose for weak-signal detection and why?
 
+## What to expect
+
+```text
+rectangular: weak visibility = 0.45 dB
+hann: weak visibility = 46.62 dB
+blackman: weak visibility = 46.50 dB
+```
+
+- A weak tone 54 dB below a strong one, 8.4 kHz away (about 138 bins at 61 Hz per bin), is
+  **invisible with a rectangular window** (0.45 dB above its local floor) and clearly visible with
+  Hann or Blackman (about 46.5 dB).
+- Here Hann and Blackman tie because the weak tone is far from the strong one, where both have
+  leakage far below the noise. Compare Lab 3.1, where the weak tone is only 12 bins away and
+  Blackman wins by 7.7 dB: which window is "best" depends on the spacing you need to resolve.
+
+## Exercises
+
+1. Move the weak tone closer to the strong one (for example 1.2 kHz, about 20 bins). Which window
+   wins now?
+2. Lower the weak tone to −80 dB. Which limit do you hit first: leakage or the noise floor?
+3. Using the ENBW values from Lab 3.1, predict how much the noise floor rises from rectangular to
+   Blackman, and check it on the plot.
+
 ## Report checklist
 
 - Include both generated plots.

@@ -49,6 +49,25 @@ flowchart LR
 
 Real SDR experiments often mix tools. A course capture may start from HDSDR/RTL-SDR, then move to AD9363, then be exported through GNU Radio or MATLAB. The analysis stage should be metadata-driven, not hard-coded for one binary layout.
 
+## What to expect
+
+```text
+ci16: peak=124987.793 Hz, SNR=73.22 dB
+cu8: peak=124987.793 Hz, SNR=73.14 dB
+cf32: peak=124987.793 Hz, SNR=73.23 dB
+```
+
+- All three formats give the same peak. The 8-bit CU8 file loses only 0.1 dB of "SNR" here. That
+  does **not** mean 8 bits are as good as 16: the measured figure is peak over median FFT bin, which
+  includes the FFT's processing gain over a long record, and the synthetic tone's own noise is far
+  above the 8-bit quantization noise spread over that many bins.
+
+## Exercises
+
+1. Remove the synthetic noise and rerun. Which format now shows a lower floor, and by roughly how
+   much (hint: about 6 dB per bit)?
+2. Add a second tone 50 dB weaker than the first. In which format does it disappear first?
+
 ## Report checklist
 
 - [ ] List all tested IQ formats.

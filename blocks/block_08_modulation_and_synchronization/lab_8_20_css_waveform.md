@@ -67,6 +67,22 @@ docs/assets/lab820_css_metrics.json
 3. Why does dechirping convert a chirp into a tone?
 4. Which blocks map naturally to FPGA: chirp NCO, complex multiplier, FFT or peak detector?
 
+## What to expect
+
+With `SF = 7`, `BW = 125 kHz`: 128 chips per symbol, 1.024 ms per symbol, constant-envelope error
+at floating-point precision (2e-16). Symbol 37 dechirps to **FFT bin 37**, while the raw upchirp
+peaks at bin 0. In this noiseless case the peak-to-second ratio (192 dB) only reflects numerical
+precision; Lab 8.21 shows what noise does to it.
+
+## Exercises
+
+1. Change `SF` to 9. How many chips and how many milliseconds per symbol? How many bits does one
+   symbol carry?
+2. Encode symbol 127 and symbol 0. Where do they land after dechirping, and why do neighbouring
+   symbols sit on neighbouring bins?
+3. Multiply the received chirp by a small frequency offset (a quarter of a bin). What happens to
+   the peak bin and to its height?
+
 ## Report checklist
 
 - [ ] Record `SF`, `BW`, sample rate and symbol duration.

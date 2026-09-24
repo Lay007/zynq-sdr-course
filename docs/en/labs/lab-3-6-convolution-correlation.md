@@ -41,6 +41,34 @@ python tools/run_all_labs.py
 4. What accumulator width would be required in a fixed-point correlator?
 5. How would you implement a sliding correlator in FPGA logic?
 
+## What to expect
+
+```text
+Estimated delay: 512 samples
+Delay error: 0 samples
+Correlation peak/median: 40.00 dB
+```
+
+- A 64-symbol QPSK preamble is buried at sample 512 in a 2048-sample record, passed through a
+  3-tap multipath channel, at 9 dB SNR, then low-pass filtered. Correlating with the known preamble
+  finds it **exactly**.
+- **The peak stands 40 dB above the median correlation value.** A 64-symbol preamble gives a
+  coherent gain of `10*log10(64) = 18 dB` in power over any single sample; the peak-to-median ratio
+  is larger because the median of a noise-only correlation is well below its mean.
+- The FIR is symmetric and applied with `mode="same"`, so it adds no delay. The channel is causal.
+  Until September 2026 the channel was also applied with `mode="same"`, which moved the preamble one
+  sample early and made the lab report 511: a reminder that the convolution mode is part of the
+  model, not a plotting detail.
+
+## Exercises
+
+1. Lower the SNR from 9 dB to 0, −6 and −12 dB. At which SNR does the delay estimate start to
+   fail, and how does the peak-to-median ratio behave just before that?
+2. Shorten the preamble from 64 to 16 symbols. How many dB of peak-to-median do you lose? Compare
+   with `10*log10(64/16)`.
+3. Apply the FIR with `np.convolve(rx, h)` (full) instead of `mode="same"`. By how many samples does
+   the estimate move, and why is it exactly `(len(h) - 1) / 2`?
+
 ## Report checklist
 
 - Include both generated plots.
