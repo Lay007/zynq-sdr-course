@@ -56,17 +56,32 @@ def demod(sym):
     return np.column_stack([(sym.real < 0).astype(int), (sym.imag < 0).astype(int)])
 
 
-def resolve_90deg_ambiguity(y, ref_dibits):
-    """A QPSK Costas loop locks to one of four k*90-deg rotations. A known preamble /
-    unique word (here: the reference dibits) picks the true rotation. Returns the
-    de-rotated symbols and the resulting BER — i.e. what a real framed link does."""
-    best_ber, best = 1.0, y
+PREAMBLE_SYMBOLS = 32
+
+
+def resolve_90deg_ambiguity(y, ref_dibits, preamble_symbols=PREAMBLE_SYMBOLS):
+    """A QPSK Costas loop locks to one of four k*90-deg rotations. The first
+    `preamble_symbols` known symbols (the preamble / unique word) pick the rotation;
+    the BER is then scored on the remaining symbols only, i.e. what a real framed
+    link does. Choosing the rotation by the lowest BER over the whole frame would use
+    the payload as a reference (genie alignment)."""
+    pre = slice(0, preamble_symbols)
+    k = min(range(4), key=lambda k: np.sum(demod(y[pre] * np.exp(-1j * pi / 2 * k)) != ref_dibits[pre]))
+    rot = y[preamble_symbols:] * np.exp(-1j * pi / 2 * k)
+    return rot, float(np.mean(demod(rot) != ref_dibits[preamble_symbols:]))
+
+
+def acquisition_symbols(y, ref_dibits):
+    """Index just after the last symbol error under the best rotation: how long the
+    loop needed to pull in. A measurement against the known data, not a receiver step."""
+    last = -1
+    best = None
     for k in range(4):
-        rot = y * np.exp(-1j * pi / 2 * k)
-        ber = np.mean(demod(rot) != ref_dibits)
-        if ber < best_ber:
-            best_ber, best = ber, rot
-    return best, best_ber
+        wrong = np.nonzero((demod(y * np.exp(-1j * pi / 2 * k)) != ref_dibits).any(axis=1))[0]
+        if best is None or len(wrong) < best:
+            best = len(wrong)
+            last = int(wrong[-1]) if len(wrong) else -1
+    return last + 1
 
 
 def ber_vs_cfo(n_sym=20000, ebn0_db=12.0):
@@ -78,10 +93,13 @@ def ber_vs_cfo(n_sym=20000, ebn0_db=12.0):
         rx = add_cfo_awgn(tx, c, ebn0_db)
         raw.append(np.mean(demod(rx) != dibits))
         y, _ = costas_qpsk(rx)
-        # loop needs a few symbols to lock; resolve the residual 90-deg ambiguity
-        # against the preamble, then measure BER over the locked span.
+        # The loop needs time to pull in, and that time grows steeply with the CFO.
+        # Skip the first 1000 symbols, resolve the 90-deg ambiguity on the next
+        # preamble, then measure BER over the rest.
         _, ber = resolve_90deg_ambiguity(y[1000:], dibits[1000:])
         rec.append(ber)
+        print(f"CFO {c:.3f} cycles/symbol: pull-in {acquisition_symbols(y, dibits):4d} symbols, "
+              f"raw BER {raw[-1]:.4f}, recovered BER {ber:.2e} over {2 * (n_sym - 1000 - PREAMBLE_SYMBOLS)} bits")
     return cfos, np.array(raw), np.array(rec)
 
 
