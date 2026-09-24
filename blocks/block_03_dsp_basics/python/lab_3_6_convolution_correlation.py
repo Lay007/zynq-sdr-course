@@ -53,7 +53,10 @@ def make_received_signal(preamble: np.ndarray, delay: int, n: int = 2048, snr_db
     x = np.zeros(n, dtype=np.complex128)
     x[delay : delay + len(preamble)] = preamble
     channel = np.array([1.0 + 0.0j, 0.30 * np.exp(1j * 0.8), 0.16 * np.exp(-1j * 1.3)])
-    y = np.convolve(x, channel, mode="same")
+    # A physical multipath channel is causal: keep the first n samples of the full
+    # convolution. mode="same" would centre the 3-tap kernel and move the preamble
+    # one sample earlier than the true delay.
+    y = np.convolve(x, channel)[:n]
     signal_power = np.mean(np.abs(y) ** 2)
     noise_power = signal_power / (10.0 ** (snr_db / 10.0))
     noise = np.sqrt(noise_power / 2.0) * (rng.standard_normal(n) + 1j * rng.standard_normal(n))

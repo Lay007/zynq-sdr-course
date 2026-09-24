@@ -93,3 +93,14 @@ def test_lab34_alias_prediction_and_suppression() -> None:
     )
     assert abs(bad_dbc - (-6.0)) < 0.5
     assert good_dbc < -90.0
+
+
+LAB36 = _load("lab_3_6_convolution_correlation")
+
+
+def test_lab36_correlation_finds_the_exact_delay() -> None:
+    # Regression: mode="same" on the causal channel shifted the preamble by one sample.
+    preamble = LAB36.qpsk_preamble(64)
+    rx = LAB36.make_received_signal(preamble, 512)
+    filtered = np.convolve(rx, LAB36.lowpass_fir(), mode="same")
+    assert int(np.argmax(LAB36.matched_correlation(filtered, preamble))) == 512
