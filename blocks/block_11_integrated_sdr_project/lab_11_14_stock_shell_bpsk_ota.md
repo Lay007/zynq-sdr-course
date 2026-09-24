@@ -114,6 +114,8 @@ Observed result:
 - `BER payload = 0`;
 - `EVM = 54.98 %`.
 
+These numbers are reference-aided: gain/phase are fitted over the whole known frame and the candidate with the fewest bit errors is kept. Re-scored on 2026-09-24 from the committed capture with the receiver scoring of Lab 11.20 (preamble gain/phase, decision-directed PLL, payload bits only): **0 / 256 payload bit errors, EVM 53.9 %**. The high EVM is therefore a property of this capture, not an artefact of the phase estimate.
+
 Artifacts:
 
 - `datasets/lab11_14_stock_shell_bpsk_ota/manifest_live_20260623d.yaml`
