@@ -51,6 +51,31 @@ python tools/run_all_labs.py
 - The real-valued capture should show matching positive and negative peaks around `+/-120 kHz`.
 - The metrics JSON should confirm a small error for the correct case and near-symmetric mirror peaks for the real-valued case.
 
+## What to expect
+
+```text
+Correct peak: 119995.117 Hz
+I/Q swapped peak: -119995.117 Hz
+Real-valued positive/negative peaks: 119995.117/-119995.117 Hz
+```
+
+- **Swapping I and Q mirrors the spectrum exactly**: +120 kHz becomes -120 kHz. Swapping the two
+  parts turns `x` into `j * conj(x)`, and conjugation reverses the direction of rotation.
+- **A real-valued capture shows both +120 and -120 kHz with equal height**. A real signal cannot
+  tell the two directions apart; this is why an SDR delivers two channels, I and Q.
+- A mirrored spectrum is the typical symptom of a wrong `i_first` setting or of a receiver that
+  uses the other sign convention for the LO. Nothing in the samples says which one is right, so
+  it has to be recorded in the metadata and checked with a known tone.
+
+## Exercises
+
+1. Conjugate the correct signal (`np.conj(x)`) instead of swapping I and Q. Compare the peak with
+   the swapped case. Why are they equal?
+2. You record a known FM station that should appear at +300 kHz and it appears at -300 kHz.
+   List two possible causes and one experiment that separates them.
+3. Why does the real-valued capture need twice the sample rate of the complex one to cover the
+   same bandwidth?
+
 ## Report checklist
 
 - [ ] Explain why complex baseband can distinguish spectral direction.

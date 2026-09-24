@@ -51,6 +51,27 @@ python tools/run_all_labs.py
 - The `1.18 MHz` tone should fold to approximately `180 kHz`.
 - The metrics JSON should confirm that measured alias frequencies follow the analytical alias model within a small error.
 
+## What to expect
+
+```text
+Input 180000 Hz -> expected alias 180000.000 Hz, measured 179992.676 Hz
+Input 620000 Hz -> expected alias 380000.000 Hz, measured 380004.883 Hz
+Input 1180000 Hz -> expected alias 180000.000 Hz, measured 179992.676 Hz
+```
+
+- For a **real** sampler at `Fs = 1 MHz` the observable band is 0 to 500 kHz. A tone at `f`
+  appears at `|f - k*Fs|` for the integer `k` that lands in that band.
+- **180 kHz and 1.18 MHz produce the same spectrum.** From the samples alone they cannot be told
+  apart. Only an analog filter *before* the ADC can decide which one is allowed in.
+- The few-hertz differences between expected and measured are bin quantization, as in Lab 2.1.
+
+## Exercises
+
+1. Predict the alias of 950 kHz, 1.5 MHz and 2.3 MHz at `Fs = 1 MHz`, then check.
+2. Which input frequencies between 0 and 3 MHz all land exactly on 100 kHz?
+3. A receiver has an anti-alias filter with a 450 kHz passband edge. Which band of inputs can
+   still fold into 0–50 kHz if the filter only reaches 40 dB rejection at 950 kHz?
+
 ## Report checklist
 
 - [ ] Record `Fs` and the Nyquist frequency.
