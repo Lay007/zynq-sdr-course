@@ -131,48 +131,75 @@ PS → AXI → PL → AXI → PS
 
 without RF or DSP.
 
-### Concrete Vivado procedure (prepared, not executed in this repository)
+### Concrete Vivado procedure (built with Vivado 2021.1; not loaded on a board)
 
-The RTL side of this step is already committed and CI-tested (`zynq_message_mailbox_axi_lite.v`, `zynq_message_mailbox_vivado_wrapper.v`, `tb_zynq_message_mailbox_axi_lite.sv`, workflow `block5_ps_pl_mailbox.yml`). Building this into a Zynq Block Design still requires Vivado itself, which is not available in every development environment (it was not available when this section was written). The steps below are the exact, reviewable procedure to run when it is -- a recipe, not a report of results already obtained.
+The RTL side of this step is committed and CI-tested (`zynq_message_mailbox_axi_lite.v`, `zynq_message_mailbox_vivado_wrapper.v`, `tb_zynq_message_mailbox_axi_lite.sv`, workflow `block5_ps_pl_mailbox.yml`). The Block Design procedure below was executed end to end on 2026-09-24 with Vivado 2021.1, through bitstream and XSA, by one command:
+
+```bash
+python tools/build_block5_mailbox_bd.py --build-dir C:/tmp/mb
+```
+
+The script reads the course board's own PS7 settings (all 876 `PCW_*` parameters: DDR, MIO, peripherals) from its known-good hardware handoff `hardware/7020_ad936x_sdr/ps/bringup_tests/design_1_wrapper.xsa`, so DDR and MIO are not guessed, then runs `tools/vivado_block5_mailbox_bd.tcl`. Keep the build directory short: Vivado warns above 80 characters, and IP generation fails near the 260-character Windows path limit.
 
 ```tcl
-# 1. Create a new BD in an existing Zynq-7020 project (or the course project).
+# 1. New BD in a project for xc7z020clg400-2.
 create_bd_design "mailbox_echo_bd"
 
-# 2. Add the Zynq7 Processing System and run block automation
-#    (enables one AXI clock, applies the standard processor-system-reset IP).
+# 2. Zynq PS. The course board has no Vivado board file, so do not apply a board
+#    preset; apply the board's own PCW_* settings instead (the script does this).
 create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0
 apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 \
-    -config {make_external "FIXED_IO, DDR" apply_board_preset "1"} \
+    -config {make_external "FIXED_IO, DDR" apply_board_preset "0"} \
+    [get_bd_cells processing_system7_0]
+#    ... set_property CONFIG.<PCW_*> for every board parameter, then enable what
+#    this lab needs on top (the board image has M_AXI_GP0 off and FCLK0 at 50 MHz):
+set_property -dict [list CONFIG.PCW_USE_M_AXI_GP0 {1} CONFIG.PCW_EN_CLK0_PORT {1} \
+    CONFIG.PCW_EN_RST0_PORT {1} CONFIG.PCW_FPGA0_PERIPHERAL_FREQMHZ {100}] \
     [get_bd_cells processing_system7_0]
 
-# 3. Add the mailbox as a Verilog module reference (not a packaged IP -- this
-#    is the same zynq_message_mailbox_vivado_wrapper.v that iverilog already
-#    elaborates in CI, so there is no separate hardware-only RTL to trust).
+# 3. The mailbox as a Verilog module reference (the same wrapper iverilog
+#    elaborates in CI).
 create_bd_cell -type module -reference zynq_message_mailbox_vivado_wrapper mailbox_0
 
-# 4. Connect M_AXI_GP0 to the mailbox's S_AXI through automation, which also
-#    inserts the AXI Interconnect/SmartConnect and wires clock/reset.
+# 4. M_AXI_GP0 -> interconnect -> mailbox S_AXI; automation adds the
+#    interconnect and the processor-system-reset block.
 apply_bd_automation -rule xilinx.com:bd_rule:axi4 \
     -config {Master "/processing_system7_0/M_AXI_GP0" Clk "Auto"} \
     [get_bd_intf_pins mailbox_0/S_AXI]
 
-# 5. Validate the design before assigning addresses.
+# 5-6. Let Vivado assign the address, restrict it to 4K (0x00-0xAC register map),
+#      then validate.
+assign_bd_address
+set_property range 4K [get_bd_addr_segs {processing_system7_0/Data/SEG_mailbox_0_reg0}]
 validate_bd_design
 
-# 6. Let Vivado assign the base address (do not hand-pick one); a 4K range
-#    covers the 0x00-0xAC register map with headroom for the RX_DATA words.
-assign_bd_address [get_bd_addr_segs mailbox_0/S_AXI/reg0]
-set_property range 4K [get_bd_addr_segs {processing_system7_0/Data/SEG_mailbox_0_reg0}]
-
-# 7. Generate the wrapper, run synthesis/implementation, export the bitstream
-#    and XSA, then read the *actual* assigned address back out for the report:
-report_property [get_bd_addr_segs] -class {} | grep -i offset
+# 7. Read the assigned address back (Tcl has no pipes, so no `| grep`):
+set seg [get_bd_addr_segs -of_objects [get_bd_addr_spaces processing_system7_0/Data]]
+puts "[get_property OFFSET $seg] [get_property RANGE $seg]"
+#    then make_wrapper, launch_runs impl_1 -to_step write_bitstream -jobs 1,
+#    write_hw_platform -fixed -include_bit.
 ```
 
-Record whatever address step 7 actually reports -- do not reuse the address from a previous board, a previous synthesis run, or this text. The register map, byte widths and RX-hold-until-ACK contract above are the part that is fixed; the base address is a build-time fact.
+Result of that build (normalized reports in [`reports/fpga/block5_mailbox_bd_raw`](https://github.com/Lay007/zynq-sdr-course/tree/main/reports/fpga/block5_mailbox_bd_raw)):
 
-Do not fabricate a "physical base address" without running this. A `TBD` in the lab report is an honest and acceptable state until the build above has actually produced one.
+| Item | Value |
+|---|---|
+| Mailbox segment | `SEG_mailbox_0_reg0`, offset `0x40000000`, range `0x1000` (4 KB) |
+| FCLK_CLK0 | 100.000 MHz |
+| Timing at 100 MHz | WNS +3.508 ns, 0 failing endpoints |
+| Utilization | 1060 LUT, 1844 FF, 0 BRAM, 0 DSP (mailbox 636 LUT / 1265 FF, AXI interconnect 407 LUT) |
+| DRC | 0 violations |
+| Outputs | bitstream and XSA (not committed, not loaded on a board) |
+
+What executing the recipe found:
+
+- **Without step 6 the mailbox gets the whole 1 GB `M_AXI_GP0` window** (range `0x40000000`). The 4K restriction is not cosmetic.
+- `apply_board_preset "1"` needs a Vivado board file, which this board does not have; the board's settings must come from its own hardware handoff.
+- The board's reference image has `M_AXI_GP0` disabled and `FCLK_CLK0` at 50 MHz, so they must be enabled on top of the board settings.
+- 10 of the 876 board parameters are read-only derived values (the `*_FREQMHZ` bus clocks and `PCW_NUM_F2P_INTR_INPUTS`); Vivado rejects them with a CRITICAL WARNING, which is expected.
+- With four parallel jobs on a 16 GB machine the IP syntheses ran out of memory; one job at a time completes.
+
+`0x40000000` is simply the start of the `M_AXI_GP0` window, which is why Vivado picked it. It is still a build-time fact: record the address your own build reports, not this one.
 
 ## Part C — move to the radio link
 

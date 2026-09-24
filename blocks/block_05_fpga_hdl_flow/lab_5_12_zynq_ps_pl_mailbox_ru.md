@@ -131,48 +131,75 @@ PS → AXI → PL → AXI → PS
 
 без RF и без DSP.
 
-### Конкретная Vivado-процедура (подготовлена, но не выполнена в этом репозитории)
+### Конкретная Vivado-процедура (собрана в Vivado 2021.1; на плату не загружалась)
 
-RTL-часть этого шага уже закоммичена и проверяется в CI (`zynq_message_mailbox_axi_lite.v`, `zynq_message_mailbox_vivado_wrapper.v`, `tb_zynq_message_mailbox_axi_lite.sv`, workflow `block5_ps_pl_mailbox.yml`). Чтобы собрать из этого Zynq Block Design, всё равно нужен сам Vivado, а он доступен не в каждом окружении разработки (в момент написания этого раздела его не было). Шаги ниже — точная, проверяемая процедура для запуска, когда Vivado доступен, а не отчёт об уже полученном результате.
+RTL-часть этого шага закоммичена и проверяется в CI (`zynq_message_mailbox_axi_lite.v`, `zynq_message_mailbox_vivado_wrapper.v`, `tb_zynq_message_mailbox_axi_lite.sv`, workflow `block5_ps_pl_mailbox.yml`). Процедура Block Design ниже выполнена целиком 2026-09-24 в Vivado 2021.1 — до bitstream и XSA — одной командой:
+
+```bash
+python tools/build_block5_mailbox_bd.py --build-dir C:/tmp/mb
+```
+
+Скрипт берёт собственные настройки PS7 платы курса (все 876 параметров `PCW_*`: DDR, MIO, периферия) из её проверенного hardware handoff `hardware/7020_ad936x_sdr/ps/bringup_tests/design_1_wrapper.xsa`, так что DDR и MIO не угадываются, и затем запускает `tools/vivado_block5_mailbox_bd.tcl`. Каталог сборки держите коротким: Vivado предупреждает при пути длиннее 80 символов, а генерация IP ломается у предела Windows в 260 символов.
 
 ```tcl
-# 1. Создать новый BD в существующем Zynq-7020 проекте (или в проекте курса).
+# 1. Новый BD в проекте для xc7z020clg400-2.
 create_bd_design "mailbox_echo_bd"
 
-# 2. Добавить Zynq7 Processing System и запустить block automation
-#    (включает один AXI clock, подключает стандартную processor-system-reset IP).
+# 2. Zynq PS. У платы курса нет board-файла Vivado, поэтому board preset не
+#    применяется; вместо него применяются собственные PCW_* платы (это делает скрипт).
 create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0
 apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 \
-    -config {make_external "FIXED_IO, DDR" apply_board_preset "1"} \
+    -config {make_external "FIXED_IO, DDR" apply_board_preset "0"} \
+    [get_bd_cells processing_system7_0]
+#    ... set_property CONFIG.<PCW_*> для каждого параметра платы, затем поверх
+#    включается то, что нужно лабе (в образе платы M_AXI_GP0 выключен, FCLK0 = 50 МГц):
+set_property -dict [list CONFIG.PCW_USE_M_AXI_GP0 {1} CONFIG.PCW_EN_CLK0_PORT {1} \
+    CONFIG.PCW_EN_RST0_PORT {1} CONFIG.PCW_FPGA0_PERIPHERAL_FREQMHZ {100}] \
     [get_bd_cells processing_system7_0]
 
-# 3. Добавить mailbox как Verilog module reference (не как упакованный IP -- это
-#    тот же zynq_message_mailbox_vivado_wrapper.v, который iverilog уже
-#    elaborate'ит в CI, так что отдельного «только для железа» RTL не появляется).
+# 3. Mailbox как Verilog module reference (тот же wrapper, который iverilog
+#    elaborate'ит в CI).
 create_bd_cell -type module -reference zynq_message_mailbox_vivado_wrapper mailbox_0
 
-# 4. Соединить M_AXI_GP0 с S_AXI mailbox через automation, которая заодно
-#    вставляет AXI Interconnect/SmartConnect и подключает clock/reset.
+# 4. M_AXI_GP0 -> interconnect -> S_AXI mailbox; automation добавляет
+#    interconnect и блок processor-system-reset.
 apply_bd_automation -rule xilinx.com:bd_rule:axi4 \
     -config {Master "/processing_system7_0/M_AXI_GP0" Clk "Auto"} \
     [get_bd_intf_pins mailbox_0/S_AXI]
 
-# 5. Провалидировать design перед назначением адресов.
+# 5-6. Дать Vivado назначить адрес, ограничить его 4K (карта регистров 0x00-0xAC),
+#      затем провалидировать.
+assign_bd_address
+set_property range 4K [get_bd_addr_segs {processing_system7_0/Data/SEG_mailbox_0_reg0}]
 validate_bd_design
 
-# 6. Дать Vivado самому назначить base address (не выбирать вручную); диапазон
-#    4K покрывает карту регистров 0x00-0xAC с запасом под слова RX_DATA.
-assign_bd_address [get_bd_addr_segs mailbox_0/S_AXI/reg0]
-set_property range 4K [get_bd_addr_segs {processing_system7_0/Data/SEG_mailbox_0_reg0}]
-
-# 7. Сгенерировать wrapper, прогнать synthesis/implementation, экспортировать
-#    bitstream и XSA, затем прочитать *реально* назначенный адрес для отчёта:
-report_property [get_bd_addr_segs] -class {} | grep -i offset
+# 7. Прочитать назначенный адрес (в Tcl нет конвейеров, поэтому никакого `| grep`):
+set seg [get_bd_addr_segs -of_objects [get_bd_addr_spaces processing_system7_0/Data]]
+puts "[get_property OFFSET $seg] [get_property RANGE $seg]"
+#    затем make_wrapper, launch_runs impl_1 -to_step write_bitstream -jobs 1,
+#    write_hw_platform -fixed -include_bit.
 ```
 
-В отчёт записывается ровно то, что реально вернул шаг 7 — не адрес с другой платы, не адрес из прошлого прогона синтеза и не адрес из этого текста. Карта регистров, разрядность полей и контракт «RX держится до ACK» выше — это фиксированная часть; base address — факт конкретной сборки.
+Результат этой сборки (нормализованные отчёты в [`reports/fpga/block5_mailbox_bd_raw`](https://github.com/Lay007/zynq-sdr-course/tree/main/reports/fpga/block5_mailbox_bd_raw)):
 
-Не придумывать «physical base address» без реального запуска. `TBD` в отчёте лабораторной — честное и допустимое состояние, пока сборка выше не выполнена на самом деле.
+| Пункт | Значение |
+|---|---|
+| Сегмент mailbox | `SEG_mailbox_0_reg0`, offset `0x40000000`, range `0x1000` (4 КБ) |
+| FCLK_CLK0 | 100,000 МГц |
+| Тайминг на 100 МГц | WNS +3,508 нс, 0 нарушающих конечных точек |
+| Ресурсы | 1060 LUT, 1844 FF, 0 BRAM, 0 DSP (mailbox 636 LUT / 1265 FF, AXI interconnect 407 LUT) |
+| DRC | 0 нарушений |
+| Выходы | bitstream и XSA (не закоммичены, на плату не загружались) |
+
+Что показало выполнение рецепта:
+
+- **Без шага 6 mailbox получает всё окно `M_AXI_GP0` в 1 ГБ** (range `0x40000000`). Ограничение 4K — не косметика.
+- `apply_board_preset "1"` требует board-файл Vivado, которого у этой платы нет; настройки платы должны браться из её собственного hardware handoff.
+- В эталонном образе платы `M_AXI_GP0` выключен, а `FCLK_CLK0` равен 50 МГц, поэтому их нужно включать поверх настроек платы.
+- 10 из 876 параметров платы — производные, только для чтения (тактовые частоты шин `*_FREQMHZ` и `PCW_NUM_F2P_INTR_INPUTS`); Vivado отвергает их с CRITICAL WARNING, и это ожидаемо.
+- При четырёх параллельных заданиях на машине с 16 ГБ синтез IP упёрся в нехватку памяти; по одному заданию сборка завершается.
+
+`0x40000000` — просто начало окна `M_AXI_GP0`, поэтому Vivado его и выбрал. Это всё равно факт конкретной сборки: записывайте адрес, который сообщит ваша сборка, а не этот.
 
 ## Часть C — переход к радиолинии
 
