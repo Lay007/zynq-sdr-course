@@ -40,9 +40,25 @@ Then:
 5. verify that the target signal moves to the expected frequency;
 6. discuss NCO frequency resolution and fixed-point phase accumulator width.
 
+## Run the reference script
+
+```bash
+python blocks/block_03_dsp_basics/python/lab_3_3_digital_mixing.py
+```
+
+The script is deterministic and writes:
+
+```text
+docs/assets/lab33_digital_mixing.png
+docs/assets/lab33_digital_mixing_metrics.json
+```
+
+Run it first and read its numbers against the section *What to expect* below. Then write your own
+version from the minimum structure that follows; the reference script is your answer key.
+
 ## Python implementation
 
-Minimum expected script structure:
+Minimum structure for your own implementation:
 
 ```python
 import numpy as np
@@ -75,7 +91,7 @@ plt.show()
 
 ## MATLAB implementation
 
-Minimum expected script structure:
+Minimum structure for your own implementation:
 
 ```matlab
 fs = 2.4e6;
@@ -166,6 +182,43 @@ Produce at least:
 3. zoomed view around target frequency;
 4. optional phase accumulator trace;
 5. optional NCO quantization error plot.
+
+## What to expect
+
+Default run (`Fs = 2.4 MS/s`, `N = 32768`, tone at +420 kHz, shift -420 kHz; the hardware-style NCO
+uses a 32-bit phase accumulator addressing a 1024-entry, 16-bit sine/cosine table):
+
+```text
+Input peak: 419970.7 Hz
+After ideal NCO (-420 kHz): 0.0 Hz
+After wrong-sign NCO (+420 kHz): 840014.6 Hz
+32-bit phase increment: 3543348019 -> realized shift -420000.000112 Hz (error -0.000112 Hz, resolution 0.000559 Hz)
+After hardware NCO: 0.0 Hz, worst NCO spur -58.9 dBc
+```
+
+- **Peak readings are bin-quantized.** The input reads 419 970.7 Hz, not 420 000, because the bin
+  spacing is 73.2 Hz; do not mistake this for a frequency error.
+- **A sign mistake does not fail loudly.** With the opposite sign the tone moves *away* to
+  840 kHz and the output still looks like a clean tone. Always check where the peak lands.
+- **A negative shift is a large unsigned increment.** `-420 kHz` becomes increment 3 543 348 019
+  (that is 2^32 - 751 619 277); the accumulator wraps and the shift is realized to 0.1 mHz, well
+  inside the 0.56 mHz resolution of a 32-bit accumulator.
+- **The table size, not the accumulator, limits purity.** Truncating the phase to 10 address bits
+  gives a worst spur of -58.9 dBc. Each extra address bit buys about 6 dB (8 bits: -46.8 dBc,
+  12 bits: -70.8 dBc); the 16-bit amplitude only starts to matter below about 8 bits.
+
+![Spectrum before and after shifting to DC](/zynq-sdr-course/assets/lab33_digital_mixing.png)
+
+## Exercises
+
+1. Call `hardware_nco(SHIFT_HZ, lut_addr_bits=a)` for `a` = 6, 8, 10, 12 and plot the worst spur
+   against `a`. Fit a line. What table size do you need for a 90 dBc spur-free NCO?
+2. Repeat with `amp_bits` = 8, 12, 16 at 10 address bits. Why does amplitude resolution hardly
+   matter here?
+3. Choose a shift that is an exact binary fraction of `Fs` (for example `Fs / 16`). What happens
+   to the spurs, and why?
+4. Replace the complex multiply with a real one (`np.real(x) * np.cos(...)`). Where does the
+   extra spectral line appear, and why does a real mixer need an image filter?
 
 ## Report checklist
 

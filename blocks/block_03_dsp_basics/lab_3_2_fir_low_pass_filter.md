@@ -39,9 +39,25 @@ Then:
 5. compare spectra before and after filtering;
 6. measure basic signal quality improvement.
 
+## Run the reference script
+
+```bash
+python blocks/block_03_dsp_basics/python/lab_3_2_fir_low_pass.py
+```
+
+The script is deterministic and writes:
+
+```text
+docs/assets/lab32_fir_low_pass.png
+docs/assets/lab32_fir_low_pass_metrics.json
+```
+
+Run it first and read its numbers against the section *What to expect* below. Then write your own
+version from the minimum structure that follows; the reference script is your answer key.
+
 ## Python implementation
 
-Minimum expected script structure:
+Minimum structure for your own implementation:
 
 ```python
 import numpy as np
@@ -81,7 +97,7 @@ plt.show()
 
 ## MATLAB implementation
 
-Minimum expected script structure:
+Minimum structure for your own implementation:
 
 ```matlab
 fs = 2.4e6;
@@ -161,6 +177,46 @@ Produce at least:
 3. spectrum before filtering;
 4. spectrum after filtering;
 5. optional time-domain comparison.
+
+## What to expect
+
+Default run (129-tap Blackman windowed-sinc, cutoff 250 kHz, `Fs = 2.4 MS/s`; wanted tone
+120 kHz, interferer 0.35 at 620 kHz, noise 0.03 rms, seed 32):
+
+```text
+Gain at 120 kHz / 620 kHz: -0.000 / -116.9 dB
+-3 dB edge: 240.3 kHz, first -60 dB point: 296.9 kHz
+Transition width (-3 to -60 dB): 56.6 kHz
+Stopband peak above 400 kHz: float -89.7 dB, Q1.15 -71.0 dB
+Group delay: 64 samples (26.67 us)
+Interferer: -9.1 -> -126.1 dBFS (suppression 116.9 dB), wanted change -0.000 dB
+```
+
+- **The -3 dB edge is 240 kHz, not the 250 kHz "cutoff".** In a windowed-sinc design the cutoff
+  parameter is the -6 dB point; the transition band is spread symmetrically around it.
+- **Transition width 56.6 kHz** is set by the number of taps and the window, not by the cutoff.
+  A useful rule for Blackman is `transition ≈ 5.5 * Fs / N_taps`, here about 100 kHz for the full
+  0-to-stopband span; measured from -3 to -60 dB it is 57 kHz.
+- **The interferer drops 116.9 dB, exactly the filter gain at 620 kHz**, while the wanted tone is
+  untouched (0.000 dB): in a linear filter the measured suppression *is* the frequency response.
+- **Group delay is 64 samples, (N-1)/2**, for every frequency, because the taps are symmetric
+  (linear phase). In hardware this is latency you must budget for.
+- **Quantizing the taps to Q1.15 lifts the stopband from -89.7 to -71.0 dB.** The small outer
+  taps of a long filter are only a few LSB in 16 bits; their rounding error is a noise floor on
+  the response. This is why coefficient width is a design decision, not a formality.
+
+![FIR response and spectra before/after filtering](/zynq-sdr-course/assets/lab32_fir_low_pass.png)
+
+## Exercises
+
+1. Call `design_lowpass(num_taps=...)` with 33, 65, 129 and 257 taps and read the gain at 620 kHz
+   (expected about -79, -96, -117 and -153 dB). How does the first -60 dB point move? What does
+   doubling the taps cost in an FPGA?
+2. Quantize the taps to 12 bits instead of 16. Where does the stopband floor land? How many
+   coefficient bits does a 100 dB stopband need?
+3. Replace `np.blackman` with `np.hanning`. Compare transition width and stopband peak.
+4. Move the interferer to 280 kHz, inside the transition band. What suppression do you get, and
+   what does this tell you about guard bands between channels?
 
 ## Report checklist
 

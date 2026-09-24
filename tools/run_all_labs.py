@@ -217,6 +217,38 @@ def validate_lab117(root: Path) -> list[str]:
 
 LABS: list[LabCommand] = [
     LabCommand(
+        "Block 3 / Lab 3.1 FFT windows and spectral leakage",
+        [sys.executable, "blocks/block_03_dsp_basics/python/lab_3_1_fft_windows.py"],
+        [
+            "docs/assets/lab31_fft_windows_leakage.png",
+            "docs/assets/lab31_fft_windows_metrics.json",
+        ],
+    ),
+    LabCommand(
+        "Block 3 / Lab 3.2 FIR low-pass filtering of IQ data",
+        [sys.executable, "blocks/block_03_dsp_basics/python/lab_3_2_fir_low_pass.py"],
+        [
+            "docs/assets/lab32_fir_low_pass.png",
+            "docs/assets/lab32_fir_low_pass_metrics.json",
+        ],
+    ),
+    LabCommand(
+        "Block 3 / Lab 3.3 digital mixing and NCO",
+        [sys.executable, "blocks/block_03_dsp_basics/python/lab_3_3_digital_mixing.py"],
+        [
+            "docs/assets/lab33_digital_mixing.png",
+            "docs/assets/lab33_digital_mixing_metrics.json",
+        ],
+    ),
+    LabCommand(
+        "Block 3 / Lab 3.4 decimation with anti-aliasing",
+        [sys.executable, "blocks/block_03_dsp_basics/python/lab_3_4_decimation.py"],
+        [
+            "docs/assets/lab34_decimation.png",
+            "docs/assets/lab34_decimation_metrics.json",
+        ],
+    ),
+    LabCommand(
         "Block 3 / Lab 3.5 FFT complexity and selected-bin trade-off",
         [sys.executable, "blocks/block_03_dsp_basics/python/lab_3_5_fft_complexity.py"],
         [

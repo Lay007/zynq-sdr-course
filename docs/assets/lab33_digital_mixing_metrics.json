@@ -1,0 +1,20 @@
+{
+  "config": {
+    "sample_rate_hz": 2400000.0,
+    "samples": 32768,
+    "tone_hz": 420000.0,
+    "shift_hz": -420000.0,
+    "phase_accumulator_bits": 32,
+    "lut_address_bits": 10,
+    "lut_amplitude_bits": 16
+  },
+  "input_peak_hz": 419970.703125,
+  "ideal_output_peak_hz": 0.0,
+  "wrong_sign_output_peak_hz": 840014.6484375,
+  "hardware_output_peak_hz": 0.0,
+  "phase_increment": 3543348019,
+  "realized_shift_hz": -420000.0001117587,
+  "shift_error_hz": -0.00011175870895385742,
+  "frequency_resolution_hz": 0.0005587935447692871,
+  "hardware_nco_worst_spur_dbc": -58.93606047893412
+}

@@ -41,9 +41,25 @@ Then compare:
 3. spectra before and after decimation;
 4. alias location and suppression.
 
+## Run the reference script
+
+```bash
+python blocks/block_03_dsp_basics/python/lab_3_4_decimation.py
+```
+
+The script is deterministic and writes:
+
+```text
+docs/assets/lab34_decimation.png
+docs/assets/lab34_decimation_metrics.json
+```
+
+Run it first and read its numbers against the section *What to expect* below. Then write your own
+version from the minimum structure that follows; the reference script is your answer key.
+
 ## Python implementation
 
-Minimum expected script structure:
+Minimum structure for your own implementation:
 
 ```python
 import numpy as np
@@ -92,7 +108,7 @@ plt.show()
 
 ## MATLAB implementation
 
-Minimum expected script structure:
+Minimum structure for your own implementation:
 
 ```matlab
 fs = 2.4e6;
@@ -183,6 +199,41 @@ Produce at least:
 3. output spectrum with FIR anti-aliasing;
 4. optional zoom around aliased component;
 5. optional FIR response.
+
+## What to expect
+
+Default run (`Fs_in = 2.4 MS/s`, `M = 4`, `Fs_out = 600 kS/s`; wanted tone +80 kHz, interferer 0.5 at
++520 kHz; 129-tap Blackman low-pass with cutoff `0.4 * Fs_out = 240 kHz`):
+
+```text
+Fs in/out: 2.4 / 600 kS/s, new Nyquist band +/-300 kHz
+520 kHz interferer is predicted to alias to -80 kHz
+Alias relative to wanted tone: no filter -6.0 dBc, with FIR -111.8 dBc
+Alias suppression by the anti-aliasing filter: 105.8 dB
+```
+
+- **Predict before you measure.** A complex tone lands at `((f + Fs_out/2) mod Fs_out) - Fs_out/2`:
+  520 kHz folds to 520 - 600 = **-80 kHz**, the mirror of the wanted +80 kHz. The script's
+  `alias_hz()` does exactly this arithmetic.
+- **Without a filter the alias is -6 dBc**, i.e. the interferer's full 0.5 amplitude, now sitting
+  inside the band as if it were a real signal at -80 kHz. Nothing in the decimated data tells you
+  it came from 520 kHz. Aliasing is irreversible.
+- **Filtering first removes it: -111.8 dBc, 105.8 dB of suppression.** The filter must act at the
+  *input* rate, before samples are discarded; that is why decimators are expensive and why a
+  polyphase structure (compute only the samples you keep) saves a factor of `M` in multipliers.
+
+![Decimation with and without anti-aliasing](/zynq-sdr-course/assets/lab34_decimation.png)
+
+## Exercises
+
+1. Use `alias_hz()` to predict where 250, 310, 350 and 700 kHz land at 600 kS/s (expected 250,
+   -290, -250 and +100 kHz). Which of them are dangerous for a channel at +80 kHz?
+2. Reduce the filter to 17, 33 and 65 taps (expected alias about -40, -86 and -106 dBc). What is the
+   shortest filter that keeps the alias 60 dB below the wanted tone?
+3. Move the interferer to 290 kHz, just inside the new Nyquist band but beyond the filter's
+   passband. It does not alias. Does it still reach the output, and how strongly?
+4. Compute the multiply count per output sample for the direct filter and for a polyphase version
+   with the same 129 taps.
 
 ## Report checklist
 

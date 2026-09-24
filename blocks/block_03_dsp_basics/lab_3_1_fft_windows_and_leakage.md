@@ -43,9 +43,25 @@ Compare:
 - frequency estimate error;
 - ability to see a weak nearby tone.
 
+## Run the reference script
+
+```bash
+python blocks/block_03_dsp_basics/python/lab_3_1_fft_windows.py
+```
+
+The script is deterministic and writes:
+
+```text
+docs/assets/lab31_fft_windows_leakage.png
+docs/assets/lab31_fft_windows_metrics.json
+```
+
+Run it first and read its numbers against the section *What to expect* below. Then write your own
+version from the minimum structure that follows; the reference script is your answer key.
+
 ## Python implementation
 
-Minimum expected script structure:
+Minimum structure for your own implementation:
 
 ```python
 import numpy as np
@@ -84,7 +100,7 @@ plt.show()
 
 ## MATLAB implementation
 
-Minimum expected script structure:
+Minimum structure for your own implementation:
 
 ```matlab
 fs = 2.4e6;
@@ -142,6 +158,46 @@ Produce at least:
 2. non-coherent tone spectrum with multiple windows;
 3. zoomed view around the tone;
 4. optional weak-tone detection case.
+
+## What to expect
+
+Default run (`Fs = 2.4 MS/s`, `N = 4096`, bin spacing 585.94 Hz; a full-scale tone 0.35 bin off
+bin 250, and a second tone at -60 dBc exactly 12 bins above bin 250):
+
+```text
+window         ENBW  scallop  leak@20  weak vis
+rectangular    1.00    1.83dB   -35.0dB    -27.7dB
+hann           1.50    0.69dB   -87.8dB     14.8dB
+hamming        1.36    0.85dB   -52.7dB    -10.8dB
+blackman       1.73    0.54dB   -95.4dB     22.5dB
+```
+
+- **ENBW** (equivalent noise bandwidth, in bins) is the price of a window: 1.0 for rectangular,
+  exactly 1.5 for Hann, 1.73 for Blackman. A wider ENBW lets more noise into each bin, so a
+  noise-floor reading in dB/bin rises by `10*log10(ENBW)`: +1.8 dB for Hann, +2.4 dB for Blackman.
+- **Scalloping loss** is how much an off-bin tone reads low. With a rectangular window a tone
+  0.35 bin off-grid reads 1.83 dB low; Blackman loses only 0.54 dB. If you read tone amplitudes
+  off an FFT, this is an amplitude error, not a signal change.
+- **Leakage 20 bins away** is where windows really differ: -35 dBc for rectangular against
+  -88 to -95 dBc for Hann and Blackman.
+- **Weak-tone visibility** puts it together. With a rectangular window the -60 dBc neighbour sits
+  **27.7 dB under the leakage skirt** of the strong tone and is invisible. Hamming (-10.8 dB) is
+  not enough either: its far side lobes fall slowly. Hann shows it 14.8 dB above the skirt,
+  Blackman 22.5 dB. The same weak signal is either "not there" or clearly present depending
+  only on a processing choice.
+
+![Non-coherent tone with a -60 dBc neighbour under four windows](/zynq-sdr-course/assets/lab31_fft_windows_leakage.png)
+
+## Exercises
+
+1. Change `NONCOHERENT_BIN` from 250.35 to 250.5 (the worst case, exactly between two bins).
+   How much does the rectangular scalloping loss grow? The textbook value is 3.92 dB.
+2. Move the weak tone from 12 bins to 40 bins away (`WEAK_OFFSET_BINS`). Does Hamming now show
+   it? Why does the answer depend on distance for Hamming but hardly for Blackman?
+3. Double `N` to 8192 while keeping `Fs`. What happens to the bin spacing, and to the leakage
+   *in hertz* at a fixed frequency offset?
+4. You must report the noise floor of a capture in dBm/Hz. Which correction do you apply for a
+   Blackman window, and by how many dB?
 
 ## Report checklist
 

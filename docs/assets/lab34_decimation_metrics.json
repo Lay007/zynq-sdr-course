@@ -1,0 +1,18 @@
+{
+  "config": {
+    "input_rate_hz": 2400000.0,
+    "decimation": 4,
+    "output_rate_hz": 600000.0,
+    "wanted_hz": 80000.0,
+    "interferer_hz": 520000.0,
+    "interferer_amplitude": 0.5,
+    "num_taps": 129,
+    "cutoff_hz": 240000.0
+  },
+  "output_nyquist_hz": 300000.0,
+  "predicted_alias_hz": -80000.0,
+  "no_filter_alias_dbc": -6.020599913294371,
+  "filtered_alias_dbc": -111.82363119000678,
+  "alias_suppression_db": 105.8030312767124,
+  "output_samples": 16384
+}

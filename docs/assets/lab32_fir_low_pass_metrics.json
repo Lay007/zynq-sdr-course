@@ -1,0 +1,31 @@
+{
+  "config": {
+    "sample_rate_hz": 2400000.0,
+    "samples": 32768,
+    "wanted_hz": 120000.0,
+    "interferer_hz": 620000.0,
+    "interferer_amplitude": 0.35,
+    "num_taps": 129,
+    "cutoff_hz": 250000.0,
+    "window": "blackman",
+    "seed": 32
+  },
+  "filter": {
+    "gain_at_wanted_db": -0.0003130055879717506,
+    "gain_at_interferer_db": -116.92200025462236,
+    "minus3db_edge_hz": 240300.0,
+    "first_minus60db_hz": 296900.0,
+    "transition_width_hz": 56600.0,
+    "stopband_start_hz": 400000.0,
+    "stopband_peak_db": -89.72415126691973,
+    "group_delay_samples": 64.0,
+    "group_delay_us": 26.666666666666668,
+    "q15_stopband_peak_db": -70.97960326478542
+  },
+  "signal": {
+    "interferer_before_dbfs": -9.146743824954378,
+    "interferer_after_dbfs": -126.06871582612348,
+    "interferer_suppression_db": 116.92197200116911,
+    "wanted_change_db": -0.0003130054443361008
+  }
+}

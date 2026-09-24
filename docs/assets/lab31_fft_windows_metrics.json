@@ -1,0 +1,57 @@
+{
+  "config": {
+    "sample_rate_hz": 2400000.0,
+    "fft_length": 4096,
+    "bin_spacing_hz": 585.9375,
+    "coherent_bin": 250.0,
+    "noncoherent_bin": 250.35,
+    "weak_offset_bins": 12,
+    "weak_relative_db": -60.0
+  },
+  "windows": [
+    {
+      "window": "rectangular",
+      "coherent_gain": 1.0,
+      "enbw_bins": 1.0,
+      "coherent_peak_db": 0.0,
+      "noncoherent_peak_db": -1.8267405551851876,
+      "scalloping_loss_db": 1.8267405551851876,
+      "noncoherent_freq_error_hz": -205.07812499999667,
+      "leakage_at_20_bins_dbc": -34.98556148164371,
+      "weak_tone_visibility_db": -27.72821730377575
+    },
+    {
+      "window": "hann",
+      "coherent_gain": 0.4998779296875,
+      "enbw_bins": 1.5003663003663004,
+      "coherent_peak_db": 0.0,
+      "noncoherent_peak_db": -0.6913427564095799,
+      "scalloping_loss_db": 0.6913427564095799,
+      "noncoherent_freq_error_hz": -205.07812499999667,
+      "leakage_at_20_bins_dbc": -87.76142771501596,
+      "weak_tone_visibility_db": 14.815196994695242
+    },
+    {
+      "window": "hamming",
+      "coherent_gain": 0.5398876953125,
+      "enbw_bins": 1.3630653248956126,
+      "coherent_peak_db": 0.0,
+      "noncoherent_peak_db": -0.8505019467209142,
+      "scalloping_loss_db": 0.8505019467209142,
+      "noncoherent_freq_error_hz": -205.07812499999667,
+      "leakage_at_20_bins_dbc": -52.677785824341186,
+      "weak_tone_visibility_db": -10.763154123001677
+    },
+    {
+      "window": "blackman",
+      "coherent_gain": 0.4198974609375,
+      "enbw_bins": 1.7271790441858468,
+      "coherent_peak_db": 0.0,
+      "noncoherent_peak_db": -0.5360136855294825,
+      "scalloping_loss_db": 0.5360136855294825,
+      "noncoherent_freq_error_hz": -205.07812499999667,
+      "leakage_at_20_bins_dbc": -95.39843723204719,
+      "weak_tone_visibility_db": 22.53391946155118
+    }
+  ]
+}
