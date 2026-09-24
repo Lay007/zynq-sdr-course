@@ -6,11 +6,13 @@ on:
     paths:
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
+      - "verification/vectors/block08_ofdm_pilot_tracker_vectors.txt"
       - ".github/workflows/block8_ofdm_rx_chain.yml"
   pull_request:
     paths:
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
+      - "verification/vectors/block08_ofdm_pilot_tracker_vectors.txt"
       - ".github/workflows/block8_ofdm_rx_chain.yml"
   workflow_dispatch:
 
@@ -52,6 +54,16 @@ jobs:
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_one_tap_equalizer.v \
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_one_tap_equalizer.sv
           vvp /tmp/tb_ofdm_one_tap_equalizer.vvp
+
+      - name: Check pilot phase tracker
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_pilot_phase_tracker \
+            -o /tmp/tb_ofdm_pilot_phase_tracker.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_pilot_phase_tracker.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_pilot_phase_tracker.sv
+          vvp /tmp/tb_ofdm_pilot_phase_tracker.vvp
 
       - name: Check QPSK demapper
         run: |
