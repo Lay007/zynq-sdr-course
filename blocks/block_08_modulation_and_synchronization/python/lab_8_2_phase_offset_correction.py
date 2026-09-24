@@ -24,7 +24,7 @@ ASSET_DIR = ROOT / "docs" / "assets"
 @dataclass(frozen=True)
 class PhaseConfig:
     symbol_count: int = 4096
-    phase_offset_rad: float = 0.82
+    phase_offset_rad: float = 0.70
     noise_rms: float = 0.055
     seed: int = 82
 
@@ -73,9 +73,11 @@ def wrap_pi(x: float) -> float:
 
 
 def estimate_phase_4th_power(rx: np.ndarray) -> float:
-    # QPSK has pi/2 rotational ambiguity. This educational lab uses a phase
-    # offset inside the unambiguous interval and then refines with decisions.
-    return float(np.angle(np.mean(rx**4)) / 4.0)
+    # QPSK has pi/2 rotational ambiguity: the estimate is only unique inside
+    # (-pi/4, pi/4]. The default offset (0.70 rad, 40 deg) lies inside that interval.
+    # For points at (+-1 +-j)/sqrt(2), s**4 = -1, so the mean is -exp(j*4*phi):
+    # negate it first, otherwise the estimate is off by exactly pi/4.
+    return float(np.angle(-np.mean(rx**4)) / 4.0)
 
 
 def estimate_phase_decision_directed(rx: np.ndarray) -> float:

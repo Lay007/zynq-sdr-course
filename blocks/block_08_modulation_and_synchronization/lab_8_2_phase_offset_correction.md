@@ -96,6 +96,48 @@ This is useful when the constellation is already close enough for mostly correct
 | CFO still present | phase estimate drifts | correct CFO before phase offset |
 | low SNR | phase estimate noisy | average more symbols or use pilots |
 
+## What to expect
+
+Default run (4096 QPSK symbols, phase offset 0.70 rad = 40°, noise 0.055 rms, seed 82):
+
+```text
+True phase offset: 0.700000 rad
+Blind phase estimate: 0.699895 rad
+Decision-directed total estimate: 0.700102 rad
+Blind phase error: -0.000105 rad
+Decision-directed phase error: 0.000102 rad
+EVM before: 69.026 %
+EVM after blind: 7.833 %
+EVM after decision-directed: 7.833 %
+BER before: 2.917480e-02 (239/8192)
+BER after blind: 0.000000e+00 (0/8192)
+BER after decision-directed: 0.000000e+00 (0/8192)
+```
+
+- **A 40° rotation already causes errors (BER 2.9 %)** because the points sit only 5° from the
+  45° decision boundaries, and the noise pushes some of them across.
+- **The blind 4th-power estimate is within 0.0001 rad**, and the decision-directed step has
+  nothing left to fix; EVM after both is the noise floor (7.8 %).
+- **The estimate is only unique inside ±π/4 (±45°).** 0.70 rad is inside that interval on
+  purpose. See exercise 1 for what happens outside it.
+
+!!! note "Corrected in September 2026"
+    Until then this lab computed `angle(mean(r⁴))/4` without negating the mean (for these QPSK
+    points `s⁴ = −1`), which put every estimate off by π/4, and it used 0.82 rad, which lies
+    outside the unambiguous interval. The run reported BER 0.25 "after correction".
+
+## Exercises
+
+1. Set `phase_offset_rad` to 0.82 (47°). The blind estimate becomes 0.82 − π/2 = −0.75 rad, the
+   corrected constellation is rotated by a quarter turn, and BER jumps to 0.5 although the
+   constellation looks perfect. Why can the 4th-power estimator never tell 0.82 from −0.75, and
+   how do a known preamble or differential coding fix it (see
+   [Lab 8.7](/zynq-sdr-course/en/labs/lab-8-7-snr-vs-ber-traps/))?
+2. Increase the noise until the decision-directed estimate becomes worse than the blind one.
+   Why does a decision-directed estimator degrade faster at low SNR?
+3. Estimate the phase from only the first 64, 256 and 1024 symbols. How does the estimate error
+   scale with the number of symbols?
+
 ## Report checklist
 
 - [ ] State modulation type and symbol count.

@@ -1,0 +1,25 @@
+{
+  "config": {
+    "symbol_count": 4096,
+    "sample_rate_hz": 1000000.0,
+    "cfo_hz": 2750.0,
+    "phase_offset_rad": 0.65,
+    "noise_rms": 0.035,
+    "seed": 81
+  },
+  "metrics": {
+    "true_cfo_hz": 2750.0,
+    "estimated_cfo_hz": 2750.039202365212,
+    "cfo_error_hz": 0.039202365212076984,
+    "evm_before_percent": 141.44228932705448,
+    "evm_after_percent": 4.984836921714572,
+    "evm_before_db": 3.0115855407754304,
+    "evm_after_db": -26.046980900137648,
+    "ber_before": 0.500244140625,
+    "ber_after": 0.0,
+    "bit_errors_before": 4098,
+    "bit_errors_after": 0,
+    "compared_bits": 8192,
+    "residual_phase_rad": 0.6500102246200905
+  }
+}

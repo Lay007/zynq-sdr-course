@@ -71,7 +71,10 @@ def estimate_cfo_4th_power(rx: np.ndarray, fs_hz: float) -> float:
 
 def estimate_phase_qpsk(rx: np.ndarray) -> float:
     # After CFO correction, QPSK phase can be estimated from the 4th-power mean.
-    return float(np.angle(np.mean(rx**4)) / 4.0)
+    # For points at (+-1 +-j)/sqrt(2), s**4 = -1, so the mean is -exp(j*4*phi):
+    # negate it first, otherwise the estimate is off by exactly pi/4 and the
+    # "corrected" constellation lands on the I/Q axes.
+    return float(np.angle(-np.mean(rx**4)) / 4.0)
 
 
 def scalar_align(ref: np.ndarray, rx: np.ndarray) -> np.ndarray:
@@ -141,13 +144,13 @@ def main() -> None:
     residual_phase = estimate_phase_qpsk(corrected_cfo)
     corrected = corrected_cfo * np.exp(-1j * residual_phase)
 
-    before_aligned = scalar_align(tx, rx)
-    after_aligned = scalar_align(tx, corrected)
-
-    evm_before_percent, evm_before_db = evm(tx, before_aligned)
-    evm_after_percent, evm_after_db = evm(tx, after_aligned)
-    ber_before, bit_errors_before, compared_bits = ber(bits, before_aligned)
-    ber_after, bit_errors_after, _ = ber(bits, after_aligned)
+    # Score what the receiver itself produced. Do not align to the known
+    # reference first: a genie gain/phase alignment would hide a wrong phase
+    # estimate (it did, before the pi/4 fix above).
+    evm_before_percent, evm_before_db = evm(tx, rx)
+    evm_after_percent, evm_after_db = evm(tx, corrected)
+    ber_before, bit_errors_before, compared_bits = ber(bits, rx)
+    ber_after, bit_errors_after, _ = ber(bits, corrected)
 
     metrics = CfoMetrics(
         true_cfo_hz=cfg.cfo_hz,
@@ -166,7 +169,7 @@ def main() -> None:
     )
 
     save_constellation(ASSET_DIR / "lab81_cfo_constellation_before.png", rx, "Lab 8.1 — Constellation before CFO correction")
-    save_constellation(ASSET_DIR / "lab81_cfo_constellation_after.png", after_aligned, "Lab 8.1 — Constellation after CFO correction")
+    save_constellation(ASSET_DIR / "lab81_cfo_constellation_after.png", corrected, "Lab 8.1 — Constellation after CFO correction")
     save_phase_plot(ASSET_DIR / "lab81_cfo_phase_evolution.png", rx, corrected)
 
     metrics_path = ASSET_DIR / "lab81_cfo_metrics.json"

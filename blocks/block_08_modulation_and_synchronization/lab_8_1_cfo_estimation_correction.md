@@ -98,6 +98,52 @@ This is a compact educational estimator. In real systems, preamble-based estimat
 | wrong sample rate | CFO estimate scaled incorrectly | check metadata |
 | using real-only signal | QPSK symmetry is broken | use complex IQ |
 
+## What to expect
+
+Default run (4096 QPSK symbols at 1 MS/s, one sample per symbol, CFO 2750 Hz, phase 0.65 rad,
+noise 0.035 rms, seed 81):
+
+```text
+True CFO: 2750.000 Hz
+Estimated CFO: 2750.039 Hz
+CFO error: 0.039 Hz
+EVM before: 141.442 % (3.01 dB)
+EVM after: 4.985 % (-26.05 dB)
+BER before: 5.002441e-01 (4098/8192)
+BER after: 0.000000e+00 (0/8192)
+Residual phase estimate: 0.650010 rad
+```
+
+- **BER 0.5 before correction** means the decisions are random: the constellation turns
+  `360 * 2750 / 1e6 ≈ 1°` per symbol, so over 4096 symbols it spins more than 11 times.
+- **The estimate is within 0.04 Hz**, because a straight-line fit over 4096 samples averages the
+  noise very effectively at this SNR.
+- **The residual phase 0.650 rad recovers the injected 0.65 rad.** After removing the CFO, one
+  constant phase remains. The metrics are computed on the receiver's own output, without aligning
+  it to the known reference first, so a wrong phase estimate would show up as bit errors.
+
+!!! note "A sign detail that matters"
+    For QPSK points at `(±1±j)/√2`, every symbol raised to the 4th power equals `−1`. The phase
+    estimate is therefore `angle(−mean(r⁴))/4`. Without the minus sign the estimate is off by
+    exactly π/4 and the "corrected" constellation lands on the I/Q axes. This lab had exactly
+    that bug until September 2026; it was hidden because BER was then computed after a genie
+    alignment to the reference. [Lab 11.30](/zynq-sdr-course/en/labs/lab-11-30-two-board-cfo-validation/)
+    describes the same trap on hardware.
+
+## Exercises
+
+1. The 4th-power estimator is unambiguous for `|CFO| < Fs/8` = 125 kHz here. Set the CFO to 50,
+   100, 110 and 120 kHz. At 100 kHz the estimate is already about 175 Hz low, and at 120 kHz it
+   collapses to about 55 kHz. Why is the practical limit lower than 125 kHz? (Hint: `np.unwrap`
+   needs every sample-to-sample step of `angle(r⁴)` to stay below π.)
+2. Raise the noise from 0.035 to 0.2 and 0.35. The estimate error grows to hundreds, then
+   thousands of hertz. Explain why a phase-unwrap-based estimator fails abruptly rather than
+   degrading smoothly.
+3. Replace the straight-line fit with the mean of `angle(r⁴[n+1] · conj(r⁴[n]))`. Compare the
+   error at noise 0.2.
+4. Remove the minus sign in `estimate_phase_qpsk` and rerun. Report EVM and BER after correction
+   and explain them.
+
 ## Report checklist
 
 - [ ] State modulation type and symbol count.
