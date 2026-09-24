@@ -97,3 +97,23 @@ def test_energy_detector_and_multiburst_summary() -> None:
     assert summary["frame_error_rate"] == 0.5
     assert summary["bit_errors_total"] == 1
     assert summary["aggregate_ber"] == 1 / 560
+
+
+def test_receiver_scoring_uses_only_the_sync_word_and_counts_payload_errors() -> None:
+    from lab_11_28_read_rtl_wav_ota_qpsk import receiver_decode
+
+    tx_bits, tx_symbols = load_reference(140)
+    n = np.arange(len(tx_symbols), dtype=np.float64)
+    # Residual CFO of 0.004 rad/symbol plus a phase offset: the sync word gives the
+    # initial estimate and the decision-directed loop tracks the rest.
+    frame = 0.7 * tx_symbols * np.exp(1j * (0.004 * n + 0.6))
+    clean = receiver_decode(frame, tx_bits=tx_bits, tx_symbols=tx_symbols, sync_count=16)
+    assert clean["receiver_payload_bits"] == 2 * (140 - 16)
+    assert clean["receiver_bit_errors"] == 0
+
+    # Flip ten payload symbols: a whole-frame fit could not hide them, and the
+    # receiver scoring must report exactly their bit errors (two per flipped symbol).
+    corrupted = frame.copy()
+    corrupted[60:70] *= -1
+    hit = receiver_decode(corrupted, tx_bits=tx_bits, tx_symbols=tx_symbols, sync_count=16)
+    assert hit["receiver_bit_errors"] == 20

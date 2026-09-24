@@ -95,6 +95,52 @@ def candidate_rank(candidate: dict[str, Any]) -> tuple[int, float, float]:
     )
 
 
+def receiver_decode(
+    raw_frame: np.ndarray,
+    *,
+    tx_bits: np.ndarray,
+    tx_symbols: np.ndarray,
+    sync_count: int,
+    kp: float = 0.1,
+    ki: float = 0.005,
+) -> dict[str, Any]:
+    """Decode one frame the way a receiver could: without the payload.
+
+    CFO, phase and gain come from the known sync word only; a decision-directed
+    phase-locked loop then tracks the phase over the payload, and BER is counted on
+    the payload bits only. Compare with the reference-aided metrics of
+    ``detect_frame``, which fit CFO/phase/gain over the whole known frame and pick
+    the candidate with the fewest bit errors: an upper bound on link quality, not a
+    receiver BER.
+    """
+    sync = tx_symbols[:sync_count]
+    n = np.arange(len(raw_frame), dtype=np.float64)
+    phase = np.unwrap(np.angle(raw_frame[:sync_count] * np.conj(sync)))
+    slope, intercept = np.polyfit(n[:sync_count], phase, 1)
+    z = raw_frame * np.exp(-1j * (slope * n + intercept))
+    z = z / max(abs(np.vdot(sync, z[:sync_count])) / float(np.vdot(sync, sync).real), 1e-15)
+    out = np.empty_like(z)
+    theta = 0.0
+    freq = 0.0
+    for i, value in enumerate(z):
+        y = value * np.exp(-1j * theta)
+        out[i] = y
+        ref = sync[i] if i < sync_count else (np.sign(y.real) + 1j * np.sign(y.imag)) / math.sqrt(2.0)
+        err = float(np.angle(y * np.conj(ref)))
+        freq += ki * err
+        theta += freq + kp * err
+    rx_bits = np.empty(len(tx_bits), dtype=np.uint8)
+    rx_bits[0::2] = np.real(out) < 0.0
+    rx_bits[1::2] = np.imag(out) < 0.0
+    payload = slice(2 * sync_count, None)
+    errors = int(np.sum(rx_bits[payload] != tx_bits[payload]))
+    return {
+        "receiver_bit_errors": errors,
+        "receiver_payload_bits": int(len(tx_bits) - 2 * sync_count),
+        "receiver_evm_percent": float(evm_percent(tx_symbols[sync_count:], out[sync_count:])),
+    }
+
+
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -116,6 +162,7 @@ def detect_frame(
     sync_count = min(max(sync_symbol_count, 4), len(tx_symbols))
     sync = tx_symbols[:sync_count]
     best: dict[str, Any] | None = None
+    receiver_pick: tuple[float, np.ndarray] | None = None
 
     for conjugated in (False, True):
         oriented = np.conj(matched) if conjugated else matched
@@ -138,6 +185,9 @@ def detect_frame(
                     abs(np.vdot(sync, sync_rx))
                     / math.sqrt(max(sync_energy * rx_energy, 1e-30))
                 )
+                # The receiver may only choose by what it can observe: the sync word.
+                if receiver_pick is None or normalized_correlation > receiver_pick[0]:
+                    receiver_pick = (normalized_correlation, raw_frame)
                 ratio = raw_frame * np.conj(tx_symbols)
                 phase = np.unwrap(np.angle(ratio))
                 n = np.arange(len(raw_frame), dtype=np.float64)
@@ -168,8 +218,11 @@ def detect_frame(
                 if best is None or candidate_rank(candidate) < candidate_rank(best):
                     best = candidate
 
-    if best is None:
+    if best is None or receiver_pick is None:
         raise RuntimeError("Unable to find a complete QPSK frame in the analysis window")
+    best.update(
+        receiver_decode(receiver_pick[1], tx_bits=tx_bits, tx_symbols=tx_symbols, sync_count=sync_count)
+    )
     return best
 
 
@@ -434,6 +487,9 @@ def analyze_bursts(
             "total_frequency_shift_hz": total_frequency_shift_hz,
             "sample_phase": detection["sample_phase"],
             "conjugated": detection["conjugated"],
+            "receiver_bit_errors": detection["receiver_bit_errors"],
+            "receiver_payload_bits": detection["receiver_payload_bits"],
+            "receiver_evm_percent": detection["receiver_evm_percent"],
         }
         rows.append(row)
         if not accepted:
@@ -473,7 +529,20 @@ def summarize_bursts(
     total_bits = detected_count * bits_per_burst
     total_errors = sum(int(row["bit_errors"]) for row in detected)
     aggregate_ber = float(total_errors / total_bits) if total_bits else None
+    rx_bits_total = sum(int(row.get("receiver_payload_bits", 0)) for row in detected)
+    rx_errors = sum(int(row.get("receiver_bit_errors", 0)) for row in detected)
+    rx_clean = sum(int(row.get("receiver_bit_errors", 0) == 0) for row in detected)
+    receiver = {
+        "scoring": "sync-word CFO/phase + decision-directed PLL, payload bits only",
+        "compared_bits_total": rx_bits_total,
+        "bit_errors_total": rx_errors,
+        "aggregate_ber": float(rx_errors / rx_bits_total) if rx_bits_total else None,
+        "aggregate_ber_wilson_95": wilson_interval(rx_errors, rx_bits_total),
+        "zero_error_burst_count": rx_clean,
+    }
     return {
+        "scoring": "reference-aided: CFO/phase/gain fitted over the whole known frame",
+        "receiver": receiver,
         "commanded_burst_count": commanded_count,
         "energy_candidate_count": len(rows),
         "detected_burst_count": detected_count,
@@ -751,7 +820,13 @@ def main() -> int:
             f"{burst_summary['commanded_burst_count'] or burst_summary['energy_candidate_count']}, "
             f"BER=0 {burst_summary['zero_error_burst_count']}/"
             f"{burst_summary['detected_burst_count']}, "
-            f"aggregate BER {burst_summary['aggregate_ber']:.6e}"
+            f"aggregate BER {burst_summary['aggregate_ber']:.6e} (reference-aided)"
+        )
+        receiver = burst_summary["receiver"]
+        print(
+            "Receiver scoring (sync word + PLL, payload only): "
+            f"BER=0 {receiver['zero_error_burst_count']}/{burst_summary['detected_burst_count']}, "
+            f"bit errors {receiver['bit_errors_total']}/{receiver['compared_bits_total']}"
         )
     print(f"Metrics: {repo_relative_or_str(metrics_path)}")
     print(f"Raw spectrum: {repo_relative_or_str(raw_spectrum_path)}")
