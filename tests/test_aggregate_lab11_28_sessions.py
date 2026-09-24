@@ -78,3 +78,26 @@ def test_aggregate_sessions_counts_cross_session_results(tmp_path: Path) -> None
     assert summary["bit_errors"] == 1
     assert summary["compared_bits"] == 1_120
     assert summary["aggregate_ber"] == 1 / 1_120
+
+
+def test_aggregate_sessions_sums_receiver_scoring_only_when_every_session_has_it(tmp_path: Path) -> None:
+    run_a = tmp_path / "run_a.json"
+    run_b = tmp_path / "run_b.json"
+    write_metrics(run_a, errors=[0, 0])
+    write_metrics(run_b, errors=[0, 1])
+    assert aggregate_sessions([run_a, run_b])["receiver"] is None
+
+    for path, errors, clean in ((run_a, 0, 2), (run_b, 3, 1)):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload["burst_analysis"]["summary"]["receiver"] = {
+            "compared_bits_total": 2 * 248,
+            "bit_errors_total": errors,
+            "zero_error_burst_count": clean,
+        }
+        path.write_text(json.dumps(payload), encoding="utf-8")
+
+    receiver = aggregate_sessions([run_a, run_b])["receiver"]
+    assert receiver["compared_bits"] == 4 * 248
+    assert receiver["bit_errors"] == 3
+    assert receiver["zero_error_bursts"] == 3
+    assert receiver["aggregate_ber"] == 3 / (4 * 248)

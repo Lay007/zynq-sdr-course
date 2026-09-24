@@ -124,10 +124,19 @@ def main() -> int:
         detected = int(burst_summary["detected_burst_count"])
         zero_error = int(burst_summary["zero_error_burst_count"])
         bit_errors = int(burst_summary["bit_errors_total"])
-        if detected != args.burst_count or zero_error != args.burst_count or bit_errors != 0:
+        # The reference-aided count fits phase to the known payload; the receiver
+        # scoring (sync word + PLL, payload only) must be clean too.
+        receiver_errors = int(burst_summary["receiver"]["bit_errors_total"])
+        if (
+            detected != args.burst_count
+            or zero_error != args.burst_count
+            or bit_errors != 0
+            or receiver_errors != 0
+        ):
             raise RuntimeError(
                 f"{tag}: strict qualification failed: detected={detected}/"
-                f"{args.burst_count}, zero_error={zero_error}, bit_errors={bit_errors}"
+                f"{args.burst_count}, zero_error={zero_error}, bit_errors={bit_errors}, "
+                f"receiver_bit_errors={receiver_errors}"
             )
         metrics_paths.append(metrics)
 

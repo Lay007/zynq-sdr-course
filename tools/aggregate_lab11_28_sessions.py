@@ -89,6 +89,7 @@ def aggregate_sessions(paths: list[Path]) -> dict[str, Any]:
         commanded = int(summary.get("commanded_burst_count") or 0)
         detected = int(summary.get("detected_burst_count") or 0)
         zero = int(summary.get("zero_error_burst_count") or 0)
+        receiver = summary.get("receiver") or {}
         safe_reboot = bool(session.get("reboot_to_stock_ok"))
         success = commanded > 0 and detected == commanded and zero == detected and safe_reboot
         sessions.append(
@@ -103,6 +104,11 @@ def aggregate_sessions(paths: list[Path]) -> dict[str, Any]:
                 "compared_bits": int(summary.get("compared_bits_total") or 0),
                 "bit_errors": int(summary.get("bit_errors_total") or 0),
                 "aggregate_ber": summary.get("aggregate_ber"),
+                # Receiver scoring (sync word + PLL, payload only); None for metrics
+                # written before the analyzer gained it.
+                "receiver_compared_bits": receiver.get("compared_bits_total"),
+                "receiver_bit_errors": receiver.get("bit_errors_total"),
+                "receiver_zero_error_bursts": receiver.get("zero_error_burst_count"),
                 "median_evm_percent": summary.get("evm_percent", {}).get("median"),
                 "median_snr_from_evm_db": summary.get("snr_from_evm_db", {}).get("median"),
                 "median_frequency_shift_hz": summary.get("frequency_shift_hz", {}).get("median"),
@@ -128,9 +134,26 @@ def aggregate_sessions(paths: list[Path]) -> dict[str, Any]:
     bit_errors = sum(row["bit_errors"] for row in sessions)
     frame_errors = detected_total - zero_total
     config = next(iter(common_configs))
+    receiver_summary = None
+    if all(row["receiver_compared_bits"] is not None for row in sessions):
+        rx_bits = sum(int(row["receiver_compared_bits"]) for row in sessions)
+        rx_errors = sum(int(row["receiver_bit_errors"]) for row in sessions)
+        receiver_summary = {
+            "scoring": "sync-word CFO/phase + decision-directed PLL, payload bits only",
+            "compared_bits": rx_bits,
+            "bit_errors": rx_errors,
+            "zero_error_bursts": sum(int(row["receiver_zero_error_bursts"]) for row in sessions),
+            "aggregate_ber": rx_errors / rx_bits if rx_bits else None,
+            "aggregate_ber_wilson_95": wilson_interval(rx_errors, rx_bits),
+            "zero_error_ber_upper_95_rule_of_three": (
+                3.0 / rx_bits if rx_bits and rx_errors == 0 else None
+            ),
+        }
 
     return {
         "mode": "qpsk_ota_cross_session_qualification",
+        "scoring": "reference-aided: CFO/phase/gain fitted over the whole known frame",
+        "receiver": receiver_summary,
         "bitstream_md5": next(iter(bitstream_md5s)),
         "config": {
             "center_frequency_hz": config[0],
