@@ -18,8 +18,9 @@
 //   DRAIN: the buffered samples leave through the equalizer, in the order they
 //          arrived, with that coefficient; data_ready and pilot_ready are low,
 //          so the extractor holds the next symbol (it supports backpressure).
-// Latency is therefore one OFDM symbol plus the tracker's 31 clocks. The
-// arithmetic of the tracker and the equalizer is unchanged.
+// Latency is therefore one OFDM symbol plus the tracker's 31 clocks and the
+// equalizer's three. The arithmetic of the tracker and the equalizer is
+// unchanged.
 module ofdm_pilot_phase_corrector (
     input  wire                clk,
     input  wire                resetn,
@@ -95,7 +96,9 @@ module ofdm_pilot_phase_corrector (
     wire eq_in_ready;
     wire eq_in_last = (read_count == write_count - 6'd1);
 
-    ofdm_one_tap_equalizer equalizer (
+    // Pipelined: the buffer read feeds the multipliers, so the one-clock
+    // equalizer would not meet 100 MHz here.
+    ofdm_one_tap_equalizer #(.PIPELINED(1)) equalizer (
         .clk(clk),
         .resetn(resetn),
         .in_valid(eq_in_valid),

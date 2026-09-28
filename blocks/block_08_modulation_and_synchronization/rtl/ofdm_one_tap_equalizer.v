@@ -9,12 +9,23 @@
 // zero), then saturated explicitly. saturation_count is cumulative from reset
 // and counts clipped I/Q components, not symbols.
 //
+// PIPELINED selects the schedule; the arithmetic is identical in both:
+//   0: the whole multiply/round/saturate path in one clock (teaching
+//      baseline, one registered output stage);
+//   1: inputs, the four products and the output are registered: three clocks
+//      of latency, one sample per clock. saturation_count then updates one
+//      clock after the sample reaches the output. This is the form that meets
+//      100 MHz when the inputs come from logic rather than straight from ports.
+//
 // Ready/valid contract:
-//   * one registered output stage;
+//   * registered output stage (PIPELINED=1: the whole pipeline stalls
+//     together while the output is held);
 //   * input may be accepted when the output register is empty or consumed;
 //   * output data and metadata remain stable under downstream backpressure;
 //   * synchronous active-low reset clears valid and diagnostics.
-module ofdm_one_tap_equalizer (
+module ofdm_one_tap_equalizer #(
+    parameter integer PIPELINED = 0
+) (
     input  wire                clk,
     input  wire                resetn,
 
@@ -36,20 +47,6 @@ module ofdm_one_tap_equalizer (
 
     output reg [31:0]          saturation_count
 );
-
-    wire signed [31:0] product_rr = $signed(in_re) * $signed(coeff_re);
-    wire signed [31:0] product_ii = $signed(in_im) * $signed(coeff_im);
-    wire signed [31:0] product_ri = $signed(in_re) * $signed(coeff_im);
-    wire signed [31:0] product_ir = $signed(in_im) * $signed(coeff_re);
-
-    wire signed [32:0] product_rr_ext = {product_rr[31], product_rr};
-    wire signed [32:0] product_ii_ext = {product_ii[31], product_ii};
-    wire signed [32:0] product_ri_ext = {product_ri[31], product_ri};
-    wire signed [32:0] product_ir_ext = {product_ir[31], product_ir};
-
-    // Q1.15 * Q2.14 -> Q3.29 before the complex add/subtract.
-    wire signed [32:0] equalized_re_q29 = product_rr_ext - product_ii_ext;
-    wire signed [32:0] equalized_im_q29 = product_ri_ext + product_ir_ext;
 
     function automatic signed [17:0] round_q29_to_q15_wide;
         input signed [32:0] value;
@@ -87,32 +84,133 @@ module ofdm_one_tap_equalizer (
         end
     endfunction
 
-    wire signed [17:0] equalized_re_wide = round_q29_to_q15_wide(equalized_re_q29);
-    wire signed [17:0] equalized_im_wide = round_q29_to_q15_wide(equalized_im_q29);
-    wire [1:0] saturation_increment =
-        is_saturated_q15(equalized_re_wide) +
-        is_saturated_q15(equalized_im_wide);
-
     assign in_ready = resetn && (!out_valid || out_ready);
 
-    always @(posedge clk) begin
-        if (!resetn) begin
-            out_valid <= 1'b0;
-            out_re <= 16'sd0;
-            out_im <= 16'sd0;
-            out_index <= 6'd0;
-            out_last <= 1'b0;
-            saturation_count <= 32'd0;
-        end else if (in_ready) begin
-            out_valid <= in_valid;
-            if (in_valid) begin
-                out_re <= saturate_q15(equalized_re_wide);
-                out_im <= saturate_q15(equalized_im_wide);
-                out_index <= in_index;
-                out_last <= in_last;
-                saturation_count <= saturation_count + saturation_increment;
+    generate
+        if (PIPELINED == 0) begin : g_single_cycle
+            wire signed [31:0] product_rr = $signed(in_re) * $signed(coeff_re);
+            wire signed [31:0] product_ii = $signed(in_im) * $signed(coeff_im);
+            wire signed [31:0] product_ri = $signed(in_re) * $signed(coeff_im);
+            wire signed [31:0] product_ir = $signed(in_im) * $signed(coeff_re);
+
+            wire signed [32:0] product_rr_ext = {product_rr[31], product_rr};
+            wire signed [32:0] product_ii_ext = {product_ii[31], product_ii};
+            wire signed [32:0] product_ri_ext = {product_ri[31], product_ri};
+            wire signed [32:0] product_ir_ext = {product_ir[31], product_ir};
+
+            // Q1.15 * Q2.14 -> Q3.29 before the complex add/subtract.
+            wire signed [32:0] equalized_re_q29 = product_rr_ext - product_ii_ext;
+            wire signed [32:0] equalized_im_q29 = product_ri_ext + product_ir_ext;
+
+            wire signed [17:0] equalized_re_wide = round_q29_to_q15_wide(equalized_re_q29);
+            wire signed [17:0] equalized_im_wide = round_q29_to_q15_wide(equalized_im_q29);
+            wire [1:0] saturation_increment =
+                is_saturated_q15(equalized_re_wide) +
+                is_saturated_q15(equalized_im_wide);
+
+            always @(posedge clk) begin
+                if (!resetn) begin
+                    out_valid <= 1'b0;
+                    out_re <= 16'sd0;
+                    out_im <= 16'sd0;
+                    out_index <= 6'd0;
+                    out_last <= 1'b0;
+                    saturation_count <= 32'd0;
+                end else if (in_ready) begin
+                    out_valid <= in_valid;
+                    if (in_valid) begin
+                        out_re <= saturate_q15(equalized_re_wide);
+                        out_im <= saturate_q15(equalized_im_wide);
+                        out_index <= in_index;
+                        out_last <= in_last;
+                        saturation_count <= saturation_count + saturation_increment;
+                    end
+                end
+            end
+        end else begin : g_pipelined
+            // Stage 0: registered inputs.
+            reg s0_valid;
+            reg signed [15:0] s0_re;
+            reg signed [15:0] s0_im;
+            reg signed [15:0] s0_coeff_re;
+            reg signed [15:0] s0_coeff_im;
+            reg [5:0] s0_index;
+            reg s0_last;
+            // Stage 1: registered products (Q3.29).
+            reg s1_valid;
+            reg signed [31:0] s1_rr;
+            reg signed [31:0] s1_ii;
+            reg signed [31:0] s1_ri;
+            reg signed [31:0] s1_ir;
+            reg [5:0] s1_index;
+            reg s1_last;
+            reg [1:0] saturation_pending;
+
+            wire signed [32:0] equalized_re_q29 = {s1_rr[31], s1_rr} - {s1_ii[31], s1_ii};
+            wire signed [32:0] equalized_im_q29 = {s1_ri[31], s1_ri} + {s1_ir[31], s1_ir};
+            wire signed [17:0] equalized_re_wide = round_q29_to_q15_wide(equalized_re_q29);
+            wire signed [17:0] equalized_im_wide = round_q29_to_q15_wide(equalized_im_q29);
+            wire [1:0] saturation_increment =
+                is_saturated_q15(equalized_re_wide) +
+                is_saturated_q15(equalized_im_wide);
+
+            always @(posedge clk) begin
+                if (!resetn) begin
+                    s0_valid <= 1'b0;
+                    s0_re <= 16'sd0;
+                    s0_im <= 16'sd0;
+                    s0_coeff_re <= 16'sd0;
+                    s0_coeff_im <= 16'sd0;
+                    s0_index <= 6'd0;
+                    s0_last <= 1'b0;
+                    s1_valid <= 1'b0;
+                    s1_rr <= 32'sd0;
+                    s1_ii <= 32'sd0;
+                    s1_ri <= 32'sd0;
+                    s1_ir <= 32'sd0;
+                    s1_index <= 6'd0;
+                    s1_last <= 1'b0;
+                    out_valid <= 1'b0;
+                    out_re <= 16'sd0;
+                    out_im <= 16'sd0;
+                    out_index <= 6'd0;
+                    out_last <= 1'b0;
+                    saturation_pending <= 2'd0;
+                    saturation_count <= 32'd0;
+                end else begin
+                    // Counted one clock late so the increment does not sit
+                    // behind the round/saturate logic in the same clock.
+                    saturation_count <= saturation_count + saturation_pending;
+                    saturation_pending <= 2'd0;
+                    if (in_ready) begin
+                        s0_valid <= in_valid;
+                        s0_re <= in_re;
+                        s0_im <= in_im;
+                        s0_coeff_re <= coeff_re;
+                        s0_coeff_im <= coeff_im;
+                        s0_index <= in_index;
+                        s0_last <= in_last;
+
+                        s1_valid <= s0_valid;
+                        s1_rr <= s0_re * s0_coeff_re;
+                        s1_ii <= s0_im * s0_coeff_im;
+                        s1_ri <= s0_re * s0_coeff_im;
+                        s1_ir <= s0_im * s0_coeff_re;
+                        s1_index <= s0_index;
+                        s1_last <= s0_last;
+
+                        out_valid <= s1_valid;
+                        if (s1_valid) begin
+                            out_re <= saturate_q15(equalized_re_wide);
+                            out_im <= saturate_q15(equalized_im_wide);
+                            out_index <= s1_index;
+                            out_last <= s1_last;
+                            saturation_pending <= saturation_increment;
+                        end
+                    end
+                end
             end
         end
-    end
+    endgenerate
 
 endmodule

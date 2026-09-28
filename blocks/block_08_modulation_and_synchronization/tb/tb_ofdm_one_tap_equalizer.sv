@@ -1,6 +1,11 @@
 `timescale 1ns/1ps
 
 module tb_ofdm_one_tap_equalizer;
+    // PIPELINED=1 checks the three-clock pipelined schedule with the same
+    // vectors (-Ptb_ofdm_one_tap_equalizer.PIPELINED=1).
+    parameter integer PIPELINED = 0;
+    localparam integer LATENCY = (PIPELINED != 0) ? 3 : 1;
+
     reg clk = 1'b0;
     reg resetn = 1'b0;
     reg in_valid = 1'b0;
@@ -24,8 +29,9 @@ module tb_ofdm_one_tap_equalizer;
     integer held_re;
     integer held_im;
     integer held_index;
+    integer k;
 
-    ofdm_one_tap_equalizer dut (
+    ofdm_one_tap_equalizer #(.PIPELINED(PIPELINED)) dut (
         .clk(clk), .resetn(resetn),
         .in_valid(in_valid), .in_ready(in_ready),
         .in_re(in_re), .in_im(in_im),
@@ -75,6 +81,16 @@ module tb_ofdm_one_tap_equalizer;
             end
             @(posedge clk);
             #1;
+            for (k = 1; k < LATENCY; k = k + 1) begin
+                if (out_valid) begin
+                    $display("FAIL equalizer output valid before %0d clocks", LATENCY);
+                    errors = errors + 1;
+                end
+                @(negedge clk);
+                in_valid = 1'b0;
+                @(posedge clk);
+                #1;
+            end
             if (!out_valid) begin
                 $display("FAIL equalizer output not valid");
                 errors = errors + 1;
@@ -132,6 +148,9 @@ module tb_ofdm_one_tap_equalizer;
         in_index = 6'd22;
         in_last = 1'b1;
         @(posedge clk);
+        @(negedge clk);
+        in_valid = 1'b0;
+        repeat (LATENCY - 1) @(posedge clk);
         #1;
         if (!out_valid || in_ready) begin
             $display("FAIL output stall did not close input");
@@ -141,8 +160,6 @@ module tb_ofdm_one_tap_equalizer;
         held_im = $signed(out_im);
         held_index = out_index;
 
-        @(negedge clk);
-        in_valid = 1'b0;
         repeat (2) begin
             @(posedge clk);
             #1;
