@@ -70,7 +70,23 @@ Every loopback test below asserts every one of these counters is exactly zero, a
 
 ## Streaming contract
 
-Every block uses one clock, synchronous active-low reset, and a single-register ready/valid handshake: a producer must hold `valid` and its data stable until `ready` is also high, and a consumer's `ready` can depend combinationally on its own occupancy but not create a combinational loop back through `valid`. This is deliberately the same discipline the QPSK modem chain elsewhere in this course already uses. It is **not**, yet, packaged as AXI4-Stream: signal names are `valid`/`ready`/`re`/`im`/`index`/`last` rather than `tvalid`/`tready`/`tdata`/`tlast`, and there is no AXI4-Lite control/status register block exposing the saturation counters or a soft reset to a PS. `ofdm_tx_mapper_ifft_path.v`'s own header comment says as much: CP and "AXI-Stream" are named together as the next step, and CP has been added since; AXI packaging has not. Treat this as an open, scoped, and honestly reported item rather than a silent gap.
+Every block uses one clock, synchronous active-low reset, and a single-register ready/valid handshake: a producer must hold `valid` and its data stable until `ready` is also high, and a consumer's `ready` can depend combinationally on its own occupancy but not create a combinational loop back through `valid`. This is deliberately the same discipline the QPSK modem chain elsewhere in this course already uses. Inside the chain the signal names stay `valid`/`ready`/`re`/`im`/`index`/`last`; `ofdm_axi_modem.v` is the AXI packaging around the whole TX and RX chains:
+
+| Interface | Format |
+|---|---|
+| `s_axis_tx` | `tdata[1:0]` = one QPSK bit pair; 48 pairs form one symbol (`tlast` is not used, framing is by count) |
+| `m_axis_tx` | `tdata = {Q, I}`, Q1.15; 80 samples per symbol, CP first, `tlast` on the 80th |
+| `s_axis_rx` | `tdata = {Q, I}`, Q1.15; 80 samples per symbol, `tlast` on the 80th (a misplaced `tlast` sets the RX frame-error flag) |
+| `m_axis_rx` | `tdata[7:0] = {data_index, bits}`; 48 per symbol in FFT bin order (data indices 24..47, then 0..23), `tlast` on the 48th |
+| `s_axi` (AXI4-Lite) | `0x00` ID `"OFDM"`, `0x04` version, `0x08` control (bit 0 datapath reset, bit 8 clear sticky errors), `0x0C` status, `0x10`-`0x18` TX/FFT/EQ saturation counters, `0x1C`/`0x20` TX/RX symbol counters, `0x24` pilot phase, `0x28` correction coefficient |
+
+`tb_ofdm_axi_modem.sv` sends three symbols from `s_axis_tx` through a rotated channel into `s_axis_rx` with random stalls on the link and on `m_axis_rx_tready`, and checks BER=0, the register map, the datapath reset and the sticky RX frame error:
+
+```text
+PASS: ofdm_axi_modem 120-degree channel recovered 288/288 bits in 3 symbols over AXI4-Stream, BER=0; AXI4-Lite ID, counters, reset and sticky errors checked
+```
+
+The wrapper is not yet connected to the PS, a DMA engine or the AD9361 interface in a block design.
 
 ## Pilots: what exists and what does not yet
 
@@ -191,7 +207,7 @@ This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarri
 
 It does **not** claim:
 
-- AXI4-Stream/AXI4-Lite packaging (signal-compatible ready/valid exists; the AXI naming, an AXI4-Lite control/status block and Vivado integration do not);
+- Zynq system integration: `ofdm_axi_modem.v` has the AXI4-Stream/AXI4-Lite interfaces and is verified in simulation and out-of-context implementation, but no block design connects it to the PS, a DMA engine or the AD9361 interface;
 - per-subcarrier channel estimation: the pilot-driven correction in RTL (`ofdm_pilot_phase_corrector.v`) removes one common phase per symbol, which is enough for a flat channel but not for a frequency-selective one;
 - Verification stages 3-5 (PL/fabric loopback on Zynq, safe attenuated AD9361/AD9363 cabled loopback, an independent SDR capture) -- these need the physical board and RF path, neither of which was available while writing this lab;
 - a board-level clock plan. The out-of-context Vivado 2021.1 implementation on `xc7z020clg400-2` ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md)) routes every OFDM block without DRC errors and all clocked blocks meet 100 MHz: the TX path and FFT64 with WNS +1.69 / +1.23 ns (about 120 / 114 MHz). That needed the pipelined IFFT/FFT schedule, which is now the default (`PIPELINED = 1`): the butterfly takes four clocks instead of one but accepts one butterfly per clock, so a transform computes in 222 clocks instead of 384. The one-cycle teaching baseline (`PIPELINED = 0`, or `+define+OFDM_IFFT_PIPELINED=0`) missed 100 MHz by about 10 ns (28 logic levels in one clock). The working memory still lives in fabric logic, not block RAM; its write-enable fan-out is the new critical path.
@@ -211,7 +227,8 @@ Each exercise changes the equalizer coefficient on line `.coeff_re(16'sd0), .coe
 - [x] Self-checking RTL digital loopback, BER=0, reproducible.
 - [x] Self-checking RTL equalized loopback through a real complex channel, BER=0, reproducible.
 - [x] Every saturation/overflow counter asserted zero at the tested back-off.
-- [ ] AXI4-Stream/AXI4-Lite packaging.
+- [x] AXI4-Stream/AXI4-Lite packaging (`ofdm_axi_modem.v`, BER=0 under random backpressure, register map checked).
+- [ ] Block design with PS, DMA and the AD9361 interface.
 - [x] Pilot phase tracker in RTL, bit-exact with its fixed-point model (49 symbols).
 - [x] Tracker coefficient wired into the equalizer (same-symbol correction, BER=0 through 120 and -150 degree channels).
 - [ ] Per-subcarrier channel estimation.
