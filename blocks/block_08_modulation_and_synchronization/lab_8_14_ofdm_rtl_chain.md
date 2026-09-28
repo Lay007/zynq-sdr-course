@@ -42,8 +42,10 @@ flowchart LR
     IN["80 Q1.15 samples/symbol"] --> CPR[ofdm_cp16_remover]
     CPR --> FFT[ofdm_fft64_sequential]
     FFT --> EXT[ofdm_subcarrier_extractor]
-    EXT -->|data| EQ[ofdm_one_tap_equalizer]
-    EXT -.->|pilot| PILOT["pilot phase tracker (coefficient not yet wired to EQ)"]
+    EXT -->|data| BUF["48-sample symbol buffer"]
+    EXT -->|pilot| PILOT[ofdm_pilot_phase_tracker]
+    BUF --> EQ[ofdm_one_tap_equalizer]
+    PILOT -->|"coefficient of this symbol"| EQ
     EQ --> DEMAP[ofdm_qpsk_demapper]
     DEMAP --> BITS["recovered bit pairs"]
 ```
@@ -53,7 +55,8 @@ flowchart LR
 | `ofdm_cp16_remover.v` | Drops the 16-sample prefix, forwards samples 16..79 unchanged | fully backpressured on the 64 useful samples |
 | `ofdm_fft64_sequential.v` | Scaled forward FFT, built by reusing the IFFT core via `FFT(x)/N = conj(IFFT(conj(x)))` | rare Q1.15 endpoint clips from conjugating `-32768` are counted, not hidden |
 | `ofdm_subcarrier_extractor.v` | Splits the 64 bins into 48 data, 4 pilot and 12 null/guard carriers -- the exact inverse of the allocator's layout | data and pilot are independently backpressured sinks; a stalled pilot sink cannot stall data (or vice versa) |
-| `ofdm_pilot_phase_tracker.v` | Turns each symbol's four pilots into a Q2.14 phase-correction coefficient (vectoring + rotation CORDIC) | sign-only pilot references, 14 CORDIC iterations, `pilot_ready` low for 31 cycles per symbol; bit-exact with `tools/ofdm_pilot_phase_tracker_fixed.py`; not yet wired to the equalizer |
+| `ofdm_pilot_phase_tracker.v` | Turns each symbol's four pilots into a Q2.14 phase-correction coefficient (vectoring + rotation CORDIC) | sign-only pilot references, 14 CORDIC iterations, `pilot_ready` low for 31 cycles per symbol; bit-exact with `tools/ofdm_pilot_phase_tracker_fixed.py` |
+| `ofdm_pilot_phase_corrector.v` | Wires the tracker to the equalizer: buffers one symbol's data and applies the coefficient of that same symbol | 48-entry buffer; `data_ready` and `pilot_ready` stay low while the buffer drains, so latency is one symbol plus the tracker's 31 clocks; tracker and equalizer arithmetic unchanged |
 | `ofdm_one_tap_equalizer.v` | Multiplies each data symbol by an externally supplied Q2.14 correction coefficient | Q1.15 x Q2.14 -> Q3.29, rounded to Q15 (nearest, half-LSB away from zero), then saturated; `saturation_count` is cumulative from reset |
 | `ofdm_qpsk_demapper.v` | Hard-decision inverse of the mapper | transparent ready/valid, zero maps to bit `0` exactly like the Python reference |
 
@@ -89,7 +92,7 @@ PASS: ofdm_pilot_phase_tracker matched the fixed-point model on 49 symbols (back
 
 Against the ideal `exp(-j * theta)`, the coefficient is within 7 LSB of 16384 (0.04 %) and the phase within 3 units of pi/2^15 (about 3e-4 rad) at every whole degree.
 
-What is still **not** in RTL: the coefficient belongs to the symbol whose pilots produced it, but that symbol's data has already streamed past by the time the last pilot (bin 57) arrives. Applying it to the same symbol needs a one-symbol data buffer; applying it to the next symbol gives tracking with a one-symbol lag. Neither wiring exists yet, the loopback tests below still give the equalizer a fixed coefficient, and there is no per-subcarrier channel estimate for a frequency-selective channel.
+The coefficient belongs to the symbol whose pilots produced it, but that symbol's data has already streamed past by the time the last pilot (bin 57) arrives. `ofdm_pilot_phase_corrector.v` therefore holds the symbol's data in a 48-entry buffer and releases it through the equalizer once the coefficient is ready: same-symbol correction, as in Lab 8.5, at the cost of one symbol of latency. Applying the coefficient to the *next* symbol instead would need no buffer but would track with a one-symbol lag. What is still **not** in RTL is a per-subcarrier channel estimate for a frequency-selective channel: the correction is one common phase per symbol.
 
 ## Verification stage 1: float model vs. fixed-point model vs. RTL
 
@@ -162,6 +165,26 @@ PASS: OFDM +90deg channel -> -90deg equalizer recovered 96/96 bits, BER=0
 
 The second result is not a trivial passthrough: the testbench applies a genuine +90-degree complex rotation to every transmitted sample in the time domain (`channel_re = -im, channel_im = re`), and the equalizer is given the exact inverse coefficient (`W = -j` in Q2.14) to undo it. Every saturation counter (`tx_saturation_count`, `fft_saturation_count`, `eq_saturation_count`) is asserted to be exactly zero in the same test, so "BER=0" is not concealing an overflow that happened to cancel out numerically.
 
+## Verification stage 2b: pilot-corrected loopback
+
+Here nobody gives the equalizer its coefficient. `ofdm_pilot_phase_corrector.v` buffers each symbol's 48 data samples, lets the tracker measure that symbol's four pilots, and then sends the buffered data through the equalizer with the coefficient of the same symbol. The testbench rotates the channel by `ANGLE_DEG` (120 degrees by default, far outside the +-45 degrees a QPSK slicer tolerates) and sends two symbols back to back:
+
+```bash
+for angle in 120 -150; do
+  iverilog -g2012 -s tb_ofdm_tx_rx_pilot_corrected_loopback \
+    -Ptb_ofdm_tx_rx_pilot_corrected_loopback.ANGLE_DEG=$angle \
+    -o /tmp/tb_ofdm_pc_loop.vvp $RTL/ofdm_*.v $TB/tb_ofdm_tx_rx_pilot_corrected_loopback.sv
+  vvp /tmp/tb_ofdm_pc_loop.vvp
+done
+```
+
+```text
+PASS: OFDM 120-degree channel -> pilot-corrected RX recovered 192/192 bits in 2 symbols, BER=0 (phase 21851, coeff=(-8201,-14183))
+PASS: OFDM -150-degree channel -> pilot-corrected RX recovered 192/192 bits in 2 symbols, BER=0 (phase -27301, coeff=(-14186,8200))
+```
+
+The measured phase is the channel angle in units of pi/2^15 (120 degrees = 21845), and the coefficient is `16384 * exp(-j * phase)` in Q2.14. If the corrector is forced to apply the identity coefficient instead, the same test fails with 96/192 bit errors.
+
 ## What this lab does and does not prove
 
 This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarrier allocator/extractor, streaming 64-point IFFT/FFT, CP insertion/removal, one-tap equalizer, explicit scaling/saturation/overflow counters) and Verification stages 1-2 (float vs. fixed-point, self-checking digital loopback) with real, reproducible, measured evidence: 96/96 bits at BER=0 for both the plain digital loopback and a loopback through a genuine complex channel rotation with the equalizer actually correcting it.
@@ -169,7 +192,7 @@ This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarri
 It does **not** claim:
 
 - AXI4-Stream/AXI4-Lite packaging (signal-compatible ready/valid exists; the AXI naming, an AXI4-Lite control/status block and Vivado integration do not);
-- automatic pilot-driven correction in the RTL datapath: `ofdm_pilot_phase_tracker.v` computes the per-symbol phase coefficient (bit-exact with its model), but it is not yet wired into the equalizer, and there is no per-subcarrier channel estimate;
+- per-subcarrier channel estimation: the pilot-driven correction in RTL (`ofdm_pilot_phase_corrector.v`) removes one common phase per symbol, which is enough for a flat channel but not for a frequency-selective one;
 - Verification stages 3-5 (PL/fabric loopback on Zynq, safe attenuated AD9361/AD9363 cabled loopback, an independent SDR capture) -- these need the physical board and RF path, neither of which was available while writing this lab;
 - a board-level clock plan. The out-of-context Vivado 2021.1 implementation on `xc7z020clg400-2` ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md)) routes every OFDM block without DRC errors and all clocked blocks meet 100 MHz: the TX path and FFT64 with WNS +1.69 / +1.23 ns (about 120 / 114 MHz). That needed the pipelined IFFT/FFT schedule, which is now the default (`PIPELINED = 1`): the butterfly takes four clocks instead of one but accepts one butterfly per clock, so a transform computes in 222 clocks instead of 384. The one-cycle teaching baseline (`PIPELINED = 0`, or `+define+OFDM_IFFT_PIPELINED=0`) missed 100 MHz by about 10 ns (28 logic levels in one clock). The working memory still lives in fabric logic, not block RAM; its write-enable fan-out is the new critical path.
 
@@ -190,7 +213,8 @@ Each exercise changes the equalizer coefficient on line `.coeff_re(16'sd0), .coe
 - [x] Every saturation/overflow counter asserted zero at the tested back-off.
 - [ ] AXI4-Stream/AXI4-Lite packaging.
 - [x] Pilot phase tracker in RTL, bit-exact with its fixed-point model (49 symbols).
-- [ ] Tracker coefficient wired into the equalizer; per-subcarrier channel estimation.
+- [x] Tracker coefficient wired into the equalizer (same-symbol correction, BER=0 through 120 and -150 degree channels).
+- [ ] Per-subcarrier channel estimation.
 - [ ] PL/fabric loopback on Zynq.
 - [ ] Safe attenuated AD9361/AD9363 cabled loopback with attenuation/gain metadata.
 - [x] Resource and timing report from Vivado OOC implementation (all blocks routed, all clocked blocks meet 100 MHz).
