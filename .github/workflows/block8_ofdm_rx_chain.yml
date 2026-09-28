@@ -115,3 +115,16 @@ jobs:
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_qpsk_demapper.v \
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_equalized_loopback.sv
           vvp /tmp/tb_ofdm_tx_rx_equalized_loopback.vvp
+
+      - name: Check pilot-corrected TX->RX loopback (120 and -150 degree channels)
+        run: |
+          set -euo pipefail
+          for angle in 120 -150; do
+            iverilog -g2012 -Wall \
+              -s tb_ofdm_tx_rx_pilot_corrected_loopback \
+              -Ptb_ofdm_tx_rx_pilot_corrected_loopback.ANGLE_DEG=$angle \
+              -o /tmp/tb_ofdm_tx_rx_pilot_corrected_loopback.vvp \
+              blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v \
+              blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_pilot_corrected_loopback.sv
+            vvp /tmp/tb_ofdm_tx_rx_pilot_corrected_loopback.vvp
+          done
