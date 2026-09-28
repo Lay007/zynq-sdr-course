@@ -1,5 +1,14 @@
 `timescale 1ns/1ps
 
+// Default IFFT/FFT schedule for the whole OFDM chain: 1 = pipelined butterfly
+// (timing-closed at 100 MHz), 0 = the one-cycle teaching baseline. Override per
+// instance with the PIPELINED parameter, or globally with
+// +define+OFDM_IFFT_PIPELINED=0.
+`ifndef OFDM_IFFT_PIPELINED
+`define OFDM_IFFT_PIPELINED 1
+`endif
+
+
 // Block 8 OFDM RTL: transparent baseline 64-point radix-2 DIT IFFT.
 //
 // This core intentionally reuses one ofdm_ifft_butterfly instead of hiding the
@@ -11,8 +20,9 @@
 //   * 64 natural-order frequency bins are accepted with valid/ready;
 //   * input bins are written directly into bit-reversed memory addresses;
 //   * six radix-2 DIT stages execute 32 butterflies each;
-//   * one butterfly is issued at a time and takes two controller clocks
-//     (issue + writeback), for 384 compute clocks after input collection;
+//   * PIPELINED = 0: one butterfly is issued at a time and takes two
+//     controller clocks (issue + writeback), for 384 compute clocks after
+//     input collection (PIPELINED = 1: 222 clocks, see below);
 //   * each butterfly divides by two, giving the normalized 1/64 IFFT scale;
 //   * 64 natural-order time samples are emitted with valid/ready;
 //   * output payload/index/last remain stable under backpressure;
@@ -24,7 +34,19 @@
 // Memory is deliberately described as a small dual-read/two-write register
 // array. A later optimized implementation may replace the controller/memory
 // architecture without changing this arithmetic contract.
-module ofdm_ifft64_sequential (
+//
+// PIPELINED = 1 keeps the arithmetic, ordering and interface contract but
+// changes the schedule: the four-cycle pipelined butterfly accepts one
+// butterfly per clock, so a stage's 32 butterflies are issued back to back and
+// each result is written back four clocks later (the write addresses travel
+// alongside in a delay line). Inside one radix-2 stage every point belongs to
+// exactly one butterfly, so those reads and writes never collide; between
+// stages the controller waits until the pipeline has drained. Compute then
+// takes about 6 * (32 + 4) clocks instead of 384, and no single clock holds
+// the multiply-round-saturate chain.
+module ofdm_ifft64_sequential #(
+    parameter integer PIPELINED = `OFDM_IFFT_PIPELINED
+) (
     input  wire                clk,
     input  wire                resetn,
 
@@ -44,12 +66,15 @@ module ofdm_ifft64_sequential (
     output reg  [15:0]         total_saturation_count
 );
 
-    localparam [1:0] STATE_LOAD   = 2'd0;
-    localparam [1:0] STATE_ISSUE  = 2'd1;
-    localparam [1:0] STATE_WAIT   = 2'd2;
-    localparam [1:0] STATE_OUTPUT = 2'd3;
+    localparam [2:0] STATE_LOAD   = 3'd0;
+    localparam [2:0] STATE_ISSUE  = 3'd1;
+    localparam [2:0] STATE_WAIT   = 3'd2;
+    localparam [2:0] STATE_OUTPUT = 3'd3;
+    localparam [2:0] STATE_DRAIN  = 3'd4; // pipelined only: wait for write-back
 
-    reg [1:0] state;
+    localparam integer LATENCY = (PIPELINED != 0) ? 4 : 1;
+
+    reg [2:0] state;
     reg [5:0] input_index;
     reg [2:0] stage;
     reg [5:0] group_base;
@@ -173,7 +198,17 @@ module ofdm_ifft64_sequential (
     wire signed [15:0] butterfly_y1_im;
     wire [2:0] butterfly_saturation_count;
 
-    ofdm_ifft_butterfly butterfly (
+    // Write-back addresses of the butterflies in flight (pipelined mode).
+    reg [5:0] wb_index0 [0:LATENCY-1];
+    reg [5:0] wb_index1 [0:LATENCY-1];
+    reg [2:0] in_flight;
+    integer wb_k;
+
+    wire last_butterfly_of_stage =
+        ({1'b0, butterfly_j} == (half_size - 6'd1)) &&
+        (({1'b0, group_base} + span_size) >= 7'd64);
+
+    ofdm_ifft_butterfly #(.PIPELINED(PIPELINED)) butterfly (
         .clk(clk),
         .resetn(resetn),
         .valid_in(state == STATE_ISSUE),
@@ -197,7 +232,7 @@ module ofdm_ifft64_sequential (
     assign sample_im = memory_im[output_index];
     assign sample_index = output_index;
     assign sample_last = sample_valid && (output_index == 6'd63);
-    assign busy = (state == STATE_ISSUE) || (state == STATE_WAIT);
+    assign busy = (state == STATE_ISSUE) || (state == STATE_WAIT) || (state == STATE_DRAIN);
 
     always @(posedge clk) begin
         if (!resetn) begin
@@ -208,7 +243,29 @@ module ofdm_ifft64_sequential (
             butterfly_j <= 5'd0;
             output_index <= 6'd0;
             total_saturation_count <= 16'd0;
+            in_flight <= 3'd0;
         end else begin
+            if (PIPELINED != 0) begin
+                // Address delay line, aligned with the butterfly pipeline.
+                wb_index0[0] <= butterfly_index0;
+                wb_index1[0] <= butterfly_index1;
+                for (wb_k = 1; wb_k < LATENCY; wb_k = wb_k + 1) begin
+                    wb_index0[wb_k] <= wb_index0[wb_k - 1];
+                    wb_index1[wb_k] <= wb_index1[wb_k - 1];
+                end
+                // Write back whatever leaves the pipeline.
+                if (butterfly_valid_out) begin
+                    memory_re[wb_index0[LATENCY-1]] <= butterfly_y0_re;
+                    memory_im[wb_index0[LATENCY-1]] <= butterfly_y0_im;
+                    memory_re[wb_index1[LATENCY-1]] <= butterfly_y1_re;
+                    memory_im[wb_index1[LATENCY-1]] <= butterfly_y1_im;
+                    total_saturation_count <=
+                        total_saturation_count + butterfly_saturation_count;
+                end
+                in_flight <= in_flight + {2'd0, (state == STATE_ISSUE)}
+                                       - {2'd0, butterfly_valid_out};
+            end
+
             case (state)
                 STATE_LOAD: begin
                     if (bin_valid) begin
@@ -230,11 +287,36 @@ module ofdm_ifft64_sequential (
 
                 STATE_ISSUE: begin
                     // The butterfly samples memory/twiddle inputs on this edge.
-                    state <= STATE_WAIT;
+                    if (PIPELINED == 0) begin
+                        state <= STATE_WAIT;
+                    end else if (last_butterfly_of_stage) begin
+                        butterfly_j <= 5'd0;
+                        group_base <= 6'd0;
+                        state <= STATE_DRAIN;
+                    end else if ({1'b0, butterfly_j} == (half_size - 6'd1)) begin
+                        butterfly_j <= 5'd0;
+                        group_base <= group_base + span_size[5:0];
+                    end else begin
+                        butterfly_j <= butterfly_j + 5'd1;
+                    end
+                end
+
+                STATE_DRAIN: begin
+                    // The next stage reads what this stage writes: wait until
+                    // the stage's last result has been written back.
+                    if (in_flight == 3'd0) begin
+                        if (stage == 3'd5) begin
+                            output_index <= 6'd0;
+                            state <= STATE_OUTPUT;
+                        end else begin
+                            stage <= stage + 3'd1;
+                            state <= STATE_ISSUE;
+                        end
+                    end
                 end
 
                 STATE_WAIT: begin
-                    if (butterfly_valid_out) begin
+                    if (PIPELINED == 0 && butterfly_valid_out) begin
                         memory_re[butterfly_index0] <= butterfly_y0_re;
                         memory_im[butterfly_index0] <= butterfly_y0_im;
                         memory_re[butterfly_index1] <= butterfly_y1_re;

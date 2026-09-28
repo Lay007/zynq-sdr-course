@@ -2,6 +2,7 @@
 """Run every committed OFDM testbench locally with the CI simulator."""
 from __future__ import annotations
 
+import argparse
 import shutil
 import subprocess
 from pathlib import Path
@@ -12,6 +13,14 @@ BLOCK = ROOT / "blocks/block_08_modulation_and_synchronization"
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--baseline",
+        action="store_true",
+        help="build the IFFT/FFT with the one-cycle baseline butterfly (OFDM_IFFT_PIPELINED=0)",
+    )
+    args = parser.parse_args()
+    defines = ["-DOFDM_IFFT_PIPELINED=0"] if args.baseline else []
     for command in ("iverilog", "vvp"):
         if shutil.which(command) is None:
             raise SystemExit(f"{command} is required; install Icarus Verilog")
@@ -23,11 +32,12 @@ def main() -> int:
         for bench in benches:
             output = Path(temporary) / f"{bench.stem}.vvp"
             subprocess.run(
-                ["iverilog", "-g2012", "-Wall", "-s", bench.stem, "-o", str(output),
+                ["iverilog", "-g2012", "-Wall", *defines, "-s", bench.stem, "-o", str(output),
                  *map(str, sources), str(bench)], cwd=ROOT, check=True, timeout=60,
             )
             subprocess.run(["vvp", str(output)], cwd=ROOT, check=True, timeout=120)
-    print(f"OFDM RTL: {len(benches)} testbenches passed (simulation only)")
+    mode = "baseline" if args.baseline else "pipelined"
+    print(f"OFDM RTL ({mode} IFFT/FFT): {len(benches)} testbenches passed (simulation only)")
     return 0
 
 

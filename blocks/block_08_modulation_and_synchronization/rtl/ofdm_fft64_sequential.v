@@ -1,5 +1,14 @@
 `timescale 1ns/1ps
 
+// Default IFFT/FFT schedule for the whole OFDM chain: 1 = pipelined butterfly
+// (timing-closed at 100 MHz), 0 = the one-cycle teaching baseline. Override per
+// instance with the PIPELINED parameter, or globally with
+// +define+OFDM_IFFT_PIPELINED=0.
+`ifndef OFDM_IFFT_PIPELINED
+`define OFDM_IFFT_PIPELINED 1
+`endif
+
+
 // Block 8 OFDM RX RTL: scaled 64-point FFT baseline.
 //
 // The implementation deliberately reuses the verified normalized IFFT core via
@@ -11,7 +20,9 @@
 // an imaginary value of -32768 therefore saturates it to +32767. Those rare
 // endpoint clips are counted explicitly and added to the butterfly saturation
 // count so the RX path never hides arithmetic overflow.
-module ofdm_fft64_sequential (
+module ofdm_fft64_sequential #(
+    parameter integer PIPELINED = `OFDM_IFFT_PIPELINED
+) (
     input  wire                clk,
     input  wire                resetn,
 
@@ -56,7 +67,7 @@ module ofdm_fft64_sequential (
 
     reg [5:0] input_index;
 
-    ofdm_ifft64_sequential normalized_ifft (
+    ofdm_ifft64_sequential #(.PIPELINED(PIPELINED)) normalized_ifft (
         .clk(clk),
         .resetn(resetn),
         .bin_valid(sample_valid),

@@ -2,6 +2,11 @@
 
 module tb_ofdm_ifft_butterfly;
 
+    // Run with -Ptb_ofdm_ifft_butterfly.PIPELINED=1 to check the pipelined variant;
+    // the expected numbers are the same, only the latency changes.
+    parameter integer PIPELINED = 0;
+    localparam integer LATENCY = (PIPELINED != 0) ? 4 : 1;
+
     reg clk = 1'b0;
     reg resetn = 1'b0;
     reg valid_in = 1'b0;
@@ -27,7 +32,7 @@ module tb_ofdm_ifft_butterfly;
     integer held_y1_im;
     integer held_saturations;
 
-    ofdm_ifft_butterfly dut (
+    ofdm_ifft_butterfly #(.PIPELINED(PIPELINED)) dut (
         .clk(clk),
         .resetn(resetn),
         .valid_in(valid_in),
@@ -86,6 +91,14 @@ module tb_ofdm_ifft_butterfly;
 
             @(posedge clk);
             #1;
+            // One issue only: drop valid_in and let the pipeline drain.
+            repeat (LATENCY - 1) begin
+                expect_int(valid_out, 0, "no result before the pipeline latency");
+                @(negedge clk);
+                valid_in = 1'b0;
+                @(posedge clk);
+                #1;
+            end
             expect_int(valid_out, 1, label_text);
             expect_int($signed(y0_re), exp_y0_re, "butterfly y0 real");
             expect_int($signed(y0_im), exp_y0_im, "butterfly y0 imag");

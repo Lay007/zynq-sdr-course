@@ -1,5 +1,14 @@
 `timescale 1ns/1ps
 
+// Default IFFT/FFT schedule for the whole OFDM chain: 1 = pipelined butterfly
+// (timing-closed at 100 MHz), 0 = the one-cycle teaching baseline. Override per
+// instance with the PIPELINED parameter, or globally with
+// +define+OFDM_IFFT_PIPELINED=0.
+`ifndef OFDM_IFFT_PIPELINED
+`define OFDM_IFFT_PIPELINED 1
+`endif
+
+
 // Block 8 OFDM RTL: complete baseline transmitter for one CP-protected symbol.
 //
 //   48 QPSK bit pairs
@@ -22,7 +31,9 @@
 // The inner mapper/IFFT path becomes ready again as soon as IFFT sample 63 is
 // handed to the CP buffer. frame_locked deliberately extends that lock until
 // CP output sample 79 is accepted, preventing implicit next-frame prefetch.
-module ofdm_tx_cp16_path (
+module ofdm_tx_cp16_path #(
+    parameter integer PIPELINED = `OFDM_IFFT_PIPELINED
+) (
     input  wire                clk,
     input  wire                resetn,
 
@@ -83,7 +94,7 @@ module ofdm_tx_cp16_path (
         end
     end
 
-    ofdm_tx_mapper_ifft_path tx_core (
+    ofdm_tx_mapper_ifft_path #(.PIPELINED(PIPELINED)) tx_core (
         .clk(clk),
         .resetn(resetn),
         .bits_valid(inner_bits_valid),

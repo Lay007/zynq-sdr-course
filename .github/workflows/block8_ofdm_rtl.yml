@@ -7,12 +7,14 @@ on:
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
       - "verification/vectors/block08_ofdm_*.mem"
+      - "tools/run_ofdm_rtl.py"
       - ".github/workflows/block8_ofdm_rtl.yml"
   pull_request:
     paths:
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
       - "verification/vectors/block08_ofdm_*.mem"
+      - "tools/run_ofdm_rtl.py"
       - ".github/workflows/block8_ofdm_rtl.yml"
   workflow_dispatch:
 
@@ -64,6 +66,12 @@ jobs:
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v \
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_ifft_butterfly.sv
           vvp /tmp/tb_ofdm_ifft_butterfly.vvp
+
+      - name: Compile and run pipelined OFDM IFFT butterfly regression
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall             -s tb_ofdm_ifft_butterfly             -Ptb_ofdm_ifft_butterfly.PIPELINED=1             -o /tmp/tb_ofdm_ifft_butterfly_pipelined.vvp             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_ifft_butterfly.sv
+          vvp /tmp/tb_ofdm_ifft_butterfly_pipelined.vvp
 
       - name: Compile and run sequential OFDM IFFT regression
         run: |
@@ -136,3 +144,6 @@ jobs:
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_tx_cp16_path.v \
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_cp16_path.sv
           vvp /tmp/tb_ofdm_tx_cp16_path.vvp
+
+      - name: Run every OFDM testbench with the one-cycle baseline IFFT/FFT
+        run: python3 tools/run_ofdm_rtl.py --baseline

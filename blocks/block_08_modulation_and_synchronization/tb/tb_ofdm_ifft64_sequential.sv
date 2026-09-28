@@ -115,7 +115,10 @@ module tb_ofdm_ifft64_sequential;
                 compute_cycles = compute_cycles + 1;
             end
             expect_int(sample_valid, 1, "IFFT eventually presents output frame");
-            expect_int(compute_cycles, 384, "single-butterfly IFFT compute latency clocks");
+            // Baseline: 192 butterflies x (issue + write-back) = 384 clocks.
+            // Pipelined: 6 stages x (32 issues + 4-clock drain + 1 turn-around) = 222.
+            expect_int(compute_cycles, (`OFDM_IFFT_PIPELINED != 0) ? 222 : 384,
+                       "IFFT compute latency clocks");
             expect_int(busy, 0, "busy drops when output frame becomes available");
             expect_int(sample_index, 0, "IFFT output starts at natural sample zero");
             expect_int(total_saturation_count, 0, "test transform has no saturation");

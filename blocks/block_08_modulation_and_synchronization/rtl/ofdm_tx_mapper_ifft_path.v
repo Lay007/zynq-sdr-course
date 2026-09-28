@@ -1,5 +1,14 @@
 `timescale 1ns/1ps
 
+// Default IFFT/FFT schedule for the whole OFDM chain: 1 = pipelined butterfly
+// (timing-closed at 100 MHz), 0 = the one-cycle teaching baseline. Override per
+// instance with the PIPELINED parameter, or globally with
+// +define+OFDM_IFFT_PIPELINED=0.
+`ifndef OFDM_IFFT_PIPELINED
+`define OFDM_IFFT_PIPELINED 1
+`endif
+
+
 // Block 8 OFDM RTL: first end-to-end transmit path for one 64-point symbol.
 //
 //   48 QPSK bit pairs
@@ -18,7 +27,9 @@
 // bits_ready is asserted only when both mapper/bridge are empty and the
 // allocator is collecting. This prevents accepting a 49th data carrier while
 // the 48th mapped symbol is still in flight.
-module ofdm_tx_mapper_ifft_path (
+module ofdm_tx_mapper_ifft_path #(
+    parameter integer PIPELINED = `OFDM_IFFT_PIPELINED
+) (
     input  wire                clk,
     input  wire                resetn,
 
@@ -129,7 +140,7 @@ module ofdm_tx_mapper_ifft_path (
         .bin_last(allocator_bin_last)
     );
 
-    ofdm_ifft64_sequential ifft (
+    ofdm_ifft64_sequential #(.PIPELINED(PIPELINED)) ifft (
         .clk(clk),
         .resetn(resetn),
         .bin_valid(allocator_bin_valid),
