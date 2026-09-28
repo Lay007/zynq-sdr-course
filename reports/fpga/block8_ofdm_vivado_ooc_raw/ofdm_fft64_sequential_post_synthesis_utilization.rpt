@@ -27,18 +27,20 @@ Table of Contents
 1. Slice Logic
 --------------
 
-+-------------------------+------+-------+------------+-----------+-------+
-|        Site Type        | Used | Fixed | Prohibited | Available | Util% |
-+-------------------------+------+-------+------------+-----------+-------+
-| Slice LUTs*             | 8943 |     0 |          0 |     53200 | 16.81 |
-|   LUT as Logic          | 8943 |     0 |          0 |     53200 | 16.81 |
-|   LUT as Memory         |    0 |     0 |          0 |     17400 |  0.00 |
-| Slice Registers         | 2227 |     0 |          0 |    106400 |  2.09 |
-|   Register as Flip Flop | 2227 |     0 |          0 |    106400 |  2.09 |
-|   Register as Latch     |    0 |     0 |          0 |    106400 |  0.00 |
-| F7 Muxes                |  772 |     0 |          0 |     26600 |  2.90 |
-| F8 Muxes                |  256 |     0 |          0 |     13300 |  1.92 |
-+-------------------------+------+-------+------------+-----------+-------+
++----------------------------+------+-------+------------+-----------+-------+
+|          Site Type         | Used | Fixed | Prohibited | Available | Util% |
++----------------------------+------+-------+------------+-----------+-------+
+| Slice LUTs*                | 7639 |     0 |          0 |     53200 | 14.36 |
+|   LUT as Logic             | 7627 |     0 |          0 |     53200 | 14.34 |
+|   LUT as Memory            |   12 |     0 |          0 |     17400 |  0.07 |
+|     LUT as Distributed RAM |    0 |     0 |            |           |       |
+|     LUT as Shift Register  |   12 |     0 |            |           |       |
+| Slice Registers            | 2391 |     0 |          0 |    106400 |  2.25 |
+|   Register as Flip Flop    | 2391 |     0 |          0 |    106400 |  2.25 |
+|   Register as Latch        |    0 |     0 |          0 |    106400 |  0.00 |
+| F7 Muxes                   |  634 |     0 |          0 |     26600 |  2.38 |
+| F8 Muxes                   |  251 |     0 |          0 |     13300 |  1.89 |
++----------------------------+------+-------+------------+-----------+-------+
 * Warning! The Final LUT count, after physical optimizations and full implementation, is typically lower. Run opt_design after synthesis, if not already completed, for a more realistic count.
 
 
@@ -56,8 +58,8 @@ Table of Contents
 | 0     |          Yes |           - |            - |
 | 0     |          Yes |           - |          Set |
 | 0     |          Yes |           - |        Reset |
-| 18    |          Yes |         Set |            - |
-| 2209  |          Yes |       Reset |            - |
+| 15    |          Yes |         Set |            - |
+| 2376  |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -147,17 +149,18 @@ Table of Contents
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| LUT6     | 6601 |                 LUT |
-| FDRE     | 2209 |        Flop & Latch |
-| LUT5     | 1193 |                 LUT |
-| LUT3     | 1160 |                 LUT |
-| MUXF7    |  772 |               MuxFx |
-| LUT1     |  285 |                 LUT |
-| MUXF8    |  256 |               MuxFx |
-| LUT4     |  153 |                 LUT |
+| LUT6     | 5082 |                 LUT |
+| FDRE     | 2376 |        Flop & Latch |
+| LUT5     | 1921 |                 LUT |
+| MUXF7    |  634 |               MuxFx |
+| LUT1     |  290 |                 LUT |
+| LUT2     |  286 |                 LUT |
+| MUXF8    |  251 |               MuxFx |
+| LUT3     |  208 |                 LUT |
 | CARRY4   |  146 |          CarryLogic |
-| LUT2     |  100 |                 LUT |
-| FDSE     |   18 |        Flop & Latch |
+| LUT4     |   75 |                 LUT |
+| FDSE     |   15 |        Flop & Latch |
+| SRL16E   |   12 |  Distributed Memory |
 | DSP48E1  |    4 |    Block Arithmetic |
 +----------+------+---------------------+
 
