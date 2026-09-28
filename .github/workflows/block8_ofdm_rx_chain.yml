@@ -55,6 +55,12 @@ jobs:
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_one_tap_equalizer.sv
           vvp /tmp/tb_ofdm_one_tap_equalizer.vvp
 
+      - name: Check pipelined one-tap equalizer
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall             -s tb_ofdm_one_tap_equalizer             -Ptb_ofdm_one_tap_equalizer.PIPELINED=1             -o /tmp/tb_ofdm_one_tap_equalizer_pipelined.vvp             blocks/block_08_modulation_and_synchronization/rtl/ofdm_one_tap_equalizer.v             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_one_tap_equalizer.sv
+          vvp /tmp/tb_ofdm_one_tap_equalizer_pipelined.vvp
+
       - name: Check pilot phase tracker
         run: |
           set -euo pipefail
@@ -127,4 +133,12 @@ jobs:
               blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v \
               blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_pilot_corrected_loopback.sv
             vvp /tmp/tb_ofdm_tx_rx_pilot_corrected_loopback.vvp
+          done
+
+      - name: Check AXI4-Stream/AXI4-Lite OFDM modem wrapper
+        run: |
+          set -euo pipefail
+          for angle in 120 -150; do
+            iverilog -g2012 -Wall               -s tb_ofdm_axi_modem               -Ptb_ofdm_axi_modem.ANGLE_DEG=$angle               -o /tmp/tb_ofdm_axi_modem.vvp               blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v               blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_axi_modem.sv
+            vvp /tmp/tb_ofdm_axi_modem.vvp
           done
