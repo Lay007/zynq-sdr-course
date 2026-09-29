@@ -21,6 +21,7 @@ This directory stores report templates and lightweight report examples that are 
 | `fpga/z7020-resource-summary-template.md` | board-level OOC resource summary with real numbers |
 | `fpga/block5-utilization-summary.md` | per-module LUT/FF/DSP/BRAM summary |
 | `fpga/block5-timing-summary.md` | per-module timing summary at 100 MHz |
+| `fpga/block5-bpsk-vivado-evidence.md` | OOC implementation of the Labs 5.6-5.11 BPSK modules at 100 MHz |
 | `fpga/block5-latency-throughput-notes.md` | latency and throughput notes from HDL testbenches |
 | `fpga/vivado_ooc_raw/block5_vivado_ooc_metrics.json` | machine-readable summary of the Vivado OOC run |
 

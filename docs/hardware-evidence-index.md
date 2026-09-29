@@ -24,6 +24,8 @@ Use the status values below:
 | Z7020 OOC FPGA summary | `reports/fpga/z7020-resource-summary-template.md` | synthetic | first curated resource/timing snapshot with board clock provenance |
 | Block 5 utilization summary | `reports/fpga/block5-utilization-summary.md` | synthetic | LUT/FF/DSP/BRAM usage for the four Block 5 HDL examples |
 | Block 5 timing summary | `reports/fpga/block5-timing-summary.md` | synthetic | 100 MHz OOC timing snapshot and limits |
+| Block 5 BPSK OOC implementation | `reports/fpga/block5-bpsk-vivado-evidence.md` | synthetic | 13 BPSK modules of Labs 5.6-5.11 routed at 100 MHz; 12 meet timing, the Gardner loop misses by 13.4 ns |
+| Block 8 OFDM OOC implementation | `reports/fpga/block8-ofdm-vivado-evidence.md` | synthetic | OFDM blocks, pilot corrector and AXI modem routed at 100 MHz with port paths timed; only the one-clock equalizer misses |
 | Integrated Zynq implementation pair | `reports/fpga/integrated-zynq-implementation-summary.md`, `reports/fpga/integrated-zynq-snapshot-implementation-summary.md` | measured | CDC-fixed snapshot closes timing; selected snapshot strategy reaches WNS +0.096 ns and passes fabric board qualification; standalone remains diagnostic |
 | Integrated Zynq implementation sweep | `reports/fpga/integrated-zynq-snapshot-implementation-sweep.md` | measured | 6/6 implementation strategies completed timing-clean; `Performance_ExtraTimingOpt` is selected |
 | Block 5 latency/throughput notes | `reports/fpga/block5-latency-throughput-notes.md` | reviewed | one-cycle behaviour and streaming-rate notes from HDL testbenches |

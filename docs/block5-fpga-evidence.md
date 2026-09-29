@@ -20,6 +20,7 @@ The run targets `xc7z020clg400-2` and uses a `10.000 ns` / `100.000 MHz` clock c
 | Board-level summary | Top-level LUT/FF/DSP/BRAM/Fmax snapshot | `reports/fpga/z7020-resource-summary-template.md` |
 | Utilization summary | Per-module utilization digest | `reports/fpga/block5-utilization-summary.md` |
 | Timing summary | WNS/TNS/data-path timing snapshot | `reports/fpga/block5-timing-summary.md` |
+| BPSK OOC implementation (Labs 5.6-5.11) | Placed-and-routed LUT/FF/DSP/WNS for the 13 BPSK modules, port paths timed | `reports/fpga/block5-bpsk-vivado-evidence.md` |
 | Latency and throughput notes | One-cycle pipeline and streaming behaviour | `reports/fpga/block5-latency-throughput-notes.md` |
 | Raw metrics JSON | Machine-readable run summary | `reports/fpga/vivado_ooc_raw/block5_vivado_ooc_metrics.json` |
 | Integrated implementation summary | Placed-and-routed top-level result | `reports/fpga/integrated-zynq-implementation-summary.md` |
