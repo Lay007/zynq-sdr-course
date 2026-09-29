@@ -1,0 +1,971 @@
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
+| Date         : normalized
+| Host         : normalized
+| Command      : report_drc -file <output_dir>/bpsk_zynq_ber_axi_lite_post_route_drc.rpt
+| Design       : bpsk_zynq_ber_axi_lite
+| Device       : xc7z020clg400-2
+| Speed File   : -2
+| Design State : Fully Routed
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+Report DRC
+
+Table of Contents
+-----------------
+1. REPORT SUMMARY
+2. REPORT DETAILS
+
+1. REPORT SUMMARY
+-----------------
+            Netlist: bpsk_zynq_ber_axi_lite
+          Floorplan: design_1
+      Design limits: <entire design considered>
+           Ruledeck: default
+             Max violations: <unlimited>
+             Violations found: 187
++--------+----------+------------------------+------------+
+| Rule   | Severity | Description            | Violations |
++--------+----------+------------------------+------------+
+| DPIP-1 | Warning  | Input pipelining       | 138        |
+| DPOP-2 | Warning  | MREG Output pipelining | 48         |
+| ZPS7-1 | Warning  | PS7 block required     | 1          |
++--------+----------+------------------------+------------+
+
+2. REPORT DETAILS
+-----------------
+DPIP-1#1 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[0] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[0]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#2 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[10] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[10]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#3 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[11] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[11]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#4 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[12] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[12]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#5 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[13] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[13]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#6 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[14] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[14]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#7 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[15] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[15]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#8 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[1] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[1]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#9 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[2] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[2]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#10 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[3] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[3]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#11 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[4] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[4]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#12 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[5] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[5]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#13 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[6] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[6]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#14 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[7] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[7]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#15 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[8] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[8]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#16 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[9] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[9]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#17 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[0] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[0]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#18 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[0] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[0]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#19 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[1] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[1]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#20 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[1] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[1]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#21 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[2] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[2]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#22 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[2] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[2]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#23 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[3] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[3]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#24 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[3] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[3]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#25 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[4] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[4]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#26 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[4] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[4]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#27 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[5] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[5]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#28 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[5] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[5]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#29 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[6] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[6]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#30 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[6] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[6]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#31 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[7] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[7]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#32 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[7] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum2_i_reg[7]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#33 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[0] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[0]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#34 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[0] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[0]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#35 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[1] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[1]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#36 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[1] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[1]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#37 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[2] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[2]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#38 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[2] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[2]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#39 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[3] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[3]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#40 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[3] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum3_i_reg[3]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#41 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum4_i_reg[0] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum4_i_reg[0]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#42 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum4_i_reg[0] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum4_i_reg[0]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#43 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum4_i_reg[1] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum4_i_reg[1]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#44 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum4_i_reg[1] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum4_i_reg[1]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#45 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum5_i_reg[0] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum5_i_reg[0]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#46 Warning
+Input pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum5_i_reg[0] input core_i/rx_chain_i/matched_filter_i/matched_filter_i/sum5_i_reg[0]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#47 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[0] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[0]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#48 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[10] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[10]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#49 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[11] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[11]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#50 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[12] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[12]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#51 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[13] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[13]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#52 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[14] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[14]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#53 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[15] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[15]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#54 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[1] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[1]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#55 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[2] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[2]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#56 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[3] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[3]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#57 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[4] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[4]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#58 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[5] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[5]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#59 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[6] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[6]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#60 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[7] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[7]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#61 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[8] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[8]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#62 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_i_reg[9] input core_i/tx_chain_i/tx_fir_i/sum1_i_reg[9]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#63 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[0] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[0]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#64 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[10] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[10]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#65 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[11] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[11]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#66 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[12] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[12]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#67 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[13] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[13]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#68 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[14] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[14]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#69 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[15] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[15]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#70 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[1] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[1]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#71 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[2] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[2]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#72 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[3] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[3]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#73 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[4] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[4]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#74 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[5] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[5]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#75 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[6] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[6]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#76 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[7] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[7]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#77 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[8] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[8]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#78 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum1_q_reg[9] input core_i/tx_chain_i/tx_fir_i/sum1_q_reg[9]/C[47:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#79 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[0] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[0]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#80 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[0] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[0]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#81 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[1] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[1]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#82 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[1] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[1]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#83 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[2] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[2]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#84 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[2] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[2]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#85 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[3] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[3]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#86 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[3] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[3]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#87 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[4] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[4]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#88 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[4] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[4]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#89 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[5] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[5]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#90 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[5] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[5]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#91 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[6] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[6]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#92 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[6] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[6]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#93 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[7] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[7]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#94 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_i_reg[7] input core_i/tx_chain_i/tx_fir_i/sum2_i_reg[7]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#95 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[0] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[0]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#96 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[0] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[0]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#97 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[1] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[1]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#98 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[1] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[1]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#99 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[2] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[2]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#100 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[2] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[2]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#101 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[3] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[3]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#102 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[3] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[3]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#103 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[4] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[4]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#104 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[4] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[4]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#105 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[5] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[5]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#106 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[5] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[5]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#107 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[6] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[6]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#108 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[6] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[6]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#109 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[7] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[7]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#110 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum2_q_reg[7] input core_i/tx_chain_i/tx_fir_i/sum2_q_reg[7]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#111 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_i_reg[0] input core_i/tx_chain_i/tx_fir_i/sum3_i_reg[0]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#112 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_i_reg[0] input core_i/tx_chain_i/tx_fir_i/sum3_i_reg[0]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#113 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_i_reg[1] input core_i/tx_chain_i/tx_fir_i/sum3_i_reg[1]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#114 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_i_reg[1] input core_i/tx_chain_i/tx_fir_i/sum3_i_reg[1]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#115 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_i_reg[2] input core_i/tx_chain_i/tx_fir_i/sum3_i_reg[2]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#116 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_i_reg[2] input core_i/tx_chain_i/tx_fir_i/sum3_i_reg[2]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#117 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_i_reg[3] input core_i/tx_chain_i/tx_fir_i/sum3_i_reg[3]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#118 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_i_reg[3] input core_i/tx_chain_i/tx_fir_i/sum3_i_reg[3]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#119 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_q_reg[0] input core_i/tx_chain_i/tx_fir_i/sum3_q_reg[0]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#120 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_q_reg[0] input core_i/tx_chain_i/tx_fir_i/sum3_q_reg[0]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#121 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_q_reg[1] input core_i/tx_chain_i/tx_fir_i/sum3_q_reg[1]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#122 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_q_reg[1] input core_i/tx_chain_i/tx_fir_i/sum3_q_reg[1]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#123 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_q_reg[2] input core_i/tx_chain_i/tx_fir_i/sum3_q_reg[2]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#124 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_q_reg[2] input core_i/tx_chain_i/tx_fir_i/sum3_q_reg[2]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#125 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_q_reg[3] input core_i/tx_chain_i/tx_fir_i/sum3_q_reg[3]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#126 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum3_q_reg[3] input core_i/tx_chain_i/tx_fir_i/sum3_q_reg[3]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#127 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum4_i_reg[0] input core_i/tx_chain_i/tx_fir_i/sum4_i_reg[0]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#128 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum4_i_reg[0] input core_i/tx_chain_i/tx_fir_i/sum4_i_reg[0]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#129 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum4_i_reg[1] input core_i/tx_chain_i/tx_fir_i/sum4_i_reg[1]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#130 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum4_i_reg[1] input core_i/tx_chain_i/tx_fir_i/sum4_i_reg[1]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#131 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum4_q_reg[0] input core_i/tx_chain_i/tx_fir_i/sum4_q_reg[0]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#132 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum4_q_reg[0] input core_i/tx_chain_i/tx_fir_i/sum4_q_reg[0]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#133 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum4_q_reg[1] input core_i/tx_chain_i/tx_fir_i/sum4_q_reg[1]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#134 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum4_q_reg[1] input core_i/tx_chain_i/tx_fir_i/sum4_q_reg[1]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#135 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum5_i_reg[0] input core_i/tx_chain_i/tx_fir_i/sum5_i_reg[0]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#136 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum5_i_reg[0] input core_i/tx_chain_i/tx_fir_i/sum5_i_reg[0]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#137 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum5_q_reg[0] input core_i/tx_chain_i/tx_fir_i/sum5_q_reg[0]/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#138 Warning
+Input pipelining
+DSP core_i/tx_chain_i/tx_fir_i/sum5_q_reg[0] input core_i/tx_chain_i/tx_fir_i/sum5_q_reg[0]/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPOP-2#1 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[0] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[0]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#2 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[10] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[10]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#3 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[12] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[12]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#4 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[14] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[14]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#5 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[16] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[16]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#6 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[18] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[18]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#7 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#8 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[22] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[22]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#9 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[24] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[24]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#10 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[26] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[26]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#11 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[28] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[28]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#12 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[2] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[2]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#13 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[30] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[30]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#14 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[4] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[4]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#15 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[6] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[6]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#16 Warning
+MREG Output pipelining
+DSP core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[8] multiplier stage core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[8]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#17 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[0] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[0]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#18 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[10] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[10]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#19 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[12] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[12]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#20 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[14] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[14]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#21 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[16] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[16]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#22 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[18] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[18]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#23 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[20] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[20]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#24 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[22] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[22]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#25 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[24] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[24]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#26 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[26] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[26]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#27 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[28] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[28]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#28 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[2] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[2]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#29 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[30] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[30]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#30 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[4] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[4]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#31 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[6] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[6]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#32 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_i_reg[8] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_i_reg[8]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#33 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[0] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[0]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#34 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[10] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[10]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#35 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[12] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[12]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#36 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[14] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[14]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#37 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[16] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[16]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#38 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[18] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[18]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#39 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[20] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[20]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#40 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[22] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[22]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#41 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[24] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[24]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#42 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[26] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[26]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#43 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[28] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[28]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#44 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[2] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[2]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#45 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[30] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[30]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#46 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[4] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[4]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#47 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[6] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[6]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#48 Warning
+MREG Output pipelining
+DSP core_i/tx_chain_i/tx_fir_i/prod_q_reg[8] multiplier stage core_i/tx_chain_i/tx_fir_i/prod_q_reg[8]/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+ZPS7-1#1 Warning
+PS7 block required
+The PS7 cell must be used in this Zynq design in order to enable correct default configuration.
+Related violations: <none>

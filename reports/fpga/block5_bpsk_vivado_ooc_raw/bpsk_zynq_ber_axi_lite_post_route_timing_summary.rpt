@@ -1,0 +1,697 @@
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
+| Date         : normalized
+| Host         : normalized
+| Command      : report_timing_summary -delay_type max -max_paths 10 -file <output_dir>/bpsk_zynq_ber_axi_lite_post_route_timing_summary.rpt
+| Design       : bpsk_zynq_ber_axi_lite
+| Device       : 7z020-clg400
+| Speed File   : -2  PRODUCTION 1.12 2019-11-22
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Summary Report
+
+------------------------------------------------------------------------------------------------
+| Timer Settings
+| --------------
+------------------------------------------------------------------------------------------------
+
+  Enable Multi Corner Analysis               :  Yes
+  Enable Pessimism Removal                   :  Yes
+  Pessimism Removal Resolution               :  Nearest Common Node
+  Enable Input Delay Default Clock           :  No
+  Enable Preset / Clear Arcs                 :  No
+  Disable Flight Delays                      :  No
+  Ignore I/O Paths                           :  No
+  Timing Early Launch at Borrowing Latches   :  No
+  Borrow Time for Max Delay Exceptions       :  Yes
+  Merge Timing Exceptions                    :  Yes
+
+  Corner  Analyze    Analyze
+  Name    Max Paths  Min Paths
+  ------  ---------  ---------
+  Slow    Yes        Yes
+  Fast    Yes        Yes
+
+
+------------------------------------------------------------------------------------------------
+| Report Methodology
+| ------------------
+------------------------------------------------------------------------------------------------
+
+No report available as report_methodology has not been run prior. Run report_methodology on the current design for the summary of methodology violations.
+
+
+
+check_timing report
+
+Table of Contents
+-----------------
+1. checking no_clock (0)
+2. checking constant_clock (0)
+3. checking pulse_width_clock (0)
+4. checking unconstrained_internal_endpoints (0)
+5. checking no_input_delay (0)
+6. checking no_output_delay (0)
+7. checking multiple_clock (0)
+8. checking generated_clocks (0)
+9. checking loops (0)
+10. checking partial_input_delay (0)
+11. checking partial_output_delay (0)
+12. checking latch_loops (0)
+
+1. checking no_clock (0)
+------------------------
+ There are 0 register/latch pins with no clock.
+
+
+2. checking constant_clock (0)
+------------------------------
+ There are 0 register/latch pins with constant_clock.
+
+
+3. checking pulse_width_clock (0)
+---------------------------------
+ There are 0 register/latch pins which need pulse_width check
+
+
+4. checking unconstrained_internal_endpoints (0)
+------------------------------------------------
+ There are 0 pins that are not constrained for maximum delay.
+
+ There are 0 pins that are not constrained for maximum delay due to constant clock.
+
+
+5. checking no_input_delay (0)
+------------------------------
+ There are 0 input ports with no input delay specified.
+
+ There are 0 input ports with no input delay but user has a false path constraint.
+
+
+6. checking no_output_delay (0)
+-------------------------------
+ There are 0 ports with no output delay specified.
+
+ There are 0 ports with no output delay but user has a false path constraint
+
+ There are 0 ports with no output delay but with a timing clock defined on it or propagating through it
+
+
+7. checking multiple_clock (0)
+------------------------------
+ There are 0 register/latch pins with multiple clocks.
+
+
+8. checking generated_clocks (0)
+--------------------------------
+ There are 0 generated clocks that are not connected to a clock source.
+
+
+9. checking loops (0)
+---------------------
+ There are 0 combinational loops in the design.
+
+
+10. checking partial_input_delay (0)
+------------------------------------
+ There are 0 input ports with partial input delay specified.
+
+
+11. checking partial_output_delay (0)
+-------------------------------------
+ There are 0 ports with partial output delay specified.
+
+
+12. checking latch_loops (0)
+----------------------------
+ There are 0 combinational latch loops in the design through latch input
+
+
+
+------------------------------------------------------------------------------------------------
+| Design Timing Summary
+| ---------------------
+------------------------------------------------------------------------------------------------
+
+    WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
+    -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
+      1.124        0.000                      0                16260        4.500        0.000                       0                  2139
+
+
+All user specified timing constraints are met.
+
+
+------------------------------------------------------------------------------------------------
+| Clock Summary
+| -------------
+------------------------------------------------------------------------------------------------
+
+Clock  Waveform(ns)       Period(ns)      Frequency(MHz)
+-----  ------------       ----------      --------------
+clk    {0.000 5.000}      10.000          100.000
+
+
+------------------------------------------------------------------------------------------------
+| Intra Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
+-----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
+clk                 1.124        0.000                      0                16260        4.500        0.000                       0                  2139
+
+
+------------------------------------------------------------------------------------------------
+| Inter Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints
+----------    --------          -------      -------  ---------------------  -------------------
+
+
+------------------------------------------------------------------------------------------------
+| Other Path Groups Table
+| -----------------------
+------------------------------------------------------------------------------------------------
+
+Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints
+----------    ----------    --------          -------      -------  ---------------------  -------------------
+
+
+------------------------------------------------------------------------------------------------
+| Timing Details
+| --------------
+------------------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------------------
+From Clock:  clk
+  To Clock:  clk
+
+Setup :            0  Failing Endpoints,  Worst Slack        1.124ns,  Total Violation        0.000ns
+Hold  :           NA  Failing Endpoints,  Worst Slack           NA  ,  Total Violation           NA
+PW    :            0  Failing Endpoints,  Worst Slack        4.500ns,  Total Violation        0.000ns
+---------------------------------------------------------------------------------------------------
+
+
+Max Delay Paths
+--------------------------------------------------------------------------------------
+Slack (MET) :             1.124ns  (required time - arrival time)
+  Source:                 s_axi_aresetn
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            core_i/tx_chain_i/tx_fir_i/prod_i_reg[18]/RSTA
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        9.850ns  (logic 0.105ns (1.066%)  route 9.745ns (98.934%))
+  Logic Levels:           1  (LUT1=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        1.439ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.439ns = ( 11.439 - 10.000 )
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 f  s_axi_aresetn (IN)
+                         net (fo=32, unset)           0.787     0.787    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn
+    SLICE_X52Y60         LUT1 (Prop_lut1_I0_O)        0.105     0.892 r  core_i/tx_chain_i/tx_fir_i/s_axi_awready_i_1/O
+                         net (fo=943, routed)         8.958     9.850    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn_0
+    DSP48_X3Y6           DSP48E1                                      r  core_i/tx_chain_i/tx_fir_i/prod_i_reg[18]/RSTA
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  s_axi_aclk (IN)
+                         net (fo=2138, unset)         1.439    11.439    core_i/tx_chain_i/tx_fir_i/s_axi_aclk
+    DSP48_X3Y6           DSP48E1                                      r  core_i/tx_chain_i/tx_fir_i/prod_i_reg[18]/CLK
+                         clock pessimism              0.000    11.439
+                         clock uncertainty           -0.035    11.403
+    DSP48_X3Y6           DSP48E1 (Setup_dsp48e1_CLK_RSTA)
+                                                     -0.429    10.974    core_i/tx_chain_i/tx_fir_i/prod_i_reg[18]
+  -------------------------------------------------------------------
+                         required time                         10.974
+                         arrival time                          -9.850
+  -------------------------------------------------------------------
+                         slack                                  1.124
+
+Slack (MET) :             1.257ns  (required time - arrival time)
+  Source:                 s_axi_aresetn
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            core_i/tx_chain_i/tx_fir_i/sum1_i_reg[11]/RSTA
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        9.715ns  (logic 0.105ns (1.081%)  route 9.610ns (98.919%))
+  Logic Levels:           1  (LUT1=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        1.437ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.437ns = ( 11.437 - 10.000 )
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 f  s_axi_aresetn (IN)
+                         net (fo=32, unset)           0.787     0.787    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn
+    SLICE_X52Y60         LUT1 (Prop_lut1_I0_O)        0.105     0.892 r  core_i/tx_chain_i/tx_fir_i/s_axi_awready_i_1/O
+                         net (fo=943, routed)         8.823     9.715    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn_0
+    DSP48_X3Y7           DSP48E1                                      r  core_i/tx_chain_i/tx_fir_i/sum1_i_reg[11]/RSTA
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  s_axi_aclk (IN)
+                         net (fo=2138, unset)         1.437    11.437    core_i/tx_chain_i/tx_fir_i/s_axi_aclk
+    DSP48_X3Y7           DSP48E1                                      r  core_i/tx_chain_i/tx_fir_i/sum1_i_reg[11]/CLK
+                         clock pessimism              0.000    11.437
+                         clock uncertainty           -0.035    11.401
+    DSP48_X3Y7           DSP48E1 (Setup_dsp48e1_CLK_RSTA)
+                                                     -0.429    10.972    core_i/tx_chain_i/tx_fir_i/sum1_i_reg[11]
+  -------------------------------------------------------------------
+                         required time                         10.972
+                         arrival time                          -9.715
+  -------------------------------------------------------------------
+                         slack                                  1.257
+
+Slack (MET) :             1.426ns  (required time - arrival time)
+  Source:                 s_axi_aresetn
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            core_i/tx_chain_i/tx_fir_i/prod_i_reg[18]/RSTP
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        9.681ns  (logic 0.105ns (1.085%)  route 9.576ns (98.915%))
+  Logic Levels:           1  (LUT1=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        1.439ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.439ns = ( 11.439 - 10.000 )
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 f  s_axi_aresetn (IN)
+                         net (fo=32, unset)           0.787     0.787    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn
+    SLICE_X52Y60         LUT1 (Prop_lut1_I0_O)        0.105     0.892 r  core_i/tx_chain_i/tx_fir_i/s_axi_awready_i_1/O
+                         net (fo=943, routed)         8.789     9.681    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn_0
+    DSP48_X3Y6           DSP48E1                                      r  core_i/tx_chain_i/tx_fir_i/prod_i_reg[18]/RSTP
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  s_axi_aclk (IN)
+                         net (fo=2138, unset)         1.439    11.439    core_i/tx_chain_i/tx_fir_i/s_axi_aclk
+    DSP48_X3Y6           DSP48E1                                      r  core_i/tx_chain_i/tx_fir_i/prod_i_reg[18]/CLK
+                         clock pessimism              0.000    11.439
+                         clock uncertainty           -0.035    11.403
+    DSP48_X3Y6           DSP48E1 (Setup_dsp48e1_CLK_RSTP)
+                                                     -0.296    11.107    core_i/tx_chain_i/tx_fir_i/prod_i_reg[18]
+  -------------------------------------------------------------------
+                         required time                         11.107
+                         arrival time                          -9.681
+  -------------------------------------------------------------------
+                         slack                                  1.426
+
+Slack (MET) :             1.448ns  (required time - arrival time)
+  Source:                 s_axi_aresetn
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            core_i/tx_chain_i/tx_fir_i/prod_i_reg[18]/RSTD
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        9.461ns  (logic 0.105ns (1.110%)  route 9.356ns (98.890%))
+  Logic Levels:           1  (LUT1=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        1.439ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.439ns = ( 11.439 - 10.000 )
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 f  s_axi_aresetn (IN)
+                         net (fo=32, unset)           0.787     0.787    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn
+    SLICE_X52Y60         LUT1 (Prop_lut1_I0_O)        0.105     0.892 r  core_i/tx_chain_i/tx_fir_i/s_axi_awready_i_1/O
+                         net (fo=943, routed)         8.569     9.461    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn_0
+    DSP48_X3Y6           DSP48E1                                      r  core_i/tx_chain_i/tx_fir_i/prod_i_reg[18]/RSTD
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  s_axi_aclk (IN)
+                         net (fo=2138, unset)         1.439    11.439    core_i/tx_chain_i/tx_fir_i/s_axi_aclk
+    DSP48_X3Y6           DSP48E1                                      r  core_i/tx_chain_i/tx_fir_i/prod_i_reg[18]/CLK
+                         clock pessimism              0.000    11.439
+                         clock uncertainty           -0.035    11.403
+    DSP48_X3Y6           DSP48E1 (Setup_dsp48e1_CLK_RSTD)
+                                                     -0.495    10.908    core_i/tx_chain_i/tx_fir_i/prod_i_reg[18]
+  -------------------------------------------------------------------
+                         required time                         10.908
+                         arrival time                          -9.461
+  -------------------------------------------------------------------
+                         slack                                  1.448
+
+Slack (MET) :             1.539ns  (required time - arrival time)
+  Source:                 s_axi_aresetn
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            core_i/tx_chain_i/tx_fir_i/sum1_i_reg[10]/RSTA
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        9.436ns  (logic 0.105ns (1.113%)  route 9.331ns (98.887%))
+  Logic Levels:           1  (LUT1=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        1.440ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.440ns = ( 11.440 - 10.000 )
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 f  s_axi_aresetn (IN)
+                         net (fo=32, unset)           0.787     0.787    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn
+    SLICE_X52Y60         LUT1 (Prop_lut1_I0_O)        0.105     0.892 r  core_i/tx_chain_i/tx_fir_i/s_axi_awready_i_1/O
+                         net (fo=943, routed)         8.544     9.436    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn_0
+    DSP48_X4Y7           DSP48E1                                      r  core_i/tx_chain_i/tx_fir_i/sum1_i_reg[10]/RSTA
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  s_axi_aclk (IN)
+                         net (fo=2138, unset)         1.440    11.440    core_i/tx_chain_i/tx_fir_i/s_axi_aclk
+    DSP48_X4Y7           DSP48E1                                      r  core_i/tx_chain_i/tx_fir_i/sum1_i_reg[10]/CLK
+                         clock pessimism              0.000    11.440
+                         clock uncertainty           -0.035    11.404
+    DSP48_X4Y7           DSP48E1 (Setup_dsp48e1_CLK_RSTA)
+                                                     -0.429    10.975    core_i/tx_chain_i/tx_fir_i/sum1_i_reg[10]
+  -------------------------------------------------------------------
+                         required time                         10.975
+                         arrival time                          -9.436
+  -------------------------------------------------------------------
+                         slack                                  1.539
+
+Slack (MET) :             1.546ns  (required time - arrival time)
+  Source:                 s_axi_aresetn
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            core_i/tx_chain_i/tx_fir_i/xi_reg[15][0]/R
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        9.352ns  (logic 0.105ns (1.123%)  route 9.247ns (98.877%))
+  Logic Levels:           1  (LUT1=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        1.356ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.356ns = ( 11.356 - 10.000 )
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 f  s_axi_aresetn (IN)
+                         net (fo=32, unset)           0.787     0.787    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn
+    SLICE_X52Y60         LUT1 (Prop_lut1_I0_O)        0.105     0.892 r  core_i/tx_chain_i/tx_fir_i/s_axi_awready_i_1/O
+                         net (fo=943, routed)         8.460     9.352    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn_0
+    SLICE_X94Y19         FDRE                                         r  core_i/tx_chain_i/tx_fir_i/xi_reg[15][0]/R
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  s_axi_aclk (IN)
+                         net (fo=2138, unset)         1.356    11.356    core_i/tx_chain_i/tx_fir_i/s_axi_aclk
+    SLICE_X94Y19         FDRE                                         r  core_i/tx_chain_i/tx_fir_i/xi_reg[15][0]/C
+                         clock pessimism              0.000    11.356
+                         clock uncertainty           -0.035    11.321
+    SLICE_X94Y19         FDRE (Setup_fdre_C_R)       -0.423    10.898    core_i/tx_chain_i/tx_fir_i/xi_reg[15][0]
+  -------------------------------------------------------------------
+                         required time                         10.898
+                         arrival time                          -9.352
+  -------------------------------------------------------------------
+                         slack                                  1.546
+
+Slack (MET) :             1.546ns  (required time - arrival time)
+  Source:                 s_axi_aresetn
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            core_i/tx_chain_i/tx_fir_i/xi_reg[16][0]/R
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        9.352ns  (logic 0.105ns (1.123%)  route 9.247ns (98.877%))
+  Logic Levels:           1  (LUT1=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        1.356ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.356ns = ( 11.356 - 10.000 )
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 f  s_axi_aresetn (IN)
+                         net (fo=32, unset)           0.787     0.787    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn
+    SLICE_X52Y60         LUT1 (Prop_lut1_I0_O)        0.105     0.892 r  core_i/tx_chain_i/tx_fir_i/s_axi_awready_i_1/O
+                         net (fo=943, routed)         8.460     9.352    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn_0
+    SLICE_X94Y19         FDRE                                         r  core_i/tx_chain_i/tx_fir_i/xi_reg[16][0]/R
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  s_axi_aclk (IN)
+                         net (fo=2138, unset)         1.356    11.356    core_i/tx_chain_i/tx_fir_i/s_axi_aclk
+    SLICE_X94Y19         FDRE                                         r  core_i/tx_chain_i/tx_fir_i/xi_reg[16][0]/C
+                         clock pessimism              0.000    11.356
+                         clock uncertainty           -0.035    11.321
+    SLICE_X94Y19         FDRE (Setup_fdre_C_R)       -0.423    10.898    core_i/tx_chain_i/tx_fir_i/xi_reg[16][0]
+  -------------------------------------------------------------------
+                         required time                         10.898
+                         arrival time                          -9.352
+  -------------------------------------------------------------------
+                         slack                                  1.546
+
+Slack (MET) :             1.546ns  (required time - arrival time)
+  Source:                 s_axi_aresetn
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            core_i/tx_chain_i/tx_fir_i/xi_reg[44][0]/R
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        9.352ns  (logic 0.105ns (1.123%)  route 9.247ns (98.877%))
+  Logic Levels:           1  (LUT1=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        1.356ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.356ns = ( 11.356 - 10.000 )
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 f  s_axi_aresetn (IN)
+                         net (fo=32, unset)           0.787     0.787    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn
+    SLICE_X52Y60         LUT1 (Prop_lut1_I0_O)        0.105     0.892 r  core_i/tx_chain_i/tx_fir_i/s_axi_awready_i_1/O
+                         net (fo=943, routed)         8.460     9.352    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn_0
+    SLICE_X94Y19         FDRE                                         r  core_i/tx_chain_i/tx_fir_i/xi_reg[44][0]/R
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  s_axi_aclk (IN)
+                         net (fo=2138, unset)         1.356    11.356    core_i/tx_chain_i/tx_fir_i/s_axi_aclk
+    SLICE_X94Y19         FDRE                                         r  core_i/tx_chain_i/tx_fir_i/xi_reg[44][0]/C
+                         clock pessimism              0.000    11.356
+                         clock uncertainty           -0.035    11.321
+    SLICE_X94Y19         FDRE (Setup_fdre_C_R)       -0.423    10.898    core_i/tx_chain_i/tx_fir_i/xi_reg[44][0]
+  -------------------------------------------------------------------
+                         required time                         10.898
+                         arrival time                          -9.352
+  -------------------------------------------------------------------
+                         slack                                  1.546
+
+Slack (MET) :             1.546ns  (required time - arrival time)
+  Source:                 s_axi_aresetn
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            core_i/tx_chain_i/tx_fir_i/xi_reg[45][0]/R
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        9.352ns  (logic 0.105ns (1.123%)  route 9.247ns (98.877%))
+  Logic Levels:           1  (LUT1=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        1.356ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.356ns = ( 11.356 - 10.000 )
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 f  s_axi_aresetn (IN)
+                         net (fo=32, unset)           0.787     0.787    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn
+    SLICE_X52Y60         LUT1 (Prop_lut1_I0_O)        0.105     0.892 r  core_i/tx_chain_i/tx_fir_i/s_axi_awready_i_1/O
+                         net (fo=943, routed)         8.460     9.352    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn_0
+    SLICE_X94Y19         FDRE                                         r  core_i/tx_chain_i/tx_fir_i/xi_reg[45][0]/R
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  s_axi_aclk (IN)
+                         net (fo=2138, unset)         1.356    11.356    core_i/tx_chain_i/tx_fir_i/s_axi_aclk
+    SLICE_X94Y19         FDRE                                         r  core_i/tx_chain_i/tx_fir_i/xi_reg[45][0]/C
+                         clock pessimism              0.000    11.356
+                         clock uncertainty           -0.035    11.321
+    SLICE_X94Y19         FDRE (Setup_fdre_C_R)       -0.423    10.898    core_i/tx_chain_i/tx_fir_i/xi_reg[45][0]
+  -------------------------------------------------------------------
+                         required time                         10.898
+                         arrival time                          -9.352
+  -------------------------------------------------------------------
+                         slack                                  1.546
+
+Slack (MET) :             1.675ns  (required time - arrival time)
+  Source:                 s_axi_aresetn
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            core_i/tx_chain_i/upsampler_i/out_valid_reg_rep__22/R
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        9.226ns  (logic 0.105ns (1.138%)  route 9.121ns (98.862%))
+  Logic Levels:           1  (LUT1=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        1.359ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.359ns = ( 11.359 - 10.000 )
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 f  s_axi_aresetn (IN)
+                         net (fo=32, unset)           0.787     0.787    core_i/tx_chain_i/tx_fir_i/s_axi_aresetn
+    SLICE_X52Y60         LUT1 (Prop_lut1_I0_O)        0.105     0.892 r  core_i/tx_chain_i/tx_fir_i/s_axi_awready_i_1/O
+                         net (fo=943, routed)         8.334     9.226    core_i/tx_chain_i/upsampler_i/out_valid_reg_0
+    SLICE_X102Y32        FDRE                                         r  core_i/tx_chain_i/upsampler_i/out_valid_reg_rep__22/R
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  s_axi_aclk (IN)
+                         net (fo=2138, unset)         1.359    11.359    core_i/tx_chain_i/upsampler_i/s_axi_aclk
+    SLICE_X102Y32        FDRE                                         r  core_i/tx_chain_i/upsampler_i/out_valid_reg_rep__22/C
+                         clock pessimism              0.000    11.359
+                         clock uncertainty           -0.035    11.324
+    SLICE_X102Y32        FDRE (Setup_fdre_C_R)       -0.423    10.901    core_i/tx_chain_i/upsampler_i/out_valid_reg_rep__22
+  -------------------------------------------------------------------
+                         required time                         10.901
+                         arrival time                          -9.226
+  -------------------------------------------------------------------
+                         slack                                  1.675
+
+
+
+
+
+Pulse Width Checks
+--------------------------------------------------------------------------------------
+Clock Name:         clk
+Waveform(ns):       { 0.000 5.000 }
+Period(ns):         10.000
+Sources:            { s_axi_aclk }
+
+Check Type        Corner  Lib Pin      Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location      Pin
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X1Y14   core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[0]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X1Y15   core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[10]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X2Y2    core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[12]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X2Y10   core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[14]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X0Y14   core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[16]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X0Y10   core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[18]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X0Y3    core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X0Y4    core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[22]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X0Y9    core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[24]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X1Y7    core_i/rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[26]/CLK
+Low Pulse Width   Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[0]/C
+Low Pulse Width   Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[0]/C
+Low Pulse Width   Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[1]/C
+Low Pulse Width   Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[1]/C
+Low Pulse Width   Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[2]/C
+Low Pulse Width   Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[2]/C
+Low Pulse Width   Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[3]/C
+Low Pulse Width   Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[3]/C
+Low Pulse Width   Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X54Y39  awaddr_latched_reg[4]/C
+Low Pulse Width   Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X54Y39  awaddr_latched_reg[4]/C
+High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[0]/C
+High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[0]/C
+High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[1]/C
+High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[1]/C
+High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[2]/C
+High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[2]/C
+High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[3]/C
+High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X53Y39  awaddr_latched_reg[3]/C
+High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X54Y39  awaddr_latched_reg[4]/C
+High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X54Y39  awaddr_latched_reg[4]/C

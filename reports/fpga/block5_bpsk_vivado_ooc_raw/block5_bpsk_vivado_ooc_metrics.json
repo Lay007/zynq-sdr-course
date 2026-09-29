@@ -1,0 +1,672 @@
+{
+  "part": "xc7z020clg400-2",
+  "flow": "out_of_context_implementation",
+  "target_clock_period_ns": 10.0,
+  "target_clock_frequency_mhz": 100.0,
+  "port_delays": "input and output delay 0 ns relative to the clock",
+  "tops": [
+    {
+      "top": "bpsk_symbol_mapper",
+      "clock_port": "clk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 2,
+          "ff": 4,
+          "bram_tiles": 0.0,
+          "dsp": 0
+        },
+        "timing": {
+          "wns_ns": 8.088,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 21,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 1.09,
+          "logic_levels": 0,
+          "fmax_est_mhz": 523.013
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 2,
+          "ff": 4,
+          "bram_tiles": 0.0,
+          "dsp": 0
+        },
+        "timing": {
+          "wns_ns": 7.378,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 21,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 1.166,
+          "logic_levels": 0,
+          "fmax_est_mhz": 381.388
+        },
+        "routable_nets": 4,
+        "fully_routed_nets": 4,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 1,
+        "drc_errors": 0
+      },
+      "lab": "5.7"
+    },
+    {
+      "top": "bpsk_upsampler_8x",
+      "clock_port": "clk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 21,
+          "ff": 37,
+          "bram_tiles": 0.0,
+          "dsp": 0
+        },
+        "timing": {
+          "wns_ns": 7.541,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 106,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 1.637,
+          "logic_levels": 1,
+          "fmax_est_mhz": 406.669
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 21,
+          "ff": 37,
+          "bram_tiles": 0.0,
+          "dsp": 0
+        },
+        "timing": {
+          "wns_ns": 6.567,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 106,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 1.927,
+          "logic_levels": 1,
+          "fmax_est_mhz": 291.29
+        },
+        "routable_nets": 5,
+        "fully_routed_nets": 5,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 1,
+        "drc_errors": 0
+      },
+      "lab": "5.7"
+    },
+    {
+      "top": "bpsk_rrc_tx_fir",
+      "clock_port": "clk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 148,
+          "ff": 2266,
+          "bram_tiles": 0.0,
+          "dsp": 96
+        },
+        "timing": {
+          "wns_ns": 5.144,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 14843,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 4.749,
+          "logic_levels": 11,
+          "fmax_est_mhz": 205.931
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 148,
+          "ff": 2266,
+          "bram_tiles": 0.0,
+          "dsp": 96
+        },
+        "timing": {
+          "wns_ns": 3.038,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 14843,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 6.397,
+          "logic_levels": 0,
+          "fmax_est_mhz": 143.637
+        },
+        "routable_nets": 6175,
+        "fully_routed_nets": 6175,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 125,
+        "drc_errors": 0
+      },
+      "lab": "5.6"
+    },
+    {
+      "top": "bpsk_rrc_rx_fir",
+      "clock_port": "clk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 148,
+          "ff": 2266,
+          "bram_tiles": 0.0,
+          "dsp": 96
+        },
+        "timing": {
+          "wns_ns": 5.144,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 14843,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 4.749,
+          "logic_levels": 11,
+          "fmax_est_mhz": 205.931
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 148,
+          "ff": 2266,
+          "bram_tiles": 0.0,
+          "dsp": 96
+        },
+        "timing": {
+          "wns_ns": 3.146,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 14843,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 6.285,
+          "logic_levels": 0,
+          "fmax_est_mhz": 145.9
+        },
+        "routable_nets": 6175,
+        "fully_routed_nets": 6175,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 125,
+        "drc_errors": 0
+      },
+      "lab": "5.8"
+    },
+    {
+      "top": "bpsk_symbol_timing_sampler",
+      "clock_port": "clk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 53,
+          "ff": 65,
+          "bram_tiles": 0.0,
+          "dsp": 0
+        },
+        "timing": {
+          "wns_ns": 6.637,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 194,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 3.048,
+          "logic_levels": 4,
+          "fmax_est_mhz": 297.354
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 53,
+          "ff": 65,
+          "bram_tiles": 0.0,
+          "dsp": 0
+        },
+        "timing": {
+          "wns_ns": 5.065,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 194,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 4.675,
+          "logic_levels": 4,
+          "fmax_est_mhz": 202.634
+        },
+        "routable_nets": 46,
+        "fully_routed_nets": 46,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 1,
+        "drc_errors": 0
+      },
+      "lab": "5.8"
+    },
+    {
+      "top": "bpsk_hard_decision",
+      "clock_port": "clk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 1,
+          "ff": 2,
+          "bram_tiles": 0.0,
+          "dsp": 0
+        },
+        "timing": {
+          "wns_ns": 8.088,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 4,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 1.09,
+          "logic_levels": 0,
+          "fmax_est_mhz": 523.013
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 1,
+          "ff": 2,
+          "bram_tiles": 0.0,
+          "dsp": 0
+        },
+        "timing": {
+          "wns_ns": 7.378,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 4,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 1.166,
+          "logic_levels": 0,
+          "fmax_est_mhz": 381.388
+        },
+        "routable_nets": 2,
+        "fully_routed_nets": 2,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 1,
+        "drc_errors": 0
+      },
+      "lab": "5.8"
+    },
+    {
+      "top": "bpsk_rx_bit_recovery_chain",
+      "clock_port": "clk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 252,
+          "ff": 2333,
+          "bram_tiles": 0.0,
+          "dsp": 96
+        },
+        "timing": {
+          "wns_ns": 5.144,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 14994,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 4.749,
+          "logic_levels": 11,
+          "fmax_est_mhz": 205.931
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 251,
+          "ff": 2333,
+          "bram_tiles": 0.0,
+          "dsp": 96
+        },
+        "timing": {
+          "wns_ns": 2.699,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 14994,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 6.888,
+          "logic_levels": 0,
+          "fmax_est_mhz": 136.968
+        },
+        "routable_nets": 6327,
+        "fully_routed_nets": 6327,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 125,
+        "drc_errors": 0
+      },
+      "lab": "5.8"
+    },
+    {
+      "top": "bpsk_symbol_timing_recovery",
+      "clock_port": "clk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 480,
+          "ff": 200,
+          "bram_tiles": 0.0,
+          "dsp": 8
+        },
+        "timing": {
+          "wns_ns": -12.516,
+          "tns_ns": -768.419,
+          "failing_endpoints": 122,
+          "total_endpoints": 576,
+          "timing_met": false,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 21.914,
+          "logic_levels": 39,
+          "fmax_est_mhz": 44.413
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 476,
+          "ff": 201,
+          "bram_tiles": 0.0,
+          "dsp": 8
+        },
+        "timing": {
+          "wns_ns": -13.447,
+          "tns_ns": -866.55,
+          "failing_endpoints": 122,
+          "total_endpoints": 579,
+          "timing_met": false,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 22.781,
+          "logic_levels": 40,
+          "fmax_est_mhz": 42.649
+        },
+        "routable_nets": 874,
+        "fully_routed_nets": 874,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 33,
+        "drc_errors": 0
+      },
+      "lab": "5.8"
+    },
+    {
+      "top": "bpsk_frame_bit_source",
+      "clock_port": "clk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 37,
+          "ff": 18,
+          "bram_tiles": 0.0,
+          "dsp": 0
+        },
+        "timing": {
+          "wns_ns": 5.695,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 55,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 4.27,
+          "logic_levels": 8,
+          "fmax_est_mhz": 232.288
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 36,
+          "ff": 18,
+          "bram_tiles": 0.0,
+          "dsp": 0
+        },
+        "timing": {
+          "wns_ns": 5.225,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 55,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 3.331,
+          "logic_levels": 4,
+          "fmax_est_mhz": 209.424
+        },
+        "routable_nets": 52,
+        "fully_routed_nets": 52,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 1,
+        "drc_errors": 0
+      },
+      "lab": "5.9"
+    },
+    {
+      "top": "bpsk_framed_tx_chain",
+      "clock_port": "clk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 215,
+          "ff": 593,
+          "bram_tiles": 0.0,
+          "dsp": 96
+        },
+        "timing": {
+          "wns_ns": 5.144,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 8077,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 4.749,
+          "logic_levels": 11,
+          "fmax_est_mhz": 205.931
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 213,
+          "ff": 593,
+          "bram_tiles": 0.0,
+          "dsp": 96
+        },
+        "timing": {
+          "wns_ns": 3.946,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 8077,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 5.49,
+          "logic_levels": 0,
+          "fmax_est_mhz": 165.18
+        },
+        "routable_nets": 4400,
+        "fully_routed_nets": 4400,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 125,
+        "drc_errors": 0
+      },
+      "lab": "5.9"
+    },
+    {
+      "top": "bpsk_ber_counter",
+      "clock_port": "clk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 291,
+          "ff": 203,
+          "bram_tiles": 0.0,
+          "dsp": 0
+        },
+        "timing": {
+          "wns_ns": 4.347,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 705,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 5.051,
+          "logic_levels": 8,
+          "fmax_est_mhz": 176.897
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 287,
+          "ff": 203,
+          "bram_tiles": 0.0,
+          "dsp": 0
+        },
+        "timing": {
+          "wns_ns": 2.826,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 705,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 6.477,
+          "logic_levels": 8,
+          "fmax_est_mhz": 139.392
+        },
+        "routable_nets": 378,
+        "fully_routed_nets": 378,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 1,
+        "drc_errors": 0
+      },
+      "lab": "5.9"
+    },
+    {
+      "top": "bpsk_zynq_ber_top",
+      "clock_port": "clk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 692,
+          "ff": 3074,
+          "bram_tiles": 0.0,
+          "dsp": 192
+        },
+        "timing": {
+          "wns_ns": 3.89,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 23535,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 5.508,
+          "logic_levels": 9,
+          "fmax_est_mhz": 163.666
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 688,
+          "ff": 3074,
+          "bram_tiles": 0.0,
+          "dsp": 192
+        },
+        "timing": {
+          "wns_ns": 1.659,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 23535,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 7.854,
+          "logic_levels": 0,
+          "fmax_est_mhz": 119.89
+        },
+        "routable_nets": 11054,
+        "fully_routed_nets": 11054,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 249,
+        "drc_errors": 0
+      },
+      "lab": "5.10"
+    },
+    {
+      "top": "bpsk_zynq_ber_axi_lite",
+      "clock_port": "s_axi_aclk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 602,
+          "ff": 1995,
+          "bram_tiles": 0.0,
+          "dsp": 144
+        },
+        "timing": {
+          "wns_ns": 4.307,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 16260,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 5.091,
+          "logic_levels": 8,
+          "fmax_est_mhz": 175.654
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 595,
+          "ff": 1995,
+          "bram_tiles": 0.0,
+          "dsp": 144
+        },
+        "timing": {
+          "wns_ns": 1.124,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 16260,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 9.85,
+          "logic_levels": 1,
+          "fmax_est_mhz": 112.663
+        },
+        "routable_nets": 7988,
+        "fully_routed_nets": 7988,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 187,
+        "drc_errors": 0
+      },
+      "lab": "5.11"
+    }
+  ]
+}
