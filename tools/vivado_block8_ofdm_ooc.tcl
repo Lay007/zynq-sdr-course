@@ -23,6 +23,11 @@ if {$clock_port ne "none"} {
     set xdc_handle [open $xdc_path w]
     puts $xdc_handle [format {create_clock -name clk -period %.3f [get_ports %s]} $clock_period_ns $clock_port]
     puts $xdc_handle [format {set_property HD.CLK_SRC BUFGCTRL_X0Y0 [get_ports %s]} $clock_port]
+    # Time the port paths too, as if every neighbour were a register on the
+    # same clock. Without this, logic between an input port and the first
+    # register (e.g. the equalizer's multipliers) is left unconstrained.
+    puts $xdc_handle [format {set_input_delay -clock clk 0.000 [get_ports -filter {DIRECTION == IN && NAME != %s}]} $clock_port]
+    puts $xdc_handle {set_output_delay -clock clk 0.000 [get_ports -filter {DIRECTION == OUT}]}
     close $xdc_handle
     read_xdc $xdc_path
 }

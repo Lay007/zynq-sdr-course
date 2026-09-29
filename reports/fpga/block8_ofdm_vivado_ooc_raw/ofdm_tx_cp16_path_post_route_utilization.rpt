@@ -69,9 +69,9 @@ Table of Contents
 +--------------------------------------------+------+-------+------------+-----------+-------+
 |                  Site Type                 | Used | Fixed | Prohibited | Available | Util% |
 +--------------------------------------------+------+-------+------------+-----------+-------+
-| Slice                                      | 2399 |     0 |          0 |     13300 | 18.04 |
-|   SLICEL                                   | 1804 |     0 |            |           |       |
-|   SLICEM                                   |  595 |     0 |            |           |       |
+| Slice                                      | 2415 |     0 |          0 |     13300 | 18.16 |
+|   SLICEL                                   | 1868 |     0 |            |           |       |
+|   SLICEM                                   |  547 |     0 |            |           |       |
 | LUT as Logic                               | 8233 |     0 |          0 |     53200 | 15.48 |
 |   using O5 output only                     |    6 |       |            |           |       |
 |   using O6 output only                     | 7405 |       |            |           |       |
@@ -86,10 +86,10 @@ Table of Contents
 |     using O6 output only                   |    4 |       |            |           |       |
 |     using O5 and O6                        |    4 |       |            |           |       |
 | Slice Registers                            | 2421 |     0 |          0 |    106400 |  2.28 |
-|   Register driven from within the Slice    | 2316 |       |            |           |       |
-|   Register driven from outside the Slice   |  105 |       |            |           |       |
-|     LUT in front of the register is unused |   28 |       |            |           |       |
-|     LUT in front of the register is used   |   77 |       |            |           |       |
+|   Register driven from within the Slice    | 2321 |       |            |           |       |
+|   Register driven from outside the Slice   |  100 |       |            |           |       |
+|     LUT in front of the register is unused |   30 |       |            |           |       |
+|     LUT in front of the register is used   |   70 |       |            |           |       |
 | Unique Control Sets                        |   24 |       |          0 |     13300 |  0.18 |
 +--------------------------------------------+------+-------+------------+-----------+-------+
 * * Note: Available Control Sets calculated as Slice * 1, Review the Control Sets Report for more information regarding control sets.

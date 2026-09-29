@@ -69,14 +69,14 @@ Related violations: <none>
 
 RTSTAT-10#1 Warning
 No routable loads
-37 net(s) have no routable loads. The problem bus(es) and/or net(s) are cp16/sample_im_mem_reg_0_63_0_2/DOA, cp16/sample_im_mem_reg_0_63_0_2/DOB,
-cp16/sample_im_mem_reg_0_63_12_14/DOA, cp16/sample_im_mem_reg_0_63_3_5/DOA,
-cp16/sample_im_mem_reg_0_63_6_8/DOA, cp16/sample_im_mem_reg_0_63_6_8/DOB,
-cp16/sample_im_mem_reg_0_63_9_11/DOA, cp16/sample_im_mem_reg_0_63_9_11/DOB,
-cp16/sample_re_mem_reg_0_63_0_2/DOA, cp16/sample_re_mem_reg_0_63_0_2/DOB,
-cp16/sample_re_mem_reg_0_63_12_14/DOA,
-cp16/sample_re_mem_reg_0_63_15_15/DOA, cp16/sample_re_mem_reg_0_63_3_5/DOA,
-cp16/sample_re_mem_reg_0_63_6_8/DOA, cp16/sample_re_mem_reg_0_63_9_11/DOA
+37 net(s) have no routable loads. The problem bus(es) and/or net(s) are cp16/sample_im_mem_reg_0_63_0_2/DOA, cp16/sample_im_mem_reg_0_63_12_14/DOA,
+cp16/sample_im_mem_reg_0_63_12_14/DOB, cp16/sample_im_mem_reg_0_63_3_5/DOA,
+cp16/sample_im_mem_reg_0_63_6_8/DOA, cp16/sample_im_mem_reg_0_63_9_11/DOA,
+cp16/sample_re_mem_reg_0_63_0_2/DOA, cp16/sample_re_mem_reg_0_63_12_14/DOA,
+cp16/sample_re_mem_reg_0_63_15_15/DOA,
+cp16/sample_re_mem_reg_0_63_15_15/DOB, cp16/sample_re_mem_reg_0_63_3_5/DOA,
+cp16/sample_re_mem_reg_0_63_3_5/DOB, cp16/sample_re_mem_reg_0_63_6_8/DOA,
+cp16/sample_re_mem_reg_0_63_9_11/DOA, cp16/sample_re_mem_reg_0_63_9_11/DOB
  (the first 15 of 37 listed).
 Related violations: <none>
 

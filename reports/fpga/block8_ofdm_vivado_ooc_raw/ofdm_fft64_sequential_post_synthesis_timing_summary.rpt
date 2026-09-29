@@ -51,8 +51,8 @@ Table of Contents
 2. checking constant_clock (0)
 3. checking pulse_width_clock (0)
 4. checking unconstrained_internal_endpoints (0)
-5. checking no_input_delay (35)
-6. checking no_output_delay (74)
+5. checking no_input_delay (0)
+6. checking no_output_delay (0)
 7. checking multiple_clock (0)
 8. checking generated_clocks (0)
 9. checking loops (0)
@@ -82,16 +82,16 @@ Table of Contents
  There are 0 pins that are not constrained for maximum delay due to constant clock.
 
 
-5. checking no_input_delay (35)
--------------------------------
- There are 35 input ports with no input delay specified. (HIGH)
+5. checking no_input_delay (0)
+------------------------------
+ There are 0 input ports with no input delay specified.
 
  There are 0 input ports with no input delay but user has a false path constraint.
 
 
-6. checking no_output_delay (74)
---------------------------------
- There are 74 ports with no output delay specified. (HIGH)
+6. checking no_output_delay (0)
+-------------------------------
+ There are 0 ports with no output delay specified.
 
  There are 0 ports with no output delay but user has a false path constraint
 
@@ -136,7 +136,7 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
     -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-      2.496        0.000                      0                 2916        4.146        0.000                       0                  2407
+      2.496        0.000                      0                 5375        4.146        0.000                       0                  2407
 
 
 All user specified timing constraints are met.
@@ -159,7 +159,7 @@ clk    {0.000 5.000}      10.000          100.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
 -----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-clk                 2.496        0.000                      0                 2916        4.146        0.000                       0                  2407
+clk                 2.496        0.000                      0                 5375        4.146        0.000                       0                  2407
 
 
 ------------------------------------------------------------------------------------------------

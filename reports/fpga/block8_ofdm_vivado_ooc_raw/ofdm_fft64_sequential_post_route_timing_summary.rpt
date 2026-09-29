@@ -51,8 +51,8 @@ Table of Contents
 2. checking constant_clock (0)
 3. checking pulse_width_clock (0)
 4. checking unconstrained_internal_endpoints (0)
-5. checking no_input_delay (35)
-6. checking no_output_delay (74)
+5. checking no_input_delay (0)
+6. checking no_output_delay (0)
 7. checking multiple_clock (0)
 8. checking generated_clocks (0)
 9. checking loops (0)
@@ -82,16 +82,16 @@ Table of Contents
  There are 0 pins that are not constrained for maximum delay due to constant clock.
 
 
-5. checking no_input_delay (35)
--------------------------------
- There are 35 input ports with no input delay specified. (HIGH)
+5. checking no_input_delay (0)
+------------------------------
+ There are 0 input ports with no input delay specified.
 
  There are 0 input ports with no input delay but user has a false path constraint.
 
 
-6. checking no_output_delay (74)
---------------------------------
- There are 74 ports with no output delay specified. (HIGH)
+6. checking no_output_delay (0)
+-------------------------------
+ There are 0 ports with no output delay specified.
 
  There are 0 ports with no output delay but user has a false path constraint
 
@@ -136,7 +136,7 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
     -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-      1.227        0.000                      0                 2916        4.146        0.000                       0                  2407
+      0.738        0.000                      0                 5375        4.146        0.000                       0                  2407
 
 
 All user specified timing constraints are met.
@@ -159,7 +159,7 @@ clk    {0.000 5.000}      10.000          100.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
 -----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-clk                 1.227        0.000                      0                 2916        4.146        0.000                       0                  2407
+clk                 0.738        0.000                      0                 5375        4.146        0.000                       0                  2407
 
 
 ------------------------------------------------------------------------------------------------
@@ -190,7 +190,7 @@ Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing 
 From Clock:  clk
   To Clock:  clk
 
-Setup :            0  Failing Endpoints,  Worst Slack        1.227ns,  Total Violation        0.000ns
+Setup :            0  Failing Endpoints,  Worst Slack        0.738ns,  Total Violation        0.000ns
 Hold  :           NA  Failing Endpoints,  Worst Slack           NA  ,  Total Violation           NA
 PW    :            0  Failing Endpoints,  Worst Slack        4.146ns,  Total Violation        0.000ns
 ---------------------------------------------------------------------------------------------------
@@ -198,20 +198,21 @@ PW    :            0  Failing Endpoints,  Worst Slack        4.146ns,  Total Vio
 
 Max Delay Paths
 --------------------------------------------------------------------------------------
-Slack (MET) :             1.227ns  (required time - arrival time)
-  Source:                 normalized_ifft/FSM_onehot_state_reg[0]_rep__8/C
-                            (rising edge-triggered cell FDSE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            normalized_ifft/memory_im_reg[34][4]/D
+Slack (MET) :             0.738ns  (required time - arrival time)
+  Source:                 normalized_ifft/output_index_reg[1]_rep__2/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            bin_im[0]
+                            (output port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
+  Path Type:              Max at Slow Process Corner
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.489ns  (logic 0.538ns (6.338%)  route 7.951ns (93.662%))
-  Logic Levels:           1  (LUT5=1)
-  Clock Path Skew:        -0.279ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.294ns = ( 11.294 - 10.000 )
-    Source Clock Delay      (SCD):    1.585ns
-    Clock Pessimism Removal (CPR):    0.012ns
+  Data Path Delay:        7.613ns  (logic 1.375ns (18.061%)  route 6.238ns (81.939%))
+  Logic Levels:           7  (LUT2=1 LUT4=2 LUT6=2 MUXF7=1 MUXF8=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        -1.613ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.000ns = ( 10.000 - 10.000 )
+    Source Clock Delay      (SCD):    1.613ns
+    Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
     Total Input Jitter      (TIJ):    0.000ns
@@ -222,43 +223,53 @@ Slack (MET) :             1.227ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=2406, unset)         1.585     1.585    normalized_ifft/clk
-    SLICE_X30Y121        FDSE                                         r  normalized_ifft/FSM_onehot_state_reg[0]_rep__8/C
+                         net (fo=2406, unset)         1.613     1.613    normalized_ifft/clk
+    SLICE_X67Y107        FDRE                                         r  normalized_ifft/output_index_reg[1]_rep__2/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X30Y121        FDSE (Prop_fdse_C_Q)         0.433     2.018 r  normalized_ifft/FSM_onehot_state_reg[0]_rep__8/Q
-                         net (fo=124, routed)         7.951     9.969    normalized_ifft/butterfly/memory_re_reg[37][1]
-    SLICE_X83Y93         LUT5 (Prop_lut5_I1_O)        0.105    10.074 r  normalized_ifft/butterfly/memory_im[34][4]_i_1/O
-                         net (fo=1, routed)           0.000    10.074    normalized_ifft/butterfly_n_1246
-    SLICE_X83Y93         FDRE                                         r  normalized_ifft/memory_im_reg[34][4]/D
+    SLICE_X67Y107        FDRE (Prop_fdre_C_Q)         0.379     1.992 r  normalized_ifft/output_index_reg[1]_rep__2/Q
+                         net (fo=86, routed)          2.067     4.059    normalized_ifft/output_index_reg[1]_rep__2_n_0
+    SLICE_X43Y136        LUT6 (Prop_lut6_I2_O)        0.105     4.164 f  normalized_ifft/bin_im[0]_INST_0_i_23/O
+                         net (fo=1, routed)           0.000     4.164    normalized_ifft/bin_im[0]_INST_0_i_23_n_0
+    SLICE_X43Y136        MUXF7 (Prop_muxf7_I1_O)      0.206     4.370 f  normalized_ifft/bin_im[0]_INST_0_i_10/O
+                         net (fo=1, routed)           0.000     4.370    normalized_ifft/bin_im[0]_INST_0_i_10_n_0
+    SLICE_X43Y136        MUXF8 (Prop_muxf8_I0_O)      0.085     4.455 f  normalized_ifft/bin_im[0]_INST_0_i_4/O
+                         net (fo=1, routed)           0.627     5.082    normalized_ifft/bin_im[0]_INST_0_i_4_n_0
+    SLICE_X45Y129        LUT6 (Prop_lut6_I3_O)        0.264     5.346 r  normalized_ifft/bin_im[0]_INST_0_i_1/O
+                         net (fo=3, routed)           1.430     6.776    normalized_ifft/p_0_in[0]
+    SLICE_X64Y112        LUT4 (Prop_lut4_I1_O)        0.105     6.881 f  normalized_ifft/bin_im[15]_INST_0_i_7/O
+                         net (fo=2, routed)           0.680     7.562    normalized_ifft/bin_im[15]_INST_0_i_7_n_0
+    SLICE_X64Y114        LUT4 (Prop_lut4_I1_O)        0.105     7.667 f  normalized_ifft/bin_im[15]_INST_0_i_2/O
+                         net (fo=17, routed)          0.646     8.313    normalized_ifft/bin_im[15]_INST_0_i_2_n_0
+    SLICE_X64Y112        LUT2 (Prop_lut2_I1_O)        0.126     8.439 r  normalized_ifft/bin_im[0]_INST_0/O
+                         net (fo=0)                   0.787     9.226    bin_im[0]
+                                                                      r  bin_im[0] (OUT)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=2406, unset)         1.294    11.294    normalized_ifft/clk
-    SLICE_X83Y93         FDRE                                         r  normalized_ifft/memory_im_reg[34][4]/C
-                         clock pessimism              0.012    11.306
-                         clock uncertainty           -0.035    11.271
-    SLICE_X83Y93         FDRE (Setup_fdre_C_D)        0.030    11.301    normalized_ifft/memory_im_reg[34][4]
+                         clock pessimism              0.000    10.000
+                         clock uncertainty           -0.035     9.965
+                         output delay                -0.000     9.965
   -------------------------------------------------------------------
-                         required time                         11.301
-                         arrival time                         -10.074
+                         required time                          9.965
+                         arrival time                          -9.226
   -------------------------------------------------------------------
-                         slack                                  1.227
+                         slack                                  0.738
 
-Slack (MET) :             1.455ns  (required time - arrival time)
-  Source:                 normalized_ifft/input_index_reg[4]/C
+Slack (MET) :             0.805ns  (required time - arrival time)
+  Source:                 normalized_ifft/output_index_reg[1]_rep__2/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            normalized_ifft/memory_im_reg[11][6]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            bin_im[7]
+                            (output port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
+  Path Type:              Max at Slow Process Corner
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.277ns  (logic 0.589ns (7.116%)  route 7.688ns (92.884%))
-  Logic Levels:           2  (LUT5=1 LUT6=1)
-  Clock Path Skew:        -0.305ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.274ns = ( 11.274 - 10.000 )
-    Source Clock Delay      (SCD):    1.591ns
-    Clock Pessimism Removal (CPR):    0.012ns
+  Data Path Delay:        7.547ns  (logic 1.354ns (17.941%)  route 6.193ns (82.059%))
+  Logic Levels:           7  (LUT2=1 LUT4=2 LUT6=2 MUXF7=1 MUXF8=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        -1.613ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.000ns = ( 10.000 - 10.000 )
+    Source Clock Delay      (SCD):    1.613ns
+    Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
     Total Input Jitter      (TIJ):    0.000ns
@@ -269,45 +280,53 @@ Slack (MET) :             1.455ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=2406, unset)         1.591     1.591    normalized_ifft/clk
-    SLICE_X57Y125        FDRE                                         r  normalized_ifft/input_index_reg[4]/C
+                         net (fo=2406, unset)         1.613     1.613    normalized_ifft/clk
+    SLICE_X67Y107        FDRE                                         r  normalized_ifft/output_index_reg[1]_rep__2/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X57Y125        FDRE (Prop_fdre_C_Q)         0.379     1.970 f  normalized_ifft/input_index_reg[4]/Q
-                         net (fo=134, routed)         2.478     4.448    normalized_ifft/sel0[1]
-    SLICE_X32Y131        LUT6 (Prop_lut6_I3_O)        0.105     4.553 r  normalized_ifft/memory_im[11][15]_i_2/O
-                         net (fo=32, routed)          5.210     9.763    normalized_ifft/butterfly/memory_im_reg[11][15]
-    SLICE_X54Y69         LUT5 (Prop_lut5_I0_O)        0.105     9.868 r  normalized_ifft/butterfly/memory_im[11][6]_i_1/O
-                         net (fo=1, routed)           0.000     9.868    normalized_ifft/butterfly_n_636
-    SLICE_X54Y69         FDRE                                         r  normalized_ifft/memory_im_reg[11][6]/D
+    SLICE_X67Y107        FDRE (Prop_fdre_C_Q)         0.379     1.992 r  normalized_ifft/output_index_reg[1]_rep__2/Q
+                         net (fo=86, routed)          2.067     4.059    normalized_ifft/output_index_reg[1]_rep__2_n_0
+    SLICE_X43Y136        LUT6 (Prop_lut6_I2_O)        0.105     4.164 f  normalized_ifft/bin_im[0]_INST_0_i_23/O
+                         net (fo=1, routed)           0.000     4.164    normalized_ifft/bin_im[0]_INST_0_i_23_n_0
+    SLICE_X43Y136        MUXF7 (Prop_muxf7_I1_O)      0.206     4.370 f  normalized_ifft/bin_im[0]_INST_0_i_10/O
+                         net (fo=1, routed)           0.000     4.370    normalized_ifft/bin_im[0]_INST_0_i_10_n_0
+    SLICE_X43Y136        MUXF8 (Prop_muxf8_I0_O)      0.085     4.455 f  normalized_ifft/bin_im[0]_INST_0_i_4/O
+                         net (fo=1, routed)           0.627     5.082    normalized_ifft/bin_im[0]_INST_0_i_4_n_0
+    SLICE_X45Y129        LUT6 (Prop_lut6_I3_O)        0.264     5.346 r  normalized_ifft/bin_im[0]_INST_0_i_1/O
+                         net (fo=3, routed)           1.430     6.776    normalized_ifft/p_0_in[0]
+    SLICE_X64Y112        LUT4 (Prop_lut4_I1_O)        0.105     6.881 f  normalized_ifft/bin_im[15]_INST_0_i_7/O
+                         net (fo=2, routed)           0.680     7.562    normalized_ifft/bin_im[15]_INST_0_i_7_n_0
+    SLICE_X64Y114        LUT4 (Prop_lut4_I1_O)        0.105     7.667 f  normalized_ifft/bin_im[15]_INST_0_i_2/O
+                         net (fo=17, routed)          0.601     8.268    normalized_ifft/bin_im[15]_INST_0_i_2_n_0
+    SLICE_X66Y112        LUT2 (Prop_lut2_I1_O)        0.105     8.373 r  normalized_ifft/bin_im[7]_INST_0/O
+                         net (fo=0)                   0.787     9.160    bin_im[7]
+                                                                      r  bin_im[7] (OUT)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=2406, unset)         1.274    11.274    normalized_ifft/clk
-    SLICE_X54Y69         FDRE                                         r  normalized_ifft/memory_im_reg[11][6]/C
-                         clock pessimism              0.012    11.286
-                         clock uncertainty           -0.035    11.251
-    SLICE_X54Y69         FDRE (Setup_fdre_C_D)        0.072    11.323    normalized_ifft/memory_im_reg[11][6]
+                         clock pessimism              0.000    10.000
+                         clock uncertainty           -0.035     9.965
+                         output delay                -0.000     9.965
   -------------------------------------------------------------------
-                         required time                         11.323
-                         arrival time                          -9.868
+                         required time                          9.965
+                         arrival time                          -9.160
   -------------------------------------------------------------------
-                         slack                                  1.455
+                         slack                                  0.805
 
-Slack (MET) :             1.507ns  (required time - arrival time)
-  Source:                 normalized_ifft/input_index_reg[2]_rep/C
+Slack (MET) :             0.805ns  (required time - arrival time)
+  Source:                 normalized_ifft/output_index_reg[1]_rep__2/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            normalized_ifft/memory_im_reg[44][8]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            bin_im[8]
+                            (output port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
+  Path Type:              Max at Slow Process Corner
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.176ns  (logic 0.589ns (7.204%)  route 7.587ns (92.796%))
-  Logic Levels:           2  (LUT5=1 LUT6=1)
-  Clock Path Skew:        -0.311ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.222ns = ( 11.222 - 10.000 )
-    Source Clock Delay      (SCD):    1.545ns
-    Clock Pessimism Removal (CPR):    0.012ns
+  Data Path Delay:        7.547ns  (logic 1.354ns (17.941%)  route 6.193ns (82.059%))
+  Logic Levels:           7  (LUT2=1 LUT4=2 LUT6=2 MUXF7=1 MUXF8=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        -1.613ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.000ns = ( 10.000 - 10.000 )
+    Source Clock Delay      (SCD):    1.613ns
+    Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
     Total Input Jitter      (TIJ):    0.000ns
@@ -318,45 +337,53 @@ Slack (MET) :             1.507ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=2406, unset)         1.545     1.545    normalized_ifft/clk
-    SLICE_X37Y122        FDRE                                         r  normalized_ifft/input_index_reg[2]_rep/C
+                         net (fo=2406, unset)         1.613     1.613    normalized_ifft/clk
+    SLICE_X67Y107        FDRE                                         r  normalized_ifft/output_index_reg[1]_rep__2/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X37Y122        FDRE (Prop_fdre_C_Q)         0.379     1.924 f  normalized_ifft/input_index_reg[2]_rep/Q
-                         net (fo=167, routed)         4.006     5.930    normalized_ifft/input_index_reg[2]_rep_n_0
-    SLICE_X64Y98         LUT6 (Prop_lut6_I1_O)        0.105     6.035 r  normalized_ifft/memory_im[44][15]_i_2/O
-                         net (fo=26, routed)          3.582     9.616    normalized_ifft/butterfly/memory_im_reg[44][15]
-    SLICE_X48Y71         LUT5 (Prop_lut5_I0_O)        0.105     9.721 r  normalized_ifft/butterfly/memory_im[44][8]_i_1/O
-                         net (fo=1, routed)           0.000     9.721    normalized_ifft/butterfly_n_1562
-    SLICE_X48Y71         FDRE                                         r  normalized_ifft/memory_im_reg[44][8]/D
+    SLICE_X67Y107        FDRE (Prop_fdre_C_Q)         0.379     1.992 r  normalized_ifft/output_index_reg[1]_rep__2/Q
+                         net (fo=86, routed)          2.067     4.059    normalized_ifft/output_index_reg[1]_rep__2_n_0
+    SLICE_X43Y136        LUT6 (Prop_lut6_I2_O)        0.105     4.164 f  normalized_ifft/bin_im[0]_INST_0_i_23/O
+                         net (fo=1, routed)           0.000     4.164    normalized_ifft/bin_im[0]_INST_0_i_23_n_0
+    SLICE_X43Y136        MUXF7 (Prop_muxf7_I1_O)      0.206     4.370 f  normalized_ifft/bin_im[0]_INST_0_i_10/O
+                         net (fo=1, routed)           0.000     4.370    normalized_ifft/bin_im[0]_INST_0_i_10_n_0
+    SLICE_X43Y136        MUXF8 (Prop_muxf8_I0_O)      0.085     4.455 f  normalized_ifft/bin_im[0]_INST_0_i_4/O
+                         net (fo=1, routed)           0.627     5.082    normalized_ifft/bin_im[0]_INST_0_i_4_n_0
+    SLICE_X45Y129        LUT6 (Prop_lut6_I3_O)        0.264     5.346 r  normalized_ifft/bin_im[0]_INST_0_i_1/O
+                         net (fo=3, routed)           1.430     6.776    normalized_ifft/p_0_in[0]
+    SLICE_X64Y112        LUT4 (Prop_lut4_I1_O)        0.105     6.881 f  normalized_ifft/bin_im[15]_INST_0_i_7/O
+                         net (fo=2, routed)           0.680     7.562    normalized_ifft/bin_im[15]_INST_0_i_7_n_0
+    SLICE_X64Y114        LUT4 (Prop_lut4_I1_O)        0.105     7.667 f  normalized_ifft/bin_im[15]_INST_0_i_2/O
+                         net (fo=17, routed)          0.601     8.268    normalized_ifft/bin_im[15]_INST_0_i_2_n_0
+    SLICE_X66Y112        LUT2 (Prop_lut2_I1_O)        0.105     8.373 r  normalized_ifft/bin_im[8]_INST_0/O
+                         net (fo=0)                   0.787     9.160    bin_im[8]
+                                                                      r  bin_im[8] (OUT)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=2406, unset)         1.222    11.222    normalized_ifft/clk
-    SLICE_X48Y71         FDRE                                         r  normalized_ifft/memory_im_reg[44][8]/C
-                         clock pessimism              0.012    11.234
-                         clock uncertainty           -0.035    11.199
-    SLICE_X48Y71         FDRE (Setup_fdre_C_D)        0.030    11.229    normalized_ifft/memory_im_reg[44][8]
+                         clock pessimism              0.000    10.000
+                         clock uncertainty           -0.035     9.965
+                         output delay                -0.000     9.965
   -------------------------------------------------------------------
-                         required time                         11.229
-                         arrival time                          -9.721
+                         required time                          9.965
+                         arrival time                          -9.160
   -------------------------------------------------------------------
-                         slack                                  1.507
+                         slack                                  0.805
 
-Slack (MET) :             1.509ns  (required time - arrival time)
-  Source:                 normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[0]/C
+Slack (MET) :             0.873ns  (required time - arrival time)
+  Source:                 normalized_ifft/output_index_reg[1]_rep__2/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            normalized_ifft/butterfly/saturation_count_reg[1]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            bin_im[12]
+                            (output port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
+  Path Type:              Max at Slow Process Corner
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.444ns  (logic 4.163ns (49.300%)  route 4.281ns (50.700%))
-  Logic Levels:           13  (CARRY4=7 LUT1=2 LUT2=1 LUT5=1 LUT6=2)
-  Clock Path Skew:        -0.043ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.232ns = ( 11.232 - 10.000 )
-    Source Clock Delay      (SCD):    1.371ns
-    Clock Pessimism Removal (CPR):    0.096ns
+  Data Path Delay:        7.479ns  (logic 1.357ns (18.144%)  route 6.122ns (81.856%))
+  Logic Levels:           7  (LUT2=1 LUT4=2 LUT6=2 MUXF7=1 MUXF8=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        -1.613ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.000ns = ( 10.000 - 10.000 )
+    Source Clock Delay      (SCD):    1.613ns
+    Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
     Total Input Jitter      (TIJ):    0.000ns
@@ -367,74 +394,53 @@ Slack (MET) :             1.509ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=2406, unset)         1.371     1.371    normalized_ifft/butterfly/clk
-    SLICE_X39Y75         FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[0]/C
+                         net (fo=2406, unset)         1.613     1.613    normalized_ifft/clk
+    SLICE_X67Y107        FDRE                                         r  normalized_ifft/output_index_reg[1]_rep__2/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X39Y75         FDRE (Prop_fdre_C_Q)         0.379     1.750 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[0]/Q
-                         net (fo=3, routed)           1.064     2.814    normalized_ifft/butterfly/g_pipelined.s2_tw_re[0]
-    SLICE_X37Y96         LUT2 (Prop_lut2_I1_O)        0.105     2.919 r  normalized_ifft/butterfly/y1_re[0]_i_11/O
-                         net (fo=1, routed)           0.000     2.919    normalized_ifft/butterfly/y1_re[0]_i_11_n_0
-    SLICE_X37Y96         CARRY4 (Prop_carry4_S[0]_CO[3])
-                                                      0.440     3.359 r  normalized_ifft/butterfly/y1_re_reg[0]_i_6/CO[3]
-                         net (fo=1, routed)           0.000     3.359    normalized_ifft/butterfly/y1_re_reg[0]_i_6_n_0
-    SLICE_X37Y97         CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.265     3.624 f  normalized_ifft/butterfly/round_div2_away0__67_carry_i_11/O[1]
-                         net (fo=1, routed)           0.571     4.194    normalized_ifft/butterfly/round_div2_away0__67_carry_i_11_n_6
-    SLICE_X40Y98         LUT1 (Prop_lut1_I0_O)        0.250     4.444 r  normalized_ifft/butterfly/round_div2_away0__67_carry_i_9/O
-                         net (fo=1, routed)           0.000     4.444    normalized_ifft/butterfly/round_div2_away0__67_carry_i_9_n_0
-    SLICE_X40Y98         CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.457     4.901 r  normalized_ifft/butterfly/round_div2_away0__67_carry_i_6/CO[3]
-                         net (fo=1, routed)           0.000     4.901    normalized_ifft/butterfly/round_div2_away0__67_carry_i_6_n_0
-    SLICE_X40Y99         CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.260     5.161 f  normalized_ifft/butterfly/round_div2_away0__67_carry__0_i_5/O[3]
-                         net (fo=1, routed)           0.487     5.648    normalized_ifft/butterfly/round_div2_away0__67_carry__0_i_5_n_4
-    SLICE_X38Y100        LUT1 (Prop_lut1_I0_O)        0.257     5.905 r  normalized_ifft/butterfly/round_div2_away0__67_carry__1_i_3/O
-                         net (fo=1, routed)           0.000     5.905    normalized_ifft/butterfly/round_div2_away0__67_carry__1_i_3_n_0
-    SLICE_X38Y100        CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     6.349 r  normalized_ifft/butterfly/round_div2_away0__67_carry__1/CO[3]
-                         net (fo=1, routed)           0.000     6.349    normalized_ifft/butterfly/round_div2_away0__67_carry__1_n_0
-    SLICE_X38Y101        CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.257     6.606 r  normalized_ifft/butterfly/round_div2_away0__67_carry__2/O[1]
-                         net (fo=3, routed)           0.664     7.270    normalized_ifft/butterfly/round_div2_away0__67_carry__2_n_6
-    SLICE_X36Y101        LUT5 (Prop_lut5_I0_O)        0.245     7.515 r  normalized_ifft/butterfly/saturate_q151__14_carry_i_5/O
-                         net (fo=1, routed)           0.000     7.515    normalized_ifft/butterfly/saturate_q151__14_carry_i_5_n_0
-    SLICE_X36Y101        CARRY4 (Prop_carry4_S[0]_CO[2])
-                                                      0.447     7.962 r  normalized_ifft/butterfly/saturate_q151__14_carry/CO[2]
-                         net (fo=18, routed)          1.113     9.075    normalized_ifft/butterfly/saturate_q1512_in
-    SLICE_X40Y87         LUT6 (Prop_lut6_I4_O)        0.252     9.327 r  normalized_ifft/butterfly/saturation_count[2]_i_2/O
-                         net (fo=2, routed)           0.383     9.710    normalized_ifft/butterfly/saturation_count[2]_i_2_n_0
-    SLICE_X40Y88         LUT6 (Prop_lut6_I3_O)        0.105     9.815 r  normalized_ifft/butterfly/saturation_count[1]_i_1/O
-                         net (fo=1, routed)           0.000     9.815    normalized_ifft/butterfly/saturation_count[1]_i_1_n_0
-    SLICE_X40Y88         FDRE                                         r  normalized_ifft/butterfly/saturation_count_reg[1]/D
+    SLICE_X67Y107        FDRE (Prop_fdre_C_Q)         0.379     1.992 r  normalized_ifft/output_index_reg[1]_rep__2/Q
+                         net (fo=86, routed)          2.067     4.059    normalized_ifft/output_index_reg[1]_rep__2_n_0
+    SLICE_X43Y136        LUT6 (Prop_lut6_I2_O)        0.105     4.164 f  normalized_ifft/bin_im[0]_INST_0_i_23/O
+                         net (fo=1, routed)           0.000     4.164    normalized_ifft/bin_im[0]_INST_0_i_23_n_0
+    SLICE_X43Y136        MUXF7 (Prop_muxf7_I1_O)      0.206     4.370 f  normalized_ifft/bin_im[0]_INST_0_i_10/O
+                         net (fo=1, routed)           0.000     4.370    normalized_ifft/bin_im[0]_INST_0_i_10_n_0
+    SLICE_X43Y136        MUXF8 (Prop_muxf8_I0_O)      0.085     4.455 f  normalized_ifft/bin_im[0]_INST_0_i_4/O
+                         net (fo=1, routed)           0.627     5.082    normalized_ifft/bin_im[0]_INST_0_i_4_n_0
+    SLICE_X45Y129        LUT6 (Prop_lut6_I3_O)        0.264     5.346 r  normalized_ifft/bin_im[0]_INST_0_i_1/O
+                         net (fo=3, routed)           1.430     6.776    normalized_ifft/p_0_in[0]
+    SLICE_X64Y112        LUT4 (Prop_lut4_I1_O)        0.105     6.881 f  normalized_ifft/bin_im[15]_INST_0_i_7/O
+                         net (fo=2, routed)           0.680     7.562    normalized_ifft/bin_im[15]_INST_0_i_7_n_0
+    SLICE_X64Y114        LUT4 (Prop_lut4_I1_O)        0.105     7.667 f  normalized_ifft/bin_im[15]_INST_0_i_2/O
+                         net (fo=17, routed)          0.530     8.197    normalized_ifft/bin_im[15]_INST_0_i_2_n_0
+    SLICE_X64Y113        LUT2 (Prop_lut2_I1_O)        0.108     8.305 r  normalized_ifft/bin_im[12]_INST_0/O
+                         net (fo=0)                   0.787     9.092    bin_im[12]
+                                                                      r  bin_im[12] (OUT)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=2406, unset)         1.232    11.232    normalized_ifft/butterfly/clk
-    SLICE_X40Y88         FDRE                                         r  normalized_ifft/butterfly/saturation_count_reg[1]/C
-                         clock pessimism              0.096    11.328
-                         clock uncertainty           -0.035    11.293
-    SLICE_X40Y88         FDRE (Setup_fdre_C_D)        0.032    11.325    normalized_ifft/butterfly/saturation_count_reg[1]
+                         clock pessimism              0.000    10.000
+                         clock uncertainty           -0.035     9.965
+                         output delay                -0.000     9.965
   -------------------------------------------------------------------
-                         required time                         11.325
-                         arrival time                          -9.815
+                         required time                          9.965
+                         arrival time                          -9.092
   -------------------------------------------------------------------
-                         slack                                  1.509
+                         slack                                  0.873
 
-Slack (MET) :             1.511ns  (required time - arrival time)
-  Source:                 normalized_ifft/FSM_onehot_state_reg[3]/C
+Slack (MET) :             0.876ns  (required time - arrival time)
+  Source:                 normalized_ifft/output_index_reg[1]_rep__2/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            normalized_ifft/memory_re_reg[6][3]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            bin_im[11]
+                            (output port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
+  Path Type:              Max at Slow Process Corner
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.396ns  (logic 0.822ns (9.791%)  route 7.574ns (90.209%))
-  Logic Levels:           2  (LUT3=1 LUT5=1)
-  Clock Path Skew:        -0.088ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.282ns = ( 11.282 - 10.000 )
-    Source Clock Delay      (SCD):    1.382ns
-    Clock Pessimism Removal (CPR):    0.012ns
+  Data Path Delay:        7.476ns  (logic 1.354ns (18.111%)  route 6.122ns (81.889%))
+  Logic Levels:           7  (LUT2=1 LUT4=2 LUT6=2 MUXF7=1 MUXF8=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        -1.613ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.000ns = ( 10.000 - 10.000 )
+    Source Clock Delay      (SCD):    1.613ns
+    Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
     Total Input Jitter      (TIJ):    0.000ns
@@ -445,45 +451,53 @@ Slack (MET) :             1.511ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=2406, unset)         1.382     1.382    normalized_ifft/clk
-    SLICE_X34Y82         FDRE                                         r  normalized_ifft/FSM_onehot_state_reg[3]/C
+                         net (fo=2406, unset)         1.613     1.613    normalized_ifft/clk
+    SLICE_X67Y107        FDRE                                         r  normalized_ifft/output_index_reg[1]_rep__2/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X34Y82         FDRE (Prop_fdre_C_Q)         0.433     1.815 r  normalized_ifft/FSM_onehot_state_reg[3]/Q
-                         net (fo=101, routed)         2.733     4.548    normalized_ifft/FSM_onehot_state_reg_n_0_[3]
-    SLICE_X38Y119        LUT3 (Prop_lut3_I0_O)        0.125     4.673 f  normalized_ifft/memory_re[62][9]_i_3/O
-                         net (fo=113, routed)         4.841     9.514    normalized_ifft/butterfly/memory_re_reg[2][13]
-    SLICE_X65Y67         LUT5 (Prop_lut5_I3_O)        0.264     9.778 r  normalized_ifft/butterfly/memory_re[6][3]_i_1/O
-                         net (fo=1, routed)           0.000     9.778    normalized_ifft/butterfly_n_495
-    SLICE_X65Y67         FDRE                                         r  normalized_ifft/memory_re_reg[6][3]/D
+    SLICE_X67Y107        FDRE (Prop_fdre_C_Q)         0.379     1.992 r  normalized_ifft/output_index_reg[1]_rep__2/Q
+                         net (fo=86, routed)          2.067     4.059    normalized_ifft/output_index_reg[1]_rep__2_n_0
+    SLICE_X43Y136        LUT6 (Prop_lut6_I2_O)        0.105     4.164 f  normalized_ifft/bin_im[0]_INST_0_i_23/O
+                         net (fo=1, routed)           0.000     4.164    normalized_ifft/bin_im[0]_INST_0_i_23_n_0
+    SLICE_X43Y136        MUXF7 (Prop_muxf7_I1_O)      0.206     4.370 f  normalized_ifft/bin_im[0]_INST_0_i_10/O
+                         net (fo=1, routed)           0.000     4.370    normalized_ifft/bin_im[0]_INST_0_i_10_n_0
+    SLICE_X43Y136        MUXF8 (Prop_muxf8_I0_O)      0.085     4.455 f  normalized_ifft/bin_im[0]_INST_0_i_4/O
+                         net (fo=1, routed)           0.627     5.082    normalized_ifft/bin_im[0]_INST_0_i_4_n_0
+    SLICE_X45Y129        LUT6 (Prop_lut6_I3_O)        0.264     5.346 r  normalized_ifft/bin_im[0]_INST_0_i_1/O
+                         net (fo=3, routed)           1.430     6.776    normalized_ifft/p_0_in[0]
+    SLICE_X64Y112        LUT4 (Prop_lut4_I1_O)        0.105     6.881 f  normalized_ifft/bin_im[15]_INST_0_i_7/O
+                         net (fo=2, routed)           0.680     7.562    normalized_ifft/bin_im[15]_INST_0_i_7_n_0
+    SLICE_X64Y114        LUT4 (Prop_lut4_I1_O)        0.105     7.667 f  normalized_ifft/bin_im[15]_INST_0_i_2/O
+                         net (fo=17, routed)          0.530     8.197    normalized_ifft/bin_im[15]_INST_0_i_2_n_0
+    SLICE_X64Y113        LUT2 (Prop_lut2_I1_O)        0.105     8.302 r  normalized_ifft/bin_im[11]_INST_0/O
+                         net (fo=0)                   0.787     9.089    bin_im[11]
+                                                                      r  bin_im[11] (OUT)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=2406, unset)         1.282    11.282    normalized_ifft/clk
-    SLICE_X65Y67         FDRE                                         r  normalized_ifft/memory_re_reg[6][3]/C
-                         clock pessimism              0.012    11.294
-                         clock uncertainty           -0.035    11.259
-    SLICE_X65Y67         FDRE (Setup_fdre_C_D)        0.030    11.289    normalized_ifft/memory_re_reg[6][3]
+                         clock pessimism              0.000    10.000
+                         clock uncertainty           -0.035     9.965
+                         output delay                -0.000     9.965
   -------------------------------------------------------------------
-                         required time                         11.289
-                         arrival time                          -9.778
+                         required time                          9.965
+                         arrival time                          -9.089
   -------------------------------------------------------------------
-                         slack                                  1.511
+                         slack                                  0.876
 
-Slack (MET) :             1.518ns  (required time - arrival time)
-  Source:                 normalized_ifft/wb_index0_reg[3][4]/C
+Slack (MET) :             0.880ns  (required time - arrival time)
+  Source:                 normalized_ifft/output_index_reg[1]_rep__2/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            normalized_ifft/memory_im_reg[5][8]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            bin_im[13]
+                            (output port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
+  Path Type:              Max at Slow Process Corner
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.239ns  (logic 0.840ns (10.196%)  route 7.399ns (89.804%))
-  Logic Levels:           3  (LUT5=1 LUT6=2)
-  Clock Path Skew:        -0.284ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.261ns = ( 11.261 - 10.000 )
-    Source Clock Delay      (SCD):    1.557ns
-    Clock Pessimism Removal (CPR):    0.012ns
+  Data Path Delay:        7.472ns  (logic 1.357ns (18.162%)  route 6.115ns (81.838%))
+  Logic Levels:           7  (LUT2=1 LUT4=2 LUT6=2 MUXF7=1 MUXF8=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        -1.613ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.000ns = ( 10.000 - 10.000 )
+    Source Clock Delay      (SCD):    1.613ns
+    Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
     Total Input Jitter      (TIJ):    0.000ns
@@ -494,47 +508,53 @@ Slack (MET) :             1.518ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=2406, unset)         1.557     1.557    normalized_ifft/clk
-    SLICE_X36Y110        FDRE                                         r  normalized_ifft/wb_index0_reg[3][4]/C
+                         net (fo=2406, unset)         1.613     1.613    normalized_ifft/clk
+    SLICE_X67Y107        FDRE                                         r  normalized_ifft/output_index_reg[1]_rep__2/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X36Y110        FDRE (Prop_fdre_C_Q)         0.398     1.955 r  normalized_ifft/wb_index0_reg[3][4]/Q
-                         net (fo=65, routed)          2.896     4.851    normalized_ifft/wb_index0_reg[3]_1[4]
-    SLICE_X57Y130        LUT6 (Prop_lut6_I2_O)        0.232     5.083 r  normalized_ifft/memory_im[5][15]_i_4/O
-                         net (fo=33, routed)          3.975     9.058    normalized_ifft/butterfly/memory_re_reg[5][7]_0
-    SLICE_X30Y74         LUT6 (Prop_lut6_I0_O)        0.105     9.163 r  normalized_ifft/butterfly/memory_im[5][8]_i_2/O
-                         net (fo=1, routed)           0.528     9.691    normalized_ifft/butterfly/memory_im[5][8]_i_2_n_0
-    SLICE_X30Y74         LUT5 (Prop_lut5_I4_O)        0.105     9.796 r  normalized_ifft/butterfly/memory_im[5][8]_i_1/O
-                         net (fo=1, routed)           0.000     9.796    normalized_ifft/butterfly_n_442
-    SLICE_X30Y74         FDRE                                         r  normalized_ifft/memory_im_reg[5][8]/D
+    SLICE_X67Y107        FDRE (Prop_fdre_C_Q)         0.379     1.992 r  normalized_ifft/output_index_reg[1]_rep__2/Q
+                         net (fo=86, routed)          2.067     4.059    normalized_ifft/output_index_reg[1]_rep__2_n_0
+    SLICE_X43Y136        LUT6 (Prop_lut6_I2_O)        0.105     4.164 f  normalized_ifft/bin_im[0]_INST_0_i_23/O
+                         net (fo=1, routed)           0.000     4.164    normalized_ifft/bin_im[0]_INST_0_i_23_n_0
+    SLICE_X43Y136        MUXF7 (Prop_muxf7_I1_O)      0.206     4.370 f  normalized_ifft/bin_im[0]_INST_0_i_10/O
+                         net (fo=1, routed)           0.000     4.370    normalized_ifft/bin_im[0]_INST_0_i_10_n_0
+    SLICE_X43Y136        MUXF8 (Prop_muxf8_I0_O)      0.085     4.455 f  normalized_ifft/bin_im[0]_INST_0_i_4/O
+                         net (fo=1, routed)           0.627     5.082    normalized_ifft/bin_im[0]_INST_0_i_4_n_0
+    SLICE_X45Y129        LUT6 (Prop_lut6_I3_O)        0.264     5.346 r  normalized_ifft/bin_im[0]_INST_0_i_1/O
+                         net (fo=3, routed)           1.430     6.776    normalized_ifft/p_0_in[0]
+    SLICE_X64Y112        LUT4 (Prop_lut4_I1_O)        0.105     6.881 f  normalized_ifft/bin_im[15]_INST_0_i_7/O
+                         net (fo=2, routed)           0.680     7.562    normalized_ifft/bin_im[15]_INST_0_i_7_n_0
+    SLICE_X64Y114        LUT4 (Prop_lut4_I1_O)        0.105     7.667 f  normalized_ifft/bin_im[15]_INST_0_i_2/O
+                         net (fo=17, routed)          0.523     8.190    normalized_ifft/bin_im[15]_INST_0_i_2_n_0
+    SLICE_X64Y113        LUT2 (Prop_lut2_I1_O)        0.108     8.298 r  normalized_ifft/bin_im[13]_INST_0/O
+                         net (fo=0)                   0.787     9.085    bin_im[13]
+                                                                      r  bin_im[13] (OUT)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=2406, unset)         1.261    11.261    normalized_ifft/clk
-    SLICE_X30Y74         FDRE                                         r  normalized_ifft/memory_im_reg[5][8]/C
-                         clock pessimism              0.012    11.273
-                         clock uncertainty           -0.035    11.238
-    SLICE_X30Y74         FDRE (Setup_fdre_C_D)        0.076    11.314    normalized_ifft/memory_im_reg[5][8]
+                         clock pessimism              0.000    10.000
+                         clock uncertainty           -0.035     9.965
+                         output delay                -0.000     9.965
   -------------------------------------------------------------------
-                         required time                         11.314
-                         arrival time                          -9.796
+                         required time                          9.965
+                         arrival time                          -9.085
   -------------------------------------------------------------------
-                         slack                                  1.518
+                         slack                                  0.880
 
-Slack (MET) :             1.522ns  (required time - arrival time)
-  Source:                 normalized_ifft/FSM_onehot_state_reg[0]_rep__8/C
-                            (rising edge-triggered cell FDSE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            normalized_ifft/memory_im_reg[34][5]/D
+Slack (MET) :             0.883ns  (required time - arrival time)
+  Source:                 normalized_ifft/output_index_reg[1]_rep__2/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            bin_im[10]
+                            (output port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
+  Path Type:              Max at Slow Process Corner
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.184ns  (logic 0.538ns (6.574%)  route 7.646ns (93.426%))
-  Logic Levels:           1  (LUT5=1)
-  Clock Path Skew:        -0.288ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.285ns = ( 11.285 - 10.000 )
-    Source Clock Delay      (SCD):    1.585ns
-    Clock Pessimism Removal (CPR):    0.012ns
+  Data Path Delay:        7.469ns  (logic 1.354ns (18.129%)  route 6.115ns (81.871%))
+  Logic Levels:           7  (LUT2=1 LUT4=2 LUT6=2 MUXF7=1 MUXF8=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        -1.613ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.000ns = ( 10.000 - 10.000 )
+    Source Clock Delay      (SCD):    1.613ns
+    Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
     Total Input Jitter      (TIJ):    0.000ns
@@ -545,43 +565,53 @@ Slack (MET) :             1.522ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=2406, unset)         1.585     1.585    normalized_ifft/clk
-    SLICE_X30Y121        FDSE                                         r  normalized_ifft/FSM_onehot_state_reg[0]_rep__8/C
+                         net (fo=2406, unset)         1.613     1.613    normalized_ifft/clk
+    SLICE_X67Y107        FDRE                                         r  normalized_ifft/output_index_reg[1]_rep__2/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X30Y121        FDSE (Prop_fdse_C_Q)         0.433     2.018 r  normalized_ifft/FSM_onehot_state_reg[0]_rep__8/Q
-                         net (fo=124, routed)         7.646     9.664    normalized_ifft/butterfly/memory_re_reg[37][1]
-    SLICE_X81Y81         LUT5 (Prop_lut5_I1_O)        0.105     9.769 r  normalized_ifft/butterfly/memory_im[34][5]_i_1/O
-                         net (fo=1, routed)           0.000     9.769    normalized_ifft/butterfly_n_1245
-    SLICE_X81Y81         FDRE                                         r  normalized_ifft/memory_im_reg[34][5]/D
+    SLICE_X67Y107        FDRE (Prop_fdre_C_Q)         0.379     1.992 r  normalized_ifft/output_index_reg[1]_rep__2/Q
+                         net (fo=86, routed)          2.067     4.059    normalized_ifft/output_index_reg[1]_rep__2_n_0
+    SLICE_X43Y136        LUT6 (Prop_lut6_I2_O)        0.105     4.164 f  normalized_ifft/bin_im[0]_INST_0_i_23/O
+                         net (fo=1, routed)           0.000     4.164    normalized_ifft/bin_im[0]_INST_0_i_23_n_0
+    SLICE_X43Y136        MUXF7 (Prop_muxf7_I1_O)      0.206     4.370 f  normalized_ifft/bin_im[0]_INST_0_i_10/O
+                         net (fo=1, routed)           0.000     4.370    normalized_ifft/bin_im[0]_INST_0_i_10_n_0
+    SLICE_X43Y136        MUXF8 (Prop_muxf8_I0_O)      0.085     4.455 f  normalized_ifft/bin_im[0]_INST_0_i_4/O
+                         net (fo=1, routed)           0.627     5.082    normalized_ifft/bin_im[0]_INST_0_i_4_n_0
+    SLICE_X45Y129        LUT6 (Prop_lut6_I3_O)        0.264     5.346 r  normalized_ifft/bin_im[0]_INST_0_i_1/O
+                         net (fo=3, routed)           1.430     6.776    normalized_ifft/p_0_in[0]
+    SLICE_X64Y112        LUT4 (Prop_lut4_I1_O)        0.105     6.881 f  normalized_ifft/bin_im[15]_INST_0_i_7/O
+                         net (fo=2, routed)           0.680     7.562    normalized_ifft/bin_im[15]_INST_0_i_7_n_0
+    SLICE_X64Y114        LUT4 (Prop_lut4_I1_O)        0.105     7.667 f  normalized_ifft/bin_im[15]_INST_0_i_2/O
+                         net (fo=17, routed)          0.523     8.190    normalized_ifft/bin_im[15]_INST_0_i_2_n_0
+    SLICE_X64Y113        LUT2 (Prop_lut2_I1_O)        0.105     8.295 r  normalized_ifft/bin_im[10]_INST_0/O
+                         net (fo=0)                   0.787     9.082    bin_im[10]
+                                                                      r  bin_im[10] (OUT)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=2406, unset)         1.285    11.285    normalized_ifft/clk
-    SLICE_X81Y81         FDRE                                         r  normalized_ifft/memory_im_reg[34][5]/C
-                         clock pessimism              0.012    11.297
-                         clock uncertainty           -0.035    11.262
-    SLICE_X81Y81         FDRE (Setup_fdre_C_D)        0.030    11.292    normalized_ifft/memory_im_reg[34][5]
+                         clock pessimism              0.000    10.000
+                         clock uncertainty           -0.035     9.965
+                         output delay                -0.000     9.965
   -------------------------------------------------------------------
-                         required time                         11.292
-                         arrival time                          -9.769
+                         required time                          9.965
+                         arrival time                          -9.082
   -------------------------------------------------------------------
-                         slack                                  1.522
+                         slack                                  0.883
 
-Slack (MET) :             1.524ns  (required time - arrival time)
-  Source:                 normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[0]/C
+Slack (MET) :             0.910ns  (required time - arrival time)
+  Source:                 normalized_ifft/output_index_reg[1]_rep__2/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            normalized_ifft/butterfly/saturation_count_reg[2]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            bin_im[5]
+                            (output port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
+  Path Type:              Max at Slow Process Corner
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.428ns  (logic 4.163ns (49.397%)  route 4.265ns (50.603%))
-  Logic Levels:           13  (CARRY4=7 LUT1=2 LUT2=1 LUT5=1 LUT6=2)
-  Clock Path Skew:        -0.043ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.232ns = ( 11.232 - 10.000 )
-    Source Clock Delay      (SCD):    1.371ns
-    Clock Pessimism Removal (CPR):    0.096ns
+  Data Path Delay:        7.442ns  (logic 1.359ns (18.262%)  route 6.083ns (81.738%))
+  Logic Levels:           7  (LUT2=1 LUT4=2 LUT6=2 MUXF7=1 MUXF8=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        -1.613ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.000ns = ( 10.000 - 10.000 )
+    Source Clock Delay      (SCD):    1.613ns
+    Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
     Total Input Jitter      (TIJ):    0.000ns
@@ -592,74 +622,53 @@ Slack (MET) :             1.524ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=2406, unset)         1.371     1.371    normalized_ifft/butterfly/clk
-    SLICE_X39Y75         FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[0]/C
+                         net (fo=2406, unset)         1.613     1.613    normalized_ifft/clk
+    SLICE_X67Y107        FDRE                                         r  normalized_ifft/output_index_reg[1]_rep__2/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X39Y75         FDRE (Prop_fdre_C_Q)         0.379     1.750 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[0]/Q
-                         net (fo=3, routed)           1.064     2.814    normalized_ifft/butterfly/g_pipelined.s2_tw_re[0]
-    SLICE_X37Y96         LUT2 (Prop_lut2_I1_O)        0.105     2.919 r  normalized_ifft/butterfly/y1_re[0]_i_11/O
-                         net (fo=1, routed)           0.000     2.919    normalized_ifft/butterfly/y1_re[0]_i_11_n_0
-    SLICE_X37Y96         CARRY4 (Prop_carry4_S[0]_CO[3])
-                                                      0.440     3.359 r  normalized_ifft/butterfly/y1_re_reg[0]_i_6/CO[3]
-                         net (fo=1, routed)           0.000     3.359    normalized_ifft/butterfly/y1_re_reg[0]_i_6_n_0
-    SLICE_X37Y97         CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.265     3.624 f  normalized_ifft/butterfly/round_div2_away0__67_carry_i_11/O[1]
-                         net (fo=1, routed)           0.571     4.194    normalized_ifft/butterfly/round_div2_away0__67_carry_i_11_n_6
-    SLICE_X40Y98         LUT1 (Prop_lut1_I0_O)        0.250     4.444 r  normalized_ifft/butterfly/round_div2_away0__67_carry_i_9/O
-                         net (fo=1, routed)           0.000     4.444    normalized_ifft/butterfly/round_div2_away0__67_carry_i_9_n_0
-    SLICE_X40Y98         CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.457     4.901 r  normalized_ifft/butterfly/round_div2_away0__67_carry_i_6/CO[3]
-                         net (fo=1, routed)           0.000     4.901    normalized_ifft/butterfly/round_div2_away0__67_carry_i_6_n_0
-    SLICE_X40Y99         CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.260     5.161 f  normalized_ifft/butterfly/round_div2_away0__67_carry__0_i_5/O[3]
-                         net (fo=1, routed)           0.487     5.648    normalized_ifft/butterfly/round_div2_away0__67_carry__0_i_5_n_4
-    SLICE_X38Y100        LUT1 (Prop_lut1_I0_O)        0.257     5.905 r  normalized_ifft/butterfly/round_div2_away0__67_carry__1_i_3/O
-                         net (fo=1, routed)           0.000     5.905    normalized_ifft/butterfly/round_div2_away0__67_carry__1_i_3_n_0
-    SLICE_X38Y100        CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     6.349 r  normalized_ifft/butterfly/round_div2_away0__67_carry__1/CO[3]
-                         net (fo=1, routed)           0.000     6.349    normalized_ifft/butterfly/round_div2_away0__67_carry__1_n_0
-    SLICE_X38Y101        CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.257     6.606 r  normalized_ifft/butterfly/round_div2_away0__67_carry__2/O[1]
-                         net (fo=3, routed)           0.664     7.270    normalized_ifft/butterfly/round_div2_away0__67_carry__2_n_6
-    SLICE_X36Y101        LUT5 (Prop_lut5_I0_O)        0.245     7.515 r  normalized_ifft/butterfly/saturate_q151__14_carry_i_5/O
-                         net (fo=1, routed)           0.000     7.515    normalized_ifft/butterfly/saturate_q151__14_carry_i_5_n_0
-    SLICE_X36Y101        CARRY4 (Prop_carry4_S[0]_CO[2])
-                                                      0.447     7.962 r  normalized_ifft/butterfly/saturate_q151__14_carry/CO[2]
-                         net (fo=18, routed)          1.113     9.075    normalized_ifft/butterfly/saturate_q1512_in
-    SLICE_X40Y87         LUT6 (Prop_lut6_I4_O)        0.252     9.327 r  normalized_ifft/butterfly/saturation_count[2]_i_2/O
-                         net (fo=2, routed)           0.366     9.694    normalized_ifft/butterfly/saturation_count[2]_i_2_n_0
-    SLICE_X40Y88         LUT6 (Prop_lut6_I0_O)        0.105     9.799 r  normalized_ifft/butterfly/saturation_count[2]_i_1/O
-                         net (fo=1, routed)           0.000     9.799    normalized_ifft/butterfly/saturation_count[2]_i_1_n_0
-    SLICE_X40Y88         FDRE                                         r  normalized_ifft/butterfly/saturation_count_reg[2]/D
+    SLICE_X67Y107        FDRE (Prop_fdre_C_Q)         0.379     1.992 r  normalized_ifft/output_index_reg[1]_rep__2/Q
+                         net (fo=86, routed)          2.067     4.059    normalized_ifft/output_index_reg[1]_rep__2_n_0
+    SLICE_X43Y136        LUT6 (Prop_lut6_I2_O)        0.105     4.164 f  normalized_ifft/bin_im[0]_INST_0_i_23/O
+                         net (fo=1, routed)           0.000     4.164    normalized_ifft/bin_im[0]_INST_0_i_23_n_0
+    SLICE_X43Y136        MUXF7 (Prop_muxf7_I1_O)      0.206     4.370 f  normalized_ifft/bin_im[0]_INST_0_i_10/O
+                         net (fo=1, routed)           0.000     4.370    normalized_ifft/bin_im[0]_INST_0_i_10_n_0
+    SLICE_X43Y136        MUXF8 (Prop_muxf8_I0_O)      0.085     4.455 f  normalized_ifft/bin_im[0]_INST_0_i_4/O
+                         net (fo=1, routed)           0.627     5.082    normalized_ifft/bin_im[0]_INST_0_i_4_n_0
+    SLICE_X45Y129        LUT6 (Prop_lut6_I3_O)        0.264     5.346 r  normalized_ifft/bin_im[0]_INST_0_i_1/O
+                         net (fo=3, routed)           1.430     6.776    normalized_ifft/p_0_in[0]
+    SLICE_X64Y112        LUT4 (Prop_lut4_I1_O)        0.105     6.881 f  normalized_ifft/bin_im[15]_INST_0_i_7/O
+                         net (fo=2, routed)           0.680     7.562    normalized_ifft/bin_im[15]_INST_0_i_7_n_0
+    SLICE_X64Y114        LUT4 (Prop_lut4_I1_O)        0.105     7.667 f  normalized_ifft/bin_im[15]_INST_0_i_2/O
+                         net (fo=17, routed)          0.491     8.158    normalized_ifft/bin_im[15]_INST_0_i_2_n_0
+    SLICE_X64Y112        LUT2 (Prop_lut2_I1_O)        0.110     8.268 r  normalized_ifft/bin_im[5]_INST_0/O
+                         net (fo=0)                   0.787     9.055    bin_im[5]
+                                                                      r  bin_im[5] (OUT)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=2406, unset)         1.232    11.232    normalized_ifft/butterfly/clk
-    SLICE_X40Y88         FDRE                                         r  normalized_ifft/butterfly/saturation_count_reg[2]/C
-                         clock pessimism              0.096    11.328
-                         clock uncertainty           -0.035    11.293
-    SLICE_X40Y88         FDRE (Setup_fdre_C_D)        0.030    11.323    normalized_ifft/butterfly/saturation_count_reg[2]
+                         clock pessimism              0.000    10.000
+                         clock uncertainty           -0.035     9.965
+                         output delay                -0.000     9.965
   -------------------------------------------------------------------
-                         required time                         11.323
-                         arrival time                          -9.799
+                         required time                          9.965
+                         arrival time                          -9.055
   -------------------------------------------------------------------
-                         slack                                  1.524
+                         slack                                  0.910
 
-Slack (MET) :             1.540ns  (required time - arrival time)
-  Source:                 normalized_ifft/FSM_onehot_state_reg[0]_rep__8/C
-                            (rising edge-triggered cell FDSE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            normalized_ifft/memory_im_reg[35][5]/D
+Slack (MET) :             0.915ns  (required time - arrival time)
+  Source:                 normalized_ifft/output_index_reg[1]_rep__2/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            bin_im[4]
+                            (output port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
+  Path Type:              Max at Slow Process Corner
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.209ns  (logic 0.538ns (6.554%)  route 7.671ns (93.446%))
-  Logic Levels:           1  (LUT5=1)
-  Clock Path Skew:        -0.287ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.286ns = ( 11.286 - 10.000 )
-    Source Clock Delay      (SCD):    1.585ns
-    Clock Pessimism Removal (CPR):    0.012ns
+  Data Path Delay:        7.437ns  (logic 1.354ns (18.207%)  route 6.083ns (81.793%))
+  Logic Levels:           7  (LUT2=1 LUT4=2 LUT6=2 MUXF7=1 MUXF8=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        -1.613ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.000ns = ( 10.000 - 10.000 )
+    Source Clock Delay      (SCD):    1.613ns
+    Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
     Total Input Jitter      (TIJ):    0.000ns
@@ -670,43 +679,53 @@ Slack (MET) :             1.540ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=2406, unset)         1.585     1.585    normalized_ifft/clk
-    SLICE_X30Y121        FDSE                                         r  normalized_ifft/FSM_onehot_state_reg[0]_rep__8/C
+                         net (fo=2406, unset)         1.613     1.613    normalized_ifft/clk
+    SLICE_X67Y107        FDRE                                         r  normalized_ifft/output_index_reg[1]_rep__2/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X30Y121        FDSE (Prop_fdse_C_Q)         0.433     2.018 r  normalized_ifft/FSM_onehot_state_reg[0]_rep__8/Q
-                         net (fo=124, routed)         7.671     9.689    normalized_ifft/butterfly/memory_re_reg[37][1]
-    SLICE_X82Y81         LUT5 (Prop_lut5_I1_O)        0.105     9.794 r  normalized_ifft/butterfly/memory_im[35][5]_i_1/O
-                         net (fo=1, routed)           0.000     9.794    normalized_ifft/butterfly_n_1277
-    SLICE_X82Y81         FDRE                                         r  normalized_ifft/memory_im_reg[35][5]/D
+    SLICE_X67Y107        FDRE (Prop_fdre_C_Q)         0.379     1.992 r  normalized_ifft/output_index_reg[1]_rep__2/Q
+                         net (fo=86, routed)          2.067     4.059    normalized_ifft/output_index_reg[1]_rep__2_n_0
+    SLICE_X43Y136        LUT6 (Prop_lut6_I2_O)        0.105     4.164 f  normalized_ifft/bin_im[0]_INST_0_i_23/O
+                         net (fo=1, routed)           0.000     4.164    normalized_ifft/bin_im[0]_INST_0_i_23_n_0
+    SLICE_X43Y136        MUXF7 (Prop_muxf7_I1_O)      0.206     4.370 f  normalized_ifft/bin_im[0]_INST_0_i_10/O
+                         net (fo=1, routed)           0.000     4.370    normalized_ifft/bin_im[0]_INST_0_i_10_n_0
+    SLICE_X43Y136        MUXF8 (Prop_muxf8_I0_O)      0.085     4.455 f  normalized_ifft/bin_im[0]_INST_0_i_4/O
+                         net (fo=1, routed)           0.627     5.082    normalized_ifft/bin_im[0]_INST_0_i_4_n_0
+    SLICE_X45Y129        LUT6 (Prop_lut6_I3_O)        0.264     5.346 r  normalized_ifft/bin_im[0]_INST_0_i_1/O
+                         net (fo=3, routed)           1.430     6.776    normalized_ifft/p_0_in[0]
+    SLICE_X64Y112        LUT4 (Prop_lut4_I1_O)        0.105     6.881 f  normalized_ifft/bin_im[15]_INST_0_i_7/O
+                         net (fo=2, routed)           0.680     7.562    normalized_ifft/bin_im[15]_INST_0_i_7_n_0
+    SLICE_X64Y114        LUT4 (Prop_lut4_I1_O)        0.105     7.667 f  normalized_ifft/bin_im[15]_INST_0_i_2/O
+                         net (fo=17, routed)          0.491     8.158    normalized_ifft/bin_im[15]_INST_0_i_2_n_0
+    SLICE_X64Y112        LUT2 (Prop_lut2_I1_O)        0.105     8.263 r  normalized_ifft/bin_im[4]_INST_0/O
+                         net (fo=0)                   0.787     9.050    bin_im[4]
+                                                                      r  bin_im[4] (OUT)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=2406, unset)         1.286    11.286    normalized_ifft/clk
-    SLICE_X82Y81         FDRE                                         r  normalized_ifft/memory_im_reg[35][5]/C
-                         clock pessimism              0.012    11.298
-                         clock uncertainty           -0.035    11.263
-    SLICE_X82Y81         FDRE (Setup_fdre_C_D)        0.072    11.335    normalized_ifft/memory_im_reg[35][5]
+                         clock pessimism              0.000    10.000
+                         clock uncertainty           -0.035     9.965
+                         output delay                -0.000     9.965
   -------------------------------------------------------------------
-                         required time                         11.335
-                         arrival time                          -9.794
+                         required time                          9.965
+                         arrival time                          -9.050
   -------------------------------------------------------------------
-                         slack                                  1.540
+                         slack                                  0.915
 
-Slack (MET) :             1.560ns  (required time - arrival time)
-  Source:                 normalized_ifft/FSM_onehot_state_reg[0]_rep__8/C
-                            (rising edge-triggered cell FDSE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            normalized_ifft/memory_im_reg[35][4]/D
+Slack (MET) :             0.918ns  (required time - arrival time)
+  Source:                 normalized_ifft/output_index_reg[1]_rep__2/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            bin_im[3]
+                            (output port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
+  Path Type:              Max at Slow Process Corner
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.198ns  (logic 0.538ns (6.563%)  route 7.660ns (93.437%))
-  Logic Levels:           1  (LUT5=1)
-  Clock Path Skew:        -0.279ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.294ns = ( 11.294 - 10.000 )
-    Source Clock Delay      (SCD):    1.585ns
-    Clock Pessimism Removal (CPR):    0.012ns
+  Data Path Delay:        7.434ns  (logic 1.357ns (18.254%)  route 6.077ns (81.746%))
+  Logic Levels:           7  (LUT2=1 LUT4=2 LUT6=2 MUXF7=1 MUXF8=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        -1.613ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.000ns = ( 10.000 - 10.000 )
+    Source Clock Delay      (SCD):    1.613ns
+    Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
     Total Input Jitter      (TIJ):    0.000ns
@@ -717,28 +736,37 @@ Slack (MET) :             1.560ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=2406, unset)         1.585     1.585    normalized_ifft/clk
-    SLICE_X30Y121        FDSE                                         r  normalized_ifft/FSM_onehot_state_reg[0]_rep__8/C
+                         net (fo=2406, unset)         1.613     1.613    normalized_ifft/clk
+    SLICE_X67Y107        FDRE                                         r  normalized_ifft/output_index_reg[1]_rep__2/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X30Y121        FDSE (Prop_fdse_C_Q)         0.433     2.018 r  normalized_ifft/FSM_onehot_state_reg[0]_rep__8/Q
-                         net (fo=124, routed)         7.660     9.678    normalized_ifft/butterfly/memory_re_reg[37][1]
-    SLICE_X82Y92         LUT5 (Prop_lut5_I1_O)        0.105     9.783 r  normalized_ifft/butterfly/memory_im[35][4]_i_1/O
-                         net (fo=1, routed)           0.000     9.783    normalized_ifft/butterfly_n_1278
-    SLICE_X82Y92         FDRE                                         r  normalized_ifft/memory_im_reg[35][4]/D
+    SLICE_X67Y107        FDRE (Prop_fdre_C_Q)         0.379     1.992 r  normalized_ifft/output_index_reg[1]_rep__2/Q
+                         net (fo=86, routed)          2.067     4.059    normalized_ifft/output_index_reg[1]_rep__2_n_0
+    SLICE_X43Y136        LUT6 (Prop_lut6_I2_O)        0.105     4.164 f  normalized_ifft/bin_im[0]_INST_0_i_23/O
+                         net (fo=1, routed)           0.000     4.164    normalized_ifft/bin_im[0]_INST_0_i_23_n_0
+    SLICE_X43Y136        MUXF7 (Prop_muxf7_I1_O)      0.206     4.370 f  normalized_ifft/bin_im[0]_INST_0_i_10/O
+                         net (fo=1, routed)           0.000     4.370    normalized_ifft/bin_im[0]_INST_0_i_10_n_0
+    SLICE_X43Y136        MUXF8 (Prop_muxf8_I0_O)      0.085     4.455 f  normalized_ifft/bin_im[0]_INST_0_i_4/O
+                         net (fo=1, routed)           0.627     5.082    normalized_ifft/bin_im[0]_INST_0_i_4_n_0
+    SLICE_X45Y129        LUT6 (Prop_lut6_I3_O)        0.264     5.346 r  normalized_ifft/bin_im[0]_INST_0_i_1/O
+                         net (fo=3, routed)           1.430     6.776    normalized_ifft/p_0_in[0]
+    SLICE_X64Y112        LUT4 (Prop_lut4_I1_O)        0.105     6.881 f  normalized_ifft/bin_im[15]_INST_0_i_7/O
+                         net (fo=2, routed)           0.680     7.562    normalized_ifft/bin_im[15]_INST_0_i_7_n_0
+    SLICE_X64Y114        LUT4 (Prop_lut4_I1_O)        0.105     7.667 f  normalized_ifft/bin_im[15]_INST_0_i_2/O
+                         net (fo=17, routed)          0.485     8.152    normalized_ifft/bin_im[15]_INST_0_i_2_n_0
+    SLICE_X64Y112        LUT2 (Prop_lut2_I1_O)        0.108     8.260 r  normalized_ifft/bin_im[3]_INST_0/O
+                         net (fo=0)                   0.787     9.047    bin_im[3]
+                                                                      r  bin_im[3] (OUT)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=2406, unset)         1.294    11.294    normalized_ifft/clk
-    SLICE_X82Y92         FDRE                                         r  normalized_ifft/memory_im_reg[35][4]/C
-                         clock pessimism              0.012    11.306
-                         clock uncertainty           -0.035    11.271
-    SLICE_X82Y92         FDRE (Setup_fdre_C_D)        0.072    11.343    normalized_ifft/memory_im_reg[35][4]
+                         clock pessimism              0.000    10.000
+                         clock uncertainty           -0.035     9.965
+                         output delay                -0.000     9.965
   -------------------------------------------------------------------
-                         required time                         11.343
-                         arrival time                          -9.783
+                         required time                          9.965
+                         arrival time                          -9.047
   -------------------------------------------------------------------
-                         slack                                  1.560
+                         slack                                  0.918
 
 
 
@@ -752,33 +780,33 @@ Period(ns):         10.000
 Sources:            { clk }
 
 Check Type        Corner  Lib Pin      Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location       Pin
-Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X2Y32    normalized_ifft/butterfly/g_pipelined.s1_ri_reg/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X2Y30    normalized_ifft/butterfly/g_pipelined.s1_rr_reg/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            1.816         10.000      8.184      DSP48_X2Y31    normalized_ifft/butterfly/g_pipelined.value/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            1.816         10.000      8.184      DSP48_X2Y33    normalized_ifft/butterfly/g_pipelined.value__0/CLK
-Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000      SLICE_X30Y89   conjugation_saturation_count_reg[0]/C
-Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000      SLICE_X26Y88   conjugation_saturation_count_reg[10]/C
-Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000      SLICE_X26Y88   conjugation_saturation_count_reg[11]/C
-Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000      SLICE_X26Y88   conjugation_saturation_count_reg[12]/C
-Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000      SLICE_X26Y88   conjugation_saturation_count_reg[13]/C
-Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000      SLICE_X26Y89   conjugation_saturation_count_reg[14]/C
-Low Pulse Width   Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][0]_srl3/CLK
-Low Pulse Width   Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][0]_srl3/CLK
-Low Pulse Width   Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][1]_srl3/CLK
-Low Pulse Width   Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][1]_srl3/CLK
-Low Pulse Width   Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][2]_srl3/CLK
-Low Pulse Width   Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][2]_srl3/CLK
-Low Pulse Width   Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][3]_srl3/CLK
-Low Pulse Width   Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][3]_srl3/CLK
-Low Pulse Width   Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][4]_srl3/CLK
-Low Pulse Width   Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][4]_srl3/CLK
-High Pulse Width  Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][0]_srl3/CLK
-High Pulse Width  Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][0]_srl3/CLK
-High Pulse Width  Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][1]_srl3/CLK
-High Pulse Width  Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][1]_srl3/CLK
-High Pulse Width  Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][2]_srl3/CLK
-High Pulse Width  Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][2]_srl3/CLK
-High Pulse Width  Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][3]_srl3/CLK
-High Pulse Width  Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][3]_srl3/CLK
-High Pulse Width  Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][4]_srl3/CLK
-High Pulse Width  Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X36Y110  normalized_ifft/wb_index0_reg[2][4]_srl3/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X2Y40    normalized_ifft/butterfly/g_pipelined.s1_ri_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X2Y37    normalized_ifft/butterfly/g_pipelined.s1_rr_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            1.816         10.000      8.184      DSP48_X2Y36    normalized_ifft/butterfly/g_pipelined.value/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            1.816         10.000      8.184      DSP48_X2Y41    normalized_ifft/butterfly/g_pipelined.value__0/CLK
+Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000      SLICE_X49Y118  conjugation_saturation_count_reg[0]/C
+Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000      SLICE_X48Y121  conjugation_saturation_count_reg[10]/C
+Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000      SLICE_X48Y121  conjugation_saturation_count_reg[11]/C
+Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000      SLICE_X48Y121  conjugation_saturation_count_reg[12]/C
+Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000      SLICE_X48Y121  conjugation_saturation_count_reg[13]/C
+Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000      SLICE_X48Y121  conjugation_saturation_count_reg[14]/C
+Low Pulse Width   Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][0]_srl3/CLK
+Low Pulse Width   Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][0]_srl3/CLK
+Low Pulse Width   Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][1]_srl3/CLK
+Low Pulse Width   Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][1]_srl3/CLK
+Low Pulse Width   Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][2]_srl3/CLK
+Low Pulse Width   Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][2]_srl3/CLK
+Low Pulse Width   Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][3]_srl3/CLK
+Low Pulse Width   Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][3]_srl3/CLK
+Low Pulse Width   Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][4]_srl3/CLK
+Low Pulse Width   Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][4]_srl3/CLK
+High Pulse Width  Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][0]_srl3/CLK
+High Pulse Width  Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][0]_srl3/CLK
+High Pulse Width  Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][1]_srl3/CLK
+High Pulse Width  Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][1]_srl3/CLK
+High Pulse Width  Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][2]_srl3/CLK
+High Pulse Width  Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][2]_srl3/CLK
+High Pulse Width  Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][3]_srl3/CLK
+High Pulse Width  Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][3]_srl3/CLK
+High Pulse Width  Slow    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][4]_srl3/CLK
+High Pulse Width  Fast    SRL16E/CLK   n/a            0.854         5.000       4.146      SLICE_X50Y130  normalized_ifft/wb_index0_reg[2][4]_srl3/CLK

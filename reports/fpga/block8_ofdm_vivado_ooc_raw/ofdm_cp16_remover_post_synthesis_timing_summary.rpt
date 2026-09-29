@@ -51,8 +51,8 @@ Table of Contents
 2. checking constant_clock (0)
 3. checking pulse_width_clock (0)
 4. checking unconstrained_internal_endpoints (0)
-5. checking no_input_delay (4)
-6. checking no_output_delay (4)
+5. checking no_input_delay (0)
+6. checking no_output_delay (0)
 7. checking multiple_clock (0)
 8. checking generated_clocks (0)
 9. checking loops (0)
@@ -82,16 +82,16 @@ Table of Contents
  There are 0 pins that are not constrained for maximum delay due to constant clock.
 
 
-5. checking no_input_delay (4)
+5. checking no_input_delay (0)
 ------------------------------
- There are 4 input ports with no input delay specified. (HIGH)
+ There are 0 input ports with no input delay specified.
 
  There are 0 input ports with no input delay but user has a false path constraint.
 
 
-6. checking no_output_delay (4)
+6. checking no_output_delay (0)
 -------------------------------
- There are 4 ports with no output delay specified. (HIGH)
+ There are 0 ports with no output delay specified.
 
  There are 0 ports with no output delay but user has a false path constraint
 
@@ -136,7 +136,7 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
     -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-      7.054        0.000                      0                   22        4.500        0.000                       0                     8
+      6.749        0.000                      0                   58        4.500        0.000                       0                     8
 
 
 All user specified timing constraints are met.
@@ -159,7 +159,7 @@ clk    {0.000 5.000}      10.000          100.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
 -----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-clk                 7.054        0.000                      0                   22        4.500        0.000                       0                     8
+clk                 6.749        0.000                      0                   58        4.500        0.000                       0                     8
 
 
 ------------------------------------------------------------------------------------------------
@@ -190,7 +190,7 @@ Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing 
 From Clock:  clk
   To Clock:  clk
 
-Setup :            0  Failing Endpoints,  Worst Slack        7.054ns,  Total Violation        0.000ns
+Setup :            0  Failing Endpoints,  Worst Slack        6.749ns,  Total Violation        0.000ns
 Hold  :           NA  Failing Endpoints,  Worst Slack           NA  ,  Total Violation           NA
 PW    :            0  Failing Endpoints,  Worst Slack        4.500ns,  Total Violation        0.000ns
 ---------------------------------------------------------------------------------------------------
@@ -198,6 +198,53 @@ PW    :            0  Failing Endpoints,  Worst Slack        4.500ns,  Total Vio
 
 Max Delay Paths
 --------------------------------------------------------------------------------------
+Slack (MET) :             6.749ns  (required time - arrival time)
+  Source:                 sample_index_reg[0]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            out_last
+                            (output port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Max at Slow Process Corner
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        2.429ns  (logic 0.640ns (26.348%)  route 1.789ns (73.652%))
+  Logic Levels:           2  (LUT4=1 LUT5=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        -0.787ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.000ns = ( 10.000 - 10.000 )
+    Source Clock Delay      (SCD):    0.787ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  clk (IN)
+                         net (fo=7, unset)            0.787     0.787    clk
+                         FDRE                                         r  sample_index_reg[0]/C
+  -------------------------------------------------------------------    -------------------
+                         FDRE (Prop_fdre_C_Q)         0.303     1.090 r  sample_index_reg[0]/Q
+                         net (fo=8, unplaced)         0.637     1.727    sample_index_reg[0]
+                         LUT4 (Prop_lut4_I1_O)        0.232     1.959 f  out_last_INST_0_i_1/O
+                         net (fo=3, unplaced)         0.365     2.324    out_last_INST_0_i_1_n_0
+                         LUT5 (Prop_lut5_I1_O)        0.105     2.429 r  out_last_INST_0/O
+                         net (fo=0)                   0.787     3.216    out_last
+                                                                      r  out_last (OUT)
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                         clock pessimism              0.000    10.000
+                         clock uncertainty           -0.035     9.965
+                         output delay                -0.000     9.965
+  -------------------------------------------------------------------
+                         required time                          9.965
+                         arrival time                          -3.216
+  -------------------------------------------------------------------
+                         slack                                  6.749
+
 Slack (MET) :             7.054ns  (required time - arrival time)
   Source:                 sample_index_reg[5]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
@@ -541,18 +588,19 @@ Slack (MET) :             7.054ns  (required time - arrival time)
   -------------------------------------------------------------------
                          slack                                  7.054
 
-Slack (MET) :             8.106ns  (required time - arrival time)
-  Source:                 sample_index_reg[5]/C
+Slack (MET) :             7.214ns  (required time - arrival time)
+  Source:                 sample_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            sample_index_reg[0]/CE
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            in_ready
+                            (output port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
+  Path Type:              Max at Slow Process Corner
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        1.579ns  (logic 0.535ns (33.882%)  route 1.044ns (66.118%))
-  Logic Levels:           1  (LUT5=1)
-  Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
+  Data Path Delay:        1.964ns  (logic 0.535ns (27.240%)  route 1.429ns (72.760%))
+  Logic Levels:           1  (LUT4=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        -0.787ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.000ns = ( 10.000 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -566,40 +614,38 @@ Slack (MET) :             8.106ns  (required time - arrival time)
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
                          net (fo=7, unset)            0.787     0.787    clk
-                         FDRE                                         r  sample_index_reg[5]/C
+                         FDRE                                         r  sample_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
-                         FDRE (Prop_fdre_C_Q)         0.303     1.090 f  sample_index_reg[5]/Q
-                         net (fo=9, unplaced)         0.640     1.730    sample_index_reg[5]
-                         LUT5 (Prop_lut5_I2_O)        0.232     1.962 r  sample_index[6]_i_2/O
-                         net (fo=8, unplaced)         0.404     2.366    accept_in
-                         FDRE                                         r  sample_index_reg[0]/CE
+                         FDRE (Prop_fdre_C_Q)         0.303     1.090 f  sample_index_reg[4]/Q
+                         net (fo=10, unplaced)        0.642     1.732    sample_index_reg[4]
+                         LUT4 (Prop_lut4_I1_O)        0.232     1.964 r  in_ready_INST_0/O
+                         net (fo=0)                   0.787     2.751    in_ready
+                                                                      r  in_ready (OUT)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=7, unset)            0.748    10.748    clk
-                         FDRE                                         r  sample_index_reg[0]/C
-                         clock pessimism              0.000    10.748
-                         clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_CE)      -0.240    10.472    sample_index_reg[0]
+                         clock pessimism              0.000    10.000
+                         clock uncertainty           -0.035     9.965
+                         output delay                -0.000     9.965
   -------------------------------------------------------------------
-                         required time                         10.472
-                         arrival time                          -2.366
+                         required time                          9.965
+                         arrival time                          -2.751
   -------------------------------------------------------------------
-                         slack                                  8.106
+                         slack                                  7.214
 
-Slack (MET) :             8.106ns  (required time - arrival time)
-  Source:                 sample_index_reg[5]/C
+Slack (MET) :             7.214ns  (required time - arrival time)
+  Source:                 sample_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            sample_index_reg[1]/CE
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            out_valid
+                            (output port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
+  Path Type:              Max at Slow Process Corner
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        1.579ns  (logic 0.535ns (33.882%)  route 1.044ns (66.118%))
-  Logic Levels:           1  (LUT5=1)
-  Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
+  Data Path Delay:        1.964ns  (logic 0.535ns (27.240%)  route 1.429ns (72.760%))
+  Logic Levels:           1  (LUT4=1)
+  Output Delay:           0.000ns
+  Clock Path Skew:        -0.787ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.000ns = ( 10.000 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
@@ -613,74 +659,24 @@ Slack (MET) :             8.106ns  (required time - arrival time)
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
                          net (fo=7, unset)            0.787     0.787    clk
-                         FDRE                                         r  sample_index_reg[5]/C
+                         FDRE                                         r  sample_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
-                         FDRE (Prop_fdre_C_Q)         0.303     1.090 f  sample_index_reg[5]/Q
-                         net (fo=9, unplaced)         0.640     1.730    sample_index_reg[5]
-                         LUT5 (Prop_lut5_I2_O)        0.232     1.962 r  sample_index[6]_i_2/O
-                         net (fo=8, unplaced)         0.404     2.366    accept_in
-                         FDRE                                         r  sample_index_reg[1]/CE
-  -------------------------------------------------------------------    -------------------
-
-                         (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=7, unset)            0.748    10.748    clk
-                         FDRE                                         r  sample_index_reg[1]/C
-                         clock pessimism              0.000    10.748
-                         clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_CE)      -0.240    10.472    sample_index_reg[1]
-  -------------------------------------------------------------------
-                         required time                         10.472
-                         arrival time                          -2.366
-  -------------------------------------------------------------------
-                         slack                                  8.106
-
-Slack (MET) :             8.106ns  (required time - arrival time)
-  Source:                 sample_index_reg[5]/C
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            sample_index_reg[2]/CE
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
-  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        1.579ns  (logic 0.535ns (33.882%)  route 1.044ns (66.118%))
-  Logic Levels:           1  (LUT5=1)
-  Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
-    Source Clock Delay      (SCD):    0.787ns
-    Clock Pessimism Removal (CPR):    0.000ns
-  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
-    Total System Jitter     (TSJ):    0.071ns
-    Total Input Jitter      (TIJ):    0.000ns
-    Discrete Jitter          (DJ):    0.000ns
-    Phase Error              (PE):    0.000ns
-
-    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
-  -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  clk (IN)
-                         net (fo=7, unset)            0.787     0.787    clk
-                         FDRE                                         r  sample_index_reg[5]/C
-  -------------------------------------------------------------------    -------------------
-                         FDRE (Prop_fdre_C_Q)         0.303     1.090 f  sample_index_reg[5]/Q
-                         net (fo=9, unplaced)         0.640     1.730    sample_index_reg[5]
-                         LUT5 (Prop_lut5_I2_O)        0.232     1.962 r  sample_index[6]_i_2/O
-                         net (fo=8, unplaced)         0.404     2.366    accept_in
-                         FDRE                                         r  sample_index_reg[2]/CE
+                         FDRE (Prop_fdre_C_Q)         0.303     1.090 r  sample_index_reg[4]/Q
+                         net (fo=10, unplaced)        0.642     1.732    sample_index_reg[4]
+                         LUT4 (Prop_lut4_I1_O)        0.232     1.964 r  out_valid_INST_0/O
+                         net (fo=0)                   0.787     2.751    out_valid
+                                                                      r  out_valid (OUT)
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=7, unset)            0.748    10.748    clk
-                         FDRE                                         r  sample_index_reg[2]/C
-                         clock pessimism              0.000    10.748
-                         clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_CE)      -0.240    10.472    sample_index_reg[2]
+                         clock pessimism              0.000    10.000
+                         clock uncertainty           -0.035     9.965
+                         output delay                -0.000     9.965
   -------------------------------------------------------------------
-                         required time                         10.472
-                         arrival time                          -2.366
+                         required time                          9.965
+                         arrival time                          -2.751
   -------------------------------------------------------------------
-                         slack                                  8.106
+                         slack                                  7.214
 
 
 

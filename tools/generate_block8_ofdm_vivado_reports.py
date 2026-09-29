@@ -28,6 +28,7 @@ TOPS: tuple[tuple[str, str | None], ...] = (
     ("ofdm_pilot_phase_tracker", "clk"),
     ("ofdm_pilot_phase_corrector", "clk"),
     ("ofdm_qpsk_demapper", None),
+    ("ofdm_axi_modem", "aclk"),
 )
 
 
@@ -123,6 +124,7 @@ def main() -> int:
         "flow": "out_of_context_implementation",
         "target_clock_period_ns": args.clock_period_ns,
         "target_clock_frequency_mhz": round(1000.0 / args.clock_period_ns, 3),
+        "port_delays": "input and output delay 0 ns relative to the clock",
         "tops": entries,
     }
     metrics_path = output_dir / "block8_ofdm_vivado_ooc_metrics.json"

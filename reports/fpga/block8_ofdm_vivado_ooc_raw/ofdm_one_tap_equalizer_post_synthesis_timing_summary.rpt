@@ -51,8 +51,8 @@ Table of Contents
 2. checking constant_clock (0)
 3. checking pulse_width_clock (0)
 4. checking unconstrained_internal_endpoints (0)
-5. checking no_input_delay (74)
-6. checking no_output_delay (73)
+5. checking no_input_delay (0)
+6. checking no_output_delay (0)
 7. checking multiple_clock (0)
 8. checking generated_clocks (0)
 9. checking loops (0)
@@ -82,16 +82,16 @@ Table of Contents
  There are 0 pins that are not constrained for maximum delay due to constant clock.
 
 
-5. checking no_input_delay (74)
--------------------------------
- There are 74 input ports with no input delay specified. (HIGH)
+5. checking no_input_delay (0)
+------------------------------
+ There are 0 input ports with no input delay specified.
 
  There are 0 input ports with no input delay but user has a false path constraint.
 
 
-6. checking no_output_delay (73)
---------------------------------
- There are 73 ports with no output delay specified. (HIGH)
+6. checking no_output_delay (0)
+-------------------------------
+ There are 0 ports with no output delay specified.
 
  There are 0 ports with no output delay but user has a false path constraint
 
@@ -136,10 +136,10 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
     -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-      7.391        0.000                      0                  104        4.500        0.000                       0                    72
+     -1.847      -60.312                     64                  287        4.500        0.000                       0                    72
 
 
-All user specified timing constraints are met.
+Timing constraints are not met.
 
 
 ------------------------------------------------------------------------------------------------
@@ -159,7 +159,7 @@ clk    {0.000 5.000}      10.000          100.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
 -----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-clk                 7.391        0.000                      0                  104        4.500        0.000                       0                    72
+clk                -1.847      -60.312                     64                  287        4.500        0.000                       0                    72
 
 
 ------------------------------------------------------------------------------------------------
@@ -190,7 +190,7 @@ Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing 
 From Clock:  clk
   To Clock:  clk
 
-Setup :            0  Failing Endpoints,  Worst Slack        7.391ns,  Total Violation        0.000ns
+Setup :           64  Failing Endpoints,  Worst Slack       -1.847ns,  Total Violation      -60.312ns
 Hold  :           NA  Failing Endpoints,  Worst Slack           NA  ,  Total Violation           NA
 PW    :            0  Failing Endpoints,  Worst Slack        4.500ns,  Total Violation        0.000ns
 ---------------------------------------------------------------------------------------------------
@@ -198,19 +198,20 @@ PW    :            0  Failing Endpoints,  Worst Slack        4.500ns,  Total Vio
 
 Max Delay Paths
 --------------------------------------------------------------------------------------
-Slack (MET) :             7.391ns  (required time - arrival time)
-  Source:                 saturation_count_reg[0]/C
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            saturation_count_reg[31]/D
+Slack (VIOLATED) :        -1.847ns  (required time - arrival time)
+  Source:                 in_re[15]
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            g_single_cycle.saturation_count_reg[31]/D
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        2.531ns  (logic 1.729ns (68.313%)  route 0.802ns (31.687%))
-  Logic Levels:           9  (CARRY4=8 LUT6=1)
-  Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
+  Data Path Delay:        12.557ns  (logic 9.168ns (73.014%)  route 3.389ns (26.986%))
+  Logic Levels:           23  (CARRY4=17 DSP48E1=2 LUT1=2 LUT5=1 LUT6=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        0.748ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
-    Source Clock Delay      (SCD):    0.787ns
+    Source Clock Delay      (SCD):    0.000ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -221,138 +222,104 @@ Slack (MET) :             7.391ns  (required time - arrival time)
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  clk (IN)
-                         net (fo=71, unset)           0.787     0.787    clk
-                         FDRE                                         r  saturation_count_reg[0]/C
-  -------------------------------------------------------------------    -------------------
-                         FDRE (Prop_fdre_C_Q)         0.303     1.090 r  saturation_count_reg[0]/Q
-                         net (fo=2, unplaced)         0.794     1.884    saturation_count[0]
-                         LUT6 (Prop_lut6_I0_O)        0.105     1.989 r  saturation_count[3]_i_2/O
-                         net (fo=1, unplaced)         0.000     1.989    saturation_count[3]_i_2_n_0
-                         CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     2.433 r  saturation_count_reg[3]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.008     2.441    saturation_count_reg[3]_i_1_n_0
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 r  in_re[15] (IN)
+                         net (fo=29, unset)           0.787     0.787    in_re[15]
+                         DSP48E1 (Prop_dsp48e1_A[29]_PCOUT[47])
+                                                      3.397     4.184 r  g_single_cycle.product_rr/PCOUT[47]
+                         net (fo=1, unplaced)         0.055     4.239    g_single_cycle.product_rr_n_106
+                         DSP48E1 (Prop_dsp48e1_PCIN[47]_P[0])
+                                                      1.271     5.510 f  g_single_cycle.equalized_re_q29/P[0]
+                         net (fo=1, unplaced)         0.646     6.156    g_single_cycle.equalized_re_q29_n_105
+                         LUT1 (Prop_lut1_I0_O)        0.105     6.261 r  g_single_cycle.out_re[0]_i_18/O
+                         net (fo=1, unplaced)         0.258     6.519    g_single_cycle.out_re[0]_i_18_n_0
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     7.013 r  g_single_cycle.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, unplaced)         0.008     7.021    g_single_cycle.out_re_reg[0]_i_13_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.541 r  saturation_count_reg[7]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.541    saturation_count_reg[7]_i_1_n_0
+                                                      0.100     7.121 r  g_single_cycle.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.000     7.121    g_single_cycle.out_re_reg[0]_i_8_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.641 r  saturation_count_reg[11]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.641    saturation_count_reg[11]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.741 r  saturation_count_reg[15]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.741    saturation_count_reg[15]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.841 r  saturation_count_reg[19]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.841    saturation_count_reg[19]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.941 r  saturation_count_reg[23]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.941    saturation_count_reg[23]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     3.041 r  saturation_count_reg[27]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     3.041    saturation_count_reg[27]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.277     3.318 r  saturation_count_reg[31]_i_1/O[3]
-                         net (fo=1, unplaced)         0.000     3.318    p_1_in[31]
-                         FDRE                                         r  saturation_count_reg[31]/D
-  -------------------------------------------------------------------    -------------------
-
-                         (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=71, unset)           0.748    10.748    clk
-                         FDRE                                         r  saturation_count_reg[31]/C
-                         clock pessimism              0.000    10.748
-                         clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_D)       -0.003    10.709    saturation_count_reg[31]
-  -------------------------------------------------------------------
-                         required time                         10.709
-                         arrival time                          -3.318
-  -------------------------------------------------------------------
-                         slack                                  7.391
-
-Slack (MET) :             7.399ns  (required time - arrival time)
-  Source:                 saturation_count_reg[0]/C
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            saturation_count_reg[29]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
-  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        2.523ns  (logic 1.721ns (68.212%)  route 0.802ns (31.788%))
-  Logic Levels:           9  (CARRY4=8 LUT6=1)
-  Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
-    Source Clock Delay      (SCD):    0.787ns
-    Clock Pessimism Removal (CPR):    0.000ns
-  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
-    Total System Jitter     (TSJ):    0.071ns
-    Total Input Jitter      (TIJ):    0.000ns
-    Discrete Jitter          (DJ):    0.000ns
-    Phase Error              (PE):    0.000ns
-
-    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
-  -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  clk (IN)
-                         net (fo=71, unset)           0.787     0.787    clk
-                         FDRE                                         r  saturation_count_reg[0]/C
-  -------------------------------------------------------------------    -------------------
-                         FDRE (Prop_fdre_C_Q)         0.303     1.090 r  saturation_count_reg[0]/Q
-                         net (fo=2, unplaced)         0.794     1.884    saturation_count[0]
-                         LUT6 (Prop_lut6_I0_O)        0.105     1.989 r  saturation_count[3]_i_2/O
-                         net (fo=1, unplaced)         0.000     1.989    saturation_count[3]_i_2_n_0
-                         CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     2.433 r  saturation_count_reg[3]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.008     2.441    saturation_count_reg[3]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.541 r  saturation_count_reg[7]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.541    saturation_count_reg[7]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.641 r  saturation_count_reg[11]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.641    saturation_count_reg[11]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.741 r  saturation_count_reg[15]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.741    saturation_count_reg[15]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.841 r  saturation_count_reg[19]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.841    saturation_count_reg[19]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.941 r  saturation_count_reg[23]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.941    saturation_count_reg[23]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     3.041 r  saturation_count_reg[27]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     3.041    saturation_count_reg[27]_i_1_n_0
+                                                      0.100     7.221 r  g_single_cycle.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000     7.221    g_single_cycle.out_re_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     3.310 r  saturation_count_reg[31]_i_1/O[1]
-                         net (fo=1, unplaced)         0.000     3.310    p_1_in[29]
-                         FDRE                                         r  saturation_count_reg[29]/D
+                                                      0.269     7.490 f  g_single_cycle.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, unplaced)         0.251     7.741    round_q29_to_q15_wide2[14]
+                         LUT1 (Prop_lut1_I0_O)        0.245     7.986 r  g_single_cycle.out_re[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     8.244    p_0_in[0]
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     8.738 r  g_single_cycle.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     8.746    g_single_cycle.out_re_reg[4]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.846 r  g_single_cycle.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.846    g_single_cycle.out_re_reg[8]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.946 r  g_single_cycle.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.946    g_single_cycle.out_re_reg[12]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     9.215 r  g_single_cycle.out_re_reg[15]_i_4/O[1]
+                         net (fo=3, unplaced)         0.490     9.705    round_q29_to_q15_wide0[14]
+                         LUT5 (Prop_lut5_I1_O)        0.245     9.950 r  g_single_cycle.out_re[15]_i_19/O
+                         net (fo=1, unplaced)         0.000     9.950    g_single_cycle.out_re[15]_i_19_n_0
+                         CARRY4 (Prop_carry4_S[0]_CO[1])
+                                                      0.381    10.331 r  g_single_cycle.out_re_reg[15]_i_7/CO[1]
+                         net (fo=18, unplaced)        0.620    10.951    saturate_q1512_in
+                         LUT6 (Prop_lut6_I1_O)        0.277    11.228 r  g_single_cycle.saturation_count[3]_i_2/O
+                         net (fo=1, unplaced)         0.000    11.228    g_single_cycle.saturation_count[3]_i_2_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.444    11.672 r  g_single_cycle.saturation_count_reg[3]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.008    11.680    g_single_cycle.saturation_count_reg[3]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.780 r  g_single_cycle.saturation_count_reg[7]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.780    g_single_cycle.saturation_count_reg[7]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.880 r  g_single_cycle.saturation_count_reg[11]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.880    g_single_cycle.saturation_count_reg[11]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.980 r  g_single_cycle.saturation_count_reg[15]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.980    g_single_cycle.saturation_count_reg[15]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.080 r  g_single_cycle.saturation_count_reg[19]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.080    g_single_cycle.saturation_count_reg[19]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.180 r  g_single_cycle.saturation_count_reg[23]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.180    g_single_cycle.saturation_count_reg[23]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.280 r  g_single_cycle.saturation_count_reg[27]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.280    g_single_cycle.saturation_count_reg[27]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.277    12.557 r  g_single_cycle.saturation_count_reg[31]_i_1/O[3]
+                         net (fo=1, unplaced)         0.000    12.557    p_1_in[31]
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[31]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=71, unset)           0.748    10.748    clk
-                         FDRE                                         r  saturation_count_reg[29]/C
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[31]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_D)       -0.003    10.709    saturation_count_reg[29]
+                         FDRE (Setup_fdre_C_D)       -0.003    10.709    g_single_cycle.saturation_count_reg[31]
   -------------------------------------------------------------------
                          required time                         10.709
-                         arrival time                          -3.310
+                         arrival time                         -12.557
   -------------------------------------------------------------------
-                         slack                                  7.399
+                         slack                                 -1.847
 
-Slack (MET) :             7.454ns  (required time - arrival time)
-  Source:                 saturation_count_reg[0]/C
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            saturation_count_reg[30]/D
+Slack (VIOLATED) :        -1.839ns  (required time - arrival time)
+  Source:                 in_re[15]
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            g_single_cycle.saturation_count_reg[29]/D
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        2.468ns  (logic 1.666ns (67.504%)  route 0.802ns (32.496%))
-  Logic Levels:           9  (CARRY4=8 LUT6=1)
-  Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
+  Data Path Delay:        12.549ns  (logic 9.160ns (72.996%)  route 3.389ns (27.004%))
+  Logic Levels:           23  (CARRY4=17 DSP48E1=2 LUT1=2 LUT5=1 LUT6=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        0.748ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
-    Source Clock Delay      (SCD):    0.787ns
+    Source Clock Delay      (SCD):    0.000ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -363,67 +330,212 @@ Slack (MET) :             7.454ns  (required time - arrival time)
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  clk (IN)
-                         net (fo=71, unset)           0.787     0.787    clk
-                         FDRE                                         r  saturation_count_reg[0]/C
-  -------------------------------------------------------------------    -------------------
-                         FDRE (Prop_fdre_C_Q)         0.303     1.090 r  saturation_count_reg[0]/Q
-                         net (fo=2, unplaced)         0.794     1.884    saturation_count[0]
-                         LUT6 (Prop_lut6_I0_O)        0.105     1.989 r  saturation_count[3]_i_2/O
-                         net (fo=1, unplaced)         0.000     1.989    saturation_count[3]_i_2_n_0
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 r  in_re[15] (IN)
+                         net (fo=29, unset)           0.787     0.787    in_re[15]
+                         DSP48E1 (Prop_dsp48e1_A[29]_PCOUT[47])
+                                                      3.397     4.184 r  g_single_cycle.product_rr/PCOUT[47]
+                         net (fo=1, unplaced)         0.055     4.239    g_single_cycle.product_rr_n_106
+                         DSP48E1 (Prop_dsp48e1_PCIN[47]_P[0])
+                                                      1.271     5.510 f  g_single_cycle.equalized_re_q29/P[0]
+                         net (fo=1, unplaced)         0.646     6.156    g_single_cycle.equalized_re_q29_n_105
+                         LUT1 (Prop_lut1_I0_O)        0.105     6.261 r  g_single_cycle.out_re[0]_i_18/O
+                         net (fo=1, unplaced)         0.258     6.519    g_single_cycle.out_re[0]_i_18_n_0
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     7.013 r  g_single_cycle.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, unplaced)         0.008     7.021    g_single_cycle.out_re_reg[0]_i_13_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.121 r  g_single_cycle.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.000     7.121    g_single_cycle.out_re_reg[0]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.221 r  g_single_cycle.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000     7.221    g_single_cycle.out_re_reg[0]_i_3_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     7.490 f  g_single_cycle.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, unplaced)         0.251     7.741    round_q29_to_q15_wide2[14]
+                         LUT1 (Prop_lut1_I0_O)        0.245     7.986 r  g_single_cycle.out_re[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     8.244    p_0_in[0]
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     8.738 r  g_single_cycle.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     8.746    g_single_cycle.out_re_reg[4]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.846 r  g_single_cycle.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.846    g_single_cycle.out_re_reg[8]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.946 r  g_single_cycle.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.946    g_single_cycle.out_re_reg[12]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     9.215 r  g_single_cycle.out_re_reg[15]_i_4/O[1]
+                         net (fo=3, unplaced)         0.490     9.705    round_q29_to_q15_wide0[14]
+                         LUT5 (Prop_lut5_I1_O)        0.245     9.950 r  g_single_cycle.out_re[15]_i_19/O
+                         net (fo=1, unplaced)         0.000     9.950    g_single_cycle.out_re[15]_i_19_n_0
+                         CARRY4 (Prop_carry4_S[0]_CO[1])
+                                                      0.381    10.331 r  g_single_cycle.out_re_reg[15]_i_7/CO[1]
+                         net (fo=18, unplaced)        0.620    10.951    saturate_q1512_in
+                         LUT6 (Prop_lut6_I1_O)        0.277    11.228 r  g_single_cycle.saturation_count[3]_i_2/O
+                         net (fo=1, unplaced)         0.000    11.228    g_single_cycle.saturation_count[3]_i_2_n_0
                          CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     2.433 r  saturation_count_reg[3]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.008     2.441    saturation_count_reg[3]_i_1_n_0
+                                                      0.444    11.672 r  g_single_cycle.saturation_count_reg[3]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.008    11.680    g_single_cycle.saturation_count_reg[3]_i_1_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.541 r  saturation_count_reg[7]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.541    saturation_count_reg[7]_i_1_n_0
+                                                      0.100    11.780 r  g_single_cycle.saturation_count_reg[7]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.780    g_single_cycle.saturation_count_reg[7]_i_1_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.641 r  saturation_count_reg[11]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.641    saturation_count_reg[11]_i_1_n_0
+                                                      0.100    11.880 r  g_single_cycle.saturation_count_reg[11]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.880    g_single_cycle.saturation_count_reg[11]_i_1_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.741 r  saturation_count_reg[15]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.741    saturation_count_reg[15]_i_1_n_0
+                                                      0.100    11.980 r  g_single_cycle.saturation_count_reg[15]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.980    g_single_cycle.saturation_count_reg[15]_i_1_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.841 r  saturation_count_reg[19]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.841    saturation_count_reg[19]_i_1_n_0
+                                                      0.100    12.080 r  g_single_cycle.saturation_count_reg[19]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.080    g_single_cycle.saturation_count_reg[19]_i_1_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.941 r  saturation_count_reg[23]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.941    saturation_count_reg[23]_i_1_n_0
+                                                      0.100    12.180 r  g_single_cycle.saturation_count_reg[23]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.180    g_single_cycle.saturation_count_reg[23]_i_1_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     3.041 r  saturation_count_reg[27]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     3.041    saturation_count_reg[27]_i_1_n_0
+                                                      0.100    12.280 r  g_single_cycle.saturation_count_reg[27]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.280    g_single_cycle.saturation_count_reg[27]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269    12.549 r  g_single_cycle.saturation_count_reg[31]_i_1/O[1]
+                         net (fo=1, unplaced)         0.000    12.549    p_1_in[29]
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[29]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=71, unset)           0.748    10.748    clk
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[29]/C
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
+                         FDRE (Setup_fdre_C_D)       -0.003    10.709    g_single_cycle.saturation_count_reg[29]
+  -------------------------------------------------------------------
+                         required time                         10.709
+                         arrival time                         -12.549
+  -------------------------------------------------------------------
+                         slack                                 -1.839
+
+Slack (VIOLATED) :        -1.784ns  (required time - arrival time)
+  Source:                 in_re[15]
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            g_single_cycle.saturation_count_reg[30]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        12.494ns  (logic 9.105ns (72.877%)  route 3.389ns (27.123%))
+  Logic Levels:           23  (CARRY4=17 DSP48E1=2 LUT1=2 LUT5=1 LUT6=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        0.748ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 r  in_re[15] (IN)
+                         net (fo=29, unset)           0.787     0.787    in_re[15]
+                         DSP48E1 (Prop_dsp48e1_A[29]_PCOUT[47])
+                                                      3.397     4.184 r  g_single_cycle.product_rr/PCOUT[47]
+                         net (fo=1, unplaced)         0.055     4.239    g_single_cycle.product_rr_n_106
+                         DSP48E1 (Prop_dsp48e1_PCIN[47]_P[0])
+                                                      1.271     5.510 f  g_single_cycle.equalized_re_q29/P[0]
+                         net (fo=1, unplaced)         0.646     6.156    g_single_cycle.equalized_re_q29_n_105
+                         LUT1 (Prop_lut1_I0_O)        0.105     6.261 r  g_single_cycle.out_re[0]_i_18/O
+                         net (fo=1, unplaced)         0.258     6.519    g_single_cycle.out_re[0]_i_18_n_0
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     7.013 r  g_single_cycle.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, unplaced)         0.008     7.021    g_single_cycle.out_re_reg[0]_i_13_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.121 r  g_single_cycle.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.000     7.121    g_single_cycle.out_re_reg[0]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.221 r  g_single_cycle.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000     7.221    g_single_cycle.out_re_reg[0]_i_3_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     7.490 f  g_single_cycle.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, unplaced)         0.251     7.741    round_q29_to_q15_wide2[14]
+                         LUT1 (Prop_lut1_I0_O)        0.245     7.986 r  g_single_cycle.out_re[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     8.244    p_0_in[0]
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     8.738 r  g_single_cycle.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     8.746    g_single_cycle.out_re_reg[4]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.846 r  g_single_cycle.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.846    g_single_cycle.out_re_reg[8]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.946 r  g_single_cycle.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.946    g_single_cycle.out_re_reg[12]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     9.215 r  g_single_cycle.out_re_reg[15]_i_4/O[1]
+                         net (fo=3, unplaced)         0.490     9.705    round_q29_to_q15_wide0[14]
+                         LUT5 (Prop_lut5_I1_O)        0.245     9.950 r  g_single_cycle.out_re[15]_i_19/O
+                         net (fo=1, unplaced)         0.000     9.950    g_single_cycle.out_re[15]_i_19_n_0
+                         CARRY4 (Prop_carry4_S[0]_CO[1])
+                                                      0.381    10.331 r  g_single_cycle.out_re_reg[15]_i_7/CO[1]
+                         net (fo=18, unplaced)        0.620    10.951    saturate_q1512_in
+                         LUT6 (Prop_lut6_I1_O)        0.277    11.228 r  g_single_cycle.saturation_count[3]_i_2/O
+                         net (fo=1, unplaced)         0.000    11.228    g_single_cycle.saturation_count[3]_i_2_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.444    11.672 r  g_single_cycle.saturation_count_reg[3]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.008    11.680    g_single_cycle.saturation_count_reg[3]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.780 r  g_single_cycle.saturation_count_reg[7]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.780    g_single_cycle.saturation_count_reg[7]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.880 r  g_single_cycle.saturation_count_reg[11]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.880    g_single_cycle.saturation_count_reg[11]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.980 r  g_single_cycle.saturation_count_reg[15]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.980    g_single_cycle.saturation_count_reg[15]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.080 r  g_single_cycle.saturation_count_reg[19]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.080    g_single_cycle.saturation_count_reg[19]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.180 r  g_single_cycle.saturation_count_reg[23]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.180    g_single_cycle.saturation_count_reg[23]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.280 r  g_single_cycle.saturation_count_reg[27]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.280    g_single_cycle.saturation_count_reg[27]_i_1_n_0
                          CARRY4 (Prop_carry4_CI_O[2])
-                                                      0.214     3.255 r  saturation_count_reg[31]_i_1/O[2]
-                         net (fo=1, unplaced)         0.000     3.255    p_1_in[30]
-                         FDRE                                         r  saturation_count_reg[30]/D
+                                                      0.214    12.494 r  g_single_cycle.saturation_count_reg[31]_i_1/O[2]
+                         net (fo=1, unplaced)         0.000    12.494    p_1_in[30]
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[30]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=71, unset)           0.748    10.748    clk
-                         FDRE                                         r  saturation_count_reg[30]/C
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[30]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_D)       -0.003    10.709    saturation_count_reg[30]
+                         FDRE (Setup_fdre_C_D)       -0.003    10.709    g_single_cycle.saturation_count_reg[30]
   -------------------------------------------------------------------
                          required time                         10.709
-                         arrival time                          -3.255
+                         arrival time                         -12.494
   -------------------------------------------------------------------
-                         slack                                  7.454
+                         slack                                 -1.784
 
-Slack (MET) :             7.479ns  (required time - arrival time)
-  Source:                 saturation_count_reg[0]/C
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            saturation_count_reg[28]/D
+Slack (VIOLATED) :        -1.759ns  (required time - arrival time)
+  Source:                 in_re[15]
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            g_single_cycle.saturation_count_reg[28]/D
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        2.443ns  (logic 1.641ns (67.172%)  route 0.802ns (32.828%))
-  Logic Levels:           9  (CARRY4=8 LUT6=1)
-  Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
+  Data Path Delay:        12.469ns  (logic 9.080ns (72.823%)  route 3.389ns (27.177%))
+  Logic Levels:           23  (CARRY4=17 DSP48E1=2 LUT1=2 LUT5=1 LUT6=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        0.748ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
-    Source Clock Delay      (SCD):    0.787ns
+    Source Clock Delay      (SCD):    0.000ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -434,203 +546,104 @@ Slack (MET) :             7.479ns  (required time - arrival time)
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  clk (IN)
-                         net (fo=71, unset)           0.787     0.787    clk
-                         FDRE                                         r  saturation_count_reg[0]/C
-  -------------------------------------------------------------------    -------------------
-                         FDRE (Prop_fdre_C_Q)         0.303     1.090 r  saturation_count_reg[0]/Q
-                         net (fo=2, unplaced)         0.794     1.884    saturation_count[0]
-                         LUT6 (Prop_lut6_I0_O)        0.105     1.989 r  saturation_count[3]_i_2/O
-                         net (fo=1, unplaced)         0.000     1.989    saturation_count[3]_i_2_n_0
-                         CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     2.433 r  saturation_count_reg[3]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.008     2.441    saturation_count_reg[3]_i_1_n_0
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 r  in_re[15] (IN)
+                         net (fo=29, unset)           0.787     0.787    in_re[15]
+                         DSP48E1 (Prop_dsp48e1_A[29]_PCOUT[47])
+                                                      3.397     4.184 r  g_single_cycle.product_rr/PCOUT[47]
+                         net (fo=1, unplaced)         0.055     4.239    g_single_cycle.product_rr_n_106
+                         DSP48E1 (Prop_dsp48e1_PCIN[47]_P[0])
+                                                      1.271     5.510 f  g_single_cycle.equalized_re_q29/P[0]
+                         net (fo=1, unplaced)         0.646     6.156    g_single_cycle.equalized_re_q29_n_105
+                         LUT1 (Prop_lut1_I0_O)        0.105     6.261 r  g_single_cycle.out_re[0]_i_18/O
+                         net (fo=1, unplaced)         0.258     6.519    g_single_cycle.out_re[0]_i_18_n_0
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     7.013 r  g_single_cycle.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, unplaced)         0.008     7.021    g_single_cycle.out_re_reg[0]_i_13_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.541 r  saturation_count_reg[7]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.541    saturation_count_reg[7]_i_1_n_0
+                                                      0.100     7.121 r  g_single_cycle.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.000     7.121    g_single_cycle.out_re_reg[0]_i_8_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.641 r  saturation_count_reg[11]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.641    saturation_count_reg[11]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.741 r  saturation_count_reg[15]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.741    saturation_count_reg[15]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.841 r  saturation_count_reg[19]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.841    saturation_count_reg[19]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.941 r  saturation_count_reg[23]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.941    saturation_count_reg[23]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     3.041 r  saturation_count_reg[27]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     3.041    saturation_count_reg[27]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_O[0])
-                                                      0.189     3.230 r  saturation_count_reg[31]_i_1/O[0]
-                         net (fo=1, unplaced)         0.000     3.230    p_1_in[28]
-                         FDRE                                         r  saturation_count_reg[28]/D
-  -------------------------------------------------------------------    -------------------
-
-                         (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=71, unset)           0.748    10.748    clk
-                         FDRE                                         r  saturation_count_reg[28]/C
-                         clock pessimism              0.000    10.748
-                         clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_D)       -0.003    10.709    saturation_count_reg[28]
-  -------------------------------------------------------------------
-                         required time                         10.709
-                         arrival time                          -3.230
-  -------------------------------------------------------------------
-                         slack                                  7.479
-
-Slack (MET) :             7.491ns  (required time - arrival time)
-  Source:                 saturation_count_reg[0]/C
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            saturation_count_reg[27]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
-  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        2.431ns  (logic 1.629ns (67.009%)  route 0.802ns (32.991%))
-  Logic Levels:           8  (CARRY4=7 LUT6=1)
-  Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
-    Source Clock Delay      (SCD):    0.787ns
-    Clock Pessimism Removal (CPR):    0.000ns
-  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
-    Total System Jitter     (TSJ):    0.071ns
-    Total Input Jitter      (TIJ):    0.000ns
-    Discrete Jitter          (DJ):    0.000ns
-    Phase Error              (PE):    0.000ns
-
-    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
-  -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  clk (IN)
-                         net (fo=71, unset)           0.787     0.787    clk
-                         FDRE                                         r  saturation_count_reg[0]/C
-  -------------------------------------------------------------------    -------------------
-                         FDRE (Prop_fdre_C_Q)         0.303     1.090 r  saturation_count_reg[0]/Q
-                         net (fo=2, unplaced)         0.794     1.884    saturation_count[0]
-                         LUT6 (Prop_lut6_I0_O)        0.105     1.989 r  saturation_count[3]_i_2/O
-                         net (fo=1, unplaced)         0.000     1.989    saturation_count[3]_i_2_n_0
-                         CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     2.433 r  saturation_count_reg[3]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.008     2.441    saturation_count_reg[3]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.541 r  saturation_count_reg[7]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.541    saturation_count_reg[7]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.641 r  saturation_count_reg[11]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.641    saturation_count_reg[11]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.741 r  saturation_count_reg[15]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.741    saturation_count_reg[15]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.841 r  saturation_count_reg[19]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.841    saturation_count_reg[19]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.941 r  saturation_count_reg[23]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.941    saturation_count_reg[23]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.277     3.218 r  saturation_count_reg[27]_i_1/O[3]
-                         net (fo=1, unplaced)         0.000     3.218    p_1_in[27]
-                         FDRE                                         r  saturation_count_reg[27]/D
-  -------------------------------------------------------------------    -------------------
-
-                         (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=71, unset)           0.748    10.748    clk
-                         FDRE                                         r  saturation_count_reg[27]/C
-                         clock pessimism              0.000    10.748
-                         clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_D)       -0.003    10.709    saturation_count_reg[27]
-  -------------------------------------------------------------------
-                         required time                         10.709
-                         arrival time                          -3.218
-  -------------------------------------------------------------------
-                         slack                                  7.491
-
-Slack (MET) :             7.499ns  (required time - arrival time)
-  Source:                 saturation_count_reg[0]/C
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            saturation_count_reg[25]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
-  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        2.423ns  (logic 1.621ns (66.901%)  route 0.802ns (33.099%))
-  Logic Levels:           8  (CARRY4=7 LUT6=1)
-  Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
-    Source Clock Delay      (SCD):    0.787ns
-    Clock Pessimism Removal (CPR):    0.000ns
-  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
-    Total System Jitter     (TSJ):    0.071ns
-    Total Input Jitter      (TIJ):    0.000ns
-    Discrete Jitter          (DJ):    0.000ns
-    Phase Error              (PE):    0.000ns
-
-    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
-  -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  clk (IN)
-                         net (fo=71, unset)           0.787     0.787    clk
-                         FDRE                                         r  saturation_count_reg[0]/C
-  -------------------------------------------------------------------    -------------------
-                         FDRE (Prop_fdre_C_Q)         0.303     1.090 r  saturation_count_reg[0]/Q
-                         net (fo=2, unplaced)         0.794     1.884    saturation_count[0]
-                         LUT6 (Prop_lut6_I0_O)        0.105     1.989 r  saturation_count[3]_i_2/O
-                         net (fo=1, unplaced)         0.000     1.989    saturation_count[3]_i_2_n_0
-                         CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     2.433 r  saturation_count_reg[3]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.008     2.441    saturation_count_reg[3]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.541 r  saturation_count_reg[7]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.541    saturation_count_reg[7]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.641 r  saturation_count_reg[11]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.641    saturation_count_reg[11]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.741 r  saturation_count_reg[15]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.741    saturation_count_reg[15]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.841 r  saturation_count_reg[19]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.841    saturation_count_reg[19]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.941 r  saturation_count_reg[23]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.941    saturation_count_reg[23]_i_1_n_0
+                                                      0.100     7.221 r  g_single_cycle.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000     7.221    g_single_cycle.out_re_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     3.210 r  saturation_count_reg[27]_i_1/O[1]
-                         net (fo=1, unplaced)         0.000     3.210    p_1_in[25]
-                         FDRE                                         r  saturation_count_reg[25]/D
+                                                      0.269     7.490 f  g_single_cycle.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, unplaced)         0.251     7.741    round_q29_to_q15_wide2[14]
+                         LUT1 (Prop_lut1_I0_O)        0.245     7.986 r  g_single_cycle.out_re[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     8.244    p_0_in[0]
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     8.738 r  g_single_cycle.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     8.746    g_single_cycle.out_re_reg[4]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.846 r  g_single_cycle.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.846    g_single_cycle.out_re_reg[8]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.946 r  g_single_cycle.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.946    g_single_cycle.out_re_reg[12]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     9.215 r  g_single_cycle.out_re_reg[15]_i_4/O[1]
+                         net (fo=3, unplaced)         0.490     9.705    round_q29_to_q15_wide0[14]
+                         LUT5 (Prop_lut5_I1_O)        0.245     9.950 r  g_single_cycle.out_re[15]_i_19/O
+                         net (fo=1, unplaced)         0.000     9.950    g_single_cycle.out_re[15]_i_19_n_0
+                         CARRY4 (Prop_carry4_S[0]_CO[1])
+                                                      0.381    10.331 r  g_single_cycle.out_re_reg[15]_i_7/CO[1]
+                         net (fo=18, unplaced)        0.620    10.951    saturate_q1512_in
+                         LUT6 (Prop_lut6_I1_O)        0.277    11.228 r  g_single_cycle.saturation_count[3]_i_2/O
+                         net (fo=1, unplaced)         0.000    11.228    g_single_cycle.saturation_count[3]_i_2_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.444    11.672 r  g_single_cycle.saturation_count_reg[3]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.008    11.680    g_single_cycle.saturation_count_reg[3]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.780 r  g_single_cycle.saturation_count_reg[7]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.780    g_single_cycle.saturation_count_reg[7]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.880 r  g_single_cycle.saturation_count_reg[11]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.880    g_single_cycle.saturation_count_reg[11]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.980 r  g_single_cycle.saturation_count_reg[15]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.980    g_single_cycle.saturation_count_reg[15]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.080 r  g_single_cycle.saturation_count_reg[19]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.080    g_single_cycle.saturation_count_reg[19]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.180 r  g_single_cycle.saturation_count_reg[23]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.180    g_single_cycle.saturation_count_reg[23]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.280 r  g_single_cycle.saturation_count_reg[27]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.280    g_single_cycle.saturation_count_reg[27]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.189    12.469 r  g_single_cycle.saturation_count_reg[31]_i_1/O[0]
+                         net (fo=1, unplaced)         0.000    12.469    p_1_in[28]
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[28]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=71, unset)           0.748    10.748    clk
-                         FDRE                                         r  saturation_count_reg[25]/C
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[28]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_D)       -0.003    10.709    saturation_count_reg[25]
+                         FDRE (Setup_fdre_C_D)       -0.003    10.709    g_single_cycle.saturation_count_reg[28]
   -------------------------------------------------------------------
                          required time                         10.709
-                         arrival time                          -3.210
+                         arrival time                         -12.469
   -------------------------------------------------------------------
-                         slack                                  7.499
+                         slack                                 -1.759
 
-Slack (MET) :             7.554ns  (required time - arrival time)
-  Source:                 saturation_count_reg[0]/C
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            saturation_count_reg[26]/D
+Slack (VIOLATED) :        -1.747ns  (required time - arrival time)
+  Source:                 in_re[15]
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            g_single_cycle.saturation_count_reg[27]/D
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        2.368ns  (logic 1.566ns (66.132%)  route 0.802ns (33.868%))
-  Logic Levels:           8  (CARRY4=7 LUT6=1)
-  Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
+  Data Path Delay:        12.457ns  (logic 9.068ns (72.797%)  route 3.389ns (27.203%))
+  Logic Levels:           22  (CARRY4=16 DSP48E1=2 LUT1=2 LUT5=1 LUT6=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        0.748ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
-    Source Clock Delay      (SCD):    0.787ns
+    Source Clock Delay      (SCD):    0.000ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -641,64 +654,311 @@ Slack (MET) :             7.554ns  (required time - arrival time)
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  clk (IN)
-                         net (fo=71, unset)           0.787     0.787    clk
-                         FDRE                                         r  saturation_count_reg[0]/C
-  -------------------------------------------------------------------    -------------------
-                         FDRE (Prop_fdre_C_Q)         0.303     1.090 r  saturation_count_reg[0]/Q
-                         net (fo=2, unplaced)         0.794     1.884    saturation_count[0]
-                         LUT6 (Prop_lut6_I0_O)        0.105     1.989 r  saturation_count[3]_i_2/O
-                         net (fo=1, unplaced)         0.000     1.989    saturation_count[3]_i_2_n_0
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 r  in_re[15] (IN)
+                         net (fo=29, unset)           0.787     0.787    in_re[15]
+                         DSP48E1 (Prop_dsp48e1_A[29]_PCOUT[47])
+                                                      3.397     4.184 r  g_single_cycle.product_rr/PCOUT[47]
+                         net (fo=1, unplaced)         0.055     4.239    g_single_cycle.product_rr_n_106
+                         DSP48E1 (Prop_dsp48e1_PCIN[47]_P[0])
+                                                      1.271     5.510 f  g_single_cycle.equalized_re_q29/P[0]
+                         net (fo=1, unplaced)         0.646     6.156    g_single_cycle.equalized_re_q29_n_105
+                         LUT1 (Prop_lut1_I0_O)        0.105     6.261 r  g_single_cycle.out_re[0]_i_18/O
+                         net (fo=1, unplaced)         0.258     6.519    g_single_cycle.out_re[0]_i_18_n_0
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     7.013 r  g_single_cycle.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, unplaced)         0.008     7.021    g_single_cycle.out_re_reg[0]_i_13_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.121 r  g_single_cycle.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.000     7.121    g_single_cycle.out_re_reg[0]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.221 r  g_single_cycle.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000     7.221    g_single_cycle.out_re_reg[0]_i_3_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     7.490 f  g_single_cycle.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, unplaced)         0.251     7.741    round_q29_to_q15_wide2[14]
+                         LUT1 (Prop_lut1_I0_O)        0.245     7.986 r  g_single_cycle.out_re[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     8.244    p_0_in[0]
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     8.738 r  g_single_cycle.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     8.746    g_single_cycle.out_re_reg[4]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.846 r  g_single_cycle.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.846    g_single_cycle.out_re_reg[8]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.946 r  g_single_cycle.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.946    g_single_cycle.out_re_reg[12]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     9.215 r  g_single_cycle.out_re_reg[15]_i_4/O[1]
+                         net (fo=3, unplaced)         0.490     9.705    round_q29_to_q15_wide0[14]
+                         LUT5 (Prop_lut5_I1_O)        0.245     9.950 r  g_single_cycle.out_re[15]_i_19/O
+                         net (fo=1, unplaced)         0.000     9.950    g_single_cycle.out_re[15]_i_19_n_0
+                         CARRY4 (Prop_carry4_S[0]_CO[1])
+                                                      0.381    10.331 r  g_single_cycle.out_re_reg[15]_i_7/CO[1]
+                         net (fo=18, unplaced)        0.620    10.951    saturate_q1512_in
+                         LUT6 (Prop_lut6_I1_O)        0.277    11.228 r  g_single_cycle.saturation_count[3]_i_2/O
+                         net (fo=1, unplaced)         0.000    11.228    g_single_cycle.saturation_count[3]_i_2_n_0
                          CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     2.433 r  saturation_count_reg[3]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.008     2.441    saturation_count_reg[3]_i_1_n_0
+                                                      0.444    11.672 r  g_single_cycle.saturation_count_reg[3]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.008    11.680    g_single_cycle.saturation_count_reg[3]_i_1_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.541 r  saturation_count_reg[7]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.541    saturation_count_reg[7]_i_1_n_0
+                                                      0.100    11.780 r  g_single_cycle.saturation_count_reg[7]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.780    g_single_cycle.saturation_count_reg[7]_i_1_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.641 r  saturation_count_reg[11]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.641    saturation_count_reg[11]_i_1_n_0
+                                                      0.100    11.880 r  g_single_cycle.saturation_count_reg[11]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.880    g_single_cycle.saturation_count_reg[11]_i_1_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.741 r  saturation_count_reg[15]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.741    saturation_count_reg[15]_i_1_n_0
+                                                      0.100    11.980 r  g_single_cycle.saturation_count_reg[15]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.980    g_single_cycle.saturation_count_reg[15]_i_1_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.841 r  saturation_count_reg[19]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.841    saturation_count_reg[19]_i_1_n_0
+                                                      0.100    12.080 r  g_single_cycle.saturation_count_reg[19]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.080    g_single_cycle.saturation_count_reg[19]_i_1_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.941 r  saturation_count_reg[23]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.941    saturation_count_reg[23]_i_1_n_0
+                                                      0.100    12.180 r  g_single_cycle.saturation_count_reg[23]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.180    g_single_cycle.saturation_count_reg[23]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.277    12.457 r  g_single_cycle.saturation_count_reg[27]_i_1/O[3]
+                         net (fo=1, unplaced)         0.000    12.457    p_1_in[27]
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[27]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=71, unset)           0.748    10.748    clk
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[27]/C
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
+                         FDRE (Setup_fdre_C_D)       -0.003    10.709    g_single_cycle.saturation_count_reg[27]
+  -------------------------------------------------------------------
+                         required time                         10.709
+                         arrival time                         -12.457
+  -------------------------------------------------------------------
+                         slack                                 -1.747
+
+Slack (VIOLATED) :        -1.739ns  (required time - arrival time)
+  Source:                 in_re[15]
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            g_single_cycle.saturation_count_reg[25]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        12.449ns  (logic 9.060ns (72.779%)  route 3.389ns (27.221%))
+  Logic Levels:           22  (CARRY4=16 DSP48E1=2 LUT1=2 LUT5=1 LUT6=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        0.748ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 r  in_re[15] (IN)
+                         net (fo=29, unset)           0.787     0.787    in_re[15]
+                         DSP48E1 (Prop_dsp48e1_A[29]_PCOUT[47])
+                                                      3.397     4.184 r  g_single_cycle.product_rr/PCOUT[47]
+                         net (fo=1, unplaced)         0.055     4.239    g_single_cycle.product_rr_n_106
+                         DSP48E1 (Prop_dsp48e1_PCIN[47]_P[0])
+                                                      1.271     5.510 f  g_single_cycle.equalized_re_q29/P[0]
+                         net (fo=1, unplaced)         0.646     6.156    g_single_cycle.equalized_re_q29_n_105
+                         LUT1 (Prop_lut1_I0_O)        0.105     6.261 r  g_single_cycle.out_re[0]_i_18/O
+                         net (fo=1, unplaced)         0.258     6.519    g_single_cycle.out_re[0]_i_18_n_0
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     7.013 r  g_single_cycle.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, unplaced)         0.008     7.021    g_single_cycle.out_re_reg[0]_i_13_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.121 r  g_single_cycle.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.000     7.121    g_single_cycle.out_re_reg[0]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.221 r  g_single_cycle.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000     7.221    g_single_cycle.out_re_reg[0]_i_3_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     7.490 f  g_single_cycle.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, unplaced)         0.251     7.741    round_q29_to_q15_wide2[14]
+                         LUT1 (Prop_lut1_I0_O)        0.245     7.986 r  g_single_cycle.out_re[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     8.244    p_0_in[0]
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     8.738 r  g_single_cycle.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     8.746    g_single_cycle.out_re_reg[4]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.846 r  g_single_cycle.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.846    g_single_cycle.out_re_reg[8]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.946 r  g_single_cycle.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.946    g_single_cycle.out_re_reg[12]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     9.215 r  g_single_cycle.out_re_reg[15]_i_4/O[1]
+                         net (fo=3, unplaced)         0.490     9.705    round_q29_to_q15_wide0[14]
+                         LUT5 (Prop_lut5_I1_O)        0.245     9.950 r  g_single_cycle.out_re[15]_i_19/O
+                         net (fo=1, unplaced)         0.000     9.950    g_single_cycle.out_re[15]_i_19_n_0
+                         CARRY4 (Prop_carry4_S[0]_CO[1])
+                                                      0.381    10.331 r  g_single_cycle.out_re_reg[15]_i_7/CO[1]
+                         net (fo=18, unplaced)        0.620    10.951    saturate_q1512_in
+                         LUT6 (Prop_lut6_I1_O)        0.277    11.228 r  g_single_cycle.saturation_count[3]_i_2/O
+                         net (fo=1, unplaced)         0.000    11.228    g_single_cycle.saturation_count[3]_i_2_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.444    11.672 r  g_single_cycle.saturation_count_reg[3]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.008    11.680    g_single_cycle.saturation_count_reg[3]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.780 r  g_single_cycle.saturation_count_reg[7]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.780    g_single_cycle.saturation_count_reg[7]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.880 r  g_single_cycle.saturation_count_reg[11]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.880    g_single_cycle.saturation_count_reg[11]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.980 r  g_single_cycle.saturation_count_reg[15]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.980    g_single_cycle.saturation_count_reg[15]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.080 r  g_single_cycle.saturation_count_reg[19]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.080    g_single_cycle.saturation_count_reg[19]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.180 r  g_single_cycle.saturation_count_reg[23]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.180    g_single_cycle.saturation_count_reg[23]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269    12.449 r  g_single_cycle.saturation_count_reg[27]_i_1/O[1]
+                         net (fo=1, unplaced)         0.000    12.449    p_1_in[25]
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[25]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=71, unset)           0.748    10.748    clk
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[25]/C
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
+                         FDRE (Setup_fdre_C_D)       -0.003    10.709    g_single_cycle.saturation_count_reg[25]
+  -------------------------------------------------------------------
+                         required time                         10.709
+                         arrival time                         -12.449
+  -------------------------------------------------------------------
+                         slack                                 -1.739
+
+Slack (VIOLATED) :        -1.684ns  (required time - arrival time)
+  Source:                 in_re[15]
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            g_single_cycle.saturation_count_reg[26]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        12.394ns  (logic 9.005ns (72.659%)  route 3.389ns (27.341%))
+  Logic Levels:           22  (CARRY4=16 DSP48E1=2 LUT1=2 LUT5=1 LUT6=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        0.748ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 r  in_re[15] (IN)
+                         net (fo=29, unset)           0.787     0.787    in_re[15]
+                         DSP48E1 (Prop_dsp48e1_A[29]_PCOUT[47])
+                                                      3.397     4.184 r  g_single_cycle.product_rr/PCOUT[47]
+                         net (fo=1, unplaced)         0.055     4.239    g_single_cycle.product_rr_n_106
+                         DSP48E1 (Prop_dsp48e1_PCIN[47]_P[0])
+                                                      1.271     5.510 f  g_single_cycle.equalized_re_q29/P[0]
+                         net (fo=1, unplaced)         0.646     6.156    g_single_cycle.equalized_re_q29_n_105
+                         LUT1 (Prop_lut1_I0_O)        0.105     6.261 r  g_single_cycle.out_re[0]_i_18/O
+                         net (fo=1, unplaced)         0.258     6.519    g_single_cycle.out_re[0]_i_18_n_0
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     7.013 r  g_single_cycle.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, unplaced)         0.008     7.021    g_single_cycle.out_re_reg[0]_i_13_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.121 r  g_single_cycle.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.000     7.121    g_single_cycle.out_re_reg[0]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.221 r  g_single_cycle.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000     7.221    g_single_cycle.out_re_reg[0]_i_3_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     7.490 f  g_single_cycle.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, unplaced)         0.251     7.741    round_q29_to_q15_wide2[14]
+                         LUT1 (Prop_lut1_I0_O)        0.245     7.986 r  g_single_cycle.out_re[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     8.244    p_0_in[0]
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     8.738 r  g_single_cycle.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     8.746    g_single_cycle.out_re_reg[4]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.846 r  g_single_cycle.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.846    g_single_cycle.out_re_reg[8]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.946 r  g_single_cycle.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.946    g_single_cycle.out_re_reg[12]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     9.215 r  g_single_cycle.out_re_reg[15]_i_4/O[1]
+                         net (fo=3, unplaced)         0.490     9.705    round_q29_to_q15_wide0[14]
+                         LUT5 (Prop_lut5_I1_O)        0.245     9.950 r  g_single_cycle.out_re[15]_i_19/O
+                         net (fo=1, unplaced)         0.000     9.950    g_single_cycle.out_re[15]_i_19_n_0
+                         CARRY4 (Prop_carry4_S[0]_CO[1])
+                                                      0.381    10.331 r  g_single_cycle.out_re_reg[15]_i_7/CO[1]
+                         net (fo=18, unplaced)        0.620    10.951    saturate_q1512_in
+                         LUT6 (Prop_lut6_I1_O)        0.277    11.228 r  g_single_cycle.saturation_count[3]_i_2/O
+                         net (fo=1, unplaced)         0.000    11.228    g_single_cycle.saturation_count[3]_i_2_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.444    11.672 r  g_single_cycle.saturation_count_reg[3]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.008    11.680    g_single_cycle.saturation_count_reg[3]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.780 r  g_single_cycle.saturation_count_reg[7]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.780    g_single_cycle.saturation_count_reg[7]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.880 r  g_single_cycle.saturation_count_reg[11]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.880    g_single_cycle.saturation_count_reg[11]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.980 r  g_single_cycle.saturation_count_reg[15]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.980    g_single_cycle.saturation_count_reg[15]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.080 r  g_single_cycle.saturation_count_reg[19]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.080    g_single_cycle.saturation_count_reg[19]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.180 r  g_single_cycle.saturation_count_reg[23]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.180    g_single_cycle.saturation_count_reg[23]_i_1_n_0
                          CARRY4 (Prop_carry4_CI_O[2])
-                                                      0.214     3.155 r  saturation_count_reg[27]_i_1/O[2]
-                         net (fo=1, unplaced)         0.000     3.155    p_1_in[26]
-                         FDRE                                         r  saturation_count_reg[26]/D
+                                                      0.214    12.394 r  g_single_cycle.saturation_count_reg[27]_i_1/O[2]
+                         net (fo=1, unplaced)         0.000    12.394    p_1_in[26]
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[26]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=71, unset)           0.748    10.748    clk
-                         FDRE                                         r  saturation_count_reg[26]/C
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[26]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_D)       -0.003    10.709    saturation_count_reg[26]
+                         FDRE (Setup_fdre_C_D)       -0.003    10.709    g_single_cycle.saturation_count_reg[26]
   -------------------------------------------------------------------
                          required time                         10.709
-                         arrival time                          -3.155
+                         arrival time                         -12.394
   -------------------------------------------------------------------
-                         slack                                  7.554
+                         slack                                 -1.684
 
-Slack (MET) :             7.579ns  (required time - arrival time)
-  Source:                 saturation_count_reg[0]/C
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            saturation_count_reg[24]/D
+Slack (VIOLATED) :        -1.659ns  (required time - arrival time)
+  Source:                 in_re[15]
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            g_single_cycle.saturation_count_reg[24]/D
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        2.343ns  (logic 1.541ns (65.770%)  route 0.802ns (34.230%))
-  Logic Levels:           8  (CARRY4=7 LUT6=1)
-  Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
+  Data Path Delay:        12.369ns  (logic 8.980ns (72.603%)  route 3.389ns (27.397%))
+  Logic Levels:           22  (CARRY4=16 DSP48E1=2 LUT1=2 LUT5=1 LUT6=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        0.748ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
-    Source Clock Delay      (SCD):    0.787ns
+    Source Clock Delay      (SCD):    0.000ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -709,180 +969,290 @@ Slack (MET) :             7.579ns  (required time - arrival time)
     Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  clk (IN)
-                         net (fo=71, unset)           0.787     0.787    clk
-                         FDRE                                         r  saturation_count_reg[0]/C
-  -------------------------------------------------------------------    -------------------
-                         FDRE (Prop_fdre_C_Q)         0.303     1.090 r  saturation_count_reg[0]/Q
-                         net (fo=2, unplaced)         0.794     1.884    saturation_count[0]
-                         LUT6 (Prop_lut6_I0_O)        0.105     1.989 r  saturation_count[3]_i_2/O
-                         net (fo=1, unplaced)         0.000     1.989    saturation_count[3]_i_2_n_0
-                         CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     2.433 r  saturation_count_reg[3]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.008     2.441    saturation_count_reg[3]_i_1_n_0
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 r  in_re[15] (IN)
+                         net (fo=29, unset)           0.787     0.787    in_re[15]
+                         DSP48E1 (Prop_dsp48e1_A[29]_PCOUT[47])
+                                                      3.397     4.184 r  g_single_cycle.product_rr/PCOUT[47]
+                         net (fo=1, unplaced)         0.055     4.239    g_single_cycle.product_rr_n_106
+                         DSP48E1 (Prop_dsp48e1_PCIN[47]_P[0])
+                                                      1.271     5.510 f  g_single_cycle.equalized_re_q29/P[0]
+                         net (fo=1, unplaced)         0.646     6.156    g_single_cycle.equalized_re_q29_n_105
+                         LUT1 (Prop_lut1_I0_O)        0.105     6.261 r  g_single_cycle.out_re[0]_i_18/O
+                         net (fo=1, unplaced)         0.258     6.519    g_single_cycle.out_re[0]_i_18_n_0
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     7.013 r  g_single_cycle.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, unplaced)         0.008     7.021    g_single_cycle.out_re_reg[0]_i_13_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.541 r  saturation_count_reg[7]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.541    saturation_count_reg[7]_i_1_n_0
+                                                      0.100     7.121 r  g_single_cycle.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.000     7.121    g_single_cycle.out_re_reg[0]_i_8_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.641 r  saturation_count_reg[11]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.641    saturation_count_reg[11]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.741 r  saturation_count_reg[15]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.741    saturation_count_reg[15]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.841 r  saturation_count_reg[19]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.841    saturation_count_reg[19]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.941 r  saturation_count_reg[23]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.941    saturation_count_reg[23]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_O[0])
-                                                      0.189     3.130 r  saturation_count_reg[27]_i_1/O[0]
-                         net (fo=1, unplaced)         0.000     3.130    p_1_in[24]
-                         FDRE                                         r  saturation_count_reg[24]/D
-  -------------------------------------------------------------------    -------------------
-
-                         (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=71, unset)           0.748    10.748    clk
-                         FDRE                                         r  saturation_count_reg[24]/C
-                         clock pessimism              0.000    10.748
-                         clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_D)       -0.003    10.709    saturation_count_reg[24]
-  -------------------------------------------------------------------
-                         required time                         10.709
-                         arrival time                          -3.130
-  -------------------------------------------------------------------
-                         slack                                  7.579
-
-Slack (MET) :             7.591ns  (required time - arrival time)
-  Source:                 saturation_count_reg[0]/C
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            saturation_count_reg[23]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
-  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        2.331ns  (logic 1.529ns (65.594%)  route 0.802ns (34.406%))
-  Logic Levels:           7  (CARRY4=6 LUT6=1)
-  Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
-    Source Clock Delay      (SCD):    0.787ns
-    Clock Pessimism Removal (CPR):    0.000ns
-  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
-    Total System Jitter     (TSJ):    0.071ns
-    Total Input Jitter      (TIJ):    0.000ns
-    Discrete Jitter          (DJ):    0.000ns
-    Phase Error              (PE):    0.000ns
-
-    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
-  -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  clk (IN)
-                         net (fo=71, unset)           0.787     0.787    clk
-                         FDRE                                         r  saturation_count_reg[0]/C
-  -------------------------------------------------------------------    -------------------
-                         FDRE (Prop_fdre_C_Q)         0.303     1.090 r  saturation_count_reg[0]/Q
-                         net (fo=2, unplaced)         0.794     1.884    saturation_count[0]
-                         LUT6 (Prop_lut6_I0_O)        0.105     1.989 r  saturation_count[3]_i_2/O
-                         net (fo=1, unplaced)         0.000     1.989    saturation_count[3]_i_2_n_0
-                         CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     2.433 r  saturation_count_reg[3]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.008     2.441    saturation_count_reg[3]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.541 r  saturation_count_reg[7]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.541    saturation_count_reg[7]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.641 r  saturation_count_reg[11]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.641    saturation_count_reg[11]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.741 r  saturation_count_reg[15]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.741    saturation_count_reg[15]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.841 r  saturation_count_reg[19]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.841    saturation_count_reg[19]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.277     3.118 r  saturation_count_reg[23]_i_1/O[3]
-                         net (fo=1, unplaced)         0.000     3.118    p_1_in[23]
-                         FDRE                                         r  saturation_count_reg[23]/D
-  -------------------------------------------------------------------    -------------------
-
-                         (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=71, unset)           0.748    10.748    clk
-                         FDRE                                         r  saturation_count_reg[23]/C
-                         clock pessimism              0.000    10.748
-                         clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_D)       -0.003    10.709    saturation_count_reg[23]
-  -------------------------------------------------------------------
-                         required time                         10.709
-                         arrival time                          -3.118
-  -------------------------------------------------------------------
-                         slack                                  7.591
-
-Slack (MET) :             7.599ns  (required time - arrival time)
-  Source:                 saturation_count_reg[0]/C
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            saturation_count_reg[21]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
-  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        2.323ns  (logic 1.521ns (65.476%)  route 0.802ns (34.524%))
-  Logic Levels:           7  (CARRY4=6 LUT6=1)
-  Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
-    Source Clock Delay      (SCD):    0.787ns
-    Clock Pessimism Removal (CPR):    0.000ns
-  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
-    Total System Jitter     (TSJ):    0.071ns
-    Total Input Jitter      (TIJ):    0.000ns
-    Discrete Jitter          (DJ):    0.000ns
-    Phase Error              (PE):    0.000ns
-
-    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
-  -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  clk (IN)
-                         net (fo=71, unset)           0.787     0.787    clk
-                         FDRE                                         r  saturation_count_reg[0]/C
-  -------------------------------------------------------------------    -------------------
-                         FDRE (Prop_fdre_C_Q)         0.303     1.090 r  saturation_count_reg[0]/Q
-                         net (fo=2, unplaced)         0.794     1.884    saturation_count[0]
-                         LUT6 (Prop_lut6_I0_O)        0.105     1.989 r  saturation_count[3]_i_2/O
-                         net (fo=1, unplaced)         0.000     1.989    saturation_count[3]_i_2_n_0
-                         CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     2.433 r  saturation_count_reg[3]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.008     2.441    saturation_count_reg[3]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.541 r  saturation_count_reg[7]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.541    saturation_count_reg[7]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.641 r  saturation_count_reg[11]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.641    saturation_count_reg[11]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.741 r  saturation_count_reg[15]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.741    saturation_count_reg[15]_i_1_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.841 r  saturation_count_reg[19]_i_1/CO[3]
-                         net (fo=1, unplaced)         0.000     2.841    saturation_count_reg[19]_i_1_n_0
+                                                      0.100     7.221 r  g_single_cycle.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000     7.221    g_single_cycle.out_re_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     3.110 r  saturation_count_reg[23]_i_1/O[1]
-                         net (fo=1, unplaced)         0.000     3.110    p_1_in[21]
-                         FDRE                                         r  saturation_count_reg[21]/D
+                                                      0.269     7.490 f  g_single_cycle.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, unplaced)         0.251     7.741    round_q29_to_q15_wide2[14]
+                         LUT1 (Prop_lut1_I0_O)        0.245     7.986 r  g_single_cycle.out_re[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     8.244    p_0_in[0]
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     8.738 r  g_single_cycle.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     8.746    g_single_cycle.out_re_reg[4]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.846 r  g_single_cycle.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.846    g_single_cycle.out_re_reg[8]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.946 r  g_single_cycle.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.946    g_single_cycle.out_re_reg[12]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     9.215 r  g_single_cycle.out_re_reg[15]_i_4/O[1]
+                         net (fo=3, unplaced)         0.490     9.705    round_q29_to_q15_wide0[14]
+                         LUT5 (Prop_lut5_I1_O)        0.245     9.950 r  g_single_cycle.out_re[15]_i_19/O
+                         net (fo=1, unplaced)         0.000     9.950    g_single_cycle.out_re[15]_i_19_n_0
+                         CARRY4 (Prop_carry4_S[0]_CO[1])
+                                                      0.381    10.331 r  g_single_cycle.out_re_reg[15]_i_7/CO[1]
+                         net (fo=18, unplaced)        0.620    10.951    saturate_q1512_in
+                         LUT6 (Prop_lut6_I1_O)        0.277    11.228 r  g_single_cycle.saturation_count[3]_i_2/O
+                         net (fo=1, unplaced)         0.000    11.228    g_single_cycle.saturation_count[3]_i_2_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.444    11.672 r  g_single_cycle.saturation_count_reg[3]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.008    11.680    g_single_cycle.saturation_count_reg[3]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.780 r  g_single_cycle.saturation_count_reg[7]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.780    g_single_cycle.saturation_count_reg[7]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.880 r  g_single_cycle.saturation_count_reg[11]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.880    g_single_cycle.saturation_count_reg[11]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.980 r  g_single_cycle.saturation_count_reg[15]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.980    g_single_cycle.saturation_count_reg[15]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.080 r  g_single_cycle.saturation_count_reg[19]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.080    g_single_cycle.saturation_count_reg[19]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.180 r  g_single_cycle.saturation_count_reg[23]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.180    g_single_cycle.saturation_count_reg[23]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.189    12.369 r  g_single_cycle.saturation_count_reg[27]_i_1/O[0]
+                         net (fo=1, unplaced)         0.000    12.369    p_1_in[24]
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[24]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=71, unset)           0.748    10.748    clk
-                         FDRE                                         r  saturation_count_reg[21]/C
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[24]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_D)       -0.003    10.709    saturation_count_reg[21]
+                         FDRE (Setup_fdre_C_D)       -0.003    10.709    g_single_cycle.saturation_count_reg[24]
   -------------------------------------------------------------------
                          required time                         10.709
-                         arrival time                          -3.110
+                         arrival time                         -12.369
   -------------------------------------------------------------------
-                         slack                                  7.599
+                         slack                                 -1.659
+
+Slack (VIOLATED) :        -1.647ns  (required time - arrival time)
+  Source:                 in_re[15]
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            g_single_cycle.saturation_count_reg[23]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        12.357ns  (logic 8.968ns (72.577%)  route 3.389ns (27.423%))
+  Logic Levels:           21  (CARRY4=15 DSP48E1=2 LUT1=2 LUT5=1 LUT6=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        0.748ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 r  in_re[15] (IN)
+                         net (fo=29, unset)           0.787     0.787    in_re[15]
+                         DSP48E1 (Prop_dsp48e1_A[29]_PCOUT[47])
+                                                      3.397     4.184 r  g_single_cycle.product_rr/PCOUT[47]
+                         net (fo=1, unplaced)         0.055     4.239    g_single_cycle.product_rr_n_106
+                         DSP48E1 (Prop_dsp48e1_PCIN[47]_P[0])
+                                                      1.271     5.510 f  g_single_cycle.equalized_re_q29/P[0]
+                         net (fo=1, unplaced)         0.646     6.156    g_single_cycle.equalized_re_q29_n_105
+                         LUT1 (Prop_lut1_I0_O)        0.105     6.261 r  g_single_cycle.out_re[0]_i_18/O
+                         net (fo=1, unplaced)         0.258     6.519    g_single_cycle.out_re[0]_i_18_n_0
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     7.013 r  g_single_cycle.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, unplaced)         0.008     7.021    g_single_cycle.out_re_reg[0]_i_13_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.121 r  g_single_cycle.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.000     7.121    g_single_cycle.out_re_reg[0]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.221 r  g_single_cycle.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000     7.221    g_single_cycle.out_re_reg[0]_i_3_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     7.490 f  g_single_cycle.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, unplaced)         0.251     7.741    round_q29_to_q15_wide2[14]
+                         LUT1 (Prop_lut1_I0_O)        0.245     7.986 r  g_single_cycle.out_re[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     8.244    p_0_in[0]
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     8.738 r  g_single_cycle.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     8.746    g_single_cycle.out_re_reg[4]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.846 r  g_single_cycle.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.846    g_single_cycle.out_re_reg[8]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.946 r  g_single_cycle.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.946    g_single_cycle.out_re_reg[12]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     9.215 r  g_single_cycle.out_re_reg[15]_i_4/O[1]
+                         net (fo=3, unplaced)         0.490     9.705    round_q29_to_q15_wide0[14]
+                         LUT5 (Prop_lut5_I1_O)        0.245     9.950 r  g_single_cycle.out_re[15]_i_19/O
+                         net (fo=1, unplaced)         0.000     9.950    g_single_cycle.out_re[15]_i_19_n_0
+                         CARRY4 (Prop_carry4_S[0]_CO[1])
+                                                      0.381    10.331 r  g_single_cycle.out_re_reg[15]_i_7/CO[1]
+                         net (fo=18, unplaced)        0.620    10.951    saturate_q1512_in
+                         LUT6 (Prop_lut6_I1_O)        0.277    11.228 r  g_single_cycle.saturation_count[3]_i_2/O
+                         net (fo=1, unplaced)         0.000    11.228    g_single_cycle.saturation_count[3]_i_2_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.444    11.672 r  g_single_cycle.saturation_count_reg[3]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.008    11.680    g_single_cycle.saturation_count_reg[3]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.780 r  g_single_cycle.saturation_count_reg[7]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.780    g_single_cycle.saturation_count_reg[7]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.880 r  g_single_cycle.saturation_count_reg[11]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.880    g_single_cycle.saturation_count_reg[11]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.980 r  g_single_cycle.saturation_count_reg[15]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.980    g_single_cycle.saturation_count_reg[15]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.080 r  g_single_cycle.saturation_count_reg[19]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.080    g_single_cycle.saturation_count_reg[19]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.277    12.357 r  g_single_cycle.saturation_count_reg[23]_i_1/O[3]
+                         net (fo=1, unplaced)         0.000    12.357    p_1_in[23]
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[23]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=71, unset)           0.748    10.748    clk
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[23]/C
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
+                         FDRE (Setup_fdre_C_D)       -0.003    10.709    g_single_cycle.saturation_count_reg[23]
+  -------------------------------------------------------------------
+                         required time                         10.709
+                         arrival time                         -12.357
+  -------------------------------------------------------------------
+                         slack                                 -1.647
+
+Slack (VIOLATED) :        -1.639ns  (required time - arrival time)
+  Source:                 in_re[15]
+                            (input port clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            g_single_cycle.saturation_count_reg[21]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        12.349ns  (logic 8.960ns (72.559%)  route 3.389ns (27.441%))
+  Logic Levels:           21  (CARRY4=15 DSP48E1=2 LUT1=2 LUT5=1 LUT6=1)
+  Input Delay:            0.000ns
+  Clock Path Skew:        0.748ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
+    Source Clock Delay      (SCD):    0.000ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                         input delay                  0.000     0.000
+                                                      0.000     0.000 r  in_re[15] (IN)
+                         net (fo=29, unset)           0.787     0.787    in_re[15]
+                         DSP48E1 (Prop_dsp48e1_A[29]_PCOUT[47])
+                                                      3.397     4.184 r  g_single_cycle.product_rr/PCOUT[47]
+                         net (fo=1, unplaced)         0.055     4.239    g_single_cycle.product_rr_n_106
+                         DSP48E1 (Prop_dsp48e1_PCIN[47]_P[0])
+                                                      1.271     5.510 f  g_single_cycle.equalized_re_q29/P[0]
+                         net (fo=1, unplaced)         0.646     6.156    g_single_cycle.equalized_re_q29_n_105
+                         LUT1 (Prop_lut1_I0_O)        0.105     6.261 r  g_single_cycle.out_re[0]_i_18/O
+                         net (fo=1, unplaced)         0.258     6.519    g_single_cycle.out_re[0]_i_18_n_0
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     7.013 r  g_single_cycle.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, unplaced)         0.008     7.021    g_single_cycle.out_re_reg[0]_i_13_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.121 r  g_single_cycle.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.000     7.121    g_single_cycle.out_re_reg[0]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.221 r  g_single_cycle.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, unplaced)         0.000     7.221    g_single_cycle.out_re_reg[0]_i_3_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     7.490 f  g_single_cycle.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, unplaced)         0.251     7.741    round_q29_to_q15_wide2[14]
+                         LUT1 (Prop_lut1_I0_O)        0.245     7.986 r  g_single_cycle.out_re[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     8.244    p_0_in[0]
+                         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     8.738 r  g_single_cycle.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     8.746    g_single_cycle.out_re_reg[4]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.846 r  g_single_cycle.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.846    g_single_cycle.out_re_reg[8]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     8.946 r  g_single_cycle.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     8.946    g_single_cycle.out_re_reg[12]_i_2_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269     9.215 r  g_single_cycle.out_re_reg[15]_i_4/O[1]
+                         net (fo=3, unplaced)         0.490     9.705    round_q29_to_q15_wide0[14]
+                         LUT5 (Prop_lut5_I1_O)        0.245     9.950 r  g_single_cycle.out_re[15]_i_19/O
+                         net (fo=1, unplaced)         0.000     9.950    g_single_cycle.out_re[15]_i_19_n_0
+                         CARRY4 (Prop_carry4_S[0]_CO[1])
+                                                      0.381    10.331 r  g_single_cycle.out_re_reg[15]_i_7/CO[1]
+                         net (fo=18, unplaced)        0.620    10.951    saturate_q1512_in
+                         LUT6 (Prop_lut6_I1_O)        0.277    11.228 r  g_single_cycle.saturation_count[3]_i_2/O
+                         net (fo=1, unplaced)         0.000    11.228    g_single_cycle.saturation_count[3]_i_2_n_0
+                         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.444    11.672 r  g_single_cycle.saturation_count_reg[3]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.008    11.680    g_single_cycle.saturation_count_reg[3]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.780 r  g_single_cycle.saturation_count_reg[7]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.780    g_single_cycle.saturation_count_reg[7]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.880 r  g_single_cycle.saturation_count_reg[11]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.880    g_single_cycle.saturation_count_reg[11]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    11.980 r  g_single_cycle.saturation_count_reg[15]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    11.980    g_single_cycle.saturation_count_reg[15]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100    12.080 r  g_single_cycle.saturation_count_reg[19]_i_1/CO[3]
+                         net (fo=1, unplaced)         0.000    12.080    g_single_cycle.saturation_count_reg[19]_i_1_n_0
+                         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.269    12.349 r  g_single_cycle.saturation_count_reg[23]_i_1/O[1]
+                         net (fo=1, unplaced)         0.000    12.349    p_1_in[21]
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[21]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=71, unset)           0.748    10.748    clk
+                         FDRE                                         r  g_single_cycle.saturation_count_reg[21]/C
+                         clock pessimism              0.000    10.748
+                         clock uncertainty           -0.035    10.712
+                         FDRE (Setup_fdre_C_D)       -0.003    10.709    g_single_cycle.saturation_count_reg[21]
+  -------------------------------------------------------------------
+                         required time                         10.709
+                         arrival time                         -12.349
+  -------------------------------------------------------------------
+                         slack                                 -1.639
 
 
 
@@ -896,33 +1266,33 @@ Period(ns):         10.000
 Sources:            { clk }
 
 Check Type        Corner  Lib Pin  Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location  Pin
-Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                out_im_reg[0]/C
-Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                out_im_reg[10]/C
-Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                out_im_reg[11]/C
-Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                out_im_reg[12]/C
-Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                out_im_reg[13]/C
-Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                out_im_reg[14]/C
-Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                out_im_reg[15]/C
-Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                out_im_reg[1]/C
-Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                out_im_reg[2]/C
-Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                out_im_reg[3]/C
-Low Pulse Width   Slow    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[0]/C
-Low Pulse Width   Fast    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[0]/C
-Low Pulse Width   Slow    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[10]/C
-Low Pulse Width   Fast    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[10]/C
-Low Pulse Width   Slow    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[11]/C
-Low Pulse Width   Fast    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[11]/C
-Low Pulse Width   Slow    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[12]/C
-Low Pulse Width   Fast    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[12]/C
-Low Pulse Width   Slow    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[13]/C
-Low Pulse Width   Fast    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[13]/C
-High Pulse Width  Slow    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[0]/C
-High Pulse Width  Fast    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[0]/C
-High Pulse Width  Slow    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[10]/C
-High Pulse Width  Fast    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[10]/C
-High Pulse Width  Slow    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[11]/C
-High Pulse Width  Fast    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[11]/C
-High Pulse Width  Slow    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[12]/C
-High Pulse Width  Fast    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[12]/C
-High Pulse Width  Slow    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[13]/C
-High Pulse Width  Fast    FDRE/C   n/a            0.500         5.000       4.500                out_im_reg[13]/C
+Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                g_single_cycle.out_im_reg[0]/C
+Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                g_single_cycle.out_im_reg[10]/C
+Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                g_single_cycle.out_im_reg[11]/C
+Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                g_single_cycle.out_im_reg[12]/C
+Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                g_single_cycle.out_im_reg[13]/C
+Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                g_single_cycle.out_im_reg[14]/C
+Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                g_single_cycle.out_im_reg[15]/C
+Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                g_single_cycle.out_im_reg[1]/C
+Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                g_single_cycle.out_im_reg[2]/C
+Min Period        n/a     FDRE/C   n/a            1.000         10.000      9.000                g_single_cycle.out_im_reg[3]/C
+Low Pulse Width   Slow    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[0]/C
+Low Pulse Width   Fast    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[0]/C
+Low Pulse Width   Slow    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[10]/C
+Low Pulse Width   Fast    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[10]/C
+Low Pulse Width   Slow    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[11]/C
+Low Pulse Width   Fast    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[11]/C
+Low Pulse Width   Slow    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[12]/C
+Low Pulse Width   Fast    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[12]/C
+Low Pulse Width   Slow    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[13]/C
+Low Pulse Width   Fast    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[13]/C
+High Pulse Width  Slow    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[0]/C
+High Pulse Width  Fast    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[0]/C
+High Pulse Width  Slow    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[10]/C
+High Pulse Width  Fast    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[10]/C
+High Pulse Width  Slow    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[11]/C
+High Pulse Width  Fast    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[11]/C
+High Pulse Width  Slow    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[12]/C
+High Pulse Width  Fast    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[12]/C
+High Pulse Width  Slow    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[13]/C
+High Pulse Width  Fast    FDRE/C   n/a            0.500         5.000       4.500                g_single_cycle.out_im_reg[13]/C
