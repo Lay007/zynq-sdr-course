@@ -148,9 +148,51 @@ Reference models and RTL, all bit-exact with each other:
 | Vector generator | `python/generate_bpsk_timing_recovery_vectors.py` |
 | Bit-exact HDL check | `tb/tb_bpsk_symbol_timing_recovery.v` |
 | Full-chain BER check (TR vs fixed-phase) | `tb/tb_bpsk_zynq_ber_timing_recovery.v` |
+| One-clock vs pipelined loop, symbol for symbol | `tb/tb_bpsk_symbol_timing_recovery_equivalence.v` |
 
 `bpsk_rx_bit_recovery_chain` selects between the two via `parameter TIMING_RECOVERY`
-(0 = this lab's fixed-phase sampler, 1 = the Gardner loop); the runtime AD9361
-bridge sets it to 1. Running `python/bpsk_timing_recovery_model.py` prints the
+(0 = this lab's fixed-phase sampler, 1 = the Gardner loop). The Block 11 runtime
+bridge keeps 0: on its short, gap-free loopback burst the loop mis-tracks and does worse
+than the fixed phase, so the loop is meant for genuinely drifted streams. Running `python/bpsk_timing_recovery_model.py` prints the
 float / fixed-point / fixed-phase BER table on a drifted burst — both
 timing-recovery models reach BER 0 where the fixed-phase decimator does not.
+
+### Implementing the loop at 100 MHz
+
+The loop is a recursion over one sample: at a strobe, the interpolation multiply, the timing error
+and the loop filter must produce the next NCO step before the next sample needs it. Written that
+way (`PIPELINED = 0`), Vivado places and routes it at about 52 MHz on the course part, 9.4 ns
+short of a 100 MHz clock
+([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block5-bpsk-vivado-evidence.md)).
+The default `PIPELINED = 1` meets 100 MHz (+0.335 ns) with the same output symbols, using two
+ideas that apply to most feedback loops in a receiver:
+
+- **Use the slack the algorithm already has.** The next strobe is at least three samples away
+  (`3 * W_MAX <= 1.0` at 8 samples per symbol), so the symbol and the loop update can be formed
+  two clocks after the strobe. The samples in between stepped the NCO with the old step; the update
+  rewrites the NCO as "NCO after the strobe - k * new step", with k the number of samples consumed
+  since the strobe.
+- **Lookahead.** The sign-Gardner error has only three values, so the three possible results of
+  the loop filter are computed and registered at the strobe, and the error only selects one.
+
+The cost is area (659 instead of 201 flip-flops). `tb/tb_bpsk_symbol_timing_recovery_equivalence.v`
+runs both forms on the same drifted burst with random idle clocks and requires every output symbol
+to match in I and Q:
+
+```bash
+iverilog -g2012 -o /tmp/tr_eq.vvp \
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_symbol_timing_recovery.v \
+  blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_symbol_timing_recovery_equivalence.v
+vvp /tmp/tr_eq.vvp
+```
+
+```text
+PASS: bpsk_symbol_timing_recovery PIPELINED=1 equals PIPELINED=0 on all 281 symbols (I and Q values, 854 idle input clocks)
+```
+
+Exercise: in `rtl/bpsk_symbol_timing_recovery.v`, make the NCO correction ignore the sample consumed
+in the clock after the strobe (`wire [1:0] k_steps = {1'b0, consume};`). The equivalence test then
+fails with `symbol counts reference=281 pipelined=270, expected 281`: the loop loses track, drops
+symbols, and the error is invisible to a test that only looks at the decided bits of the symbols
+that do come out. Which k does the broken code use, in which clocks is it wrong, and why does
+the test also fail with `-Ptb_bpsk_symbol_timing_recovery_equivalence.GAPS=0` (a sample every clock)?

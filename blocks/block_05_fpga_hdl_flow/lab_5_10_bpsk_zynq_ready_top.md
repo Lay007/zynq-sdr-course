@@ -121,6 +121,13 @@ The course runner generates the vectors, compiles, simulates and turns any `FAIL
 python tools/run_block5_hdl_smoke.py --test tb_bpsk_zynq_ber_top
 ```
 
+In Vivado 2021.1 this top places and routes on `xc7z020clg400-2` at 100 MHz with +1.659 ns of
+slack, using 688 LUTs, 3074 flip-flops and **192 of the 220 DSP48E1 slices (87 %)**
+([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block5-bpsk-vivado-evidence.md)): the TX pulse-shaping filter and the RX matched filter take 96 each
+(Lab 5.6). Anything else that needs multipliers on the same device, such as a carrier loop or a
+second channel, would not fit. The worst path is a fan-out, not arithmetic: a valid signal
+driving the clock enables of the matched filter's adder tree, 0 logic levels and 94 % routing.
+
 ## Exercises
 
 Each exercise below is a deliberate one-line RTL mutation. Make it, run the bench, read the messages, then restore the file (`git checkout -- <file>`). The quoted outputs were observed with Icarus Verilog 12.0.

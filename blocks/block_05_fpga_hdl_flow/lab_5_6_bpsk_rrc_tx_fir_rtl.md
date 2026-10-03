@@ -102,6 +102,13 @@ The course runner generates the vectors, compiles, simulates and turns any `FAIL
 python tools/run_block5_hdl_smoke.py --test tb_bpsk_rrc_tx_fir
 ```
 
+In Vivado 2021.1 the filter places and routes on the course part `xc7z020clg400-2` at 100 MHz
+with +3.038 ns of slack, using 96 DSP48E1, 2266 flip-flops and 148 LUTs
+([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block5-bpsk-vivado-evidence.md)). The synthesis log shows where the 96 slices go: 66 hold the
+multiplies (33 per channel, each with the symmetric pre-add inside the slice), and 30 are used
+only as 40-bit adders of the adder tree. Compare that with your answer to exercise 3 before
+reading on: a fully parallel filter is cheap in timing and expensive in area.
+
 ## Exercises
 
 Each exercise below is a deliberate one-line RTL mutation. Make it, run the bench, read the messages, then restore the file (`git checkout -- <file>`). The quoted outputs were observed with Icarus Verilog 12.0.

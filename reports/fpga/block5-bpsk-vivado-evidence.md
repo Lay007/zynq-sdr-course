@@ -5,10 +5,11 @@
 ## Result
 
 Vivado 2021.1 synthesizes, places and routes every BPSK RTL module of Labs 5.6-5.11 out of
-context on the course part `xc7z020clg400-2` with a `100 MHz` clock. All 13 tops are fully routed
-with no DRC errors. Input and output ports are timed as if every neighbour were a register on the
-same clock (0 ns input and output delay). **Twelve of the thirteen meet 100 MHz; the Gardner
-symbol timing recovery does not.**
+context on the course part `xc7z020clg400-2` with a `100 MHz` clock. All 13 tops, plus the one-clock
+teaching form of the Gardner loop, are fully routed with no DRC errors. Input and output ports are timed as if every neighbour were a register on the
+same clock (0 ns input and output delay). **All 13 meet 100 MHz.** The Gardner
+symbol timing recovery needed a pipelined schedule for that; its one-clock teaching form
+(`PIPELINED = 0`) is listed as well and misses by 9.4 ns.
 
 | Lab | Top | LUT | FF | DSP48E1 | BRAM | Post-route WNS at 100 MHz | Estimate |
 |---|---|---:|---:|---:|---:|---:|---:|
@@ -19,7 +20,8 @@ symbol timing recovery does not.**
 | 5.8 | `bpsk_symbol_timing_sampler` | 53 | 65 | 0 | 0 | +5.065 ns | |
 | 5.8 | `bpsk_hard_decision` | 1 | 2 | 0 | 0 | +7.378 ns | |
 | 5.8 | `bpsk_rx_bit_recovery_chain` | 251 | 2333 | 96 | 0 | +2.699 ns | about 137 MHz |
-| 5.8 | `bpsk_symbol_timing_recovery` (Gardner loop) | 476 | 201 | 8 | 0 | **-13.447 ns**, 122 failing endpoints | about 43 MHz |
+| 5.8 | `bpsk_symbol_timing_recovery` (Gardner loop, `PIPELINED = 1`) | 967 | 659 | 2 | 0 | +0.335 ns | about 103 MHz |
+| 5.8 | `bpsk_symbol_timing_recovery_pipelined0` (the same module, `PIPELINED = 0`) | 338 | 201 | 2 | 0 | **-9.390 ns**, 122 failing endpoints | about 52 MHz |
 | 5.9 | `bpsk_frame_bit_source` | 36 | 18 | 0 | 0 | +5.225 ns | |
 | 5.9 | `bpsk_framed_tx_chain` | 213 | 593 | 96 | 0 | +3.946 ns | about 165 MHz |
 | 5.9 | `bpsk_ber_counter` | 287 | 203 | 0 | 0 | +2.826 ns | about 139 MHz |
@@ -47,17 +49,40 @@ the same datapath. The Lab 5.10 top drives `tx_q` to a port; the AXI-Lite top ex
 registers, and Vivado removes logic whose result never reaches an output. The difference equals
 one channel of one filter, which is consistent with the TX Q path being removed.
 
-**The Gardner loop does not meet 100 MHz.** `bpsk_symbol_timing_recovery` computes the whole loop
-in one clock: NCO -> interpolation multiply (2 DSP48E1) -> sign-Gardner detector -> PI loop filter
--> next NCO step. The worst path runs from `nco_reg` to `w_step_reg` through 40 logic levels
-(28 of them carry chains) in 22.8 ns against a 10 ns budget. This module is the "drop-in
-alternative" of Lab 5.8b and is not instantiated in the Lab 5.10/5.11 tops with their default parameters, whose fixed-phase
-`bpsk_symbol_timing_sampler` meets timing with +5.065 ns. The Gardner module and its alternative are selected by the
-`TIMING_RECOVERY` parameter of `bpsk_rx_bit_recovery_chain` (default 0, fixed phase). Before the
-loop runs on hardware at 100 MHz it needs pipelining. The loop filter and the NCO step update only
-on the on-time strobe, once per symbol (every 8 input samples), and the interpolator is evaluated
-on every strobe (about every 4 samples), so both have several clocks of slack in the loop's own
-time scale; the work is to split the path without changing the loop's bit-exact behaviour.
+**The Gardner loop needed a different schedule to meet 100 MHz.** The loop is a recursion over
+one sample: at a strobe, NCO -> mu -> interpolation multiply -> add -> saturate -> sign-Gardner
+error -> PI loop filter -> clamp -> next NCO step, and the next sample already needs that step.
+The module is the "drop-in alternative" of Lab 5.8b, selected by the `TIMING_RECOVERY` parameter
+of `bpsk_rx_bit_recovery_chain` (default 0: the fixed-phase `bpsk_symbol_timing_sampler`, +5.065
+ns), so the Lab 5.10/5.11 tops do not contain it by default. Three measured steps:
+
+| Version | LUT | FF | DSP48E1 | WNS at 100 MHz | Worst path |
+|---|---:|---:|---:|---:|---|
+| Original (commit `3d9aee8`): 32-bit x 32-bit interpolation multiply | 476 | 201 | 8 | -13.447 ns | 40 levels, 22.8 ns |
+| `PIPELINED = 0`: same one-clock loop, 17-bit x 17-bit multiply | 338 | 201 | 2 | -9.390 ns | 34 levels, 18.9 ns |
+| `PIPELINED = 1` (default): two-clock-late update with lookahead | 967 | 659 | 2 | +0.335 ns | 20 levels, 9.5 ns |
+
+The interpolation operands fit in 17 bits (`x - x_prev` and `mu` in `[0, 1)`), so declaring them
+that wide gives the same products from one DSP48E1 per channel instead of a cascade; that alone
+removes 4 ns. The rest needs the schedule changed without changing a single output value:
+
+- After a strobe the next one is at least three samples away when `3 * W_MAX <= 1.0` (55296 <=
+  65536 at 8 samples per symbol; the module refuses `PIPELINED = 1` otherwise). So the strobe clock
+  only captures the operands, the product is registered in the next clock, and the clock after that
+  forms the symbol, the timing error and the loop update. The samples consumed in between stepped
+  the NCO with the old step; the update rewrites the NCO as "NCO after the strobe - k * new step",
+  k = 0, 1 or 2.
+- The timing error has three values, so the three possible integrator values, steps and NCO values
+  are computed and registered at the strobe, and the error only selects one (lookahead). An
+  intermediate version computed the candidates combinationally; Vivado merged the selection back
+  into one subtraction after the multiplexer and the path stayed at -4.6 ns. Registering the
+  candidates is what keeps the selection a plain multiplexer.
+
+The price is area: 659 instead of 201 flip-flops and twice the LUTs, mostly the nine registered
+32-bit candidates. `tb_bpsk_symbol_timing_recovery_equivalence.v` feeds both versions the same
+drifted burst (with random idle clocks between samples, so 0, 1 and 2 consumed samples all occur)
+and requires every output symbol to match in I and Q; the model bit check and the full BER chain
+with the loop enabled pass unchanged.
 
 **The remaining critical paths are fanout, not logic.** In the two top-level designs the worst
 path has 0-1 logic levels and is more than 94 % routing: a valid signal driving the clock enables
@@ -79,6 +104,7 @@ From the repository root, with Vivado available through `VIVADO_BIN` or a standa
 python tools/generate_block5_bpsk_vivado_reports.py
 python tools/generate_block5_bpsk_vivado_reports.py --reuse    # re-parse without rerunning Vivado
 python tools/generate_block5_bpsk_vivado_reports.py --top bpsk_symbol_timing_recovery
+python tools/generate_block5_bpsk_vivado_reports.py --top bpsk_symbol_timing_recovery_pipelined0
 ```
 
 Each top is built in an in-memory project from the checked-in `bpsk_*.v` sources:
