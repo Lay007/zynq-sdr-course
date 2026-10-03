@@ -31,18 +31,22 @@ The run targets `xc7z020clg400-2` and uses a `10.000 ns` / `100.000 MHz` clock c
 
 ## Key results
 
+Placed and routed out of context at 100 MHz with the port paths timed
+(`reports/fpga/block5-bpsk-vivado-evidence.md`; the first synthesis-only snapshot is kept in
+`reports/fpga/block5-timing-summary.md`):
+
 | Block | LUT | FF | DSP | BRAM | Fmax, MHz | Latency, cycles | Timing result |
 |---|---:|---:|---:|---:|---:|---:|---|
-| `iq_passthrough` | 1 | 33 | 0 | 0 | N/A | 1 | no internal reg-to-reg setup path in OOC timing |
-| `fir_iq_4tap` | 117 | 129 | 4 | 0 | 98.795 | 1 | misses 100 MHz by `0.125 ns` WNS |
-| `nco_mixer_iq` | 110 | 37 | 4 | 0 | 92.558 | 1 | misses 100 MHz by `0.807 ns` WNS |
-| `axis_iq_passthrough` | 5 | 34 | 0 | 0 | 579.710 | 1 | meets 100 MHz with `8.064 ns` WNS |
+| `iq_passthrough` | 1 | 33 | 0 | 0 | 373.134 | 1 | meets 100 MHz with `7.320 ns` WNS |
+| `fir_iq_4tap` | 117 | 129 | 4 | 0 | 97.590 | 1 | misses 100 MHz by `0.247 ns` WNS |
+| `nco_mixer_iq` | 110 | 43 | 4 | 0 | 96.516 | 1 | misses 100 MHz by `0.361 ns` WNS |
+| `axis_iq_passthrough` | 4 | 34 | 0 | 0 | 288.934 | 1 | meets 100 MHz with `6.539 ns` WNS |
 
 ## Interpretation
 
 - The two arithmetic blocks remain compact on XC7Z020: both use 4 DSP48E1 slices and no BRAM tiles.
 - The AXI-Stream wrapper overhead is negligible compared with the arithmetic blocks, which is useful when estimating integration cost into a Zynq data path.
-- `fir_iq_4tap` is already close to the 100 MHz target, while `nco_mixer_iq` needs additional timing headroom before it should be treated as an integrated board-level datapath block.
+- `fir_iq_4tap` and `nco_mixer_iq` both miss 100 MHz by a fraction of a nanosecond on the same kind of path: product, sum, rounding and saturation in one clock. Registering the sum before rounding and saturation closes it (Lab 5.2, exercise 4).
 
 ## Integrated routed results
 

@@ -4,15 +4,21 @@
 
 ## Result
 
-Vivado 2021.1 synthesizes, places and routes every BPSK RTL module of Labs 5.6-5.11 out of
-context on the course part `xc7z020clg400-2` with a `100 MHz` clock. All 13 tops, plus the one-clock
-teaching form of the Gardner loop, are fully routed with no DRC errors. Input and output ports are timed as if every neighbour were a register on the
-same clock (0 ns input and output delay). **All 13 meet 100 MHz.** The Gardner
+Vivado 2021.1 synthesizes, places and routes every BPSK RTL module of Labs 5.6-5.11, and the four
+introductory modules of Labs 5.1-5.4, out of context on the course part `xc7z020clg400-2` with a
+`100 MHz` clock. All 17 tops, plus the one-clock teaching form of the Gardner loop, are fully
+routed with no DRC errors. Input and output ports are timed as if every neighbour were a register
+on the same clock (0 ns input and output delay). **All 13 BPSK modules meet 100 MHz.** The Gardner
 symbol timing recovery needed a pipelined schedule for that; its one-clock teaching form
-(`PIPELINED = 0`) is listed as well and misses by 9.4 ns.
+(`PIPELINED = 0`) is listed as well and misses by 9.4 ns. Of the introductory modules, the FIR and
+the NCO mixer miss by a fraction of a nanosecond.
 
 | Lab | Top | LUT | FF | DSP48E1 | BRAM | Post-route WNS at 100 MHz | Estimate |
 |---|---|---:|---:|---:|---:|---:|---:|
+| 5.1 | `iq_passthrough` | 1 | 33 | 0 | 0 | +7.320 ns | |
+| 5.2 | `fir_iq_4tap` | 117 | 129 | 4 | 0 | **-0.247 ns**, 16 failing endpoints | about 98 MHz |
+| 5.3 | `nco_mixer_iq` | 110 | 43 | 4 | 0 | **-0.361 ns**, 16 failing endpoints | about 97 MHz |
+| 5.4 | `axis_iq_passthrough` | 4 | 34 | 0 | 0 | +6.539 ns | |
 | 5.7 | `bpsk_symbol_mapper` | 2 | 4 | 0 | 0 | +7.378 ns | |
 | 5.7 | `bpsk_upsampler_8x` | 21 | 37 | 0 | 0 | +6.567 ns | |
 | 5.6 | `bpsk_rrc_tx_fir` (65 taps, I and Q) | 148 | 2266 | 96 | 0 | +3.038 ns | about 144 MHz |
@@ -88,6 +94,27 @@ with the loop enabled pass unchanged.
 path has 0-1 logic levels and is more than 94 % routing: a valid signal driving the clock enables
 of the matched filter's adder tree (Lab 5.10), and the AXI reset driving the reset pins of the
 filter's product registers (Lab 5.11).
+
+## The four introductory modules (Labs 5.1-5.4)
+
+The first Block 5 timing report, [`block5-timing-summary.md`](block5-timing-summary.md), ran
+synthesis only and constrained only the clock. Re-run with this flow (placement, routing and
+timed ports), the two arithmetic modules still miss 100 MHz by a fraction of a nanosecond, and the
+numbers moved in both directions:
+
+| Module | Synthesis only, clock-only constraint | This flow |
+|---|---:|---:|
+| `iq_passthrough` | no timed path (input to register untimed) | +7.320 ns |
+| `fir_iq_4tap` | -0.125 ns | -0.247 ns |
+| `nco_mixer_iq` | -0.807 ns | -0.361 ns |
+| `axis_iq_passthrough` | +8.064 ns | +6.539 ns |
+
+Post-synthesis timing uses estimated wire delays; after placement and routing they are real, and
+`phys_opt_design` can also shorten a path, which is why the NCO improved while the FIR got slightly
+worse. Both worst paths are the same kind: two cascaded DSP48E1 products followed by the
+add/round/saturate carry chains into the output register, about 10.1-10.3 ns in one clock (the
+FIR with 20 logic levels, the NCO with 14). Registering the sum before rounding and saturation is
+the fix discussed in Lab 5.2.
 
 ## Relation to the earlier Block 5 reports
 

@@ -2,6 +2,11 @@
 
 This page records the first Vivado timing evidence for the four educational Block 5 RTL modules.
 
+> **Superseded numbers.** This snapshot is synthesis-only with a clock-only constraint, so port paths are
+> untimed. The same four modules re-run with placement, routing and timed ports are in
+> [`block5-bpsk-vivado-evidence.md`](block5-bpsk-vivado-evidence.md): `fir_iq_4tap` -0.247 ns,
+> `nco_mixer_iq` -0.361 ns, `axis_iq_passthrough` +6.539 ns, `iq_passthrough` +7.320 ns.
+
 ## Constraint and provenance
 
 | Field | Value |

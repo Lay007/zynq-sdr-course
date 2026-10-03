@@ -201,7 +201,8 @@ Reference result for this RTL, Vivado 2021.1 out-of-context synthesis on the cou
 | DSP48E1 | 4 | constant multiplications mapped to DSP slices |
 | BRAM | 0 | coefficients are constants |
 | Latency | 1 clock | from `in_valid` to `out_valid` |
-| Timing at 100 MHz | WNS -0.125 ns | misses by a narrow margin: 20 logic levels, estimate about 98.8 MHz |
+| Timing at 100 MHz | WNS -0.125 ns | misses by a narrow margin: 20 logic levels, estimate about 98.8 MHz (synthesis only) |
+| Timing after placement and routing | WNS -0.247 ns | still a miss, same 20-level path; port paths timed ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block5-bpsk-vivado-evidence.md)) |
 
 ## What to expect
 
