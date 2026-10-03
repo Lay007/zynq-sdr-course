@@ -10,9 +10,16 @@
 // slicer tolerates, so an uncorrected or wrongly corrected symbol fails.
 // Two OFDM symbols are sent back to back to exercise the symbol buffer and
 // the backpressure between them.
+//
+// CFO_PPM adds a carrier frequency offset of CFO_PPM * 1e-6 cycles per sample:
+// the channel phase then grows through every symbol (and inside it), so each
+// symbol needs its own coefficient. The bench prints a RESULT line with the
+// bit errors before PASS/FAIL, so tools/run_ofdm_cfo_sweep.py can map how much
+// offset a common-phase correction tolerates.
 module tb_ofdm_tx_rx_pilot_corrected_loopback;
     parameter integer ANGLE_DEG = 120;
-    localparam integer SYMBOLS = 2;
+    parameter integer CFO_PPM = 0;
+    parameter integer SYMBOLS = 2;
     localparam integer PAIRS = 48 * SYMBOLS;
 
     reg clk = 1'b0;
@@ -31,8 +38,11 @@ module tb_ofdm_tx_rx_pilot_corrected_loopback;
     wire [15:0] tx_saturation_count;
     wire tx_frame_error;
 
-    // Flat channel exp(j*ANGLE_DEG) in Q1.15, applied in the time domain.
+    // Flat channel exp(j*(ANGLE_DEG + 2*pi*CFO*n)) in Q1.15, applied in the
+    // time domain; n counts the transmitted samples.
     real angle_rad;
+    real sample_phase;
+    integer tx_sample_count = 0;
     integer rot_c;
     integer rot_s;
     integer prod_re;
@@ -54,7 +64,16 @@ module tb_ofdm_tx_rx_pilot_corrected_loopback;
         end
     endfunction
 
+    always @(posedge clk)
+        if (tx_sample_valid && tx_sample_ready)
+            tx_sample_count <= tx_sample_count + 1;
+
     always @* begin
+        sample_phase = angle_rad + 6.283185307179586 * CFO_PPM * 1.0e-6 * tx_sample_count;
+        rot_c = $rtoi($floor(32768.0 * $cos(sample_phase) + 0.5));
+        rot_s = $rtoi($floor(32768.0 * $sin(sample_phase) + 0.5));
+        if (rot_c > 32767) rot_c = 32767;
+        if (rot_s > 32767) rot_s = 32767;
         prod_re = tx_sample_re * rot_c - tx_sample_im * rot_s;
         prod_im = tx_sample_re * rot_s + tx_sample_im * rot_c;
         channel_re = round_clip_q15(prod_re);
@@ -228,10 +247,6 @@ module tb_ofdm_tx_rx_pilot_corrected_loopback;
 
     initial begin
         angle_rad = ANGLE_DEG * 3.14159265358979 / 180.0;
-        rot_c = $rtoi($floor(32768.0 * $cos(angle_rad) + 0.5));
-        rot_s = $rtoi($floor(32768.0 * $sin(angle_rad) + 0.5));
-        if (rot_c > 32767) rot_c = 32767;
-        if (rot_s > 32767) rot_s = 32767;
 
         repeat (4) @(posedge clk);
         resetn = 1'b1;
@@ -241,7 +256,7 @@ module tb_ofdm_tx_rx_pilot_corrected_loopback;
             send_pair(i);
 
         timeout = 0;
-        while ((recovered_count < PAIRS) && (timeout < 20000)) begin
+        while ((recovered_count < PAIRS) && (timeout < 10000 * SYMBOLS)) begin
             @(posedge clk);
             timeout = timeout + 1;
         end
@@ -262,12 +277,21 @@ module tb_ofdm_tx_rx_pilot_corrected_loopback;
             $display("FAIL pilot energy reported as zero");
             errors = errors + 1;
         end
-        // The tracker measures the channel angle (pi = 2^15 units).
-        expected_phase = (ANGLE_DEG * 32768) / 180;
+        // The tracker measures the channel angle (pi = 2^15 units); with a CFO,
+        // the mean channel phase over the last symbol's 64 useful samples
+        // (samples 16..79 of the last 80-sample symbol).
+        expected_phase = $rtoi(((ANGLE_DEG / 180.0)
+            + 2.0 * CFO_PPM * 1.0e-6 * (80.0 * (SYMBOLS - 1) + 16.0 + 31.5)) * 32768.0);
+        expected_phase = ((expected_phase % 65536) + 65536) % 65536;
+        if (expected_phase >= 32768) expected_phase = expected_phase - 65536;
         phase_error = last_phase - expected_phase;
         if (phase_error > 32767) phase_error = phase_error - 65536;
         if (phase_error < -32768) phase_error = phase_error + 65536;
-        if (phase_error > 64 || phase_error < -64) begin
+        // With a CFO the data carriers leak into the pilot bins (ICI) and bias
+        // the estimate in proportion to the offset (tools/ofdm_cfo_pilot_bias.py
+        // reproduces the RTL value with a float model), so only the BER is
+        // checked then; the phase is reported in the RESULT line.
+        if ((CFO_PPM == 0) && (phase_error > 64 || phase_error < -64)) begin
             $display("FAIL measured channel phase %0d, expected about %0d", last_phase, expected_phase);
             errors = errors + 1;
         end
@@ -276,6 +300,8 @@ module tb_ofdm_tx_rx_pilot_corrected_loopback;
             errors = errors + 1;
         end
 
+        $display("RESULT angle_deg=%0d cfo_ppm=%0d symbols=%0d bit_errors=%0d bits=%0d phase=%0d expected_phase=%0d",
+                 ANGLE_DEG, CFO_PPM, SYMBOLS, bit_errors, 2 * PAIRS, last_phase, expected_phase);
         if (errors == 0) begin
             $display("PASS: OFDM %0d-degree channel -> pilot-corrected RX recovered %0d/%0d bits in %0d symbols, BER=0 (phase %0d, coeff=(%0d,%0d))",
                      ANGLE_DEG, 2 * PAIRS, 2 * PAIRS, SYMBOLS, last_phase, applied_coeff_re, applied_coeff_im);
