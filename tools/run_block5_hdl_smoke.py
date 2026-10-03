@@ -216,6 +216,10 @@ TESTS = (
         rtl("bpsk_symbol_timing_recovery.v") + (tb("tb_bpsk_symbol_timing_recovery.v"),),
     ),
     HdlTest(
+        "tb_bpsk_symbol_timing_recovery_equivalence",
+        rtl("bpsk_symbol_timing_recovery.v") + (tb("tb_bpsk_symbol_timing_recovery_equivalence.v"),),
+    ),
+    HdlTest(
         "tb_bpsk_zynq_ber_timing_recovery",
         BPSK_TOP + (tb("tb_bpsk_zynq_ber_timing_recovery.v"),),
     ),
