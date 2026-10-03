@@ -30,11 +30,11 @@ Table of Contents
 +-------------------------+------+-------+------------+-----------+-------+
 |        Site Type        | Used | Fixed | Prohibited | Available | Util% |
 +-------------------------+------+-------+------------+-----------+-------+
-| Slice LUTs*             |  480 |     0 |          0 |     53200 |  0.90 |
-|   LUT as Logic          |  480 |     0 |          0 |     53200 |  0.90 |
+| Slice LUTs*             |  984 |     0 |          0 |     53200 |  1.85 |
+|   LUT as Logic          |  984 |     0 |          0 |     53200 |  1.85 |
 |   LUT as Memory         |    0 |     0 |          0 |     17400 |  0.00 |
-| Slice Registers         |  200 |     0 |          0 |    106400 |  0.19 |
-|   Register as Flip Flop |  200 |     0 |          0 |    106400 |  0.19 |
+| Slice Registers         |  641 |     0 |          0 |    106400 |  0.60 |
+|   Register as Flip Flop |  641 |     0 |          0 |    106400 |  0.60 |
 |   Register as Latch     |    0 |     0 |          0 |    106400 |  0.00 |
 | F7 Muxes                |    0 |     0 |          0 |     26600 |  0.00 |
 | F8 Muxes                |    0 |     0 |          0 |     13300 |  0.00 |
@@ -56,8 +56,8 @@ Table of Contents
 | 0     |          Yes |           - |            - |
 | 0     |          Yes |           - |          Set |
 | 0     |          Yes |           - |        Reset |
-| 0     |          Yes |         Set |            - |
-| 200   |          Yes |       Reset |            - |
+| 4     |          Yes |         Set |            - |
+| 637   |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -80,8 +80,8 @@ Table of Contents
 +----------------+------+-------+------------+-----------+-------+
 |    Site Type   | Used | Fixed | Prohibited | Available | Util% |
 +----------------+------+-------+------------+-----------+-------+
-| DSPs           |    8 |     0 |          0 |       220 |  3.64 |
-|   DSP48E1 only |    8 |       |            |           |       |
+| DSPs           |    2 |     0 |          0 |       220 |  0.91 |
+|   DSP48E1 only |    2 |       |            |           |       |
 +----------------+------+-------+------------+-----------+-------+
 
 
@@ -147,15 +147,16 @@ Table of Contents
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| LUT2     |  358 |                 LUT |
-| FDRE     |  200 |        Flop & Latch |
-| CARRY4   |  116 |          CarryLogic |
-| LUT4     |   70 |                 LUT |
-| LUT3     |   70 |                 LUT |
-| LUT5     |   54 |                 LUT |
-| LUT6     |   41 |                 LUT |
-| LUT1     |   31 |                 LUT |
-| DSP48E1  |    8 |    Block Arithmetic |
+| FDRE     |  637 |        Flop & Latch |
+| LUT6     |  390 |                 LUT |
+| LUT2     |  291 |                 LUT |
+| CARRY4   |  169 |          CarryLogic |
+| LUT5     |  153 |                 LUT |
+| LUT3     |  130 |                 LUT |
+| LUT1     |  125 |                 LUT |
+| LUT4     |   80 |                 LUT |
+| FDSE     |    4 |        Flop & Latch |
+| DSP48E1  |    2 |    Block Arithmetic |
 +----------+------+---------------------+
 
 
