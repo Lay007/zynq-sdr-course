@@ -27,8 +27,14 @@ file mkdir $output_dir
 set_param general.maxThreads 1
 create_project -in_memory -part $part_name
 
-# Every checked-in BPSK source; synth_design keeps only what the top uses.
-foreach rtl_path [lsort [glob [file join $root_dir blocks/block_05_fpga_hdl_flow/rtl/bpsk_*.v]]] {
+# Every checked-in BPSK source plus the four introductory Block 5 modules;
+# synth_design keeps only what the top uses.
+set rtl_dir [file join $root_dir blocks/block_05_fpga_hdl_flow/rtl]
+set rtl_paths [lsort [glob [file join $rtl_dir bpsk_*.v]]]
+foreach intro {iq_passthrough.v fir_iq_4tap.v nco_mixer_iq.v axis_iq_passthrough.v} {
+    lappend rtl_paths [file join $rtl_dir $intro]
+}
+foreach rtl_path $rtl_paths {
     read_verilog $rtl_path
 }
 

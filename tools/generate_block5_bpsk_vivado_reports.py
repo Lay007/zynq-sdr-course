@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate reproducible Vivado OOC implementation evidence for the Block 5 BPSK RTL (Labs 5.6-5.11)."""
+"""Generate reproducible Vivado OOC implementation evidence for the Block 5 RTL (Labs 5.1-5.4 and the BPSK Labs 5.6-5.11)."""
 
 from __future__ import annotations
 
@@ -19,6 +19,12 @@ DEFAULT_CLOCK_PERIOD_NS = 10.0
 
 # (top module, clock port, lab)
 TOPS: tuple[tuple[str, str, str], ...] = (
+    # The four introductory modules, re-run with this flow (the first Block 5
+    # report used synthesis only, without port delays).
+    ("iq_passthrough", "clk", "5.1"),
+    ("fir_iq_4tap", "clk", "5.2"),
+    ("nco_mixer_iq", "clk", "5.3"),
+    ("axis_iq_passthrough", "aclk", "5.4"),
     ("bpsk_symbol_mapper", "clk", "5.7"),
     ("bpsk_upsampler_8x", "clk", "5.7"),
     ("bpsk_rrc_tx_fir", "clk", "5.6"),
