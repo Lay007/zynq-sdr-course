@@ -201,6 +201,62 @@ PASS: OFDM -150-degree channel -> pilot-corrected RX recovered 192/192 bits in 2
 
 The measured phase is the channel angle in units of pi/2^15 (120 degrees = 21845), and the coefficient is `16384 * exp(-j * phase)` in Q2.14. If the corrector is forced to apply the identity coefficient instead, the same test fails with 96/192 bit errors.
 
+## Verification stage 2c: a carrier frequency offset
+
+A static rotation is the easy case: every symbol needs the same coefficient. A carrier frequency
+offset (CFO) makes the phase grow through every symbol and inside it. The same testbench takes
+`CFO_PPM` (offset in 1e-6 cycles per sample) and `SYMBOLS`, and prints a `RESULT` line before
+PASS/FAIL; `tools/run_ofdm_cfo_sweep.py` runs it for a list of offsets:
+
+```bash
+python tools/run_ofdm_cfo_sweep.py --angle-deg 30 --symbols 8
+```
+
+Measured with Icarus Verilog 12.0 (768 bits per point):
+
+| CFO, ppm | CFO / subcarrier spacing | Phase step per symbol | Bit errors | RTL phase (last symbol) | Float-model phase |
+|---:|---:|---:|---:|---:|---:|
+| 0 | 0.000 | 0 deg | 0 | 5467 | 5461.3 |
+| 1000 | 0.064 | 28.8 deg | 0 | -19767 | -19764.1 |
+| 2000 | 0.128 | 57.6 deg | 0 | 20491 | 20487.2 |
+| 4000 | 0.256 | 115.2 deg | 0 | -30221 | -30220.4 |
+| 5000 | 0.320 | 144.0 deg | 0 | 9907 | 9904.7 |
+| 6000 | 0.384 | 172.8 deg | 13 | -15547 | -15540.8 |
+| 7000 | 0.448 | 201.6 deg | 71 | 24527 | 24514.3 |
+| 8000 | 0.512 | 230.4 deg | 104 | -997 | -1006.0 |
+
+Three things to read from it:
+
+- **Same-symbol correction tracks large phase steps.** Up to 144 degrees per symbol the corrector
+  still gives BER = 0, because each symbol is corrected with the phase measured on that symbol's
+  own pilots. A receiver that applied the previous symbol's coefficient would be wrong by the whole
+  step, and a QPSK slicer only tolerates 45 degrees.
+- **What fails is the common-phase model, not the tracking.** Inside one symbol the phase still
+  moves by `2*pi*CFO*64`, and the subcarriers stop being orthogonal: energy from every carrier
+  leaks into its neighbours (inter-carrier interference, ICI). From about 0.38 of a subcarrier
+  spacing the ICI alone flips bits. One coefficient per symbol cannot undo it; that needs CFO
+  estimation and correction in the time domain, before the FFT.
+- **The pilot estimate is biased, and the bias is not noise.** The tracker's phase differs from
+  the mean channel phase of the symbol by an amount that grows with the CFO. The float model
+  `tools/ofdm_cfo_pilot_bias.py` builds the same symbols and reproduces the RTL phase to within
+  about 13 units (0.07 degrees); with the data carriers left empty the difference is zero. The
+  bias is ICI from the data carriers leaking into the four pilot bins, and it depends on the data:
+
+```bash
+python tools/ofdm_cfo_pilot_bias.py --angle-deg 30 --symbols 8 --ppm 0 500 2000 4000
+```
+
+```text
+   CFO ppm   mean phase   pilot estimate   bias (units, deg)   bias with pilots only
+         0       5461.3           5461.3       0.0    0.00                   0.0
+       500      25367.9          25624.8     256.9    1.41                  -0.0
+      2000      19551.6          20487.2     935.6    5.14                  -0.0
+      4000     -31894.2         -30220.4    1673.8    9.19                  -0.0
+```
+
+With a CFO the testbench therefore checks the BER and only reports the phase. CI runs the 2000 ppm,
+8-symbol case.
+
 ## What this lab does and does not prove
 
 This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarrier allocator/extractor, streaming 64-point IFFT/FFT, CP insertion/removal, one-tap equalizer, explicit scaling/saturation/overflow counters) and Verification stages 1-2 (float vs. fixed-point, self-checking digital loopback) with real, reproducible, measured evidence: 96/96 bits at BER=0 for both the plain digital loopback and a loopback through a genuine complex channel rotation with the equalizer actually correcting it.
@@ -220,6 +276,8 @@ Each exercise changes the equalizer coefficient on line `.coeff_re(16'sd0), .coe
 2. Turn the equalizer off, `W = 1` (`.coeff_re(16'sd16384), .coeff_im(16'sd0)`), or use `W = -1`. The residual rotation is +90 or -90 degrees: `48/96 bit errors` in both cases. With Gray QPSK a quarter turn flips exactly one of the two bits of every symbol.
 3. Correct only half of the rotation, `W = exp(-j pi/4)` (`.coeff_re(16'sd11585), .coeff_im(-16'sd11585)`). The residual is 45 degrees and the points land on the axes (for example data index 22 gives `EQ=(513,1)`): `22/96 bit errors`. Explain why this is the worst case for a hard decision and why the count is not exactly 48.
 4. In a real receiver the coefficient is not given by the testbench. Which OFDM symbols or subcarriers would you use to estimate it, and how does Lab 8.5 do it in Python?
+5. With a 2000 ppm CFO, how many degrees would a receiver be off on every symbol if it applied the previous symbol's coefficient? Compare with the 45-degree margin of a QPSK slicer and with the table's 57.6-degree step. At which offset would such a receiver start to fail?
+6. Run `python tools/ofdm_cfo_pilot_bias.py --ppm 4000` and look at the bias with and without data carriers. Why does a known, deterministic data pattern give a bias rather than random noise, and would more pilots reduce it?
 
 ## Report checklist
 
