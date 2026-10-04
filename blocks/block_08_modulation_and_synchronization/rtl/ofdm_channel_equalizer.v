@@ -335,8 +335,10 @@ module ofdm_channel_equalizer #(
             if (retrain)
                 mode_train <= 1'b1;
 
-            // CORDIC pass over all 64 bins after a training symbol.
-            case (n_state)
+            // CORDIC pass over all 64 bins after a training symbol. Gated by
+            // the parameter so that with NORMALIZE = 0 synthesis removes the
+            // engine and its second read port of the coefficient memory.
+            if (NORMALIZE != 0) case (n_state)
                 N_LOAD: begin
                     n_e <= n_gr * n_gr + n_gi * n_gi;
                     n_state <= N_LZ;
