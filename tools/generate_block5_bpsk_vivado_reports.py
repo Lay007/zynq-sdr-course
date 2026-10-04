@@ -28,6 +28,7 @@ TOPS: tuple[tuple[str, str, str], ...] = (
     ("bpsk_symbol_mapper", "clk", "5.7"),
     ("bpsk_upsampler_8x", "clk", "5.7"),
     ("bpsk_rrc_tx_fir", "clk", "5.6"),
+    ("bpsk_rrc_tx_polyphase", "clk", "5.7"),
     ("bpsk_rrc_rx_fir", "clk", "5.8"),
     ("bpsk_symbol_timing_sampler", "clk", "5.8"),
     ("bpsk_hard_decision", "clk", "5.8"),
