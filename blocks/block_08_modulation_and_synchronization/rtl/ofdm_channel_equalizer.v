@@ -146,6 +146,13 @@ module ofdm_channel_equalizer #(
     reg signed [17:0] g_re [0:63];
     reg signed [17:0] g_im [0:63];
 
+    integer init_k;
+    initial
+        for (init_k = 0; init_k < 64; init_k = init_k + 1) begin
+            g_re[init_k] = 18'sd0;
+            g_im[init_k] = 18'sd0;
+        end
+
     // Stage 0: registered input bin and its coefficient.
     reg               s0_valid;
     reg               s0_train;
@@ -184,8 +191,6 @@ module ofdm_channel_equalizer #(
     wire stall = out_valid && !out_ready;
     assign bin_ready = resetn && !stall;
 
-    integer k;
-
     always @(posedge clk) begin
         if (!resetn) begin
             mode_train <= 1'b1;
@@ -202,10 +207,10 @@ module ofdm_channel_equalizer #(
             out_last <= 1'b0;
             s0_train <= 1'b0;
             s1_train <= 1'b0;
-            for (k = 0; k < 64; k = k + 1) begin
-                g_re[k] <= 18'sd0;
-                g_im[k] <= 18'sd0;
-            end
+            // g_re/g_im are deliberately not reset: the training symbol writes
+            // all 64 entries (zero on null bins) before any data symbol reads
+            // them, and a memory without reset can live in LUT RAM instead of
+            // 2304 flip-flops.
         end else begin
             saturation_count <= saturation_count + saturation_pending;
             saturation_pending <= 2'd0;
