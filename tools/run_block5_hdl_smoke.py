@@ -216,6 +216,11 @@ TESTS = (
         rtl("bpsk_symbol_timing_recovery.v") + (tb("tb_bpsk_symbol_timing_recovery.v"),),
     ),
     HdlTest(
+        "tb_bpsk_rrc_tx_polyphase_equivalence",
+        rtl("bpsk_upsampler_8x.v", "bpsk_rrc_tx_fir.v", "bpsk_rrc_tx_polyphase.v")
+        + (tb("tb_bpsk_rrc_tx_polyphase_equivalence.v"),),
+    ),
+    HdlTest(
         "tb_bpsk_symbol_timing_recovery_equivalence",
         rtl("bpsk_symbol_timing_recovery.v") + (tb("tb_bpsk_symbol_timing_recovery_equivalence.v"),),
     ),
