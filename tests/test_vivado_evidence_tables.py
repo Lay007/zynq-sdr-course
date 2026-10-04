@@ -33,6 +33,15 @@ def _int_cell(cell: str) -> int | None:
     return int(cell) if cell.isdigit() else None
 
 
+def _tiles_cell(cell: str) -> float | None:
+    """BRAM tiles: an integer or a half (0.5 / 0,5 for one RAMB18)."""
+    cell = cell.strip().replace(",", ".")
+    try:
+        return float(cell)
+    except ValueError:
+        return None
+
+
 def table_rows(text: str, tops: set[str]) -> dict[str, dict[str, object]]:
     """Rows of the form | ... | `top` ... | LUT | FF | DSP | BRAM | WNS | ... |."""
     rows: dict[str, dict[str, object]] = {}
@@ -44,7 +53,8 @@ def table_rows(text: str, tops: set[str]) -> dict[str, dict[str, object]]:
             match = TOP_RE.search(cell)
             if not match or match.group(1) not in tops:
                 continue
-            numbers = [_int_cell(c) for c in cells[index + 1:index + 5]]
+            numbers = [_int_cell(c) for c in cells[index + 1:index + 4]]
+            numbers.append(_tiles_cell(cells[index + 4]) if index + 4 < len(cells) else None)
             if len(numbers) != 4 or any(n is None for n in numbers):
                 continue
             wns_cell = cells[index + 5] if index + 5 < len(cells) else ""
@@ -77,7 +87,7 @@ def test_report_table_matches_metrics(report: str, metrics: str) -> None:
             "lut": util["lut"],
             "ff": util["ff"],
             "dsp": util["dsp"],
-            "bram": int(util["bram_tiles"]),
+            "bram": float(util["bram_tiles"]),
         }
         for key, value in expected.items():
             if row[key] != value:
@@ -98,5 +108,6 @@ def test_table_parser_reads_both_decimal_styles() -> None:
         "| `a_top` | WNS -10.2 ns | other table |\n"
     )
     rows = table_rows(text, {"a_top", "b_top"})
-    assert rows["a_top"] == {"lut": 10, "ff": 20, "dsp": 1, "bram": 0, "wns": 1.335}
+    assert rows["a_top"] == {"lut": 10, "ff": 20, "dsp": 1, "bram": 0.0, "wns": 1.335}
+    assert table_rows("| `c_top` | 1 | 2 | 3 | 3,5 | +0,1 нс |\n", {"c_top"})["c_top"]["bram"] == 3.5
     assert rows["b_top"]["wns"] == -13.447
