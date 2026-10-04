@@ -7,12 +7,14 @@ on:
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
       - "verification/vectors/block08_ofdm_pilot_tracker_vectors.txt"
+      - "verification/vectors/block08_ofdm_channel_eq_vectors.txt"
       - ".github/workflows/block8_ofdm_rx_chain.yml"
   pull_request:
     paths:
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v"
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
       - "verification/vectors/block08_ofdm_pilot_tracker_vectors.txt"
+      - "verification/vectors/block08_ofdm_channel_eq_vectors.txt"
       - ".github/workflows/block8_ofdm_rx_chain.yml"
   workflow_dispatch:
 
@@ -140,6 +142,20 @@ jobs:
           set -euo pipefail
           iverilog -g2012 -Wall             -s tb_ofdm_tx_rx_pilot_corrected_loopback             -Ptb_ofdm_tx_rx_pilot_corrected_loopback.ANGLE_DEG=30             -Ptb_ofdm_tx_rx_pilot_corrected_loopback.CFO_PPM=2000             -Ptb_ofdm_tx_rx_pilot_corrected_loopback.SYMBOLS=8             -o /tmp/tb_ofdm_cfo.vvp             blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_pilot_corrected_loopback.sv
           vvp /tmp/tb_ofdm_cfo.vvp
+
+      - name: Check per-subcarrier channel equalizer against the fixed-point vectors
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall             -s tb_ofdm_channel_equalizer             -o /tmp/tb_ofdm_channel_equalizer.vvp             blocks/block_08_modulation_and_synchronization/rtl/ofdm_channel_equalizer.v             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_channel_equalizer.sv
+          vvp /tmp/tb_ofdm_channel_equalizer.vvp
+
+      - name: Check 3-path channel loopback (and with a 2000 ppm CFO)
+        run: |
+          set -euo pipefail
+          for cfo in 0 2000; do
+            iverilog -g2012 -Wall               -s tb_ofdm_tx_rx_multipath_loopback               -Ptb_ofdm_tx_rx_multipath_loopback.CFO_PPM=$cfo               -Ptb_ofdm_tx_rx_multipath_loopback.SYMBOLS=8               -o /tmp/tb_ofdm_multipath.vvp               blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v               blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_multipath_loopback.sv
+            vvp /tmp/tb_ofdm_multipath.vvp
+          done
 
       - name: Check AXI4-Stream/AXI4-Lite OFDM modem wrapper
         run: |
