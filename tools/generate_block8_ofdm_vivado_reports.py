@@ -32,13 +32,26 @@ TOPS: tuple[tuple[str, str | None], ...] = (
     ("ofdm_axi_modem", "aclk"),
 )
 
+# Extra configurations: (report name, top module, clock port, parameter overrides)
+VARIANTS: tuple[tuple[str, str, str, str], ...] = (
+    ("ofdm_channel_equalizer_zf", "ofdm_channel_equalizer", "clk", "NORMALIZE=1"),
+    ("ofdm_tx_cp16_path_bram", "ofdm_tx_cp16_path", "clk", "BRAM_MEMORY=1"),
+    ("ofdm_fft64_sequential_bram", "ofdm_fft64_sequential", "clk", "BRAM_MEMORY=1"),
+    ("ofdm_axi_modem_bram", "ofdm_axi_modem", "aclk", "BRAM_MEMORY=1"),
+)
 
-def run_vivado(vivado_bin: Path, output_dir: Path, part: str, period_ns: float, top: str, clock: str | None) -> None:
+
+def run_vivado(
+    vivado_bin: Path, output_dir: Path, part: str, period_ns: float, top: str, clock: str | None,
+    report_name: str | None = None, generics: str = "",
+) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     command = [
         "cmd.exe", "/c", str(vivado_bin), "-mode", "batch", "-nojournal", "-nolog",
         "-source", str(TCL_SCRIPT), "-tclargs",
-        str(output_dir), part, f"{period_ns:.3f}", top, clock or "none",
+        # cmd.exe splits .bat arguments at '=', so NAME=VALUE travels as NAME:VALUE.
+        str(output_dir), part, f"{period_ns:.3f}", top, clock or "none", report_name or top,
+        generics.replace("=", ":"),
     ]
     # Vivado drops helper files (e.g. tight_setup_hold_pins.txt) into its working
     # directory; keep them with the reports instead of the repository root.
@@ -107,17 +120,22 @@ def main() -> int:
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir).resolve()
-    selected = [t for t in TOPS if not args.tops or t[0] in args.tops]
+    # Every configuration as (report name, top, clock, parameter overrides).
+    configs = [(top, top, clock, "") for top, clock in TOPS] + list(VARIANTS)
+    selected = [c for c in configs if not args.tops or c[0] in args.tops]
     if not args.reuse:
         vivado_bin = detect_vivado()
         print(f"Vivado: {vivado_bin}")
-        for top, clock in selected:
-            run_vivado(vivado_bin, output_dir, args.part, args.clock_period_ns, top, clock)
+        for name, top, clock, generics in selected:
+            run_vivado(vivado_bin, output_dir, args.part, args.clock_period_ns, top, clock, name, generics)
     normalize_reports(output_dir)
 
     entries = []
-    for top, clock in selected:
-        entry = parse_top(output_dir, args.clock_period_ns, top, clock)
+    for name, top, clock, generics in selected:
+        entry = parse_top(output_dir, args.clock_period_ns, name, clock)
+        if name != top:
+            entry["module"] = top
+            entry["parameters"] = generics
         validate(entry)
         entries.append(entry)
     metrics = {
