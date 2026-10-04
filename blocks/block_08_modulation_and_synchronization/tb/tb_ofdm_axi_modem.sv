@@ -3,17 +3,21 @@
 // Self-checking test of ofdm_axi_modem, the AXI4-Stream + AXI4-Lite packaging
 // of the Block 8 OFDM chain:
 //   1. ID/VERSION registers;
-//   2. SYMBOLS symbols: s_axis_tx -> m_axis_tx -> channel rotated by
-//      ANGLE_DEG -> s_axis_rx -> m_axis_rx, with random stalls on the
-//      TX->RX link and random m_axis_rx_tready, BER=0;
-//   3. counters, phase and coefficient registers after the traffic;
-//   4. CONTROL[0] datapath reset clears the counters and the coefficient;
-//   5. a misplaced s_axis_rx_tlast sets the sticky RX frame error, and
+//   2. a training symbol, then SYMBOLS data symbols: s_axis_tx -> m_axis_tx
+//      -> channel rotated by ANGLE_DEG -> s_axis_rx -> m_axis_rx, with random
+//      stalls on the TX->RX link and random m_axis_rx_tready, BER=0;
+//   3. counters, phase, coefficient and channel-equalizer registers;
+//   4. CONTROL[0] datapath reset clears the counters, the coefficient and the
+//      channel training; a new training symbol and one data symbol pass;
+//   5. CONTROL[1] retrains: another training symbol and one data symbol pass;
+//   6. a misplaced s_axis_rx_tlast sets the sticky RX frame error, and
 //      CONTROL[8] clears it.
 module tb_ofdm_axi_modem;
     parameter integer ANGLE_DEG = 120;
+    parameter integer NORMALIZE = 1;
     localparam integer SYMBOLS = 3;
     localparam integer PAIRS = 48 * SYMBOLS;
+    localparam integer ALL_PAIRS = 48 * (SYMBOLS + 2);
 
     localparam [5:0] REG_ID = 6'h00;
     localparam [5:0] REG_VERSION = 6'h04;
@@ -26,6 +30,8 @@ module tb_ofdm_axi_modem;
     localparam [5:0] REG_RX_SYMBOLS = 6'h20;
     localparam [5:0] REG_PHASE = 6'h24;
     localparam [5:0] REG_COEFF = 6'h28;
+    localparam [5:0] REG_CE_SAT = 6'h2C;
+    localparam [5:0] REG_CE_TRAINED = 6'h30;
 
     reg aclk = 1'b0;
     always #5 aclk = ~aclk;
@@ -109,7 +115,7 @@ module tb_ofdm_axi_modem;
     assign s_axis_rx_tlast = inject_rx ? inject_last : m_axis_tx_tlast;
     assign m_axis_tx_tready = !inject_rx && s_axis_rx_tready && link_open;
 
-    ofdm_axi_modem dut (
+    ofdm_axi_modem #(.NORMALIZE(NORMALIZE)) dut (
         .aclk(aclk), .aresetn(aresetn),
         .s_axis_tx_tvalid(s_axis_tx_tvalid), .s_axis_tx_tready(s_axis_tx_tready),
         .s_axis_tx_tdata(s_axis_tx_tdata), .s_axis_tx_tlast(1'b0),
@@ -128,7 +134,8 @@ module tb_ofdm_axi_modem;
         .s_axi_rready(s_axi_rready)
     );
 
-    reg [1:0] expected_bits [0:PAIRS-1];
+    reg [1:0] expected_bits [0:ALL_PAIRS-1];
+    integer data_idx = 0;
     integer rx_symbol = 0;
     integer rx_pairs_in_symbol = 0;
     integer recovered_count = 0;
@@ -264,12 +271,9 @@ module tb_ofdm_axi_modem;
         end
     end
 
-    task automatic send_pair;
-        input integer idx;
-        reg [1:0] value;
+    task automatic send_value;
+        input [1:0] value;
         begin
-            value = {idx[0], (idx[1] ^ idx[0] ^ idx[6])};
-            expected_bits[idx] = value;
             @(negedge aclk);
             s_axis_tx_tdata = {6'd0, value};
             s_axis_tx_tvalid = 1'b1;
@@ -278,6 +282,47 @@ module tb_ofdm_axi_modem;
                 @(posedge aclk);
             @(negedge aclk);
             s_axis_tx_tvalid = 1'b0;
+        end
+    endtask
+
+    // One data symbol; its bits are scored on m_axis_rx.
+    task automatic send_data_symbol;
+        integer k;
+        reg [1:0] value;
+        begin
+            for (k = 0; k < 48; k = k + 1) begin
+                value = {data_idx[0], (data_idx[1] ^ data_idx[0] ^ data_idx[6])};
+                expected_bits[data_idx] = value;
+                data_idx = data_idx + 1;
+                send_value(value);
+            end
+        end
+    endtask
+
+    // The channel equalizer's training symbol (train_bits() of ofdm_channel_equalizer).
+    task automatic send_training_symbol;
+        integer k;
+        reg [5:0] d;
+        begin
+            for (k = 0; k < 48; k = k + 1) begin
+                d = k;
+                send_value({d[0] ^ d[3], d[1] ^ d[2] ^ d[4]});
+            end
+        end
+    endtask
+
+    task automatic wait_pairs;
+        input integer target;
+        begin
+            timeout = 0;
+            while ((recovered_count < target) && (timeout < 60000)) begin
+                @(posedge aclk);
+                timeout = timeout + 1;
+            end
+            if (recovered_count != target) begin
+                $display("FAIL expected %0d recovered pairs, got %0d", target, recovered_count);
+                errors = errors + 1;
+            end
         end
     endtask
 
@@ -294,35 +339,32 @@ module tb_ofdm_axi_modem;
 
         // 1. Identification.
         expect_reg(REG_ID, 32'h4F46444D);
-        expect_reg(REG_VERSION, 32'h00010000);
+        expect_reg(REG_VERSION, 32'h00020000);
         expect_reg(REG_STATUS, 32'd0);
 
-        // 2. Traffic through the rotated channel.
-        for (i = 0; i < PAIRS; i = i + 1)
-            send_pair(i);
-        timeout = 0;
-        while ((recovered_count < PAIRS) && (timeout < 40000)) begin
-            @(posedge aclk);
-            timeout = timeout + 1;
-        end
-        if (recovered_count != PAIRS) begin
-            $display("FAIL expected %0d recovered pairs, got %0d", PAIRS, recovered_count);
-            errors = errors + 1;
-        end
+        // 2. Training symbol, then traffic through the rotated channel.
+        send_training_symbol();
+        for (i = 0; i < SYMBOLS; i = i + 1)
+            send_data_symbol();
+        wait_pairs(PAIRS);
         if (bit_errors != 0) begin
             $display("FAIL BER nonzero: %0d/%0d bit errors", bit_errors, 2 * PAIRS);
             errors = errors + 1;
         end
 
-        // 3. Counters and measurements.
-        expect_reg(REG_STATUS, 32'd0);
+        // 3. Counters and measurements. The training symbol is sent but never
+        // leaves m_axis_rx. The channel equalizer has already removed the
+        // channel phase from the pilots, so the pilot tracker sees about 0.
+        expect_reg(REG_STATUS, 32'h40);
         expect_reg(REG_TX_SAT, 32'd0);
         expect_reg(REG_FFT_SAT, 32'd0);
         expect_reg(REG_EQ_SAT, 32'd0);
-        expect_reg(REG_TX_SYMBOLS, SYMBOLS);
+        expect_reg(REG_CE_SAT, 32'd0);
+        expect_reg(REG_CE_TRAINED, 32'd1);
+        expect_reg(REG_TX_SYMBOLS, SYMBOLS + 1);
         expect_reg(REG_RX_SYMBOLS, SYMBOLS);
         axi_read(REG_PHASE, word);
-        expected_phase = (ANGLE_DEG * 32768) / 180;
+        expected_phase = 0;
         phase_error = $signed(word) - expected_phase;
         if (phase_error > 32767) phase_error = phase_error - 65536;
         if (phase_error < -32768) phase_error = phase_error + 65536;
@@ -344,8 +386,30 @@ module tb_ofdm_axi_modem;
         expect_reg(REG_TX_SYMBOLS, 32'd0);
         expect_reg(REG_RX_SYMBOLS, 32'd0);
         expect_reg(REG_COEFF, {16'd0, 16'd16384});
+        expect_reg(REG_CE_TRAINED, 32'd0);
+        expect_reg(REG_STATUS, 32'd0);
+        send_training_symbol();
+        send_data_symbol();
+        wait_pairs(PAIRS + 48);
+        expect_reg(REG_STATUS, 32'h40);
+        expect_reg(REG_CE_TRAINED, 32'd1);
+        expect_reg(REG_RX_SYMBOLS, 32'd1);
 
-        // 5. Misplaced tlast on s_axis_rx: sticky RX frame error, then clear.
+        // 5. Retrain through CONTROL[1]: the next symbol trains again.
+        axi_write(REG_CONTROL, 32'h2);
+        expect_reg(REG_CONTROL, 32'h0);
+        send_training_symbol();
+        send_data_symbol();
+        wait_pairs(PAIRS + 96);
+        expect_reg(REG_CE_TRAINED, 32'd2);
+        expect_reg(REG_RX_SYMBOLS, 32'd2);
+        expect_reg(REG_TX_SYMBOLS, 32'd4);
+        if (bit_errors != 0) begin
+            $display("FAIL BER nonzero after reset/retrain: %0d bit errors", bit_errors);
+            errors = errors + 1;
+        end
+
+        // 6. Misplaced tlast on s_axis_rx: sticky RX frame error, then clear.
         inject_rx = 1'b1;
         @(negedge aclk);
         inject_valid = 1'b1;
@@ -374,8 +438,8 @@ module tb_ofdm_axi_modem;
         expect_reg(REG_CONTROL, 32'h0);
 
         if (errors == 0) begin
-            $display("PASS: ofdm_axi_modem %0d-degree channel recovered %0d/%0d bits in %0d symbols over AXI4-Stream, BER=0; AXI4-Lite ID, counters, reset and sticky errors checked",
-                     ANGLE_DEG, 2 * PAIRS, 2 * PAIRS, SYMBOLS);
+            $display("PASS: ofdm_axi_modem (NORMALIZE=%0d) %0d-degree channel recovered %0d/%0d bits in %0d symbols after a training symbol, BER=0; reset, retrain, registers and sticky errors checked",
+                     NORMALIZE, ANGLE_DEG, 2 * (PAIRS + 96), 2 * (PAIRS + 96), SYMBOLS + 2);
             $finish;
         end else begin
             $display("FAIL tb_ofdm_axi_modem errors=%0d", errors);

@@ -8,11 +8,20 @@
 //
 //   s_axis_tx  (bit pairs)  -> ofdm_tx_cp16_path                     -> m_axis_tx  (IQ)
 //   s_axis_rx  (IQ)         -> ofdm_cp16_remover -> ofdm_fft64_sequential
+//                           -> ofdm_channel_equalizer (CHANNEL_EQ = 1)
 //                           -> ofdm_subcarrier_extractor
 //                           -> ofdm_pilot_phase_corrector -> ofdm_qpsk_demapper -> m_axis_rx (bits)
 //
 // The wrapper only renames and packs signals; the datapath modules and their
-// arithmetic are unchanged. Stream formats:
+// arithmetic are unchanged.
+//
+// With CHANNEL_EQ = 1 the first received symbol after reset (aresetn or
+// CONTROL[0]) and after CONTROL[1] is a training symbol: the transmitter must
+// send the fixed pattern of ofdm_channel_equalizer train_bits() as one OFDM
+// symbol (48 bit pairs in data_k order). It produces no m_axis_rx output;
+// STATUS[6] rises when the per-subcarrier coefficients are ready. NORMALIZE = 1
+// selects the zero-forcing mode (CORDIC 1/|G|^2): every data carrier then
+// leaves the equalizer on one amplitude grid. Stream formats:
 //   s_axis_tx_tdata[1:0]  one QPSK bit pair; 48 pairs form one OFDM symbol.
 //                         s_axis_tx_tlast is not used: framing is by count.
 //   m_axis_tx_tdata       {Q[15:0], I[15:0]} Q1.15; 80 samples per symbol
@@ -26,12 +35,14 @@
 //
 // AXI4-Lite register map (32-bit, byte addresses):
 //   0x00 ID          "OFDM" (0x4F46444D)
-//   0x04 VERSION     0x00010000
+//   0x04 VERSION     0x00020000
 //   0x08 CONTROL     [0] datapath reset, held while 1 (clears every counter)
+//                    [1] write 1: the next received symbol is a training symbol
 //                    [8] write 1: clear the sticky frame-error flags
 //   0x0C STATUS      [0] datapath reset  [1] TX IFFT busy  [2] RX FFT busy
 //                    [3] TX frame error (sticky)  [4] RX frame error (sticky)
 //                    [5] last symbol's pilots had zero energy
+//                    [6] channel equalizer trained (1 when CHANNEL_EQ = 0)
 //   0x10 TX_SAT      IFFT butterfly saturations
 //   0x14 FFT_SAT     [31:16] conjugation saturations, [15:0] butterfly saturations
 //   0x18 EQ_SAT      equalizer saturations
@@ -40,11 +51,15 @@
 //   0x24 PHASE       last pilot phase, sign-extended (pi = 2^15)
 //   0x28 COEFF       [31:16] imaginary, [15:0] real part of the last Q2.14
 //                    correction coefficient
+//   0x2C CE_SAT      channel equalizer saturations
+//   0x30 CE_TRAINED  training symbols completed
 // All counters count from the last reset (aresetn or CONTROL[0]).
 module ofdm_axi_modem #(
     parameter integer AXI_ADDR_W = 6,
     parameter integer AXI_DATA_W = 32,
-    parameter integer PIPELINED = `OFDM_IFFT_PIPELINED
+    parameter integer PIPELINED = `OFDM_IFFT_PIPELINED,
+    parameter integer CHANNEL_EQ = 1,
+    parameter integer NORMALIZE = 1
 ) (
     input  wire                         aclk,
     input  wire                         aresetn,
@@ -98,8 +113,10 @@ module ofdm_axi_modem #(
     localparam [AXI_ADDR_W-1:0] REG_RX_SYMBOLS = 6'h20;
     localparam [AXI_ADDR_W-1:0] REG_PHASE = 6'h24;
     localparam [AXI_ADDR_W-1:0] REG_COEFF = 6'h28;
+    localparam [AXI_ADDR_W-1:0] REG_CE_SAT = 6'h2C;
+    localparam [AXI_ADDR_W-1:0] REG_CE_TRAINED = 6'h30;
     localparam [AXI_DATA_W-1:0] CORE_ID = 32'h4F46444D; // "OFDM"
-    localparam [AXI_DATA_W-1:0] CORE_VERSION = 32'h00010000;
+    localparam [AXI_DATA_W-1:0] CORE_VERSION = 32'h00020000;
 
     reg datapath_reset;
     wire core_resetn = aresetn && !datapath_reset;
@@ -215,14 +232,60 @@ module ofdm_axi_modem #(
         .conjugation_saturation_count(fft_conjugation_saturation_count)
     );
 
+    wire ext_bin_valid;
+    wire ext_bin_ready;
+    wire signed [15:0] ext_bin_re;
+    wire signed [15:0] ext_bin_im;
+    wire [5:0] ext_bin_index;
+    wire ext_bin_last;
+    wire ce_trained;
+    wire [15:0] ce_train_count;
+    wire [31:0] ce_saturation_count;
+    reg retrain_pulse;
+
+    generate
+        if (CHANNEL_EQ != 0) begin : g_channel_eq
+            ofdm_channel_equalizer #(.NORMALIZE(NORMALIZE)) u_channel_eq (
+                .clk(aclk),
+                .resetn(core_resetn),
+                .retrain(retrain_pulse),
+                .bin_valid(fft_bin_valid),
+                .bin_ready(fft_bin_ready),
+                .bin_re(fft_bin_re),
+                .bin_im(fft_bin_im),
+                .bin_index(fft_bin_index),
+                .bin_last(fft_bin_last),
+                .out_valid(ext_bin_valid),
+                .out_ready(ext_bin_ready),
+                .out_re(ext_bin_re),
+                .out_im(ext_bin_im),
+                .out_index(ext_bin_index),
+                .out_last(ext_bin_last),
+                .trained(ce_trained),
+                .train_count(ce_train_count),
+                .saturation_count(ce_saturation_count)
+            );
+        end else begin : g_no_channel_eq
+            assign ext_bin_valid = fft_bin_valid;
+            assign fft_bin_ready = ext_bin_ready;
+            assign ext_bin_re = fft_bin_re;
+            assign ext_bin_im = fft_bin_im;
+            assign ext_bin_index = fft_bin_index;
+            assign ext_bin_last = fft_bin_last;
+            assign ce_trained = 1'b1;
+            assign ce_train_count = 16'd0;
+            assign ce_saturation_count = 32'd0;
+        end
+    endgenerate
+
     ofdm_subcarrier_extractor u_extract (
         .resetn(core_resetn),
-        .bin_valid(fft_bin_valid),
-        .bin_ready(fft_bin_ready),
-        .bin_re(fft_bin_re),
-        .bin_im(fft_bin_im),
-        .bin_index(fft_bin_index),
-        .bin_last(fft_bin_last),
+        .bin_valid(ext_bin_valid),
+        .bin_ready(ext_bin_ready),
+        .bin_re(ext_bin_re),
+        .bin_im(ext_bin_im),
+        .bin_index(ext_bin_index),
+        .bin_last(ext_bin_last),
         .data_valid(data_valid),
         .data_ready(data_ready),
         .data_re(data_re),
@@ -331,7 +394,8 @@ module ofdm_axi_modem #(
             REG_VERSION: read_word = CORE_VERSION;
             REG_CONTROL: read_word = {{(AXI_DATA_W-1){1'b0}}, datapath_reset};
             REG_STATUS: read_word = {
-                {(AXI_DATA_W-6){1'b0}},
+                {(AXI_DATA_W-7){1'b0}},
+                ce_trained,
                 last_zero_energy,
                 rx_frame_error_sticky,
                 tx_frame_error_sticky,
@@ -346,6 +410,8 @@ module ofdm_axi_modem #(
             REG_RX_SYMBOLS: read_word = rx_symbol_count;
             REG_PHASE: read_word = {{16{last_phase[15]}}, last_phase};
             REG_COEFF: read_word = {coeff_im, coeff_re};
+            REG_CE_SAT: read_word = ce_saturation_count;
+            REG_CE_TRAINED: read_word = {16'd0, ce_train_count};
             default: read_word = {AXI_DATA_W{1'b0}};
         endcase
     end
@@ -362,6 +428,7 @@ module ofdm_axi_modem #(
             s_axi_rvalid <= 1'b0;
             datapath_reset <= 1'b0;
             clear_sticky <= 1'b0;
+            retrain_pulse <= 1'b0;
             awaddr_latched <= {AXI_ADDR_W{1'b0}};
             awaddr_valid <= 1'b0;
             wdata_latched <= {AXI_DATA_W{1'b0}};
@@ -369,6 +436,7 @@ module ofdm_axi_modem #(
             wdata_valid <= 1'b0;
         end else begin
             clear_sticky <= 1'b0;
+            retrain_pulse <= 1'b0;
 
             s_axi_awready <= (!awaddr_valid) && (!s_axi_bvalid);
             s_axi_wready <= (!wdata_valid) && (!s_axi_bvalid);
@@ -388,6 +456,8 @@ module ofdm_axi_modem #(
                 if (awaddr_latched == REG_CONTROL) begin
                     if (wstrb_latched[0])
                         datapath_reset <= wdata_latched[0];
+                    if (wstrb_latched[0] && wdata_latched[1])
+                        retrain_pulse <= 1'b1;
                     if (wstrb_latched[1] && wdata_latched[8])
                         clear_sticky <= 1'b1;
                 end
