@@ -1,13 +1,13 @@
 Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
 | Date         : normalized
 | Host         : normalized
-| Command      : report_utilization -file <output_dir>/ofdm_fft64_sequential_bram_post_synthesis_utilization.rpt
+| Command      : report_utilization -file <output_dir>/ofdm_fft64_sequential_fabric_post_route_utilization.rpt
 | Design       : ofdm_fft64_sequential
 | Device       : 7z020clg400-2
-| Design State : Synthesized
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Design State : Routed
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Utilization Design Information
 
@@ -15,14 +15,15 @@ Table of Contents
 -----------------
 1. Slice Logic
 1.1 Summary of Registers by Type
-2. Memory
-3. DSP
-4. IO and GT Specific
-5. Clocking
-6. Specific Feature
-7. Primitives
-8. Black Boxes
-9. Instantiated Netlists
+2. Slice Logic Distribution
+3. Memory
+4. DSP
+5. IO and GT Specific
+6. Clocking
+7. Specific Feature
+8. Primitives
+9. Black Boxes
+10. Instantiated Netlists
 
 1. Slice Logic
 --------------
@@ -30,18 +31,17 @@ Table of Contents
 +----------------------------+------+-------+------------+-----------+-------+
 |          Site Type         | Used | Fixed | Prohibited | Available | Util% |
 +----------------------------+------+-------+------------+-----------+-------+
-| Slice LUTs*                |  860 |     0 |          0 |     53200 |  1.62 |
-|   LUT as Logic             |  848 |     0 |          0 |     53200 |  1.59 |
-|   LUT as Memory            |   12 |     0 |          0 |     17400 |  0.07 |
+| Slice LUTs                 | 7307 |     0 |          0 |     53200 | 13.73 |
+|   LUT as Logic             | 7299 |     0 |          0 |     53200 | 13.72 |
+|   LUT as Memory            |    8 |     0 |          0 |     17400 |  0.05 |
 |     LUT as Distributed RAM |    0 |     0 |            |           |       |
-|     LUT as Shift Register  |   12 |     0 |            |           |       |
-| Slice Registers            |  329 |     0 |          0 |    106400 |  0.31 |
-|   Register as Flip Flop    |  319 |     0 |          0 |    106400 |  0.30 |
-|   Register as Latch        |   10 |     0 |          0 |    106400 | <0.01 |
-| F7 Muxes                   |    0 |     0 |          0 |     26600 |  0.00 |
-| F8 Muxes                   |    0 |     0 |          0 |     13300 |  0.00 |
+|     LUT as Shift Register  |    8 |     0 |            |           |       |
+| Slice Registers            | 2423 |     0 |          0 |    106400 |  2.28 |
+|   Register as Flip Flop    | 2423 |     0 |          0 |    106400 |  2.28 |
+|   Register as Latch        |    0 |     0 |          0 |    106400 |  0.00 |
+| F7 Muxes                   |  928 |     0 |          0 |     26600 |  3.49 |
+| F8 Muxes                   |  384 |     0 |          0 |     13300 |  2.89 |
 +----------------------------+------+-------+------------+-----------+-------+
-* Warning! The Final LUT count, after physical optimizations and full implementation, is typically lower. Run opt_design after synthesis, if not already completed, for a more realistic count.
 
 
 1.1 Summary of Registers by Type
@@ -57,27 +57,55 @@ Table of Contents
 | 0     |            _ |       Reset |            - |
 | 0     |          Yes |           - |            - |
 | 0     |          Yes |           - |          Set |
-| 10    |          Yes |           - |        Reset |
-| 1     |          Yes |         Set |            - |
-| 318   |          Yes |       Reset |            - |
+| 0     |          Yes |           - |        Reset |
+| 18    |          Yes |         Set |            - |
+| 2405  |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
-2. Memory
+2. Slice Logic Distribution
+---------------------------
+
++--------------------------------------------+------+-------+------------+-----------+-------+
+|                  Site Type                 | Used | Fixed | Prohibited | Available | Util% |
++--------------------------------------------+------+-------+------------+-----------+-------+
+| Slice                                      | 2045 |     0 |          0 |     13300 | 15.38 |
+|   SLICEL                                   | 1353 |     0 |            |           |       |
+|   SLICEM                                   |  692 |     0 |            |           |       |
+| LUT as Logic                               | 7299 |     0 |          0 |     53200 | 13.72 |
+|   using O5 output only                     |    6 |       |            |           |       |
+|   using O6 output only                     | 7114 |       |            |           |       |
+|   using O5 and O6                          |  179 |       |            |           |       |
+| LUT as Memory                              |    8 |     0 |          0 |     17400 |  0.05 |
+|   LUT as Distributed RAM                   |    0 |     0 |            |           |       |
+|   LUT as Shift Register                    |    8 |     0 |            |           |       |
+|     using O5 output only                   |    0 |       |            |           |       |
+|     using O6 output only                   |    4 |       |            |           |       |
+|     using O5 and O6                        |    4 |       |            |           |       |
+| Slice Registers                            | 2423 |     0 |          0 |    106400 |  2.28 |
+|   Register driven from within the Slice    | 2295 |       |            |           |       |
+|   Register driven from outside the Slice   |  128 |       |            |           |       |
+|     LUT in front of the register is unused |   38 |       |            |           |       |
+|     LUT in front of the register is used   |   90 |       |            |           |       |
+| Unique Control Sets                        |   16 |       |          0 |     13300 |  0.12 |
++--------------------------------------------+------+-------+------------+-----------+-------+
+* * Note: Available Control Sets calculated as Slice * 1, Review the Control Sets Report for more information regarding control sets.
+
+
+3. Memory
 ---------
 
-+-------------------+------+-------+------------+-----------+-------+
-|     Site Type     | Used | Fixed | Prohibited | Available | Util% |
-+-------------------+------+-------+------------+-----------+-------+
-| Block RAM Tile    |    1 |     0 |          0 |       140 |  0.71 |
-|   RAMB36/FIFO*    |    0 |     0 |          0 |       140 |  0.00 |
-|   RAMB18          |    2 |     0 |          0 |       280 |  0.71 |
-|     RAMB18E1 only |    2 |       |            |           |       |
-+-------------------+------+-------+------------+-----------+-------+
++----------------+------+-------+------------+-----------+-------+
+|    Site Type   | Used | Fixed | Prohibited | Available | Util% |
++----------------+------+-------+------------+-----------+-------+
+| Block RAM Tile |    0 |     0 |          0 |       140 |  0.00 |
+|   RAMB36/FIFO* |    0 |     0 |          0 |       140 |  0.00 |
+|   RAMB18       |    0 |     0 |          0 |       280 |  0.00 |
++----------------+------+-------+------------+-----------+-------+
 * Note: Each Block RAM Tile only has one FIFO logic available and therefore can accommodate only one FIFO36E1 or one FIFO18E1. However, if a FIFO18E1 occupies a Block RAM Tile, that tile can still accommodate a RAMB18E1
 
 
-3. DSP
+4. DSP
 ------
 
 +----------------+------+-------+------------+-----------+-------+
@@ -88,7 +116,7 @@ Table of Contents
 +----------------+------+-------+------------+-----------+-------+
 
 
-4. IO and GT Specific
+5. IO and GT Specific
 ---------------------
 
 +-----------------------------+------+-------+------------+-----------+-------+
@@ -111,7 +139,7 @@ Table of Contents
 +-----------------------------+------+-------+------------+-----------+-------+
 
 
-5. Clocking
+6. Clocking
 -----------
 
 +------------+------+-------+------------+-----------+-------+
@@ -127,7 +155,7 @@ Table of Contents
 +------------+------+-------+------------+-----------+-------+
 
 
-6. Specific Feature
+7. Specific Feature
 -------------------
 
 +-------------+------+-------+------------+-----------+-------+
@@ -144,29 +172,29 @@ Table of Contents
 +-------------+------+-------+------------+-----------+-------+
 
 
-7. Primitives
+8. Primitives
 -------------
 
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| FDRE     |  318 |        Flop & Latch |
+| LUT6     | 6622 |                 LUT |
+| FDRE     | 2405 |        Flop & Latch |
+| MUXF7    |  928 |               MuxFx |
+| MUXF8    |  384 |               MuxFx |
 | LUT1     |  272 |                 LUT |
-| LUT2     |  188 |                 LUT |
-| LUT3     |  175 |                 LUT |
-| LUT6     |  167 |                 LUT |
+| LUT3     |  192 |                 LUT |
+| LUT2     |  168 |                 LUT |
 | CARRY4   |  146 |          CarryLogic |
-| LUT4     |  112 |                 LUT |
-| LUT5     |   96 |                 LUT |
+| LUT5     |  143 |                 LUT |
+| LUT4     |   81 |                 LUT |
+| FDSE     |   18 |        Flop & Latch |
 | SRL16E   |   12 |  Distributed Memory |
-| LDCE     |   10 |        Flop & Latch |
 | DSP48E1  |    4 |    Block Arithmetic |
-| RAMB18E1 |    2 |        Block Memory |
-| FDSE     |    1 |        Flop & Latch |
 +----------+------+---------------------+
 
 
-8. Black Boxes
+9. Black Boxes
 --------------
 
 +----------+------+
@@ -174,8 +202,8 @@ Table of Contents
 +----------+------+
 
 
-9. Instantiated Netlists
-------------------------
+10. Instantiated Netlists
+-------------------------
 
 +----------+------+
 | Ref Name | Used |

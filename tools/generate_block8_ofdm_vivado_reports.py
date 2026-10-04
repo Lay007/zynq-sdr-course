@@ -35,9 +35,9 @@ TOPS: tuple[tuple[str, str | None], ...] = (
 # Extra configurations: (report name, top module, clock port, parameter overrides)
 VARIANTS: tuple[tuple[str, str, str, str], ...] = (
     ("ofdm_channel_equalizer_zf", "ofdm_channel_equalizer", "clk", "NORMALIZE=1"),
-    ("ofdm_tx_cp16_path_bram", "ofdm_tx_cp16_path", "clk", "BRAM_MEMORY=1"),
-    ("ofdm_fft64_sequential_bram", "ofdm_fft64_sequential", "clk", "BRAM_MEMORY=1"),
-    ("ofdm_axi_modem_bram", "ofdm_axi_modem", "aclk", "BRAM_MEMORY=1"),
+    ("ofdm_tx_cp16_path_fabric", "ofdm_tx_cp16_path", "clk", "BRAM_MEMORY=0"),
+    ("ofdm_fft64_sequential_fabric", "ofdm_fft64_sequential", "clk", "BRAM_MEMORY=0"),
+    ("ofdm_axi_modem_fabric", "ofdm_axi_modem", "aclk", "BRAM_MEMORY=0"),
 )
 
 

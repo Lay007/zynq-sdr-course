@@ -1,13 +1,13 @@
 Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
 | Date         : normalized
 | Host         : normalized
-| Command      : report_timing_summary -delay_type max -max_paths 10 -file <output_dir>/ofdm_fft64_sequential_bram_post_synthesis_timing_summary.rpt
+| Command      : report_timing_summary -delay_type max -max_paths 10 -file <output_dir>/ofdm_fft64_sequential_fabric_post_synthesis_timing_summary.rpt
 | Design       : ofdm_fft64_sequential
 | Device       : 7z020-clg400
 | Speed File   : -2  PRODUCTION 1.12 2019-11-22
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Timing Summary Report
 
@@ -47,10 +47,10 @@ check_timing report
 
 Table of Contents
 -----------------
-1. checking no_clock (140)
+1. checking no_clock (0)
 2. checking constant_clock (0)
 3. checking pulse_width_clock (0)
-4. checking unconstrained_internal_endpoints (10)
+4. checking unconstrained_internal_endpoints (0)
 5. checking no_input_delay (0)
 6. checking no_output_delay (0)
 7. checking multiple_clock (0)
@@ -60,35 +60,9 @@ Table of Contents
 11. checking partial_output_delay (0)
 12. checking latch_loops (0)
 
-1. checking no_clock (140)
---------------------------
- There are 10 register/latch pins with no clock driven by root clock pin: normalized_ifft/FSM_onehot_state_reg[4]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: normalized_ifft/butterfly_j_reg[0]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: normalized_ifft/butterfly_j_reg[1]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: normalized_ifft/butterfly_j_reg[2]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: normalized_ifft/butterfly_j_reg[3]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: normalized_ifft/butterfly_j_reg[4]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: normalized_ifft/group_base_reg[1]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: normalized_ifft/group_base_reg[2]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: normalized_ifft/group_base_reg[3]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: normalized_ifft/group_base_reg[4]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: normalized_ifft/group_base_reg[5]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: normalized_ifft/stage_reg[0]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: normalized_ifft/stage_reg[1]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: normalized_ifft/stage_reg[2]/Q (HIGH)
+1. checking no_clock (0)
+------------------------
+ There are 0 register/latch pins with no clock.
 
 
 2. checking constant_clock (0)
@@ -101,9 +75,9 @@ Table of Contents
  There are 0 register/latch pins which need pulse_width check
 
 
-4. checking unconstrained_internal_endpoints (10)
--------------------------------------------------
- There are 10 pins that are not constrained for maximum delay. (HIGH)
+4. checking unconstrained_internal_endpoints (0)
+------------------------------------------------
+ There are 0 pins that are not constrained for maximum delay.
 
  There are 0 pins that are not constrained for maximum delay due to constant clock.
 
@@ -162,7 +136,7 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
     -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-      2.496        0.000                      0                 1224        4.146        0.000                       0                   339
+      2.496        0.000                      0                 5457        4.146        0.000                       0                  2439
 
 
 All user specified timing constraints are met.
@@ -185,7 +159,7 @@ clk    {0.000 5.000}      10.000          100.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
 -----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-clk                 2.496        0.000                      0                 1224        4.146        0.000                       0                   339
+clk                 2.496        0.000                      0                 5457        4.146        0.000                       0                  2439
 
 
 ------------------------------------------------------------------------------------------------
@@ -248,7 +222,7 @@ Slack (MET) :             2.496ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=338, unset)          0.787     0.787    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.787     0.787    normalized_ifft/butterfly/clk
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_a_im_reg[1]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  normalized_ifft/butterfly/g_pipelined.s2_a_im_reg[1]/Q
@@ -259,39 +233,39 @@ Slack (MET) :             2.496ns  (required time - arrival time)
                                                       0.444     2.156 r  normalized_ifft/butterfly/y1_im_reg[0]_i_6/CO[3]
                          net (fo=1, unplaced)         0.008     2.164    normalized_ifft/butterfly/y1_im_reg[0]_i_6_n_0
                          CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.277     2.441 f  normalized_ifft/butterfly/i__carry_i_11__0/O[3]
-                         net (fo=1, unplaced)         0.519     2.960    normalized_ifft/butterfly/i__carry_i_11__0_n_4
-                         LUT1 (Prop_lut1_I0_O)        0.250     3.210 r  normalized_ifft/butterfly/i__carry_i_7__2/O
-                         net (fo=1, unplaced)         0.000     3.210    normalized_ifft/butterfly/i__carry_i_7__2_n_0
+                                                      0.277     2.441 f  normalized_ifft/butterfly/round_div2_away0__101_carry_i_11/O[3]
+                         net (fo=1, unplaced)         0.519     2.960    normalized_ifft/butterfly/round_div2_away0__101_carry_i_11_n_4
+                         LUT1 (Prop_lut1_I0_O)        0.250     3.210 r  normalized_ifft/butterfly/round_div2_away0__101_carry_i_7/O
+                         net (fo=1, unplaced)         0.000     3.210    normalized_ifft/butterfly/round_div2_away0__101_carry_i_7_n_0
                          CARRY4 (Prop_carry4_S[3]_CO[3])
-                                                      0.314     3.524 r  normalized_ifft/butterfly/i__carry_i_6__2/CO[3]
-                         net (fo=1, unplaced)         0.000     3.524    normalized_ifft/butterfly/i__carry_i_6__2_n_0
+                                                      0.314     3.524 r  normalized_ifft/butterfly/round_div2_away0__101_carry_i_6/CO[3]
+                         net (fo=1, unplaced)         0.000     3.524    normalized_ifft/butterfly/round_div2_away0__101_carry_i_6_n_0
                          CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.277     3.801 f  normalized_ifft/butterfly/i__carry__0_i_5__1/O[3]
-                         net (fo=1, unplaced)         0.519     4.320    normalized_ifft/butterfly/i__carry__0_i_5__1_n_4
-                         LUT1 (Prop_lut1_I0_O)        0.250     4.570 r  normalized_ifft/butterfly/i__carry__1_i_3__1/O
-                         net (fo=1, unplaced)         0.000     4.570    normalized_ifft/butterfly/i__carry__1_i_3__1_n_0
+                                                      0.277     3.801 f  normalized_ifft/butterfly/round_div2_away0__101_carry__0_i_5/O[3]
+                         net (fo=1, unplaced)         0.519     4.320    normalized_ifft/butterfly/round_div2_away0__101_carry__0_i_5_n_4
+                         LUT1 (Prop_lut1_I0_O)        0.250     4.570 r  normalized_ifft/butterfly/round_div2_away0__101_carry__1_i_3/O
+                         net (fo=1, unplaced)         0.000     4.570    normalized_ifft/butterfly/round_div2_away0__101_carry__1_i_3_n_0
                          CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     5.014 r  normalized_ifft/butterfly/round_div2_away0_inferred__2/i__carry__1/CO[3]
-                         net (fo=1, unplaced)         0.000     5.014    normalized_ifft/butterfly/round_div2_away0_inferred__2/i__carry__1_n_0
+                                                      0.444     5.014 r  normalized_ifft/butterfly/round_div2_away0__101_carry__1/CO[3]
+                         net (fo=1, unplaced)         0.000     5.014    normalized_ifft/butterfly/round_div2_away0__101_carry__1_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     5.283 f  normalized_ifft/butterfly/round_div2_away0_inferred__2/i__carry__2/O[1]
-                         net (fo=3, unplaced)         0.490     5.773    normalized_ifft/butterfly/round_div2_away0_inferred__2/i__carry__2_n_6
-                         LUT5 (Prop_lut5_I0_O)        0.245     6.018 r  normalized_ifft/butterfly/i__carry_i_5__4/O
-                         net (fo=1, unplaced)         0.000     6.018    normalized_ifft/butterfly/i__carry_i_5__4_n_0
+                                                      0.269     5.283 r  normalized_ifft/butterfly/round_div2_away0__101_carry__2/O[1]
+                         net (fo=3, unplaced)         0.490     5.773    normalized_ifft/butterfly/round_div2_away0__101_carry__2_n_6
+                         LUT5 (Prop_lut5_I0_O)        0.245     6.018 r  normalized_ifft/butterfly/saturate_q151__20_carry_i_5/O
+                         net (fo=1, unplaced)         0.000     6.018    normalized_ifft/butterfly/saturate_q151__20_carry_i_5_n_0
                          CARRY4 (Prop_carry4_S[0]_CO[2])
-                                                      0.447     6.465 r  normalized_ifft/butterfly/saturate_q151_inferred__5/i__carry/CO[2]
-                         net (fo=18, unplaced)        0.997     7.462    normalized_ifft/butterfly/saturate_q151
+                                                      0.447     6.465 r  normalized_ifft/butterfly/saturate_q151__20_carry/CO[2]
+                         net (fo=18, unplaced)        0.997     7.462    normalized_ifft/butterfly/saturate_q1510_in
                          LUT6 (Prop_lut6_I1_O)        0.252     7.714 r  normalized_ifft/butterfly/saturation_count[2]_i_3/O
                          net (fo=3, unplaced)         0.365     8.079    normalized_ifft/butterfly/saturation_count[2]_i_3_n_0
-                         LUT5 (Prop_lut5_I2_O)        0.105     8.184 r  normalized_ifft/butterfly/saturation_count[0]_i_1/O
+                         LUT5 (Prop_lut5_I0_O)        0.105     8.184 r  normalized_ifft/butterfly/saturation_count[0]_i_1/O
                          net (fo=1, unplaced)         0.000     8.184    normalized_ifft/butterfly/saturation_count[0]_i_1_n_0
                          FDRE                                         r  normalized_ifft/butterfly/saturation_count_reg[0]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=338, unset)          0.748    10.748    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.748    10.748    normalized_ifft/butterfly/clk
                          FDRE                                         r  normalized_ifft/butterfly/saturation_count_reg[0]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -326,7 +300,7 @@ Slack (MET) :             2.496ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=338, unset)          0.787     0.787    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.787     0.787    normalized_ifft/butterfly/clk
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_a_im_reg[1]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  normalized_ifft/butterfly/g_pipelined.s2_a_im_reg[1]/Q
@@ -337,29 +311,29 @@ Slack (MET) :             2.496ns  (required time - arrival time)
                                                       0.444     2.156 r  normalized_ifft/butterfly/y1_im_reg[0]_i_6/CO[3]
                          net (fo=1, unplaced)         0.008     2.164    normalized_ifft/butterfly/y1_im_reg[0]_i_6_n_0
                          CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.277     2.441 f  normalized_ifft/butterfly/i__carry_i_11__0/O[3]
-                         net (fo=1, unplaced)         0.519     2.960    normalized_ifft/butterfly/i__carry_i_11__0_n_4
-                         LUT1 (Prop_lut1_I0_O)        0.250     3.210 r  normalized_ifft/butterfly/i__carry_i_7__2/O
-                         net (fo=1, unplaced)         0.000     3.210    normalized_ifft/butterfly/i__carry_i_7__2_n_0
+                                                      0.277     2.441 f  normalized_ifft/butterfly/round_div2_away0__101_carry_i_11/O[3]
+                         net (fo=1, unplaced)         0.519     2.960    normalized_ifft/butterfly/round_div2_away0__101_carry_i_11_n_4
+                         LUT1 (Prop_lut1_I0_O)        0.250     3.210 r  normalized_ifft/butterfly/round_div2_away0__101_carry_i_7/O
+                         net (fo=1, unplaced)         0.000     3.210    normalized_ifft/butterfly/round_div2_away0__101_carry_i_7_n_0
                          CARRY4 (Prop_carry4_S[3]_CO[3])
-                                                      0.314     3.524 r  normalized_ifft/butterfly/i__carry_i_6__2/CO[3]
-                         net (fo=1, unplaced)         0.000     3.524    normalized_ifft/butterfly/i__carry_i_6__2_n_0
+                                                      0.314     3.524 r  normalized_ifft/butterfly/round_div2_away0__101_carry_i_6/CO[3]
+                         net (fo=1, unplaced)         0.000     3.524    normalized_ifft/butterfly/round_div2_away0__101_carry_i_6_n_0
                          CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.277     3.801 f  normalized_ifft/butterfly/i__carry__0_i_5__1/O[3]
-                         net (fo=1, unplaced)         0.519     4.320    normalized_ifft/butterfly/i__carry__0_i_5__1_n_4
-                         LUT1 (Prop_lut1_I0_O)        0.250     4.570 r  normalized_ifft/butterfly/i__carry__1_i_3__1/O
-                         net (fo=1, unplaced)         0.000     4.570    normalized_ifft/butterfly/i__carry__1_i_3__1_n_0
+                                                      0.277     3.801 f  normalized_ifft/butterfly/round_div2_away0__101_carry__0_i_5/O[3]
+                         net (fo=1, unplaced)         0.519     4.320    normalized_ifft/butterfly/round_div2_away0__101_carry__0_i_5_n_4
+                         LUT1 (Prop_lut1_I0_O)        0.250     4.570 r  normalized_ifft/butterfly/round_div2_away0__101_carry__1_i_3/O
+                         net (fo=1, unplaced)         0.000     4.570    normalized_ifft/butterfly/round_div2_away0__101_carry__1_i_3_n_0
                          CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     5.014 r  normalized_ifft/butterfly/round_div2_away0_inferred__2/i__carry__1/CO[3]
-                         net (fo=1, unplaced)         0.000     5.014    normalized_ifft/butterfly/round_div2_away0_inferred__2/i__carry__1_n_0
+                                                      0.444     5.014 r  normalized_ifft/butterfly/round_div2_away0__101_carry__1/CO[3]
+                         net (fo=1, unplaced)         0.000     5.014    normalized_ifft/butterfly/round_div2_away0__101_carry__1_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     5.283 f  normalized_ifft/butterfly/round_div2_away0_inferred__2/i__carry__2/O[1]
-                         net (fo=3, unplaced)         0.490     5.773    normalized_ifft/butterfly/round_div2_away0_inferred__2/i__carry__2_n_6
-                         LUT5 (Prop_lut5_I0_O)        0.245     6.018 r  normalized_ifft/butterfly/i__carry_i_5__4/O
-                         net (fo=1, unplaced)         0.000     6.018    normalized_ifft/butterfly/i__carry_i_5__4_n_0
+                                                      0.269     5.283 r  normalized_ifft/butterfly/round_div2_away0__101_carry__2/O[1]
+                         net (fo=3, unplaced)         0.490     5.773    normalized_ifft/butterfly/round_div2_away0__101_carry__2_n_6
+                         LUT5 (Prop_lut5_I0_O)        0.245     6.018 r  normalized_ifft/butterfly/saturate_q151__20_carry_i_5/O
+                         net (fo=1, unplaced)         0.000     6.018    normalized_ifft/butterfly/saturate_q151__20_carry_i_5_n_0
                          CARRY4 (Prop_carry4_S[0]_CO[2])
-                                                      0.447     6.465 r  normalized_ifft/butterfly/saturate_q151_inferred__5/i__carry/CO[2]
-                         net (fo=18, unplaced)        0.997     7.462    normalized_ifft/butterfly/saturate_q151
+                                                      0.447     6.465 r  normalized_ifft/butterfly/saturate_q151__20_carry/CO[2]
+                         net (fo=18, unplaced)        0.997     7.462    normalized_ifft/butterfly/saturate_q1510_in
                          LUT6 (Prop_lut6_I1_O)        0.252     7.714 r  normalized_ifft/butterfly/saturation_count[2]_i_3/O
                          net (fo=3, unplaced)         0.365     8.079    normalized_ifft/butterfly/saturation_count[2]_i_3_n_0
                          LUT6 (Prop_lut6_I1_O)        0.105     8.184 r  normalized_ifft/butterfly/saturation_count[2]_i_1/O
@@ -369,7 +343,7 @@ Slack (MET) :             2.496ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=338, unset)          0.748    10.748    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.748    10.748    normalized_ifft/butterfly/clk
                          FDRE                                         r  normalized_ifft/butterfly/saturation_count_reg[2]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -381,7 +355,7 @@ Slack (MET) :             2.496ns  (required time - arrival time)
                          slack                                  2.496
 
 Slack (MET) :             2.503ns  (required time - arrival time)
-  Source:                 normalized_ifft/butterfly/g_pipelined.s2_a_re_reg[1]/C
+  Source:                 normalized_ifft/butterfly/g_pipelined.s2_a_im_reg[1]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Destination:            normalized_ifft/butterfly/saturation_count_reg[1]/D
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
@@ -404,40 +378,40 @@ Slack (MET) :             2.503ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=338, unset)          0.787     0.787    normalized_ifft/butterfly/clk
-                         FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_a_re_reg[1]/C
+                         net (fo=2438, unset)         0.787     0.787    normalized_ifft/butterfly/clk
+                         FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_a_im_reg[1]/C
   -------------------------------------------------------------------    -------------------
-                         FDRE (Prop_fdre_C_Q)         0.303     1.090 r  normalized_ifft/butterfly/g_pipelined.s2_a_re_reg[1]/Q
-                         net (fo=5, unplaced)         0.390     1.480    normalized_ifft/butterfly/g_pipelined.s2_a_re[1]
-                         LUT2 (Prop_lut2_I0_O)        0.232     1.712 r  normalized_ifft/butterfly/y1_re[0]_i_10/O
-                         net (fo=1, unplaced)         0.000     1.712    normalized_ifft/butterfly/y1_re[0]_i_10_n_0
+                         FDRE (Prop_fdre_C_Q)         0.303     1.090 r  normalized_ifft/butterfly/g_pipelined.s2_a_im_reg[1]/Q
+                         net (fo=5, unplaced)         0.390     1.480    normalized_ifft/butterfly/g_pipelined.s2_a_im[1]
+                         LUT2 (Prop_lut2_I0_O)        0.232     1.712 r  normalized_ifft/butterfly/y1_im[0]_i_10/O
+                         net (fo=1, unplaced)         0.000     1.712    normalized_ifft/butterfly/y1_im[0]_i_10_n_0
                          CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     2.156 r  normalized_ifft/butterfly/y1_re_reg[0]_i_6/CO[3]
-                         net (fo=1, unplaced)         0.008     2.164    normalized_ifft/butterfly/y1_re_reg[0]_i_6_n_0
+                                                      0.444     2.156 r  normalized_ifft/butterfly/y1_im_reg[0]_i_6/CO[3]
+                         net (fo=1, unplaced)         0.008     2.164    normalized_ifft/butterfly/y1_im_reg[0]_i_6_n_0
                          CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.277     2.441 f  normalized_ifft/butterfly/i__carry_i_11/O[3]
-                         net (fo=1, unplaced)         0.519     2.960    normalized_ifft/butterfly/i__carry_i_11_n_4
-                         LUT1 (Prop_lut1_I0_O)        0.250     3.210 r  normalized_ifft/butterfly/i__carry_i_7__1/O
-                         net (fo=1, unplaced)         0.000     3.210    normalized_ifft/butterfly/i__carry_i_7__1_n_0
+                                                      0.277     2.441 f  normalized_ifft/butterfly/round_div2_away0__101_carry_i_11/O[3]
+                         net (fo=1, unplaced)         0.519     2.960    normalized_ifft/butterfly/round_div2_away0__101_carry_i_11_n_4
+                         LUT1 (Prop_lut1_I0_O)        0.250     3.210 r  normalized_ifft/butterfly/round_div2_away0__101_carry_i_7/O
+                         net (fo=1, unplaced)         0.000     3.210    normalized_ifft/butterfly/round_div2_away0__101_carry_i_7_n_0
                          CARRY4 (Prop_carry4_S[3]_CO[3])
-                                                      0.314     3.524 r  normalized_ifft/butterfly/i__carry_i_6__1/CO[3]
-                         net (fo=1, unplaced)         0.000     3.524    normalized_ifft/butterfly/i__carry_i_6__1_n_0
+                                                      0.314     3.524 r  normalized_ifft/butterfly/round_div2_away0__101_carry_i_6/CO[3]
+                         net (fo=1, unplaced)         0.000     3.524    normalized_ifft/butterfly/round_div2_away0__101_carry_i_6_n_0
                          CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.277     3.801 f  normalized_ifft/butterfly/i__carry__0_i_5__0/O[3]
-                         net (fo=1, unplaced)         0.519     4.320    normalized_ifft/butterfly/i__carry__0_i_5__0_n_4
-                         LUT1 (Prop_lut1_I0_O)        0.250     4.570 r  normalized_ifft/butterfly/i__carry__1_i_3__0/O
-                         net (fo=1, unplaced)         0.000     4.570    normalized_ifft/butterfly/i__carry__1_i_3__0_n_0
+                                                      0.277     3.801 f  normalized_ifft/butterfly/round_div2_away0__101_carry__0_i_5/O[3]
+                         net (fo=1, unplaced)         0.519     4.320    normalized_ifft/butterfly/round_div2_away0__101_carry__0_i_5_n_4
+                         LUT1 (Prop_lut1_I0_O)        0.250     4.570 r  normalized_ifft/butterfly/round_div2_away0__101_carry__1_i_3/O
+                         net (fo=1, unplaced)         0.000     4.570    normalized_ifft/butterfly/round_div2_away0__101_carry__1_i_3_n_0
                          CARRY4 (Prop_carry4_S[1]_CO[3])
-                                                      0.444     5.014 r  normalized_ifft/butterfly/round_div2_away0_inferred__1/i__carry__1/CO[3]
-                         net (fo=1, unplaced)         0.000     5.014    normalized_ifft/butterfly/round_div2_away0_inferred__1/i__carry__1_n_0
+                                                      0.444     5.014 r  normalized_ifft/butterfly/round_div2_away0__101_carry__1/CO[3]
+                         net (fo=1, unplaced)         0.000     5.014    normalized_ifft/butterfly/round_div2_away0__101_carry__1_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     5.283 r  normalized_ifft/butterfly/round_div2_away0_inferred__1/i__carry__2/O[1]
-                         net (fo=3, unplaced)         0.490     5.773    normalized_ifft/butterfly/round_div2_away0_inferred__1/i__carry__2_n_6
-                         LUT5 (Prop_lut5_I0_O)        0.245     6.018 r  normalized_ifft/butterfly/i__carry_i_5__3/O
-                         net (fo=1, unplaced)         0.000     6.018    normalized_ifft/butterfly/i__carry_i_5__3_n_0
+                                                      0.269     5.283 r  normalized_ifft/butterfly/round_div2_away0__101_carry__2/O[1]
+                         net (fo=3, unplaced)         0.490     5.773    normalized_ifft/butterfly/round_div2_away0__101_carry__2_n_6
+                         LUT5 (Prop_lut5_I0_O)        0.245     6.018 r  normalized_ifft/butterfly/saturate_q151__20_carry_i_5/O
+                         net (fo=1, unplaced)         0.000     6.018    normalized_ifft/butterfly/saturate_q151__20_carry_i_5_n_0
                          CARRY4 (Prop_carry4_S[0]_CO[2])
-                                                      0.447     6.465 r  normalized_ifft/butterfly/saturate_q151_inferred__4/i__carry/CO[2]
-                         net (fo=18, unplaced)        0.997     7.462    normalized_ifft/butterfly/saturate_q1512_in
+                                                      0.447     6.465 r  normalized_ifft/butterfly/saturate_q151__20_carry/CO[2]
+                         net (fo=18, unplaced)        0.997     7.462    normalized_ifft/butterfly/saturate_q1510_in
                          LUT6 (Prop_lut6_I1_O)        0.252     7.714 r  normalized_ifft/butterfly/saturation_count[2]_i_2/O
                          net (fo=2, unplaced)         0.358     8.072    normalized_ifft/butterfly/saturation_count[2]_i_2_n_0
                          LUT6 (Prop_lut6_I3_O)        0.105     8.177 r  normalized_ifft/butterfly/saturation_count[1]_i_1/O
@@ -447,7 +421,7 @@ Slack (MET) :             2.503ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=338, unset)          0.748    10.748    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.748    10.748    normalized_ifft/butterfly/clk
                          FDRE                                         r  normalized_ifft/butterfly/saturation_count_reg[1]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -482,7 +456,7 @@ Slack (MET) :             2.820ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=338, unset)          0.787     0.787    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.787     0.787    normalized_ifft/butterfly/clk
                          DSP48E1                                      r  normalized_ifft/butterfly/g_pipelined.s1_ri_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -504,21 +478,21 @@ Slack (MET) :             2.820ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[2])
                                                       0.214     5.250 f  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2/O[2]
-                         net (fo=2, unplaced)         0.360     5.610    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2_n_5
-                         LUT1 (Prop_lut1_I0_O)        0.244     5.854 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3/O
-                         net (fo=1, unplaced)         0.258     6.112    normalized_ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3_n_0
+                         net (fo=2, unplaced)         0.360     5.610    normalized_ifft_n_26
+                         LUT1 (Prop_lut1_I0_O)        0.244     5.854 r  butterfly/g_pipelined.s2_tw_im[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     6.112    butterfly/g_pipelined.s2_tw_im[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     6.606 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.008     6.614    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2_n_0
+                                                      0.494     6.606 r  g_pipelined.s2_tw_im_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     6.614    g_pipelined.s2_tw_im_reg[4]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.714 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     6.714    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2_n_0
+                                                      0.100     6.714 r  g_pipelined.s2_tw_im_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     6.714    g_pipelined.s2_tw_im_reg[8]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.814 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[12]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     6.814    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[12]_i_2_n_0
+                                                      0.100     6.814 r  g_pipelined.s2_tw_im_reg[12]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     6.814    g_pipelined.s2_tw_im_reg[12]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.277     7.091 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[16]_i_2/O[3]
-                         net (fo=1, unplaced)         0.519     7.610    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[16]_i_2_n_4
+                                                      0.277     7.091 r  g_pipelined.s2_tw_im_reg[16]_i_2/O[3]
+                         net (fo=1, unplaced)         0.519     7.610    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[16]_0[3]
                          LUT3 (Prop_lut3_I0_O)        0.250     7.860 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im[16]_i_1/O
                          net (fo=1, unplaced)         0.000     7.860    normalized_ifft/butterfly/twiddle_imag_rounded_return[16]
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[16]/D
@@ -526,7 +500,7 @@ Slack (MET) :             2.820ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=338, unset)          0.748    10.748    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.748    10.748    normalized_ifft/butterfly/clk
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[16]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -561,7 +535,7 @@ Slack (MET) :             2.820ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=338, unset)          0.787     0.787    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.787     0.787    normalized_ifft/butterfly/clk
                          DSP48E1                                      r  normalized_ifft/butterfly/g_pipelined.s1_rr_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -583,21 +557,21 @@ Slack (MET) :             2.820ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[2])
                                                       0.214     5.250 f  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[0]_i_2/O[2]
-                         net (fo=2, unplaced)         0.360     5.610    normalized_ifft/butterfly/round_q30_to_q15_wide2[15]
-                         LUT1 (Prop_lut1_I0_O)        0.244     5.854 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re[4]_i_3/O
-                         net (fo=1, unplaced)         0.258     6.112    normalized_ifft/butterfly/g_pipelined.s2_tw_re[4]_i_3_n_0
+                         net (fo=2, unplaced)         0.360     5.610    butterfly/round_q30_to_q15_wide2[15]
+                         LUT1 (Prop_lut1_I0_O)        0.244     5.854 r  butterfly/g_pipelined.s2_tw_re[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     6.112    butterfly/g_pipelined.s2_tw_re[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     6.606 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[4]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.008     6.614    normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[4]_i_2_n_0
+                                                      0.494     6.606 r  g_pipelined.s2_tw_re_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     6.614    g_pipelined.s2_tw_re_reg[4]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.714 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[8]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     6.714    normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[8]_i_2_n_0
+                                                      0.100     6.714 r  g_pipelined.s2_tw_re_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     6.714    g_pipelined.s2_tw_re_reg[8]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.814 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[12]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     6.814    normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[12]_i_2_n_0
+                                                      0.100     6.814 r  g_pipelined.s2_tw_re_reg[12]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     6.814    g_pipelined.s2_tw_re_reg[12]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.277     7.091 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[16]_i_2/O[3]
-                         net (fo=1, unplaced)         0.519     7.610    normalized_ifft/butterfly/round_q30_to_q15_wide0[16]
+                                                      0.277     7.091 r  g_pipelined.s2_tw_re_reg[16]_i_2/O[3]
+                         net (fo=1, unplaced)         0.519     7.610    normalized_ifft/butterfly/round_q30_to_q15_wide0[15]
                          LUT3 (Prop_lut3_I0_O)        0.250     7.860 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re[16]_i_1/O
                          net (fo=1, unplaced)         0.000     7.860    normalized_ifft/butterfly/twiddle_real_rounded_return[16]
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[16]/D
@@ -605,7 +579,7 @@ Slack (MET) :             2.820ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=338, unset)          0.748    10.748    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.748    10.748    normalized_ifft/butterfly/clk
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[16]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -640,7 +614,7 @@ Slack (MET) :             2.920ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=338, unset)          0.787     0.787    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.787     0.787    normalized_ifft/butterfly/clk
                          DSP48E1                                      r  normalized_ifft/butterfly/g_pipelined.s1_ri_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -662,18 +636,18 @@ Slack (MET) :             2.920ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[2])
                                                       0.214     5.250 f  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2/O[2]
-                         net (fo=2, unplaced)         0.360     5.610    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2_n_5
-                         LUT1 (Prop_lut1_I0_O)        0.244     5.854 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3/O
-                         net (fo=1, unplaced)         0.258     6.112    normalized_ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3_n_0
+                         net (fo=2, unplaced)         0.360     5.610    normalized_ifft_n_26
+                         LUT1 (Prop_lut1_I0_O)        0.244     5.854 r  butterfly/g_pipelined.s2_tw_im[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     6.112    butterfly/g_pipelined.s2_tw_im[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     6.606 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.008     6.614    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2_n_0
+                                                      0.494     6.606 r  g_pipelined.s2_tw_im_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     6.614    g_pipelined.s2_tw_im_reg[4]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.714 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     6.714    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2_n_0
+                                                      0.100     6.714 r  g_pipelined.s2_tw_im_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     6.714    g_pipelined.s2_tw_im_reg[8]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.277     6.991 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[12]_i_2/O[3]
-                         net (fo=1, unplaced)         0.519     7.510    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[12]_i_2_n_4
+                                                      0.277     6.991 r  g_pipelined.s2_tw_im_reg[12]_i_2/O[3]
+                         net (fo=1, unplaced)         0.519     7.510    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[12]_0[3]
                          LUT3 (Prop_lut3_I0_O)        0.250     7.760 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im[12]_i_1/O
                          net (fo=1, unplaced)         0.000     7.760    normalized_ifft/butterfly/twiddle_imag_rounded_return[12]
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[12]/D
@@ -681,7 +655,7 @@ Slack (MET) :             2.920ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=338, unset)          0.748    10.748    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.748    10.748    normalized_ifft/butterfly/clk
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[12]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -716,7 +690,7 @@ Slack (MET) :             2.920ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=338, unset)          0.787     0.787    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.787     0.787    normalized_ifft/butterfly/clk
                          DSP48E1                                      r  normalized_ifft/butterfly/g_pipelined.s1_rr_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -738,18 +712,18 @@ Slack (MET) :             2.920ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[2])
                                                       0.214     5.250 f  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[0]_i_2/O[2]
-                         net (fo=2, unplaced)         0.360     5.610    normalized_ifft/butterfly/round_q30_to_q15_wide2[15]
-                         LUT1 (Prop_lut1_I0_O)        0.244     5.854 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re[4]_i_3/O
-                         net (fo=1, unplaced)         0.258     6.112    normalized_ifft/butterfly/g_pipelined.s2_tw_re[4]_i_3_n_0
+                         net (fo=2, unplaced)         0.360     5.610    butterfly/round_q30_to_q15_wide2[15]
+                         LUT1 (Prop_lut1_I0_O)        0.244     5.854 r  butterfly/g_pipelined.s2_tw_re[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     6.112    butterfly/g_pipelined.s2_tw_re[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     6.606 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[4]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.008     6.614    normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[4]_i_2_n_0
+                                                      0.494     6.606 r  g_pipelined.s2_tw_re_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     6.614    g_pipelined.s2_tw_re_reg[4]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.714 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[8]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     6.714    normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[8]_i_2_n_0
+                                                      0.100     6.714 r  g_pipelined.s2_tw_re_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     6.714    g_pipelined.s2_tw_re_reg[8]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.277     6.991 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[12]_i_2/O[3]
-                         net (fo=1, unplaced)         0.519     7.510    normalized_ifft/butterfly/round_q30_to_q15_wide0[12]
+                                                      0.277     6.991 r  g_pipelined.s2_tw_re_reg[12]_i_2/O[3]
+                         net (fo=1, unplaced)         0.519     7.510    normalized_ifft/butterfly/round_q30_to_q15_wide0[11]
                          LUT3 (Prop_lut3_I0_O)        0.250     7.760 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re[12]_i_1/O
                          net (fo=1, unplaced)         0.000     7.760    normalized_ifft/butterfly/twiddle_real_rounded_return[12]
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[12]/D
@@ -757,7 +731,7 @@ Slack (MET) :             2.920ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=338, unset)          0.748    10.748    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.748    10.748    normalized_ifft/butterfly/clk
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[12]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -792,7 +766,7 @@ Slack (MET) :             3.020ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=338, unset)          0.787     0.787    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.787     0.787    normalized_ifft/butterfly/clk
                          DSP48E1                                      r  normalized_ifft/butterfly/g_pipelined.s1_ri_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -814,15 +788,15 @@ Slack (MET) :             3.020ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[2])
                                                       0.214     5.250 f  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2/O[2]
-                         net (fo=2, unplaced)         0.360     5.610    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2_n_5
-                         LUT1 (Prop_lut1_I0_O)        0.244     5.854 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3/O
-                         net (fo=1, unplaced)         0.258     6.112    normalized_ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3_n_0
+                         net (fo=2, unplaced)         0.360     5.610    normalized_ifft_n_26
+                         LUT1 (Prop_lut1_I0_O)        0.244     5.854 r  butterfly/g_pipelined.s2_tw_im[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     6.112    butterfly/g_pipelined.s2_tw_im[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     6.606 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.008     6.614    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2_n_0
+                                                      0.494     6.606 r  g_pipelined.s2_tw_im_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     6.614    g_pipelined.s2_tw_im_reg[4]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.277     6.891 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2/O[3]
-                         net (fo=1, unplaced)         0.519     7.410    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2_n_4
+                                                      0.277     6.891 r  g_pipelined.s2_tw_im_reg[8]_i_2/O[3]
+                         net (fo=1, unplaced)         0.519     7.410    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_0[3]
                          LUT3 (Prop_lut3_I0_O)        0.250     7.660 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im[8]_i_1/O
                          net (fo=1, unplaced)         0.000     7.660    normalized_ifft/butterfly/twiddle_imag_rounded_return[8]
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[8]/D
@@ -830,7 +804,7 @@ Slack (MET) :             3.020ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=338, unset)          0.748    10.748    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.748    10.748    normalized_ifft/butterfly/clk
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[8]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -865,7 +839,7 @@ Slack (MET) :             3.020ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=338, unset)          0.787     0.787    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.787     0.787    normalized_ifft/butterfly/clk
                          DSP48E1                                      r  normalized_ifft/butterfly/g_pipelined.s1_rr_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -887,15 +861,15 @@ Slack (MET) :             3.020ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[2])
                                                       0.214     5.250 f  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[0]_i_2/O[2]
-                         net (fo=2, unplaced)         0.360     5.610    normalized_ifft/butterfly/round_q30_to_q15_wide2[15]
-                         LUT1 (Prop_lut1_I0_O)        0.244     5.854 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re[4]_i_3/O
-                         net (fo=1, unplaced)         0.258     6.112    normalized_ifft/butterfly/g_pipelined.s2_tw_re[4]_i_3_n_0
+                         net (fo=2, unplaced)         0.360     5.610    butterfly/round_q30_to_q15_wide2[15]
+                         LUT1 (Prop_lut1_I0_O)        0.244     5.854 r  butterfly/g_pipelined.s2_tw_re[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     6.112    butterfly/g_pipelined.s2_tw_re[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     6.606 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[4]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.008     6.614    normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[4]_i_2_n_0
+                                                      0.494     6.606 r  g_pipelined.s2_tw_re_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     6.614    g_pipelined.s2_tw_re_reg[4]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[3])
-                                                      0.277     6.891 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[8]_i_2/O[3]
-                         net (fo=1, unplaced)         0.519     7.410    normalized_ifft/butterfly/round_q30_to_q15_wide0[8]
+                                                      0.277     6.891 r  g_pipelined.s2_tw_re_reg[8]_i_2/O[3]
+                         net (fo=1, unplaced)         0.519     7.410    normalized_ifft/butterfly/round_q30_to_q15_wide0[7]
                          LUT3 (Prop_lut3_I0_O)        0.250     7.660 r  normalized_ifft/butterfly/g_pipelined.s2_tw_re[8]_i_1/O
                          net (fo=1, unplaced)         0.000     7.660    normalized_ifft/butterfly/twiddle_real_rounded_return[8]
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[8]/D
@@ -903,7 +877,7 @@ Slack (MET) :             3.020ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=338, unset)          0.748    10.748    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.748    10.748    normalized_ifft/butterfly/clk
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_re_reg[8]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -938,7 +912,7 @@ Slack (MET) :             3.059ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=338, unset)          0.787     0.787    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.787     0.787    normalized_ifft/butterfly/clk
                          DSP48E1                                      r  normalized_ifft/butterfly/g_pipelined.s1_ri_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -960,21 +934,21 @@ Slack (MET) :             3.059ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[2])
                                                       0.214     5.250 f  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2/O[2]
-                         net (fo=2, unplaced)         0.360     5.610    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2_n_5
-                         LUT1 (Prop_lut1_I0_O)        0.244     5.854 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3/O
-                         net (fo=1, unplaced)         0.258     6.112    normalized_ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3_n_0
+                         net (fo=2, unplaced)         0.360     5.610    normalized_ifft_n_26
+                         LUT1 (Prop_lut1_I0_O)        0.244     5.854 r  butterfly/g_pipelined.s2_tw_im[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     6.112    butterfly/g_pipelined.s2_tw_im[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     6.606 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.008     6.614    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2_n_0
+                                                      0.494     6.606 r  g_pipelined.s2_tw_im_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     6.614    g_pipelined.s2_tw_im_reg[4]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.714 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     6.714    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2_n_0
+                                                      0.100     6.714 r  g_pipelined.s2_tw_im_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     6.714    g_pipelined.s2_tw_im_reg[8]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.814 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[12]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     6.814    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[12]_i_2_n_0
+                                                      0.100     6.814 r  g_pipelined.s2_tw_im_reg[12]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     6.814    g_pipelined.s2_tw_im_reg[12]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[2])
-                                                      0.214     7.028 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[16]_i_2/O[2]
-                         net (fo=1, unplaced)         0.349     7.377    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[16]_i_2_n_5
+                                                      0.214     7.028 r  g_pipelined.s2_tw_im_reg[16]_i_2/O[2]
+                         net (fo=1, unplaced)         0.349     7.377    normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[16]_0[2]
                          LUT3 (Prop_lut3_I0_O)        0.244     7.621 r  normalized_ifft/butterfly/g_pipelined.s2_tw_im[15]_i_1/O
                          net (fo=1, unplaced)         0.000     7.621    normalized_ifft/butterfly/twiddle_imag_rounded_return[15]
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[15]/D
@@ -982,7 +956,7 @@ Slack (MET) :             3.059ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=338, unset)          0.748    10.748    normalized_ifft/butterfly/clk
+                         net (fo=2438, unset)         0.748    10.748    normalized_ifft/butterfly/clk
                          FDRE                                         r  normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[15]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -1004,34 +978,34 @@ Waveform(ns):       { 0.000 5.000 }
 Period(ns):         10.000
 Sources:            { clk }
 
-Check Type        Corner  Lib Pin             Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location  Pin
-Min Period        n/a     DSP48E1/CLK         n/a            3.272         10.000      6.728                normalized_ifft/butterfly/g_pipelined.s1_ri_reg/CLK
-Min Period        n/a     DSP48E1/CLK         n/a            3.272         10.000      6.728                normalized_ifft/butterfly/g_pipelined.s1_rr_reg/CLK
-Min Period        n/a     RAMB18E1/CLKARDCLK  n/a            2.472         10.000      7.528                normalized_ifft/g_banks.bank0/mem_reg/CLKARDCLK
-Min Period        n/a     RAMB18E1/CLKBWRCLK  n/a            2.472         10.000      7.528                normalized_ifft/g_banks.bank0/mem_reg/CLKBWRCLK
-Min Period        n/a     RAMB18E1/CLKARDCLK  n/a            2.472         10.000      7.528                normalized_ifft/g_banks.bank1/mem_reg/CLKARDCLK
-Min Period        n/a     RAMB18E1/CLKBWRCLK  n/a            2.472         10.000      7.528                normalized_ifft/g_banks.bank1/mem_reg/CLKBWRCLK
-Min Period        n/a     DSP48E1/CLK         n/a            1.816         10.000      8.184                normalized_ifft/butterfly/g_pipelined.value/CLK
-Min Period        n/a     DSP48E1/CLK         n/a            1.816         10.000      8.184                normalized_ifft/butterfly/g_pipelined.value__0/CLK
-Min Period        n/a     FDRE/C              n/a            1.000         10.000      9.000                conjugation_saturation_count_reg[0]/C
-Min Period        n/a     FDRE/C              n/a            1.000         10.000      9.000                conjugation_saturation_count_reg[10]/C
-Low Pulse Width   Slow    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][0]_srl4/CLK
-Low Pulse Width   Fast    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][0]_srl4/CLK
-Low Pulse Width   Slow    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][1]_srl4/CLK
-Low Pulse Width   Fast    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][1]_srl4/CLK
-Low Pulse Width   Slow    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][2]_srl4/CLK
-Low Pulse Width   Fast    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][2]_srl4/CLK
-Low Pulse Width   Slow    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][3]_srl4/CLK
-Low Pulse Width   Fast    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][3]_srl4/CLK
-Low Pulse Width   Slow    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][4]_srl4/CLK
-Low Pulse Width   Fast    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][4]_srl4/CLK
-High Pulse Width  Slow    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][0]_srl4/CLK
-High Pulse Width  Fast    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][0]_srl4/CLK
-High Pulse Width  Slow    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][1]_srl4/CLK
-High Pulse Width  Fast    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][1]_srl4/CLK
-High Pulse Width  Slow    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][2]_srl4/CLK
-High Pulse Width  Fast    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][2]_srl4/CLK
-High Pulse Width  Slow    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][3]_srl4/CLK
-High Pulse Width  Fast    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][3]_srl4/CLK
-High Pulse Width  Slow    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][4]_srl4/CLK
-High Pulse Width  Fast    SRL16E/CLK          n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[3][4]_srl4/CLK
+Check Type        Corner  Lib Pin      Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location  Pin
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728                normalized_ifft/butterfly/g_pipelined.s1_ri_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728                normalized_ifft/butterfly/g_pipelined.s1_rr_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            1.816         10.000      8.184                normalized_ifft/butterfly/g_pipelined.value/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            1.816         10.000      8.184                normalized_ifft/butterfly/g_pipelined.value__0/CLK
+Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000                conjugation_saturation_count_reg[0]/C
+Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000                conjugation_saturation_count_reg[10]/C
+Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000                conjugation_saturation_count_reg[11]/C
+Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000                conjugation_saturation_count_reg[12]/C
+Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000                conjugation_saturation_count_reg[13]/C
+Min Period        n/a     FDRE/C       n/a            1.000         10.000      9.000                conjugation_saturation_count_reg[14]/C
+Low Pulse Width   Slow    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][0]_srl3/CLK
+Low Pulse Width   Fast    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][0]_srl3/CLK
+Low Pulse Width   Slow    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][1]_srl3/CLK
+Low Pulse Width   Fast    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][1]_srl3/CLK
+Low Pulse Width   Slow    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][2]_srl3/CLK
+Low Pulse Width   Fast    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][2]_srl3/CLK
+Low Pulse Width   Slow    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][3]_srl3/CLK
+Low Pulse Width   Fast    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][3]_srl3/CLK
+Low Pulse Width   Slow    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][4]_srl3/CLK
+Low Pulse Width   Fast    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][4]_srl3/CLK
+High Pulse Width  Slow    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][0]_srl3/CLK
+High Pulse Width  Fast    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][0]_srl3/CLK
+High Pulse Width  Slow    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][1]_srl3/CLK
+High Pulse Width  Fast    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][1]_srl3/CLK
+High Pulse Width  Slow    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][2]_srl3/CLK
+High Pulse Width  Fast    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][2]_srl3/CLK
+High Pulse Width  Slow    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][3]_srl3/CLK
+High Pulse Width  Fast    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][3]_srl3/CLK
+High Pulse Width  Slow    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][4]_srl3/CLK
+High Pulse Width  Fast    SRL16E/CLK   n/a            0.854         5.000       4.146                normalized_ifft/wb_index0_reg[2][4]_srl3/CLK

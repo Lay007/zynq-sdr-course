@@ -1,0 +1,924 @@
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
+| Date         : normalized
+| Host         : normalized
+| Command      : report_timing_summary -delay_type max -max_paths 10 -file <output_dir>/ofdm_axi_modem_post_route_timing_summary.rpt
+| Design       : ofdm_axi_modem
+| Device       : 7z020-clg400
+| Speed File   : -2  PRODUCTION 1.12 2019-11-22
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Summary Report
+
+------------------------------------------------------------------------------------------------
+| Timer Settings
+| --------------
+------------------------------------------------------------------------------------------------
+
+  Enable Multi Corner Analysis               :  Yes
+  Enable Pessimism Removal                   :  Yes
+  Pessimism Removal Resolution               :  Nearest Common Node
+  Enable Input Delay Default Clock           :  No
+  Enable Preset / Clear Arcs                 :  No
+  Disable Flight Delays                      :  No
+  Ignore I/O Paths                           :  No
+  Timing Early Launch at Borrowing Latches   :  No
+  Borrow Time for Max Delay Exceptions       :  Yes
+  Merge Timing Exceptions                    :  Yes
+
+  Corner  Analyze    Analyze
+  Name    Max Paths  Min Paths
+  ------  ---------  ---------
+  Slow    Yes        Yes
+  Fast    Yes        Yes
+
+
+------------------------------------------------------------------------------------------------
+| Report Methodology
+| ------------------
+------------------------------------------------------------------------------------------------
+
+No report available as report_methodology has not been run prior. Run report_methodology on the current design for the summary of methodology violations.
+
+
+
+check_timing report
+
+Table of Contents
+-----------------
+1. checking no_clock (0)
+2. checking constant_clock (0)
+3. checking pulse_width_clock (0)
+4. checking unconstrained_internal_endpoints (0)
+5. checking no_input_delay (0)
+6. checking no_output_delay (0)
+7. checking multiple_clock (0)
+8. checking generated_clocks (0)
+9. checking loops (0)
+10. checking partial_input_delay (0)
+11. checking partial_output_delay (0)
+12. checking latch_loops (0)
+
+1. checking no_clock (0)
+------------------------
+ There are 0 register/latch pins with no clock.
+
+
+2. checking constant_clock (0)
+------------------------------
+ There are 0 register/latch pins with constant_clock.
+
+
+3. checking pulse_width_clock (0)
+---------------------------------
+ There are 0 register/latch pins which need pulse_width check
+
+
+4. checking unconstrained_internal_endpoints (0)
+------------------------------------------------
+ There are 0 pins that are not constrained for maximum delay.
+
+ There are 0 pins that are not constrained for maximum delay due to constant clock.
+
+
+5. checking no_input_delay (0)
+------------------------------
+ There are 0 input ports with no input delay specified.
+
+ There are 0 input ports with no input delay but user has a false path constraint.
+
+
+6. checking no_output_delay (0)
+-------------------------------
+ There are 0 ports with no output delay specified.
+
+ There are 0 ports with no output delay but user has a false path constraint
+
+ There are 0 ports with no output delay but with a timing clock defined on it or propagating through it
+
+
+7. checking multiple_clock (0)
+------------------------------
+ There are 0 register/latch pins with multiple clocks.
+
+
+8. checking generated_clocks (0)
+--------------------------------
+ There are 0 generated clocks that are not connected to a clock source.
+
+
+9. checking loops (0)
+---------------------
+ There are 0 combinational loops in the design.
+
+
+10. checking partial_input_delay (0)
+------------------------------------
+ There are 0 input ports with partial input delay specified.
+
+
+11. checking partial_output_delay (0)
+-------------------------------------
+ There are 0 ports with partial output delay specified.
+
+
+12. checking latch_loops (0)
+----------------------------
+ There are 0 combinational latch loops in the design through latch input
+
+
+
+------------------------------------------------------------------------------------------------
+| Design Timing Summary
+| ---------------------
+------------------------------------------------------------------------------------------------
+
+    WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
+    -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
+      1.141        0.000                      0                15656        3.870        0.000                       0                  6047
+
+
+All user specified timing constraints are met.
+
+
+------------------------------------------------------------------------------------------------
+| Clock Summary
+| -------------
+------------------------------------------------------------------------------------------------
+
+Clock  Waveform(ns)       Period(ns)      Frequency(MHz)
+-----  ------------       ----------      --------------
+clk    {0.000 5.000}      10.000          100.000
+
+
+------------------------------------------------------------------------------------------------
+| Intra Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
+-----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
+clk                 1.141        0.000                      0                15656        3.870        0.000                       0                  6047
+
+
+------------------------------------------------------------------------------------------------
+| Inter Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints
+----------    --------          -------      -------  ---------------------  -------------------
+
+
+------------------------------------------------------------------------------------------------
+| Other Path Groups Table
+| -----------------------
+------------------------------------------------------------------------------------------------
+
+Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints
+----------    ----------    --------          -------      -------  ---------------------  -------------------
+
+
+------------------------------------------------------------------------------------------------
+| Timing Details
+| --------------
+------------------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------------------
+From Clock:  clk
+  To Clock:  clk
+
+Setup :            0  Failing Endpoints,  Worst Slack        1.141ns,  Total Violation        0.000ns
+Hold  :           NA  Failing Endpoints,  Worst Slack           NA  ,  Total Violation           NA
+PW    :            0  Failing Endpoints,  Worst Slack        3.870ns,  Total Violation        0.000ns
+---------------------------------------------------------------------------------------------------
+
+
+Max Delay Paths
+--------------------------------------------------------------------------------------
+Slack (MET) :             1.141ns  (required time - arrival time)
+  Source:                 u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_correct/equalizer/g_pipelined.saturation_pending_reg[0]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.715ns  (logic 5.083ns (58.322%)  route 3.632ns (41.678%))
+  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=1 LUT6=1)
+  Clock Path Skew:        -0.139ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.350ns = ( 11.350 - 10.000 )
+    Source Clock Delay      (SCD):    1.586ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.586     1.586    u_correct/equalizer/aclk
+    DSP48_X3Y10          DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X3Y10          DSP48E1 (Prop_dsp48e1_CLK_P[21])
+                                                      0.370     1.956 r  u_correct/equalizer/g_pipelined.s1_ri_reg/P[21]
+                         net (fo=1, routed)           0.846     2.801    u_correct/equalizer/g_pipelined.s1_ri_reg_n_84
+    DSP48_X3Y8           DSP48E1 (Prop_dsp48e1_C[21]_P[0])
+                                                      1.523     4.324 f  u_correct/equalizer/g_pipelined.equalized_im_q29/P[0]
+                         net (fo=1, routed)           0.768     5.092    u_correct/equalizer/g_pipelined.equalized_im_q29_n_105
+    SLICE_X95Y14         LUT1 (Prop_lut1_I0_O)        0.105     5.197 r  u_correct/equalizer/g_pipelined.out_im[15]_i_64/O
+                         net (fo=1, routed)           0.255     5.452    u_correct/equalizer/g_pipelined.out_im[15]_i_64_n_0
+    SLICE_X94Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     5.946 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_59/CO[3]
+                         net (fo=1, routed)           0.000     5.946    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_59_n_0
+    SLICE_X94Y15         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     6.046 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_54/CO[3]
+                         net (fo=1, routed)           0.000     6.046    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_54_n_0
+    SLICE_X94Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     6.146 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_49/CO[3]
+                         net (fo=1, routed)           0.000     6.146    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_49_n_0
+    SLICE_X94Y17         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.257     6.403 f  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_43/O[1]
+                         net (fo=1, routed)           0.339     6.742    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_43_n_6
+    SLICE_X97Y17         LUT1 (Prop_lut1_I0_O)        0.245     6.987 r  u_correct/equalizer/g_pipelined.out_im[15]_i_32/O
+                         net (fo=1, routed)           0.286     7.273    u_correct/equalizer/g_pipelined.out_im[15]_i_32_n_0
+    SLICE_X96Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     7.767 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_18/CO[3]
+                         net (fo=1, routed)           0.000     7.767    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_18_n_0
+    SLICE_X96Y18         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.867 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_10/CO[3]
+                         net (fo=1, routed)           0.000     7.867    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_10_n_0
+    SLICE_X96Y19         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.967 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_4/CO[3]
+                         net (fo=1, routed)           0.000     7.967    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_4_n_0
+    SLICE_X96Y20         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.262     8.229 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_2/O[3]
+                         net (fo=4, routed)           0.613     8.842    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_2_n_4
+    SLICE_X95Y20         LUT5 (Prop_lut5_I1_O)        0.250     9.092 r  u_correct/equalizer/i__carry_i_3__2/O
+                         net (fo=1, routed)           0.000     9.092    u_correct/equalizer/i__carry_i_3__2_n_0
+    SLICE_X95Y20         CARRY4 (Prop_carry4_S[1]_CO[1])
+                                                      0.408     9.500 r  u_correct/equalizer/saturate_q151_inferred__1/i__carry/CO[1]
+                         net (fo=3, routed)           0.526    10.026    u_correct/equalizer/saturate_q151
+    SLICE_X91Y22         LUT6 (Prop_lut6_I3_O)        0.275    10.301 r  u_correct/equalizer/g_pipelined.saturation_pending[0]_i_1/O
+                         net (fo=1, routed)           0.000    10.301    u_correct/equalizer/g_pipelined.saturation_pending[0]_i_1_n_0
+    SLICE_X91Y22         FDRE                                         r  u_correct/equalizer/g_pipelined.saturation_pending_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.350    11.350    u_correct/equalizer/aclk
+    SLICE_X91Y22         FDRE                                         r  u_correct/equalizer/g_pipelined.saturation_pending_reg[0]/C
+                         clock pessimism              0.097    11.447
+                         clock uncertainty           -0.035    11.412
+    SLICE_X91Y22         FDRE (Setup_fdre_C_D)        0.030    11.442    u_correct/equalizer/g_pipelined.saturation_pending_reg[0]
+  -------------------------------------------------------------------
+                         required time                         11.442
+                         arrival time                         -10.301
+  -------------------------------------------------------------------
+                         slack                                  1.141
+
+Slack (MET) :             1.146ns  (required time - arrival time)
+  Source:                 u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_correct/equalizer/g_pipelined.saturation_pending_reg[1]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.712ns  (logic 5.083ns (58.342%)  route 3.629ns (41.658%))
+  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=1 LUT6=1)
+  Clock Path Skew:        -0.139ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.350ns = ( 11.350 - 10.000 )
+    Source Clock Delay      (SCD):    1.586ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.586     1.586    u_correct/equalizer/aclk
+    DSP48_X3Y10          DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X3Y10          DSP48E1 (Prop_dsp48e1_CLK_P[21])
+                                                      0.370     1.956 r  u_correct/equalizer/g_pipelined.s1_ri_reg/P[21]
+                         net (fo=1, routed)           0.846     2.801    u_correct/equalizer/g_pipelined.s1_ri_reg_n_84
+    DSP48_X3Y8           DSP48E1 (Prop_dsp48e1_C[21]_P[0])
+                                                      1.523     4.324 f  u_correct/equalizer/g_pipelined.equalized_im_q29/P[0]
+                         net (fo=1, routed)           0.768     5.092    u_correct/equalizer/g_pipelined.equalized_im_q29_n_105
+    SLICE_X95Y14         LUT1 (Prop_lut1_I0_O)        0.105     5.197 r  u_correct/equalizer/g_pipelined.out_im[15]_i_64/O
+                         net (fo=1, routed)           0.255     5.452    u_correct/equalizer/g_pipelined.out_im[15]_i_64_n_0
+    SLICE_X94Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     5.946 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_59/CO[3]
+                         net (fo=1, routed)           0.000     5.946    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_59_n_0
+    SLICE_X94Y15         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     6.046 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_54/CO[3]
+                         net (fo=1, routed)           0.000     6.046    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_54_n_0
+    SLICE_X94Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     6.146 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_49/CO[3]
+                         net (fo=1, routed)           0.000     6.146    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_49_n_0
+    SLICE_X94Y17         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.257     6.403 f  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_43/O[1]
+                         net (fo=1, routed)           0.339     6.742    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_43_n_6
+    SLICE_X97Y17         LUT1 (Prop_lut1_I0_O)        0.245     6.987 r  u_correct/equalizer/g_pipelined.out_im[15]_i_32/O
+                         net (fo=1, routed)           0.286     7.273    u_correct/equalizer/g_pipelined.out_im[15]_i_32_n_0
+    SLICE_X96Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     7.767 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_18/CO[3]
+                         net (fo=1, routed)           0.000     7.767    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_18_n_0
+    SLICE_X96Y18         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.867 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_10/CO[3]
+                         net (fo=1, routed)           0.000     7.867    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_10_n_0
+    SLICE_X96Y19         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.967 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_4/CO[3]
+                         net (fo=1, routed)           0.000     7.967    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_4_n_0
+    SLICE_X96Y20         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.262     8.229 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_2/O[3]
+                         net (fo=4, routed)           0.613     8.842    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_2_n_4
+    SLICE_X95Y20         LUT5 (Prop_lut5_I1_O)        0.250     9.092 r  u_correct/equalizer/i__carry_i_3__2/O
+                         net (fo=1, routed)           0.000     9.092    u_correct/equalizer/i__carry_i_3__2_n_0
+    SLICE_X95Y20         CARRY4 (Prop_carry4_S[1]_CO[1])
+                                                      0.408     9.500 r  u_correct/equalizer/saturate_q151_inferred__1/i__carry/CO[1]
+                         net (fo=3, routed)           0.523    10.023    u_correct/equalizer/saturate_q151
+    SLICE_X91Y22         LUT6 (Prop_lut6_I3_O)        0.275    10.298 r  u_correct/equalizer/g_pipelined.saturation_pending[1]_i_1/O
+                         net (fo=1, routed)           0.000    10.298    u_correct/equalizer/g_pipelined.saturation_pending[1]_i_1_n_0
+    SLICE_X91Y22         FDRE                                         r  u_correct/equalizer/g_pipelined.saturation_pending_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.350    11.350    u_correct/equalizer/aclk
+    SLICE_X91Y22         FDRE                                         r  u_correct/equalizer/g_pipelined.saturation_pending_reg[1]/C
+                         clock pessimism              0.097    11.447
+                         clock uncertainty           -0.035    11.412
+    SLICE_X91Y22         FDRE (Setup_fdre_C_D)        0.032    11.444    u_correct/equalizer/g_pipelined.saturation_pending_reg[1]
+  -------------------------------------------------------------------
+                         required time                         11.444
+                         arrival time                         -10.298
+  -------------------------------------------------------------------
+                         slack                                  1.146
+
+Slack (MET) :             1.229ns  (required time - arrival time)
+  Source:                 u_fft/normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[5]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_fft/normalized_ifft/butterfly/saturation_count_reg[1]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.646ns  (logic 4.201ns (48.587%)  route 4.445ns (51.413%))
+  Logic Levels:           13  (CARRY4=7 LUT1=2 LUT2=1 LUT5=1 LUT6=2)
+  Clock Path Skew:        -0.165ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.303ns = ( 11.303 - 10.000 )
+    Source Clock Delay      (SCD):    1.480ns
+    Clock Pessimism Removal (CPR):    0.012ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.480     1.480    u_fft/normalized_ifft/butterfly/aclk
+    SLICE_X23Y40         FDRE                                         r  u_fft/normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[5]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X23Y40         FDRE (Prop_fdre_C_Q)         0.348     1.828 r  u_fft/normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[5]/Q
+                         net (fo=5, routed)           1.583     3.411    u_fft/normalized_ifft/butterfly/g_pipelined.s2_tw_im[5]
+    SLICE_X60Y42         LUT2 (Prop_lut2_I1_O)        0.242     3.653 r  u_fft/normalized_ifft/butterfly/value__53_carry__0_i_3__0/O
+                         net (fo=1, routed)           0.000     3.653    u_fft/normalized_ifft/butterfly/value__53_carry__0_i_3__0_n_0
+    SLICE_X60Y42         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     4.110 r  u_fft/normalized_ifft/butterfly/value__53_carry__0/CO[3]
+                         net (fo=1, routed)           0.000     4.110    u_fft/normalized_ifft/butterfly/value__53_carry__0_n_0
+    SLICE_X60Y43         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     4.375 f  u_fft/normalized_ifft/butterfly/value__53_carry__1/O[1]
+                         net (fo=2, routed)           0.339     4.713    u_fft/normalized_ifft/butterfly/value__53_carry__1_n_6
+    SLICE_X63Y44         LUT1 (Prop_lut1_I0_O)        0.250     4.963 r  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__0_i_8__0/O
+                         net (fo=1, routed)           0.000     4.963    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__0_i_8__0_n_0
+    SLICE_X63Y44         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     5.420 r  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__0_i_5__0/CO[3]
+                         net (fo=1, routed)           0.000     5.420    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__0_i_5__0_n_0
+    SLICE_X63Y45         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     5.685 f  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1_i_5__0/O[1]
+                         net (fo=1, routed)           0.424     6.110    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1_i_5__0_n_6
+    SLICE_X62Y45         LUT1 (Prop_lut1_I0_O)        0.250     6.360 r  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1_i_1__0/O
+                         net (fo=1, routed)           0.000     6.360    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1_i_1__0_n_0
+    SLICE_X62Y45         CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.314     6.674 r  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1/CO[3]
+                         net (fo=1, routed)           0.000     6.674    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1_n_0
+    SLICE_X62Y46         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.262     6.936 f  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__2/O[3]
+                         net (fo=4, routed)           0.587     7.523    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__2_n_4
+    SLICE_X61Y48         LUT5 (Prop_lut5_I2_O)        0.250     7.773 r  u_fft/normalized_ifft/butterfly/saturate_q151__8_carry_i_4__0/O
+                         net (fo=1, routed)           0.000     7.773    u_fft/normalized_ifft/butterfly/saturate_q151__8_carry_i_4__0_n_0
+    SLICE_X61Y48         CARRY4 (Prop_carry4_S[1]_CO[2])
+                                                      0.475     8.248 r  u_fft/normalized_ifft/butterfly/saturate_q151__8_carry/CO[2]
+                         net (fo=18, routed)          0.942     9.190    u_fft/normalized_ifft/butterfly/saturate_q1515_in
+    SLICE_X62Y41         LUT6 (Prop_lut6_I2_O)        0.261     9.451 r  u_fft/normalized_ifft/butterfly/saturation_count[2]_i_3__0/O
+                         net (fo=3, routed)           0.570    10.021    u_fft/normalized_ifft/butterfly/saturation_count[2]_i_3__0_n_0
+    SLICE_X62Y41         LUT6 (Prop_lut6_I0_O)        0.105    10.126 r  u_fft/normalized_ifft/butterfly/saturation_count[1]_i_1__0/O
+                         net (fo=1, routed)           0.000    10.126    u_fft/normalized_ifft/butterfly/saturation_count[1]_i_1__0_n_0
+    SLICE_X62Y41         FDRE                                         r  u_fft/normalized_ifft/butterfly/saturation_count_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.303    11.303    u_fft/normalized_ifft/butterfly/aclk
+    SLICE_X62Y41         FDRE                                         r  u_fft/normalized_ifft/butterfly/saturation_count_reg[1]/C
+                         clock pessimism              0.012    11.315
+                         clock uncertainty           -0.035    11.280
+    SLICE_X62Y41         FDRE (Setup_fdre_C_D)        0.076    11.356    u_fft/normalized_ifft/butterfly/saturation_count_reg[1]
+  -------------------------------------------------------------------
+                         required time                         11.356
+                         arrival time                         -10.126
+  -------------------------------------------------------------------
+                         slack                                  1.229
+
+Slack (MET) :             1.273ns  (required time - arrival time)
+  Source:                 u_fft/normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[5]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_fft/normalized_ifft/butterfly/saturation_count_reg[2]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.599ns  (logic 4.201ns (48.854%)  route 4.398ns (51.146%))
+  Logic Levels:           13  (CARRY4=7 LUT1=2 LUT2=1 LUT5=1 LUT6=2)
+  Clock Path Skew:        -0.165ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.303ns = ( 11.303 - 10.000 )
+    Source Clock Delay      (SCD):    1.480ns
+    Clock Pessimism Removal (CPR):    0.012ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.480     1.480    u_fft/normalized_ifft/butterfly/aclk
+    SLICE_X23Y40         FDRE                                         r  u_fft/normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[5]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X23Y40         FDRE (Prop_fdre_C_Q)         0.348     1.828 r  u_fft/normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[5]/Q
+                         net (fo=5, routed)           1.583     3.411    u_fft/normalized_ifft/butterfly/g_pipelined.s2_tw_im[5]
+    SLICE_X60Y42         LUT2 (Prop_lut2_I1_O)        0.242     3.653 r  u_fft/normalized_ifft/butterfly/value__53_carry__0_i_3__0/O
+                         net (fo=1, routed)           0.000     3.653    u_fft/normalized_ifft/butterfly/value__53_carry__0_i_3__0_n_0
+    SLICE_X60Y42         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     4.110 r  u_fft/normalized_ifft/butterfly/value__53_carry__0/CO[3]
+                         net (fo=1, routed)           0.000     4.110    u_fft/normalized_ifft/butterfly/value__53_carry__0_n_0
+    SLICE_X60Y43         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     4.375 f  u_fft/normalized_ifft/butterfly/value__53_carry__1/O[1]
+                         net (fo=2, routed)           0.339     4.713    u_fft/normalized_ifft/butterfly/value__53_carry__1_n_6
+    SLICE_X63Y44         LUT1 (Prop_lut1_I0_O)        0.250     4.963 r  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__0_i_8__0/O
+                         net (fo=1, routed)           0.000     4.963    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__0_i_8__0_n_0
+    SLICE_X63Y44         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     5.420 r  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__0_i_5__0/CO[3]
+                         net (fo=1, routed)           0.000     5.420    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__0_i_5__0_n_0
+    SLICE_X63Y45         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     5.685 f  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1_i_5__0/O[1]
+                         net (fo=1, routed)           0.424     6.110    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1_i_5__0_n_6
+    SLICE_X62Y45         LUT1 (Prop_lut1_I0_O)        0.250     6.360 r  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1_i_1__0/O
+                         net (fo=1, routed)           0.000     6.360    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1_i_1__0_n_0
+    SLICE_X62Y45         CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.314     6.674 r  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1/CO[3]
+                         net (fo=1, routed)           0.000     6.674    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1_n_0
+    SLICE_X62Y46         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.262     6.936 f  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__2/O[3]
+                         net (fo=4, routed)           0.587     7.523    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__2_n_4
+    SLICE_X61Y48         LUT5 (Prop_lut5_I2_O)        0.250     7.773 r  u_fft/normalized_ifft/butterfly/saturate_q151__8_carry_i_4__0/O
+                         net (fo=1, routed)           0.000     7.773    u_fft/normalized_ifft/butterfly/saturate_q151__8_carry_i_4__0_n_0
+    SLICE_X61Y48         CARRY4 (Prop_carry4_S[1]_CO[2])
+                                                      0.475     8.248 r  u_fft/normalized_ifft/butterfly/saturate_q151__8_carry/CO[2]
+                         net (fo=18, routed)          0.942     9.190    u_fft/normalized_ifft/butterfly/saturate_q1515_in
+    SLICE_X62Y41         LUT6 (Prop_lut6_I2_O)        0.261     9.451 r  u_fft/normalized_ifft/butterfly/saturation_count[2]_i_3__0/O
+                         net (fo=3, routed)           0.523     9.974    u_fft/normalized_ifft/butterfly/saturation_count[2]_i_3__0_n_0
+    SLICE_X62Y41         LUT6 (Prop_lut6_I1_O)        0.105    10.079 r  u_fft/normalized_ifft/butterfly/saturation_count[2]_i_1__0/O
+                         net (fo=1, routed)           0.000    10.079    u_fft/normalized_ifft/butterfly/saturation_count[2]_i_1__0_n_0
+    SLICE_X62Y41         FDRE                                         r  u_fft/normalized_ifft/butterfly/saturation_count_reg[2]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.303    11.303    u_fft/normalized_ifft/butterfly/aclk
+    SLICE_X62Y41         FDRE                                         r  u_fft/normalized_ifft/butterfly/saturation_count_reg[2]/C
+                         clock pessimism              0.012    11.315
+                         clock uncertainty           -0.035    11.280
+    SLICE_X62Y41         FDRE (Setup_fdre_C_D)        0.072    11.352    u_fft/normalized_ifft/butterfly/saturation_count_reg[2]
+  -------------------------------------------------------------------
+                         required time                         11.352
+                         arrival time                         -10.079
+  -------------------------------------------------------------------
+                         slack                                  1.273
+
+Slack (MET) :             1.327ns  (required time - arrival time)
+  Source:                 u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_correct/equalizer/g_pipelined.out_im_reg[15]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.534ns  (logic 5.083ns (59.562%)  route 3.451ns (40.438%))
+  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=1 LUT6=1)
+  Clock Path Skew:        -0.136ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.353ns = ( 11.353 - 10.000 )
+    Source Clock Delay      (SCD):    1.586ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.586     1.586    u_correct/equalizer/aclk
+    DSP48_X3Y10          DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X3Y10          DSP48E1 (Prop_dsp48e1_CLK_P[21])
+                                                      0.370     1.956 r  u_correct/equalizer/g_pipelined.s1_ri_reg/P[21]
+                         net (fo=1, routed)           0.846     2.801    u_correct/equalizer/g_pipelined.s1_ri_reg_n_84
+    DSP48_X3Y8           DSP48E1 (Prop_dsp48e1_C[21]_P[0])
+                                                      1.523     4.324 f  u_correct/equalizer/g_pipelined.equalized_im_q29/P[0]
+                         net (fo=1, routed)           0.768     5.092    u_correct/equalizer/g_pipelined.equalized_im_q29_n_105
+    SLICE_X95Y14         LUT1 (Prop_lut1_I0_O)        0.105     5.197 r  u_correct/equalizer/g_pipelined.out_im[15]_i_64/O
+                         net (fo=1, routed)           0.255     5.452    u_correct/equalizer/g_pipelined.out_im[15]_i_64_n_0
+    SLICE_X94Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     5.946 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_59/CO[3]
+                         net (fo=1, routed)           0.000     5.946    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_59_n_0
+    SLICE_X94Y15         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     6.046 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_54/CO[3]
+                         net (fo=1, routed)           0.000     6.046    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_54_n_0
+    SLICE_X94Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     6.146 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_49/CO[3]
+                         net (fo=1, routed)           0.000     6.146    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_49_n_0
+    SLICE_X94Y17         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.257     6.403 f  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_43/O[1]
+                         net (fo=1, routed)           0.339     6.742    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_43_n_6
+    SLICE_X97Y17         LUT1 (Prop_lut1_I0_O)        0.245     6.987 r  u_correct/equalizer/g_pipelined.out_im[15]_i_32/O
+                         net (fo=1, routed)           0.286     7.273    u_correct/equalizer/g_pipelined.out_im[15]_i_32_n_0
+    SLICE_X96Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     7.767 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_18/CO[3]
+                         net (fo=1, routed)           0.000     7.767    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_18_n_0
+    SLICE_X96Y18         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.867 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_10/CO[3]
+                         net (fo=1, routed)           0.000     7.867    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_10_n_0
+    SLICE_X96Y19         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.967 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_4/CO[3]
+                         net (fo=1, routed)           0.000     7.967    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_4_n_0
+    SLICE_X96Y20         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.262     8.229 r  u_correct/equalizer/g_pipelined.out_im_reg[15]_i_2/O[3]
+                         net (fo=4, routed)           0.613     8.842    u_correct/equalizer/g_pipelined.out_im_reg[15]_i_2_n_4
+    SLICE_X95Y20         LUT5 (Prop_lut5_I1_O)        0.250     9.092 r  u_correct/equalizer/i__carry_i_3__2/O
+                         net (fo=1, routed)           0.000     9.092    u_correct/equalizer/i__carry_i_3__2_n_0
+    SLICE_X95Y20         CARRY4 (Prop_carry4_S[1]_CO[1])
+                                                      0.408     9.500 r  u_correct/equalizer/saturate_q151_inferred__1/i__carry/CO[1]
+                         net (fo=3, routed)           0.344     9.845    u_correct/equalizer/saturate_q151
+    SLICE_X97Y21         LUT6 (Prop_lut6_I3_O)        0.275    10.120 r  u_correct/equalizer/g_pipelined.out_im[15]_i_1/O
+                         net (fo=1, routed)           0.000    10.120    u_correct/equalizer/g_pipelined.out_im[15]_i_1_n_0
+    SLICE_X97Y21         FDRE                                         r  u_correct/equalizer/g_pipelined.out_im_reg[15]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.353    11.353    u_correct/equalizer/aclk
+    SLICE_X97Y21         FDRE                                         r  u_correct/equalizer/g_pipelined.out_im_reg[15]/C
+                         clock pessimism              0.097    11.450
+                         clock uncertainty           -0.035    11.415
+    SLICE_X97Y21         FDRE (Setup_fdre_C_D)        0.032    11.447    u_correct/equalizer/g_pipelined.out_im_reg[15]
+  -------------------------------------------------------------------
+                         required time                         11.447
+                         arrival time                         -10.120
+  -------------------------------------------------------------------
+                         slack                                  1.327
+
+Slack (MET) :             1.333ns  (required time - arrival time)
+  Source:                 u_fft/normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[5]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_fft/normalized_ifft/butterfly/saturation_count_reg[0]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.537ns  (logic 4.201ns (49.207%)  route 4.336ns (50.793%))
+  Logic Levels:           13  (CARRY4=7 LUT1=2 LUT2=1 LUT5=2 LUT6=1)
+  Clock Path Skew:        -0.166ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.302ns = ( 11.302 - 10.000 )
+    Source Clock Delay      (SCD):    1.480ns
+    Clock Pessimism Removal (CPR):    0.012ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.480     1.480    u_fft/normalized_ifft/butterfly/aclk
+    SLICE_X23Y40         FDRE                                         r  u_fft/normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[5]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X23Y40         FDRE (Prop_fdre_C_Q)         0.348     1.828 r  u_fft/normalized_ifft/butterfly/g_pipelined.s2_tw_im_reg[5]/Q
+                         net (fo=5, routed)           1.583     3.411    u_fft/normalized_ifft/butterfly/g_pipelined.s2_tw_im[5]
+    SLICE_X60Y42         LUT2 (Prop_lut2_I1_O)        0.242     3.653 r  u_fft/normalized_ifft/butterfly/value__53_carry__0_i_3__0/O
+                         net (fo=1, routed)           0.000     3.653    u_fft/normalized_ifft/butterfly/value__53_carry__0_i_3__0_n_0
+    SLICE_X60Y42         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     4.110 r  u_fft/normalized_ifft/butterfly/value__53_carry__0/CO[3]
+                         net (fo=1, routed)           0.000     4.110    u_fft/normalized_ifft/butterfly/value__53_carry__0_n_0
+    SLICE_X60Y43         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     4.375 f  u_fft/normalized_ifft/butterfly/value__53_carry__1/O[1]
+                         net (fo=2, routed)           0.339     4.713    u_fft/normalized_ifft/butterfly/value__53_carry__1_n_6
+    SLICE_X63Y44         LUT1 (Prop_lut1_I0_O)        0.250     4.963 r  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__0_i_8__0/O
+                         net (fo=1, routed)           0.000     4.963    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__0_i_8__0_n_0
+    SLICE_X63Y44         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     5.420 r  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__0_i_5__0/CO[3]
+                         net (fo=1, routed)           0.000     5.420    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__0_i_5__0_n_0
+    SLICE_X63Y45         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     5.685 f  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1_i_5__0/O[1]
+                         net (fo=1, routed)           0.424     6.110    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1_i_5__0_n_6
+    SLICE_X62Y45         LUT1 (Prop_lut1_I0_O)        0.250     6.360 r  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1_i_1__0/O
+                         net (fo=1, routed)           0.000     6.360    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1_i_1__0_n_0
+    SLICE_X62Y45         CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.314     6.674 r  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1/CO[3]
+                         net (fo=1, routed)           0.000     6.674    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__1_n_0
+    SLICE_X62Y46         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.262     6.936 f  u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__2/O[3]
+                         net (fo=4, routed)           0.587     7.523    u_fft/normalized_ifft/butterfly/round_div2_away0__33_carry__2_n_4
+    SLICE_X61Y48         LUT5 (Prop_lut5_I2_O)        0.250     7.773 r  u_fft/normalized_ifft/butterfly/saturate_q151__8_carry_i_4__0/O
+                         net (fo=1, routed)           0.000     7.773    u_fft/normalized_ifft/butterfly/saturate_q151__8_carry_i_4__0_n_0
+    SLICE_X61Y48         CARRY4 (Prop_carry4_S[1]_CO[2])
+                                                      0.475     8.248 r  u_fft/normalized_ifft/butterfly/saturate_q151__8_carry/CO[2]
+                         net (fo=18, routed)          0.942     9.190    u_fft/normalized_ifft/butterfly/saturate_q1515_in
+    SLICE_X62Y41         LUT6 (Prop_lut6_I2_O)        0.261     9.451 r  u_fft/normalized_ifft/butterfly/saturation_count[2]_i_3__0/O
+                         net (fo=3, routed)           0.462     9.912    u_fft/normalized_ifft/butterfly/saturation_count[2]_i_3__0_n_0
+    SLICE_X62Y39         LUT5 (Prop_lut5_I0_O)        0.105    10.017 r  u_fft/normalized_ifft/butterfly/saturation_count[0]_i_1__0/O
+                         net (fo=1, routed)           0.000    10.017    u_fft/normalized_ifft/butterfly/saturation_count[0]_i_1__0_n_0
+    SLICE_X62Y39         FDRE                                         r  u_fft/normalized_ifft/butterfly/saturation_count_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.302    11.302    u_fft/normalized_ifft/butterfly/aclk
+    SLICE_X62Y39         FDRE                                         r  u_fft/normalized_ifft/butterfly/saturation_count_reg[0]/C
+                         clock pessimism              0.012    11.314
+                         clock uncertainty           -0.035    11.279
+    SLICE_X62Y39         FDRE (Setup_fdre_C_D)        0.072    11.351    u_fft/normalized_ifft/butterfly/saturation_count_reg[0]
+  -------------------------------------------------------------------
+                         required time                         11.351
+                         arrival time                         -10.017
+  -------------------------------------------------------------------
+                         slack                                  1.333
+
+Slack (MET) :             1.378ns  (required time - arrival time)
+  Source:                 u_fft/normalized_ifft/input_index_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_fft/normalized_ifft/memory_im_reg[48][7]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.444ns  (logic 0.589ns (6.975%)  route 7.855ns (93.025%))
+  Logic Levels:           2  (LUT6=2)
+  Clock Path Skew:        -0.173ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.290ns = ( 11.290 - 10.000 )
+    Source Clock Delay      (SCD):    1.463ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.463     1.463    u_fft/normalized_ifft/aclk
+    SLICE_X68Y43         FDRE                                         r  u_fft/normalized_ifft/input_index_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X68Y43         FDRE (Prop_fdre_C_Q)         0.379     1.842 r  u_fft/normalized_ifft/input_index_reg[1]/Q
+                         net (fo=107, routed)         4.020     5.862    u_fft/normalized_ifft/sel0[4]
+    SLICE_X32Y61         LUT6 (Prop_lut6_I1_O)        0.105     5.967 r  u_fft/normalized_ifft/memory_im[48][15]_i_3__0/O
+                         net (fo=32, routed)          3.835     9.802    u_fft/normalized_ifft/butterfly/memory_im_reg[48][0]
+    SLICE_X84Y63         LUT6 (Prop_lut6_I4_O)        0.105     9.907 r  u_fft/normalized_ifft/butterfly/memory_im[48][7]_i_1__0/O
+                         net (fo=1, routed)           0.000     9.907    u_fft/normalized_ifft/butterfly_n_1122
+    SLICE_X84Y63         FDRE                                         r  u_fft/normalized_ifft/memory_im_reg[48][7]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.290    11.290    u_fft/normalized_ifft/aclk
+    SLICE_X84Y63         FDRE                                         r  u_fft/normalized_ifft/memory_im_reg[48][7]/C
+                         clock pessimism              0.000    11.290
+                         clock uncertainty           -0.035    11.255
+    SLICE_X84Y63         FDRE (Setup_fdre_C_D)        0.030    11.285    u_fft/normalized_ifft/memory_im_reg[48][7]
+  -------------------------------------------------------------------
+                         required time                         11.285
+                         arrival time                          -9.907
+  -------------------------------------------------------------------
+                         slack                                  1.378
+
+Slack (MET) :             1.385ns  (required time - arrival time)
+  Source:                 u_fft/normalized_ifft/input_index_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_fft/normalized_ifft/memory_im_reg[7][1]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.597ns  (logic 0.589ns (6.851%)  route 8.008ns (93.149%))
+  Logic Levels:           2  (LUT6=2)
+  Clock Path Skew:        -0.058ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.308ns = ( 11.308 - 10.000 )
+    Source Clock Delay      (SCD):    1.463ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.463     1.463    u_fft/normalized_ifft/aclk
+    SLICE_X68Y43         FDRE                                         r  u_fft/normalized_ifft/input_index_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X68Y43         FDRE (Prop_fdre_C_Q)         0.379     1.842 f  u_fft/normalized_ifft/input_index_reg[1]/Q
+                         net (fo=107, routed)         3.765     5.607    u_fft/normalized_ifft/sel0[4]
+    SLICE_X32Y63         LUT6 (Prop_lut6_I0_O)        0.105     5.712 r  u_fft/normalized_ifft/memory_im[7][15]_i_3__0/O
+                         net (fo=32, routed)          4.243     9.955    u_fft/normalized_ifft/butterfly/memory_im_reg[7][0]
+    SLICE_X82Y37         LUT6 (Prop_lut6_I4_O)        0.105    10.060 r  u_fft/normalized_ifft/butterfly/memory_im[7][1]_i_1__0/O
+                         net (fo=1, routed)           0.000    10.060    u_fft/normalized_ifft/butterfly_n_280
+    SLICE_X82Y37         FDRE                                         r  u_fft/normalized_ifft/memory_im_reg[7][1]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.308    11.308    u_fft/normalized_ifft/aclk
+    SLICE_X82Y37         FDRE                                         r  u_fft/normalized_ifft/memory_im_reg[7][1]/C
+                         clock pessimism              0.097    11.405
+                         clock uncertainty           -0.035    11.370
+    SLICE_X82Y37         FDRE (Setup_fdre_C_D)        0.076    11.446    u_fft/normalized_ifft/memory_im_reg[7][1]
+  -------------------------------------------------------------------
+                         required time                         11.446
+                         arrival time                         -10.060
+  -------------------------------------------------------------------
+                         slack                                  1.385
+
+Slack (MET) :             1.410ns  (required time - arrival time)
+  Source:                 u_fft/normalized_ifft/input_index_reg[0]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_fft/normalized_ifft/memory_im_reg[3][5]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.457ns  (logic 0.589ns (6.964%)  route 7.868ns (93.035%))
+  Logic Levels:           2  (LUT6=2)
+  Clock Path Skew:        -0.169ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.294ns = ( 11.294 - 10.000 )
+    Source Clock Delay      (SCD):    1.463ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.463     1.463    u_fft/normalized_ifft/aclk
+    SLICE_X68Y43         FDRE                                         r  u_fft/normalized_ifft/input_index_reg[0]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X68Y43         FDRE (Prop_fdre_C_Q)         0.379     1.842 f  u_fft/normalized_ifft/input_index_reg[0]/Q
+                         net (fo=108, routed)         3.879     5.721    u_fft/normalized_ifft/sel0[5]
+    SLICE_X32Y62         LUT6 (Prop_lut6_I3_O)        0.105     5.826 r  u_fft/normalized_ifft/memory_im[3][15]_i_3__0/O
+                         net (fo=32, routed)          3.989     9.815    u_fft/normalized_ifft/butterfly/memory_im_reg[3][0]
+    SLICE_X86Y52         LUT6 (Prop_lut6_I4_O)        0.105     9.920 r  u_fft/normalized_ifft/butterfly/memory_im[3][5]_i_1__0/O
+                         net (fo=1, routed)           0.000     9.920    u_fft/normalized_ifft/butterfly_n_740
+    SLICE_X86Y52         FDRE                                         r  u_fft/normalized_ifft/memory_im_reg[3][5]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.294    11.294    u_fft/normalized_ifft/aclk
+    SLICE_X86Y52         FDRE                                         r  u_fft/normalized_ifft/memory_im_reg[3][5]/C
+                         clock pessimism              0.000    11.294
+                         clock uncertainty           -0.035    11.259
+    SLICE_X86Y52         FDRE (Setup_fdre_C_D)        0.072    11.331    u_fft/normalized_ifft/memory_im_reg[3][5]
+  -------------------------------------------------------------------
+                         required time                         11.331
+                         arrival time                          -9.920
+  -------------------------------------------------------------------
+                         slack                                  1.410
+
+Slack (MET) :             1.431ns  (required time - arrival time)
+  Source:                 u_fft/normalized_ifft/input_index_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_fft/normalized_ifft/memory_im_reg[7][5]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.394ns  (logic 0.589ns (7.017%)  route 7.805ns (92.983%))
+  Logic Levels:           2  (LUT6=2)
+  Clock Path Skew:        -0.169ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.294ns = ( 11.294 - 10.000 )
+    Source Clock Delay      (SCD):    1.463ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.463     1.463    u_fft/normalized_ifft/aclk
+    SLICE_X68Y43         FDRE                                         r  u_fft/normalized_ifft/input_index_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X68Y43         FDRE (Prop_fdre_C_Q)         0.379     1.842 f  u_fft/normalized_ifft/input_index_reg[1]/Q
+                         net (fo=107, routed)         3.765     5.607    u_fft/normalized_ifft/sel0[4]
+    SLICE_X32Y63         LUT6 (Prop_lut6_I0_O)        0.105     5.712 r  u_fft/normalized_ifft/memory_im[7][15]_i_3__0/O
+                         net (fo=32, routed)          4.040     9.752    u_fft/normalized_ifft/butterfly/memory_im_reg[7][0]
+    SLICE_X87Y52         LUT6 (Prop_lut6_I4_O)        0.105     9.857 r  u_fft/normalized_ifft/butterfly/memory_im[7][5]_i_1__0/O
+                         net (fo=1, routed)           0.000     9.857    u_fft/normalized_ifft/butterfly_n_276
+    SLICE_X87Y52         FDRE                                         r  u_fft/normalized_ifft/memory_im_reg[7][5]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=6046, unset)         1.294    11.294    u_fft/normalized_ifft/aclk
+    SLICE_X87Y52         FDRE                                         r  u_fft/normalized_ifft/memory_im_reg[7][5]/C
+                         clock pessimism              0.000    11.294
+                         clock uncertainty           -0.035    11.259
+    SLICE_X87Y52         FDRE (Setup_fdre_C_D)        0.030    11.289    u_fft/normalized_ifft/memory_im_reg[7][5]
+  -------------------------------------------------------------------
+                         required time                         11.289
+                         arrival time                          -9.857
+  -------------------------------------------------------------------
+                         slack                                  1.431
+
+
+
+
+
+Pulse Width Checks
+--------------------------------------------------------------------------------------
+Clock Name:         clk
+Waveform(ns):       { 0.000 5.000 }
+Period(ns):         10.000
+Sources:            { aclk }
+
+Check Type        Corner  Lib Pin      Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location      Pin
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X3Y19   g_channel_eq.u_channel_eq/s1_ir_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X4Y16   g_channel_eq.u_channel_eq/s1_rr_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X1Y14   u_fft/normalized_ifft/butterfly/g_pipelined.s1_ri_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X0Y14   u_fft/normalized_ifft/butterfly/g_pipelined.s1_rr_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X0Y0    u_tx/tx_core/ifft/butterfly/g_pipelined.s1_ri_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X0Y3    u_tx/tx_core/ifft/butterfly/g_pipelined.s1_rr_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.109         10.000      6.891      DSP48_X3Y15   g_channel_eq.u_channel_eq/s3_q_im_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.109         10.000      6.891      DSP48_X4Y15   g_channel_eq.u_channel_eq/s3_q_re_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.109         10.000      6.891      DSP48_X3Y10   u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.109         10.000      6.891      DSP48_X3Y11   u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+Low Pulse Width   Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMA/CLK
+Low Pulse Width   Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMA/CLK
+Low Pulse Width   Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMB/CLK
+Low Pulse Width   Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMB/CLK
+Low Pulse Width   Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMC/CLK
+Low Pulse Width   Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMC/CLK
+Low Pulse Width   Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMD/CLK
+Low Pulse Width   Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMD/CLK
+Low Pulse Width   Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X96Y48  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_12_14/RAMA/CLK
+Low Pulse Width   Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X96Y48  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_12_14/RAMA/CLK
+High Pulse Width  Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMA/CLK
+High Pulse Width  Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMA/CLK
+High Pulse Width  Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMB/CLK
+High Pulse Width  Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMB/CLK
+High Pulse Width  Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMC/CLK
+High Pulse Width  Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMC/CLK
+High Pulse Width  Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMD/CLK
+High Pulse Width  Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X94Y45  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_0_2/RAMD/CLK
+High Pulse Width  Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X96Y48  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_12_14/RAMA/CLK
+High Pulse Width  Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X96Y48  g_channel_eq.u_channel_eq/g_im_reg_r1_0_63_12_14/RAMA/CLK

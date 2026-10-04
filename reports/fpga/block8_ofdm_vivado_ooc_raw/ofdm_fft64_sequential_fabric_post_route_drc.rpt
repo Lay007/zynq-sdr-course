@@ -1,14 +1,14 @@
 Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
-----------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
 | Date         : normalized
 | Host         : normalized
-| Command      : report_drc -file <output_dir>/ofdm_fft64_sequential_bram_post_route_drc.rpt
+| Command      : report_drc -file <output_dir>/ofdm_fft64_sequential_fabric_post_route_drc.rpt
 | Design       : ofdm_fft64_sequential
 | Device       : xc7z020clg400-2
 | Speed File   : -2
 | Design State : Fully Routed
-----------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Report DRC
 
@@ -24,16 +24,15 @@ Table of Contents
       Design limits: <entire design considered>
            Ruledeck: default
              Max violations: <unlimited>
-             Violations found: 9
-+----------+----------+------------------------+------------+
-| Rule     | Severity | Description            | Violations |
-+----------+----------+------------------------+------------+
-| DPIP-1   | Warning  | Input pipelining       | 2          |
-| DPOP-1   | Warning  | PREG Output pipelining | 2          |
-| DPOP-2   | Warning  | MREG Output pipelining | 2          |
-| PDRC-153 | Warning  | Gated clock check      | 2          |
-| ZPS7-1   | Warning  | PS7 block required     | 1          |
-+----------+----------+------------------------+------------+
+             Violations found: 7
++--------+----------+------------------------+------------+
+| Rule   | Severity | Description            | Violations |
++--------+----------+------------------------+------------+
+| DPIP-1 | Warning  | Input pipelining       | 2          |
+| DPOP-1 | Warning  | PREG Output pipelining | 2          |
+| DPOP-2 | Warning  | MREG Output pipelining | 2          |
+| ZPS7-1 | Warning  | PS7 block required     | 1          |
++--------+----------+------------------------+------------+
 
 2. REPORT DETAILS
 -----------------
@@ -65,16 +64,6 @@ Related violations: <none>
 DPOP-2#2 Warning
 MREG Output pipelining
 DSP normalized_ifft/butterfly/g_pipelined.s1_rr_reg multiplier stage normalized_ifft/butterfly/g_pipelined.s1_rr_reg/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
-Related violations: <none>
-
-PDRC-153#1 Warning
-Gated clock check
-Net normalized_ifft/bank_raddr is a gated clock net sourced by a combinational pin normalized_ifft/bank_raddr_reg[1][4]_i_2/O, cell normalized_ifft/bank_raddr_reg[1][4]_i_2. This is not good design practice and will likely impact performance. For SLICE registers, for example, use the CE pin to control the loading of data.
-Related violations: <none>
-
-PDRC-153#2 Warning
-Gated clock check
-Net normalized_ifft/bank_raddr_reg[0][4]_i_2_n_0 is a gated clock net sourced by a combinational pin normalized_ifft/bank_raddr_reg[0][4]_i_2/O, cell normalized_ifft/bank_raddr_reg[0][4]_i_2. This is not good design practice and will likely impact performance. For SLICE registers, for example, use the CE pin to control the loading of data.
 Related violations: <none>
 
 ZPS7-1#1 Warning
