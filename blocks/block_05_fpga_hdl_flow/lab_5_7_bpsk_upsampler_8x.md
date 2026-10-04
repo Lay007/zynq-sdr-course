@@ -90,6 +90,52 @@ Each exercise below is a deliberate one-line RTL mutation. Make it, run the benc
 2. Why zero-stuffing and not sample-and-hold (repeating the symbol 8 times)? Describe what holding does to the spectrum before the RRC filter.
 3. With zero-stuffing, the average power per output sample drops by a factor of 8. The 65 TX taps in `rtl/bpsk_rrc_tx_fir_taps.mem` sum to about 2.85 (close to the square root of 8), and the largest tap is 0.387. Explain where that scaling comes from and how much headroom it leaves below Q1.15 full scale.
 
+## Lab 5.7b: the upsampler and the TX filter as one polyphase filter
+
+The zeros this block inserts are not free downstream: `bpsk_rrc_tx_fir` multiplies them. For output
+phase p (0..7) only the taps p, p+8, ..., p+64 meet a non-zero input, so
+
+```text
+y[8n + p] = sum over m of h[p + 8m] * s[n - m],   m = 0..8
+```
+
+`rtl/bpsk_rrc_tx_polyphase.v` computes exactly that: 9 multipliers per channel whose coefficients
+change with the phase, a registered adder tree, the same rounding and saturation. It has the ports
+of the pair (symbol input with `in_ready`, sample output) and is checked clock for clock against
+`bpsk_upsampler_8x` followed by `bpsk_rrc_tx_fir`:
+
+```bash
+iverilog -g2012 -o /tmp/tx_pp.vvp \
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_upsampler_8x.v \
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir.v \
+  blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_polyphase.v \
+  blocks/block_05_fpga_hdl_flow/tb/tb_bpsk_rrc_tx_polyphase_equivalence.v
+vvp /tmp/tx_pp.vvp
+```
+
+```text
+PASS: bpsk_rrc_tx_polyphase equals bpsk_upsampler_8x + bpsk_rrc_tx_fir clock for clock (600 symbols, 4800 samples, 0 saturated)
+```
+
+Vivado 2021.1 on `xc7z020clg400-2` at 100 MHz ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block5-bpsk-vivado-evidence.md)):
+
+| Implementation | LUT | FF | DSP48E1 | WNS |
+|---|---:|---:|---:|---:|
+| `bpsk_upsampler_8x` + `bpsk_rrc_tx_fir` | 169 | 2303 | 96 | +3.038 ns (filter) |
+| `bpsk_rrc_tx_polyphase` | 404 | 541 | 14 | +3.233 ns |
+
+Same output, a seventh of the DSP slices and a quarter of the flip-flops; the extra LUTs are the
+coefficient multiplexers. The hardware TX path keeps the original pair, so nothing on the board
+changes.
+
+4. The design has 18 multiplies (9 per channel) but uses 14 DSP slices. Synthesize it
+   (`python tools/generate_block5_bpsk_vivado_reports.py --top bpsk_rrc_tx_polyphase` writes the
+   reports) and read the "DSP: Preliminary Mapping Report" in the synthesis log: most slices get
+   only a 2-3 bit B input. Where did the rest of each coefficient go, and what does that cost in
+   LUTs?
+5. Why can the RX matched filter in Lab 5.8 not use the same trick, and which receive-side
+   structure would (think of the decimation after the matched filter)?
+
 ## Report checklist
 
 - [ ] Explain why the mapper-to-FIR boundary is a multi-rate interface.

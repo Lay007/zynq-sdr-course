@@ -22,6 +22,7 @@ the NCO mixer miss by a fraction of a nanosecond.
 | 5.7 | `bpsk_symbol_mapper` | 2 | 4 | 0 | 0 | +7.378 ns | |
 | 5.7 | `bpsk_upsampler_8x` | 21 | 37 | 0 | 0 | +6.567 ns | |
 | 5.6 | `bpsk_rrc_tx_fir` (65 taps, I and Q) | 148 | 2266 | 96 | 0 | +3.038 ns | about 144 MHz |
+| 5.7 | `bpsk_rrc_tx_polyphase` (upsampler + TX FIR as one polyphase filter) | 404 | 541 | 14 | 0 | +3.233 ns | about 148 MHz |
 | 5.8 | `bpsk_rrc_rx_fir` (matched filter) | 148 | 2266 | 96 | 0 | +3.146 ns | about 146 MHz |
 | 5.8 | `bpsk_symbol_timing_sampler` | 53 | 65 | 0 | 0 | +5.065 ns | |
 | 5.8 | `bpsk_hard_decision` | 1 | 2 | 0 | 0 | +7.378 ns | |
@@ -45,10 +46,17 @@ Zynq build is reported separately in
 testbench-verified structure pre-adds mirrored samples and multiplies 33 products per clock, for I
 and for Q. Vivado maps it to 96 DSP48E1, so the Lab 5.10 top with a TX and an RX filter uses 192
 of the 220 DSP slices on the XC7Z020 (87 %). The timing is comfortable (the adder tree is
-registered stage by stage); the cost is area. Two observations for a later optimization, not
-measured here: after the 8x upsampler seven of every eight TX input samples are zero, so a
-polyphase TX filter needs about one eighth of the multipliers, and a BPSK Q channel carries no
-information on TX.
+registered stage by stage); the cost is area.
+
+On the TX side most of that area multiplies zeros: after the 8x upsampler seven of every eight
+filter inputs are zero. `bpsk_rrc_tx_polyphase` replaces the upsampler and the TX filter with one
+polyphase filter: for output phase p only taps p, p+8, ..., p+64 meet a symbol, so one output per
+clock needs 9 multipliers per channel whose coefficients change with p. It produces the same
+samples on the same clocks as the pair (`tb_bpsk_rrc_tx_polyphase_equivalence.v`, 600 random
+full-scale symbols with gaps, compared every clock) and uses 14 DSP48E1 instead of 96 and 541
+flip-flops instead of 2303, at +3.233 ns. The price is 404 LUTs instead of 169, mostly the
+coefficient multiplexers. The receive filter cannot do this: its input is a full-rate signal with
+no zeros. (A further saving not used here: a BPSK Q channel carries no information on TX.)
 
 The AXI-Lite top (Lab 5.11) uses 48 fewer DSP slices than the Lab 5.10 top although it contains
 the same datapath. The Lab 5.10 top drives `tx_q` to a port; the AXI-Lite top exposes only
