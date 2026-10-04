@@ -6,7 +6,8 @@
 
 Vivado 2021.1 synthesizes, places and routes every Block 8 OFDM RTL block out of context on
 the course part `xc7z020clg400-2` with a `100 MHz` clock constraint, plus the pilot phase
-corrector and the complete AXI4-Stream/AXI4-Lite modem. All nine are fully routed with no DRC
+corrector, the per-subcarrier channel equalizer and the complete AXI4-Stream/AXI4-Lite modem.
+All ten are fully routed with no DRC
 errors. Input and output ports are timed as if every neighbour were a register on the same clock
 (0 ns input and output delay, see [Port paths](#port-paths-a-correction)). With the default
 pipelined schedules, **every clocked block except the one-clock teaching equalizer meets
@@ -21,11 +22,21 @@ pipelined schedules, **every clocked block except the one-clock teaching equaliz
 | `ofdm_one_tap_equalizer` (`PIPELINED = 0`, one clock) | 147 | 72 | 4 | 0 | **-1.077 ns**, 32 failing endpoints | about 90 MHz |
 | `ofdm_pilot_phase_tracker` | 532 | 267 | 0 | 0 | +4.022 ns | |
 | `ofdm_pilot_phase_corrector` (tracker, symbol buffer, pipelined equalizer) | 707 | 364 | 4 | 1 | +0.568 ns | about 106 MHz |
+| `ofdm_channel_equalizer` (per-subcarrier, training symbol) | 332 | 141 | 4 | 1 | +1.152 ns | about 113 MHz |
 | `ofdm_qpsk_demapper` | 3 | 0 | 0 | 0 | combinational, no clock | |
 | `ofdm_axi_modem` (TX and RX chains with AXI4-Stream/AXI4-Lite) | 16711 | 5245 | 12 | 1 | +0.775 ns | about 108 MHz |
 
 The frequency estimate is `1 / (period - WNS)`; it describes the routed critical path, not a
 characterized maximum clock.
+
+## A memory reset that cost 2300 flip-flops
+
+The first version of `ofdm_channel_equalizer` cleared its 64-entry coefficient memory (2 x 18 bits
+per entry) in the reset branch. A memory with a reset cannot be a RAM, so Vivado built it from
+flip-flops: 995 LUTs, 2445 flip-flops, WNS +0.909 ns. The reset was not needed, because the
+training symbol writes all 64 entries (zero on the null bins) before any data symbol reads them.
+Without it the same RTL, bit-exact with the same vectors, maps the memory to one block RAM:
+332 LUTs, 141 flip-flops, WNS +1.152 ns.
 
 ## Port paths: a correction
 
