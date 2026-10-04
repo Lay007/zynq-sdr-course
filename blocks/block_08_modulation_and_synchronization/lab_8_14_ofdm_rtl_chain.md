@@ -41,7 +41,8 @@ flowchart LR
 flowchart LR
     IN["80 Q1.15 samples/symbol"] --> CPR[ofdm_cp16_remover]
     CPR --> FFT[ofdm_fft64_sequential]
-    FFT --> EXT[ofdm_subcarrier_extractor]
+    FFT --> CEQ["ofdm_channel_equalizer (per-subcarrier, training symbol)"]
+    CEQ --> EXT[ofdm_subcarrier_extractor]
     EXT -->|data| BUF["48-sample symbol buffer"]
     EXT -->|pilot| PILOT[ofdm_pilot_phase_tracker]
     BUF --> EQ[ofdm_one_tap_equalizer]
@@ -56,6 +57,7 @@ flowchart LR
 | `ofdm_fft64_sequential.v` | Scaled forward FFT, built by reusing the IFFT core via `FFT(x)/N = conj(IFFT(conj(x)))` | rare Q1.15 endpoint clips from conjugating `-32768` are counted, not hidden |
 | `ofdm_subcarrier_extractor.v` | Splits the 64 bins into 48 data, 4 pilot and 12 null/guard carriers -- the exact inverse of the allocator's layout | data and pilot are independently backpressured sinks; a stalled pilot sink cannot stall data (or vice versa) |
 | `ofdm_pilot_phase_tracker.v` | Turns each symbol's four pilots into a Q2.14 phase-correction coefficient (vectoring + rotation CORDIC) | sign-only pilot references, 14 CORDIC iterations, `pilot_ready` low for 31 cycles per symbol; bit-exact with `tools/ofdm_pilot_phase_tracker_fixed.py` |
+| `ofdm_channel_equalizer.v` | Estimates `H[k]` on every used carrier from a training symbol and removes its phase from later symbols | `G = Y*conj(sign X)` (additions only), `Z = Y*conj(G) >> 4`; amplitude not normalized; 3-clock pipeline; bit-exact with `tools/ofdm_channel_equalizer_fixed.py` |
 | `ofdm_pilot_phase_corrector.v` | Wires the tracker to the equalizer: buffers one symbol's data and applies the coefficient of that same symbol | 48-entry buffer; `data_ready` and `pilot_ready` stay low while the buffer drains, so latency is one symbol plus the tracker's 31 clocks; tracker and equalizer arithmetic unchanged |
 | `ofdm_one_tap_equalizer.v` | Multiplies each data symbol by an externally supplied Q2.14 correction coefficient | Q1.15 x Q2.14 -> Q3.29, rounded to Q15 (nearest, half-LSB away from zero), then saturated; `saturation_count` is cumulative from reset |
 | `ofdm_qpsk_demapper.v` | Hard-decision inverse of the mapper | transparent ready/valid, zero maps to bit `0` exactly like the Python reference |
@@ -86,7 +88,7 @@ Every block uses one clock, synchronous active-low reset, and a single-register 
 PASS: ofdm_axi_modem 120-degree channel recovered 288/288 bits in 3 symbols over AXI4-Stream, BER=0; AXI4-Lite ID, counters, reset and sticky errors checked
 ```
 
-The wrapper is not yet connected to the PS, a DMA engine or the AD9361 interface in a block design.
+The wrapper is not yet connected to the PS, a DMA engine or the AD9361 interface in a block design, and its RX chain does not yet include the per-subcarrier `ofdm_channel_equalizer.v` of stage 2d.
 
 ## Pilots: what exists and what does not yet
 
@@ -108,7 +110,7 @@ PASS: ofdm_pilot_phase_tracker matched the fixed-point model on 49 symbols (back
 
 Against the ideal `exp(-j * theta)`, the coefficient is within 7 LSB of 16384 (0.04 %) and the phase within 3 units of pi/2^15 (about 3e-4 rad) at every whole degree.
 
-The coefficient belongs to the symbol whose pilots produced it, but that symbol's data has already streamed past by the time the last pilot (bin 57) arrives. `ofdm_pilot_phase_corrector.v` therefore holds the symbol's data in a 48-entry buffer and releases it through the equalizer once the coefficient is ready: same-symbol correction, as in Lab 8.5, at the cost of one symbol of latency. Applying the coefficient to the *next* symbol instead would need no buffer but would track with a one-symbol lag. What is still **not** in RTL is a per-subcarrier channel estimate for a frequency-selective channel: the correction is one common phase per symbol.
+The coefficient belongs to the symbol whose pilots produced it, but that symbol's data has already streamed past by the time the last pilot (bin 57) arrives. `ofdm_pilot_phase_corrector.v` therefore holds the symbol's data in a 48-entry buffer and releases it through the equalizer once the coefficient is ready: same-symbol correction, as in Lab 8.5, at the cost of one symbol of latency. Applying the coefficient to the *next* symbol instead would need no buffer but would track with a one-symbol lag. That correction is one common phase per symbol; a frequency-selective channel also needs the per-subcarrier estimate of stage 2d (`ofdm_channel_equalizer.v`).
 
 ## Verification stage 1: float model vs. fixed-point model vs. RTL
 
@@ -257,6 +259,56 @@ python tools/ofdm_cfo_pilot_bias.py --angle-deg 30 --symbols 8 --ppm 0 500 2000 
 With a CFO the testbench therefore checks the BER and only reports the phase. CI runs the 2000 ppm,
 8-symbol case.
 
+## Verification stage 2d: a frequency-selective channel
+
+One coefficient per symbol is enough while every subcarrier sees the same channel. A multipath
+channel does not: its frequency response `H[k]` has a different gain and phase on every carrier.
+`ofdm_channel_equalizer.v` sits between the FFT and the extractor and estimates `H[k]` from a
+**training symbol**, the first symbol after reset, whose 48 data carriers carry a fixed known bit
+pattern (`train_bits()`) and whose pilots are the usual ones:
+
+- training: `G[k] = Y[k] * conj(sign(X[k]))`, only additions, because the reference signs are +-1;
+- every later symbol: `Z[k] = Y[k] * conj(G[k]) >> 4`, rounded and saturated.
+
+`Z[k]` is `|H[k]|^2` times the transmitted symbol: the channel phase is gone on every carrier, so
+QPSK hard decisions are right **without a division**. The amplitude is not normalized (carriers in
+a fade come out small), which is fine for QPSK and not for 16-QAM or for measuring EVM. Pilots are
+equalized as well, so `ofdm_pilot_phase_corrector.v` downstream now measures only what changed
+since the training symbol, such as a residual CFO. Lab 8.5 uses a different preamble (known values
+on even carriers, interpolation in between, division by `H`); the training symbol here is closer
+to the 802.11 long training field.
+
+The block is bit-exact with `tools/ofdm_channel_equalizer_fixed.py` on 6 frames (identity, Lab 8.5
+multipath, strong multipath with noise, a deep fade, equalizer saturation, bins near full scale):
+
+```bash
+python -m pytest tests/test_ofdm_channel_equalizer_fixed.py
+python -m tools.generate_ofdm_channel_eq_vectors      # regenerate the committed vectors
+```
+
+```text
+PASS: ofdm_channel_equalizer matched the fixed-point model on 6 frames, 768 equalized bins, saturation counts included
+```
+
+End to end, `tb_ofdm_tx_rx_multipath_loopback.sv` sends the training symbol and then data through
+`h = 0.5 + 0.25 e^{j1.2} z^-3 + 0.15 e^{-j2.0} z^-7` (inside the cyclic prefix):
+
+```bash
+iverilog -g2012 -s tb_ofdm_tx_rx_multipath_loopback -o /tmp/tb_mp.vvp \
+  $RTL/ofdm_*.v $TB/tb_ofdm_tx_rx_multipath_loopback.sv
+vvp /tmp/tb_mp.vvp
+```
+
+```text
+PASS: OFDM 3-path channel -> per-subcarrier equalizer recovered 384/384 data bits in 4 symbols after 1 training symbol, BER=0 (equalizer saturations 0)
+```
+
+With `-Ptb_ofdm_tx_rx_multipath_loopback.USE_CHANNEL_EQ=0` the per-subcarrier equalizer is bypassed
+and only the common pilot phase is corrected: `FAIL BER nonzero: 24/384 bit errors`. Adding a CFO
+(`CFO_PPM`, 8 data symbols) shows the two corrections working together: 0 errors at 500, 1000 and
+2000 ppm, 2 of 768 bits at 3000 ppm, where the carriers in the deepest part of the fade meet the
+inter-carrier interference of stage 2c.
+
 ## What this lab does and does not prove
 
 This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarrier allocator/extractor, streaming 64-point IFFT/FFT, CP insertion/removal, one-tap equalizer, explicit scaling/saturation/overflow counters) and Verification stages 1-2 (float vs. fixed-point, self-checking digital loopback) with real, reproducible, measured evidence: 96/96 bits at BER=0 for both the plain digital loopback and a loopback through a genuine complex channel rotation with the equalizer actually correcting it.
@@ -264,7 +316,7 @@ This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarri
 It does **not** claim:
 
 - Zynq system integration: `ofdm_axi_modem.v` has the AXI4-Stream/AXI4-Lite interfaces and is verified in simulation and out-of-context implementation, but no block design connects it to the PS, a DMA engine or the AD9361 interface;
-- per-subcarrier channel estimation: the pilot-driven correction in RTL (`ofdm_pilot_phase_corrector.v`) removes one common phase per symbol, which is enough for a flat channel but not for a frequency-selective one;
+- amplitude equalization: `ofdm_channel_equalizer.v` removes the channel phase per carrier but does not divide by `|H|`, which is enough for QPSK and not for higher-order QAM; the channel is estimated once per training symbol, not tracked;
 - Verification stages 3-5 (PL/fabric loopback on Zynq, safe attenuated AD9361/AD9363 cabled loopback, an independent SDR capture) -- these need the physical board and RF path, neither of which was available while writing this lab;
 - a board-level clock plan. The out-of-context Vivado 2021.1 implementation on `xc7z020clg400-2` ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md)) routes every OFDM block, the pilot corrector and the AXI modem without DRC errors, with the port paths timed as well (0 ns input/output delay). Every clocked block except the one-clock equalizer meets 100 MHz: the TX path and FFT64 with WNS +1.34 / +0.74 ns (about 115 / 108 MHz), the corrector +0.57 ns and the complete AXI modem +0.78 ns (16711 LUT, 12 DSP48E1, 1 BRAM). That needed the pipelined IFFT/FFT schedule, which is now the default (`PIPELINED = 1`): the butterfly takes four clocks instead of one but accepts one butterfly per clock, so a transform computes in 222 clocks instead of 384. The one-cycle teaching baseline (`PIPELINED = 0`, or `+define+OFDM_IFFT_PIPELINED=0`) missed 100 MHz by about 10 ns (28 logic levels in one clock). The one-clock equalizer (`PIPELINED = 0`, the standalone default) misses by 1.08 ns once its input-port paths are timed; the corrector and the modem use its three-clock `PIPELINED = 1` form. The transforms' working memory still lives in fabric logic, not block RAM, and reads out of it are the remaining critical paths.
 
@@ -289,7 +341,7 @@ Each exercise changes the equalizer coefficient on line `.coeff_re(16'sd0), .coe
 - [ ] Block design with PS, DMA and the AD9361 interface.
 - [x] Pilot phase tracker in RTL, bit-exact with its fixed-point model (49 symbols).
 - [x] Tracker coefficient wired into the equalizer (same-symbol correction, BER=0 through 120 and -150 degree channels).
-- [ ] Per-subcarrier channel estimation.
+- [x] Per-subcarrier channel estimation from a training symbol (bit-exact; BER=0 through a 3-path channel, also with a 2000 ppm CFO).
 - [ ] PL/fabric loopback on Zynq.
 - [ ] Safe attenuated AD9361/AD9363 cabled loopback with attenuation/gain metadata.
 - [x] Resource and timing report from Vivado OOC implementation, port paths included (all blocks routed; all clocked blocks except the one-clock equalizer meet 100 MHz).
