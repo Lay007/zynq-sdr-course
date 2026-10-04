@@ -27,6 +27,7 @@ TOPS: tuple[tuple[str, str | None], ...] = (
     ("ofdm_one_tap_equalizer", "clk"),
     ("ofdm_pilot_phase_tracker", "clk"),
     ("ofdm_pilot_phase_corrector", "clk"),
+    ("ofdm_channel_equalizer", "clk"),
     ("ofdm_qpsk_demapper", None),
     ("ofdm_axi_modem", "aclk"),
 )

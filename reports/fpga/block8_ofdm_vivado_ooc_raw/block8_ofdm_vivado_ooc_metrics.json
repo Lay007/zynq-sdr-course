@@ -338,6 +338,56 @@
       }
     },
     {
+      "top": "ofdm_channel_equalizer",
+      "clock_port": "clk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 369,
+          "ff": 141,
+          "bram_tiles": 1.0,
+          "dsp": 4
+        },
+        "timing": {
+          "wns_ns": 1.213,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 692,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 8.68,
+          "logic_levels": 15,
+          "fmax_est_mhz": 113.804
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 332,
+          "ff": 141,
+          "bram_tiles": 1.0,
+          "dsp": 4
+        },
+        "timing": {
+          "wns_ns": 1.152,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 692,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 8.739,
+          "logic_levels": 15,
+          "fmax_est_mhz": 113.02
+        },
+        "routable_nets": 701,
+        "fully_routed_nets": 701,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 11,
+        "drc_errors": 0
+      }
+    },
+    {
       "top": "ofdm_qpsk_demapper",
       "clock_port": null,
       "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
