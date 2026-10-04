@@ -6,7 +6,9 @@ symbols, 64 natural-order bins per symbol, one bin per line, in decimal:
 
     frame symbol bin y_re y_im exp_re exp_im exp_sat
 
-symbol 0 is the training symbol (exp_* are 0 and not checked). Expected values
+symbol 0 is the training symbol (exp_* are 0 and not checked). A second file,
+block08_ofdm_channel_eq_norm_vectors.txt, holds the same frames with the
+expected outputs of the NORMALIZE = 1 (zero-forcing, CORDIC 1/|G|^2) mode. Expected values
 come from the bit-exact model in tools/ofdm_channel_equalizer_fixed.py. The
 Verilog testbench resets the block before every frame. pytest checks that the
 committed file matches the model.
@@ -32,6 +34,7 @@ from tools.ofdm_channel_equalizer_fixed import (
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT = ROOT / "verification" / "vectors" / "block08_ofdm_channel_eq_vectors.txt"
+NORMALIZED_OUT = ROOT / "verification" / "vectors" / "block08_ofdm_channel_eq_norm_vectors.txt"
 QPSK = 23170
 PILOT = 32767
 SCALE = 1.0 / 64.0
@@ -97,24 +100,26 @@ def build_frames() -> list[tuple[list[tuple[int, int]], list[list[tuple[int, int
         (fade, 1.0, 0.0),            # near-null around DC (deep fade)
         (flat, 2.0, 0.0),            # |H|^2 = 4: equalizer saturation
         (lab85, 60.0, 0.0),          # bins near Q1.15 full scale
+        (flat, 0.1, 0.0, 3.0),       # channel 3x stronger after training: zero-forcing saturates
     ]
     frames = []
-    for response, gain, noise in cases:
+    for response, gain, noise, *data_gain in cases:
         training = _receive(_training_values(), response, gain, noise, rng)
+        data_scale = gain * data_gain[0] if data_gain else gain
         data = []
         for _ in range(2):
             bits = {d: (rng.randrange(2), rng.randrange(2)) for d in range(48)}
-            data.append(_receive(_symbol_values(lambda d, b=bits: b[d]), response, gain, noise, rng))
+            data.append(_receive(_symbol_values(lambda d, b=bits: b[d]), response, data_scale, noise, rng))
         frames.append((training, data))
     return frames
 
 
-def render(frames) -> str:
+def render(frames, normalize: bool = False) -> str:
     lines = []
     for f, (training, data) in enumerate(frames):
         for k, (yr, yi) in enumerate(training):
             lines.append(f"{f} 0 {k} {yr} {yi} 0 0 0")
-        outputs, sats = equalize_frame(training, data)
+        outputs, sats = equalize_frame(training, data, normalize=normalize)
         for s, symbol in enumerate(data, start=1):
             for k, (yr, yi) in enumerate(symbol):
                 zr, zi = outputs[s - 1][k]
@@ -125,10 +130,13 @@ def render(frames) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
+    parser.add_argument("--normalized-out", type=Path, default=NORMALIZED_OUT)
     args = parser.parse_args()
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(render(build_frames()), encoding="utf-8", newline="\n")
-    print(f"wrote {args.out}")
+    frames = build_frames()
+    for path, normalize in ((args.out, False), (args.normalized_out, True)):
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(render(frames, normalize), encoding="utf-8", newline="\n")
+        print(f"wrote {path}")
     return 0
 
 

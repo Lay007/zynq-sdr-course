@@ -12,8 +12,15 @@
 // symbol is not enough. USE_CHANNEL_EQ=0 bypasses the per-subcarrier
 // equalizer (the training symbol is then decoded as data and ignored) to show
 // exactly that. CFO_PPM adds a carrier offset in 1e-6 cycles per sample.
+// NORMALIZE=1 uses the zero-forcing equalizer (CORDIC 1/|G|^2).
+//
+// Grid spread: every decided component c is compared with sign * A, where A
+// is the mean |c| over all data components; spread = rms(c - sign*A) / A. It
+// says how well all carriers land on one amplitude grid, which a 16-QAM
+// slicer would need; QPSK only needs the signs.
 module tb_ofdm_tx_rx_multipath_loopback;
     parameter integer USE_CHANNEL_EQ = 1;
+    parameter integer NORMALIZE = 0;
     parameter integer CFO_PPM = 0;
     parameter integer SYMBOLS = 4;
     localparam integer TOTAL_SYMBOLS = SYMBOLS + 1;
@@ -139,6 +146,14 @@ module tb_ofdm_tx_rx_multipath_loopback;
     integer i;
     integer timeout;
     integer data_pairs;
+    real abs_sum = 0.0;
+    real comp_count = 0.0;
+    real grid_amp;
+    real err_sum;
+    real spread;
+    integer comp_log [0:2*PAIRS-1];
+    integer sign_log [0:2*PAIRS-1];
+    integer n_comp = 0;
 
     ofdm_tx_cp16_path tx (
         .clk(clk), .resetn(resetn),
@@ -173,7 +188,7 @@ module tb_ofdm_tx_rx_multipath_loopback;
 
     generate
         if (USE_CHANNEL_EQ != 0) begin : g_channel_eq
-            ofdm_channel_equalizer channel_eq (
+            ofdm_channel_equalizer #(.NORMALIZE(NORMALIZE)) channel_eq (
                 .clk(clk), .resetn(resetn), .retrain(1'b0),
                 .bin_valid(fft_bin_valid), .bin_ready(fft_bin_ready),
                 .bin_re(fft_bin_re), .bin_im(fft_bin_im),
@@ -254,6 +269,11 @@ module tb_ofdm_tx_rx_multipath_loopback;
             end
             if (rx_bits_valid) begin
                 if (rx_symbol >= 1) begin
+                    comp_log[n_comp] = $signed(eq_re);
+                    sign_log[n_comp] = expected_bits[rx_symbol * 48 + rx_bits_index][1] ? -1 : 1;
+                    comp_log[n_comp + 1] = $signed(eq_im);
+                    sign_log[n_comp + 1] = expected_bits[rx_symbol * 48 + rx_bits_index][0] ? -1 : 1;
+                    n_comp = n_comp + 2;
                     if (rx_bits !== expected_bits[rx_symbol * 48 + rx_bits_index]) begin
                         bit_errors = bit_errors +
                             (rx_bits[1] !== expected_bits[rx_symbol * 48 + rx_bits_index][1]) +
@@ -315,8 +335,17 @@ module tb_ofdm_tx_rx_multipath_loopback;
             timeout = timeout + 1;
         end
 
-        $display("RESULT channel_eq=%0d cfo_ppm=%0d data_symbols=%0d bit_errors=%0d bits=%0d trained=%0d ce_saturations=%0d",
-                 USE_CHANNEL_EQ, CFO_PPM, SYMBOLS, bit_errors, 2 * data_pairs, ce_trained, ce_saturation_count);
+        abs_sum = 0.0;
+        for (i = 0; i < n_comp; i = i + 1)
+            abs_sum = abs_sum + ((comp_log[i] < 0) ? -comp_log[i] : comp_log[i]);
+        grid_amp = (n_comp > 0) ? abs_sum / n_comp : 1.0;
+        err_sum = 0.0;
+        for (i = 0; i < n_comp; i = i + 1)
+            err_sum = err_sum + (comp_log[i] - sign_log[i] * grid_amp) * (comp_log[i] - sign_log[i] * grid_amp);
+        spread = (n_comp > 0) ? 100.0 * $sqrt(err_sum / n_comp) / grid_amp : 0.0;
+        $display("RESULT channel_eq=%0d normalize=%0d cfo_ppm=%0d data_symbols=%0d bit_errors=%0d bits=%0d trained=%0d ce_saturations=%0d grid_amp=%0.0f grid_spread_pct=%0.1f",
+                 USE_CHANNEL_EQ, NORMALIZE, CFO_PPM, SYMBOLS, bit_errors, 2 * data_pairs, ce_trained, ce_saturation_count,
+                 grid_amp, spread);
         if (recovered_count != data_pairs) begin
             $display("FAIL expected %0d recovered pairs, got %0d", data_pairs, recovered_count);
             errors = errors + 1;
@@ -327,6 +356,12 @@ module tb_ofdm_tx_rx_multipath_loopback;
         end
         if (USE_CHANNEL_EQ != 0 && (!ce_trained || ce_train_count != 16'd1)) begin
             $display("FAIL channel equalizer trained=%0d train_count=%0d", ce_trained, ce_train_count);
+            errors = errors + 1;
+        end
+        if (USE_CHANNEL_EQ != 0 && NORMALIZE != 0 && CFO_PPM == 0 &&
+            (spread > 2.0 || grid_amp < 8028.0 || grid_amp > 8356.0)) begin
+            $display("FAIL zero-forcing grid: amplitude %0.0f (expected 8192 +- 2%%), spread %0.1f%% (expected < 2%%)",
+                     grid_amp, spread);
             errors = errors + 1;
         end
         if (tx_saturation_count != 16'd0) begin

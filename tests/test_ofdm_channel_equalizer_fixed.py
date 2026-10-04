@@ -5,11 +5,13 @@ import math
 import random
 from pathlib import Path
 
-from tools.generate_ofdm_channel_eq_vectors import DEFAULT_OUT, build_frames, render
+from tools.generate_ofdm_channel_eq_vectors import DEFAULT_OUT, NORMALIZED_OUT, build_frames, render
 from tools.ofdm_channel_equalizer_fixed import (
     data_index_for_bin,
     equalize,
+    equalize_normalized,
     estimate,
+    inverse,
     is_null,
     train_bits,
     train_reference,
@@ -17,7 +19,32 @@ from tools.ofdm_channel_equalizer_fixed import (
 
 
 def test_committed_vectors_match_the_model() -> None:
-    assert Path(DEFAULT_OUT).read_text(encoding="utf-8") == render(build_frames())
+    frames = build_frames()
+    assert Path(DEFAULT_OUT).read_text(encoding="utf-8") == render(frames)
+    assert Path(NORMALIZED_OUT).read_text(encoding="utf-8") == render(frames, normalize=True)
+
+
+def test_cordic_inverse_is_accurate() -> None:
+    for energy in (1, 3, 1000, 2**17 + 5, 724 * 724, 512 * 512, 2**33 - 1):
+        z, sh = inverse(energy)
+        assert abs(z / 2**sh - 2**14 / energy) <= 2 ** 14 / energy * 4e-5
+    assert inverse(0) == (0, 37)
+
+
+def test_zero_forcing_puts_every_carrier_on_one_grid() -> None:
+    rng = random.Random(11)
+    for _ in range(200):
+        h = rng.uniform(0.05, 1.8) * cmath.exp(1j * rng.uniform(-math.pi, math.pi))
+        k = rng.choice([b for b in range(64) if not is_null(b) and b not in (7, 21, 43, 57)])
+        xr, xi = train_reference(k)
+        train = h * complex(xr, xi) * 362
+        g = estimate(k, (round(train.real), round(train.imag)))
+        sr, si = rng.choice([-1, 1]), rng.choice([-1, 1])
+        y = h * complex(sr, si) * 362
+        (zr, zi), sat = equalize_normalized((round(y.real), round(y.imag)), g, inverse(g[0] ** 2 + g[1] ** 2))
+        assert sat == 0
+        # 2^14 * Y / G with G = 2 * 362 * H: about 8192 per component, whatever |H|.
+        assert abs(zr - sr * 8192) < 8192 * 0.06 and abs(zi - si * 8192) < 8192 * 0.06
 
 
 def test_training_reference_covers_the_lab85_plan() -> None:

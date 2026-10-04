@@ -8,7 +8,12 @@
 // and order; the training symbol must produce no output; the saturation count
 // must equal the model's.
 module tb_ofdm_channel_equalizer;
-    localparam VECTORS = "verification/vectors/block08_ofdm_channel_eq_vectors.txt";
+    // NORMALIZE=1 checks the zero-forcing mode (CORDIC 1/|G|^2) against its own vectors.
+    parameter integer NORMALIZE = 0;
+    // Two names, chosen with if: a ?: between strings of different lengths
+    // pads the shorter one with NUL characters.
+    localparam VECTORS_PLAIN = "verification/vectors/block08_ofdm_channel_eq_vectors.txt";
+    localparam VECTORS_NORM = "verification/vectors/block08_ofdm_channel_eq_norm_vectors.txt";
     localparam integer MAX_LINES = 4096;
 
     reg clk = 1'b0;
@@ -32,7 +37,7 @@ module tb_ofdm_channel_equalizer;
     wire [15:0] train_count;
     wire [31:0] saturation_count;
 
-    ofdm_channel_equalizer dut (
+    ofdm_channel_equalizer #(.NORMALIZE(NORMALIZE)) dut (
         .clk(clk), .resetn(resetn), .retrain(1'b0),
         .bin_valid(bin_valid), .bin_ready(bin_ready),
         .bin_re(bin_re), .bin_im(bin_im), .bin_index(bin_index), .bin_last(bin_last),
@@ -85,9 +90,12 @@ module tb_ofdm_channel_equalizer;
         out_ready <= ($random(seed) & 3) != 0;
 
     initial begin
-        fd = $fopen(VECTORS, "r");
+        if (NORMALIZE != 0)
+            fd = $fopen(VECTORS_NORM, "r");
+        else
+            fd = $fopen(VECTORS_PLAIN, "r");
         if (fd == 0) begin
-            $display("FAIL cannot open %0s", VECTORS);
+            $display("FAIL cannot open the vector file");
             $fatal(1);
         end
         while (!$feof(fd)) begin
@@ -141,7 +149,7 @@ module tb_ofdm_channel_equalizer;
             @(negedge clk);
             bin_valid = 1'b0;
             timeout = 0;
-            while (expect_ptr < last_line && timeout < 2000) begin
+            while (expect_ptr < last_line && timeout < 4000) begin
                 @(posedge clk);
                 timeout = timeout + 1;
             end
@@ -163,8 +171,8 @@ module tb_ofdm_channel_equalizer;
         end
 
         if (errors == 0) begin
-            $display("PASS: ofdm_channel_equalizer matched the fixed-point model on %0d frames, %0d equalized bins, saturation counts included",
-                     frames_done, checked);
+            $display("PASS: ofdm_channel_equalizer (NORMALIZE=%0d) matched the fixed-point model on %0d frames, %0d equalized bins, saturation counts included",
+                     NORMALIZE, frames_done, checked);
             $finish;
         end else begin
             $display("FAIL tb_ofdm_channel_equalizer errors=%0d", errors);

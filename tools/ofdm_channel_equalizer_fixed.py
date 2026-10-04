@@ -7,6 +7,10 @@ with X the known training symbol (data carriers: the train_bits() QPSK pattern,
 pilots: +1, +1, +1, -1 at bins 7, 43, 57 and 21). Data symbols leave as
     Z[k] = round(Y[k] * conj(G[k]) / 2^SHIFT), saturated to Q1.15,
 rounding to nearest with halves away from zero. Null and guard bins give 0.
+
+With normalize=True (the RTL's NORMALIZE = 1) every used bin also gets
+1/|G[k]|^2 from a linear-mode CORDIC division (see inverse()), and data bins
+leave as round((Y * conj(G)) * z / 2^sh) = 2^14 * Y / G, saturated.
 """
 
 from __future__ import annotations
@@ -85,19 +89,60 @@ def equalize(y: tuple[int, int], g: tuple[int, int], shift: int = DEFAULT_SHIFT)
     return (zr, zi), int(sr) + int(si)
 
 
+CORDIC_ITERS = 17
+
+
+def inverse(energy: int) -> tuple[int, int]:
+    """CORDIC 1/|G|^2 as the RTL computes it: (z, sh) with 2^14/energy ~ z / 2^sh.
+
+    energy is shifted left by s so that its top bit is bit 35; then
+    y = 2^35, z = 0 and for i = 0..16: y -/+= x >> i, z +/-= 2^(16-i)
+    (subtract while y >= 0). z ~ 2^16 * 2^35 / (energy << s), sh = 37 - s.
+    """
+    if energy == 0:
+        return 0, 37
+    s = 35 - (energy.bit_length() - 1)
+    x = energy << s
+    y = 1 << 35
+    z = 0
+    for i in range(CORDIC_ITERS):
+        if y >= 0:
+            y -= x >> i
+            z += 1 << (16 - i)
+        else:
+            y += x >> i
+            z -= 1 << (16 - i)
+    return z & 0x1FFFF, 37 - s
+
+
+def equalize_normalized(y: tuple[int, int], g: tuple[int, int], inv: tuple[int, int]) -> tuple[tuple[int, int], int]:
+    """Z = round((Y * conj(G)) * z / 2^sh), saturated: 2^14 * Y / G."""
+    yr, yi = y
+    gr, gi = g
+    m, sh = inv
+    zr, sr = _saturate(_round_shift((yr * gr + yi * gi) * m, sh))
+    zi, si = _saturate(_round_shift((yi * gr - yr * gi) * m, sh))
+    return (zr, zi), int(sr) + int(si)
+
+
 def equalize_frame(
     training: list[tuple[int, int]],
     data_symbols: list[list[tuple[int, int]]],
     shift: int = DEFAULT_SHIFT,
+    normalize: bool = False,
 ) -> tuple[list[list[tuple[int, int]]], list[list[int]]]:
     """Train on one 64-bin symbol, then equalize each 64-bin data symbol."""
     g = [estimate(k, training[k]) for k in range(64)]
+    inv = [inverse(gr * gr + gi * gi) for gr, gi in g]
     out: list[list[tuple[int, int]]] = []
     sats: list[list[int]] = []
     for symbol in data_symbols:
         row, row_sat = [], []
         for k in range(64):
-            z, s = equalize(symbol[k], g[k], shift)
+            if normalize:
+                z, s = equalize_normalized(symbol[k], g[k], inv[k])
+            else:
+                z, s = equalize(symbol[k], g[k], shift)
             row.append(z)
             row_sat.append(s)
         out.append(row)

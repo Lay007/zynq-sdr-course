@@ -8,6 +8,7 @@ on:
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
       - "verification/vectors/block08_ofdm_pilot_tracker_vectors.txt"
       - "verification/vectors/block08_ofdm_channel_eq_vectors.txt"
+      - "verification/vectors/block08_ofdm_channel_eq_norm_vectors.txt"
       - ".github/workflows/block8_ofdm_rx_chain.yml"
   pull_request:
     paths:
@@ -15,6 +16,7 @@ on:
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_*.sv"
       - "verification/vectors/block08_ofdm_pilot_tracker_vectors.txt"
       - "verification/vectors/block08_ofdm_channel_eq_vectors.txt"
+      - "verification/vectors/block08_ofdm_channel_eq_norm_vectors.txt"
       - ".github/workflows/block8_ofdm_rx_chain.yml"
   workflow_dispatch:
 
@@ -60,7 +62,12 @@ jobs:
       - name: Check pipelined one-tap equalizer
         run: |
           set -euo pipefail
-          iverilog -g2012 -Wall             -s tb_ofdm_one_tap_equalizer             -Ptb_ofdm_one_tap_equalizer.PIPELINED=1             -o /tmp/tb_ofdm_one_tap_equalizer_pipelined.vvp             blocks/block_08_modulation_and_synchronization/rtl/ofdm_one_tap_equalizer.v             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_one_tap_equalizer.sv
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_one_tap_equalizer \
+            -Ptb_ofdm_one_tap_equalizer.PIPELINED=1 \
+            -o /tmp/tb_ofdm_one_tap_equalizer_pipelined.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_one_tap_equalizer.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_one_tap_equalizer.sv
           vvp /tmp/tb_ofdm_one_tap_equalizer_pipelined.vvp
 
       - name: Check pilot phase tracker
@@ -140,20 +147,42 @@ jobs:
       - name: Check pilot-corrected loopback under a 2000 ppm CFO (8 symbols)
         run: |
           set -euo pipefail
-          iverilog -g2012 -Wall             -s tb_ofdm_tx_rx_pilot_corrected_loopback             -Ptb_ofdm_tx_rx_pilot_corrected_loopback.ANGLE_DEG=30             -Ptb_ofdm_tx_rx_pilot_corrected_loopback.CFO_PPM=2000             -Ptb_ofdm_tx_rx_pilot_corrected_loopback.SYMBOLS=8             -o /tmp/tb_ofdm_cfo.vvp             blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_pilot_corrected_loopback.sv
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_tx_rx_pilot_corrected_loopback \
+            -Ptb_ofdm_tx_rx_pilot_corrected_loopback.ANGLE_DEG=30 \
+            -Ptb_ofdm_tx_rx_pilot_corrected_loopback.CFO_PPM=2000 \
+            -Ptb_ofdm_tx_rx_pilot_corrected_loopback.SYMBOLS=8 \
+            -o /tmp/tb_ofdm_cfo.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_pilot_corrected_loopback.sv
           vvp /tmp/tb_ofdm_cfo.vvp
 
       - name: Check per-subcarrier channel equalizer against the fixed-point vectors
         run: |
           set -euo pipefail
-          iverilog -g2012 -Wall             -s tb_ofdm_channel_equalizer             -o /tmp/tb_ofdm_channel_equalizer.vvp             blocks/block_08_modulation_and_synchronization/rtl/ofdm_channel_equalizer.v             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_channel_equalizer.sv
-          vvp /tmp/tb_ofdm_channel_equalizer.vvp
+          for normalize in 0 1; do
+            iverilog -g2012 -Wall \
+              -s tb_ofdm_channel_equalizer \
+              -Ptb_ofdm_channel_equalizer.NORMALIZE=$normalize \
+              -o /tmp/tb_ofdm_channel_equalizer.vvp \
+              blocks/block_08_modulation_and_synchronization/rtl/ofdm_channel_equalizer.v \
+              blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_channel_equalizer.sv
+            vvp /tmp/tb_ofdm_channel_equalizer.vvp
+          done
 
-      - name: Check 3-path channel loopback (and with a 2000 ppm CFO)
+      - name: Check 3-path channel loopback (phase-only and zero-forcing, with and without a 2000 ppm CFO)
         run: |
           set -euo pipefail
-          for cfo in 0 2000; do
-            iverilog -g2012 -Wall               -s tb_ofdm_tx_rx_multipath_loopback               -Ptb_ofdm_tx_rx_multipath_loopback.CFO_PPM=$cfo               -Ptb_ofdm_tx_rx_multipath_loopback.SYMBOLS=8               -o /tmp/tb_ofdm_multipath.vvp               blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v               blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_multipath_loopback.sv
+          for case in "0 0" "0 2000" "1 0" "1 2000"; do
+            set -- $case
+            iverilog -g2012 -Wall \
+              -s tb_ofdm_tx_rx_multipath_loopback \
+              -Ptb_ofdm_tx_rx_multipath_loopback.NORMALIZE=$1 \
+              -Ptb_ofdm_tx_rx_multipath_loopback.CFO_PPM=$2 \
+              -Ptb_ofdm_tx_rx_multipath_loopback.SYMBOLS=8 \
+              -o /tmp/tb_ofdm_multipath.vvp \
+              blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v \
+              blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_multipath_loopback.sv
             vvp /tmp/tb_ofdm_multipath.vvp
           done
 
@@ -161,6 +190,11 @@ jobs:
         run: |
           set -euo pipefail
           for angle in 120 -150; do
-            iverilog -g2012 -Wall               -s tb_ofdm_axi_modem               -Ptb_ofdm_axi_modem.ANGLE_DEG=$angle               -o /tmp/tb_ofdm_axi_modem.vvp               blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v               blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_axi_modem.sv
+            iverilog -g2012 -Wall \
+              -s tb_ofdm_axi_modem \
+              -Ptb_ofdm_axi_modem.ANGLE_DEG=$angle \
+              -o /tmp/tb_ofdm_axi_modem.vvp \
+              blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v \
+              blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_axi_modem.sv
             vvp /tmp/tb_ofdm_axi_modem.vvp
           done
