@@ -117,7 +117,10 @@ module tb_ofdm_ifft64_sequential;
             expect_int(sample_valid, 1, "IFFT eventually presents output frame");
             // Baseline: 192 butterflies x (issue + write-back) = 384 clocks.
             // Pipelined: 6 stages x (32 issues + 4-clock drain + 1 turn-around) = 222.
-            expect_int(compute_cycles, (`OFDM_IFFT_PIPELINED != 0) ? 222 : 384,
+            // Block-RAM memory: one more clock per stage (registered read) and
+            // one to read output sample 0 = 229.
+            expect_int(compute_cycles, (`OFDM_IFFT_PIPELINED == 0) ? 384 :
+                                       (`OFDM_IFFT_BRAM != 0) ? 229 : 222,
                        "IFFT compute latency clocks");
             expect_int(busy, 0, "busy drops when output frame becomes available");
             expect_int(sample_index, 0, "IFFT output starts at natural sample zero");

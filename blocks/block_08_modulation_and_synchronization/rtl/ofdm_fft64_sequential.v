@@ -7,6 +7,9 @@
 `ifndef OFDM_IFFT_PIPELINED
 `define OFDM_IFFT_PIPELINED 1
 `endif
+`ifndef OFDM_IFFT_BRAM
+`define OFDM_IFFT_BRAM 0
+`endif
 
 
 // Block 8 OFDM RX RTL: scaled 64-point FFT baseline.
@@ -21,7 +24,8 @@
 // endpoint clips are counted explicitly and added to the butterfly saturation
 // count so the RX path never hides arithmetic overflow.
 module ofdm_fft64_sequential #(
-    parameter integer PIPELINED = `OFDM_IFFT_PIPELINED
+    parameter integer PIPELINED = `OFDM_IFFT_PIPELINED,
+    parameter integer BRAM_MEMORY = `OFDM_IFFT_BRAM
 ) (
     input  wire                clk,
     input  wire                resetn,
@@ -67,7 +71,7 @@ module ofdm_fft64_sequential #(
 
     reg [5:0] input_index;
 
-    ofdm_ifft64_sequential #(.PIPELINED(PIPELINED)) normalized_ifft (
+    ofdm_ifft64_sequential #(.PIPELINED(PIPELINED), .BRAM_MEMORY(BRAM_MEMORY)) normalized_ifft (
         .clk(clk),
         .resetn(resetn),
         .bin_valid(sample_valid),

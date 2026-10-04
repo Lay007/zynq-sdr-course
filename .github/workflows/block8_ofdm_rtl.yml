@@ -152,3 +152,6 @@ jobs:
 
       - name: Run every OFDM testbench with the one-cycle baseline IFFT/FFT
         run: python3 tools/run_ofdm_rtl.py --baseline
+
+      - name: Run every OFDM testbench with the IFFT/FFT working memory in block RAM
+        run: python3 tools/run_ofdm_rtl.py --bram

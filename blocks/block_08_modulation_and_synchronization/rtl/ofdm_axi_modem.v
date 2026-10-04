@@ -3,6 +3,9 @@
 `ifndef OFDM_IFFT_PIPELINED
 `define OFDM_IFFT_PIPELINED 1
 `endif
+`ifndef OFDM_IFFT_BRAM
+`define OFDM_IFFT_BRAM 0
+`endif
 
 // Shared-clock AXI4-Stream + AXI4-Lite packaging of the Block 8 OFDM chain.
 //
@@ -58,6 +61,7 @@ module ofdm_axi_modem #(
     parameter integer AXI_ADDR_W = 6,
     parameter integer AXI_DATA_W = 32,
     parameter integer PIPELINED = `OFDM_IFFT_PIPELINED,
+    parameter integer BRAM_MEMORY = `OFDM_IFFT_BRAM,
     parameter integer CHANNEL_EQ = 1,
     parameter integer NORMALIZE = 1
 ) (
@@ -130,7 +134,7 @@ module ofdm_axi_modem #(
     wire [15:0] tx_saturation_count;
     wire tx_frame_error;
 
-    ofdm_tx_cp16_path #(.PIPELINED(PIPELINED)) u_tx (
+    ofdm_tx_cp16_path #(.PIPELINED(PIPELINED), .BRAM_MEMORY(BRAM_MEMORY)) u_tx (
         .clk(aclk),
         .resetn(core_resetn),
         .bits_valid(s_axis_tx_tvalid),
@@ -214,7 +218,7 @@ module ofdm_axi_modem #(
         .frame_error(rx_frame_error)
     );
 
-    ofdm_fft64_sequential #(.PIPELINED(PIPELINED)) u_fft (
+    ofdm_fft64_sequential #(.PIPELINED(PIPELINED), .BRAM_MEMORY(BRAM_MEMORY)) u_fft (
         .clk(aclk),
         .resetn(core_resetn),
         .sample_valid(useful_valid),

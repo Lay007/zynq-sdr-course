@@ -7,6 +7,9 @@
 `ifndef OFDM_IFFT_PIPELINED
 `define OFDM_IFFT_PIPELINED 1
 `endif
+`ifndef OFDM_IFFT_BRAM
+`define OFDM_IFFT_BRAM 0
+`endif
 
 
 // Block 8 OFDM RTL: first end-to-end transmit path for one 64-point symbol.
@@ -28,7 +31,8 @@
 // allocator is collecting. This prevents accepting a 49th data carrier while
 // the 48th mapped symbol is still in flight.
 module ofdm_tx_mapper_ifft_path #(
-    parameter integer PIPELINED = `OFDM_IFFT_PIPELINED
+    parameter integer PIPELINED = `OFDM_IFFT_PIPELINED,
+    parameter integer BRAM_MEMORY = `OFDM_IFFT_BRAM
 ) (
     input  wire                clk,
     input  wire                resetn,
@@ -140,7 +144,7 @@ module ofdm_tx_mapper_ifft_path #(
         .bin_last(allocator_bin_last)
     );
 
-    ofdm_ifft64_sequential #(.PIPELINED(PIPELINED)) ifft (
+    ofdm_ifft64_sequential #(.PIPELINED(PIPELINED), .BRAM_MEMORY(BRAM_MEMORY)) ifft (
         .clk(clk),
         .resetn(resetn),
         .bin_valid(allocator_bin_valid),

@@ -19,8 +19,17 @@ def main() -> int:
         action="store_true",
         help="build the IFFT/FFT with the one-cycle baseline butterfly (OFDM_IFFT_PIPELINED=0)",
     )
+    parser.add_argument(
+        "--bram",
+        action="store_true",
+        help="keep the IFFT/FFT working memory in block RAM (OFDM_IFFT_BRAM=1, pipelined schedule only)",
+    )
     args = parser.parse_args()
+    if args.baseline and args.bram:
+        raise SystemExit("--bram needs the pipelined schedule; do not combine it with --baseline")
     defines = ["-DOFDM_IFFT_PIPELINED=0"] if args.baseline else []
+    if args.bram:
+        defines.append("-DOFDM_IFFT_BRAM=1")
     for command in ("iverilog", "vvp"):
         if shutil.which(command) is None:
             raise SystemExit(f"{command} is required; install Icarus Verilog")
@@ -36,7 +45,7 @@ def main() -> int:
                  *map(str, sources), str(bench)], cwd=ROOT, check=True, timeout=60,
             )
             subprocess.run(["vvp", str(output)], cwd=ROOT, check=True, timeout=120)
-    mode = "baseline" if args.baseline else "pipelined"
+    mode = "baseline" if args.baseline else ("pipelined, block-RAM memory" if args.bram else "pipelined")
     print(f"OFDM RTL ({mode} IFFT/FFT): {len(benches)} testbenches passed (simulation only)")
     return 0
 

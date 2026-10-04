@@ -7,6 +7,9 @@
 `ifndef OFDM_IFFT_PIPELINED
 `define OFDM_IFFT_PIPELINED 1
 `endif
+`ifndef OFDM_IFFT_BRAM
+`define OFDM_IFFT_BRAM 0
+`endif
 
 
 // Block 8 OFDM RTL: complete baseline transmitter for one CP-protected symbol.
@@ -32,7 +35,8 @@
 // handed to the CP buffer. frame_locked deliberately extends that lock until
 // CP output sample 79 is accepted, preventing implicit next-frame prefetch.
 module ofdm_tx_cp16_path #(
-    parameter integer PIPELINED = `OFDM_IFFT_PIPELINED
+    parameter integer PIPELINED = `OFDM_IFFT_PIPELINED,
+    parameter integer BRAM_MEMORY = `OFDM_IFFT_BRAM
 ) (
     input  wire                clk,
     input  wire                resetn,
@@ -94,7 +98,7 @@ module ofdm_tx_cp16_path #(
         end
     end
 
-    ofdm_tx_mapper_ifft_path #(.PIPELINED(PIPELINED)) tx_core (
+    ofdm_tx_mapper_ifft_path #(.PIPELINED(PIPELINED), .BRAM_MEMORY(BRAM_MEMORY)) tx_core (
         .clk(clk),
         .resetn(resetn),
         .bits_valid(inner_bits_valid),
