@@ -86,6 +86,7 @@ jobs:
             -o /tmp/tb_ofdm_ifft64_sequential.vvp \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_iq_bank_ram.v \
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_ifft64_sequential.sv
           vvp /tmp/tb_ofdm_ifft64_sequential.vvp
 
@@ -130,6 +131,7 @@ jobs:
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_subcarrier_allocator.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_iq_bank_ram.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_tx_mapper_ifft_path.v \
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_mapper_ifft_path.sv
           vvp /tmp/tb_ofdm_tx_mapper_ifft_path.vvp
@@ -144,6 +146,7 @@ jobs:
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_subcarrier_allocator.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_iq_bank_ram.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_tx_mapper_ifft_path.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_cp16_inserter.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_tx_cp16_path.v \
@@ -153,5 +156,5 @@ jobs:
       - name: Run every OFDM testbench with the one-cycle baseline IFFT/FFT
         run: python3 tools/run_ofdm_rtl.py --baseline
 
-      - name: Run every OFDM testbench with the IFFT/FFT working memory in block RAM
-        run: python3 tools/run_ofdm_rtl.py --bram
+      - name: Run every OFDM testbench with the IFFT/FFT working memory in fabric logic
+        run: python3 tools/run_ofdm_rtl.py --fabric

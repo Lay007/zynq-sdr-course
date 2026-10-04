@@ -6,6 +6,7 @@ on:
     paths:
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_fft64_sequential.v"
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v"
+      - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_iq_bank_ram.v"
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v"
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_fft64_sequential.sv"
       - "verification/vectors/block08_ofdm_fft_bin1_expected.mem"
@@ -15,6 +16,7 @@ on:
     paths:
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_fft64_sequential.v"
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v"
+      - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_iq_bank_ram.v"
       - "blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v"
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_fft64_sequential.sv"
       - "verification/vectors/block08_ofdm_fft_bin1_expected.mem"
@@ -48,6 +50,7 @@ jobs:
             -o /tmp/tb_ofdm_fft64_sequential.vvp \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_iq_bank_ram.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_fft64_sequential.v \
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_fft64_sequential.sv
           vvp /tmp/tb_ofdm_fft64_sequential.vvp

@@ -8,7 +8,7 @@
 `define OFDM_IFFT_PIPELINED 1
 `endif
 `ifndef OFDM_IFFT_BRAM
-`define OFDM_IFFT_BRAM 0
+`define OFDM_IFFT_BRAM `OFDM_IFFT_PIPELINED
 `endif
 
 

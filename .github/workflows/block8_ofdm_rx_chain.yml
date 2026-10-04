@@ -100,6 +100,7 @@ jobs:
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_subcarrier_allocator.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_iq_bank_ram.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_tx_mapper_ifft_path.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_cp16_inserter.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_tx_cp16_path.v \
@@ -120,6 +121,7 @@ jobs:
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_subcarrier_allocator.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_iq_bank_ram.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_tx_mapper_ifft_path.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_cp16_inserter.v \
             blocks/block_08_modulation_and_synchronization/rtl/ofdm_tx_cp16_path.v \

@@ -20,16 +20,15 @@ def main() -> int:
         help="build the IFFT/FFT with the one-cycle baseline butterfly (OFDM_IFFT_PIPELINED=0)",
     )
     parser.add_argument(
-        "--bram",
+        "--fabric",
         action="store_true",
-        help="keep the IFFT/FFT working memory in block RAM (OFDM_IFFT_BRAM=1, pipelined schedule only)",
+        help="keep the pipelined IFFT/FFT working memory in fabric logic instead of block RAM (OFDM_IFFT_BRAM=0)",
     )
     args = parser.parse_args()
-    if args.baseline and args.bram:
-        raise SystemExit("--bram needs the pipelined schedule; do not combine it with --baseline")
+    # The one-cycle baseline always uses fabric memory (block RAM needs the pipelined schedule).
     defines = ["-DOFDM_IFFT_PIPELINED=0"] if args.baseline else []
-    if args.bram:
-        defines.append("-DOFDM_IFFT_BRAM=1")
+    if args.fabric:
+        defines.append("-DOFDM_IFFT_BRAM=0")
     for command in ("iverilog", "vvp"):
         if shutil.which(command) is None:
             raise SystemExit(f"{command} is required; install Icarus Verilog")
@@ -45,7 +44,8 @@ def main() -> int:
                  *map(str, sources), str(bench)], cwd=ROOT, check=True, timeout=60,
             )
             subprocess.run(["vvp", str(output)], cwd=ROOT, check=True, timeout=120)
-    mode = "baseline" if args.baseline else ("pipelined, block-RAM memory" if args.bram else "pipelined")
+    mode = "baseline, fabric memory" if args.baseline else (
+        "pipelined, fabric memory" if args.fabric else "pipelined, block-RAM memory")
     print(f"OFDM RTL ({mode} IFFT/FFT): {len(benches)} testbenches passed (simulation only)")
     return 0
 

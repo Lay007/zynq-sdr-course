@@ -8,11 +8,14 @@
 `define OFDM_IFFT_PIPELINED 1
 `endif
 
-// Working memory of the transforms: 0 = fabric registers/LUT RAM (default),
-// 1 = two block-RAM banks (needs PIPELINED = 1). Override per instance with the
-// BRAM_MEMORY parameter, or globally with +define+OFDM_IFFT_BRAM=1.
+// Working memory of the transforms: 1 = two block-RAM banks (the default with
+// the pipelined schedule; about a ninth of the LUTs of the fabric memory and
+// more timing margin, at 7 more clocks per transform), 0 = fabric registers/LUT
+// RAM (the default with the one-cycle baseline, which BRAM cannot serve).
+// Override per instance with the BRAM_MEMORY parameter, or globally with
+// +define+OFDM_IFFT_BRAM=0.
 `ifndef OFDM_IFFT_BRAM
-`define OFDM_IFFT_BRAM 0
+`define OFDM_IFFT_BRAM `OFDM_IFFT_PIPELINED
 `endif
 
 
