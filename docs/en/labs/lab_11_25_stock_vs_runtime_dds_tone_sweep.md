@@ -1,3 +1,3 @@
-# Lab 11.25
+# Lab 11.25 — compatibility link
 
-Compatibility page for local links. The canonical page uses hyphens in its filename.
+This page keeps old local links working. The canonical page uses hyphens in its filename: [Lab 11.25](lab-11-25-stock-vs-runtime-dds-tone-sweep.md).

@@ -1,5 +1,3 @@
-# Lab 11.22
+# Lab 11.22 — compatibility link
 
-Compatibility page for local links.
-
-See the canonical page: [Lab 11.22](lab-11-22-capture-runtime-pl-rtl-monitor-wav.md).
+This page keeps old local links working. The canonical page uses hyphens in its filename: [Lab 11.22](lab-11-22-capture-runtime-pl-rtl-monitor-wav.md).

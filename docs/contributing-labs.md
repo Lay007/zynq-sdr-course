@@ -12,19 +12,20 @@ A good lab should answer three questions:
 
 ## Required lab structure
 
-Every new lab page should contain:
+Every new lab page should contain these sections, in this order and with these headings (the
+Russian page uses the same order: «Цель», «Зачем это нужно», «Запуск», «Артефакты», «Чего ожидать»,
+«Упражнения», «Что включить в отчёт»):
 
 | Section | Purpose |
 |---|---|
 | Goal | One clear engineering objective. |
-| Background | Short theory needed for the task. |
-| Inputs | Parameters, files, scripts, hardware and assumptions. |
-| Procedure | Step-by-step reproducible workflow. |
-| Expected result | Plots, metrics, console output or measurement observations. |
-| Validation | How to know the result is correct. |
-| Troubleshooting | Common failure modes and fixes. |
+| Why this lab matters | Short theory and the engineering reason for the task. |
+| Run | The exact command(s), from the repository root. |
+| Artifacts | Generated figures, metrics files or reports, as a `text` block of paths. |
+| What to expect | Measured numbers and how to read them, including the surprising ones. |
+| Exercises | Changes the learner makes, with the result each one should produce. |
 | Report checklist | What the learner must include in the lab report. |
-| Safety notes | Required for RF, power, soldering or measurement hardware. |
+| RF safety | Required for RF, power, soldering or measurement hardware. |
 
 ## Required artifacts by lab type
 
@@ -51,6 +52,17 @@ docs/assets/labXY_result_name.png
 ```
 
 For new public figures, prefer `docs/assets/` and use lower-case file names with hyphens or underscores.
+
+## Page formatting
+
+`tests/test_docs_formatting.py` checks the rules that MkDocs rendering depends on:
+
+- the H1 reads `# Lab X.Y — Title` (Russian pages: `# Лабораторная X.Y — ...`), with an em dash;
+- a page under `docs/` that includes a snippet with `--8<--` has no H1 of its own when the snippet
+  starts with one, otherwise the title is rendered twice;
+- every opening code fence names a language (`text` for diagrams, tables of paths and console
+  output);
+- the Russian navigation in `mkdocs.yml` labels pages in Russian, normally with the page's own H1.
 
 ## Bilingual rule
 
