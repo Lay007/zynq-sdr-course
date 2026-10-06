@@ -403,6 +403,59 @@ What to read from it:
 - With the strong multipath (`CHANNEL = 2`) the EVM is 1.7 % at 0, 6000 and -4000 ppm: what remains
   is the equalizer, not the offset.
 
+## Verification stage 2f: noise, and the price of one training symbol
+
+`tb_ofdm_tx_rx_qam16_loopback.sv` can add white Gaussian noise after the channel
+(`ESN0_DB10`, Es/N0 per used subcarrier in tenths of a dB; `MODULATION = 0` runs QPSK through the
+same chain). The bench derives the noise level from the chain's scaling: a bin is `X/64`, so
+time-domain noise of variance `2*sigma^2` per sample becomes `2*sigma^2/64` per bin and
+`sigma = sqrt(abs(X)^2 / (128 * Es/N0))`. `tools/run_ofdm_ber_sweep.py` sweeps Es/N0 and prints the
+measured BER beside the AWGN curve:
+
+```bash
+python tools/run_ofdm_ber_sweep.py --modulation qpsk --esn0 6 8 10 12 --seeds 4
+python tools/run_ofdm_ber_sweep.py --modulation qam16 --esn0 14 16 18 20 22 --seeds 4
+```
+
+Flat channel, no CFO, 100 data symbols per run, four noise seeds per point (the full chain: CFO
+corrector, FFT, zero-forcing equalizer trained on one noisy symbol, pilot phase, slicer):
+
+| Modulation | Es/N0, dB | Bit errors / bits | BER | EVM | AWGN theory | Theory 3 dB later |
+|---|---:|---:|---:|---:|---:|---:|
+| QPSK | 6 | 3613 / 38400 | 9.4e-2 | 88.6 % | 2.3e-2 | 7.9e-2 |
+| QPSK | 8 | 1793 / 38400 | 4.7e-2 | 68.6 % | 6.0e-3 | 3.8e-2 |
+| QPSK | 10 | 669 / 38400 | 1.7e-2 | 52.7 % | 7.8e-4 | 1.3e-2 |
+| QPSK | 12 | 152 / 38400 | 4.0e-3 | 40.6 % | 3.4e-5 | 2.4e-3 |
+| 16-QAM | 14 | 2552 / 76800 | 3.3e-2 | 27.5 % | 9.4e-3 | 4.2e-2 |
+| 16-QAM | 16 | 971 / 76800 | 1.3e-2 | 21.6 % | 1.8e-3 | 1.7e-2 |
+| 16-QAM | 18 | 236 / 76800 | 3.1e-3 | 17.1 % | 1.4e-4 | 4.5e-3 |
+| 16-QAM | 20 | 31 / 76800 | 4.0e-4 | 13.5 % | 2.9e-6 | 5.8e-4 |
+| 16-QAM | 22 | 3 / 76800 | 3.9e-5 | 10.7 % | 6.8e-9 | 2.5e-5 |
+
+Simulation only, with fixed seeds; the theory columns are `1/2 erfc(sqrt(Es/N0 / 2))` for Gray
+QPSK and the nearest-neighbour `3/8 erfc(sqrt(Es/N0 / 10))` for Gray 16-QAM. What to read from it:
+
+- **Most of the gap is the training symbol, not the RTL.** The equalizer divides by `G`, estimated
+  from one symbol with the same noise. To first order that adds the estimate's noise to the data's:
+  twice the variance, a 3 dB loss, if the training points have the average symbol energy (QPSK). The
+  16-QAM training symbol uses the outer points, 1.8 times the average energy, so its estimate is
+  cleaner: `1 + 1/1.8`, about 1.9 dB. That is why 16-QAM lands between the two theory curves and
+  QPSK beyond the second one.
+- **At low Es/N0 the first-order argument is too kind.** `1/G` of a noisy `G` has a heavy tail: a
+  carrier whose estimate happens to come out small amplifies everything on it for all 100 symbols.
+  An ideal floating-point model of exactly this (perfect timing, no pilots, `Z = Y / G_est`) gives
+  QPSK EVM 131 % at 6 dB and 49.7 % at 10 dB against 70.7 % and 44.7 % for "twice the variance".
+- **The CFO corrector costs nothing here.** Bypassing it (`--no-cfo-corr`) gives 1848 and 707 errors
+  at 8 and 10 dB, the same as with it within the seed spread. The rest of the gap to the ideal model,
+  about 0.5-1 dB, is consistent with the per-symbol phase taken from four noisy pilots (the ideal
+  model has no pilot tracker) and the fixed-point chain.
+- **Seeds matter.** Every data symbol of a run shares one channel estimate, so a run measures one
+  training realization; a lucky or unlucky estimate moves a point by a factor of two. Average over
+  seeds (`--seeds`) before comparing with a curve.
+
+The remedy is the usual one: average the estimate over several training symbols, or smooth it
+across neighbouring subcarriers. Each halving of the estimate's noise recovers part of the loss.
+
 ## What this lab does and does not prove
 
 This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarrier allocator/extractor, streaming 64-point IFFT/FFT, CP insertion/removal, one-tap equalizer, explicit scaling/saturation/overflow counters) and Verification stages 1-2 (float vs. fixed-point, self-checking digital loopback) with real, reproducible, measured evidence: 96/96 bits at BER=0 for both the plain digital loopback and a loopback through a genuine complex channel rotation with the equalizer actually correcting it.
@@ -410,7 +463,7 @@ This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarri
 It does **not** claim:
 
 - Zynq system integration: `ofdm_axi_modem.v` has the AXI4-Stream/AXI4-Lite interfaces and is verified in simulation and out-of-context implementation, but no block design connects it to the PS, a DMA engine or the AD9361 interface;
-- a complete 16-QAM modem: the 16-QAM mapper, slicer and time-domain CFO correction are verified end to end in simulation (stage 2e), but the AXI modem still carries QPSK without the CFO corrector, the channel is estimated once per training symbol and not tracked, and no run includes noise;
+- a finished 16-QAM receiver: the AXI modem carries 16-QAM with the CFO corrector (`MODULATION = 1`) and noise runs exist (stage 2f), but the channel is estimated from a single training symbol and not tracked, which costs about 2-3 dB against theory, and every run is a simulation;
 - Verification stages 3-5 (PL/fabric loopback on Zynq, safe attenuated AD9361/AD9363 cabled loopback, an independent SDR capture) -- these need the physical board and RF path, neither of which was available while writing this lab;
 - a board-level clock plan. The out-of-context Vivado 2021.1 implementation on `xc7z020clg400-2` ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md)) routes every OFDM block, the pilot corrector and the AXI modem without DRC errors, with the port paths timed as well (0 ns input/output delay). Every clocked block except the one-clock equalizer meets 100 MHz: the TX path and FFT64 with WNS +1.65 / +1.49 ns (about 120 / 117 MHz), the corrector +0.57 ns, the zero-forcing channel equalizer +2.68 ns, and the complete AXI modem with it and the CFO corrector +0.85 ns (5895 LUT, 3178 FF, 32 DSP48E1, 3.5 BRAM; the 16-QAM build +0.58 ns, 5966 LUT). That needed the pipelined IFFT/FFT schedule, which is now the default (`PIPELINED = 1`): the butterfly takes four clocks instead of one but accepts one butterfly per clock, so a transform computes in 222 clocks instead of 384. The one-cycle teaching baseline (`PIPELINED = 0`, or `+define+OFDM_IFFT_PIPELINED=0`) missed 100 MHz by about 10 ns (28 logic levels in one clock). The one-clock equalizer (`PIPELINED = 0`, the standalone default) misses by 1.08 ns once its input-port paths are timed; the corrector and the modem use its three-clock `PIPELINED = 1` form. The transforms' working memory is in block RAM by default (`BRAM_MEMORY = 1`: two 32-word banks chosen by the parity of the address, so a butterfly's two points never share a bank): 886 / 833 LUTs instead of 8151 / 7307 with fabric memory, at 229 instead of 222 compute clocks. `--fabric` and `+define+OFDM_IFFT_BRAM=0` select the fabric memory, and the one-cycle baseline always uses it.
 
@@ -442,3 +495,6 @@ Each exercise changes the equalizer coefficient on line `.coeff_re(16'sd0), .coe
 - [x] Pipelined butterfly and schedule: TX/FFT meet 100 MHz, 222 compute clocks; both schedules pass every OFDM testbench.
 - [x] Block-RAM working memory for the transforms (two parity banks; about a ninth of the LUTs, more timing margin; every testbench passes in both memory modes).
 - [x] Zero-forcing channel equalizer with a CORDIC `1/abs(G)^2` (bit-exact; grid spread 0.4 % through a 3-path channel; meets 100 MHz) and the channel equalizer in the AXI modem.
+- [x] 16-QAM and time-domain CFO correction end to end and in the AXI modem (BER=0 up to 7700 ppm; meets 100 MHz).
+- [x] BER against Es/N0 with AWGN, compared with theory (simulation; about 2-3 dB lost to the single training symbol).
+- [ ] Channel estimate averaged over several training symbols or smoothed across subcarriers.
