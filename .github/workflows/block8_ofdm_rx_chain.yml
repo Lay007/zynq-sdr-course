@@ -227,13 +227,16 @@ jobs:
             vvp /tmp/tb_ofdm_qam16.vvp
           done
 
-      - name: Check AXI4-Stream/AXI4-Lite OFDM modem wrapper
+      - name: Check AXI4-Stream/AXI4-Lite OFDM modem wrapper (QPSK, and 16-QAM under a 5000 ppm CFO)
         run: |
           set -euo pipefail
-          for angle in 120 -150; do
+          for case in "120 0 0" "-150 0 0" "120 1 5000"; do
+            set -- $case
             iverilog -g2012 -Wall \
               -s tb_ofdm_axi_modem \
-              -Ptb_ofdm_axi_modem.ANGLE_DEG=$angle \
+              -Ptb_ofdm_axi_modem.ANGLE_DEG=$1 \
+              -Ptb_ofdm_axi_modem.MODULATION=$2 \
+              -Ptb_ofdm_axi_modem.CFO_PPM=$3 \
               -o /tmp/tb_ofdm_axi_modem.vvp \
               blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v \
               blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_axi_modem.sv

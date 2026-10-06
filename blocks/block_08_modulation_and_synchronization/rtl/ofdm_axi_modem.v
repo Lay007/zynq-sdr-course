@@ -10,10 +10,16 @@
 // Shared-clock AXI4-Stream + AXI4-Lite packaging of the Block 8 OFDM chain.
 //
 //   s_axis_tx  (bit pairs)  -> ofdm_tx_cp16_path                     -> m_axis_tx  (IQ)
-//   s_axis_rx  (IQ)         -> ofdm_cp16_remover -> ofdm_fft64_sequential
+//   s_axis_rx  (IQ)         -> ofdm_cfo_corrector (CFO_CORR = 1)
+//                           -> ofdm_cp16_remover -> ofdm_fft64_sequential
 //                           -> ofdm_channel_equalizer (CHANNEL_EQ = 1)
 //                           -> ofdm_subcarrier_extractor
-//                           -> ofdm_pilot_phase_corrector -> ofdm_qpsk_demapper -> m_axis_rx (bits)
+//                           -> ofdm_pilot_phase_corrector
+//                           -> ofdm_qpsk_demapper / ofdm_qam16_demapper -> m_axis_rx (bits)
+//
+// MODULATION = 1 selects Gray 16-QAM on both sides (needs the zero-forcing
+// channel equalizer, NORMALIZE = 1). Its training symbol carries the
+// train_bits() signs on the outer points: {i, 0, q, 0} per carrier.
 //
 // The wrapper only renames and packs signals; the datapath modules and their
 // arithmetic are unchanged.
@@ -25,25 +31,28 @@
 // STATUS[6] rises when the per-subcarrier coefficients are ready. NORMALIZE = 1
 // selects the zero-forcing mode (CORDIC 1/|G|^2): every data carrier then
 // leaves the equalizer on one amplitude grid. Stream formats:
-//   s_axis_tx_tdata[1:0]  one QPSK bit pair; 48 pairs form one OFDM symbol.
+//   s_axis_tx_tdata[1:0]  one QPSK bit pair (MODULATION = 1: [3:0], one 16-QAM
+//                         symbol); 48 per OFDM symbol.
 //                         s_axis_tx_tlast is not used: framing is by count.
 //   m_axis_tx_tdata       {Q[15:0], I[15:0]} Q1.15; 80 samples per symbol
 //                         (CP first), tlast on the 80th.
 //   s_axis_rx_tdata       {Q[15:0], I[15:0]} Q1.15; 80 samples per symbol,
 //                         tlast on the 80th (a misplaced tlast sets
 //                         RX_FRAME_ERROR, see ofdm_cp16_remover).
-//   m_axis_rx_tdata[7:0]  {data_index[5:0], bits[1:0]}; 48 per symbol in FFT
+//   m_axis_rx_tdata[7:0]  {data_index[5:0], bits[1:0]} (MODULATION = 1: 16 bits,
+//                         {2'b00, data_index[5:0], 4'b0000, bits[3:0]}); 48 per symbol in FFT
 //                         bin order (data indices 24..47, then 0..23), tlast
 //                         on the 48th.
 //
 // AXI4-Lite register map (32-bit, byte addresses):
 //   0x00 ID          "OFDM" (0x4F46444D)
-//   0x04 VERSION     0x00020000
+//   0x04 VERSION     0x00030000
 //   0x08 CONTROL     [0] datapath reset, held while 1 (clears every counter)
-//                    [1] write 1: the next received symbol is a training symbol
+//                    [1] write 1: the next received symbol is a training symbol;
+//                        also restarts the CFO estimate
 //                    [8] write 1: clear the sticky frame-error flags
 //   0x0C STATUS      [0] datapath reset  [1] TX IFFT busy  [2] RX FFT busy
-//                    [3] TX frame error (sticky)  [4] RX frame error (sticky)
+//                    [3] TX frame error (sticky)  [4] RX frame error (sticky; CP removal or CFO corrector)
 //                    [5] last symbol's pilots had zero energy
 //                    [6] channel equalizer trained (1 when CHANNEL_EQ = 0)
 //   0x10 TX_SAT      IFFT butterfly saturations
@@ -56,6 +65,10 @@
 //                    correction coefficient
 //   0x2C CE_SAT      channel equalizer saturations
 //   0x30 CE_TRAINED  training symbols completed
+//   0x34 CFO_THETA   CP-correlation angle, sign-extended (2*pi = 2^24); the
+//                    estimated CFO is -theta / 2^24 / 64 cycles per sample
+//   0x38 CONFIG      build: [0] MODULATION [1] CHANNEL_EQ [2] NORMALIZE
+//                    [3] CFO_CORR [4] BRAM_MEMORY
 // All counters count from the last reset (aresetn or CONTROL[0]).
 module ofdm_axi_modem #(
     parameter integer AXI_ADDR_W = 6,
@@ -63,7 +76,9 @@ module ofdm_axi_modem #(
     parameter integer PIPELINED = `OFDM_IFFT_PIPELINED,
     parameter integer BRAM_MEMORY = `OFDM_IFFT_BRAM,
     parameter integer CHANNEL_EQ = 1,
-    parameter integer NORMALIZE = 1
+    parameter integer NORMALIZE = 1,
+    parameter integer MODULATION = 0,
+    parameter integer CFO_CORR = 1
 ) (
     input  wire                         aclk,
     input  wire                         aresetn,
@@ -83,7 +98,7 @@ module ofdm_axi_modem #(
     input  wire                         s_axis_rx_tlast,
     output wire                         m_axis_rx_tvalid,
     input  wire                         m_axis_rx_tready,
-    output wire [7:0]                   m_axis_rx_tdata,
+    output wire [((MODULATION != 0) ? 16 : 8)-1:0] m_axis_rx_tdata,
     output wire                         m_axis_rx_tlast,
 
     input  wire [AXI_ADDR_W-1:0]        s_axi_awaddr,
@@ -119,8 +134,20 @@ module ofdm_axi_modem #(
     localparam [AXI_ADDR_W-1:0] REG_COEFF = 6'h28;
     localparam [AXI_ADDR_W-1:0] REG_CE_SAT = 6'h2C;
     localparam [AXI_ADDR_W-1:0] REG_CE_TRAINED = 6'h30;
+    localparam [AXI_ADDR_W-1:0] REG_CFO_THETA = 6'h34;
+    localparam [AXI_ADDR_W-1:0] REG_CONFIG = 6'h38;
+    localparam integer BITS_W = (MODULATION != 0) ? 4 : 2;
+
+    generate
+        if ((MODULATION != 0) && ((CHANNEL_EQ == 0) || (NORMALIZE == 0))) begin : g_bad_config
+            initial begin
+                $display("ERROR: ofdm_axi_modem MODULATION=1 (16-QAM) needs CHANNEL_EQ=1 and NORMALIZE=1");
+                $finish;
+            end
+        end
+    endgenerate
     localparam [AXI_DATA_W-1:0] CORE_ID = 32'h4F46444D; // "OFDM"
-    localparam [AXI_DATA_W-1:0] CORE_VERSION = 32'h00020000;
+    localparam [AXI_DATA_W-1:0] CORE_VERSION = 32'h00030000;
 
     reg datapath_reset;
     wire core_resetn = aresetn && !datapath_reset;
@@ -134,12 +161,12 @@ module ofdm_axi_modem #(
     wire [15:0] tx_saturation_count;
     wire tx_frame_error;
 
-    ofdm_tx_cp16_path #(.PIPELINED(PIPELINED), .BRAM_MEMORY(BRAM_MEMORY)) u_tx (
+    ofdm_tx_cp16_path #(.PIPELINED(PIPELINED), .BRAM_MEMORY(BRAM_MEMORY), .MODULATION(MODULATION)) u_tx (
         .clk(aclk),
         .resetn(core_resetn),
         .bits_valid(s_axis_tx_tvalid),
         .bits_ready(s_axis_tx_tready),
-        .bits_in(s_axis_tx_tdata[1:0]),
+        .bits_in(s_axis_tx_tdata[BITS_W-1:0]),
         .sample_valid(m_axis_tx_tvalid),
         .sample_ready(m_axis_tx_tready),
         .sample_re(tx_re),
@@ -199,17 +226,58 @@ module ofdm_axi_modem #(
     wire last_zero_energy;
     wire [31:0] eq_saturation_count;
 
-    wire [1:0] rx_bits;
+    wire [BITS_W-1:0] rx_bits;
     wire [5:0] rx_bits_index;
+
+    // Time-domain CFO correction in front of the CP removal.
+    wire cc_valid;
+    wire cc_ready;
+    wire signed [15:0] cc_re;
+    wire signed [15:0] cc_im;
+    wire cc_last;
+    wire signed [23:0] cfo_theta;
+    wire cfo_frame_error;
+    reg retrain_pulse;
+
+    generate
+        if (CFO_CORR != 0) begin : g_cfo
+            ofdm_cfo_corrector u_cfo (
+                .clk(aclk),
+                .resetn(core_resetn),
+                .restart(retrain_pulse),
+                .in_valid(s_axis_rx_tvalid),
+                .in_ready(s_axis_rx_tready),
+                .in_re(s_axis_rx_tdata[15:0]),
+                .in_im(s_axis_rx_tdata[31:16]),
+                .in_last(s_axis_rx_tlast),
+                .out_valid(cc_valid),
+                .out_ready(cc_ready),
+                .out_re(cc_re),
+                .out_im(cc_im),
+                .out_last(cc_last),
+                .theta(cfo_theta),
+                .symbol_count(),
+                .frame_error(cfo_frame_error)
+            );
+        end else begin : g_no_cfo
+            assign cc_valid = s_axis_rx_tvalid;
+            assign s_axis_rx_tready = cc_ready;
+            assign cc_re = s_axis_rx_tdata[15:0];
+            assign cc_im = s_axis_rx_tdata[31:16];
+            assign cc_last = s_axis_rx_tlast;
+            assign cfo_theta = 24'sd0;
+            assign cfo_frame_error = 1'b0;
+        end
+    endgenerate
 
     ofdm_cp16_remover u_cp_remove (
         .clk(aclk),
         .resetn(core_resetn),
-        .in_i(s_axis_rx_tdata[15:0]),
-        .in_q(s_axis_rx_tdata[31:16]),
-        .in_valid(s_axis_rx_tvalid),
-        .in_ready(s_axis_rx_tready),
-        .in_last(s_axis_rx_tlast),
+        .in_i(cc_re),
+        .in_q(cc_im),
+        .in_valid(cc_valid),
+        .in_ready(cc_ready),
+        .in_last(cc_last),
         .out_i(useful_re),
         .out_q(useful_im),
         .out_valid(useful_valid),
@@ -245,7 +313,6 @@ module ofdm_axi_modem #(
     wire ce_trained;
     wire [15:0] ce_train_count;
     wire [31:0] ce_saturation_count;
-    reg retrain_pulse;
 
     generate
         if (CHANNEL_EQ != 0) begin : g_channel_eq
@@ -334,28 +401,48 @@ module ofdm_axi_modem #(
         .saturation_count(eq_saturation_count)
     );
 
-    ofdm_qpsk_demapper u_demap (
-        .resetn(core_resetn),
-        .symbol_valid(eq_valid),
-        .symbol_ready(eq_ready),
-        .symbol_re(eq_re),
-        .symbol_im(eq_im),
-        .data_index(eq_index),
-        .symbol_last(eq_last),
-        .bits_valid(m_axis_rx_tvalid),
-        .bits_ready(m_axis_rx_tready),
-        .bits_out(rx_bits),
-        .bits_index(rx_bits_index),
-        .bits_last(m_axis_rx_tlast)
-    );
-
-    assign m_axis_rx_tdata = {rx_bits_index, rx_bits};
+    generate
+        if (MODULATION != 0) begin : g_qam16_rx
+            ofdm_qam16_demapper u_demap (
+                .resetn(core_resetn),
+                .symbol_valid(eq_valid),
+                .symbol_ready(eq_ready),
+                .symbol_re(eq_re),
+                .symbol_im(eq_im),
+                .data_index(eq_index),
+                .symbol_last(eq_last),
+                .bits_valid(m_axis_rx_tvalid),
+                .bits_ready(m_axis_rx_tready),
+                .bits_out(rx_bits),
+                .bits_index(rx_bits_index),
+                .bits_last(m_axis_rx_tlast)
+            );
+            assign m_axis_rx_tdata = {2'b00, rx_bits_index, 4'b0000, rx_bits};
+        end else begin : g_qpsk_rx
+            ofdm_qpsk_demapper u_demap (
+                .resetn(core_resetn),
+                .symbol_valid(eq_valid),
+                .symbol_ready(eq_ready),
+                .symbol_re(eq_re),
+                .symbol_im(eq_im),
+                .data_index(eq_index),
+                .symbol_last(eq_last),
+                .bits_valid(m_axis_rx_tvalid),
+                .bits_ready(m_axis_rx_tready),
+                .bits_out(rx_bits),
+                .bits_index(rx_bits_index),
+                .bits_last(m_axis_rx_tlast)
+            );
+            assign m_axis_rx_tdata = {rx_bits_index, rx_bits};
+        end
+    endgenerate
 
     // ------------------------------------------------------------------
     // Status counters
     // ------------------------------------------------------------------
     reg tx_frame_error_sticky;
     reg rx_frame_error_sticky;
+    reg cfo_frame_error_d;
     reg [31:0] tx_symbol_count;
     reg [31:0] rx_symbol_count;
     reg clear_sticky;
@@ -364,6 +451,7 @@ module ofdm_axi_modem #(
         if (!core_resetn) begin
             tx_frame_error_sticky <= 1'b0;
             rx_frame_error_sticky <= 1'b0;
+            cfo_frame_error_d <= 1'b0;
             tx_symbol_count <= 32'd0;
             rx_symbol_count <= 32'd0;
         end else begin
@@ -373,7 +461,10 @@ module ofdm_axi_modem #(
             end
             if (tx_frame_error)
                 tx_frame_error_sticky <= 1'b1;
-            if (rx_frame_error)
+            // The corrector's own flag is sticky; count its rising edge so that
+            // CONTROL[8] can clear the modem's flag.
+            cfo_frame_error_d <= cfo_frame_error;
+            if (rx_frame_error || (cfo_frame_error && !cfo_frame_error_d))
                 rx_frame_error_sticky <= 1'b1;
             if (m_axis_tx_tvalid && m_axis_tx_tready && m_axis_tx_tlast)
                 tx_symbol_count <= tx_symbol_count + 32'd1;
@@ -416,6 +507,9 @@ module ofdm_axi_modem #(
             REG_COEFF: read_word = {coeff_im, coeff_re};
             REG_CE_SAT: read_word = ce_saturation_count;
             REG_CE_TRAINED: read_word = {16'd0, ce_train_count};
+            REG_CFO_THETA: read_word = {{8{cfo_theta[23]}}, cfo_theta};
+            REG_CONFIG: read_word = {27'd0, (BRAM_MEMORY != 0), (CFO_CORR != 0), (NORMALIZE != 0),
+                                     (CHANNEL_EQ != 0), (MODULATION != 0)};
             default: read_word = {AXI_DATA_W{1'b0}};
         endcase
     end

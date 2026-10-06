@@ -40,6 +40,7 @@ VARIANTS: tuple[tuple[str, str, str, str], ...] = (
     ("ofdm_fft64_sequential_fabric", "ofdm_fft64_sequential", "clk", "BRAM_MEMORY=0"),
     ("ofdm_axi_modem_fabric", "ofdm_axi_modem", "aclk", "BRAM_MEMORY=0"),
     ("ofdm_tx_cp16_path_qam16", "ofdm_tx_cp16_path", "clk", "MODULATION=1"),
+    ("ofdm_axi_modem_qam16", "ofdm_axi_modem", "aclk", "MODULATION=1"),
 )
 
 

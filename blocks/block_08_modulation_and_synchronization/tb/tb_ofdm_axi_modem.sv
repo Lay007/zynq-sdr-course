@@ -15,6 +15,13 @@
 module tb_ofdm_axi_modem;
     parameter integer ANGLE_DEG = 120;
     parameter integer NORMALIZE = 1;
+    // MODULATION=1: 16-QAM (4 bits per carrier, 16-bit m_axis_rx_tdata).
+    parameter integer MODULATION = 0;
+    // Carrier offset of the TX->RX link, 1e-6 cycles per sample.
+    parameter integer CFO_PPM = 0;
+    localparam integer BITS_W = (MODULATION != 0) ? 4 : 2;
+    localparam integer RXW = (MODULATION != 0) ? 16 : 8;
+    localparam integer IDX_LO = (MODULATION != 0) ? 8 : 2;
     localparam integer SYMBOLS = 3;
     localparam integer PAIRS = 48 * SYMBOLS;
     localparam integer ALL_PAIRS = 48 * (SYMBOLS + 2);
@@ -32,6 +39,8 @@ module tb_ofdm_axi_modem;
     localparam [5:0] REG_COEFF = 6'h28;
     localparam [5:0] REG_CE_SAT = 6'h2C;
     localparam [5:0] REG_CE_TRAINED = 6'h30;
+    localparam [5:0] REG_CFO_THETA = 6'h34;
+    localparam [5:0] REG_CONFIG = 6'h38;
 
     reg aclk = 1'b0;
     always #5 aclk = ~aclk;
@@ -51,7 +60,9 @@ module tb_ofdm_axi_modem;
     wire s_axis_rx_tlast;
     wire m_axis_rx_tvalid;
     reg m_axis_rx_tready = 1'b0;
-    wire [7:0] m_axis_rx_tdata;
+    wire [RXW-1:0] m_axis_rx_tdata;
+    wire [5:0] rx_idx = m_axis_rx_tdata[IDX_LO +: 6];
+    wire [3:0] rx_val = m_axis_rx_tdata[BITS_W-1:0];
     wire m_axis_rx_tlast;
 
     reg [5:0] s_axi_awaddr = 6'd0;
@@ -103,7 +114,18 @@ module tb_ofdm_axi_modem;
         end
     endfunction
 
+    integer tx_sample_count = 0;
+    real link_phase;
+    always @(posedge aclk)
+        if (m_axis_tx_tvalid && m_axis_tx_tready)
+            tx_sample_count <= tx_sample_count + 1;
+
     always @* begin
+        link_phase = angle_rad + 6.283185307179586 * CFO_PPM * 1.0e-6 * tx_sample_count;
+        rot_c = $rtoi($floor(32768.0 * $cos(link_phase) + 0.5));
+        rot_s = $rtoi($floor(32768.0 * $sin(link_phase) + 0.5));
+        if (rot_c > 32767) rot_c = 32767;
+        if (rot_s > 32767) rot_s = 32767;
         prod_re = tx_re * rot_c - tx_im * rot_s;
         prod_im = tx_re * rot_s + tx_im * rot_c;
         channel_re = round_clip_q15(prod_re);
@@ -115,7 +137,7 @@ module tb_ofdm_axi_modem;
     assign s_axis_rx_tlast = inject_rx ? inject_last : m_axis_tx_tlast;
     assign m_axis_tx_tready = !inject_rx && s_axis_rx_tready && link_open;
 
-    ofdm_axi_modem #(.NORMALIZE(NORMALIZE)) dut (
+    ofdm_axi_modem #(.NORMALIZE(NORMALIZE), .MODULATION(MODULATION)) dut (
         .aclk(aclk), .aresetn(aresetn),
         .s_axis_tx_tvalid(s_axis_tx_tvalid), .s_axis_tx_tready(s_axis_tx_tready),
         .s_axis_tx_tdata(s_axis_tx_tdata), .s_axis_tx_tlast(1'b0),
@@ -134,7 +156,7 @@ module tb_ofdm_axi_modem;
         .s_axi_rready(s_axi_rready)
     );
 
-    reg [1:0] expected_bits [0:ALL_PAIRS-1];
+    reg [3:0] expected_bits [0:ALL_PAIRS-1];
     integer data_idx = 0;
     integer rx_symbol = 0;
     integer rx_pairs_in_symbol = 0;
@@ -246,9 +268,9 @@ module tb_ofdm_axi_modem;
         if (aresetn && m_axis_rx_tvalid && m_axis_rx_tready) begin
             // Bits leave in FFT bin order: data indices 24..47 (bins 1..26),
             // then 0..23 (bins 38..63).
-            if (m_axis_rx_tdata[7:2] !== (rx_pairs_in_symbol + 24) % 48) begin
+            if (rx_idx !== (rx_pairs_in_symbol + 24) % 48) begin
                 $display("FAIL symbol %0d pair %0d carries data index %0d, expected %0d",
-                         rx_symbol, rx_pairs_in_symbol, m_axis_rx_tdata[7:2],
+                         rx_symbol, rx_pairs_in_symbol, rx_idx,
                          (rx_pairs_in_symbol + 24) % 48);
                 errors = errors + 1;
             end
@@ -256,10 +278,10 @@ module tb_ofdm_axi_modem;
                 $display("FAIL symbol %0d pair %0d tlast=%0b", rx_symbol, rx_pairs_in_symbol, m_axis_rx_tlast);
                 errors = errors + 1;
             end
-            if (m_axis_rx_tdata[1:0] !== expected_bits[rx_symbol * 48 + m_axis_rx_tdata[7:2]]) begin
-                bit_errors = bit_errors +
-                    (m_axis_rx_tdata[1] !== expected_bits[rx_symbol * 48 + m_axis_rx_tdata[7:2]][1]) +
-                    (m_axis_rx_tdata[0] !== expected_bits[rx_symbol * 48 + m_axis_rx_tdata[7:2]][0]);
+            begin : score
+                reg [3:0] diff;
+                diff = (rx_val ^ expected_bits[rx_symbol * 48 + rx_idx]) & ((BITS_W == 4) ? 4'hF : 4'h3);
+                bit_errors = bit_errors + diff[0] + diff[1] + diff[2] + diff[3];
             end
             recovered_count = recovered_count + 1;
             if (m_axis_rx_tlast) begin
@@ -272,10 +294,10 @@ module tb_ofdm_axi_modem;
     end
 
     task automatic send_value;
-        input [1:0] value;
+        input [3:0] value;
         begin
             @(negedge aclk);
-            s_axis_tx_tdata = {6'd0, value};
+            s_axis_tx_tdata = {4'd0, value};
             s_axis_tx_tvalid = 1'b1;
             @(posedge aclk);
             while (!s_axis_tx_tready)
@@ -288,10 +310,14 @@ module tb_ofdm_axi_modem;
     // One data symbol; its bits are scored on m_axis_rx.
     task automatic send_data_symbol;
         integer k;
-        reg [1:0] value;
+        reg [3:0] value;
         begin
             for (k = 0; k < 48; k = k + 1) begin
-                value = {data_idx[0], (data_idx[1] ^ data_idx[0] ^ data_idx[6])};
+                if (MODULATION != 0)
+                    value = {data_idx[0], data_idx[1] ^ data_idx[6], data_idx[2] ^ data_idx[5],
+                             data_idx[3] ^ data_idx[1] ^ data_idx[7]};
+                else
+                    value = {2'b00, data_idx[0], (data_idx[1] ^ data_idx[0] ^ data_idx[6])};
                 expected_bits[data_idx] = value;
                 data_idx = data_idx + 1;
                 send_value(value);
@@ -306,7 +332,11 @@ module tb_ofdm_axi_modem;
         begin
             for (k = 0; k < 48; k = k + 1) begin
                 d = k;
-                send_value({d[0] ^ d[3], d[1] ^ d[2] ^ d[4]});
+                // 16-QAM: the same signs on the outer points.
+                if (MODULATION != 0)
+                    send_value({d[0] ^ d[3], 1'b0, d[1] ^ d[2] ^ d[4], 1'b0});
+                else
+                    send_value({2'b00, d[0] ^ d[3], d[1] ^ d[2] ^ d[4]});
             end
         end
     endtask
@@ -328,10 +358,6 @@ module tb_ofdm_axi_modem;
 
     initial begin
         angle_rad = ANGLE_DEG * 3.14159265358979 / 180.0;
-        rot_c = $rtoi($floor(32768.0 * $cos(angle_rad) + 0.5));
-        rot_s = $rtoi($floor(32768.0 * $sin(angle_rad) + 0.5));
-        if (rot_c > 32767) rot_c = 32767;
-        if (rot_s > 32767) rot_s = 32767;
 
         repeat (4) @(posedge aclk);
         aresetn = 1'b1;
@@ -339,7 +365,7 @@ module tb_ofdm_axi_modem;
 
         // 1. Identification.
         expect_reg(REG_ID, 32'h4F46444D);
-        expect_reg(REG_VERSION, 32'h00020000);
+        expect_reg(REG_VERSION, 32'h00030000);
         expect_reg(REG_STATUS, 32'd0);
 
         // 2. Training symbol, then traffic through the rotated channel.
@@ -361,14 +387,25 @@ module tb_ofdm_axi_modem;
         expect_reg(REG_EQ_SAT, 32'd0);
         expect_reg(REG_CE_SAT, 32'd0);
         expect_reg(REG_CE_TRAINED, 32'd1);
+        expect_reg(REG_CONFIG, {27'd0, (`OFDM_IFFT_BRAM != 0), 1'b1, (NORMALIZE != 0), 1'b1, (MODULATION != 0)});
+        axi_read(REG_CFO_THETA, word);
+        // theta = -2^24 * 64 * CFO: within 1 % of that, or 3000 units at CFO 0
+        if (word[31:24] !== {8{word[23]}} ||
+            ($signed(word) + 1.0 * CFO_PPM * 1.0e-6 * 64.0 * 16777216.0) > 3000.0 + 0.01 * CFO_PPM * 1.0e-6 * 64.0 * 16777216.0 ||
+            ($signed(word) + 1.0 * CFO_PPM * 1.0e-6 * 64.0 * 16777216.0) < -3000.0 - 0.01 * CFO_PPM * 1.0e-6 * 64.0 * 16777216.0) begin
+            $display("FAIL CFO_THETA %0d for a %0d ppm offset", $signed(word), CFO_PPM);
+            errors = errors + 1;
+        end
         expect_reg(REG_TX_SYMBOLS, SYMBOLS + 1);
         expect_reg(REG_RX_SYMBOLS, SYMBOLS);
         axi_read(REG_PHASE, word);
+        // Without a CFO the channel phase is gone after the equalizer; with one,
+        // the CFO corrector leaves a constant phase for the pilot tracker.
         expected_phase = 0;
         phase_error = $signed(word) - expected_phase;
         if (phase_error > 32767) phase_error = phase_error - 65536;
         if (phase_error < -32768) phase_error = phase_error + 65536;
-        if (phase_error > 64 || phase_error < -64) begin
+        if (CFO_PPM == 0 && (phase_error > 64 || phase_error < -64)) begin
             $display("FAIL PHASE register %0d, expected about %0d", $signed(word), expected_phase);
             errors = errors + 1;
         end
@@ -438,8 +475,8 @@ module tb_ofdm_axi_modem;
         expect_reg(REG_CONTROL, 32'h0);
 
         if (errors == 0) begin
-            $display("PASS: ofdm_axi_modem (NORMALIZE=%0d) %0d-degree channel recovered %0d/%0d bits in %0d symbols after a training symbol, BER=0; reset, retrain, registers and sticky errors checked",
-                     NORMALIZE, ANGLE_DEG, 2 * (PAIRS + 96), 2 * (PAIRS + 96), SYMBOLS + 2);
+            $display("PASS: ofdm_axi_modem (MODULATION=%0d, NORMALIZE=%0d, CFO %0d ppm) %0d-degree channel recovered %0d/%0d bits in %0d symbols after a training symbol, BER=0; reset, retrain, registers and sticky errors checked",
+                     MODULATION, NORMALIZE, CFO_PPM, ANGLE_DEG, BITS_W * (PAIRS + 96), BITS_W * (PAIRS + 96), SYMBOLS + 2);
             $finish;
         end else begin
             $display("FAIL tb_ofdm_axi_modem errors=%0d", errors);
