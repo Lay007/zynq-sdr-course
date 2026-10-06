@@ -26,11 +26,12 @@ one-clock teaching equalizer meets 100 MHz**:
 | `ofdm_channel_equalizer_zf` (the same, `NORMALIZE = 1`: zero-forcing, CORDIC `1/abs(G)^2`) | 966 | 538 | 10 | 0.5 | +2.677 ns | about 137 MHz |
 | `ofdm_cfo_corrector` (CP correlation, vectoring CORDIC, NCO, pipelined rotation CORDIC) | 2382 | 1519 | 10 | 0 | +2.412 ns | about 132 MHz |
 | `ofdm_qpsk_demapper` | 3 | 0 | 0 | 0 | combinational, no clock | |
-| `ofdm_axi_modem` (TX and RX chains, zero-forcing channel equalizer, AXI4-Stream/AXI4-Lite) | 3509 | 1674 | 22 | 3.5 | +1.241 ns | about 114 MHz |
+| `ofdm_axi_modem` (TX and RX chains, CFO corrector, zero-forcing channel equalizer, AXI4-Stream/AXI4-Lite) | 5895 | 3178 | 32 | 3.5 | +0.853 ns | about 109 MHz |
 | `ofdm_tx_cp16_path_fabric` (`BRAM_MEMORY = 0`) | 8151 | 2403 | 4 | 0 | +0.832 ns | about 109 MHz |
 | `ofdm_fft64_sequential_fabric` (`BRAM_MEMORY = 0`) | 7307 | 2423 | 4 | 0 | +0.597 ns | about 106 MHz |
-| `ofdm_axi_modem_fabric` (`BRAM_MEMORY = 0`) | 17203 | 5791 | 22 | 1.5 | +1.141 ns | about 113 MHz |
+| `ofdm_axi_modem_fabric` (`BRAM_MEMORY = 0`) | 19602 | 7295 | 32 | 1.5 | +0.220 ns | about 102 MHz |
 | `ofdm_tx_cp16_path_qam16` (`MODULATION = 1`: 16-QAM mapper) | 895 | 370 | 4 | 1 | +1.771 ns | about 122 MHz |
+| `ofdm_axi_modem_qam16` (`MODULATION = 1`: 16-QAM mapper and slicer) | 5966 | 3216 | 32 | 3.5 | +0.584 ns | about 106 MHz |
 
 The frequency estimate is `1 / (period - WNS)`; it describes the routed critical path, not a
 characterized maximum clock. Rows with a suffix are the same module with a parameter override.
@@ -49,9 +50,9 @@ registered, so a transform takes 229 compute clocks instead of 222.
 |---|---:|---:|
 | `ofdm_tx_cp16_path` | 8151 LUT, 2403 FF, +0.832 ns | 886 LUT, 362 FF, 1 BRAM, +1.650 ns |
 | `ofdm_fft64_sequential` | 7307 LUT, 2423 FF, +0.597 ns | 833 LUT, 329 FF, 1 BRAM, +1.487 ns |
-| `ofdm_axi_modem` | 17203 LUT, 5791 FF, +1.141 ns | 3509 LUT, 1674 FF, 3.5 BRAM, +1.241 ns |
+| `ofdm_axi_modem` | 19602 LUT, 7295 FF, +0.220 ns | 5895 LUT, 3178 FF, 3.5 BRAM, +0.853 ns |
 
-About a ninth of the LUTs and more timing margin. All 20 OFDM testbenches pass in both memory
+About a ninth of the transforms' LUTs and more timing margin. All 23 OFDM testbenches pass in both memory
 modes (`python tools/run_ofdm_rtl.py` and `--fabric`), and the one-cycle baseline (`--baseline`)
 keeps fabric memory because block RAM cannot serve its schedule.
 
@@ -71,6 +72,15 @@ The first `ofdm_cfo_corrector` took the magnitudes of the 48-bit accumulated cor
 them and searched the top bit in one clock (19 logic levels): +0.147 ns, barely met. Registering the
 magnitudes one clock earlier gives +2.412 ns with the same arithmetic; the worst path is then a
 vectoring CORDIC iteration.
+
+## AXI modem: what the CFO corrector costs
+
+Since core version 3.0 the modem has the CFO corrector in front of the CP removal by default
+(`CFO_CORR = 1`). Against the previous build (3509 LUT, 1674 FF, 22 DSP, +1.241 ns) it adds 2386 LUT,
+1504 FF and 10 DSP, practically the standalone corrector (2382 LUT, 1519 FF, 10 DSP). The 16-QAM
+variant (`MODULATION = 1`) costs another 71 LUT and 38 FF for the mapper and the slicer. Timing
+still closes, with less margin: the worst path is unchanged (the pilot corrector's one-tap
+equalizer), only longer through routing in a fuller device.
 
 ## A memory reset that cost 2300 flip-flops
 
@@ -136,9 +146,10 @@ The fix keeps the arithmetic bit for bit and changes only the schedule:
 With the working memory in block RAM the remaining critical paths are arithmetic again, with
 margin: in the TX path and the FFT the butterfly's last stage (rounding, Q1.15 saturation and the
 saturation counter, 12-13 logic levels, 8.3-8.5 ns), and in the AXI modem the pipelined one-tap
-equalizer of the pilot corrector (round, saturate, count; 14 levels, 8.6 ns). In the fabric-memory
-variants the worst path is the state register driving the writes into the 64-point memory: one
-logic level, 9.0-9.3 ns, about 95 % of it routing to some 2k flip-flops.
+equalizer of the pilot corrector (round, saturate, count; 14-15 levels, 9.1-9.3 ns, of which
+about 42-46 % is routing). In the fabric-memory variants the worst path is the state register
+driving the writes into the 64-point memory: one logic level, 9.0-9.6 ns, about 95 % of it routing
+to some 2k flip-flops.
 
 ## Reproduction
 
@@ -149,7 +160,11 @@ python tools/generate_block8_ofdm_vivado_reports.py
 python tools/generate_block8_ofdm_vivado_reports.py --reuse    # re-parse without rerunning Vivado
 python tools/generate_block8_ofdm_vivado_reports.py --top ofdm_pilot_phase_tracker
 python tools/generate_block8_ofdm_vivado_reports.py --top ofdm_axi_modem_fabric
+python tools/generate_block8_ofdm_vivado_reports.py --top ofdm_axi_modem_qam16
 ```
+
+A `--top` run rewrites the metrics JSON with only the tops it built; run `--reuse` afterwards to
+collect every configuration again.
 
 Each configuration is built in an in-memory project from the checked-in `ofdm_*.v` sources:
 `synth_design -mode out_of_context` (with `-generic` overrides for the suffixed rows),

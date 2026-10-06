@@ -78,24 +78,30 @@ Every block uses one clock, synchronous active-low reset, and a single-register 
 
 | Interface | Format |
 |---|---|
-| `s_axis_tx` | `tdata[1:0]` = one QPSK bit pair; 48 pairs form one symbol (`tlast` is not used, framing is by count) |
+| `s_axis_tx` | `tdata[1:0]` = one QPSK bit pair (`tdata[3:0]`, four bits, with `MODULATION = 1`); 48 per symbol (`tlast` is not used, framing is by count) |
 | `m_axis_tx` | `tdata = {Q, I}`, Q1.15; 80 samples per symbol, CP first, `tlast` on the 80th |
 | `s_axis_rx` | `tdata = {Q, I}`, Q1.15; 80 samples per symbol, `tlast` on the 80th (a misplaced `tlast` sets the RX frame-error flag) |
-| `m_axis_rx` | `tdata[7:0] = {data_index, bits}`; 48 per symbol in FFT bin order (data indices 24..47, then 0..23), `tlast` on the 48th |
-| `s_axi` (AXI4-Lite) | `0x00` ID `"OFDM"`, `0x04` version (`0x00020000`), `0x08` control (bit 0 datapath reset, bit 1 retrain, bit 8 clear sticky errors), `0x0C` status (bit 6: channel trained), `0x10`-`0x18` TX/FFT/EQ saturation counters, `0x1C`/`0x20` TX/RX symbol counters, `0x24` pilot phase, `0x28` correction coefficient, `0x2C` channel-equalizer saturations, `0x30` training symbols completed |
+| `m_axis_rx` | QPSK: `tdata[7:0] = {data_index, bits}`; 16-QAM: `tdata[15:0] = {2'b00, data_index, 4'b0000, bits}`, so the index stays byte-aligned. 48 per symbol in FFT bin order (data indices 24..47, then 0..23), `tlast` on the 48th |
+| `s_axi` (AXI4-Lite) | `0x00` ID `"OFDM"`, `0x04` version (`0x00030000`), `0x08` control (bit 0 datapath reset, bit 1 retrain, bit 8 clear sticky errors), `0x0C` status (bit 6: channel trained), `0x10`-`0x18` TX/FFT/EQ saturation counters, `0x1C`/`0x20` TX/RX symbol counters, `0x24` pilot phase, `0x28` correction coefficient, `0x2C` channel-equalizer saturations, `0x30` training symbols completed, `0x34` CFO estimate `theta = -2^24 * 64 * CFO` (CFO in cycles per sample, sign-extended 24-bit), `0x38` build configuration (bit 0 `MODULATION`, 1 `CHANNEL_EQ`, 2 `NORMALIZE`, 3 `CFO_CORR`, 4 `BRAM_MEMORY`) |
 
-The RX chain includes the per-subcarrier `ofdm_channel_equalizer.v` of stage 2d (`CHANNEL_EQ = 1`,
-zero-forcing `NORMALIZE = 1` by default). The first symbol received after reset, and after writing
-`CONTROL[1]`, must therefore be the training symbol: the host sends the equalizer's `train_bits()`
-pattern as 48 bit pairs on `s_axis_tx`. That symbol produces no `m_axis_rx` output, and `STATUS[6]`
+The RX chain includes the time-domain CFO corrector of stage 2e (`CFO_CORR = 1`) and the
+per-subcarrier `ofdm_channel_equalizer.v` of stage 2d (`CHANNEL_EQ = 1`, zero-forcing
+`NORMALIZE = 1` by default). `MODULATION = 1` builds the 16-QAM variant; it requires the zero-forcing
+equalizer, because only that puts the inner and outer levels on one grid. The first symbol received
+after reset, and after writing `CONTROL[1]`, must be the training symbol: the host sends the
+equalizer's `train_bits()` pattern as 48 bit pairs on `s_axis_tx` (16-QAM: the same signs on the
+outer points, `{b1, 0, b0, 0}`). Retraining also restarts the CFO estimate. That symbol produces no `m_axis_rx` output, and `STATUS[6]`
 rises when the coefficients are ready. `tb_ofdm_axi_modem.sv` sends the training symbol and three data
 symbols from `s_axis_tx` through a rotated channel into `s_axis_rx` with random stalls on the link and
 on `m_axis_rx_tready`, then resets the datapath and retrains through `CONTROL[1]`, each time followed by
 one more data symbol. It checks BER=0, the register map, that the pilot phase register reads about 0
-once the channel is equalized, and the sticky RX frame error:
+once the channel is equalized, that `CFO_THETA` reads the applied offset within 1 %, and the sticky RX
+frame error. With `CFO_PPM` the bench also turns the channel phase by the offset on every sample;
+CI runs QPSK at 120 and -150 degrees and 16-QAM at 120 degrees under 5000 ppm:
 
 ```text
-PASS: ofdm_axi_modem (NORMALIZE=1) 120-degree channel recovered 480/480 bits in 5 symbols after a training symbol, BER=0; reset, retrain, registers and sticky errors checked
+PASS: ofdm_axi_modem (MODULATION=0, NORMALIZE=1, CFO 0 ppm) 120-degree channel recovered 480/480 bits in 5 symbols after a training symbol, BER=0; reset, retrain, registers and sticky errors checked
+PASS: ofdm_axi_modem (MODULATION=1, NORMALIZE=1, CFO 5000 ppm) 120-degree channel recovered 960/960 bits in 5 symbols after a training symbol, BER=0; reset, retrain, registers and sticky errors checked
 ```
 
 The wrapper is not yet connected to the PS, a DMA engine or the AD9361 interface in a block design.
@@ -164,24 +170,11 @@ iverilog -g2012 -o /tmp/tb_ofdm_eq_loop.vvp \
 vvp /tmp/tb_ofdm_eq_loop.vvp
 ```
 
-Or run the whole Block 8 OFDM suite the same way CI does:
+Or run every OFDM testbench (23 of them) the way CI does; `--fabric` and `--baseline` select the
+other IFFT/FFT builds:
 
 ```bash
-bash -c '
-RTL=blocks/block_08_modulation_and_synchronization/rtl
-TB=blocks/block_08_modulation_and_synchronization/tb
-for pair in \
-  "tb_ofdm_qpsk_mapper:$RTL/ofdm_qpsk_mapper.v" \
-  "tb_ofdm_subcarrier_allocator:$RTL/ofdm_subcarrier_allocator.v" \
-  "tb_ofdm_ifft_butterfly:$RTL/ofdm_ifft_butterfly.v" \
-  "tb_ofdm_cp16_inserter:$RTL/ofdm_cp16_inserter.v" \
-  "tb_ofdm_cp16_remover:$RTL/ofdm_cp16_remover.v" \
-  "tb_ofdm_subcarrier_extractor:$RTL/ofdm_subcarrier_extractor.v" \
-  "tb_ofdm_one_tap_equalizer:$RTL/ofdm_one_tap_equalizer.v" \
-  "tb_ofdm_qpsk_demapper:$RTL/ofdm_qpsk_demapper.v"; do
-  name="${pair%%:*}"; src="${pair#*:}"
-  iverilog -g2012 -o "/tmp/$name.vvp" $src "$TB/$name.sv" && vvp "/tmp/$name.vvp"
-done'
+python tools/run_ofdm_rtl.py
 ```
 
 Measured results (reproduced by the commands above, on this repository's current RTL):
@@ -419,7 +412,7 @@ It does **not** claim:
 - Zynq system integration: `ofdm_axi_modem.v` has the AXI4-Stream/AXI4-Lite interfaces and is verified in simulation and out-of-context implementation, but no block design connects it to the PS, a DMA engine or the AD9361 interface;
 - a complete 16-QAM modem: the 16-QAM mapper, slicer and time-domain CFO correction are verified end to end in simulation (stage 2e), but the AXI modem still carries QPSK without the CFO corrector, the channel is estimated once per training symbol and not tracked, and no run includes noise;
 - Verification stages 3-5 (PL/fabric loopback on Zynq, safe attenuated AD9361/AD9363 cabled loopback, an independent SDR capture) -- these need the physical board and RF path, neither of which was available while writing this lab;
-- a board-level clock plan. The out-of-context Vivado 2021.1 implementation on `xc7z020clg400-2` ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md)) routes every OFDM block, the pilot corrector and the AXI modem without DRC errors, with the port paths timed as well (0 ns input/output delay). Every clocked block except the one-clock equalizer meets 100 MHz: the TX path and FFT64 with WNS +1.65 / +1.49 ns (about 120 / 117 MHz), the corrector +0.57 ns, the zero-forcing channel equalizer +2.68 ns, and the complete AXI modem with it +1.24 ns (3509 LUT, 1674 FF, 22 DSP48E1, 3.5 BRAM). That needed the pipelined IFFT/FFT schedule, which is now the default (`PIPELINED = 1`): the butterfly takes four clocks instead of one but accepts one butterfly per clock, so a transform computes in 222 clocks instead of 384. The one-cycle teaching baseline (`PIPELINED = 0`, or `+define+OFDM_IFFT_PIPELINED=0`) missed 100 MHz by about 10 ns (28 logic levels in one clock). The one-clock equalizer (`PIPELINED = 0`, the standalone default) misses by 1.08 ns once its input-port paths are timed; the corrector and the modem use its three-clock `PIPELINED = 1` form. The transforms' working memory is in block RAM by default (`BRAM_MEMORY = 1`: two 32-word banks chosen by the parity of the address, so a butterfly's two points never share a bank): 886 / 833 LUTs instead of 8151 / 7307 with fabric memory, at 229 instead of 222 compute clocks. `--fabric` and `+define+OFDM_IFFT_BRAM=0` select the fabric memory, and the one-cycle baseline always uses it.
+- a board-level clock plan. The out-of-context Vivado 2021.1 implementation on `xc7z020clg400-2` ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md)) routes every OFDM block, the pilot corrector and the AXI modem without DRC errors, with the port paths timed as well (0 ns input/output delay). Every clocked block except the one-clock equalizer meets 100 MHz: the TX path and FFT64 with WNS +1.65 / +1.49 ns (about 120 / 117 MHz), the corrector +0.57 ns, the zero-forcing channel equalizer +2.68 ns, and the complete AXI modem with it and the CFO corrector +0.85 ns (5895 LUT, 3178 FF, 32 DSP48E1, 3.5 BRAM; the 16-QAM build +0.58 ns, 5966 LUT). That needed the pipelined IFFT/FFT schedule, which is now the default (`PIPELINED = 1`): the butterfly takes four clocks instead of one but accepts one butterfly per clock, so a transform computes in 222 clocks instead of 384. The one-cycle teaching baseline (`PIPELINED = 0`, or `+define+OFDM_IFFT_PIPELINED=0`) missed 100 MHz by about 10 ns (28 logic levels in one clock). The one-clock equalizer (`PIPELINED = 0`, the standalone default) misses by 1.08 ns once its input-port paths are timed; the corrector and the modem use its three-clock `PIPELINED = 1` form. The transforms' working memory is in block RAM by default (`BRAM_MEMORY = 1`: two 32-word banks chosen by the parity of the address, so a butterfly's two points never share a bank): 886 / 833 LUTs instead of 8151 / 7307 with fabric memory, at 229 instead of 222 compute clocks. `--fabric` and `+define+OFDM_IFFT_BRAM=0` select the fabric memory, and the one-cycle baseline always uses it.
 
 ## Exercises
 

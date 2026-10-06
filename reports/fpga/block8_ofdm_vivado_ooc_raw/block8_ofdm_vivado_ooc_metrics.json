@@ -475,16 +475,16 @@
       "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
       "post_synthesis": {
         "utilization": {
-          "lut": 3688,
-          "ff": 1671,
+          "lut": 6191,
+          "ff": 3175,
           "bram_tiles": 3.5,
-          "dsp": 22
+          "dsp": 32
         },
         "timing": {
           "wns_ns": 1.694,
           "tns_ns": 0.0,
           "failing_endpoints": 0,
-          "total_endpoints": 7387,
+          "total_endpoints": 12492,
           "timing_met": true,
           "clock_name": "clk",
           "clock_period_ns": 10.0,
@@ -495,27 +495,27 @@
       },
       "post_route": {
         "utilization": {
-          "lut": 3509,
-          "ff": 1674,
+          "lut": 5895,
+          "ff": 3178,
           "bram_tiles": 3.5,
-          "dsp": 22
+          "dsp": 32
         },
         "timing": {
-          "wns_ns": 1.241,
+          "wns_ns": 0.853,
           "tns_ns": 0.0,
           "failing_endpoints": 0,
-          "total_endpoints": 7393,
+          "total_endpoints": 12498,
           "timing_met": true,
           "clock_name": "clk",
           "clock_period_ns": 10.0,
-          "data_path_delay_ns": 8.564,
-          "logic_levels": 14,
-          "fmax_est_mhz": 114.168
+          "data_path_delay_ns": 9.054,
+          "logic_levels": 15,
+          "fmax_est_mhz": 109.325
         },
-        "routable_nets": 5933,
-        "fully_routed_nets": 5933,
+        "routable_nets": 9244,
+        "fully_routed_nets": 9244,
         "nets_with_routing_errors": 0,
-        "drc_violations": 47,
+        "drc_violations": 55,
         "drc_errors": 0
       }
     },
@@ -681,47 +681,47 @@
       "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
       "post_synthesis": {
         "utilization": {
-          "lut": 17413,
-          "ff": 5788,
+          "lut": 19922,
+          "ff": 7292,
           "bram_tiles": 1.5,
-          "dsp": 22
+          "dsp": 32
         },
         "timing": {
-          "wns_ns": 1.694,
+          "wns_ns": 1.684,
           "tns_ns": 0.0,
           "failing_endpoints": 0,
-          "total_endpoints": 15650,
+          "total_endpoints": 20758,
           "timing_met": true,
           "clock_name": "clk",
           "clock_period_ns": 10.0,
-          "data_path_delay_ns": 8.199,
+          "data_path_delay_ns": 8.209,
           "logic_levels": 14,
-          "fmax_est_mhz": 120.395
+          "fmax_est_mhz": 120.25
         }
       },
       "post_route": {
         "utilization": {
-          "lut": 17203,
-          "ff": 5791,
+          "lut": 19602,
+          "ff": 7295,
           "bram_tiles": 1.5,
-          "dsp": 22
+          "dsp": 32
         },
         "timing": {
-          "wns_ns": 1.141,
+          "wns_ns": 0.22,
           "tns_ns": 0.0,
           "failing_endpoints": 0,
-          "total_endpoints": 15656,
+          "total_endpoints": 20764,
           "timing_met": true,
           "clock_name": "clk",
           "clock_period_ns": 10.0,
-          "data_path_delay_ns": 8.715,
-          "logic_levels": 14,
-          "fmax_est_mhz": 112.88
+          "data_path_delay_ns": 9.617,
+          "logic_levels": 1,
+          "fmax_est_mhz": 102.249
         },
-        "routable_nets": 17567,
-        "fully_routed_nets": 17567,
+        "routable_nets": 20881,
+        "fully_routed_nets": 20881,
         "nets_with_routing_errors": 0,
-        "drc_violations": 43,
+        "drc_violations": 51,
         "drc_errors": 0
       },
       "module": "ofdm_axi_modem",
@@ -777,6 +777,58 @@
         "drc_errors": 0
       },
       "module": "ofdm_tx_cp16_path",
+      "parameters": "MODULATION=1"
+    },
+    {
+      "top": "ofdm_axi_modem_qam16",
+      "clock_port": "aclk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 6263,
+          "ff": 3213,
+          "bram_tiles": 3.5,
+          "dsp": 32
+        },
+        "timing": {
+          "wns_ns": 1.637,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 12671,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 8.256,
+          "logic_levels": 14,
+          "fmax_est_mhz": 119.574
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 5966,
+          "ff": 3216,
+          "bram_tiles": 3.5,
+          "dsp": 32
+        },
+        "timing": {
+          "wns_ns": 0.584,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 12677,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 9.32,
+          "logic_levels": 14,
+          "fmax_est_mhz": 106.202
+        },
+        "routable_nets": 9353,
+        "fully_routed_nets": 9353,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 55,
+        "drc_errors": 0
+      },
+      "module": "ofdm_axi_modem",
       "parameters": "MODULATION=1"
     }
   ]

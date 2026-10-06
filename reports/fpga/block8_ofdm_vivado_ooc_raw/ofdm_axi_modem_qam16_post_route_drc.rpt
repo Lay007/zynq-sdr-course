@@ -1,14 +1,14 @@
 Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
-----------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
 | Date         : normalized
 | Host         : normalized
-| Command      : report_drc -file <output_dir>/ofdm_axi_modem_post_route_drc.rpt
+| Command      : report_drc -file <output_dir>/ofdm_axi_modem_qam16_post_route_drc.rpt
 | Design       : ofdm_axi_modem
 | Device       : xc7z020clg400-2
 | Speed File   : -2
 | Design State : Fully Routed
-----------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------
 
 Report DRC
 
@@ -305,21 +305,21 @@ Related violations: <none>
 
 RTSTAT-10#1 Warning
 No routable loads
-77 net(s) have no routable loads. The problem bus(es) and/or net(s) are u_tx/cp16/sample_im_mem_reg_0_63_0_2/DOA,
+76 net(s) have no routable loads. The problem bus(es) and/or net(s) are u_tx/cp16/sample_im_mem_reg_0_63_0_2/DOA,
 u_tx/cp16/sample_im_mem_reg_0_63_12_14/DOA,
 u_tx/cp16/sample_im_mem_reg_0_63_12_14/DOB,
 u_tx/cp16/sample_im_mem_reg_0_63_3_5/DOA,
 u_tx/cp16/sample_im_mem_reg_0_63_6_8/DOA,
-u_tx/cp16/sample_im_mem_reg_0_63_6_8/DOB,
 u_tx/cp16/sample_im_mem_reg_0_63_9_11/DOA,
 u_tx/cp16/sample_re_mem_reg_0_63_0_2/DOA,
+u_tx/cp16/sample_re_mem_reg_0_63_0_2/DOB,
 u_tx/cp16/sample_re_mem_reg_0_63_12_14/DOA,
 u_tx/cp16/sample_re_mem_reg_0_63_15_15/DOA,
 u_tx/cp16/sample_re_mem_reg_0_63_3_5/DOA,
 u_tx/cp16/sample_re_mem_reg_0_63_3_5/DOB,
 u_tx/cp16/sample_re_mem_reg_0_63_6_8/DOA,
 u_tx/cp16/sample_re_mem_reg_0_63_9_11/DOA,
-u_tx/cp16/sample_re_mem_reg_0_63_9_11/DOB (the first 15 of 39 listed).
+u_tx/cp16/sample_re_mem_reg_0_63_9_11/DOB (the first 15 of 38 listed).
 Related violations: <none>
 
 ZPS7-1#1 Warning

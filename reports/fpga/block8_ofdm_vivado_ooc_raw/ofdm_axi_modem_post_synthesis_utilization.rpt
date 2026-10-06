@@ -1,13 +1,13 @@
 Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
 | Date         : normalized
 | Host         : normalized
-| Command      : report_utilization -file <output_dir>/ofdm_axi_modem_bram_post_synthesis_utilization.rpt
+| Command      : report_utilization -file <output_dir>/ofdm_axi_modem_post_synthesis_utilization.rpt
 | Design       : ofdm_axi_modem
 | Device       : 7z020clg400-2
 | Design State : Synthesized
------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Utilization Design Information
 
@@ -30,13 +30,13 @@ Table of Contents
 +----------------------------+------+-------+------------+-----------+-------+
 |          Site Type         | Used | Fixed | Prohibited | Available | Util% |
 +----------------------------+------+-------+------------+-----------+-------+
-| Slice LUTs*                | 3688 |     0 |          0 |     53200 |  6.93 |
-|   LUT as Logic             | 3459 |     0 |          0 |     53200 |  6.50 |
-|   LUT as Memory            |  229 |     0 |          0 |     17400 |  1.32 |
-|     LUT as Distributed RAM |  192 |     0 |            |           |       |
-|     LUT as Shift Register  |   37 |     0 |            |           |       |
-| Slice Registers            | 1671 |     0 |          0 |    106400 |  1.57 |
-|   Register as Flip Flop    | 1651 |     0 |          0 |    106400 |  1.55 |
+| Slice LUTs*                | 6191 |     0 |          0 |     53200 | 11.64 |
+|   LUT as Logic             | 5783 |     0 |          0 |     53200 | 10.87 |
+|   LUT as Memory            |  408 |     0 |          0 |     17400 |  2.34 |
+|     LUT as Distributed RAM |  368 |     0 |            |           |       |
+|     LUT as Shift Register  |   40 |     0 |            |           |       |
+| Slice Registers            | 3175 |     0 |          0 |    106400 |  2.98 |
+|   Register as Flip Flop    | 3155 |     0 |          0 |    106400 |  2.97 |
 |   Register as Latch        |   20 |     0 |          0 |    106400 |  0.02 |
 | F7 Muxes                   |    0 |     0 |          0 |     26600 |  0.00 |
 | F8 Muxes                   |    0 |     0 |          0 |     13300 |  0.00 |
@@ -59,7 +59,7 @@ Table of Contents
 | 0     |          Yes |           - |          Set |
 | 20    |          Yes |           - |        Reset |
 | 20    |          Yes |         Set |            - |
-| 1631  |          Yes |       Reset |            - |
+| 3135  |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -83,8 +83,8 @@ Table of Contents
 +----------------+------+-------+------------+-----------+-------+
 |    Site Type   | Used | Fixed | Prohibited | Available | Util% |
 +----------------+------+-------+------------+-----------+-------+
-| DSPs           |   22 |     0 |          0 |       220 | 10.00 |
-|   DSP48E1 only |   22 |       |            |           |       |
+| DSPs           |   32 |     0 |          0 |       220 | 14.55 |
+|   DSP48E1 only |   32 |       |            |           |       |
 +----------------+------+-------+------------+-----------+-------+
 
 
@@ -150,20 +150,21 @@ Table of Contents
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| FDRE     | 1631 |        Flop & Latch |
-| LUT6     |  879 |                 LUT |
-| LUT1     |  794 |                 LUT |
-| LUT5     |  763 |                 LUT |
-| LUT3     |  621 |                 LUT |
-| LUT2     |  562 |                 LUT |
-| CARRY4   |  517 |          CarryLogic |
-| LUT4     |  310 |                 LUT |
-| RAMD64E  |  192 |  Distributed Memory |
-| SRL16E   |   37 |  Distributed Memory |
-| DSP48E1  |   22 |    Block Arithmetic |
+| FDRE     | 3135 |        Flop & Latch |
+| LUT3     | 1586 |                 LUT |
+| LUT2     | 1306 |                 LUT |
+| LUT6     | 1238 |                 LUT |
+| LUT1     |  986 |                 LUT |
+| CARRY4   |  958 |          CarryLogic |
+| LUT5     |  955 |                 LUT |
+| LUT4     |  468 |                 LUT |
+| RAMD64E  |  368 |  Distributed Memory |
+| SRL16E   |   39 |  Distributed Memory |
+| DSP48E1  |   32 |    Block Arithmetic |
 | LDCE     |   20 |        Flop & Latch |
 | FDSE     |   20 |        Flop & Latch |
 | RAMB18E1 |    7 |        Block Memory |
+| SRLC32E  |    1 |  Distributed Memory |
 +----------+------+---------------------+
 
 
