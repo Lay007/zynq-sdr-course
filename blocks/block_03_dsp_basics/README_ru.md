@@ -65,5 +65,5 @@ IQ input -> FFT window -> FIR filter -> digital mix -> multirate -> metrics -> F
 
 - FIR -> streaming FIR RTL;
 - digital mixer -> NCO + complex multiplier;
-- decimation -> anti-aliasing + rate-change path;
-- metrics -> automated validation and reports.
+- децимация -> антиалиасинговый фильтр + тракт смены частоты;
+- метрики -> автоматическая проверка и отчёты.

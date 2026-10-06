@@ -1,97 +1,97 @@
-# Расчёт метрик цифрового канала / Digital-link metric calculations
+# Digital-link metric calculations
 
-Эта страница фиксирует определения, которые используются в аппаратных BPSK/QPSK-отчётах курса. Число без описания алгоритма синхронизации, нормализации и размера выборки не считается достаточным доказательством.
+This page fixes the definitions used in the course's hardware BPSK/QPSK reports. A number without a description of the synchronization algorithm, the normalization and the sample size does not count as sufficient evidence.
 
-## Подготовка IQ
+## IQ preparation
 
-Stereo WAV преобразуется в комплексные отсчёты
+A stereo WAV is converted to complex samples
 
 ```text
 x[n] = I[n] + j*Q[n]
 ```
 
-Значения нормируются к диапазону полной шкалы АЦП. Из всей записи вычитается одна оценка DC:
+The values are normalized to the ADC full scale. One DC estimate is subtracted from the whole recording:
 
 ```text
 mu = (1/N) * sum(x[n]), n=0..N-1
 x0[n] = x[n] - mu
 ```
 
-Среднее отдельного burst не вычитается: конечная детерминированная последовательность не обязана иметь строго нулевое среднее, поэтому такая операция могла бы изменить полезный сигнал.
+The mean of an individual burst is not subtracted: a finite deterministic sequence need not have an exactly zero mean, so that operation could alter the wanted signal.
 
-## Обнаружение burst и кадра
+## Burst and frame detection
 
-Для энергетического детектора запись делится на блоки по `B = 256` отсчётов:
+For the energy detector the recording is split into blocks of `B = 256` samples:
 
 ```text
 P[m] = (1/B) * sum(|x0[m*B+n]|^2), n=0..B-1
 ```
 
-Порог задаётся робастно относительно медианы блочной мощности:
+The threshold is set robustly relative to the median block power:
 
 ```text
 P_threshold = median(P) + 10 * MAD(P)
 ```
 
-Кандидат также должен иметь пик выше `median + 15·MAD`. Соседние активные блоки объединяются в один burst. После RRC matched filter кадр проверяется по известной последовательности из RTL ROM. Нормированная корреляция равна
+A candidate must also peak above `median + 15·MAD`. Adjacent active blocks are merged into one burst. After the RRC matched filter the frame is checked against the known sequence from the RTL ROM. The normalized correlation is
 
 ```text
 rho = |sum(r[k] * conj(s[k]))|
       / sqrt(sum(|r[k]|^2) * sum(|s[k]|^2))
 ```
 
-В Lab 11.28 кадр принимается детектором при `rho >= 0.8`. Аппаратные кадры дали `0.898…0.983`; контрольные окна между burst’ами — примерно `0.37…0.61`.
+In Lab 11.28 the detector accepts a frame at `rho >= 0.8`. Hardware frames gave `0.898…0.983`; control windows between bursts gave about `0.37…0.61`.
 
-## Оценка CFO и комплексное выравнивание
+## CFO estimate and complex alignment
 
-Для известных QPSK-символов вычисляется фазовая ошибка
+For the known QPSK symbols the phase error is
 
 ```text
 phi[k] = unwrap(arg(r[k] * conj(s[k])))
 ```
 
-Линейная регрессия `phi[k] ~= phi0 + alpha*k` даёт остаточное частотное смещение
+A linear fit `phi[k] ~= phi0 + alpha*k` gives the residual frequency offset
 
 ```text
 delta_f = alpha * symbol_rate / (2*pi)
         = alpha * sample_rate / (2*pi*SPS)
 ```
 
-После CFO-коррекции оценивается один комплексный коэффициент канала методом наименьших квадратов:
+After the CFO correction one complex channel coefficient is estimated by least squares:
 
 ```text
 g = sum(conj(s[k]) * r[k]) / sum(|s[k]|^2)
 r_aligned[k] = r[k] * exp(-j*alpha*k) / g
 ```
 
-Такое выравнивание удаляет постоянные gain/phase и линейный CFO внутри кадра. Оно не исправляет нелинейность, IQ imbalance, timing jitter или частотно-селективный канал.
+This alignment removes a constant gain/phase and a linear CFO within the frame. It does not correct nonlinearity, IQ imbalance, timing jitter or a frequency-selective channel.
 
-## BER и FER
+## BER and FER
 
-Решения QPSK принимаются по знакам I/Q. Для `N_b` известных бит:
+QPSK decisions are taken from the signs of I/Q. For `N_b` known bits:
 
 ```text
 BER = bit_errors / compared_bits
 ```
 
-При одинаковой длине кадров агрегированный BER считается по всем обнаруженным кадрам:
+With equal frame lengths the aggregate BER is computed over all detected frames:
 
 ```text
 BER_aggregate = sum(bit_errors_per_frame)
                 / (detected_frames * bits_per_frame)
 ```
 
-Frame error rate считает кадр ошибочным при наличии хотя бы одной битовой ошибки:
+The frame error rate counts a frame as failed if it has at least one bit error:
 
 ```text
 FER = frames_with_at_least_one_error / detected_frames
 ```
 
-`BER = 0` всегда сопровождается числом сравненных бит. Для нулевых ошибок приводится приближённая 95%-граница rule of three: `BER < 3/N_b`. Это не доказанный BER floor.
+`BER = 0` is always reported together with the number of compared bits. For zero errors the approximate 95 % rule-of-three bound `BER < 3/N_b` is given. It is not a proven BER floor.
 
 ## EVM
 
-RMS EVM вычисляется после CFO и комплексного scalar alignment:
+RMS EVM is computed after the CFO correction and the complex scalar alignment:
 
 ```text
 EVM_RMS_percent = 100 * sqrt(
@@ -99,44 +99,44 @@ EVM_RMS_percent = 100 * sqrt(
 )
 ```
 
-EVM объединяет шум и остаточные искажения. Малое EVM обычно улучшает BER, но прямое однозначное соответствие между ними существует только при зафиксированных модуляции, синхронизации и модели канала.
+EVM combines noise and residual distortion. A smaller EVM usually improves BER, but a one-to-one relation between them exists only for a fixed modulation, synchronization and channel model.
 
-## SNR из EVM
+## SNR from EVM
 
-В QPSK OTA-анализаторе SNR не измеряется отдельным калиброванным noise-only интервалом. Публикуется диагностическая оценка
+The QPSK OTA analyzer does not measure SNR from a separate calibrated noise-only interval. It publishes a diagnostic estimate
 
 ```text
 evm_fraction = EVM_RMS_percent / 100
 SNR_from_EVM_dB = -20 * log10(evm_fraction)
 ```
 
-Она эквивалентна SNR только при доминировании некоррелированного аддитивного шума и корректной синхронизации. Поэтому поле называется `snr_from_evm_db`, а не calibrated RF SNR.
+It equals the SNR only when uncorrelated additive noise dominates and the synchronization is correct. That is why the field is called `snr_from_evm_db` and not calibrated RF SNR.
 
-## Clipping, уровни и crest factor
+## Clipping, levels and crest factor
 
-Clipping fraction считается до DC-коррекции как доля комплексных отсчётов, у которых хотя бы одна ось почти достигла полной шкалы:
+The clipping fraction is computed before the DC correction as the share of complex samples in which at least one axis nearly reaches full scale:
 
 ```text
 clipping_fraction = count(|I[n]| > 0.999 or |Q[n]| > 0.999) / N
 ```
 
-Также сохраняются комплексные peak/RMS levels в dBFS и
+The complex peak/RMS levels in dBFS are stored as well, and
 
 ```text
 crest_factor_dB = peak_level_dBFS - rms_level_dBFS
 ```
 
-Нулевой clipping fraction исключает цифровое насыщение в записи, но не доказывает отсутствие аналоговой компрессии перед АЦП.
+A zero clipping fraction rules out digital saturation in the recording, but does not prove the absence of analog compression before the ADC.
 
-## Доверительные интервалы и ограничения
+## Confidence intervals and limits
 
-- Для доли безошибочных burst’ов используется двухсторонний Wilson 95% interval.
-- Для агрегированного BER также выводится Wilson interval как описательная оценка. Ошибки внутри одного RF burst могут быть коррелированы, поэтому модель независимых Bernoulli trials является приближением.
-- Detection rate, normalized correlation, FER, BER, EVM и CFO должны рассматриваться совместно.
-- Лучший кадр не заменяет распределение по всем кадрам; основной Lab 11.28 отчёт использует все обнаруженные burst’ы.
-- Для абсолютного SNR, мощности и uncertainty budget нужны калиброванный тракт и отдельная noise measurement.
+- The share of error-free bursts uses a two-sided Wilson 95 % interval.
+- The aggregate BER also gets a Wilson interval, as a descriptive estimate. Errors within one RF burst can be correlated, so the model of independent Bernoulli trials is an approximation.
+- Detection rate, normalized correlation, FER, BER, EVM and CFO must be read together.
+- The best frame does not replace the distribution over all frames; the main Lab 11.28 report uses every detected burst.
+- Absolute SNR, power and an uncertainty budget need a calibrated path and a separate noise measurement.
 
-Для `k` успехов в `n` испытаниях, `p_hat = k/n` и `z = 1.959964` границы Wilson вычисляются как
+For `k` successes in `n` trials, `p_hat = k/n` and `z = 1.959964`, the Wilson bounds are
 
 ```text
 denom  = 1 + z^2/n
@@ -145,4 +145,4 @@ half   = z * sqrt(p_hat*(1-p_hat)/n + z^2/(4*n^2)) / denom
 interval_95 = [center-half, center+half]
 ```
 
-Для BER та же формула применяется к числу ошибочных бит, но результат маркируется как описательный из-за возможной корреляции ошибок.
+For BER the same formula is applied to the number of bit errors, but the result is labelled descriptive because the errors may be correlated.

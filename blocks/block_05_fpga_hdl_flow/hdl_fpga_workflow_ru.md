@@ -1,4 +1,4 @@
-# Блок 5 — HDL/FPGA workflow
+# Блок 5 — маршрут HDL/FPGA
 
 Этот блок переводит fixed-point DSP из блока 4 в аппаратную архитектуру: потоковые интерфейсы, тестбенчи, RTL-структуру, оценку ресурсов и интеграцию в Vivado.
 
@@ -111,19 +111,19 @@ flowchart LR
 
 Подробный материал вынесен в отдельную страницу: [Отладка железа как часть модели](../hardware-debug-by-design.md).
 
-## Vivado integration checklist
+## Чек-лист интеграции в Vivado
 
-- [ ] RTL module has clean clock/reset.
-- [ ] Ports are documented.
-- [ ] Testbench passes.
-- [ ] Latency is measured.
-- [ ] Resource estimate is recorded.
-- [ ] Timing target is stated.
-- [ ] IP wrapper or block design connection is described.
-- [ ] Register map is documented if PS control is used.
-- [ ] Debug signals are selected for ILA if needed.
-- [ ] Debug tap plan is linked to model-level reference vectors.
-- [ ] Control/status registers include counters and overflow/underflow flags.
+- [ ] У RTL-модуля чистые тактирование и сброс.
+- [ ] Порты задокументированы.
+- [ ] Testbench проходит.
+- [ ] Латентность измерена.
+- [ ] Оценка ресурсов записана.
+- [ ] Целевая частота (timing target) указана.
+- [ ] Описано подключение через IP wrapper или block design.
+- [ ] Если используется управление из PS, задокументирована карта регистров.
+- [ ] При необходимости выбраны debug-сигналы для ILA.
+- [ ] План debug-точек связан с reference vectors модели.
+- [ ] Регистры управления/статуса содержат счётчики и флаги overflow/underflow.
 
 ## Связь с Zynq SoC
 

@@ -1,4 +1,4 @@
-# Блок 7 — TX/RX chain workflow
+# Блок 7 — порядок работы с трактом TX/RX
 
 Этот блок объединяет результаты предыдущих частей курса в цельный тракт передачи и приёма: baseband generation, DUC, RF frontend, канал, DDC, фильтрация, decimation и измерение метрик.
 
@@ -26,7 +26,7 @@ flowchart LR
 - RTL/testbench;
 - RF frequency/gain plan.
 
-Block 7 показывает, как эти элементы становятся системой. Главный результат — не отдельный фильтр или смеситель, а согласованный TX/RX тракт с понятными частотами, форматами, задержками и проверками.
+Блок 7 показывает, как эти элементы становятся системой. Главный результат — не отдельный фильтр или смеситель, а согласованный TX/RX тракт с понятными частотами, форматами, задержками и проверками.
 
 ## Основные проектные решения
 
@@ -40,20 +40,20 @@ Block 7 показывает, как эти элементы становятс�
 | DDC | mixer + FIR + decimator | channel selection |
 | Metrics | FFT/SNR, EVM, BER | тип сигнала |
 
-## Signal interface map
+## Карта сигнальных интерфейсов
 
 Каждый переход между блоками должен иметь явный интерфейс:
 
-| Stage | Data type | Sample rate | Format | Notes |
+| Этап | Тип данных | Частота дискретизации | Формат | Примечания |
 |---|---|---:|---|---|
-| TX source | complex |  | float / Q1.15 | symbols or waveform |
-| TX FIR | complex |  | float / Q1.15 | pulse shaping or channel filter |
-| DUC output | complex |  | Q1.15 | shifted baseband |
-| RF capture | complex |  | ci16 / cu8 / cf32 | receiver-dependent |
-| DDC output | complex |  | float / Q1.15 | baseband channel |
-| Metrics input | complex / symbols |  | float | aligned signal |
+| Источник TX | комплексный |  | float / Q1.15 | символы или waveform |
+| TX FIR | комплексный |  | float / Q1.15 | формирование импульсов или канальный фильтр |
+| Выход DUC | комплексный |  | Q1.15 | смещённый baseband |
+| Запись RF | комплексный |  | ci16 / cu8 / cf32 | зависит от приёмника |
+| Выход DDC | комплексный |  | float / Q1.15 | baseband канала |
+| Вход метрик | комплексный / символы |  | float | выровненный сигнал |
 
-## Frequency plan through the chain
+## Частотный план по тракту
 
 ```text
 RF frequency = TX_LO + TX_baseband_offset
@@ -61,23 +61,23 @@ RX observed offset = RF frequency - RX_LO
 DDC output offset = RX observed offset + DDC_shift
 ```
 
-For a correct chain, the target signal should end near DC after DDC:
+В правильно настроенном тракте целевой сигнал после DDC оказывается около DC:
 
 ```text
 DDC_shift ≈ -RX_observed_offset
 ```
 
-## Loopback levels
+## Уровни в loopback
 
-Block 7 must reuse the Block 6 safety discipline:
+Блок 7 повторяет дисциплину безопасности блока 6:
 
-- start with attenuation;
-- use manual gain;
-- avoid overload;
-- record metadata;
-- compare loopback and external observation.
+- начинать с аттенюации;
+- использовать ручное усиление;
+- избегать перегрузки;
+- записывать метаданные;
+- сравнивать loopback с внешним наблюдением.
 
-## Verification ladder
+## Лестница верификации
 
 ```mermaid
 flowchart TB
@@ -87,17 +87,17 @@ flowchart TB
     RFLOOP --> OTA[Controlled over-the-air]
 ```
 
-Do not start from RF if the pure simulation chain does not work.
+Не переходите к RF, пока не работает чисто симуляционная цепочка.
 
-## Minimal Block 7 report
+## Минимальный отчёт по блоку 7
 
-A complete report should contain:
+Полный отчёт должен содержать:
 
-1. TX/RX block diagram;
-2. sample-rate table;
-3. frequency plan table;
-4. data-format table;
-5. loopback method;
-6. FFT before/after DDC;
-7. metric table;
-8. limitations and next experiment.
+1. структурную схему TX/RX;
+2. таблицу частот дискретизации;
+3. таблицу частотного плана;
+4. таблицу форматов данных;
+5. способ организации loopback;
+6. FFT до и после DDC;
+7. таблицу метрик;
+8. ограничения и следующий эксперимент.

@@ -1,4 +1,4 @@
-# Lab 11.46 — Сообщение из консоли одной Zynq в консоль другой
+# Лабораторная 11.46 — Сообщение из консоли одной Zynq в консоль другой
 
 ## Идея
 
@@ -204,7 +204,7 @@ RX sequence=17 bytes=18 crc=OK payload="Hello from board A"
 
 - bitstream / build identity обеих плат;
 - mailbox physical base address;
-- RF frequency, sample rate, attenuation/gain settings;
+- RF-частоту, частоту дискретизации, настройки аттенюации/усиления;
 - исходную строку и UTF-8 byte length;
 - sequence;
 - RX CRC result;

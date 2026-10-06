@@ -136,7 +136,7 @@ artifacts/
 - Q-format;
 - complex convention: `I + jQ`;
 - valid/ready assumptions;
-- expected latency from previous tap;
+- ожидаемую задержку относительно предыдущей точки;
 - expected frequency shift;
 - acceptable numerical error.
 

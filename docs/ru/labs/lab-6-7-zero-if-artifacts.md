@@ -1,4 +1,4 @@
-# Lab 6.7 — Zero-IF artifacts: DC component, mirror and tune offset
+# Лабораторная 6.7 — Артефакты zero-IF: DC-составляющая, зеркальный канал и tune offset
 
 ## Цель
 

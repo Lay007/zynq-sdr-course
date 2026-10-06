@@ -18,10 +18,10 @@ flowchart LR
 
 | Проект | Основной фокус | Минимальный результат |
 |---|---|---|
-| QPSK modem final project | DSP + synchronization | BER/EVM after sync |
-| RF capture analysis project | real IQ + metadata | FFT/SNR/DC/clipping report |
-| FPGA DSP block project | Verilog + fixed-point | testbench PASS + error analysis |
-| Full SDR measurement report | whole chain | final report with pass/fail table |
+| Финальный проект QPSK-модема | DSP + синхронизация | BER/EVM после синхронизации |
+| Анализ RF-записи | реальный IQ + метаданные | отчёт FFT/SNR/DC/clipping |
+| DSP-блок на FPGA | Verilog + fixed-point | PASS testbench + анализ ошибки |
+| Полный отчёт об SDR-измерениях | весь тракт | итоговый отчёт с таблицей pass/fail |
 
 ## Общие требования
 

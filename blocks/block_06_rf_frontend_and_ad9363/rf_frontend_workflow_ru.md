@@ -1,4 +1,4 @@
-# Блок 6 — RF frontend workflow
+# Блок 6 — порядок работы с RF-фронтендом
 
 Этот блок переводит студента от цифрового DSP/FPGA-тракта к реальному радиочастотному стенду: частотный план, уровни, полосы, усиление, безопасное подключение и наблюдение сигнала внешним приёмником.
 
@@ -117,8 +117,8 @@ silence → lead-in tone → preamble → sync word → header → training → 
 
 Block 6 подготавливает реальный RF-стенд для:
 
-- TX/RX chain experiments;
-- modulation and synchronization;
-- recording and analysis tools;
-- integrated SDR project;
-- final report with measured IQ data.
+- экспериментов с трактом TX/RX;
+- модуляции и синхронизации;
+- инструментов записи и анализа;
+- интегрированного SDR-проекта;
+- итогового отчёта с измеренными IQ-данными.

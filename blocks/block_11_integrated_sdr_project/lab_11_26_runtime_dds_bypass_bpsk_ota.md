@@ -1,4 +1,4 @@
-# Lab 11.26 - Runtime PL BPSK OTA: DDS-bypass fix and first air-path validation
+# Lab 11.26 — Runtime PL BPSK OTA: DDS-bypass fix and first air-path validation
 
 ## Current status (supersedes intermediate conclusions below)
 
@@ -14,21 +14,16 @@ This page preserves the investigation chronology. The promoted result is:
 
 Do not treat the earlier 35–50% BER observations below as the current modem result; they are retained because each one motivated a specific bridge, FIFO, timing or frame-sync correction. The next board gate is a fixed clean-boot repetition series, not another one-off BER=0 run.
 
-## Objective / Цель
+## Objective
 
-**EN:** Identify why the runtime PL BPSK signal was not detectable by the external
+Identify why the runtime PL BPSK signal was not detectable by the external
 RTL-SDR despite `tx_valid_count > 0`, apply the DDS-bypass fix, and confirm the
 first OTA BPSK frame over the PL-owned AD9361 TX path.
 
-**RU:** Установить, почему сигнал PL BPSK не обнаруживался RTL-SDR несмотря на
-ненулевой `tx_valid_count`, применить исправление DDS-bypass и подтвердить
-первый OTA BPSK-кадр через путь AD9361 TX, управляемый PL.
-
 ---
 
-## Background / Предпосылки
+## Background
 
-**EN:**
 Previous RTL-SDR captures (labs 11.22–11.23) showed consistent BER ≈ 35–40%
 (near-random) with EVM > 500 % for all runtime PL BPSK attempts, even after:
 - AXI DDS repair (`cf_axi_dds` rebind + `RATECNTRL = 3`)
@@ -43,26 +38,10 @@ A preamble-correlation diagnostic confirmed no BPSK signal was present:
 The strongest spectral peak at −316 kHz was identified as interference/spurious
 (3 dB bandwidth did not match the expected ≈ 648 kHz BPSK occupied bandwidth).
 
-**RU:**
-Все предыдущие захваты RTL-SDR (lab 11.22–11.23) показывали BER ≈ 35–40%
-(случайный уровень) при EVM > 500 % даже после:
-- DDS-ремонта AXI (`cf_axi_dds` перепривязка + `RATECNTRL = 3`)
-- Перепривязки драйвера АЦП
-- Точного поиска CFO ±12 кГц
-
-Диагностика корреляции преамбулы подтвердила отсутствие сигнала BPSK:
-- Stock-shell захват: отношение корреляции ≈ 5.2 (чёткий пик) → BER = 0
-- Захваты runtime PL: отношение ≈ 3.5 (ниже порога шума ≈ 4.7) → сигнал
-  отсутствует на любой несущей
-
-Доминирующий пик на −316 кГц идентифицирован как помеха/спур (полоса 3 дБ не
-соответствует ожидаемым ≈ 648 кГц для 480 кбит/с BPSK с rolloff 0.35).
-
 ---
 
-## Root Cause / Причина
+## Root Cause
 
-**EN:**
 After `fpga_manager` overlay reload the `cf-ad9361-dds-core-lpc` DDS core
 re-initialises in **DDS-only mode** (driver default). In this mode the PL
 AXI-Stream TX data path is disconnected from the AD9361 DAC: only the DDS tone
@@ -70,49 +49,34 @@ AXI-Stream TX data path is disconnected from the AD9361 DAC: only the DDS tone
 DAC. The PL BPSK chain asserts `tx_valid` (counted by `axi_gpreg`), but those
 samples never leave the FPGA fabric.
 
-**RU:**
-После перезагрузки оверлея `fpga_manager` ядро `cf-ad9361-dds-core-lpc`
-инициализируется в режиме **DDS-only** (поведение по умолчанию драйвера). В этом
-режиме путь данных AXI-Stream PL TX отключён от ЦАП AD9361: в ЦАП поступает
-только выход DDS-тона (амплитуда 0 по умолчанию, или последнее конфигурированное
-значение). Цепь PL BPSK подтверждает `tx_valid` (считается `axi_gpreg`), но эти
-отсчёты никогда не покидают логику FPGA.
-
 ---
 
-## Fix / Исправление
+## Fix
 
-**EN:**
 Call `disable_dds_tones(dds)` after connecting to the IIO context and before
 starting the BPSK bringup. This writes `raw = 0` and `scale = 0` to every DDS
 output channel, muting the DDS and switching the hardware mux to pass PL
 AXI-Stream data through to the AD9361 DAC.
 
-**RU:**
-Вызвать `disable_dds_tones(dds)` после подключения к IIO-контексту и до запуска
-BPSK. Функция записывает `raw = 0` и `scale = 0` во все выходные каналы DDS,
-заглушая тон и переключая мультиплексор на передачу данных PL AXI-Stream в ЦАП
-AD9361.
-
-Files modified / Изменённые файлы:
+Files modified:
 - `lab_11_19_runtime_bridge_txrx_self_timed_bringup.py` — `disable_dds_tones`
   + DDS/ADC rebind args added
 - `lab_11_22_capture_runtime_pl_rtl_monitor_wav.py` — `disable_dds_tones` added
 
 ---
 
-## Procedure / Порядок выполнения
+## Procedure
 
-### Prerequisites / Предварительные условия
+### Prerequisites
 
 - Zynq SDR board at `192.168.40.1`, SSH root/analog
 - RTL-SDR V3 Pro tuned to 915 MHz, gain 20–40 dB, SDR++ recording
 - TX antenna and RX antenna ≤ 3 m apart, no external attenuator
 - TX attenuation: −45 dB (default, RF-safe)
 
-> **RF Safety / Безопасность:** не увеличивать TX мощность ради «увидеть сигнал».
-> Для первого OTA-обнаружения использовать минимальную мощность TX.
-> RX gain — ручной, AGC выключен. Burst короткий.
+> **RF safety:** do not raise the TX power just to "see the signal". Use the
+> minimum TX power for the first OTA detection. Manual RX gain, AGC off, short
+> burst.
 
 ### Step 1 — Capture RTL-SDR monitor WAV with DDS bypass
 
@@ -125,10 +89,10 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_22_capture_runtime_p
     --runtime-dds-ratecntrl 3
 ```
 
-**What to expect / Ожидаемый результат:**
-- `disable_dds_tones: {"status": "ok"}` в выходном JSON
-- `tx_valid_count > 0` (PL цепь работает)
-- Сигнал BPSK должен появиться вблизи DC (≈ +2.4 кГц, как у stock-shell)
+**What to expect:**
+- `disable_dds_tones: {"status": "ok"}` in the output JSON
+- `tx_valid_count > 0` (the PL chain is running)
+- the BPSK signal appears near DC (≈ +2.4 kHz, as with the stock shell)
 
 ### Step 2 — Offline BER analysis
 
@@ -138,10 +102,10 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_20_read_rtl_wav_ota_
     --run-tag dds_bypass_v1
 ```
 
-**Success criterion / Критерий успеха:**
-- Отношение корреляции преамбулы > 5.0 (сигнал обнаружен)
-- BER < 10 % → первое подтверждённое OTA BPSK через PL-путь
-- BER = 0 → полный успех (как у stock-shell)
+**Success criterion:**
+- preamble correlation ratio > 5.0 (signal detected)
+- BER < 10 % → first confirmed OTA BPSK over the PL path
+- BER = 0 → full success (as with the stock shell)
 
 ### Step 3 — If BER > 10 % after DDS fix
 
@@ -154,7 +118,7 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_20_read_rtl_wav_ota_
 
 ---
 
-## Evidence template / Шаблон доказательства
+## Evidence template
 
 After a successful run, record the following metrics in
 `docs/assets/lab1126_runtime_dds_bypass_bpsk_ota_<timestamp>_metrics.json`:
@@ -178,7 +142,7 @@ After a successful run, record the following metrics in
 
 ---
 
-## Follow-up diagnosis (2026-06-25) / Дополнительная диагностика
+## Follow-up diagnosis (2026-06-25)
 
 ### FIFO→DAC data path verification
 
@@ -280,9 +244,9 @@ The TCL overlay correctly disconnects and reconnects `din_valid_in_0..3` via the
 
 ---
 
-## First OTA RF evidence via antennas (2026-06-25) / Первое подтверждение сигнала через антенны
+## First OTA RF evidence via antennas (2026-06-25)
 
-### Setup / Установка
+### Setup
 
 - Run tag: `diag_overlay` (`--no-reboot-after`; board kept in overlay state)
 - TX: Zynq AD9361 → TX1A antenna, attenuation −50 dB (safe floor)
@@ -291,7 +255,7 @@ The TCL overlay correctly disconnects and reconnects `din_valid_in_0..3` via the
 - Board config: `configure_ad9361_bpsk` OK, `disable_dds_tones` OK, `dma_zero_buffer` OK (65 536 samples)
 - 3 BPSK bursts, 100-poll × 30 ms gap ≈ 3.1 s between each
 
-### Power trace confirms BPSK reaching the air / Трассировка мощности подтверждает выход BPSK в эфир
+### Power trace confirms BPSK reaching the air
 
 RTL-SDR WAV (10.81 s, 2.4 MS/s):
 
@@ -306,7 +270,7 @@ Each elevated window is ≈ 250 ms ≈ `RX_IDLE_TIMEOUT_CYCLES / 3.84 MHz` = 273
 idle timeout; burst itself is 637 μs). Burst-start resolved to t = 0.951 s (1 ms
 resolution scan).
 
-### Spectrum analysis / Спектральный анализ
+### Spectrum analysis
 
 After coarse −2 800 Hz shift and DC-offset removal (`analysis_capture -= mean`):
 
@@ -315,7 +279,7 @@ After coarse −2 800 Hz shift and DC-offset removal (`analysis_capture -= mean`
 - BPSK signal ≈ **+10 dB above noise floor**
 - LO carrier residual at +2.8 kHz: **48.9 dB above noise** (AD9361 × RTL-SDR LO beat)
 
-### Why BER demodulation fails via RTL-SDR / Почему BER через RTL-SDR не работает
+### Why BER demodulation fails via RTL-SDR
 
 ```text
 Burst duration:          637 μs = 2 448 samples @ 3.84 MHz
@@ -333,13 +297,13 @@ window → preamble correlator fails. RTL-SDR hardware BER counter is not availa
 elevation). Quantitative BER via RTL-SDR with this architecture is inconclusive
 (BER ≈ 36 %, preliminary). Final BER measurement requires AD9361 RX loopback.
 
-### Evidence files / Файлы доказательств
+### Evidence files
 
 - `docs/assets/lab1122_runtime_pl_rtl_monitor_diag_overlay.json` — runtime JSON (3 bursts OK, timed_out_observed=True)
 - `docs/assets/lab1120_lab11_22_runtime_pl_rtl_monitor_diag_overlay_ota_carrier_removed_metrics.json` — spectrum after carrier removal (BER 35.6 %, EVM 602 %)
 - `docs/assets/lab1120_lab11_22_runtime_pl_rtl_monitor_diag_overlay_ota_carrier_removed_baseband_spectrum.png` — RRC spectrum shape visible
 
-### Next step / Следующий шаг
+### Next step
 
 Run with AD9361 RX loopback (TX antenna → RX antenna close-range, or short cable) so
 the hardware BER counter closes the loop in ≈ 1 ms instead of 273 ms. This eliminates
@@ -351,7 +315,7 @@ the tail-loop problem and allows proper preamble correlation.
 
 ## Hardware BER counter root cause and RTL fix (2026-06-25)
 
-### Symptom / Симптом
+### Symptom
 
 After switching to the AD9361 RX loopback (TX1/RX1 antennas touching on the board),
 the PL hardware BER counter consistently reported **BER ≈ 46–50 %** across all runs
@@ -363,7 +327,7 @@ v3:  281 bits, 141 errors, BER = 50.2 %,  rx_valid_count = 2982
 dig: 281 bits, 131 errors, BER = 46.6 %,  capture_peak  = 1126
 ```
 
-### Root cause / Причина
+### Root cause
 
 `bpsk_ynq_ber_gpreg_bridge.v` passes `capture_in_valid` **ungated** to the timing
 sampler:
@@ -397,7 +361,7 @@ Key facts:
   frame_start). The bug triggers because `sample_index` has advanced to ~63 488 by
   then, so all 281 firings happen in the pre-TX silence window.
 
-### RTL fix applied / Применённое RTL-исправление
+### RTL fix applied
 
 Gate `rx_valid` with `tx_path_active_sample` in
 `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/bpsk_ynq_ber_gpreg_bridge.v`:
@@ -422,7 +386,7 @@ With this fix the required `start_offset` satisfies `start_offset ≈ D_total`, 
 testbench uses `start_offset = 62` with a 24-sample loopback; for OTA with adjacent
 antennas, `start_offset = 62` should also work, with fine-tuning ±8 if needed.
 
-### Rebuild and test / Пересборка и тест
+### Rebuild and test
 
 The fix requires a Vivado bitstream rebuild (Vivado 2021.1 at `g:/Xilinx/Vivado/`).
 After rebuild:
@@ -451,7 +415,7 @@ Evidence files will be saved to `docs/assets/lab1122_runtime_bridge_txrx_*_ber0*
 
 ---
 
-## Resolution and remaining limit (2026-06-26) / Итог и оставшееся ограничение
+## Resolution and remaining limit (2026-06-26)
 
 The 2026-06-25 "rebuild and test with `start_offset = 62`" plan above did not work as
 written, and the reason turned out to be a build-flow defect that invalidated every
@@ -692,7 +656,7 @@ until then the host retry at `start_offset = 110` already reaches BER 0 in a cou
 
 ---
 
-## Related labs / Связанные лабораторные работы
+## Related labs
 
 - [Lab 11.19](lab_11_19_runtime_bridge_txrx_self_timed_bringup.md) — Runtime self-timed bring-up (DDS bypass now included)
 - [Lab 11.22](lab_11_22_capture_runtime_pl_rtl_monitor_wav.md) — RTL-SDR monitor capture (DDS bypass now included)
