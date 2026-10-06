@@ -32,14 +32,16 @@
 // the 48th mapped symbol is still in flight.
 module ofdm_tx_mapper_ifft_path #(
     parameter integer PIPELINED = `OFDM_IFFT_PIPELINED,
-    parameter integer BRAM_MEMORY = `OFDM_IFFT_BRAM
+    parameter integer BRAM_MEMORY = `OFDM_IFFT_BRAM,
+    // 0 = QPSK (bits_in[1:0]), 1 = Gray 16-QAM (bits_in[3:0], ofdm_qam16_mapper).
+    parameter integer MODULATION = 0
 ) (
     input  wire                clk,
     input  wire                resetn,
 
     input  wire                bits_valid,
     output wire                bits_ready,
-    input  wire [1:0]          bits_in,
+    input  wire [((MODULATION != 0) ? 4 : 2)-1:0] bits_in,
 
     output wire                sample_valid,
     input  wire                sample_ready,
@@ -82,15 +84,29 @@ module ofdm_tx_mapper_ifft_path #(
         !bridge_valid &&
         allocator_data_ready;
 
-    ofdm_qpsk_mapper mapper (
-        .clk(clk),
-        .resetn(resetn),
-        .valid_in(launch_mapper),
-        .bits_in(bits_in),
-        .valid_out(mapper_valid),
-        .i_out(mapper_i),
-        .q_out(mapper_q)
-    );
+    generate
+        if (MODULATION != 0) begin : g_qam16
+            ofdm_qam16_mapper mapper (
+                .clk(clk),
+                .resetn(resetn),
+                .valid_in(launch_mapper),
+                .bits_in(bits_in),
+                .valid_out(mapper_valid),
+                .i_out(mapper_i),
+                .q_out(mapper_q)
+            );
+        end else begin : g_qpsk
+            ofdm_qpsk_mapper mapper (
+                .clk(clk),
+                .resetn(resetn),
+                .valid_in(launch_mapper),
+                .bits_in(bits_in),
+                .valid_out(mapper_valid),
+                .i_out(mapper_i),
+                .q_out(mapper_q)
+            );
+        end
+    endgenerate
 
     always @(posedge clk) begin
         if (!resetn) begin

@@ -36,14 +36,16 @@
 // CP output sample 79 is accepted, preventing implicit next-frame prefetch.
 module ofdm_tx_cp16_path #(
     parameter integer PIPELINED = `OFDM_IFFT_PIPELINED,
-    parameter integer BRAM_MEMORY = `OFDM_IFFT_BRAM
+    parameter integer BRAM_MEMORY = `OFDM_IFFT_BRAM,
+    // 0 = QPSK (bits_in[1:0]), 1 = Gray 16-QAM (bits_in[3:0]).
+    parameter integer MODULATION = 0
 ) (
     input  wire                clk,
     input  wire                resetn,
 
     input  wire                bits_valid,
     output wire                bits_ready,
-    input  wire [1:0]          bits_in,
+    input  wire [((MODULATION != 0) ? 4 : 2)-1:0] bits_in,
 
     output wire                sample_valid,
     input  wire                sample_ready,
@@ -98,7 +100,7 @@ module ofdm_tx_cp16_path #(
         end
     end
 
-    ofdm_tx_mapper_ifft_path #(.PIPELINED(PIPELINED), .BRAM_MEMORY(BRAM_MEMORY)) tx_core (
+    ofdm_tx_mapper_ifft_path #(.PIPELINED(PIPELINED), .BRAM_MEMORY(BRAM_MEMORY), .MODULATION(MODULATION)) tx_core (
         .clk(clk),
         .resetn(resetn),
         .bits_valid(inner_bits_valid),
