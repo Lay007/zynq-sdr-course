@@ -112,7 +112,7 @@ module ofdm_cfo_corrector (
     endfunction
 
     localparam [2:0] S_FILL = 3'd0, S_FLUSH = 3'd1, S_ACC = 3'd2, S_NORM = 3'd3,
-                     S_SHIFT = 3'd4, S_ITER = 3'd5, S_DRAIN = 3'd6;
+                     S_SHIFT = 3'd4, S_ITER = 3'd5, S_DRAIN = 3'd6, S_ABS = 3'd7;
 
     reg [2:0] state;
     reg [6:0] wr_count;
@@ -142,8 +142,7 @@ module ofdm_cfo_corrector (
     reg signed [25:0] v_x, v_y;
     reg signed [23:0] v_z;
     reg [4:0]         v_i;
-    wire [47:0] abs_re = acc_re[47] ? -acc_re : acc_re;
-    wire [47:0] abs_im = acc_im[47] ? -acc_im : acc_im;
+    reg  [47:0] abs_re, abs_im;     // registered in S_ABS
     wire [47:0] abs_max = (abs_re > abs_im) ? abs_re : abs_im;
     wire signed [47:0] sh_re = acc_re >>> n_shift;
     wire signed [47:0] sh_im = acc_im >>> n_shift;
@@ -248,6 +247,11 @@ module ofdm_cfo_corrector (
                     acc_im <= acc_im + p_sym_im;
                     p_sym_re <= 38'sd0;
                     p_sym_im <= 38'sd0;
+                    state <= S_ABS;
+                end
+                S_ABS: begin
+                    abs_re <= acc_re[47] ? -acc_re : acc_re;
+                    abs_im <= acc_im[47] ? -acc_im : acc_im;
                     state <= S_NORM;
                 end
                 S_NORM: begin
