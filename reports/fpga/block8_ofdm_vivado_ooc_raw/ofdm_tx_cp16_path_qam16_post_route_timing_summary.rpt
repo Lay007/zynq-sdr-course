@@ -1,0 +1,1046 @@
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
+| Date         : normalized
+| Host         : normalized
+| Command      : report_timing_summary -delay_type max -max_paths 10 -file <output_dir>/ofdm_tx_cp16_path_qam16_post_route_timing_summary.rpt
+| Design       : ofdm_tx_cp16_path
+| Device       : 7z020-clg400
+| Speed File   : -2  PRODUCTION 1.12 2019-11-22
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Timing Summary Report
+
+------------------------------------------------------------------------------------------------
+| Timer Settings
+| --------------
+------------------------------------------------------------------------------------------------
+
+  Enable Multi Corner Analysis               :  Yes
+  Enable Pessimism Removal                   :  Yes
+  Pessimism Removal Resolution               :  Nearest Common Node
+  Enable Input Delay Default Clock           :  No
+  Enable Preset / Clear Arcs                 :  No
+  Disable Flight Delays                      :  No
+  Ignore I/O Paths                           :  No
+  Timing Early Launch at Borrowing Latches   :  No
+  Borrow Time for Max Delay Exceptions       :  Yes
+  Merge Timing Exceptions                    :  Yes
+
+  Corner  Analyze    Analyze
+  Name    Max Paths  Min Paths
+  ------  ---------  ---------
+  Slow    Yes        Yes
+  Fast    Yes        Yes
+
+
+------------------------------------------------------------------------------------------------
+| Report Methodology
+| ------------------
+------------------------------------------------------------------------------------------------
+
+No report available as report_methodology has not been run prior. Run report_methodology on the current design for the summary of methodology violations.
+
+
+
+check_timing report
+
+Table of Contents
+-----------------
+1. checking no_clock (140)
+2. checking constant_clock (0)
+3. checking pulse_width_clock (0)
+4. checking unconstrained_internal_endpoints (10)
+5. checking no_input_delay (0)
+6. checking no_output_delay (0)
+7. checking multiple_clock (0)
+8. checking generated_clocks (0)
+9. checking loops (0)
+10. checking partial_input_delay (0)
+11. checking partial_output_delay (0)
+12. checking latch_loops (0)
+
+1. checking no_clock (140)
+--------------------------
+ There are 10 register/latch pins with no clock driven by root clock pin: tx_core/ifft/FSM_onehot_state_reg[4]/Q (HIGH)
+
+ There are 10 register/latch pins with no clock driven by root clock pin: tx_core/ifft/butterfly_j_reg[0]/Q (HIGH)
+
+ There are 10 register/latch pins with no clock driven by root clock pin: tx_core/ifft/butterfly_j_reg[1]/Q (HIGH)
+
+ There are 10 register/latch pins with no clock driven by root clock pin: tx_core/ifft/butterfly_j_reg[2]/Q (HIGH)
+
+ There are 10 register/latch pins with no clock driven by root clock pin: tx_core/ifft/butterfly_j_reg[3]/Q (HIGH)
+
+ There are 10 register/latch pins with no clock driven by root clock pin: tx_core/ifft/butterfly_j_reg[4]/Q (HIGH)
+
+ There are 10 register/latch pins with no clock driven by root clock pin: tx_core/ifft/group_base_reg[1]/Q (HIGH)
+
+ There are 10 register/latch pins with no clock driven by root clock pin: tx_core/ifft/group_base_reg[2]/Q (HIGH)
+
+ There are 10 register/latch pins with no clock driven by root clock pin: tx_core/ifft/group_base_reg[3]/Q (HIGH)
+
+ There are 10 register/latch pins with no clock driven by root clock pin: tx_core/ifft/group_base_reg[4]/Q (HIGH)
+
+ There are 10 register/latch pins with no clock driven by root clock pin: tx_core/ifft/group_base_reg[5]/Q (HIGH)
+
+ There are 10 register/latch pins with no clock driven by root clock pin: tx_core/ifft/stage_reg[0]/Q (HIGH)
+
+ There are 10 register/latch pins with no clock driven by root clock pin: tx_core/ifft/stage_reg[1]/Q (HIGH)
+
+ There are 10 register/latch pins with no clock driven by root clock pin: tx_core/ifft/stage_reg[2]/Q (HIGH)
+
+
+2. checking constant_clock (0)
+------------------------------
+ There are 0 register/latch pins with constant_clock.
+
+
+3. checking pulse_width_clock (0)
+---------------------------------
+ There are 0 register/latch pins which need pulse_width check
+
+
+4. checking unconstrained_internal_endpoints (10)
+-------------------------------------------------
+ There are 10 pins that are not constrained for maximum delay. (HIGH)
+
+ There are 0 pins that are not constrained for maximum delay due to constant clock.
+
+
+5. checking no_input_delay (0)
+------------------------------
+ There are 0 input ports with no input delay specified.
+
+ There are 0 input ports with no input delay but user has a false path constraint.
+
+
+6. checking no_output_delay (0)
+-------------------------------
+ There are 0 ports with no output delay specified.
+
+ There are 0 ports with no output delay but user has a false path constraint
+
+ There are 0 ports with no output delay but with a timing clock defined on it or propagating through it
+
+
+7. checking multiple_clock (0)
+------------------------------
+ There are 0 register/latch pins with multiple clocks.
+
+
+8. checking generated_clocks (0)
+--------------------------------
+ There are 0 generated clocks that are not connected to a clock source.
+
+
+9. checking loops (0)
+---------------------
+ There are 0 combinational loops in the design.
+
+
+10. checking partial_input_delay (0)
+------------------------------------
+ There are 0 input ports with partial input delay specified.
+
+
+11. checking partial_output_delay (0)
+-------------------------------------
+ There are 0 ports with partial output delay specified.
+
+
+12. checking latch_loops (0)
+----------------------------
+ There are 0 combinational latch loops in the design through latch input
+
+
+
+------------------------------------------------------------------------------------------------
+| Design Timing Summary
+| ---------------------
+------------------------------------------------------------------------------------------------
+
+    WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
+    -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
+      1.771        0.000                      0                 2000        3.870        0.000                       0                   468
+
+
+All user specified timing constraints are met.
+
+
+------------------------------------------------------------------------------------------------
+| Clock Summary
+| -------------
+------------------------------------------------------------------------------------------------
+
+Clock  Waveform(ns)       Period(ns)      Frequency(MHz)
+-----  ------------       ----------      --------------
+clk    {0.000 5.000}      10.000          100.000
+
+
+------------------------------------------------------------------------------------------------
+| Intra Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
+-----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
+clk                 1.771        0.000                      0                 2000        3.870        0.000                       0                   468
+
+
+------------------------------------------------------------------------------------------------
+| Inter Clock Table
+| -----------------
+------------------------------------------------------------------------------------------------
+
+From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints
+----------    --------          -------      -------  ---------------------  -------------------
+
+
+------------------------------------------------------------------------------------------------
+| Other Path Groups Table
+| -----------------------
+------------------------------------------------------------------------------------------------
+
+Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints
+----------    ----------    --------          -------      -------  ---------------------  -------------------
+
+
+------------------------------------------------------------------------------------------------
+| Timing Details
+| --------------
+------------------------------------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------------------------
+From Clock:  clk
+  To Clock:  clk
+
+Setup :            0  Failing Endpoints,  Worst Slack        1.771ns,  Total Violation        0.000ns
+Hold  :           NA  Failing Endpoints,  Worst Slack           NA  ,  Total Violation           NA
+PW    :            0  Failing Endpoints,  Worst Slack        3.870ns,  Total Violation        0.000ns
+---------------------------------------------------------------------------------------------------
+
+
+Max Delay Paths
+--------------------------------------------------------------------------------------
+Slack (MET) :             1.771ns  (required time - arrival time)
+  Source:                 tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            tx_core/ifft/butterfly/saturation_count_reg[1]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.163ns  (logic 4.299ns (52.664%)  route 3.864ns (47.336%))
+  Logic Levels:           13  (CARRY4=7 LUT1=2 LUT2=1 LUT5=1 LUT6=2)
+  Clock Path Skew:        -0.061ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.243ns = ( 11.243 - 10.000 )
+    Source Clock Delay      (SCD):    1.401ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  clk (IN)
+                         net (fo=467, unset)          1.401     1.401    tx_core/ifft/butterfly/clk
+    SLICE_X32Y14         FDRE                                         r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X32Y14         FDRE (Prop_fdre_C_Q)         0.398     1.799 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[1]/Q
+                         net (fo=6, routed)           0.694     2.493    tx_core/ifft/butterfly/g_pipelined.s2_tw_re[1]
+    SLICE_X29Y13         LUT2 (Prop_lut2_I1_O)        0.232     2.725 r  tx_core/ifft/butterfly/y1_re[0]_i_10/O
+                         net (fo=1, routed)           0.000     2.725    tx_core/ifft/butterfly/y1_re[0]_i_10_n_0
+    SLICE_X29Y13         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     3.182 r  tx_core/ifft/butterfly/y1_re_reg[0]_i_6/CO[3]
+                         net (fo=1, routed)           0.000     3.182    tx_core/ifft/butterfly/y1_re_reg[0]_i_6_n_0
+    SLICE_X29Y14         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     3.280 r  tx_core/ifft/butterfly/i__carry_i_11/CO[3]
+                         net (fo=1, routed)           0.000     3.280    tx_core/ifft/butterfly/i__carry_i_11_n_0
+    SLICE_X29Y15         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     3.545 f  tx_core/ifft/butterfly/y1_re_reg[15]_i_6/O[1]
+                         net (fo=1, routed)           0.459     4.004    tx_core_n_12
+    SLICE_X28Y16         LUT1 (Prop_lut1_I0_O)        0.250     4.254 r  i__carry__0_i_8__0/O
+                         net (fo=1, routed)           0.000     4.254    i__carry__0_i_8__0_n_0
+    SLICE_X28Y16         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     4.711 r  i__carry__0_i_5__0/CO[3]
+                         net (fo=1, routed)           0.000     4.711    i__carry__0_i_5__0_n_0
+    SLICE_X28Y17         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.260     4.971 f  i__carry__1_i_5__0/O[3]
+                         net (fo=1, routed)           0.493     5.465    tx_core/ifft/butterfly/round_div2_away0_inferred__1/i__carry__2_0[3]
+    SLICE_X26Y20         LUT1 (Prop_lut1_I0_O)        0.257     5.722 r  tx_core/ifft/butterfly/i__carry__2_i_3__0/O
+                         net (fo=1, routed)           0.000     5.722    tx_core/ifft/butterfly/i__carry__2_i_3__0_n_0
+    SLICE_X26Y20         CARRY4 (Prop_carry4_S[1]_O[3])
+                                                      0.534     6.256 r  tx_core/ifft/butterfly/round_div2_away0_inferred__1/i__carry__2/O[3]
+                         net (fo=4, routed)           0.586     6.842    tx_core/ifft/butterfly/round_div2_away0_inferred__1/i__carry__2_n_4
+    SLICE_X25Y20         LUT5 (Prop_lut5_I2_O)        0.250     7.092 r  tx_core/ifft/butterfly/i__carry_i_4__3/O
+                         net (fo=1, routed)           0.000     7.092    tx_core/ifft/butterfly/i__carry_i_4__3_n_0
+    SLICE_X25Y20         CARRY4 (Prop_carry4_S[1]_CO[2])
+                                                      0.475     7.567 r  tx_core/ifft/butterfly/saturate_q151_inferred__3/i__carry/CO[2]
+                         net (fo=18, routed)          1.246     8.812    tx_core/ifft/butterfly/saturate_q1511_in
+    SLICE_X44Y18         LUT6 (Prop_lut6_I3_O)        0.261     9.073 r  tx_core/ifft/butterfly/saturation_count[2]_i_3/O
+                         net (fo=2, routed)           0.386     9.459    tx_core/ifft/butterfly/saturation_count[2]_i_3_n_0
+    SLICE_X44Y18         LUT6 (Prop_lut6_I3_O)        0.105     9.564 r  tx_core/ifft/butterfly/saturation_count[1]_i_1/O
+                         net (fo=1, routed)           0.000     9.564    tx_core/ifft/butterfly/saturation_count[1]_i_1_n_0
+    SLICE_X44Y18         FDRE                                         r  tx_core/ifft/butterfly/saturation_count_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=467, unset)          1.243    11.243    tx_core/ifft/butterfly/clk
+    SLICE_X44Y18         FDRE                                         r  tx_core/ifft/butterfly/saturation_count_reg[1]/C
+                         clock pessimism              0.097    11.340
+                         clock uncertainty           -0.035    11.305
+    SLICE_X44Y18         FDRE (Setup_fdre_C_D)        0.030    11.335    tx_core/ifft/butterfly/saturation_count_reg[1]
+  -------------------------------------------------------------------
+                         required time                         11.335
+                         arrival time                          -9.564
+  -------------------------------------------------------------------
+                         slack                                  1.771
+
+Slack (MET) :             1.773ns  (required time - arrival time)
+  Source:                 tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            tx_core/ifft/butterfly/saturation_count_reg[0]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.162ns  (logic 4.299ns (52.671%)  route 3.863ns (47.329%))
+  Logic Levels:           13  (CARRY4=7 LUT1=2 LUT2=1 LUT5=2 LUT6=1)
+  Clock Path Skew:        -0.060ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.244ns = ( 11.244 - 10.000 )
+    Source Clock Delay      (SCD):    1.401ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  clk (IN)
+                         net (fo=467, unset)          1.401     1.401    tx_core/ifft/butterfly/clk
+    SLICE_X32Y14         FDRE                                         r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X32Y14         FDRE (Prop_fdre_C_Q)         0.398     1.799 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[1]/Q
+                         net (fo=6, routed)           0.694     2.493    tx_core/ifft/butterfly/g_pipelined.s2_tw_re[1]
+    SLICE_X29Y13         LUT2 (Prop_lut2_I1_O)        0.232     2.725 r  tx_core/ifft/butterfly/y1_re[0]_i_10/O
+                         net (fo=1, routed)           0.000     2.725    tx_core/ifft/butterfly/y1_re[0]_i_10_n_0
+    SLICE_X29Y13         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     3.182 r  tx_core/ifft/butterfly/y1_re_reg[0]_i_6/CO[3]
+                         net (fo=1, routed)           0.000     3.182    tx_core/ifft/butterfly/y1_re_reg[0]_i_6_n_0
+    SLICE_X29Y14         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     3.280 r  tx_core/ifft/butterfly/i__carry_i_11/CO[3]
+                         net (fo=1, routed)           0.000     3.280    tx_core/ifft/butterfly/i__carry_i_11_n_0
+    SLICE_X29Y15         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     3.545 f  tx_core/ifft/butterfly/y1_re_reg[15]_i_6/O[1]
+                         net (fo=1, routed)           0.459     4.004    tx_core_n_12
+    SLICE_X28Y16         LUT1 (Prop_lut1_I0_O)        0.250     4.254 r  i__carry__0_i_8__0/O
+                         net (fo=1, routed)           0.000     4.254    i__carry__0_i_8__0_n_0
+    SLICE_X28Y16         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     4.711 r  i__carry__0_i_5__0/CO[3]
+                         net (fo=1, routed)           0.000     4.711    i__carry__0_i_5__0_n_0
+    SLICE_X28Y17         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.260     4.971 f  i__carry__1_i_5__0/O[3]
+                         net (fo=1, routed)           0.493     5.465    tx_core/ifft/butterfly/round_div2_away0_inferred__1/i__carry__2_0[3]
+    SLICE_X26Y20         LUT1 (Prop_lut1_I0_O)        0.257     5.722 r  tx_core/ifft/butterfly/i__carry__2_i_3__0/O
+                         net (fo=1, routed)           0.000     5.722    tx_core/ifft/butterfly/i__carry__2_i_3__0_n_0
+    SLICE_X26Y20         CARRY4 (Prop_carry4_S[1]_O[3])
+                                                      0.534     6.256 r  tx_core/ifft/butterfly/round_div2_away0_inferred__1/i__carry__2/O[3]
+                         net (fo=4, routed)           0.586     6.842    tx_core/ifft/butterfly/round_div2_away0_inferred__1/i__carry__2_n_4
+    SLICE_X25Y20         LUT5 (Prop_lut5_I2_O)        0.250     7.092 r  tx_core/ifft/butterfly/i__carry_i_4__3/O
+                         net (fo=1, routed)           0.000     7.092    tx_core/ifft/butterfly/i__carry_i_4__3_n_0
+    SLICE_X25Y20         CARRY4 (Prop_carry4_S[1]_CO[2])
+                                                      0.475     7.567 r  tx_core/ifft/butterfly/saturate_q151_inferred__3/i__carry/CO[2]
+                         net (fo=18, routed)          1.246     8.813    tx_core/ifft/butterfly/saturate_q1511_in
+    SLICE_X44Y18         LUT6 (Prop_lut6_I2_O)        0.261     9.074 r  tx_core/ifft/butterfly/saturation_count[2]_i_2/O
+                         net (fo=3, routed)           0.384     9.458    tx_core/ifft/butterfly/saturation_count[2]_i_2_n_0
+    SLICE_X43Y18         LUT5 (Prop_lut5_I2_O)        0.105     9.563 r  tx_core/ifft/butterfly/saturation_count[0]_i_1/O
+                         net (fo=1, routed)           0.000     9.563    tx_core/ifft/butterfly/saturation_count[0]_i_1_n_0
+    SLICE_X43Y18         FDRE                                         r  tx_core/ifft/butterfly/saturation_count_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=467, unset)          1.244    11.244    tx_core/ifft/butterfly/clk
+    SLICE_X43Y18         FDRE                                         r  tx_core/ifft/butterfly/saturation_count_reg[0]/C
+                         clock pessimism              0.097    11.341
+                         clock uncertainty           -0.035    11.306
+    SLICE_X43Y18         FDRE (Setup_fdre_C_D)        0.030    11.336    tx_core/ifft/butterfly/saturation_count_reg[0]
+  -------------------------------------------------------------------
+                         required time                         11.336
+                         arrival time                          -9.563
+  -------------------------------------------------------------------
+                         slack                                  1.773
+
+Slack (MET) :             1.774ns  (required time - arrival time)
+  Source:                 tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[1]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            tx_core/ifft/butterfly/saturation_count_reg[2]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.161ns  (logic 4.299ns (52.676%)  route 3.862ns (47.324%))
+  Logic Levels:           13  (CARRY4=7 LUT1=2 LUT2=1 LUT5=1 LUT6=2)
+  Clock Path Skew:        -0.061ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.243ns = ( 11.243 - 10.000 )
+    Source Clock Delay      (SCD):    1.401ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  clk (IN)
+                         net (fo=467, unset)          1.401     1.401    tx_core/ifft/butterfly/clk
+    SLICE_X32Y14         FDRE                                         r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[1]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X32Y14         FDRE (Prop_fdre_C_Q)         0.398     1.799 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[1]/Q
+                         net (fo=6, routed)           0.694     2.493    tx_core/ifft/butterfly/g_pipelined.s2_tw_re[1]
+    SLICE_X29Y13         LUT2 (Prop_lut2_I1_O)        0.232     2.725 r  tx_core/ifft/butterfly/y1_re[0]_i_10/O
+                         net (fo=1, routed)           0.000     2.725    tx_core/ifft/butterfly/y1_re[0]_i_10_n_0
+    SLICE_X29Y13         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     3.182 r  tx_core/ifft/butterfly/y1_re_reg[0]_i_6/CO[3]
+                         net (fo=1, routed)           0.000     3.182    tx_core/ifft/butterfly/y1_re_reg[0]_i_6_n_0
+    SLICE_X29Y14         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     3.280 r  tx_core/ifft/butterfly/i__carry_i_11/CO[3]
+                         net (fo=1, routed)           0.000     3.280    tx_core/ifft/butterfly/i__carry_i_11_n_0
+    SLICE_X29Y15         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     3.545 f  tx_core/ifft/butterfly/y1_re_reg[15]_i_6/O[1]
+                         net (fo=1, routed)           0.459     4.004    tx_core_n_12
+    SLICE_X28Y16         LUT1 (Prop_lut1_I0_O)        0.250     4.254 r  i__carry__0_i_8__0/O
+                         net (fo=1, routed)           0.000     4.254    i__carry__0_i_8__0_n_0
+    SLICE_X28Y16         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     4.711 r  i__carry__0_i_5__0/CO[3]
+                         net (fo=1, routed)           0.000     4.711    i__carry__0_i_5__0_n_0
+    SLICE_X28Y17         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.260     4.971 f  i__carry__1_i_5__0/O[3]
+                         net (fo=1, routed)           0.493     5.465    tx_core/ifft/butterfly/round_div2_away0_inferred__1/i__carry__2_0[3]
+    SLICE_X26Y20         LUT1 (Prop_lut1_I0_O)        0.257     5.722 r  tx_core/ifft/butterfly/i__carry__2_i_3__0/O
+                         net (fo=1, routed)           0.000     5.722    tx_core/ifft/butterfly/i__carry__2_i_3__0_n_0
+    SLICE_X26Y20         CARRY4 (Prop_carry4_S[1]_O[3])
+                                                      0.534     6.256 r  tx_core/ifft/butterfly/round_div2_away0_inferred__1/i__carry__2/O[3]
+                         net (fo=4, routed)           0.586     6.842    tx_core/ifft/butterfly/round_div2_away0_inferred__1/i__carry__2_n_4
+    SLICE_X25Y20         LUT5 (Prop_lut5_I2_O)        0.250     7.092 r  tx_core/ifft/butterfly/i__carry_i_4__3/O
+                         net (fo=1, routed)           0.000     7.092    tx_core/ifft/butterfly/i__carry_i_4__3_n_0
+    SLICE_X25Y20         CARRY4 (Prop_carry4_S[1]_CO[2])
+                                                      0.475     7.567 r  tx_core/ifft/butterfly/saturate_q151_inferred__3/i__carry/CO[2]
+                         net (fo=18, routed)          1.246     8.812    tx_core/ifft/butterfly/saturate_q1511_in
+    SLICE_X44Y18         LUT6 (Prop_lut6_I3_O)        0.261     9.073 r  tx_core/ifft/butterfly/saturation_count[2]_i_3/O
+                         net (fo=2, routed)           0.384     9.457    tx_core/ifft/butterfly/saturation_count[2]_i_3_n_0
+    SLICE_X44Y18         LUT6 (Prop_lut6_I3_O)        0.105     9.562 r  tx_core/ifft/butterfly/saturation_count[2]_i_1/O
+                         net (fo=1, routed)           0.000     9.562    tx_core/ifft/butterfly/saturation_count[2]_i_1_n_0
+    SLICE_X44Y18         FDRE                                         r  tx_core/ifft/butterfly/saturation_count_reg[2]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=467, unset)          1.243    11.243    tx_core/ifft/butterfly/clk
+    SLICE_X44Y18         FDRE                                         r  tx_core/ifft/butterfly/saturation_count_reg[2]/C
+                         clock pessimism              0.097    11.340
+                         clock uncertainty           -0.035    11.305
+    SLICE_X44Y18         FDRE (Setup_fdre_C_D)        0.032    11.337    tx_core/ifft/butterfly/saturation_count_reg[2]
+  -------------------------------------------------------------------
+                         required time                         11.337
+                         arrival time                          -9.562
+  -------------------------------------------------------------------
+                         slack                                  1.774
+
+Slack (MET) :             2.671ns  (required time - arrival time)
+  Source:                 tx_core/ifft/butterfly/g_pipelined.s1_ri_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[8]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        7.225ns  (logic 4.142ns (57.325%)  route 3.083ns (42.675%))
+  Logic Levels:           10  (CARRY4=6 DSP48E1=1 LUT1=2 LUT3=1)
+  Clock Path Skew:        -0.138ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.247ns = ( 11.247 - 10.000 )
+    Source Clock Delay      (SCD):    1.482ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  clk (IN)
+                         net (fo=467, unset)          1.482     1.482    tx_core/ifft/butterfly/clk
+    DSP48_X2Y6           DSP48E1                                      r  tx_core/ifft/butterfly/g_pipelined.s1_ri_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X2Y6           DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      0.370     1.852 r  tx_core/ifft/butterfly/g_pipelined.s1_ri_reg/P[31]
+                         net (fo=2, routed)           0.578     2.429    tx_core/ifft/butterfly/g_pipelined.s1_ri_reg_n_74
+    DSP48_X2Y7           DSP48E1 (Prop_dsp48e1_C[32]_P[0])
+                                                      1.523     3.952 f  tx_core/ifft/butterfly/g_pipelined.value__0/P[0]
+                         net (fo=1, routed)           0.669     4.621    tx_core/ifft/butterfly/g_pipelined.value__0_n_105
+    SLICE_X38Y12         LUT1 (Prop_lut1_I0_O)        0.105     4.726 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im[0]_i_18/O
+                         net (fo=1, routed)           0.367     5.094    tx_core/ifft/butterfly/g_pipelined.s2_tw_im[0]_i_18_n_0
+    SLICE_X36Y12         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     5.588 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_13/CO[3]
+                         net (fo=1, routed)           0.000     5.588    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_13_n_0
+    SLICE_X36Y13         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     5.688 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_8/CO[3]
+                         net (fo=1, routed)           0.000     5.688    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_8_n_0
+    SLICE_X36Y14         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     5.788 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     5.788    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_3_n_0
+    SLICE_X36Y15         CARRY4 (Prop_carry4_CI_O[2])
+                                                      0.199     5.987 f  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2/O[2]
+                         net (fo=2, routed)           0.244     6.231    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2_n_5
+    SLICE_X39Y15         LUT1 (Prop_lut1_I0_O)        0.244     6.475 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3/O
+                         net (fo=1, routed)           0.428     6.903    tx_core/ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3_n_0
+    SLICE_X37Y15         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     7.383 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.383    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2_n_0
+    SLICE_X37Y16         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.260     7.643 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2/O[3]
+                         net (fo=1, routed)           0.797     8.440    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2_n_4
+    SLICE_X39Y16         LUT3 (Prop_lut3_I0_O)        0.267     8.707 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im[8]_i_1/O
+                         net (fo=1, routed)           0.000     8.707    tx_core/ifft/butterfly/twiddle_imag_rounded_return[8]
+    SLICE_X39Y16         FDRE                                         r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[8]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=467, unset)          1.247    11.247    tx_core/ifft/butterfly/clk
+    SLICE_X39Y16         FDRE                                         r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[8]/C
+                         clock pessimism              0.097    11.344
+                         clock uncertainty           -0.035    11.309
+    SLICE_X39Y16         FDRE (Setup_fdre_C_D)        0.069    11.378    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[8]
+  -------------------------------------------------------------------
+                         required time                         11.378
+                         arrival time                          -8.707
+  -------------------------------------------------------------------
+                         slack                                  2.671
+
+Slack (MET) :             2.673ns  (required time - arrival time)
+  Source:                 tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[5]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            tx_core/ifft/butterfly/y0_re_reg[1]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        7.365ns  (logic 4.173ns (56.662%)  route 3.192ns (43.338%))
+  Logic Levels:           12  (CARRY4=7 LUT1=2 LUT2=1 LUT5=1 LUT6=1)
+  Clock Path Skew:        0.001ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.305ns = ( 11.305 - 10.000 )
+    Source Clock Delay      (SCD):    1.401ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  clk (IN)
+                         net (fo=467, unset)          1.401     1.401    tx_core/ifft/butterfly/clk
+    SLICE_X32Y14         FDRE                                         r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[5]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X32Y14         FDRE (Prop_fdre_C_Q)         0.398     1.799 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[5]/Q
+                         net (fo=5, routed)           0.786     2.585    tx_core/ifft/butterfly/g_pipelined.s2_tw_re[5]
+    SLICE_X29Y19         LUT2 (Prop_lut2_I0_O)        0.232     2.817 r  tx_core/ifft/butterfly/value_carry__0_i_3/O
+                         net (fo=1, routed)           0.000     2.817    tx_core/ifft/butterfly/value_carry__0_i_3_n_0
+    SLICE_X29Y19         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     3.274 r  tx_core/ifft/butterfly/value_carry__0/CO[3]
+                         net (fo=1, routed)           0.000     3.274    tx_core/ifft/butterfly/value_carry__0_n_0
+    SLICE_X29Y20         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     3.539 f  tx_core/ifft/butterfly/value_carry__1/O[1]
+                         net (fo=2, routed)           0.558     4.097    tx_core/ifft/butterfly/value[9]
+    SLICE_X32Y22         LUT1 (Prop_lut1_I0_O)        0.250     4.347 r  tx_core/ifft/butterfly/round_div2_away0_carry__0_i_8/O
+                         net (fo=1, routed)           0.000     4.347    tx_core/ifft/butterfly/p_0_in[9]
+    SLICE_X32Y22         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.444     4.791 r  tx_core/ifft/butterfly/round_div2_away0_carry__0_i_5/CO[3]
+                         net (fo=1, routed)           0.000     4.791    tx_core/ifft/butterfly/round_div2_away0_carry__0_i_5_n_0
+    SLICE_X32Y23         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.262     5.053 f  tx_core/ifft/butterfly/round_div2_away0_carry__1_i_5/O[3]
+                         net (fo=1, routed)           0.333     5.386    tx_core/ifft/butterfly/round_div2_away2[15]
+    SLICE_X33Y24         LUT1 (Prop_lut1_I0_O)        0.250     5.636 r  tx_core/ifft/butterfly/round_div2_away0_carry__2_i_3/O
+                         net (fo=1, routed)           0.000     5.636    tx_core/ifft/butterfly/round_div2_away0_carry__2_i_3_n_0
+    SLICE_X33Y24         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     6.093 r  tx_core/ifft/butterfly/round_div2_away0_carry__2/CO[3]
+                         net (fo=1, routed)           0.008     6.102    tx_core/ifft/butterfly/round_div2_away0_carry__2_n_0
+    SLICE_X33Y25         CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.180     6.282 r  tx_core/ifft/butterfly/round_div2_away0_carry__3/O[0]
+                         net (fo=4, routed)           0.548     6.830    tx_core/ifft/butterfly/round_div2_away0[17]
+    SLICE_X34Y24         LUT5 (Prop_lut5_I2_O)        0.249     7.079 r  tx_core/ifft/butterfly/saturate_q151_carry_i_4/O
+                         net (fo=1, routed)           0.000     7.079    tx_core/ifft/butterfly/saturate_q151_carry_i_4_n_0
+    SLICE_X34Y24         CARRY4 (Prop_carry4_S[1]_CO[2])
+                                                      0.477     7.556 f  tx_core/ifft/butterfly/saturate_q151_carry/CO[2]
+                         net (fo=19, routed)          0.958     8.514    tx_core/ifft/butterfly/saturate_q1517_in
+    SLICE_X30Y21         LUT6 (Prop_lut6_I2_O)        0.252     8.766 r  tx_core/ifft/butterfly/y0_re[1]_i_1/O
+                         net (fo=1, routed)           0.000     8.766    tx_core/ifft/butterfly/y0_re[1]_i_1_n_0
+    SLICE_X30Y21         FDRE                                         r  tx_core/ifft/butterfly/y0_re_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=467, unset)          1.305    11.305    tx_core/ifft/butterfly/clk
+    SLICE_X30Y21         FDRE                                         r  tx_core/ifft/butterfly/y0_re_reg[1]/C
+                         clock pessimism              0.097    11.402
+                         clock uncertainty           -0.035    11.367
+    SLICE_X30Y21         FDRE (Setup_fdre_C_D)        0.072    11.439    tx_core/ifft/butterfly/y0_re_reg[1]
+  -------------------------------------------------------------------
+                         required time                         11.439
+                         arrival time                          -8.766
+  -------------------------------------------------------------------
+                         slack                                  2.673
+
+Slack (MET) :             2.682ns  (required time - arrival time)
+  Source:                 tx_core/ifft/butterfly/g_pipelined.s1_ri_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[17]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        7.212ns  (logic 4.359ns (60.441%)  route 2.853ns (39.559%))
+  Logic Levels:           13  (CARRY4=9 DSP48E1=1 LUT1=2 LUT3=1)
+  Clock Path Skew:        -0.140ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.245ns = ( 11.245 - 10.000 )
+    Source Clock Delay      (SCD):    1.482ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  clk (IN)
+                         net (fo=467, unset)          1.482     1.482    tx_core/ifft/butterfly/clk
+    DSP48_X2Y6           DSP48E1                                      r  tx_core/ifft/butterfly/g_pipelined.s1_ri_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X2Y6           DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      0.370     1.852 r  tx_core/ifft/butterfly/g_pipelined.s1_ri_reg/P[31]
+                         net (fo=2, routed)           0.578     2.429    tx_core/ifft/butterfly/g_pipelined.s1_ri_reg_n_74
+    DSP48_X2Y7           DSP48E1 (Prop_dsp48e1_C[32]_P[0])
+                                                      1.523     3.952 f  tx_core/ifft/butterfly/g_pipelined.value__0/P[0]
+                         net (fo=1, routed)           0.669     4.621    tx_core/ifft/butterfly/g_pipelined.value__0_n_105
+    SLICE_X38Y12         LUT1 (Prop_lut1_I0_O)        0.105     4.726 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im[0]_i_18/O
+                         net (fo=1, routed)           0.367     5.094    tx_core/ifft/butterfly/g_pipelined.s2_tw_im[0]_i_18_n_0
+    SLICE_X36Y12         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     5.588 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_13/CO[3]
+                         net (fo=1, routed)           0.000     5.588    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_13_n_0
+    SLICE_X36Y13         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     5.688 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_8/CO[3]
+                         net (fo=1, routed)           0.000     5.688    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_8_n_0
+    SLICE_X36Y14         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     5.788 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     5.788    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_3_n_0
+    SLICE_X36Y15         CARRY4 (Prop_carry4_CI_O[2])
+                                                      0.199     5.987 f  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2/O[2]
+                         net (fo=2, routed)           0.244     6.231    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2_n_5
+    SLICE_X39Y15         LUT1 (Prop_lut1_I0_O)        0.244     6.475 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3/O
+                         net (fo=1, routed)           0.428     6.903    tx_core/ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3_n_0
+    SLICE_X37Y15         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     7.383 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.383    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2_n_0
+    SLICE_X37Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     7.481 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.481    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2_n_0
+    SLICE_X37Y17         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     7.579 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[12]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.579    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[12]_i_2_n_0
+    SLICE_X37Y18         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     7.677 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[16]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.677    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[16]_i_2_n_0
+    SLICE_X37Y19         CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.180     7.857 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[17]_i_2/O[0]
+                         net (fo=1, routed)           0.567     8.424    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[17]_i_2_n_7
+    SLICE_X39Y18         LUT3 (Prop_lut3_I0_O)        0.270     8.694 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im[17]_i_1/O
+                         net (fo=1, routed)           0.000     8.694    tx_core/ifft/butterfly/twiddle_imag_rounded_return[17]
+    SLICE_X39Y18         FDRE                                         r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[17]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=467, unset)          1.245    11.245    tx_core/ifft/butterfly/clk
+    SLICE_X39Y18         FDRE                                         r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[17]/C
+                         clock pessimism              0.097    11.342
+                         clock uncertainty           -0.035    11.307
+    SLICE_X39Y18         FDRE (Setup_fdre_C_D)        0.069    11.376    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[17]
+  -------------------------------------------------------------------
+                         required time                         11.376
+                         arrival time                          -8.694
+  -------------------------------------------------------------------
+                         slack                                  2.682
+
+Slack (MET) :             2.729ns  (required time - arrival time)
+  Source:                 tx_core/ifft/butterfly/g_pipelined.s1_rr_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[17]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        7.198ns  (logic 4.343ns (60.338%)  route 2.855ns (39.662%))
+  Logic Levels:           13  (CARRY4=9 DSP48E1=1 LUT1=2 LUT3=1)
+  Clock Path Skew:        -0.144ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.246ns = ( 11.246 - 10.000 )
+    Source Clock Delay      (SCD):    1.487ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  clk (IN)
+                         net (fo=467, unset)          1.487     1.487    tx_core/ifft/butterfly/clk
+    DSP48_X2Y4           DSP48E1                                      r  tx_core/ifft/butterfly/g_pipelined.s1_rr_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X2Y4           DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      0.370     1.857 r  tx_core/ifft/butterfly/g_pipelined.s1_rr_reg/P[31]
+                         net (fo=2, routed)           0.578     2.434    tx_core/ifft/butterfly/g_pipelined.s1_rr_reg_n_74
+    DSP48_X2Y5           DSP48E1 (Prop_dsp48e1_C[32]_P[0])
+                                                      1.523     3.957 f  tx_core/ifft/butterfly/g_pipelined.value/P[0]
+                         net (fo=1, routed)           0.620     4.577    tx_core/ifft/butterfly/g_pipelined.value_n_105
+    SLICE_X34Y10         LUT1 (Prop_lut1_I0_O)        0.105     4.682 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re[0]_i_18/O
+                         net (fo=1, routed)           0.303     4.985    tx_core/ifft/butterfly/g_pipelined.s2_tw_re[0]_i_18_n_0
+    SLICE_X35Y10         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     5.465 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[0]_i_13/CO[3]
+                         net (fo=1, routed)           0.000     5.465    tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[0]_i_13_n_0
+    SLICE_X35Y11         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     5.563 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[0]_i_8/CO[3]
+                         net (fo=1, routed)           0.000     5.563    tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[0]_i_8_n_0
+    SLICE_X35Y12         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     5.661 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[0]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     5.661    tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[0]_i_3_n_0
+    SLICE_X35Y13         CARRY4 (Prop_carry4_CI_O[2])
+                                                      0.200     5.861 f  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[0]_i_2/O[2]
+                         net (fo=2, routed)           0.258     6.119    tx_core/ifft/butterfly/round_q30_to_q15_wide2[15]
+    SLICE_X33Y13         LUT1 (Prop_lut1_I0_O)        0.253     6.372 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re[4]_i_3/O
+                         net (fo=1, routed)           0.426     6.799    tx_core/ifft/butterfly/g_pipelined.s2_tw_re[4]_i_3_n_0
+    SLICE_X33Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     7.279 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.279    tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[4]_i_2_n_0
+    SLICE_X33Y15         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     7.377 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[8]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.377    tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[8]_i_2_n_0
+    SLICE_X33Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     7.475 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[12]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.475    tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[12]_i_2_n_0
+    SLICE_X33Y17         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     7.573 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[16]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.573    tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[16]_i_2_n_0
+    SLICE_X33Y18         CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.180     7.753 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[17]_i_2/O[0]
+                         net (fo=1, routed)           0.670     8.422    tx_core/ifft/butterfly/round_q30_to_q15_wide0[17]
+    SLICE_X32Y17         LUT3 (Prop_lut3_I0_O)        0.262     8.684 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re[17]_i_1/O
+                         net (fo=1, routed)           0.000     8.684    tx_core/ifft/butterfly/twiddle_real_rounded_return[17]
+    SLICE_X32Y17         FDRE                                         r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[17]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=467, unset)          1.246    11.246    tx_core/ifft/butterfly/clk
+    SLICE_X32Y17         FDRE                                         r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[17]/C
+                         clock pessimism              0.097    11.343
+                         clock uncertainty           -0.035    11.308
+    SLICE_X32Y17         FDRE (Setup_fdre_C_D)        0.106    11.414    tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[17]
+  -------------------------------------------------------------------
+                         required time                         11.414
+                         arrival time                          -8.684
+  -------------------------------------------------------------------
+                         slack                                  2.729
+
+Slack (MET) :             2.746ns  (required time - arrival time)
+  Source:                 tx_core/ifft/butterfly/g_pipelined.s1_ri_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[16]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        7.148ns  (logic 4.348ns (60.830%)  route 2.800ns (39.170%))
+  Logic Levels:           12  (CARRY4=8 DSP48E1=1 LUT1=2 LUT3=1)
+  Clock Path Skew:        -0.140ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.245ns = ( 11.245 - 10.000 )
+    Source Clock Delay      (SCD):    1.482ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  clk (IN)
+                         net (fo=467, unset)          1.482     1.482    tx_core/ifft/butterfly/clk
+    DSP48_X2Y6           DSP48E1                                      r  tx_core/ifft/butterfly/g_pipelined.s1_ri_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X2Y6           DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      0.370     1.852 r  tx_core/ifft/butterfly/g_pipelined.s1_ri_reg/P[31]
+                         net (fo=2, routed)           0.578     2.429    tx_core/ifft/butterfly/g_pipelined.s1_ri_reg_n_74
+    DSP48_X2Y7           DSP48E1 (Prop_dsp48e1_C[32]_P[0])
+                                                      1.523     3.952 f  tx_core/ifft/butterfly/g_pipelined.value__0/P[0]
+                         net (fo=1, routed)           0.669     4.621    tx_core/ifft/butterfly/g_pipelined.value__0_n_105
+    SLICE_X38Y12         LUT1 (Prop_lut1_I0_O)        0.105     4.726 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im[0]_i_18/O
+                         net (fo=1, routed)           0.367     5.094    tx_core/ifft/butterfly/g_pipelined.s2_tw_im[0]_i_18_n_0
+    SLICE_X36Y12         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     5.588 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_13/CO[3]
+                         net (fo=1, routed)           0.000     5.588    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_13_n_0
+    SLICE_X36Y13         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     5.688 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_8/CO[3]
+                         net (fo=1, routed)           0.000     5.688    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_8_n_0
+    SLICE_X36Y14         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     5.788 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     5.788    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_3_n_0
+    SLICE_X36Y15         CARRY4 (Prop_carry4_CI_O[2])
+                                                      0.199     5.987 f  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2/O[2]
+                         net (fo=2, routed)           0.244     6.231    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2_n_5
+    SLICE_X39Y15         LUT1 (Prop_lut1_I0_O)        0.244     6.475 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3/O
+                         net (fo=1, routed)           0.428     6.903    tx_core/ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3_n_0
+    SLICE_X37Y15         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     7.383 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.383    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2_n_0
+    SLICE_X37Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     7.481 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.481    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2_n_0
+    SLICE_X37Y17         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     7.579 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[12]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.579    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[12]_i_2_n_0
+    SLICE_X37Y18         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.260     7.839 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[16]_i_2/O[3]
+                         net (fo=1, routed)           0.513     8.352    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[16]_i_2_n_4
+    SLICE_X39Y18         LUT3 (Prop_lut3_I0_O)        0.277     8.629 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im[16]_i_1/O
+                         net (fo=1, routed)           0.000     8.629    tx_core/ifft/butterfly/twiddle_imag_rounded_return[16]
+    SLICE_X39Y18         FDRE                                         r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[16]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=467, unset)          1.245    11.245    tx_core/ifft/butterfly/clk
+    SLICE_X39Y18         FDRE                                         r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[16]/C
+                         clock pessimism              0.097    11.342
+                         clock uncertainty           -0.035    11.307
+    SLICE_X39Y18         FDRE (Setup_fdre_C_D)        0.069    11.376    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[16]
+  -------------------------------------------------------------------
+                         required time                         11.376
+                         arrival time                          -8.629
+  -------------------------------------------------------------------
+                         slack                                  2.746
+
+Slack (MET) :             2.755ns  (required time - arrival time)
+  Source:                 tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[5]/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            tx_core/ifft/butterfly/y0_re_reg[9]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        7.287ns  (logic 4.173ns (57.269%)  route 3.114ns (42.731%))
+  Logic Levels:           12  (CARRY4=7 LUT1=2 LUT2=1 LUT5=1 LUT6=1)
+  Clock Path Skew:        0.001ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.305ns = ( 11.305 - 10.000 )
+    Source Clock Delay      (SCD):    1.401ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  clk (IN)
+                         net (fo=467, unset)          1.401     1.401    tx_core/ifft/butterfly/clk
+    SLICE_X32Y14         FDRE                                         r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[5]/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X32Y14         FDRE (Prop_fdre_C_Q)         0.398     1.799 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_re_reg[5]/Q
+                         net (fo=5, routed)           0.786     2.585    tx_core/ifft/butterfly/g_pipelined.s2_tw_re[5]
+    SLICE_X29Y19         LUT2 (Prop_lut2_I0_O)        0.232     2.817 r  tx_core/ifft/butterfly/value_carry__0_i_3/O
+                         net (fo=1, routed)           0.000     2.817    tx_core/ifft/butterfly/value_carry__0_i_3_n_0
+    SLICE_X29Y19         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     3.274 r  tx_core/ifft/butterfly/value_carry__0/CO[3]
+                         net (fo=1, routed)           0.000     3.274    tx_core/ifft/butterfly/value_carry__0_n_0
+    SLICE_X29Y20         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     3.539 f  tx_core/ifft/butterfly/value_carry__1/O[1]
+                         net (fo=2, routed)           0.558     4.097    tx_core/ifft/butterfly/value[9]
+    SLICE_X32Y22         LUT1 (Prop_lut1_I0_O)        0.250     4.347 r  tx_core/ifft/butterfly/round_div2_away0_carry__0_i_8/O
+                         net (fo=1, routed)           0.000     4.347    tx_core/ifft/butterfly/p_0_in[9]
+    SLICE_X32Y22         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.444     4.791 r  tx_core/ifft/butterfly/round_div2_away0_carry__0_i_5/CO[3]
+                         net (fo=1, routed)           0.000     4.791    tx_core/ifft/butterfly/round_div2_away0_carry__0_i_5_n_0
+    SLICE_X32Y23         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.262     5.053 f  tx_core/ifft/butterfly/round_div2_away0_carry__1_i_5/O[3]
+                         net (fo=1, routed)           0.333     5.386    tx_core/ifft/butterfly/round_div2_away2[15]
+    SLICE_X33Y24         LUT1 (Prop_lut1_I0_O)        0.250     5.636 r  tx_core/ifft/butterfly/round_div2_away0_carry__2_i_3/O
+                         net (fo=1, routed)           0.000     5.636    tx_core/ifft/butterfly/round_div2_away0_carry__2_i_3_n_0
+    SLICE_X33Y24         CARRY4 (Prop_carry4_S[1]_CO[3])
+                                                      0.457     6.093 r  tx_core/ifft/butterfly/round_div2_away0_carry__2/CO[3]
+                         net (fo=1, routed)           0.008     6.102    tx_core/ifft/butterfly/round_div2_away0_carry__2_n_0
+    SLICE_X33Y25         CARRY4 (Prop_carry4_CI_O[0])
+                                                      0.180     6.282 r  tx_core/ifft/butterfly/round_div2_away0_carry__3/O[0]
+                         net (fo=4, routed)           0.548     6.830    tx_core/ifft/butterfly/round_div2_away0[17]
+    SLICE_X34Y24         LUT5 (Prop_lut5_I2_O)        0.249     7.079 r  tx_core/ifft/butterfly/saturate_q151_carry_i_4/O
+                         net (fo=1, routed)           0.000     7.079    tx_core/ifft/butterfly/saturate_q151_carry_i_4_n_0
+    SLICE_X34Y24         CARRY4 (Prop_carry4_S[1]_CO[2])
+                                                      0.477     7.556 f  tx_core/ifft/butterfly/saturate_q151_carry/CO[2]
+                         net (fo=19, routed)          0.880     8.436    tx_core/ifft/butterfly/saturate_q1517_in
+    SLICE_X30Y22         LUT6 (Prop_lut6_I2_O)        0.252     8.688 r  tx_core/ifft/butterfly/y0_re[9]_i_1/O
+                         net (fo=1, routed)           0.000     8.688    tx_core/ifft/butterfly/y0_re[9]_i_1_n_0
+    SLICE_X30Y22         FDRE                                         r  tx_core/ifft/butterfly/y0_re_reg[9]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=467, unset)          1.305    11.305    tx_core/ifft/butterfly/clk
+    SLICE_X30Y22         FDRE                                         r  tx_core/ifft/butterfly/y0_re_reg[9]/C
+                         clock pessimism              0.097    11.402
+                         clock uncertainty           -0.035    11.367
+    SLICE_X30Y22         FDRE (Setup_fdre_C_D)        0.076    11.443    tx_core/ifft/butterfly/y0_re_reg[9]
+  -------------------------------------------------------------------
+                         required time                         11.443
+                         arrival time                          -8.688
+  -------------------------------------------------------------------
+                         slack                                  2.755
+
+Slack (MET) :             2.758ns  (required time - arrival time)
+  Source:                 tx_core/ifft/butterfly/g_pipelined.s1_ri_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[12]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        7.137ns  (logic 4.251ns (59.559%)  route 2.886ns (40.441%))
+  Logic Levels:           11  (CARRY4=7 DSP48E1=1 LUT1=2 LUT3=1)
+  Clock Path Skew:        -0.139ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.246ns = ( 11.246 - 10.000 )
+    Source Clock Delay      (SCD):    1.482ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  clk (IN)
+                         net (fo=467, unset)          1.482     1.482    tx_core/ifft/butterfly/clk
+    DSP48_X2Y6           DSP48E1                                      r  tx_core/ifft/butterfly/g_pipelined.s1_ri_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X2Y6           DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      0.370     1.852 r  tx_core/ifft/butterfly/g_pipelined.s1_ri_reg/P[31]
+                         net (fo=2, routed)           0.578     2.429    tx_core/ifft/butterfly/g_pipelined.s1_ri_reg_n_74
+    DSP48_X2Y7           DSP48E1 (Prop_dsp48e1_C[32]_P[0])
+                                                      1.523     3.952 f  tx_core/ifft/butterfly/g_pipelined.value__0/P[0]
+                         net (fo=1, routed)           0.669     4.621    tx_core/ifft/butterfly/g_pipelined.value__0_n_105
+    SLICE_X38Y12         LUT1 (Prop_lut1_I0_O)        0.105     4.726 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im[0]_i_18/O
+                         net (fo=1, routed)           0.367     5.094    tx_core/ifft/butterfly/g_pipelined.s2_tw_im[0]_i_18_n_0
+    SLICE_X36Y12         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     5.588 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_13/CO[3]
+                         net (fo=1, routed)           0.000     5.588    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_13_n_0
+    SLICE_X36Y13         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     5.688 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_8/CO[3]
+                         net (fo=1, routed)           0.000     5.688    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_8_n_0
+    SLICE_X36Y14         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     5.788 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     5.788    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_3_n_0
+    SLICE_X36Y15         CARRY4 (Prop_carry4_CI_O[2])
+                                                      0.199     5.987 f  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2/O[2]
+                         net (fo=2, routed)           0.244     6.231    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[0]_i_2_n_5
+    SLICE_X39Y15         LUT1 (Prop_lut1_I0_O)        0.244     6.475 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3/O
+                         net (fo=1, routed)           0.428     6.903    tx_core/ifft/butterfly/g_pipelined.s2_tw_im[4]_i_3_n_0
+    SLICE_X37Y15         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     7.383 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.383    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[4]_i_2_n_0
+    SLICE_X37Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     7.481 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.481    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[8]_i_2_n_0
+    SLICE_X37Y17         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.260     7.741 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[12]_i_2/O[3]
+                         net (fo=1, routed)           0.600     8.341    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[12]_i_2_n_4
+    SLICE_X39Y17         LUT3 (Prop_lut3_I0_O)        0.278     8.619 r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im[12]_i_1/O
+                         net (fo=1, routed)           0.000     8.619    tx_core/ifft/butterfly/twiddle_imag_rounded_return[12]
+    SLICE_X39Y17         FDRE                                         r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[12]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=467, unset)          1.246    11.246    tx_core/ifft/butterfly/clk
+    SLICE_X39Y17         FDRE                                         r  tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[12]/C
+                         clock pessimism              0.097    11.343
+                         clock uncertainty           -0.035    11.308
+    SLICE_X39Y17         FDRE (Setup_fdre_C_D)        0.069    11.377    tx_core/ifft/butterfly/g_pipelined.s2_tw_im_reg[12]
+  -------------------------------------------------------------------
+                         required time                         11.377
+                         arrival time                          -8.619
+  -------------------------------------------------------------------
+                         slack                                  2.758
+
+
+
+
+
+Pulse Width Checks
+--------------------------------------------------------------------------------------
+Clock Name:         clk
+Waveform(ns):       { 0.000 5.000 }
+Period(ns):         10.000
+Sources:            { clk }
+
+Check Type        Corner  Lib Pin             Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location      Pin
+Min Period        n/a     DSP48E1/CLK         n/a            3.272         10.000      6.728      DSP48_X2Y6    tx_core/ifft/butterfly/g_pipelined.s1_ri_reg/CLK
+Min Period        n/a     DSP48E1/CLK         n/a            3.272         10.000      6.728      DSP48_X2Y4    tx_core/ifft/butterfly/g_pipelined.s1_rr_reg/CLK
+Min Period        n/a     RAMB18E1/CLKARDCLK  n/a            2.472         10.000      7.528      RAMB18_X2Y6   tx_core/ifft/g_banks.bank0/mem_reg/CLKARDCLK
+Min Period        n/a     RAMB18E1/CLKBWRCLK  n/a            2.472         10.000      7.528      RAMB18_X2Y6   tx_core/ifft/g_banks.bank0/mem_reg/CLKBWRCLK
+Min Period        n/a     RAMB18E1/CLKARDCLK  n/a            2.472         10.000      7.528      RAMB18_X2Y4   tx_core/ifft/g_banks.bank1/mem_reg/CLKARDCLK
+Min Period        n/a     RAMB18E1/CLKBWRCLK  n/a            2.472         10.000      7.528      RAMB18_X2Y4   tx_core/ifft/g_banks.bank1/mem_reg/CLKBWRCLK
+Min Period        n/a     DSP48E1/CLK         n/a            1.816         10.000      8.184      DSP48_X2Y5    tx_core/ifft/butterfly/g_pipelined.value/CLK
+Min Period        n/a     DSP48E1/CLK         n/a            1.816         10.000      8.184      DSP48_X2Y7    tx_core/ifft/butterfly/g_pipelined.value__0/CLK
+Min Period        n/a     FDRE/C              n/a            1.000         10.000      9.000      SLICE_X42Y28  accepted_data_count_reg[0]/C
+Min Period        n/a     FDRE/C              n/a            1.000         10.000      9.000      SLICE_X41Y28  accepted_data_count_reg[1]/C
+Low Pulse Width   Slow    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMA/CLK
+Low Pulse Width   Fast    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMA/CLK
+Low Pulse Width   Slow    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMB/CLK
+Low Pulse Width   Fast    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMB/CLK
+Low Pulse Width   Slow    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMC/CLK
+Low Pulse Width   Fast    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMC/CLK
+Low Pulse Width   Slow    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMD/CLK
+Low Pulse Width   Fast    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMD/CLK
+Low Pulse Width   Slow    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X26Y15  cp16/sample_im_mem_reg_0_63_12_14/RAMA/CLK
+Low Pulse Width   Fast    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X26Y15  cp16/sample_im_mem_reg_0_63_12_14/RAMA/CLK
+High Pulse Width  Slow    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMA/CLK
+High Pulse Width  Fast    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMA/CLK
+High Pulse Width  Slow    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMB/CLK
+High Pulse Width  Fast    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMB/CLK
+High Pulse Width  Slow    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMC/CLK
+High Pulse Width  Fast    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMC/CLK
+High Pulse Width  Slow    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMD/CLK
+High Pulse Width  Fast    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X30Y11  cp16/sample_im_mem_reg_0_63_0_2/RAMD/CLK
+High Pulse Width  Slow    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X26Y15  cp16/sample_im_mem_reg_0_63_12_14/RAMA/CLK
+High Pulse Width  Fast    RAMD64E/CLK         n/a            1.130         5.000       3.870      SLICE_X26Y15  cp16/sample_im_mem_reg_0_63_12_14/RAMA/CLK

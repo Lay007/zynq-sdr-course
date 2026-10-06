@@ -388,6 +388,56 @@
       }
     },
     {
+      "top": "ofdm_cfo_corrector",
+      "clock_port": "clk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 2502,
+          "ff": 1519,
+          "bram_tiles": 0.0,
+          "dsp": 10
+        },
+        "timing": {
+          "wns_ns": 4.034,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 5257,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 5.859,
+          "logic_levels": 13,
+          "fmax_est_mhz": 167.616
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 2382,
+          "ff": 1519,
+          "bram_tiles": 0.0,
+          "dsp": 10
+        },
+        "timing": {
+          "wns_ns": 2.412,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 5257,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 7.378,
+          "logic_levels": 13,
+          "fmax_est_mhz": 131.787
+        },
+        "routable_nets": 3307,
+        "fully_routed_nets": 3307,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 10,
+        "drc_errors": 0
+      }
+    },
+    {
       "top": "ofdm_qpsk_demapper",
       "clock_port": null,
       "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
@@ -676,6 +726,58 @@
       },
       "module": "ofdm_axi_modem",
       "parameters": "BRAM_MEMORY=0"
+    },
+    {
+      "top": "ofdm_tx_cp16_path_qam16",
+      "clock_port": "clk",
+      "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
+      "post_synthesis": {
+        "utilization": {
+          "lut": 942,
+          "ff": 370,
+          "bram_tiles": 1.0,
+          "dsp": 4
+        },
+        "timing": {
+          "wns_ns": 2.561,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 2000,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 7.332,
+          "logic_levels": 13,
+          "fmax_est_mhz": 134.427
+        }
+      },
+      "post_route": {
+        "utilization": {
+          "lut": 895,
+          "ff": 370,
+          "bram_tiles": 1.0,
+          "dsp": 4
+        },
+        "timing": {
+          "wns_ns": 1.771,
+          "tns_ns": 0.0,
+          "failing_endpoints": 0,
+          "total_endpoints": 2000,
+          "timing_met": true,
+          "clock_name": "clk",
+          "clock_period_ns": 10.0,
+          "data_path_delay_ns": 8.163,
+          "logic_levels": 13,
+          "fmax_est_mhz": 121.521
+        },
+        "routable_nets": 1416,
+        "fully_routed_nets": 1416,
+        "nets_with_routing_errors": 0,
+        "drc_violations": 10,
+        "drc_errors": 0
+      },
+      "module": "ofdm_tx_cp16_path",
+      "parameters": "MODULATION=1"
     }
   ]
 }

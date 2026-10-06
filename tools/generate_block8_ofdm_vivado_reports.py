@@ -28,6 +28,7 @@ TOPS: tuple[tuple[str, str | None], ...] = (
     ("ofdm_pilot_phase_tracker", "clk"),
     ("ofdm_pilot_phase_corrector", "clk"),
     ("ofdm_channel_equalizer", "clk"),
+    ("ofdm_cfo_corrector", "clk"),
     ("ofdm_qpsk_demapper", None),
     ("ofdm_axi_modem", "aclk"),
 )
@@ -38,6 +39,7 @@ VARIANTS: tuple[tuple[str, str, str, str], ...] = (
     ("ofdm_tx_cp16_path_fabric", "ofdm_tx_cp16_path", "clk", "BRAM_MEMORY=0"),
     ("ofdm_fft64_sequential_fabric", "ofdm_fft64_sequential", "clk", "BRAM_MEMORY=0"),
     ("ofdm_axi_modem_fabric", "ofdm_axi_modem", "aclk", "BRAM_MEMORY=0"),
+    ("ofdm_tx_cp16_path_qam16", "ofdm_tx_cp16_path", "clk", "MODULATION=1"),
 )
 
 
