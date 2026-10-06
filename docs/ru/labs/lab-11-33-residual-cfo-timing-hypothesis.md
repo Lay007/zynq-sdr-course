@@ -37,6 +37,19 @@ timing: **WNS=+0.010 ns, TNS=0**, 75 689 полностью разведённы
 Кандидат удалён из RTL и с SD-карты. Плата B холодно загружена обратно в принятый образ;
 проверены FPGA `operating`, core ID `0x4250534B`, IIO и безопасный TX `-89.75 dB`.
 
+## Воспроизведение сборки доказательств
+
+Аппаратные попытки записывает раннер Lab 11.32. Lab 11.33 намеренно берёт эти сырые JSON по
+каждой попытке и не скрывает попытки без захвата:
+
+```powershell
+python blocks/block_11_integrated_sdr_project/python/lab_11_33_residual_cfo_timing_hypothesis.py `
+  --accepted tmp/lab1133_30k_fixed4.json `
+  --candidate tmp/lab1133_pipeline_30k_fixed1.json `
+  --candidate tmp/lab1133_pipeline_30k_fixed3.json `
+  --candidate tmp/lab1133_pipeline_30k_fixed5.json
+```
+
 Канонический результат: [`lab1133_residual_cfo_timing_hypothesis.json`](../../assets/lab1133_residual_cfo_timing_hypothesis.json).
 
 ## Решение

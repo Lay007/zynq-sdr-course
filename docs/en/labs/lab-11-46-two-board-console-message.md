@@ -66,7 +66,13 @@ PS message bytes → packet serializer → [existing modem] → packet decoder �
 
 The existing working frame provides **256 payload bits = 32 bytes**. Therefore the first radio version accepts one fixed 32-byte packet payload.
 
-The 64-byte PS/PL mailbox remains useful, but v1 of the radio bridge intentionally uses a single existing QPSK payload. Longer messages can be fragmented later.
+This is a deliberate baseline limit, not a mailbox shortcoming:
+
+- the PS/PL mailbox holds up to 64 bytes;
+- the v1 radio bridge uses one existing 32-byte QPSK payload;
+- fragmentation over several frames is a separate extension after the first PASS.
+
+`Hello from board A` fits in one frame.
 
 ## Packet payload v1
 
@@ -119,6 +125,15 @@ Implement the AXI-Lite mailbox and prove:
 ```text
 Linux PS → AXI-Lite → PL echo → AXI-Lite → Linux PS
 ```
+
+Expected result:
+
+```text
+zynq$ sudo python3 tools/zynq_message_console.py --base <mailbox_addr> send "Hello PL" --sequence 1
+TX sequence=1 bytes=8 payload="Hello PL"
+```
+
+and the same payload read back from the RX mailbox.
 
 The physical address must come from the actual Vivado Address Editor map.
 
@@ -213,7 +228,7 @@ BER from the modem evidence remains useful, but **PER / successful message deliv
 
 ## Do not add before the first PASS
 
-Do not simultaneously add DMA, interrupts, fragmentation, encryption, OFDM, LoRa, or an Ethernet bridge.
+Do not simultaneously add DMA, interrupts, a variable-length streaming protocol, fragmentation, encryption, OFDM, LoRa, or an Ethernet bridge.
 
 First prove the simplest visible chain:
 

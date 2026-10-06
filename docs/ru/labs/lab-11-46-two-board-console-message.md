@@ -64,7 +64,7 @@ PS message bytes → packet serializer → [existing modem] → packet decoder �
 
 ## Ограничение первой версии
 
-Существующий рабочий кадр использует **256 payload bits = 32 bytes**. Поэтому первая radio-версия принимает сообщения длиной `0…32` bytes.
+Существующий рабочий кадр использует **256 payload bits = 32 bytes**. Поэтому первая radio-версия передаёт один фиксированный 32-байтный payload пакета; сообщение пользователя в нём — до 27 bytes (см. Packet payload v1).
 
 Это намеренное ограничение baseline, а не недостаток mailbox:
 
