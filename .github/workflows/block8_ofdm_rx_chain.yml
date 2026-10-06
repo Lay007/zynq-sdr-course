@@ -9,6 +9,7 @@ on:
       - "verification/vectors/block08_ofdm_pilot_tracker_vectors.txt"
       - "verification/vectors/block08_ofdm_channel_eq_vectors.txt"
       - "verification/vectors/block08_ofdm_channel_eq_norm_vectors.txt"
+      - "verification/vectors/block08_ofdm_cfo_vectors.txt"
       - ".github/workflows/block8_ofdm_rx_chain.yml"
   pull_request:
     paths:
@@ -17,6 +18,7 @@ on:
       - "verification/vectors/block08_ofdm_pilot_tracker_vectors.txt"
       - "verification/vectors/block08_ofdm_channel_eq_vectors.txt"
       - "verification/vectors/block08_ofdm_channel_eq_norm_vectors.txt"
+      - "verification/vectors/block08_ofdm_cfo_vectors.txt"
       - ".github/workflows/block8_ofdm_rx_chain.yml"
   workflow_dispatch:
 
@@ -186,6 +188,43 @@ jobs:
               blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v \
               blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_multipath_loopback.sv
             vvp /tmp/tb_ofdm_multipath.vvp
+          done
+
+      - name: Check 16-QAM mapper and slicer
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_qam16_mapper_demapper \
+            -o /tmp/tb_ofdm_qam16_mapper_demapper.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_qam16_mapper.v \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_qam16_demapper.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_qam16_mapper_demapper.sv
+          vvp /tmp/tb_ofdm_qam16_mapper_demapper.vvp
+
+      - name: Check time-domain CFO corrector against the fixed-point vectors
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_cfo_corrector \
+            -o /tmp/tb_ofdm_cfo_corrector.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_cfo_corrector.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_cfo_corrector.sv
+          vvp /tmp/tb_ofdm_cfo_corrector.vvp
+
+      - name: Check 16-QAM through multipath and a 6000 ppm CFO (BER 0, EVM limits)
+        run: |
+          set -euo pipefail
+          for case in "1 0 2" "1 6000 2" "2 6000 3"; do
+            set -- $case
+            iverilog -g2012 -Wall \
+              -s tb_ofdm_tx_rx_qam16_loopback \
+              -Ptb_ofdm_tx_rx_qam16_loopback.CHANNEL=$1 \
+              -Ptb_ofdm_tx_rx_qam16_loopback.CFO_PPM=$2 \
+              -Ptb_ofdm_tx_rx_qam16_loopback.EVM_LIMIT_PCT=$3 \
+              -o /tmp/tb_ofdm_qam16.vvp \
+              blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v \
+              blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_qam16_loopback.sv
+            vvp /tmp/tb_ofdm_qam16.vvp
           done
 
       - name: Check AXI4-Stream/AXI4-Lite OFDM modem wrapper
