@@ -1,4 +1,4 @@
-# Lab 6.5 - RF impairment calibration (DC, IQ imbalance, LO leakage)
+# Lab 6.5 — RF impairment calibration (DC, IQ imbalance, LO leakage)
 
 ## Goal
 

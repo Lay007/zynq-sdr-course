@@ -1,4 +1,4 @@
-# Lab 5.10 - Zynq-ready BPSK BER top-level
+# Lab 5.10 — Zynq-ready BPSK BER top-level
 
 ## Goal
 

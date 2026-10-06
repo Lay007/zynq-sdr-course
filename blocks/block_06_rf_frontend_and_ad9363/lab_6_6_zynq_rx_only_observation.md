@@ -1,4 +1,4 @@
-# Lab 6.6 - Zynq RX-only observation on the clean image
+# Lab 6.6 — Zynq RX-only observation on the clean image
 
 ## Goal
 

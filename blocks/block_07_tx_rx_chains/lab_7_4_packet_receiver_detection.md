@@ -1,4 +1,4 @@
-# Lab 7.4 - Packet receiver chain and frame detection
+# Lab 7.4 — Packet receiver chain and frame detection
 
 ## Goal
 

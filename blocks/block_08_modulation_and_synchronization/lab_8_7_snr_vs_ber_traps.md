@@ -1,4 +1,4 @@
-# Lab 8.7 - SNR is not enough: BER/EVM traps
+# Lab 8.7 — SNR is not enough: BER/EVM traps
 
 ## Objective
 

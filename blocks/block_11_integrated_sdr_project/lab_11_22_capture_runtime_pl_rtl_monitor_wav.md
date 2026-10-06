@@ -1,4 +1,4 @@
-# Lab 11.22 - Capture RTL-SDR monitor WAV during runtime/PL BPSK bring-up
+# Lab 11.22 — Capture RTL-SDR monitor WAV during runtime/PL BPSK bring-up
 
 ## Objective
 
@@ -18,7 +18,7 @@ isolate the failure to the RX side only.
 
 Same physical layout as Lab 11.21:
 
-```
+```text
 ZynqSDR TX1 antenna  ─── (air gap, ~1–5 m) ───  RTL-SDR antenna
 ```
 

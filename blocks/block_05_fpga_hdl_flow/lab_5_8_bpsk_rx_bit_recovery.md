@@ -1,4 +1,4 @@
-# Lab 5.8 - BPSK RX matched filter and bit recovery
+# Lab 5.8 — BPSK RX matched filter and bit recovery
 
 ## Goal
 

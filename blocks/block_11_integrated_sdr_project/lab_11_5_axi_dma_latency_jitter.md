@@ -1,4 +1,4 @@
-# Lab 11.5 - AXI DMA pipeline latency and jitter
+# Lab 11.5 — AXI DMA pipeline latency and jitter
 
 ## Goal
 

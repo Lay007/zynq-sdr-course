@@ -1,4 +1,4 @@
-# Lab 5.7 - BPSK 8x symbol upsampler
+# Lab 5.7 — BPSK 8x symbol upsampler
 
 ## Goal
 

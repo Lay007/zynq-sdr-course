@@ -1,4 +1,4 @@
-# Lab 5.6 - BPSK RRC TX FIR RTL
+# Lab 5.6 — BPSK RRC TX FIR RTL
 
 ## Goal
 

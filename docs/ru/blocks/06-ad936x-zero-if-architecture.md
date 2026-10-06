@@ -1,4 +1,4 @@
-# AD936x zero-IF architecture
+# Архитектура zero-IF в AD936x
 
 Эта страница связывает теорию IQ-сигналов с реальным RF frontend семейства AD936x.
 

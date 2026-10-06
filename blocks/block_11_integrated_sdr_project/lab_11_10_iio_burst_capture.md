@@ -1,4 +1,4 @@
-# Lab 11.10 - Timed IIO RX snapshot around the discovery burst
+# Lab 11.10 — Timed IIO RX snapshot around the discovery burst
 
 ## Goal
 

@@ -1,4 +1,4 @@
-# Lab 11.14 - Stock-shell host BPSK OTA fallback
+# Lab 11.14 — Stock-shell host BPSK OTA fallback
 
 ## Objective
 

@@ -1,4 +1,4 @@
-# Lab 11.19 - Runtime self-timed `bridge_txrx_mux` bring-up
+# Lab 11.19 — Runtime self-timed `bridge_txrx_mux` bring-up
 
 ## Objective
 
@@ -39,7 +39,7 @@ lab_11_19_runtime_bridge_txrx_self_timed_bringup.py \
 
 ## Self-timed sequence
 
-```
+```text
 load overlay → verify axi_gpreg ID
 configure AD9361 (915 MHz / 3.84 MS/s)
 assert burst_start

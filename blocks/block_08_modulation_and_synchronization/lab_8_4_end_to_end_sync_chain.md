@@ -1,4 +1,4 @@
-# Lab 8.4 - End-to-End Synchronization Chain
+# Lab 8.4 — End-to-End Synchronization Chain
 
 ## Goal
 

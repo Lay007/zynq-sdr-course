@@ -1,4 +1,4 @@
-# Lab 4.4 - BPSK Simulink chain and ideal BER vs SNR
+# Lab 4.4 — BPSK Simulink chain and ideal BER vs SNR
 
 ## Goal
 

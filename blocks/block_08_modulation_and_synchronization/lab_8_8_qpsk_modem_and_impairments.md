@@ -19,7 +19,7 @@ complex-I/Q blocks of the BPSK chain unchanged — `bpsk_upsampler_8x`, `bpsk_rr
 `bpsk_rrc_rx_fir`, `bpsk_symbol_timing_sampler` — and only the mapper / decision / framing
 are QPSK-specific:
 
-```
+```text
 dibit source -> qpsk_symbol_mapper -> upsampler -> RRC TX  ── loopback ──►
     RRC RX (matched filter) -> fixed-phase sampler -> qpsk_hard_decision -> qpsk_ber_counter
 ```

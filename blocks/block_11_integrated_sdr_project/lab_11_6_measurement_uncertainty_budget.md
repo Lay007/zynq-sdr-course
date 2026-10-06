@@ -1,4 +1,4 @@
-# Lab 11.6 - Measurement uncertainty budget and reporting
+# Lab 11.6 — Measurement uncertainty budget and reporting
 
 ## Goal
 

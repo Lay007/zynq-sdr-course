@@ -26,7 +26,7 @@ constellation points map to one), leaving a tone at `4·ω` where `ω` is the pe
 increment from the CFO. It then measures that tone's angle. An angle is only unambiguous over one
 turn, so `4·ω` must stay inside `(−π, π]`:
 
-```
+```text
 |ω| < π/4  per symbol   →   |f| < Rsym/8 = 480 kSym/s / 8 = 60 kHz
 ```
 
@@ -36,7 +36,7 @@ that boundary so the fold is visible in the data.
 
 ## Setup
 
-```
+```text
 board A  ──  cyclic QPSK out of the DAC via DMA, TX_LO = carrier + Δ
    │
    │   TX1 ──▶ 30 dB attenuator ──▶ RX1     (contained SMA cable, 915 MHz base)
@@ -111,7 +111,7 @@ downstream loop is what turns these into decodable symbols (and did, at BER 0, i
 
 ## Self-test (no radio)
 
-```
+```bash
 python blocks/block_11_integrated_sdr_project/python/lab_11_31_coarse_cfo_stress_sweep.py --self-test
 ```
 
@@ -123,7 +123,7 @@ the ±60 kHz singularity (where the estimate may legitimately take either sign) 
 
 ## Run it on hardware
 
-```
+```bash
 python blocks/block_11_integrated_sdr_project/python/lab_11_31_coarse_cfo_stress_sweep.py \
     --host-a 192.168.40.1 --host-b 192.168.20.1 --carrier 915e6
 ```

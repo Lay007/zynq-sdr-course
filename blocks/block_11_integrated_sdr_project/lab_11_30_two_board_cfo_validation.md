@@ -15,7 +15,7 @@ so agreement here is evidence about the shipped HDL rather than about a simulati
 
 ## Setup
 
-```
+```text
 board A  ──  cyclic QPSK out of the DAC via DMA (course RRC, SPS=8, 480 kSym/s, 3.84 MHz)
    │
    │   TX1 ──▶ 30 dB attenuator ──▶ RX1     (contained SMA cable, 915 MHz)

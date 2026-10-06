@@ -1,4 +1,4 @@
-# Lab 11.15 - Runtime `bridge_rx_only` witness using stock TX and gpreg RX counters
+# Lab 11.15 — Runtime `bridge_rx_only` witness using stock TX and gpreg RX counters
 
 ## Objective
 

@@ -1,4 +1,4 @@
-# Lab 11.18 - Fresh-session runtime sweep after RX common re-init
+# Lab 11.18 — Fresh-session runtime sweep after RX common re-init
 
 ## Objective
 

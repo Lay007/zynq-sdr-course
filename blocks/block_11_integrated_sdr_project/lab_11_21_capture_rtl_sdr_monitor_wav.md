@@ -1,4 +1,4 @@
-# Lab 11.21 - Capture RTL-SDR monitor WAV during stock-shell ZynqSDR BPSK TX
+# Lab 11.21 — Capture RTL-SDR monitor WAV during stock-shell ZynqSDR BPSK TX
 
 ## Objective
 
@@ -16,7 +16,7 @@ the ZynqSDR TX signal is actually radiated — independently of any PL RX issue.
 
 ## Hardware setup
 
-```
+```text
 ZynqSDR TX1 antenna  ─── (air gap, ~1–5 m) ───  RTL-SDR antenna
                                                     │
                                                  USB 2.0

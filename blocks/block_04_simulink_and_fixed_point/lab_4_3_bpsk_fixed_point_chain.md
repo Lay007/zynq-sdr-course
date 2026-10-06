@@ -1,4 +1,4 @@
-# Lab 4.3 - BPSK fixed-point chain
+# Lab 4.3 — BPSK fixed-point chain
 
 ## Goal
 

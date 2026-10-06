@@ -1,4 +1,4 @@
-# Lab 7.5 - CIC decimator for SDR receiver chains
+# Lab 7.5 — CIC decimator for SDR receiver chains
 
 ## Goal
 

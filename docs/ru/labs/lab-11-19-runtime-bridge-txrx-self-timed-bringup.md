@@ -29,7 +29,7 @@ lab_11_19_runtime_bridge_txrx_self_timed_bringup.py \
 
 ## Самотактируемая последовательность
 
-```
+```text
 загрузить overlay → проверить ID axi_gpreg
 настроить AD9361 (915 МГц / 3,84 МС/с)
 выставить burst_start

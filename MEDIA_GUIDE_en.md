@@ -1,4 +1,4 @@
-# MEDIA GUIDE
+# Media guide
 
 ## Recommended formats
 - equipment photos: JPG

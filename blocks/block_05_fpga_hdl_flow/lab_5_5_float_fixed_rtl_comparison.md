@@ -1,4 +1,4 @@
-# Lab 5.5 - Float vs fixed-point vs RTL comparison
+# Lab 5.5 — Float vs fixed-point vs RTL comparison
 
 ## Goal
 

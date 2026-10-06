@@ -1,4 +1,4 @@
-# Lab 8.14 - OFDM RTL: mapper to equalized loopback
+# Lab 8.14 — OFDM RTL: mapper to equalized loopback
 
 ## Goal
 

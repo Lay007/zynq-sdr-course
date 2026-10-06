@@ -11,7 +11,7 @@
 
 QPSK — это просто **две независимые оси BPSK**: младший бит задаёт I, старший — Q (код Грея, поэтому переворот одного бита переводит в соседний угол). Поэтому модем без изменений использует общие комплексные I/Q-блоки цепочки BPSK — `bpsk_upsampler_8x`, `bpsk_rrc_tx_fir`, `bpsk_rrc_rx_fir`, `bpsk_symbol_timing_sampler` — а QPSK-специфичны только маппер, решение и кадрирование:
 
-```
+```text
 источник дибит -> qpsk_symbol_mapper -> upsampler -> RRC TX  ── loopback ──►
     RRC RX (согласованный фильтр) -> сэмплер с фиксированной фазой -> qpsk_hard_decision -> qpsk_ber_counter
 ```

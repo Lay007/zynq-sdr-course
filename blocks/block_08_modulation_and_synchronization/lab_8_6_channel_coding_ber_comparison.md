@@ -1,4 +1,4 @@
-# Lab 8.6 - Channel coding BER comparison with interleaving
+# Lab 8.6 — Channel coding BER comparison with interleaving
 
 ## Goal
 

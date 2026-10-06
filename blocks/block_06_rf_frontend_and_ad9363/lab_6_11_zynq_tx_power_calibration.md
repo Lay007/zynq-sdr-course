@@ -1,4 +1,4 @@
-# Lab 6.11 - dBm vs dBFS power calibration
+# Lab 6.11 — dBm vs dBFS power calibration
 
 ## Goal
 

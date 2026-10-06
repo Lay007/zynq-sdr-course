@@ -1,4 +1,4 @@
-# Lab 11.17 - start_offset sweep after runtime RX common re-init under stock host TX
+# Lab 11.17 — start_offset sweep after runtime RX common re-init under stock host TX
 
 ## Objective
 

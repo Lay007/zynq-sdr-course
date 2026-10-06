@@ -1,4 +1,4 @@
-# Lab 8.5 - OFDM mini link (CP, pilots, sync, equalization)
+# Lab 8.5 — OFDM mini link (CP, pilots, sync, equalization)
 
 ## Goal
 

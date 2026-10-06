@@ -1,4 +1,4 @@
-# Lab 11.23 - Focused runtime/PL RTL-SDR monitor sweep around the live BPSK point
+# Lab 11.23 — Focused runtime/PL RTL-SDR monitor sweep around the live BPSK point
 
 ## Objective
 

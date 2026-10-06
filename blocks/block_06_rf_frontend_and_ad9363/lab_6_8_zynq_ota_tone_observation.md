@@ -1,4 +1,4 @@
-# Lab 6.8 - Zynq stock-shell OTA DDS tone observation
+# Lab 6.8 — Zynq stock-shell OTA DDS tone observation
 
 ## Goal
 

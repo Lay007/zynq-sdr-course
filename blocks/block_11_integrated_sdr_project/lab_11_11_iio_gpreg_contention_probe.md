@@ -1,4 +1,4 @@
-# Lab 11.11 - Contention probe between host IIO capture and gpreg burst control
+# Lab 11.11 — Contention probe between host IIO capture and gpreg burst control
 
 ## Goal
 

@@ -1,4 +1,4 @@
-# Lab 11.24 - Capture RTL-SDR monitor WAV during stock/runtime DDS-tone TX
+# Lab 11.24 — Capture RTL-SDR monitor WAV during stock/runtime DDS-tone TX
 
 ## Objective
 
@@ -25,7 +25,7 @@ the runtime boot sequence.
 
 ## Hardware setup
 
-```
+```text
 ZynqSDR TX1 antenna ─── (air gap, ~1–5 m) ─── RTL-SDR antenna
 ```
 

@@ -1,4 +1,4 @@
-# Lab 11.25 - Stock vs runtime external DDS-tone visibility sweep on RTL-SDR
+# Lab 11.25 — Stock vs runtime external DDS-tone visibility sweep on RTL-SDR
 
 ## Objective
 

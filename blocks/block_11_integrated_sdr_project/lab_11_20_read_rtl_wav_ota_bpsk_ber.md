@@ -1,4 +1,4 @@
-# Lab 11.20 - Read RTL-SDR WAV IQ, demodulate OTA BPSK, and measure BER
+# Lab 11.20 — Read RTL-SDR WAV IQ, demodulate OTA BPSK, and measure BER
 
 ## Objective
 
@@ -36,7 +36,7 @@ The WAV files are not in git (they are hundreds of megabytes). The manifest's `l
 
 ## Processing chain
 
-```
+```text
 WAV file (int16 I/Q) -> complex float, global DC removed
   -> coarse frequency candidates: spectrum peaks near the expected offset
   -> for each candidate: mix to baseband, resample to the reference rate,

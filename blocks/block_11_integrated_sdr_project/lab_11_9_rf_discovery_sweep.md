@@ -1,4 +1,4 @@
-# Lab 11.9 - AD9361 RF discovery sweep for the gpreg BPSK overlay
+# Lab 11.9 — AD9361 RF discovery sweep for the gpreg BPSK overlay
 
 ## Goal
 

@@ -1,4 +1,4 @@
-# Lab 11.13 - Stock shell versus runtime overlay RX-path comparison
+# Lab 11.13 — Stock shell versus runtime overlay RX-path comparison
 
 ## Objective
 

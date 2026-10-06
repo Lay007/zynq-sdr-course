@@ -1,4 +1,4 @@
-# Lab 5.9 - BPSK framed TX/RX loopback top-level
+# Lab 5.9 — BPSK framed TX/RX loopback top-level
 
 ## Goal
 

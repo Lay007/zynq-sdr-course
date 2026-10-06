@@ -1,4 +1,4 @@
-# Lab 11.7 - PS-side AXI-Lite BPSK bring-up
+# Lab 11.7 — PS-side AXI-Lite BPSK bring-up
 
 ## Goal
 

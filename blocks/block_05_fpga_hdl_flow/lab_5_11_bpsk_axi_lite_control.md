@@ -1,4 +1,4 @@
-# Lab 5.11 - AXI-Lite control wrapper for the BPSK BER top-level
+# Lab 5.11 — AXI-Lite control wrapper for the BPSK BER top-level
 
 ## Goal
 

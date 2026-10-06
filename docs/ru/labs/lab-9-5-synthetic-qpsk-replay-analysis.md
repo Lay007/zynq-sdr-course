@@ -1,4 +1,4 @@
-# Lab 9.5 — Synthetic QPSK replay and constellation analysis
+# Лабораторная 9.5 — Synthetic QPSK replay and constellation analysis
 
 ## Цель
 

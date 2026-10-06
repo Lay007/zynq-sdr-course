@@ -1,4 +1,4 @@
-# Lab 11.16 - RX host capture before and after runtime RX common re-init
+# Lab 11.16 — RX host capture before and after runtime RX common re-init
 
 ## Objective
 

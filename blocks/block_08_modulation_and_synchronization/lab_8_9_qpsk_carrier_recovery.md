@@ -16,7 +16,7 @@ filter + a phase-error detector), the frequency-domain twin of the Gardner timin
 
 Per symbol `s`:
 
-```
+```text
 y = s · e^(−jθ)                      # de-rotate by the current NCO phase
 e = sign(Re y)·Im y − sign(Im y)·Re y   # decision-directed QPSK phase error
 freq += ki·e                         # integral term tracks the CFO

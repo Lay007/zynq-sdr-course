@@ -1,4 +1,4 @@
-# Lab 11.8 - AD9361 gpreg BPSK overlay and first discovery burst
+# Lab 11.8 — AD9361 gpreg BPSK overlay and first discovery burst
 
 ## Goal
 
