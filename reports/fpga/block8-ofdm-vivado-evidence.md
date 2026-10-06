@@ -24,11 +24,13 @@ one-clock teaching equalizer meets 100 MHz**:
 | `ofdm_pilot_phase_corrector` (tracker, symbol buffer, pipelined equalizer) | 707 | 364 | 4 | 1 | +0.568 ns | about 106 MHz |
 | `ofdm_channel_equalizer` (per-subcarrier, training symbol, `NORMALIZE = 0`) | 331 | 141 | 4 | 1 | +0.962 ns | about 111 MHz |
 | `ofdm_channel_equalizer_zf` (the same, `NORMALIZE = 1`: zero-forcing, CORDIC `1/abs(G)^2`) | 966 | 538 | 10 | 0.5 | +2.677 ns | about 137 MHz |
+| `ofdm_cfo_corrector` (CP correlation, vectoring CORDIC, NCO, pipelined rotation CORDIC) | 2382 | 1519 | 10 | 0 | +2.412 ns | about 132 MHz |
 | `ofdm_qpsk_demapper` | 3 | 0 | 0 | 0 | combinational, no clock | |
 | `ofdm_axi_modem` (TX and RX chains, zero-forcing channel equalizer, AXI4-Stream/AXI4-Lite) | 3509 | 1674 | 22 | 3.5 | +1.241 ns | about 114 MHz |
 | `ofdm_tx_cp16_path_fabric` (`BRAM_MEMORY = 0`) | 8151 | 2403 | 4 | 0 | +0.832 ns | about 109 MHz |
 | `ofdm_fft64_sequential_fabric` (`BRAM_MEMORY = 0`) | 7307 | 2423 | 4 | 0 | +0.597 ns | about 106 MHz |
 | `ofdm_axi_modem_fabric` (`BRAM_MEMORY = 0`) | 17203 | 5791 | 22 | 1.5 | +1.141 ns | about 113 MHz |
+| `ofdm_tx_cp16_path_qam16` (`MODULATION = 1`: 16-QAM mapper) | 895 | 370 | 4 | 1 | +1.771 ns | about 122 MHz |
 
 The frequency estimate is `1 / (period - WNS)`; it describes the routed critical path, not a
 characterized maximum clock. Rows with a suffix are the same module with a parameter override.
@@ -62,6 +64,13 @@ saturation test, 26 carry chains. It missed 100 MHz with WNS -2.227 ns (the AXI 
 saturation test, and replacing the CORDIC's barrel shift by registers that shift one place per
 iteration, gives +2.677 ns with the same arithmetic (the same vectors pass). The modem with the
 zero-forcing equalizer then meets 100 MHz with more margin than the modem without it had.
+
+## CFO corrector: one more clock for the normalization
+
+The first `ofdm_cfo_corrector` took the magnitudes of the 48-bit accumulated correlation, compared
+them and searched the top bit in one clock (19 logic levels): +0.147 ns, barely met. Registering the
+magnitudes one clock earlier gives +2.412 ns with the same arithmetic; the worst path is then a
+vectoring CORDIC iteration.
 
 ## A memory reset that cost 2300 flip-flops
 

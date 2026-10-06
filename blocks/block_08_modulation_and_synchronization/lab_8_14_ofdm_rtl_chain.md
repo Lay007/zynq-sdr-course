@@ -60,6 +60,8 @@ flowchart LR
 | `ofdm_channel_equalizer.v` | Estimates `H[k]` on every used carrier from a training symbol and removes its phase from later symbols | `G = Y*conj(sign X)` (additions only); `NORMALIZE = 0`: `Z = Y*conj(G) >> 4`, amplitude not normalized, 3-clock pipeline; `NORMALIZE = 1`: zero-forcing `2^14 * Y/G` with a CORDIC `1/abs(G)^2` per bin, 7-clock pipeline; bit-exact with `tools/ofdm_channel_equalizer_fixed.py` |
 | `ofdm_pilot_phase_corrector.v` | Wires the tracker to the equalizer: buffers one symbol's data and applies the coefficient of that same symbol | 48-entry buffer; `data_ready` and `pilot_ready` stay low while the buffer drains, so latency is one symbol plus the tracker's 31 clocks; tracker and equalizer arithmetic unchanged |
 | `ofdm_one_tap_equalizer.v` | Multiplies each data symbol by an externally supplied Q2.14 correction coefficient | Q1.15 x Q2.14 -> Q3.29, rounded to Q15 (nearest, half-LSB away from zero), then saturated; `saturation_count` is cumulative from reset |
+| `ofdm_cfo_corrector.v` | Time-domain CFO correction before CP removal (stage 2e) | CP correlation accumulated over symbols, 20-step vectoring CORDIC, 32-bit NCO, pipelined 16-step rotation CORDIC; bit-exact with `tools/ofdm_cfo_corrector_fixed.py` |
+| `ofdm_qam16_demapper.v` | Gray 16-QAM slicer (stage 2e) | needs the zero-forcing equalizer; threshold `2^14/3 = 5461` |
 | `ofdm_qpsk_demapper.v` | Hard-decision inverse of the mapper | transparent ready/valid, zero maps to bit `0` exactly like the Python reference |
 
 ## Fixed-point contract, in one place
@@ -346,6 +348,68 @@ Zero-forcing puts every carrier on one grid. A CFO then spreads it again: inside
 still moves by `2*pi*CFO*64`, which one coefficient per symbol cannot remove. QPSK does not care
 (BER stays 0); a 16-QAM slicer would, so a QAM receiver needs CFO correction before the FFT.
 
+## Verification stage 2e: 16-QAM and time-domain CFO correction
+
+Two new blocks turn the chain into a 16-QAM receiver:
+
+- `ofdm_qam16_mapper.v` / `ofdm_qam16_demapper.v`: Gray 16-QAM, four bits per carrier. On each axis
+  the first bit is the sign and the second chooses the inner level `1/sqrt(10)` (10362) or the outer
+  level `3/sqrt(10)` (31086). `ofdm_tx_cp16_path` selects the mapper with `MODULATION = 1`. The
+  training symbol uses the outer points with the QPSK training signs, so the zero-forcing equalizer
+  puts the outer level at `2^14/2 = 8192` and the inner one at a third of that: the slicer threshold
+  halfway between them is `2^14/3 = 5461`, derived rather than tuned.
+- `ofdm_cfo_corrector.v`, in front of the CP removal: it buffers each 80-sample symbol and forms the
+  cyclic-prefix correlation `P = sum x[n] * conj(x[n+64])` over the 16 prefix samples (the prefix is a
+  copy of the symbol's tail, so `angle(P) = -2*pi*64*CFO`), accumulated since reset. A 20-step
+  vectoring CORDIC gives the angle, a 32-bit NCO advances by `angle/64` per sample, and a pipelined
+  16-step rotation CORDIC rotates the same symbol back, including the training symbol. Bit-exact with
+  `tools/ofdm_cfo_corrector_fixed.py` (6 streams, 1280 samples):
+
+```bash
+python -m pytest tests/test_ofdm_qam16_cfo_fixed.py
+python -m tools.generate_ofdm_cfo_vectors      # regenerate the committed vectors
+```
+
+```text
+PASS: ofdm_cfo_corrector matched the fixed-point model on 6 streams, 1280 samples; misplaced in_last flagged
+PASS: 16-QAM mapper and slicer match the model (16 codes, thresholds)
+```
+
+`tb_ofdm_tx_rx_qam16_loopback.sv` runs 16-QAM through the whole chain (`CHANNEL = 1`: the Lab 8.5
+multipath, 6 data symbols, 1152 bits per point) and reports the EVM against the ideal equalized
+grid:
+
+| CFO, ppm (spacing) | Without the CFO corrector | With the CFO corrector |
+|---:|---:|---:|
+| 0 | 0 errors, EVM 0.44 % | 0 errors, EVM 0.44 % |
+| 500 (0.032) | 0 errors, EVM 8.4 % | 0 errors, EVM 0.44 % |
+| 2000 (0.128) | 88 errors, EVM 34 % | 0 errors, EVM 0.45 % |
+| 4000 (0.256) | 281 errors, EVM 74 % | 0 errors, EVM 0.54 % |
+| 7000 (0.448) | 495 errors, EVM 162 % | 0 errors, EVM 0.50 % |
+| 7700 (0.493) | | 0 errors, EVM 0.49 % |
+| 8200 (0.525) | | 550 errors, EVM 146 % |
+
+```bash
+iverilog -g2012 -s tb_ofdm_tx_rx_qam16_loopback -Ptb_ofdm_tx_rx_qam16_loopback.CFO_PPM=6000 \
+  -o /tmp/tb_qam16.vvp $RTL/ofdm_*.v $TB/tb_ofdm_tx_rx_qam16_loopback.sv
+vvp /tmp/tb_qam16.vvp
+```
+
+What to read from it:
+
+- **16-QAM needs the CFO removed before the FFT.** QPSK survived 0.32 subcarrier spacings with a
+  per-symbol phase (stage 2c); 16-QAM already loses bits at 0.128, because the inter-carrier
+  interference blurs the inner/outer decision long before it flips a sign.
+- **The CP correlation has a range.** Its angle is unambiguous only while `64 * CFO` stays within
+  half a turn, `abs(CFO) < 1/128` cycles per sample (7812.5 ppm, half a subcarrier spacing). At
+  8200 ppm the angle wraps (`theta` changes sign) and the correction pushes the wrong way.
+- **Multipath biases it slightly.** With no offset at all the corrector still reads a small one
+  (up to about 26 ppm on the strong channel): the first samples of the prefix carry the previous
+  symbol's echo, so the prefix is not an exact copy. The pilot tracker removes what is left; skipping
+  the first prefix samples in the correlation would remove the bias at the cost of fewer samples.
+- With the strong multipath (`CHANNEL = 2`) the EVM is 1.7 % at 0, 6000 and -4000 ppm: what remains
+  is the equalizer, not the offset.
+
 ## What this lab does and does not prove
 
 This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarrier allocator/extractor, streaming 64-point IFFT/FFT, CP insertion/removal, one-tap equalizer, explicit scaling/saturation/overflow counters) and Verification stages 1-2 (float vs. fixed-point, self-checking digital loopback) with real, reproducible, measured evidence: 96/96 bits at BER=0 for both the plain digital loopback and a loopback through a genuine complex channel rotation with the equalizer actually correcting it.
@@ -353,7 +417,7 @@ This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarri
 It does **not** claim:
 
 - Zynq system integration: `ofdm_axi_modem.v` has the AXI4-Stream/AXI4-Lite interfaces and is verified in simulation and out-of-context implementation, but no block design connects it to the PS, a DMA engine or the AD9361 interface;
-- a QAM receiver: the zero-forcing equalizer puts every carrier on one amplitude grid, but there is no 16-QAM mapper or slicer in RTL, the channel is estimated once per training symbol and not tracked, and the residual CFO inside a symbol (stage 2c) is not corrected before the FFT;
+- a complete 16-QAM modem: the 16-QAM mapper, slicer and time-domain CFO correction are verified end to end in simulation (stage 2e), but the AXI modem still carries QPSK without the CFO corrector, the channel is estimated once per training symbol and not tracked, and no run includes noise;
 - Verification stages 3-5 (PL/fabric loopback on Zynq, safe attenuated AD9361/AD9363 cabled loopback, an independent SDR capture) -- these need the physical board and RF path, neither of which was available while writing this lab;
 - a board-level clock plan. The out-of-context Vivado 2021.1 implementation on `xc7z020clg400-2` ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md)) routes every OFDM block, the pilot corrector and the AXI modem without DRC errors, with the port paths timed as well (0 ns input/output delay). Every clocked block except the one-clock equalizer meets 100 MHz: the TX path and FFT64 with WNS +1.65 / +1.49 ns (about 120 / 117 MHz), the corrector +0.57 ns, the zero-forcing channel equalizer +2.68 ns, and the complete AXI modem with it +1.24 ns (3509 LUT, 1674 FF, 22 DSP48E1, 3.5 BRAM). That needed the pipelined IFFT/FFT schedule, which is now the default (`PIPELINED = 1`): the butterfly takes four clocks instead of one but accepts one butterfly per clock, so a transform computes in 222 clocks instead of 384. The one-cycle teaching baseline (`PIPELINED = 0`, or `+define+OFDM_IFFT_PIPELINED=0`) missed 100 MHz by about 10 ns (28 logic levels in one clock). The one-clock equalizer (`PIPELINED = 0`, the standalone default) misses by 1.08 ns once its input-port paths are timed; the corrector and the modem use its three-clock `PIPELINED = 1` form. The transforms' working memory is in block RAM by default (`BRAM_MEMORY = 1`: two 32-word banks chosen by the parity of the address, so a butterfly's two points never share a bank): 886 / 833 LUTs instead of 8151 / 7307 with fabric memory, at 229 instead of 222 compute clocks. `--fabric` and `+define+OFDM_IFFT_BRAM=0` select the fabric memory, and the one-cycle baseline always uses it.
 
