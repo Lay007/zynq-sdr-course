@@ -72,6 +72,7 @@ lowest tested) with RTL-SDR gain ≥ 200 (20 dB). EVM ranged from 52 % to
 60 % across the sweep, consistent with the single-point result from Lab 11.22.
 
 Practical operating point chosen for subsequent monitoring labs:
+
 - TX attenuation: **-50 dB**
 - RTL-SDR tuner gain: **200** (20 dB)
 

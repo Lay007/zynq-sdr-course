@@ -5,6 +5,7 @@ To learn how to analyze a recorded IQ signal in Python and use a scripting appro
 
 ## 1. Why Python is needed
 Python is useful in the course as a fast universal tool. It allows the student to:
+
 - read IQ files;
 - plot graphs;
 - compute FFT;
@@ -15,6 +16,7 @@ For engineering practice this is especially important because Python is well sui
 
 ## 2. Tasks of the analysis
 Within the first block it is necessary to:
+
 - read the IQ data file;
 - convert the data to a complex signal;
 - plot the time waveform;
@@ -24,10 +26,12 @@ Within the first block it is necessary to:
 
 ## 3. Recommended libraries
 For the first analysis, the following are enough:
+
 - `numpy`
 - `matplotlib`
 
 If needed, one can also use:
+
 - `scipy`
 
 ## 4. General work sequence
@@ -97,6 +101,7 @@ plt.show()
 
 ## 7. Advantages of Python in this block
 Python is convenient because it allows the student to quickly:
+
 - change analysis parameters;
 - process several files;
 - automatically compute peak frequency;
@@ -107,6 +112,7 @@ This is especially useful for later work with large amounts of IQ data.
 
 ## 8. What should be checked
 During the analysis, make sure that:
+
 - the correct data type is chosen;
 - I and Q are not swapped;
 - the sampling frequency is set correctly;
@@ -115,6 +121,7 @@ During the analysis, make sure that:
 
 ## 9. What can be improved in the next script version
 Later the student may extend the script by:
+
 - adding a window function;
 - estimating the noise-floor level;
 - automatically finding several peaks;
@@ -124,6 +131,7 @@ Later the student may extend the script by:
 
 ## 10. What to include in the report
 It is recommended to include:
+
 - the text or fragment of the Python script;
 - a time-domain plot;
 - a spectrum plot;
@@ -132,6 +140,7 @@ It is recommended to include:
 
 ## 11. Conclusions
 After this stage the student should:
+
 - be able to read an IQ file in Python;
 - build a basic spectral analysis;
 - automatically find the frequency of the test tone;

@@ -5,6 +5,8 @@
   H1 of its own; otherwise MkDocs renders the title twice.
 - Lab and project H1s read 'Lab N.M — Title' (Russian pages: 'Лабораторная N.M — ...').
 - The Russian navigation in mkdocs.yml labels pages in Russian.
+- A list is separated from the paragraph above it by a blank line; Python-Markdown
+  otherwise renders the items as one run-on paragraph.
 """
 
 from __future__ import annotations
@@ -78,3 +80,23 @@ def test_russian_navigation_labels_are_russian():
         if match and (not CYRILLIC.search(match.group(1)) or match.group(1).startswith("Lab ")):
             english.append(match.group(1))
     assert not english, f"Russian nav entries with English labels: {english}"
+
+
+LIST_ITEM = re.compile(r"\s*([-*]|\d+\.) ")
+NOT_PARAGRAPH = re.compile(r"\s*([-*]|\d+\.) |#|\||>|\s")
+
+
+def test_lists_are_not_glued_to_a_paragraph():
+    glued = []
+    for path in course_pages():
+        lines = path.read_text(encoding="utf-8").splitlines()
+        inside = False
+        for number in range(1, len(lines)):
+            previous = lines[number - 1]
+            if previous.strip().startswith("```"):
+                inside = not inside
+            if inside or not previous.strip():
+                continue
+            if LIST_ITEM.match(lines[number]) and not NOT_PARAGRAPH.match(previous):
+                glued.append(f"{path.relative_to(ROOT)}:{number + 1}")
+    assert not glued, f"list directly under a paragraph line (add a blank line): {glued}"

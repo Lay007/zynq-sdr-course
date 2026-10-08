@@ -16,6 +16,7 @@ Understand real RF limitations: signal level, noise, and overload.
 
 ### Overload
 Signs:
+
 - distorted spectrum;
 - harmonics;
 - unstable level;

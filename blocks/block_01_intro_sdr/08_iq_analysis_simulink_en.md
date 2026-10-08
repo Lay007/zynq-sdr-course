@@ -9,6 +9,7 @@ In this block, Simulink is needed not only as a modeling environment, but also a
 **recorded real signal → block-based analysis model → confirmation of signal behavior**
 
 This is important because in later blocks the course will rely on Simulink as a bridge between:
+
 - theory;
 - model;
 - fixed-point;
@@ -16,6 +17,7 @@ This is important because in later blocks the course will rely on Simulink as a 
 
 ## 2. What the student should do
 In this work, the student should:
+
 - load the IQ file into a Simulink model;
 - represent it as a complex signal;
 - display the time waveform;
@@ -25,6 +27,7 @@ In this work, the student should:
 
 ## 3. General logic of the model
 The simplest analysis model should include:
+
 1. A file data source.
 2. Formation of I and Q channels.
 3. Combination into a complex signal.
@@ -34,6 +37,7 @@ The simplest analysis model should include:
 
 ## 4. Recommended model structure
 An approximate block structure:
+
 - **File Reader / From Multimedia File / similar source**
 - **Data Type Conversion**
 - **Demux / Selector**
@@ -42,11 +46,13 @@ An approximate block structure:
 - **Spectrum Analyzer**
 
 If the file format is not supported directly, one can:
+
 - first load it into the MATLAB workspace;
 - then use a block that feeds the signal into Simulink.
 
 ## 5. What must be configured
 Before running the analysis, define:
+
 - sampling frequency;
 - data type;
 - length of the analyzed fragment;
@@ -55,6 +61,7 @@ Before running the analysis, define:
 
 ## 6. Minimum task for the first block
 The student should build a model that allows:
+
 - taking an IQ recording;
 - forming a complex stream;
 - showing the time waveform;
@@ -76,17 +83,20 @@ This is already enough for Simulink to become part of the practical route of the
 
 ## 8. Comparison with other tools
 After analysis in Simulink, it is useful to compare the result with:
+
 - observation in HDSDR;
 - the MATLAB spectrum;
 - analysis in Python.
 
 The student should make sure that the same signal:
+
 - is recognizable in different environments;
 - gives consistent results;
 - confirms the correctness of the experiment.
 
 ## 9. Practical value of this stage
 This stage is especially important because later Simulink will be used not only for analysis, but also for:
+
 - signal synthesis;
 - fixed-point preparation;
 - structural description of the chain;
@@ -96,6 +106,7 @@ So even in the first block Simulink should become a “working tool” for the s
 
 ## 10. What to include in the report
 It is recommended to include:
+
 - an image of the Simulink model;
 - the time-domain analysis window;
 - the spectral analysis window;
@@ -104,6 +115,7 @@ It is recommended to include:
 
 ## 11. Conclusions
 After completing this section, the student should:
+
 - be able to use Simulink to analyze a recorded IQ signal;
 - understand how a real recording is inserted into a block model;
 - see the link between offline analysis and future hardware implementation.

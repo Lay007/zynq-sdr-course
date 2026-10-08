@@ -14,12 +14,14 @@ images/
 Real photos of equipment and the lab setup.
 
 Examples:
+
 - `board_zynq7020_top.jpg`
 - `rtl_sdr_receiver.jpg`
 - `lab_setup_overview.jpg`
 
 ## What to store in `screenshots/`
 Screenshots of software windows:
+
 - HDSDR
 - MATLAB
 - Simulink
@@ -38,6 +40,7 @@ Fallback format: **PNG**
 Exported schematic images intended for insertion into Markdown.
 
 Preferred formats:
+
 - **SVG**
 - **PNG**
 
@@ -45,6 +48,7 @@ KiCad source files should be stored separately in the `kicad/` folder.
 
 ## What to store in `animations/`
 Short GIF animations or short video clips that show:
+
 - appearance of the tone in HDSDR;
 - frequency shift of the tone;
 - amplitude change;
@@ -55,11 +59,13 @@ For a future website or GitHub Pages, **MP4/WebM** is preferable.
 
 ## Naming convention
 Use:
+
 - lowercase names;
 - English words;
 - underscore as a separator.
 
 Examples:
+
 - `hdsdr_tone_spectrum.png`
 - `block01_signal_chain_en.svg`
 - `tone_frequency_change.gif`

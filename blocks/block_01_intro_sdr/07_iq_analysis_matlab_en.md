@@ -13,6 +13,7 @@ After observing the signal in HDSDR, it is important to move to offline analysis
 - prepare for later modeling in Simulink.
 
 MATLAB is especially convenient for the first analysis because it allows quick:
+
 - reading of data;
 - plotting;
 - FFT computation;
@@ -20,6 +21,7 @@ MATLAB is especially convenient for the first analysis because it allows quick:
 
 ## 2. What should be known about the recorded file
 Before starting the analysis, the following must be documented:
+
 - file name;
 - sample format;
 - sampling rate;
@@ -28,6 +30,7 @@ Before starting the analysis, the following must be documented:
 - order of I and Q samples.
 
 A common format is:
+
 - interleaved I/Q;
 - `int8`, `int16`, or `float`;
 - a sequence of the form  
@@ -50,6 +53,7 @@ Read the raw file into an array.
 
 ### Step 2. Form the complex signal
 Combine I and Q into a complex vector:
+
 - I — real part;
 - Q — imaginary part.
 
@@ -109,12 +113,14 @@ disp(['Peak frequency = ', num2str(f_peak), ' Hz']);
 ## 6. What should be seen on the plots
 ### In the time domain
 The student should see:
+
 - regular oscillation;
 - a stable signal shape;
 - no obvious spikes or strong distortion.
 
 ### In the spectrum
 The student should see:
+
 - a pronounced narrow peak;
 - peak location corresponding to the tone;
 - noise floor;
@@ -122,6 +128,7 @@ The student should see:
 
 ## 7. Useful parameters to estimate
 Within the first analysis it is useful to determine:
+
 - frequency of the maximum spectral peak;
 - relative peak level;
 - peak width;
@@ -141,12 +148,14 @@ Too short a fragment may degrade frequency resolution.
 
 ### 4. Overload
 If the receiver was overloaded, this may appear as:
+
 - extra peaks;
 - a wide “dirty” spectrum;
 - time-domain distortion.
 
 ## 9. What to include in the report
 It is recommended to add:
+
 - a short description of the file used;
 - recording parameters;
 - time-domain plot;
@@ -156,6 +165,7 @@ It is recommended to add:
 
 ## 10. Conclusions
 After this stage the student should:
+
 - be able to load an IQ file into MATLAB;
 - build a time-domain waveform and a spectrum;
 - determine the frequency of the main tone;

@@ -11,6 +11,7 @@ This document describes the connection between MATLAB reference models and C++ d
 | Resampling L/M | MATLAB resampling scripts | cpp/resampler_lm.cpp | tb_resampler.v | Canonical CSV + plots |
 
 **Notes:**
+
 - Each C++ implementation must produce canonical CSV files to verify reproducibility against MATLAB.
 - HDL testbenches should consume the same canonical vectors.
 - CI checks should validate that MATLAB and C++ results are aligned within defined tolerance.

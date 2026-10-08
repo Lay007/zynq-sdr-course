@@ -5,12 +5,14 @@ To become familiar with the role of KiCad in the course and understand how the c
 
 ## 1. Why KiCad is needed in an SDR course
 At first glance, an SDR course might seem limited to:
+
 - DSP;
 - modeling;
 - FPGA;
 - software processing.
 
 However, a real engineering experiment almost always includes a hardware side:
+
 - power;
 - interconnects;
 - matching;
@@ -19,6 +21,7 @@ However, a real engineering experiment almost always includes a hardware side:
 - adapters and boards.
 
 That is why **KiCad** is introduced into the course as a tool for:
+
 - reading electrical schematics;
 - drawing your own schematics;
 - preparing simple PCBs;
@@ -28,6 +31,7 @@ That is why **KiCad** is introduced into the course as a tool for:
 In the first block KiCad is used in a **lightweight format**.
 
 The student’s task is to:
+
 - get familiar with the interface;
 - open a ready-made schematic;
 - learn to read component symbols;
@@ -37,6 +41,7 @@ At this stage deep PCB routing is not required.
 
 ## 3. What the student should see in KiCad
 At the level of the first block it is useful to show:
+
 - a power source;
 - connectors;
 - signal lines;
@@ -49,6 +54,7 @@ This helps move from a “black box” view to engineering understanding.
 
 ## 4. Why this matters already at the beginning
 Even if the first laboratory work is focused on receiving a test signal, the student should understand:
+
 - where the signal comes from;
 - how it is connected electrically;
 - which subsystems participate in the experiment;
@@ -58,6 +64,7 @@ Without that, the course risks turning into a set of software exercises without 
 
 ## 5. What KiCad will be used for later
 In later stages of the course, KiCad can be used for:
+
 - schematics of a tone-pulse generator built from analog components;
 - schematics of a generator built from basic digital logic ICs;
 - simple power and interconnection boards;
@@ -65,6 +72,7 @@ In later stages of the course, KiCad can be used for:
 - documentation of educational circuits.
 
 Thus KiCad becomes a link between:
+
 - theory;
 - experiment;
 - documentation;
@@ -72,6 +80,7 @@ Thus KiCad becomes a link between:
 
 ## 6. What is useful to show in the KiCad interface
 For the first introduction it is enough to explain:
+
 - the project window;
 - the schematic editor;
 - library components;
@@ -97,6 +106,7 @@ If the student can answer these questions, then the schematic is no longer just 
 One important purpose of KiCad in the course is to help the student move from a schematic to a physical assembly.
 
 That is:
+
 - the schematic shows the electrical logic;
 - the breadboard shows the physical implementation;
 - the SDR experiment shows the practical result.
@@ -109,6 +119,7 @@ is an important part of engineering culture.
 For this course it is especially important to understand that circuit design does not exist separately from SDR.
 
 For example:
+
 - a generator schematic may form a test pulse;
 - an interface schematic may connect to the SDR board;
 - power and switching circuits influence experiment quality;
@@ -128,6 +139,7 @@ In the first block the student can be given a simple task:
 
 ## 11. Conclusions
 After studying this section, the student should understand:
+
 - why KiCad is included in the SDR course;
 - how to read a simple schematic;
 - how the schematic is connected to the real experiment;

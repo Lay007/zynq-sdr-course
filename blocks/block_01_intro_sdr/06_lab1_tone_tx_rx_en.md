@@ -33,12 +33,14 @@ During the laboratory work the student should:
 A **test tone** is used in this laboratory work.
 
 A tone is convenient because it:
+
 - is easy to observe in the spectrum;
 - produces a distinct narrow peak;
 - allows quick verification of frequency tuning;
 - is easy to record and analyze again.
 
 If the system works correctly, the student should observe:
+
 - a stable spectral peak;
 - stable frequency location;
 - a change in level when amplitude changes;
@@ -72,6 +74,7 @@ A configuration that generates a test tone must be started on the SDR board.
 
 ### Required parameters
 At minimum the following should be defined:
+
 - transmit center frequency;
 - tone frequency;
 - amplitude;
@@ -79,6 +82,7 @@ At minimum the following should be defined:
 
 ### What must be documented
 The report should include:
+
 - carrier frequency;
 - tone frequency;
 - chosen link method — over-the-air or cable;
@@ -132,6 +136,7 @@ After stable reception is achieved, record IQ data.
 
 ### Purpose of the recording
 The recording is needed for later analysis in:
+
 - MATLAB;
 - Simulink;
 - Python;
@@ -182,6 +187,7 @@ A short engineering conclusion about the experiment.
 
 ## 13. Expected results
 After completing the laboratory work the student should obtain:
+
 - a detected test signal;
 - spectral confirmation that the chain works;
 - an IQ recording;
@@ -191,6 +197,7 @@ After completing the laboratory work the student should obtain:
 ## 14. Typical problems
 ### Signal is not detected
 Possible reasons:
+
 - wrong receive frequency;
 - generation is not started;
 - incorrect wiring;
@@ -199,6 +206,7 @@ Possible reasons:
 
 ### Signal is too weak
 Possible reasons:
+
 - poor connection;
 - insufficient gain;
 - too large a distance;
@@ -206,6 +214,7 @@ Possible reasons:
 
 ### Signal overloads the receiver
 Signs:
+
 - distorted spectrum;
 - multiple parasitic peaks;
 - unstable level;
@@ -213,6 +222,7 @@ Signs:
 
 ### Signal instability
 Possible reasons:
+
 - poor contacts;
 - unstable power;
 - external interference;
@@ -235,6 +245,7 @@ It shows the student the full minimal cycle of an SDR experiment:
 **generation → transmission → reception → observation → recording**
 
 In the next blocks, this cycle will be expanded with:
+
 - more complex signals;
 - Simulink modeling;
 - transition to fixed-point;

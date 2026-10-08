@@ -25,6 +25,7 @@ records fully routed 100 MHz OOC evidence for this top level.
 The input transfer condition is `s_axis_tvalid && s_axis_tready`.
 `s_axis_tdata[15:0]` is signed Q1.15 I and `[31:16]` is signed Q1.15 Q. Exactly
 128 accepted beats form one symbol. `s_axis_tlast` must be asserted only on beat
+
 127. A mismatch sets the result's frame-error bit but does not change the fixed
 128-beat grouping or resynchronize the stream.
 

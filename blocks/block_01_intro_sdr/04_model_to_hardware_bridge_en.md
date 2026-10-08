@@ -5,6 +5,7 @@ To understand how a mathematical signal model is connected with real hardware im
 
 ## 1. Why this bridge is needed
 In many courses, theory, modeling, and hardware exist separately:
+
 - theory is studied by itself;
 - the model lives in MATLAB or Simulink;
 - hardware implementation is treated as a separate task.
@@ -24,6 +25,7 @@ That is why the first stage uses the simplest but very useful model:
 **generation of a test tone**.
 
 It allows the student to:
+
 - check the whole chain at once;
 - remove unnecessary complexity;
 - quickly locate errors;
@@ -31,6 +33,7 @@ It allows the student to:
 
 ## 3. Why the first signal is a tone
 A tone is chosen as the basic educational signal because:
+
 - it is easy to generate;
 - it is easy to describe mathematically;
 - it is easy to observe in the time domain;
@@ -44,6 +47,7 @@ A tone is a useful “checkpoint” for the entire system.
 At the first stage Simulink is used as an engineering thinking tool.
 
 With it the student can:
+
 - define signal parameters;
 - generate an I/Q sequence;
 - observe signal behavior;
@@ -60,6 +64,7 @@ With it the student can:
 
 ## 5. From a real-valued signal to I/Q representation
 For future hardware implementation, it is convenient to represent the signal in complex form:
+
 - I channel;
 - Q channel.
 
@@ -71,6 +76,7 @@ Even if the educational tone is very simple, it is useful to view it from the be
 Once the signal is defined in the model, it can be interpreted as a stream of discrete samples.
 
 At this stage it is important to understand:
+
 - sampling frequency;
 - numeric format of samples;
 - value range;
@@ -83,12 +89,14 @@ This is where the student starts to see that the model is not just a “picture�
 Next, the digital stream must be embedded into the hardware system.
 
 In practice this means:
+
 - implementing the generation logic;
 - feeding the stream into the chain;
 - matching it to the platform architecture;
 - connecting it to the RF transceiver.
 
 For a platform based on Zynq7020 + AD9363 this means:
+
 - some functions are placed in FPGA;
 - some are configured through the processor system;
 - the actual analog signal is formed by the RF chain.
@@ -97,6 +105,7 @@ For a platform based on Zynq7020 + AD9363 this means:
 It would be possible to rely only on internal means of observation, but for an educational course it is important to observe the real signal from the outside.
 
 External reception using RTL-SDR makes it possible to:
+
 - make sure that the signal really exists;
 - see it as another receiver sees it;
 - obtain independent confirmation of chain operation;
@@ -128,6 +137,7 @@ Sampling rate, quantization, levels, noise, and parasitic components all appear 
 
 ### 3. Ability to verify hypotheses
 The student can:
+
 - predict how the spectrum should look;
 - check it in the model;
 - see it on real reception;
@@ -135,6 +145,7 @@ The student can:
 
 ## 11. What comes next
 In later blocks the same logic will be extended to:
+
 - transition to fixed-point;
 - filtering;
 - DDC/DUC;
@@ -147,6 +158,7 @@ But the foundation is laid here — on a simple but complete route.
 
 ## 12. Conclusions
 After studying this section, the student should understand:
+
 - why a model is needed before hardware implementation;
 - why a test tone is the right starting point;
 - how Simulink, the digital stream, and the SDR board are connected;

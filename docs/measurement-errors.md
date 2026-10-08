@@ -7,10 +7,12 @@ This page summarizes real-world SDR mistakes.
 ## Receiver overload
 
 Symptom:
+
 - flat-topped waveform
 - distorted FFT
 
 Fix:
+
 - reduce gain
 - add attenuation
 
@@ -19,9 +21,11 @@ Fix:
 ## DC offset
 
 Symptom:
+
 - spike at zero frequency
 
 Fix:
+
 - enable DC removal
 
 ---
@@ -29,9 +33,11 @@ Fix:
 ## Aliasing
 
 Symptom:
+
 - mirrored spectrum
 
 Fix:
+
 - correct sampling rate
 
 ---
@@ -39,9 +45,11 @@ Fix:
 ## CFO (Carrier Frequency Offset)
 
 Symptom:
+
 - rotating constellation
 
 Fix:
+
 - frequency correction
 
 ---
@@ -49,9 +57,11 @@ Fix:
 ## Clipping
 
 Symptom:
+
 - distorted constellation
 
 Fix:
+
 - gain control
 
 ---

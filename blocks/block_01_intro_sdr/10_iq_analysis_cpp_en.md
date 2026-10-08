@@ -5,6 +5,7 @@ To show how offline analysis of an IQ file can be implemented in C++ and why thi
 
 ## 1. Why C++ is needed in the course
 Although MATLAB and Python are more convenient for the first analysis, C++ remains an important engineering tool because it allows the student to:
+
 - process large files;
 - create fast utilities;
 - prepare code for integration into real projects;
@@ -14,6 +15,7 @@ Later, C++ may become the basis of service applications, backend components, and
 
 ## 2. Goals of this stage
 Within the first block C++ is used in a lightweight mode. The student should:
+
 - read an IQ file;
 - form a complex array;
 - perform basic spectral analysis;
@@ -22,6 +24,7 @@ Within the first block C++ is used in a lightweight mode. The student should:
 
 ## 3. What the program should do
 A minimum program should:
+
 1. Open the file.
 2. Read interleaved I/Q data.
 3. Convert it to a complex array.
@@ -37,6 +40,7 @@ Implement a simple DFT/FFT manually or in a simplified form.
 
 ### Option 2. Practical
 Use an external library:
+
 - FFTW
 - Intel IPP
 - KissFFT
@@ -91,6 +95,7 @@ int main() {
 
 ## 6. What the student should understand
 At this stage it is important not so much to write a perfect DSP library, but to understand:
+
 - how the IQ storage format is organized;
 - how a processing pipeline is built in C++;
 - how complex data is represented in memory;
@@ -99,6 +104,7 @@ At this stage it is important not so much to write a perfect DSP library, but to
 
 ## 7. What results are needed in the first block
 It is enough to obtain:
+
 - successful file reading;
 - formation of a complex signal;
 - basic spectrum calculation;
@@ -109,6 +115,7 @@ It is enough to obtain:
 Even a simple C++ program is important because it shows the student the transition from educational analysis to applied development.
 
 This is how, in real projects, the following appear:
+
 - recording analyzers;
 - service utilities;
 - autonomous DSP modules;
@@ -116,6 +123,7 @@ This is how, in real projects, the following appear:
 
 ## 9. What to include in the report
 It is recommended to include:
+
 - a short description of the program structure;
 - a code fragment for reading the IQ file;
 - the method of spectrum calculation;
@@ -124,6 +132,7 @@ It is recommended to include:
 
 ## 10. Conclusions
 After this stage the student should:
+
 - understand how to read IQ data in C++;
 - see the role of C++ in high-performance signal processing;
 - understand how a real engineering utility grows out of an educational analysis.

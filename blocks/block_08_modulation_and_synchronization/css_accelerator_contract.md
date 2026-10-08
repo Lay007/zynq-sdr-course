@@ -73,6 +73,7 @@ The standalone DFT regression checks reset/abort/restart behavior, start
 rejection, all 128 bin events and indices, one-cycle valid pulses, X/Z-free
 outputs, and every complex bin and magnitude against the shared Python
 fixed-point reference. Its deterministic dechirped symbol-37 tone peaks at bin
+
 37. The standalone peak-detector regression checks frame control, valid gaps,
 equal-magnitude tie breaking, reset/abort/restart behavior, and X/Z-free result
 outputs. The integrated detector regression covers all 128 noiseless SF7 symbols

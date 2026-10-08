@@ -26,11 +26,13 @@ first OTA BPSK frame over the PL-owned AD9361 TX path.
 
 Previous RTL-SDR captures (labs 11.22–11.23) showed consistent BER ≈ 35–40%
 (near-random) with EVM > 500 % for all runtime PL BPSK attempts, even after:
+
 - AXI DDS repair (`cf_axi_dds` rebind + `RATECNTRL = 3`)
 - ADC driver rebind
 - Fine CFO search at ±12 kHz
 
 A preamble-correlation diagnostic confirmed no BPSK signal was present:
+
 - Stock-shell capture: correlation ratio ≈ 5.2 (clear peak) → BER = 0
 - Runtime PL captures: correlation ratio ≈ 3.5 (below the ≈ 4.7 noise threshold
   for 60 000 positions) → no signal at any coarse frequency
@@ -59,6 +61,7 @@ output channel, muting the DDS and switching the hardware mux to pass PL
 AXI-Stream data through to the AD9361 DAC.
 
 Files modified:
+
 - `lab_11_19_runtime_bridge_txrx_self_timed_bringup.py` — `disable_dds_tones`
   + DDS/ADC rebind args added
 - `lab_11_22_capture_runtime_pl_rtl_monitor_wav.py` — `disable_dds_tones` added
@@ -90,6 +93,7 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_22_capture_runtime_p
 ```
 
 **What to expect:**
+
 - `disable_dds_tones: {"status": "ok"}` in the output JSON
 - `tx_valid_count > 0` (the PL chain is running)
 - the BPSK signal appears near DC (≈ +2.4 kHz, as with the stock shell)
@@ -103,6 +107,7 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_20_read_rtl_wav_ota_
 ```
 
 **Success criterion:**
+
 - preamble correlation ratio > 5.0 (signal detected)
 - BER < 10 % → first confirmed OTA BPSK over the PL path
 - BER = 0 → full success (as with the stock shell)

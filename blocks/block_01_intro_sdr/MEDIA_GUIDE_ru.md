@@ -13,6 +13,7 @@ images/
 ## Что хранить в `photos/`
 Реальные фотографии оборудования и стенда.
 Примеры:
+
 - `board_zynq7020_top.jpg`
 - `rtl_sdr_receiver.jpg`
 - `lab_setup_overview.jpg`
@@ -30,6 +31,7 @@ images/
 
 ## Что хранить в `animations/`
 Короткие GIF:
+
 - `tone_frequency_change.gif`
 - `tone_level_change.gif`
 

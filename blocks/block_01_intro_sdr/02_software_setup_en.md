@@ -26,6 +26,7 @@ For the first laboratory work it is enough to install:
 5. **VS Code**
 
 This already allows the student to:
+
 - receive a signal;
 - observe the spectrum;
 - record data;
@@ -58,6 +59,7 @@ RTL-SDR is used as a simple external receiver for observing the signal produced 
 ## 5. Installing HDSDR
 ### Purpose
 HDSDR is used for observing:
+
 - the spectrum;
 - the waterfall;
 - the signal frequency;
@@ -73,6 +75,7 @@ HDSDR is used for observing:
 ## 6. Installing MATLAB and Simulink
 ### Purpose
 MATLAB and Simulink are used for:
+
 - signal modeling;
 - building test chains;
 - spectral analysis;
@@ -94,6 +97,7 @@ MATLAB and Simulink are used for:
 ## 7. Installing Python
 ### Purpose
 Python is needed as a fast universal tool for:
+
 - reading IQ files;
 - plotting spectra;
 - automatic analysis;
@@ -113,6 +117,7 @@ Python is needed as a fast universal tool for:
 ## 8. Installing a C/C++ toolchain
 ### Purpose
 C/C++ is needed for:
+
 - creating fast utilities;
 - offline processing of large files;
 - preparing real DSP tools;
@@ -120,6 +125,7 @@ C/C++ is needed for:
 
 ### In the first block
 C/C++ is used in a lightweight way:
+
 - reading IQ files;
 - simple spectral analysis;
 - creating a student’s own processing utility.
@@ -130,6 +136,7 @@ GNU Radio allows the student to quickly build an SDR chain from ready-made block
 
 ### In the first block
 GNU Radio can be used for:
+
 - reading a recorded file;
 - displaying the spectrum;
 - comparing results with HDSDR and MATLAB;
@@ -138,6 +145,7 @@ GNU Radio can be used for:
 ## 10. Installing Vivado / Vitis
 ### Purpose
 Vivado / Vitis is used for work with the Xilinx platform:
+
 - project build;
 - hardware configuration;
 - interaction with SoC;
@@ -147,12 +155,14 @@ Vivado / Vitis is used for work with the Xilinx platform:
 These tools may be considered only at an overview level, without deep use.
 
 The main goal is:
+
 - to understand that hardware implementation does not appear “by itself”;
 - to see the place of Xilinx tools in the overall learning route.
 
 ## 11. Installing KiCad
 ### Purpose
 KiCad is used as an engineering tool for:
+
 - reading schematics;
 - preparing circuit-design labs;
 - creating simple helper boards;
@@ -160,6 +170,7 @@ KiCad is used as an engineering tool for:
 
 ### In the first block
 KiCad is mainly needed for:
+
 - getting familiar with the interface;
 - opening ready-made schematics;
 - reading power, signal lines, and connectors.
@@ -169,6 +180,7 @@ KiCad is mainly needed for:
 VS Code acts as the main working environment of the project.
 
 It is convenient for:
+
 - editing Markdown;
 - running Python scripts;
 - working with C/C++;
@@ -213,6 +225,7 @@ Before the lab, the student should be able to answer “yes” to the following 
 The software environment of Block 1 should not be maximally complete, but **sufficient for the first real experiment**.
 
 At this stage it is important not to overload the student, but to provide:
+
 - a working set of tools;
 - an understanding of the role of each tool;
 - readiness to move on to the hardware part and the first laboratory work.
