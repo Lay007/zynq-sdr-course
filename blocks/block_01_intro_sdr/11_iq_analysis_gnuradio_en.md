@@ -31,6 +31,8 @@ The simplest scheme may include:
 
 If the file already contains complex samples in a suitable format, this is enough for the first demonstration.
 
+"Suitable" means `cf32`: a File Source of type *complex* reads 32-bit float I/Q pairs. A course `.ci16` file needs a File Source of type *short* followed by **Interleaved Short To Complex**; a raw `rtl_sdr` file is unsigned bytes and needs the 127.5 offset removed before the conversion; an HDSDR WAV file goes through **Wav File Source** with two outputs joined by **Float To Complex**. A wrong source type gives the same confident, wrong spectrum as on page 09.
+
 ## 4. What must be configured
 It is necessary to set correctly:
 

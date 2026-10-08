@@ -119,7 +119,7 @@ In the first block the student follows this path:
 1. Form the idea of the test signal.
 2. Understand the model used to generate it.
 3. Relate the model to a digital stream.
-4. feed the stream into the hardware implementation.
+4. Feed the stream into the hardware implementation.
 5. Obtain a real physical signal.
 6. Receive it with an external SDR receiver.
 7. Observe the spectrum in HDSDR.

@@ -3,6 +3,8 @@
 ## Goal of the work
 Generate a test tone on the SDR board and receive it with RTL-SDR while visualizing it in HDSDR, then prepare the data for further analysis.
 
+This page is the general method. The same experiment as a scripted run with measured numbers (a 200 kHz tone offset, captured and scored automatically) is [Lab 1.1](/zynq-sdr-course/en/labs/lab-1-1-controlled-zynq-tone-rtl-sdr/). Without the board, start with [Lab 1.0](/zynq-sdr-course/en/labs/lab-1-0-first-rtl-sdr-observation/), which needs only RTL-SDR.
+
 ## 1. Tasks of the laboratory work
 During the laboratory work the student should:
 
@@ -98,8 +100,11 @@ Perform the following actions:
 5. Choose a reasonable gain level.
 6. Observe the noise floor and the expected signal region.
 
+### Tune next to the signal, not onto it
+An RTL-SDR (like any zero-IF receiver) shows a peak at the centre of its spectrum even with no input: DC offset and LO leakage. A tone tuned exactly to the centre hides under it. Tune the receiver so the tone lands a known distance away from the centre, for example 200 kHz as in Lab 1.1, and check that the peak moves when the transmitter frequency moves; the DC peak does not.
+
 ### What counts as a successful result
-A stable spectral peak corresponding to the test signal must be detected.
+A stable spectral peak corresponding to the test signal must be detected away from the centre-of-spectrum DC peak.
 
 ## 9. Signal observation
 After the receiver is configured, the student should:

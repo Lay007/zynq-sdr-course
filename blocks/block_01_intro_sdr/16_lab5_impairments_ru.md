@@ -10,6 +10,8 @@
 - дисбаланс I/Q или gain mismatch;
 - перегрузка и clipping.
 
+Эта страница — обзор. Исполняемые версии: [Лабораторная 8.8](/zynq-sdr-course/ru/labs/lab-8-8-qpsk-modem-impairments/) (QPSK-модем с шумом, CFO и дисбалансом), [Лабораторная 6.5](/zynq-sdr-course/ru/labs/lab-6-5-rf-impairment-calibration/) (постоянная составляющая, дисбаланс I/Q и утечка гетеродина приёмника) и [Лабораторная 6.2](/zynq-sdr-course/ru/labs/lab-6-2-gain-staging-and-overload/) (распределение усиления и перегрузка).
+
 ## 1. Учебная идея
 
 ```text

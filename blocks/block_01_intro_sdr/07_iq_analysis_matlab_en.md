@@ -36,6 +36,16 @@ A common format is:
 - a sequence of the form  
   `I0, Q0, I1, Q1, I2, Q2, ...`
 
+The sample type depends on the program that wrote the file, and reading it with the wrong type gives a meaningless spectrum:
+
+| Source | Format | How to read it |
+|---|---|---|
+| `rtl_sdr` command-line tool (`.bin`, `.cu8`) | unsigned 8-bit, offset 127.5 | `fread(fid, 'uint8') - 127.5` |
+| HDSDR / SDR# / SDR++ baseband recording (`.wav`) | signed 16-bit inside a WAV file | `audioread(filename, 'native')`: I is column 1, Q column 2 |
+| course and AD9363 captures (`.ci16`) | signed 16-bit, interleaved | `fread(fid, 'int16')` |
+
+A WAV file starts with a header; `fread` from the start of the file would read the header as samples.
+
 ## 3. Main analysis tasks
 Within the first block it is necessary to:
 
@@ -82,6 +92,8 @@ i_data = raw(1:2:end);
 q_data = raw(2:2:end);
 
 x = double(i_data) + 1j * double(q_data);
+% rtl_sdr .bin/.cu8 instead: raw = fread(fid, 'uint8') - 127.5;
+% HDSDR .wav instead:        y = audioread(filename, 'native'); x = double(y(:,1)) + 1j*double(y(:,2));
 
 Nview = min(length(x), 2000);
 t = (0:Nview-1)/fs;
@@ -109,6 +121,8 @@ f_peak = f(idx);
 
 disp(['Peak frequency = ', num2str(f_peak), ' Hz']);
 ```
+
+`f_peak` is the offset from the receiver's tuning frequency, not the radio frequency: the tone is at `f_tune + f_peak`. The same script is in `blocks/block_01_intro_sdr/matlab/iq_analysis_example.m`, and its Python twin in `python/iq_analysis_example.py`.
 
 ## 6. What should be seen on the plots
 ### In the time domain

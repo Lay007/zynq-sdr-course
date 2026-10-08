@@ -88,6 +88,24 @@ print(f"Peak frequency: {peak_freq:.2f} Hz")
 plt.show()
 ```
 
+The script reads `int16` samples, the course `.ci16` format. A raw `rtl_sdr` file is unsigned 8-bit with an offset of 127.5, and an HDSDR recording is a WAV file; see the format table on page 07. The course readers of Lab 9.3 (`ci16`, `cu8`, `cf32`) and Lab 9.4 (WAV IQ) handle them for you.
+
+## 5a. Run the course version and check it against a known tone
+The same analysis, with the peak printed and the plot saved, is `blocks/block_01_intro_sdr/python/iq_analysis_example.py`. Before trusting it on a real recording, run it on a file whose answer you know. A 200 kHz tone sampled at 2.4 MS/s, written as `.ci16`, gives:
+
+```text
+samples: 65536, FFT length: 4096, bin width: 585.9 Hz
+peak offset from the tuning frequency: 199804.7 Hz
+peak above the median spectrum level: 63.6 dB
+```
+
+The peak is 195 Hz short of 200 kHz. That is not an error: the FFT only has bins every `fs/nfft = 585.9 Hz`, and 199 804.7 Hz is the bin nearest to the tone.
+
+```bash
+python blocks/block_01_intro_sdr/python/iq_analysis_example.py capture.ci16 --fs 2.4e6 --out spectrum.png
+python blocks/block_01_intro_sdr/python/iq_analysis_example.py capture.cu8 --dtype uint8
+```
+
 ## 6. What the student should see
 ### In the time domain
 - a stable waveform;
@@ -128,6 +146,11 @@ Later the student may extend the script by:
 - saving results to a file;
 - building a spectrogram;
 - comparing several recordings.
+
+## 9a. Exercises
+1. Write the same 200 kHz tone as an `rtl_sdr` file (`uint8`, offset 127.5) and analyse it with `--dtype uint8`. Then analyse the same file with the default `int16`. The wrong type gives a confident, wrong answer: a peak near −400 kHz, about 48 dB above the median. Why does a format error not look like noise?
+2. Change `--nfft` from 4096 to 65536. How close does the peak get to 200 000 Hz, and what is the bin width now?
+3. Swap I and Q in the loader. Where does the tone move, and why?
 
 ## 10. What to include in the report
 It is recommended to include:

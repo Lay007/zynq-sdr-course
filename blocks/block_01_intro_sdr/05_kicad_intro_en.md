@@ -128,7 +128,7 @@ For example:
 Therefore KiCad is not a “side” tool but part of the overall course logic.
 
 ## 10. Practical task of the first introduction
-In the first block the student can be given a simple task:
+In the first block the student can be given a simple task. The course repository does not ship a KiCad project yet; use one of the demo projects installed with KiCad (its `demos` folder), and build your own schematic later in Lab 10.4:
 
 - open a ready-made KiCad project;
 - find the power source;

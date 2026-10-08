@@ -9,6 +9,8 @@ This lab covers three fundamental tasks:
 - timing recovery;
 - frame synchronization.
 
+This page is the overview. Each step is a runnable lab later in the course: CFO in [Lab 8.1](/zynq-sdr-course/en/labs/lab-8-1-cfo-estimation-correction/), timing in [Lab 8.3](/zynq-sdr-course/en/labs/lab-8-3-timing-recovery/), frame detection in [Lab 7.4](/zynq-sdr-course/en/labs/lab-7-4-packet-receiver-detection/), the whole chain in [Lab 8.4](/zynq-sdr-course/en/labs/lab-8-4-end-to-end-sync-chain/). Without a recording of your own, use the synthetic QPSK dataset of [Lab 9.5](/zynq-sdr-course/en/labs/lab-9-5-synthetic-qpsk-replay-analysis/).
+
 ## 1. Learning idea
 
 ```text
@@ -25,35 +27,37 @@ flowchart TB
     classDef dsp fill:#DCFCE7,color:#0F172A,stroke:#16A34A,stroke-width:1px;
     classDef metric fill:#F1F5F9,color:#0F172A,stroke:#64748B,stroke-width:1px;
 
-    IQ["1. Recorded IQ"]:::rx
-    SPEC["2. Spectrum check"]:::metric
-    CFO["3. CFO estimation"]:::dsp
-    CORR["4. Frequency correction"]:::dsp
-    TIMING["5. Timing recovery"]:::dsp
-    FRAME["6. Frame sync"]:::dsp
-    DEMOD["7. Demodulation"]:::dsp
-    BER["8. BER / constellation"]:::metric
+    IQ["1. Recorded IQ<br/>from Lab 3 or SDR receiver"]:::rx
+    SPEC["2. Spectrum check<br/>coarse frequency offset"]:::metric
+    CFO["3. CFO estimation<br/>frequency mismatch"]:::dsp
+    CORR["4. Frequency correction<br/>complex rotation"]:::dsp
+    TIMING["5. Timing recovery<br/>symbol sampling point"]:::dsp
+    FRAME["6. Frame synchronization<br/>preamble / marker"]:::dsp
+    DEMOD["7. Demodulation<br/>BPSK / QPSK"]:::dsp
+    BER["8. BER / constellation<br/>quality metrics"]:::metric
 
     IQ --> SPEC --> CFO --> CORR --> TIMING --> FRAME --> DEMOD --> BER
+    BER -. tune loop parameters .-> CFO
+    BER -. tune timing .-> TIMING
 ```
 
 ## 3. Key ideas
 
 - Transmitter and receiver frequencies are never perfectly aligned.
-- CFO causes constellation rotation.
-- Incorrect sampling time increases symbol errors.
-- Packet-based communication requires frame detection.
+- Even a small CFO rotates the constellation.
+- An incorrect symbol sampling point increases errors.
+- Packet transmission needs a way to find the start of the frame.
 
 ## 4. Tasks
 
 1. Take a recorded BPSK/QPSK IQ signal.
-2. Estimate frequency offset.
-3. Apply frequency correction.
-4. Compare constellation before and after correction.
-5. Perform timing recovery.
-6. Detect frame start.
+2. Plot the spectrum and estimate the frequency offset.
+3. Apply a coarse frequency correction.
+4. Plot the constellation before and after the CFO correction.
+5. Choose the symbol sampling instant.
+6. Find the start of the frame by its preamble or test sequence.
 7. Demodulate the signal.
-8. Evaluate BER.
+8. Compare the BER before and after synchronization.
 
 ## 5. Expected results
 
@@ -61,6 +65,25 @@ flowchart TB
 - reduced BER;
 - understanding of synchronization loops.
 
-## 6. Engineering conclusion
+## 6. What the report should include
 
-Synchronization is the boundary between academic demodulation and real receivers. It introduces feedback loops and adaptive processing into the SDR chain.
+- the spectrum before correction;
+- the CFO estimate;
+- the constellation before and after correction;
+- a description of the timing-recovery algorithm;
+- a description of the frame-sync method;
+- the BER before and after synchronization;
+- conclusions.
+
+## 7. Review questions
+
+1. What is CFO?
+2. Why does CFO rotate the constellation?
+3. Why can one not simply take every N-th sample without timing recovery?
+4. What is a preamble?
+5. How do coarse and fine synchronization differ?
+6. Why is BER a convenient final metric?
+
+## 8. Engineering conclusion
+
+Synchronization is the boundary between academic demodulation and a real receiver. After this lab the student sees that an SDR receiver consists not only of filters and a demodulator, but also of a set of estimation, correction and quality-control loops.

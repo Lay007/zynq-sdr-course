@@ -7,6 +7,7 @@ To become familiar with the basic idea of Software Defined Radio, understand the
 **Software Defined Radio (SDR)** is an approach to building radio systems in which a significant part of the radio-chain functionality is implemented in software or digital logic rather than only with analog circuits.
 
 In SDR, many functions are moved into:
+
 - software;
 - DSP algorithms;
 - FPGA/SoC platforms;
@@ -36,6 +37,7 @@ A typical SDR system includes:
 A fully digital radio does not exist: the physical world remains analog. Any SDR still has an analog part at the input and output.
 
 A convenient view is:
+
 - **before the ADC** — analog part of the receiver;
 - **after the ADC** — digital receive processing;
 - **before the DAC** — digital part of the transmitter;
@@ -49,6 +51,7 @@ SDR is especially convenient for studying digital signal processing because it l
 **idea → model → implementation → real signal → observation → analysis**
 
 The same task can be:
+
 - modeled in Simulink;
 - checked in MATLAB;
 - implemented partly in FPGA;
@@ -60,12 +63,14 @@ This forms the correct engineering mindset: a signal should be understood not on
 
 ## 5. What an I/Q signal is
 In SDR, signals are often represented in **complex form**:
+
 - **I** — in-phase component;
 - **Q** — quadrature component.
 
 These are two mutually related components of one signal shifted by 90 degrees in phase.
 
 This representation is useful because it allows:
+
 - baseband signal description;
 - digital frequency shifting;
 - building modulators and demodulators;
@@ -73,6 +78,7 @@ This representation is useful because it allows:
 - working with the complex envelope.
 
 For the first block it is enough to understand:
+
 - an IQ signal is not “two separate signals”, but one complex representation;
 - recording IQ data makes it possible to move real experiments into offline analysis.
 
@@ -80,6 +86,7 @@ For the first block it is enough to understand:
 The first lab uses a **tone signal** because it is the simplest and most illustrative test.
 
 Advantages of a tone:
+
 - it is easy to find in the spectrum;
 - it is easy to distinguish from noise;
 - it is easy to check the frequency;
@@ -87,6 +94,7 @@ Advantages of a tone:
 - it is easy to detect setup errors in the chain.
 
 A tone clearly reveals:
+
 - correct generator operation;
 - frequency offset;
 - mirror components;
@@ -95,22 +103,29 @@ A tone clearly reveals:
 
 ## 7. How a tone looks in different representations
 ### In the time domain
-A tone appears as a sinusoidal or cosine waveform.
+A tone appears as a sinusoidal or cosine waveform. In an IQ recording, I and Q are two sinusoids a quarter period apart.
 
 ### In the frequency domain
-A tone corresponds to a pronounced narrow peak at a certain frequency.
+A tone corresponds to a pronounced narrow peak at a certain frequency. Two cases must be told apart:
+
+- a **real** signal `cos(2πft)` has two peaks, at `+f` and `−f`;
+- a **complex** IQ signal `exp(j2πft)` has one peak, at `+f` only.
+
+A second peak at `−f` in the spectrum of an IQ recording is therefore not "the other half of the tone" but a defect: I/Q imbalance, an image, or swapped I and Q. Blocks 2 and 6 come back to this.
 
 ### On the waterfall
-A tone appears as a stable horizontal line.
+A tone appears as a steady vertical line: frequency runs across, time runs down.
 
 This is why a tone is an ideal first educational signal.
 
 ## 8. Role of FPGA and SoC in SDR
 This course uses a platform based on **Zynq7020**, which combines:
+
 - an ARM processor system;
 - programmable FPGA logic.
 
 This allows tasks to be separated:
+
 - the processor is convenient for control, configuration, and communication with the PC;
 - the FPGA is convenient for real-time signal processing such as generation, filtering, DDC/DUC, interfaces, and specialized DSP blocks.
 
@@ -131,6 +146,7 @@ This cycle becomes the basis for the following blocks.
 
 ## 10. Conclusions
 After studying this section, the student should understand:
+
 - what SDR is;
 - why digital processing is important in modern radio systems;
 - why IQ data is used;
@@ -142,12 +158,14 @@ After studying this section, the student should understand:
 2. How does SDR differ from a classical radio architecture?
 3. Where is the boundary between the analog and digital parts of the chain?
 4. What is I/Q signal representation?
-5. Why is a tone convenient as the first test signal?
-6. What role does FPGA play in an SDR system?
-7. Why is IQ recording important for signal analysis?
+5. Why does a complex IQ tone show one spectral peak and a real tone two?
+6. Why is a tone convenient as the first test signal?
+7. What role does FPGA play in an SDR system?
+8. Why is IQ recording important for signal analysis?
 
 ## Practical preparation for the next section
 Before moving on, the student should:
+
 - understand the basic structure of an SDR chain;
 - be able to explain why external signal reception is needed;
 - be ready to install the software environment and get familiar with the hardware.

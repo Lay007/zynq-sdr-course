@@ -38,7 +38,7 @@ The simplest analysis model should include:
 ## 4. Recommended model structure
 An approximate block structure:
 
-- **File Reader / From Multimedia File / similar source**
+- **Binary File Reader** (raw interleaved files) or **From Multimedia File** (WAV recordings), both from DSP System Toolbox
 - **Data Type Conversion**
 - **Demux / Selector**
 - **Real-Imag to Complex**

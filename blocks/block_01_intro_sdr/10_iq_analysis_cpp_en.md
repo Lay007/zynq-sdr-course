@@ -93,6 +93,22 @@ int main() {
 }
 ```
 
+## 5a. The course version: a complete utility with a DFT
+`blocks/block_01_intro_sdr/cpp/iq_reader_example.cpp` extends this structure with the educational option: a plain DFT over 4096 samples and a peak search, including negative frequencies. On the same 200 kHz test tone used on page 09:
+
+```bash
+g++ -std=c++17 -O2 -o iq_reader_example blocks/block_01_intro_sdr/cpp/iq_reader_example.cpp
+./iq_reader_example capture.ci16 2400000
+```
+
+```text
+Loaded complex samples: 65536
+DFT length: 4096, bin width: 585.938 Hz
+Peak offset from the tuning frequency: 199805 Hz
+```
+
+The answer matches the Python script to the bin. The plain DFT needs `4096 × 4096 ≈ 16.8 million` complex multiplications and took about 2.7 s here; an FFT needs about `4096 × log2(4096) / 2 ≈ 25 000` butterflies. That gap is why every real tool uses an FFT library, and why the course builds an FFT, not a DFT, in hardware (Lab 8.14).
+
 ## 6. What the student should understand
 At this stage it is important not so much to write a perfect DSP library, but to understand:
 
