@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/09_iq_analysis_python_ru.md"

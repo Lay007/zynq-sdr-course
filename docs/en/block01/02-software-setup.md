@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/02_software_setup_en.md"

@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/11_iq_analysis_gnuradio_en.md"

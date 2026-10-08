@@ -194,6 +194,30 @@ nav:
       - "Аппаратная отладка по проекту": ru/hardware-debug-by-design.md
       - "Блоки курса":
           - "01. Введение в SDR": ru/blocks/01-intro.md
+          - "01A. Темы и обзорные лабораторные блока 1":
+              - "01. Введение в SDR": ru/block01/01-theory-intro.md
+              - "02. Подготовка программного окружения": ru/block01/02-software-setup.md
+              - "03. Аппаратная база курса": ru/block01/03-hardware-overview.md
+              - "04. Мостик от модели к плате": ru/block01/04-model-to-hardware-bridge.md
+              - "04. Мостик: Simulink → FPGA → RF тракт": ru/block01/04-model-to-fpga-pipeline.md
+              - "05. Знакомство с KiCad": ru/block01/05-kicad-intro.md
+              - "05. DSP-цепочка в FPGA": ru/block01/05-fpga-dsp-chain.md
+              - "06. Лабораторная работа 1. Передача и приём тестового тона": ru/block01/06-lab1-tone-tx-rx.md
+              - "06. RF-измерения в SDR": ru/block01/06-rf-measurements.md
+              - "07. Анализ записанного сигнала в MATLAB": ru/block01/07-iq-analysis-matlab.md
+              - "08. Анализ записанного сигнала в Simulink": ru/block01/08-iq-analysis-simulink.md
+              - "09. Анализ записанного сигнала в Python": ru/block01/09-iq-analysis-python.md
+              - "10. Анализ записанного сигнала в C++": ru/block01/10-iq-analysis-cpp.md
+              - "11. Анализ записанного сигнала в GNU Radio": ru/block01/11-iq-analysis-gnuradio.md
+              - "12. Лабораторная работа 2. AM/FM модуляция и демодуляция": ru/block01/12-lab2-am-fm-modulation.md
+              - "13. Лабораторная работа 3. Цифровая модуляция (BPSK/QPSK)": ru/block01/13-lab3-digital-modulation.md
+              - "14. Лабораторная работа 4. Синхронизация в SDR-приёмнике": ru/block01/14-lab4-synchronization.md
+              - "15. Метрики качества сигнала: FFT, SNR, EVM и BER": ru/block01/15-signal-metrics.md
+              - "16. FFT и спектральный анализ": ru/block01/16-fft-spectral-analysis.md
+              - "16. Лабораторная работа 5. Нарушения в SDR-тракте: шум, CFO, mismatch и clipping": ru/block01/16-lab5-impairments.md
+              - "17. Энергетический бюджет радиолинии в SDR": ru/block01/17-link-budget.md
+              - "18. Эффекты фиксированной точки в DSP и FPGA": ru/block01/18-fixed-point-effects.md
+              - "19. Лабораторная работа 6. Полный SDR-тракт (end-to-end)": ru/block01/19-lab6-end-to-end.md
           - "02. Сигналы и дискретизация": ru/blocks/02-signals-and-sampling.md
           - "03. Базовые DSP-операции": ru/blocks/03-dsp-basics.md
           - "03A. Инженерные заметки по DSP": ru/blocks/03-dsp-engineering-notes.md
@@ -357,6 +381,30 @@ nav:
       - "Hardware debug by design": en/hardware-debug-by-design.md
       - "Course blocks":
           - "01. Intro to SDR": en/blocks/01-intro.md
+          - "01A. Block 1 topics and overview labs":
+              - "01. Introduction to SDR": en/block01/01-theory-intro.md
+              - "02. Preparing the Software Environment": en/block01/02-software-setup.md
+              - "03. Hardware Platform of the Course": en/block01/03-hardware-overview.md
+              - "04. Bridge from Model to Hardware": en/block01/04-model-to-hardware-bridge.md
+              - "04. Bridge: Simulink → FPGA → RF Path": en/block01/04-model-to-fpga-pipeline.md
+              - "05. Introduction to KiCad": en/block01/05-kicad-intro.md
+              - "05. DSP Chain in FPGA": en/block01/05-fpga-dsp-chain.md
+              - "06. Laboratory Work 1. Transmission and Reception of a Test Tone": en/block01/06-lab1-tone-tx-rx.md
+              - "06. RF Measurements in SDR": en/block01/06-rf-measurements.md
+              - "07. Analysis of the Recorded Signal in MATLAB": en/block01/07-iq-analysis-matlab.md
+              - "08. Analysis of the Recorded Signal in Simulink": en/block01/08-iq-analysis-simulink.md
+              - "09. Analysis of the Recorded Signal in Python": en/block01/09-iq-analysis-python.md
+              - "10. Analysis of the Recorded Signal in C++": en/block01/10-iq-analysis-cpp.md
+              - "11. Analysis of the Recorded Signal in GNU Radio": en/block01/11-iq-analysis-gnuradio.md
+              - "12. Laboratory Work 2. AM/FM Modulation and Demodulation": en/block01/12-lab2-am-fm-modulation.md
+              - "13. Laboratory Work 3. Digital Modulation (BPSK/QPSK)": en/block01/13-lab3-digital-modulation.md
+              - "14. Laboratory Work 4. Synchronization in an SDR Receiver": en/block01/14-lab4-synchronization.md
+              - "15. Signal Quality Metrics: FFT, SNR, EVM and BER": en/block01/15-signal-metrics.md
+              - "16. FFT and Spectral Analysis": en/block01/16-fft-spectral-analysis.md
+              - "16. Laboratory Work 5. SDR Impairments: noise, CFO, mismatch and clipping": en/block01/16-lab5-impairments.md
+              - "17. Link Budget in SDR Systems": en/block01/17-link-budget.md
+              - "18. Fixed-Point Effects in DSP and FPGA": en/block01/18-fixed-point-effects.md
+              - "19. Laboratory Work 6. The Complete SDR Chain (end to end)": en/block01/19-lab6-end-to-end.md
           - "02. Signals and sampling": en/blocks/02-signals-and-sampling.md
           - "03. DSP basics": en/blocks/03-dsp-basics.md
           - "03A. DSP engineering notes": en/blocks/03-dsp-engineering-notes.md

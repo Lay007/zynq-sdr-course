@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/12_lab2_am_fm_modulation_ru.md"

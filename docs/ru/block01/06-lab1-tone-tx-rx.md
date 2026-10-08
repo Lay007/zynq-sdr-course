@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/06_lab1_tone_tx_rx_ru.md"

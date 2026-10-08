@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/13_lab3_digital_modulation_ru.md"

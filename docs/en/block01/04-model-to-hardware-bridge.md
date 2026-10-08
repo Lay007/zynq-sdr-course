@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/04_model_to_hardware_bridge_en.md"

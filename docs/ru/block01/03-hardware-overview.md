@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/03_hardware_overview_ru.md"

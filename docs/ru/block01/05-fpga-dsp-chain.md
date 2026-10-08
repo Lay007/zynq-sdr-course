@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/05_fpga_dsp_chain_ru.md"

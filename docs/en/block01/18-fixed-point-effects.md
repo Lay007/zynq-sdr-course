@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/18_fixed_point_effects_en.md"

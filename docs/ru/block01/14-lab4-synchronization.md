@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/14_lab4_synchronization_ru.md"

@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/10_iq_analysis_cpp_ru.md"

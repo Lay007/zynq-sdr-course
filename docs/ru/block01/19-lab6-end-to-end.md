@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/19_lab6_end_to_end_ru.md"

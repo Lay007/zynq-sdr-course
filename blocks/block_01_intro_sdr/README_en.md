@@ -112,11 +112,12 @@ This photo shows the real SDR platform used in the practical part of the first b
 
 ### Minimal starting set
 
+- Python with the course dependencies (`python tools/tasks.py install`);
 - RTL-SDR driver;
-- HDSDR;
-- MATLAB / Simulink;
-- Python;
+- a spectrum viewer: HDSDR, SDR#, SDR++ or GQRX;
 - VS Code.
+
+MATLAB / Simulink are an optional parallel route; every lab runs in Python.
 
 ### Extended engineering set
 
@@ -129,19 +130,33 @@ This photo shows the real SDR platform used in the practical part of the first b
 
 ## Topics of the first block
 
-1. **Introduction to SDR**: Software Defined Radio, analog/digital boundary, I/Q representation, and the role of DSP.
-2. **Classical receiver and SDR**: crystal receiver, superheterodyne, local oscillator, mixer, IF, and digital DDC.
-3. **Environment setup**: minimal and extended software stack and workplace checklist.
-4. **Course hardware setup**: Zynq7020, AD9363, RTL-SDR, RF connections, and level control.
-5. **Model-to-board bridge**: from a Simulink tone to sample streams, hardware implementation, and external reception.
-6. **KiCad introduction**: why circuit design matters even in an SDR course.
-7. **Lab 1.0**: passive RF observation, spectrum/waterfall, and short IQ recording.
-8. **Lab 1**: test-signal generation and reception, HDSDR observation, parameter capture, and IQ recording.
-9. **IQ analysis in MATLAB**: file reading, time-domain waveform, spectrum, and peak-frequency estimation.
-10. **IQ analysis in Simulink**: minimal visual analysis model.
-11. **IQ analysis in Python**: scripted processing and measurement automation.
-12. **IQ analysis in C++**: IQ storage format and performance-oriented analysis path.
-13. **IQ analysis in GNU Radio**: simple visual flowgraph for time and spectrum replay.
+The practical entry points are [Lab 1.0](/zynq-sdr-course/en/labs/lab-1-0-first-rtl-sdr-observation/) (passive observation with RTL-SDR only) and [Lab 1.1](/zynq-sdr-course/en/labs/lab-1-1-controlled-zynq-tone-rtl-sdr/) (the board's tone, captured and scored by a script). The pages below are the theory and the overview labs of the block; the overview labs 2-6 each point to the runnable labs that implement them later in the course.
+
+| Page | Topic |
+|---|---|
+| 01 | [Introduction to SDR](/zynq-sdr-course/en/block01/01-theory-intro/) |
+| 02 | [Preparing the Software Environment](/zynq-sdr-course/en/block01/02-software-setup/) |
+| 03 | [Hardware Platform of the Course](/zynq-sdr-course/en/block01/03-hardware-overview/) |
+| 04 | [Bridge from Model to Hardware](/zynq-sdr-course/en/block01/04-model-to-hardware-bridge/) |
+| 04 | [Bridge: Simulink → FPGA → RF Path](/zynq-sdr-course/en/block01/04-model-to-fpga-pipeline/) |
+| 05 | [Introduction to KiCad](/zynq-sdr-course/en/block01/05-kicad-intro/) |
+| 05 | [DSP Chain in FPGA](/zynq-sdr-course/en/block01/05-fpga-dsp-chain/) |
+| 06 | [Laboratory Work 1. Transmission and Reception of a Test Tone](/zynq-sdr-course/en/block01/06-lab1-tone-tx-rx/) |
+| 06 | [RF Measurements in SDR](/zynq-sdr-course/en/block01/06-rf-measurements/) |
+| 07 | [Analysis of the Recorded Signal in MATLAB](/zynq-sdr-course/en/block01/07-iq-analysis-matlab/) |
+| 08 | [Analysis of the Recorded Signal in Simulink](/zynq-sdr-course/en/block01/08-iq-analysis-simulink/) |
+| 09 | [Analysis of the Recorded Signal in Python](/zynq-sdr-course/en/block01/09-iq-analysis-python/) |
+| 10 | [Analysis of the Recorded Signal in C++](/zynq-sdr-course/en/block01/10-iq-analysis-cpp/) |
+| 11 | [Analysis of the Recorded Signal in GNU Radio](/zynq-sdr-course/en/block01/11-iq-analysis-gnuradio/) |
+| 12 | [Laboratory Work 2. AM/FM Modulation and Demodulation](/zynq-sdr-course/en/block01/12-lab2-am-fm-modulation/) |
+| 13 | [Laboratory Work 3. Digital Modulation (BPSK/QPSK)](/zynq-sdr-course/en/block01/13-lab3-digital-modulation/) |
+| 14 | [Laboratory Work 4. Synchronization in an SDR Receiver](/zynq-sdr-course/en/block01/14-lab4-synchronization/) |
+| 15 | [Signal Quality Metrics: FFT, SNR, EVM and BER](/zynq-sdr-course/en/block01/15-signal-metrics/) |
+| 16 | [FFT and Spectral Analysis](/zynq-sdr-course/en/block01/16-fft-spectral-analysis/) |
+| 16 | [Laboratory Work 5. SDR Impairments: noise, CFO, mismatch and clipping](/zynq-sdr-course/en/block01/16-lab5-impairments/) |
+| 17 | [Link Budget in SDR Systems](/zynq-sdr-course/en/block01/17-link-budget/) |
+| 18 | [Fixed-Point Effects in DSP and FPGA](/zynq-sdr-course/en/block01/18-fixed-point-effects/) |
+| 19 | [Laboratory Work 6. The Complete SDR Chain (end to end)](/zynq-sdr-course/en/block01/19-lab6-end-to-end/) |
 
 ## Core learning chain
 

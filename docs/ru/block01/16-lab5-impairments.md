@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/16_lab5_impairments_ru.md"

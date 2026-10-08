@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/17_link_budget_en.md"

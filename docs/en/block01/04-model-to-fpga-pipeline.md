@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/04_model_to_fpga_pipeline_en.md"

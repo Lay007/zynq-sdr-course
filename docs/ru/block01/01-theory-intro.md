@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/01_theory_intro_ru.md"

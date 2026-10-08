@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/15_signal_metrics_ru.md"

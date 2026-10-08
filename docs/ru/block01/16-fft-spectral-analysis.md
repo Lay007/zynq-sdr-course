@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/16_fft_spectral_analysis_ru.md"

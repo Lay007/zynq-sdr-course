@@ -1,0 +1,1 @@
+--8<-- "blocks/block_01_intro_sdr/08_iq_analysis_simulink_en.md"
