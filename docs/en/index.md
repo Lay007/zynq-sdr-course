@@ -34,8 +34,8 @@ This is the English learning path: the same course pipeline as the [main page](.
 </div>
 
 <div class="course-card">
-<h3>Lab track</h3>
-<p>The recommended order to work through the labs.</p>
+<h3>Learning routes</h3>
+<p>Which labs to do, in which order, with a laptop only, an RTL-SDR or the Zynq board.</p>
 <a href="lab-track.md">Open →</a>
 </div>
 

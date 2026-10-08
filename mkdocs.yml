@@ -186,7 +186,7 @@ nav:
   - Русский:
       - "Обзор курса": ru/index.md
       - "Структура курса": ru/course-structure.md
-      - "Лабораторный трек": ru/lab-track.md
+      - "Маршруты обучения": ru/lab-track.md
       - "Медиа-гайд": ru/media-guide.md
       - "Статус курса": ru/status.md
       - "Расчёт метрик цифрового канала": ru/digital-link-metrics.md
@@ -375,7 +375,7 @@ nav:
   - English:
       - "Course overview": en/index.md
       - "Course structure": en/course-structure.md
-      - "Lab track": en/lab-track.md
+      - "Learning routes": en/lab-track.md
       - "Media guide": en/media-guide.md
       - "Debug waveform design": en/debug-waveform-design.md
       - "Hardware debug by design": en/hardware-debug-by-design.md

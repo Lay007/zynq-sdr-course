@@ -8,6 +8,7 @@ This site is the main course workspace. It connects theory, MATLAB/Simulink mode
 
 <div class="hero-actions">
 <a class="hero-button" href="model-to-measurement/">Start with the system pipeline</a>
+<a class="hero-button secondary" href="en/lab-track/">Choose a learning route</a>
 <a class="hero-button secondary" href="demo/">View IEEE-style figures</a>
 <a class="hero-button secondary" href="ru/">Русская версия</a>
 <a class="hero-button secondary" href="en/">English version</a>
