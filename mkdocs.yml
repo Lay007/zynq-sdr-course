@@ -190,6 +190,7 @@ nav:
       - "Медиа-гайд": ru/media-guide.md
       - "Статус курса": ru/status.md
       - "Расчёт метрик цифрового канала": ru/digital-link-metrics.md
+      - "Рубрика оценки итоговых проектов": ru/final-project-grading-rubric.md
       - "Проектирование debug-сигналов": ru/debug-waveform-design.md
       - "Аппаратная отладка по проекту": ru/hardware-debug-by-design.md
       - "Блоки курса":

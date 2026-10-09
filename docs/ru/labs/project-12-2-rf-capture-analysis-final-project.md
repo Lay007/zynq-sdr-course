@@ -123,7 +123,7 @@ python blocks/block_09_recording_and_analysis_tools/python/lab_9_4_read_wav_iq_a
 - [ ] Вывод говорит, пригоден захват для дальнейшей обработки или **нет**, и почему.
 - [ ] Команда на чистом checkout воспроизводит графики и метрики.
 
-Оцените работу по [рубрике оценки итоговых проектов](../../final-project-grading-rubric.md) и напишите отчёт по [шаблону отчёта Блока 12](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_12_final_projects/reports/report_template_ru.md).
+Оцените работу по [рубрике оценки итоговых проектов](../final-project-grading-rubric.md) и напишите отчёт по [шаблону отчёта Блока 12](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_12_final_projects/reports/report_template_ru.md).
 
 ## Шаблон вывода отчёта
 

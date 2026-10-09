@@ -94,7 +94,7 @@
 - [ ] Команда на чистом checkout проверяет метрики.
 - [ ] Вывод говорит **достигает** или **не достигает** замороженных критериев.
 
-Пишите отчёт по [шаблону отчёта Блока 12](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_12_final_projects/reports/report_template_ru.md) и оценивайте его по [рубрике оценки итоговых проектов](../../final-project-grading-rubric.md).
+Пишите отчёт по [шаблону отчёта Блока 12](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_12_final_projects/reports/report_template_ru.md) и оценивайте его по [рубрике оценки итоговых проектов](../final-project-grading-rubric.md).
 
 ## Шаблон вывода отчёта
 

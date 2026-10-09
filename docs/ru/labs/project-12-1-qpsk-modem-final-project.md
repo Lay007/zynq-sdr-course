@@ -140,7 +140,7 @@ python tools/run_block5_hdl_smoke.py --no-generate
 - [ ] Команда на чистом checkout проверяет доказательства без доступа к исходному стенду.
 - [ ] Вывод говорит **достигает** или **не достигает** замороженного порога.
 
-Оцените работу по [рубрике оценки итоговых проектов](../../final-project-grading-rubric.md) и напишите отчёт по [шаблону отчёта Блока 12](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_12_final_projects/reports/report_template_ru.md).
+Оцените работу по [рубрике оценки итоговых проектов](../final-project-grading-rubric.md) и напишите отчёт по [шаблону отчёта Блока 12](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_12_final_projects/reports/report_template_ru.md).
 
 ## Шаблон вывода отчёта
 
