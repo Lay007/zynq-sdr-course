@@ -50,7 +50,7 @@ Correlation peak/median: 40.00 dB
 ```
 
 - A 64-symbol QPSK preamble is buried at sample 512 in a 2048-sample record, passed through a
-  3-tap multipath channel, at 9 dB SNR, then low-pass filtered. Correlating with the known preamble
+  3-tap multipath channel, at 9 dB SNR, then low-pass filtered. The SNR is measured over the whole record; the preamble fills only 64 of the 2048 samples, so inside the preamble the SNR is about 24 dB. Correlating with the known preamble
   finds it **exactly**.
 - **The peak stands 40 dB above the median correlation value.** A 64-symbol preamble gives a
   coherent gain of `10*log10(64) = 18 dB` in power over any single sample; the peak-to-median ratio
