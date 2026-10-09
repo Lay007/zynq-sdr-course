@@ -143,7 +143,7 @@ Then the integrated project of Block 11, the core path from a PS-controlled mode
 - [Lab 11.46](/zynq-sdr-course/en/labs/lab-11-46-two-board-console-message/) — A message from one Zynq console to another
 - [Project 12.4](/zynq-sdr-course/en/labs/project-12-4-full-sdr-measurement-report/) — Full SDR Measurement Report
 
-The other Block 11 labs (11.8–11.26, 11.33, 11.35, 11.41, 11.42) are the bring-up history of that path: each records one failure, how it was found and how it was fixed. Read them as case studies once the core path is clear.
+The other Block 11 labs (11.8–11.26, 11.33, 11.35, 11.41, 11.42) are the bring-up history of that path: each records one failure, how it was found and how it was fixed. Read them as case studies once the core path is clear: [Block 11 bring-up case studies](/zynq-sdr-course/block11-case-studies/) summarises each one as symptom, cause and lesson.
 
 ## Route D — add bench instruments
 

@@ -327,7 +327,7 @@ nav:
           - "Лабораторная 10.4 — Мини-проект схемы в KiCad": ru/labs/lab-10-4-kicad-schematic-mini-project.md
           - "Лабораторная 10.5 — NanoVNA и RF Demo Kit": ru/labs/lab-10-5-nanovna-rf-demo-kit.md
           - "Лабораторная 10.6 — Характеризация цифрового RF-аттенюатора": ru/labs/lab-10-6-digital-attenuator-characterization.md
-      - "Лабораторные блока 11":
+      - "Блок 11 — основной путь":
           - "Лабораторная 11.1 — Требования проекта и системная архитектура": ru/labs/lab-11-1-project-requirements-and-architecture.md
           - "Лабораторная 11.2 — Сквозной пакет симуляции": ru/labs/lab-11-2-end-to-end-simulation-package.md
           - "Лабораторная 11.3 — Чек-лист интеграции FPGA/RF": ru/labs/lab-11-3-fpga-rf-integration-checklist.md
@@ -335,12 +335,24 @@ nav:
           - "Лабораторная 11.5 — Задержка и джиттер конвейера AXI DMA": ru/labs/lab-11-5-axi-dma-latency-jitter.md
           - "Лабораторная 11.6 — Бюджет неопределённости измерений и отчётность": ru/labs/lab-11-6-measurement-uncertainty-budget.md
           - "Лабораторная 11.7 — Запуск BPSK через AXI-Lite со стороны PS": ru/labs/lab-11-7-axi-lite-bpsk-bringup.md
+          - "Лабораторная 11.14 — Резервный путь BPSK OTA со стороны хоста в стоковом shell": ru/labs/lab-11-14-stock-shell-bpsk-ota.md
+          - "Лабораторная 11.27 — BER цифрового loopback QPSK в runtime": ru/labs/lab-11-27-runtime-qpsk-digital-loopback.md
+          - "Лабораторная 11.28 — Runtime QPSK через RTL-SDR": ru/labs/lab-11-28-rtl-sdr-ota-qpsk.md
+          - "Лабораторная 11.29 — Кампания надёжности BER при холодной загрузке": ru/labs/lab-11-29-cold-boot-ber-campaign.md
+          - "Лабораторная 11.30 — Коарс-CFO на двухплатном линке": ru/labs/lab-11-30-two-board-cfo-validation.md
+          - "Лабораторная 11.31 — Свип-стресс коарс-CFO оценщика": ru/labs/lab-11-31-coarse-cfo-stress-sweep.md
+          - "Лабораторная 11.32 — Двухплатный in-fabric coarse-CFO": ru/labs/lab-11-32-two-board-fabric-coarse-cfo.md
+          - "Лабораторная 11.34 — Непрерывный QPSK timing recovery": ru/labs/lab-11-34-continuous-qpsk-timing-recovery.md
+          - "Лабораторная 11.38 — ZynqSDR TX → запись IQ → офлайн-приёмник": ru/labs/lab-11-38-hardware-tx-iq-capture-offline-rx.md
+          - "Лабораторная 11.45 — Дифференциальный QPSK + длинная преамбула": ru/labs/lab-11-45-differential-long-preamble.md
+          - "Лабораторная 11.46 — Сообщение из одной Zynq-консоли в другую": ru/labs/lab-11-46-two-board-console-message.md
+      - "Блок 11 — разборы случаев отладки":
+          - "Обзор: восемь случаев отладки": ru/block11-case-studies.md
           - "Лабораторная 11.8 — Overlay gpreg BPSK для AD9361": ru/labs/lab-11-8-axi-gpreg-bpsk-overlay.md
           - "Лабораторная 11.9 — Разведочная RF-развёртка AD9361": ru/labs/lab-11-9-rf-discovery-sweep.md
           - "Лабораторная 11.10 — Захват RX по IIO по таймеру вокруг пакета": ru/labs/lab-11-10-iio-burst-capture.md
           - "Лабораторная 11.11 — Конкуренция захвата IIO и управления через gpreg": ru/labs/lab-11-11-iio-gpreg-contention-probe.md
           - "Лабораторная 11.13 — Сравнение RX-тракта: stock shell и runtime overlay": ru/labs/lab-11-13-stock-vs-runtime-rx-compare.md
-          - "Лабораторная 11.14 — Резервный путь BPSK OTA со стороны хоста в стоковом shell": ru/labs/lab-11-14-stock-shell-bpsk-ota.md
           - "Лабораторная 11.15 — Runtime bridge_rx_only при стоковом TX хоста": ru/labs/lab-11-15-runtime-bridge-rx-host-tx-probe.md
           - "Лабораторная 11.16 — Захват RX до и после повторной инициализации RX common": ru/labs/lab-11-16-runtime-rx-common-reinit-probe.md
           - "Лабораторная 11.17 — Развёртка start_offset после повторной инициализации RX": ru/labs/lab-11-17-runtime-rx-common-reinit-start-offset-sweep.md
@@ -353,20 +365,10 @@ nav:
           - "Лабораторная 11.24 — Захват WAV RTL-SDR при DDS-тоне": ru/labs/lab-11-24-capture-dds-tone-rtl-monitor-wav.md
           - "Лабораторная 11.25 — Видимость DDS-тона на RTL-SDR: stock и runtime": ru/labs/lab-11-25-stock-vs-runtime-dds-tone-sweep.md
           - "Лабораторная 11.26 — Runtime PL BPSK OTA: исправление DDS-bypass": ru/labs/lab-11-26-runtime-dds-bypass-bpsk-ota.md
-          - "Лабораторная 11.27 — BER цифрового loopback QPSK в runtime": ru/labs/lab-11-27-runtime-qpsk-digital-loopback.md
-          - "Лабораторная 11.28 — Runtime QPSK через RTL-SDR": ru/labs/lab-11-28-rtl-sdr-ota-qpsk.md
-          - "Лабораторная 11.29 — Кампания надёжности BER при холодной загрузке": ru/labs/lab-11-29-cold-boot-ber-campaign.md
-          - "Лабораторная 11.30 — Коарс-CFO на двухплатном линке": ru/labs/lab-11-30-two-board-cfo-validation.md
-          - "Лабораторная 11.31 — Свип-стресс коарс-CFO оценщика": ru/labs/lab-11-31-coarse-cfo-stress-sweep.md
-          - "Лабораторная 11.32 — Двухплатный in-fabric coarse-CFO": ru/labs/lab-11-32-two-board-fabric-coarse-cfo.md
           - "Лабораторная 11.33 — Остаточный CFO и timing-гипотеза": ru/labs/lab-11-33-residual-cfo-timing-hypothesis.md
-          - "Лабораторная 11.34 — Непрерывный QPSK timing recovery": ru/labs/lab-11-34-continuous-qpsk-timing-recovery.md
           - "Лабораторная 11.35 — Парный timing A/B и фазоинвариантный TED": ru/labs/lab-11-35-paired-timing-ab.md
-          - "Лабораторная 11.38 — ZynqSDR TX → запись IQ → офлайн-приёмник": ru/labs/lab-11-38-hardware-tx-iq-capture-offline-rx.md
           - "Лабораторная 11.41 — DC-блокер следил за данными": ru/labs/lab-11-41-dc-blocker-data-tracking.md
           - "Лабораторная 11.42 — Ложный захват frame-sync": ru/labs/lab-11-42-ber-floor-lock-tolerance.md
-          - "Лабораторная 11.45 — Дифференциальный QPSK + длинная преамбула": ru/labs/lab-11-45-differential-long-preamble.md
-          - "Лабораторная 11.46 — Сообщение из одной Zynq-консоли в другую": ru/labs/lab-11-46-two-board-console-message.md
       - "Проекты блока 12":
           - "Проект 12.1 — Итоговый проект: QPSK-модем": ru/labs/project-12-1-qpsk-modem-final-project.md
           - "Проект 12.2 — Итоговый проект: анализ RF-захвата": ru/labs/project-12-2-rf-capture-analysis-final-project.md
@@ -514,7 +516,7 @@ nav:
           - "Lab 10.4 — KiCad schematic mini-project": en/labs/lab-10-4-kicad-schematic-mini-project.md
           - "Lab 10.5 — NanoVNA and RF Demo Kit": en/labs/lab-10-5-nanovna-rf-demo-kit.md
           - "Lab 10.6 — Digital RF attenuator characterization": en/labs/lab-10-6-digital-attenuator-characterization.md
-      - "Block 11 labs":
+      - "Block 11 — core path":
           - "Lab 11.1 — Project requirements and architecture": en/labs/lab-11-1-project-requirements-and-architecture.md
           - "Lab 11.2 — End-to-end simulation package": en/labs/lab-11-2-end-to-end-simulation-package.md
           - "Lab 11.3 — FPGA/RF integration checklist": en/labs/lab-11-3-fpga-rf-integration-checklist.md
@@ -522,12 +524,24 @@ nav:
           - "Lab 11.5 — AXI DMA latency and jitter": en/labs/lab-11-5-axi-dma-latency-jitter.md
           - "Lab 11.6 — Measurement uncertainty budget": en/labs/lab-11-6-measurement-uncertainty-budget.md
           - "Lab 11.7 — PS-side AXI-Lite BPSK bring-up": en/labs/lab-11-7-axi-lite-bpsk-bringup.md
+          - "Lab 11.14 — Stock-shell host BPSK OTA measurement": en/labs/lab-11-14-stock-shell-bpsk-ota.md
+          - "Lab 11.27 — Runtime QPSK digital-loopback BER": en/labs/lab-11-27-runtime-qpsk-digital-loopback.md
+          - "Lab 11.28 — Runtime QPSK through RTL-SDR": en/labs/lab-11-28-rtl-sdr-ota-qpsk.md
+          - "Lab 11.29 — Cold-boot BER campaign": en/labs/lab-11-29-cold-boot-ber-campaign.md
+          - "Lab 11.30 — Coarse CFO on a two-board link": en/labs/lab-11-30-two-board-cfo-validation.md
+          - "Lab 11.31 — Coarse-CFO estimator stress sweep": en/labs/lab-11-31-coarse-cfo-stress-sweep.md
+          - "Lab 11.32 — Two-board in-fabric coarse-CFO": en/labs/lab-11-32-two-board-fabric-coarse-cfo.md
+          - "Lab 11.34 — Continuous QPSK timing recovery": en/labs/lab-11-34-continuous-qpsk-timing-recovery.md
+          - "Lab 11.38 — ZynqSDR TX → IQ capture → offline receiver": en/labs/lab-11-38-hardware-tx-iq-capture-offline-rx.md
+          - "Lab 11.45 — Differential QPSK + a longer preamble": en/labs/lab-11-45-differential-long-preamble.md
+          - "Lab 11.46 — A message from one Zynq console to another": en/labs/lab-11-46-two-board-console-message.md
+      - "Block 11 — bring-up case studies":
+          - "Overview: eight debugging cases": block11-case-studies.md
           - "Lab 11.8 — AD9361 gpreg BPSK overlay": en/labs/lab-11-8-axi-gpreg-bpsk-overlay.md
           - "Lab 11.9 — AD9361 RF discovery sweep": en/labs/lab-11-9-rf-discovery-sweep.md
           - "Lab 11.10 — Timed IIO burst capture": en/labs/lab-11-10-iio-burst-capture.md
           - "Lab 11.11 — IIO vs gpreg contention probe": en/labs/lab-11-11-iio-gpreg-contention-probe.md
           - "Lab 11.13 — Stock vs runtime RX compare": en/labs/lab-11-13-stock-vs-runtime-rx-compare.md
-          - "Lab 11.14 — Stock-shell host BPSK OTA measurement": en/labs/lab-11-14-stock-shell-bpsk-ota.md
           - "Lab 11.15 — Runtime bridge RX with host TX probe": en/labs/lab-11-15-runtime-bridge-rx-host-tx-probe.md
           - "Lab 11.16 — Runtime RX common re-init probe": en/labs/lab-11-16-runtime-rx-common-reinit-probe.md
           - "Lab 11.17 — Runtime RX re-init start-offset sweep": en/labs/lab-11-17-runtime-rx-common-reinit-start-offset-sweep.md
@@ -540,20 +554,10 @@ nav:
           - "Lab 11.24 — Capture DDS tone RTL-SDR monitor WAV": en/labs/lab-11-24-capture-dds-tone-rtl-monitor-wav.md
           - "Lab 11.25 — Stock vs runtime DDS tone sweep": en/labs/lab-11-25-stock-vs-runtime-dds-tone-sweep.md
           - "Lab 11.26 — Runtime PL BPSK OTA: DDS-bypass fix": en/labs/lab-11-26-runtime-dds-bypass-bpsk-ota.md
-          - "Lab 11.27 — Runtime QPSK digital-loopback BER": en/labs/lab-11-27-runtime-qpsk-digital-loopback.md
-          - "Lab 11.28 — Runtime QPSK through RTL-SDR": en/labs/lab-11-28-rtl-sdr-ota-qpsk.md
-          - "Lab 11.29 — Cold-boot BER campaign": en/labs/lab-11-29-cold-boot-ber-campaign.md
-          - "Lab 11.30 — Coarse CFO on a two-board link": en/labs/lab-11-30-two-board-cfo-validation.md
-          - "Lab 11.31 — Coarse-CFO estimator stress sweep": en/labs/lab-11-31-coarse-cfo-stress-sweep.md
-          - "Lab 11.32 — Two-board in-fabric coarse-CFO": en/labs/lab-11-32-two-board-fabric-coarse-cfo.md
           - "Lab 11.33 — Residual CFO and timing hypothesis": en/labs/lab-11-33-residual-cfo-timing-hypothesis.md
-          - "Lab 11.34 — Continuous QPSK timing recovery": en/labs/lab-11-34-continuous-qpsk-timing-recovery.md
           - "Lab 11.35 — Paired timing A/B and rotation-invariant TED": en/labs/lab-11-35-paired-timing-ab.md
-          - "Lab 11.38 — ZynqSDR TX → IQ capture → offline receiver": en/labs/lab-11-38-hardware-tx-iq-capture-offline-rx.md
           - "Lab 11.41 — The DC blocker was following the data": en/labs/lab-11-41-dc-blocker-data-tracking.md
           - "Lab 11.42 — A frame-sync false lock": en/labs/lab-11-42-ber-floor-lock-tolerance.md
-          - "Lab 11.45 — Differential QPSK + a longer preamble": en/labs/lab-11-45-differential-long-preamble.md
-          - "Lab 11.46 — A message from one Zynq console to another": en/labs/lab-11-46-two-board-console-message.md
       - "Block 12 projects":
           - "Project 12.1 — QPSK modem final project": en/labs/project-12-1-qpsk-modem-final-project.md
           - "Project 12.2 — RF capture analysis final project": en/labs/project-12-2-rf-capture-analysis-final-project.md
