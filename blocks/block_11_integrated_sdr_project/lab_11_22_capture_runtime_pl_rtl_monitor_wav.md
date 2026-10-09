@@ -62,16 +62,21 @@ the PL bring-up sequence. Thread synchronization is via a `threading.Event`:
 the capture thread records from the moment `burst_start` is asserted until the
 event is set at the end of `--capture-duration-s`.
 
-## Live result on 2026-06-23
+## Live result on 2026-06-23 — corrected
 
-The RTL-SDR captured a WAV during the runtime `bridge_txrx_mux` bring-up.
-Offline analysis (Lab 11.20) applied to this WAV detected the BPSK preamble
-and measured BER = 0 / EVM ≈ 56 %. Simultaneously, `tx_valid_count > 0` and
-`rx_valid_count = 0` were confirmed by the gpreg poll.
+> **Correction.** An earlier version of this section said that the offline analysis "detected the BPSK
+> preamble and measured BER = 0 / EVM ≈ 56 %" and concluded that "the PL BPSK TX path radiates correctly".
+> The committed analysis output does not support that. The capture of the runtime PL run scores
+> **105 bit errors out of 281 (BER 0.37)**, EVM ≈ 820 %, and a preamble correlation of 0.13 — the
+> signature of no BPSK signal at all ([metrics](/zynq-sdr-course/assets/lab1120_lab11_22_runtime_pl_rtl_monitor_live_20260624_runtime_pl_a_live_20260624_runtime_pl_a_metrics.json)).
 
-**Key conclusion**: the PL BPSK TX path radiates correctly under the runtime
-overlay. The failure is entirely on the RX side (AD9361 → PL DMA path). The
-TX modem is not broken.
+What the run did show is the gpreg pattern `tx_valid_count > 0`, `rx_valid_count = 0`. The counters
+prove that the PL modem produced samples; they do not prove that the samples reached the DAC. Lab 11.26
+found that they did not: after the overlay reload the AD9361 DAC core comes up in DDS-only mode and
+ignores the PL stream ([Lab 11.26](/zynq-sdr-course/en/labs/lab-11-26-runtime-dds-bypass-bpsk-ota/)).
+
+The lesson is the one this page originally missed: a counter inside the FPGA is not evidence of a
+radiated signal. Only the independent receiver can say that, and here it said "no".
 
 ## Report checklist
 

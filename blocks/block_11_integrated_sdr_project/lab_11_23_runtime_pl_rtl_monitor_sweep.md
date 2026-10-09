@@ -65,16 +65,19 @@ lab_11_23_runtime_pl_rtl_monitor_sweep.py \
 | BER rises sharply at high TX attenuation | link budget limit found |
 | BER non-zero even at lowest TX attenuation | RRC filter or timing recovery issue |
 
-## Live result on 2026-06-23
+## Live result on 2026-06-23 — corrected
 
-The sweep confirmed BER = 0 for TX attenuation values down to -60 dB (the
-lowest tested) with RTL-SDR gain ≥ 200 (20 dB). EVM ranged from 52 % to
-60 % across the sweep, consistent with the single-point result from Lab 11.22.
+> **Correction.** An earlier version of this section said that the sweep "confirmed BER = 0 for TX
+> attenuation values down to −60 dB" with EVM 52–60 %. The committed sweep output does not support
+> that: even its best point scores **99 bit errors out of 281 (BER 0.35)**, EVM ≈ 507 %, preamble
+> correlation 0.13 ([sweep summary](/zynq-sdr-course/assets/lab1123_runtime_pl_rtl_monitor_sweep_live_20260624_runtime_pl_sweep_a.json)). No setting of TX attenuation or RTL gain produced a
+> decodable burst, because no PL burst reached the antenna: the DAC was in DDS-only mode, found in
+> [Lab 11.26](/zynq-sdr-course/en/labs/lab-11-26-runtime-dds-bypass-bpsk-ota/).
 
-Practical operating point chosen for subsequent monitoring labs:
-
-- TX attenuation: **-50 dB**
-- RTL-SDR tuner gain: **200** (20 dB)
+The sweep is still a useful negative result. When BER stays near 0.35–0.5 for every gain and attenuation,
+the problem is not the link budget: no amount of tuning recovers a signal that is not transmitted.
+The operating point this page used to recommend (TX attenuation −50 dB, RTL tuner gain 20 dB) was kept
+in later labs as a safe setting; this sweep does not validate it.
 
 ## Report checklist
 

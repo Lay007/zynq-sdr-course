@@ -95,6 +95,12 @@ This confirms that the AD9361 DDS peripheral is correctly restored by the
 runtime boot sequence, and that any remaining bring-up problem is limited to
 the PL BPSK RX path.
 
+> **Later correction (Lab 11.26).** The tone measurements above stand, but the conclusion that only the
+> PL RX path was left broken does not. The DDS tone travels DDS → DAC; the PL BPSK stream must be
+> switched onto the DAC separately, and after the overlay reload it was not (DDS-only mode). A healthy
+> DDS tone was exactly what made the PL TX path look healthy. See
+> [Lab 11.26](/zynq-sdr-course/en/labs/lab-11-26-runtime-dds-bypass-bpsk-ota/).
+
 ## Report checklist
 
 - [ ] Attach WAV manifest for stock-shell capture.

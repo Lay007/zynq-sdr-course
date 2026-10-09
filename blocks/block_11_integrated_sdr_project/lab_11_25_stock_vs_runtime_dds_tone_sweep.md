@@ -91,6 +91,12 @@ This sweep constitutes the final external RF evidence that:
 2. the runtime `fpga_manager` reload does not disturb the DDS tone output;
 3. the remaining bring-up problem is isolated to the PL RX input path.
 
+> **Later correction (Lab 11.26).** The tone measurements above stand, but the conclusion that only the
+> PL RX path was left broken does not. The DDS tone travels DDS → DAC; the PL BPSK stream must be
+> switched onto the DAC separately, and after the overlay reload it was not (DDS-only mode). A healthy
+> DDS tone was exactly what made the PL TX path look healthy. See
+> [Lab 11.26](/zynq-sdr-course/en/labs/lab-11-26-runtime-dds-bypass-bpsk-ota/).
+
 The sweep artifact is the reference evidence for the controlled DDS tone lab
 committed in git as `e355c14`.
 
@@ -108,7 +114,7 @@ committed in git as `e355c14`.
 DDS tone sweep covered offsets ____ Hz, TX attenuation ____ dB, modes ____.
 Tone detection: ____ out of ____ points successful. Peak offset error range:
 ____ Hz to ____ Hz. SNR range: ____ dB to ____ dB. Stock vs runtime amplitude
-difference: max ____ dB. Final isolation: the ZynqSDR PL RX path is the only
-remaining bring-up blocker; the TX chain and DDS peripheral are confirmed
-healthy in both stock and runtime modes.
+difference: max ____ dB. The DDS tone path is / is not
+healthy in both modes. This test does / does not cover the PL data path to the
+DAC, because ______.
 ```
