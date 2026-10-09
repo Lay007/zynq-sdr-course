@@ -205,6 +205,15 @@ Two of these numbers do not mean what they seem to mean:
 2. Set `noise_rms = 0` and `q_fractional_bits = 11`. The largest spur rises from -98.2 to -79.6 dBc. Is that close to 6 dB per bit? Which part of the mixer (data words or the sine/cosine words) would you widen first?
 3. For a shift that must stay phase-coherent over a 100 ms burst, how many phase bits keep the accumulated phase error below 0.01 rad at 2.4 MS/s?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. A 7.32 Hz frequency error moves the output peak by far less than one FFT bin (73 Hz here), and the spurs come from amplitude quantization, which is unchanged, so the spectrum looks perfect. But the error accumulates as a phase ramp: over 32 768 samples at 2.4 MS/s it reaches `2π·7.32·0.0137 ≈ 0.63 rad`, which is the 35.9 % EVM. An EVM against a reference compares sample by sample, so it sees phase and timing, which a magnitude spectrum discards.
+2. From −98.2 to −79.6 dBc is 18.6 dB for 4 bits, about 4.7 dB per bit: close to, but below, 6 dB. Widen the data words first: with only the data at 11 bits the worst spur is −78.7 dBc, with only the sine/cosine words at 11 bits it is −86.4 dBc.
+3. Rounding the phase increment leaves a frequency error of at most `Fs / 2^(B+1)`. Keeping `2π · Δf · 0.1 s` below 0.01 rad needs `Δf < 0.0159 Hz`, so `2^(B+1) > 2.4 MHz / 0.0159 Hz ≈ 1.5·10⁸`: **27 bits** (error 0.0089 Hz, 0.0056 rad). 26 bits gives 0.0179 Hz and 0.011 rad, just too much. A 32-bit accumulator has a wide margin.
+
+</details>
+
 ## Report checklist
 
 - [ ] State sample rate, input tone frequency and shift frequency.

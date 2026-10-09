@@ -167,6 +167,15 @@ Saturation count: 0
 2. Quantize only the taps and plot the stopband. Observed peaks from 400 kHz up: -71.0 dB (15 fractional bits), -59.6 dB (13), -47.9 dB (11), -35.3 dB (9), again about 6 dB per bit. Count the taps that round to zero (115, 107, 93, 73 non-zero of 129). Which is the cheaper fix for a -80 dB requirement: more coefficient bits or a shorter filter with larger taps?
 3. Scale the input up until the saturation counter becomes non-zero. What happens to the SQNR, and why is a few saturations much worse than a few LSB of rounding error?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. The numbers are in the exercise; the point is the irregular steps: a coefficient error is one fixed change of the filter's response, so the error depends on how that change falls on this particular signal, not on a uniform noise floor.
+2. Two more coefficient bits. 17 fractional bits put the stopband peak at −84.9 dB, and an 18-bit coefficient still fits the 18-bit port of a DSP48E1 at no extra cost. A shorter filter has larger taps but a wider transition and a shallower stopband, so it moves away from −80 dB, not towards it.
+3. Scaling the peak input from 0.85 to 1.0 changes nothing (SQNR 83.6 dB). At 1.2 the SQNR collapses to 33.1 dB **with the saturation counter still at 0**: the input quantizer clips the samples above full scale silently, and the counter only watches the output. At 1.5 the counter shows 44 events and the SQNR is 20.3 dB; at 2.0, 4911 events and 11.7 dB. A rounding error is at most half an LSB; a clipped sample is wrong by the whole overshoot, so a handful of them outweighs millions of rounding errors. And a counter only sees overflows where it is placed.
+
+</details>
+
 ## Report checklist
 
 - [ ] State input, coefficient, product, accumulator and output formats.

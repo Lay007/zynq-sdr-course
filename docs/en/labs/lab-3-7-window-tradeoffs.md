@@ -68,6 +68,15 @@ blackman: weak visibility = 46.50 dB
 3. Using the ENBW values from Lab 3.1, predict how much the noise floor rises from rectangular to
    Blackman, and check it on the plot.
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. At 1.2 kHz (about 20 bins) Blackman wins: 36.5 dB above the local floor against 31.7 dB for Hann; the rectangular window still shows nothing (−0.7 dB). Closer to the strong tone, deeper and faster-falling sidelobes matter more than the main-lobe width.
+2. The noise floor. At −80 dB the weak tone is still 20.9 dB (Hann) and 20.5 dB (Blackman) above its local floor, and that floor is the noise, not leakage: at 138 bins both windows leak far less than the noise. The rectangular window is limited by leakage and shows nothing.
+3. ENBW 1.727 for Blackman predicts `10·log10(1.727) = 2.37 dB`; the measured median noise level rises from −103.79 to −101.44 dB, i.e. 2.35 dB (Hann: predicted 1.76, measured 1.73 dB).
+
+</details>
+
 ## Report checklist
 
 - Include both generated plots.

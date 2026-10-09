@@ -64,6 +64,15 @@ FFT/selected-bin ratio at N=65536: 4.0
    needs two per bin. Which would you choose for detecting 3 known pilots in an FPGA with little
    block RAM, and why?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. With the model counts `N²` and `N/2·log2 N` the ratio is `2N / log2 N`: 21.3 at N = 64, 204.8 at 1024, 4096 at 65 536.
+2. `K` selected bins cost `K·N`, the FFT `N/2·log2 N`, so the break-even is `K = log2(N)/2 = 6` bins at N = 4096. Five or fewer bins are cheaper one by one.
+3. Goertzel: three detectors need 6 words of state instead of a 4096-word buffer, and `3·N` multiplies per block, less than one FFT. With little block RAM and few known frequencies it wins on both counts.
+
+</details>
+
 ## Report checklist
 
 - Include both generated plots.

@@ -69,6 +69,15 @@ Correlation peak/median: 40.00 dB
 3. Apply the FIR with `np.convolve(rx, h)` (full) instead of `mode="same"`. By how many samples does
    the estimate move, and why is it exactly `(len(h) - 1) / 2`?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. With the lab's noise model the estimate does not fail at 0, −6 or −12 dB: it stays at 512 samples while the peak-to-median ratio falls by about 3 dB per 3 dB of SNR (40.0 → 31.1 → 25.2 → 19.4 dB). Over 20 noise seeds it starts failing near −18 dB (15/20 correct) and is gone by −30 dB (0/20). The reason it survives so long is the SNR definition: it is measured over the whole 2048-sample record, but the preamble occupies only 64 samples, so the SNR inside the preamble is 15 dB higher than the label; add the 18 dB coherent gain of 64 symbols and −18 dB is still a positive margin.
+2. Run as written, the 16-symbol preamble shows *more* peak-to-median (41.6 dB) than the 64-symbol one, because the lab scales the noise to the record's average power, which drops with a shorter preamble. With the noise power held fixed, 16 symbols give 36.3 dB against 40.2: a 3.9 dB loss, less than the `10·log10(64/16) = 6 dB` of coherent gain, because the median of the correlation is not the noise power.
+3. The estimate moves from 512 to 532 samples: 20 = `(41 − 1)/2`. The full convolution of a symmetric 41-tap filter delays the signal by half its length; `mode="same"` crops that delay away.
+
+</details>
+
 ## Report checklist
 
 - Include both generated plots.
