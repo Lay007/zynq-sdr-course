@@ -235,6 +235,16 @@ Alias suppression by the anti-aliasing filter: 105.8 dB
 4. Compute the multiply count per output sample for the direct filter and for a polyphase version
    with the same 129 taps.
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. 250 → +250 kHz, 310 → −290 kHz, 350 → −250 kHz, 700 → +100 kHz. The 700 kHz tone is the dangerous one: it lands 20 kHz from the wanted channel at +80 kHz.
+2. 17, 33 and 65 taps give −40.1, −86.0 and −105.9 dBc. The shortest filter with the alias 60 dB down is 22 taps (−63.1 dBc; 21 taps give −57.2).
+3. 290 kHz is inside the new Nyquist band (±300 kHz), so it does not alias, but it is beyond the 240 kHz passband: it reaches the output 74.3 dB below the wanted tone (it entered 6 dB below), i.e. attenuated by about 68 dB. Decimation only needs to stop what would fold onto the band you keep.
+4. Filtering every input sample and then dropping three of four costs `129 × 4 = 516` multiplies per output sample. Computing only the kept outputs, or a polyphase filter (4 branches of about 33 taps at the low rate), costs 129 per output sample: four times less for the same response.
+
+</details>
+
 ## Report checklist
 
 - [ ] State `Fs_in`, decimation factor and `Fs_out`.

@@ -72,6 +72,15 @@ Input 1180000 Hz -> expected alias 180000.000 Hz, measured 179992.676 Hz
 3. A receiver has an anti-alias filter with a 450 kHz passband edge. Which band of inputs can
    still fold into 0–50 kHz if the filter only reaches 40 dB rejection at 950 kHz?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. 950 kHz → 50 kHz, 2.3 MHz → 300 kHz, 1.5 MHz → 500 kHz (measured 49 988, 299 988 and 499 939 Hz). 1.5 MHz lands exactly on Nyquist, where a real tone's amplitude depends on its phase: a cosine stays at full level, a sine (`phase −π/2`) samples as zeros and disappears.
+2. 100, 900, 1100, 1900, 2100 and 2900 kHz: every `k·Fs ± 100 kHz`.
+3. Inputs from 950 to 1050 kHz fold into 0–50 kHz (`1 MHz ± 50 kHz`), and they arrive attenuated by only about the 40 dB the filter reaches there; further images (1950–2050 kHz, ...) are attenuated more if the filter keeps falling. A 40 dB filter edge is a 40 dB alias floor.
+
+</details>
+
 ## Report checklist
 
 - [ ] Record `Fs` and the Nyquist frequency.

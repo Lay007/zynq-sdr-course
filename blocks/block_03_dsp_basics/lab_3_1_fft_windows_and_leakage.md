@@ -193,11 +193,21 @@ blackman       1.73    0.54dB   -95.4dB     22.5dB
 1. Change `NONCOHERENT_BIN` from 250.35 to 250.5 (the worst case, exactly between two bins).
    How much does the rectangular scalloping loss grow? The textbook value is 3.92 dB.
 2. Move the weak tone from 12 bins to 40 bins away (`WEAK_OFFSET_BINS`). Does Hamming now show
-   it? Why does the answer depend on distance for Hamming but hardly for Blackman?
+   it? Why does the verdict depend on distance for Hamming but not for Blackman?
 3. Double `N` to 8192 while keeping `Fs`. What happens to the bin spacing, and to the leakage
    *in hertz* at a fixed frequency offset?
 4. You must report the noise floor of a capture in dBm/Hz. Which correction do you apply for a
    Blackman window, and by how many dB?
+
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. The rectangular scalloping loss grows from 1.83 to 3.92 dB, the textbook value. The others: Hann 1.42, Hamming 1.75, Blackman 1.10 dB.
+2. No. Hamming's weak-tone visibility goes from −10.8 dB at 12 bins to −0.5 dB at 40 bins: closer, still not visible. Blackman shows the tone at both distances (+22.5 and +54.1 dB), so its verdict does not depend on the distance. Hamming's sidelobes start near −43 dB and fall slowly, so a −60 dB tone needs a large distance; Blackman's start below −58 dB and fall fast.
+3. The bin spacing halves, from 585.9 to 293.0 Hz. At the same offset in hertz (11.7 kHz) the leakage falls, because that offset is now twice as many bins away: −35.0 → −42.6 dBc for the rectangular window, −87.8 → −107.7 dBc for Hann.
+4. A window widens each bin's noise bandwidth by its ENBW: subtract `10·log10(1.727) = 2.37 dB` for Blackman (Hann 1.76 dB, Hamming 1.35 dB), together with `10·log10(Fs/N)` to go from per-bin to per-hertz.
+
+</details>
 
 ## Report checklist
 

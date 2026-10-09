@@ -76,6 +76,15 @@ Real-valued positive/negative peaks: 119995.117/-119995.117 Hz
 3. Why does the real-valued capture need twice the sample rate of the complex one to cover the
    same bandwidth?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. Swapping I and Q gives `Q + jI = j·conj(x)`: the conjugate multiplied by a constant phase. The magnitude spectrum is the same, so both move the tone to `−f` at the same level.
+2. Either the I/Q order or the sign of Q is wrong somewhere in the capture or the reader, or the RF chain inverts the spectrum (a mixing stage with the LO above the signal). To separate them, open the same recording in a different program (HDSDR, SDR++): if it shows +300 kHz, your reader is at fault; if every program shows −300 kHz, the inversion happened before the file was written.
+3. A real signal's spectrum is symmetric, `X(−f) = X*(f)`, so the samples carry only 0 to `Fs/2` uniquely; a complex signal carries −`Fs/2` to +`Fs/2`. The amount of data is the same: the complex stream has two real numbers per sample.
+
+</details>
+
 ## Report checklist
 
 - [ ] Explain why complex baseband can distinguish spectral direction.

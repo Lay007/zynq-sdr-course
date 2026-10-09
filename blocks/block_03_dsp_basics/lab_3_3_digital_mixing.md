@@ -220,6 +220,16 @@ After hardware NCO: 0.0 Hz, worst NCO spur -58.9 dBc
 4. Replace the complex multiply with a real one (`np.real(x) * np.cos(...)`). Where does the
    extra spectral line appear, and why does a real mixer need an image filter?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. 6, 8, 10 and 12 address bits give −36.1, −48.2, −60.3 and −72.2 dBc: about 6 dB per bit, `≈ −6·a dBc`. A 90 dBc spur-free NCO needs a 15-bit address, a 32 768-entry table, which is why real NCOs use phase dithering or CORDIC instead.
+2. At 10 address bits: 8, 12 and 16 amplitude bits give −55.3, −60.2 and −60.3 dBc. From 12 bits on, the phase truncation (−60 dBc) dominates and more amplitude bits buy nothing; only 8 bits becomes the limit.
+3. With a shift of `Fs/16` the phase increment is an exact multiple of the table step, so no phase is ever truncated: the worst spur drops to −100.6 dBc, set only by the amplitude quantization. Truncation spurs exist only when the phase sequence does not land on table entries.
+4. A real mixer multiplies by `cos`, which contains both `+f` and `−f`: besides the wanted line at 0 Hz you get a second one at 840 kHz (`420 + 420 kHz`). A real mixer produces sum and difference, so it needs a filter to remove the unwanted one.
+
+</details>
+
 ## Report checklist
 
 - [ ] State `Fs`, input tone frequency and target shift.

@@ -218,6 +218,16 @@ Interferer: -9.1 -> -126.1 dBFS (suppression 116.9 dB), wanted change -0.000 dB
 4. Move the interferer to 280 kHz, inside the transition band. What suppression do you get, and
    what does this tell you about guard bands between channels?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. At 620 kHz: −79.2, −95.6, −116.9 and −152.8 dB. The first −60 dB point moves in: 437.5, 344.0, 297.0 and 273.5 kHz, i.e. the transition band roughly halves with every doubling. In an FPGA each doubling doubles the multipliers (or the clocks per output) and the coefficient storage.
+2. 12-bit taps lift the stopband peak to −47.9 dB (14 bits −59.6, 16 bits −71.0, 18 bits −84.9): roughly 6 dB per bit. 100 dB is not reachable with this filter at any word length: the floating-point design itself peaks at −89.7 dB at the 400 kHz stopband edge, and from about 20 bits the quantization no longer matters. A 100 dB stopband needs a longer filter or a stopband that starts further out.
+3. Hann gives a slightly sharper transition (first −60 dB point at 281 instead of 297 kHz) but a higher stopband peak (−80.1 instead of −89.7 dB). The window trades transition width against stopband depth.
+4. Only 28.4 dB: 280 kHz lies inside the transition band. Channels need a guard band at least as wide as the filter's transition, or the neighbour leaks through.
+
+</details>
+
 ## Report checklist
 
 - [ ] State `Fs`, cutoff frequency and number of taps.

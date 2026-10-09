@@ -23,7 +23,7 @@ Russian page uses the same order: «Цель», «Зачем это нужно»
 | Run | The exact command(s), from the repository root. |
 | Artifacts | Generated figures, metrics files or reports, as a `text` block of paths. |
 | What to expect | Measured numbers and how to read them, including the surprising ones. |
-| Exercises | Changes the learner makes, with the result each one should produce. |
+| Exercises | Changes the learner makes, followed by their answers in a collapsed `<details markdown="1">` block. Every numeric answer is obtained by running the lab's script with that change, never estimated. |
 | Report checklist | What the learner must include in the lab report. |
 | RF safety | Required for RF, power, soldering or measurement hardware. |
 

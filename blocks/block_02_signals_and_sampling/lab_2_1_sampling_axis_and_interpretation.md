@@ -79,6 +79,15 @@ Wrong interpretation error: -24676.703 Hz
 3. A tone is known to be at 200.0 kHz, and your analysis reports 160.0 kHz. What sample rate
    did the analysis assume if the true rate is 1 MS/s?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. Every frequency is scaled by `1.2 / 1.0`: `123 474.1 × 1.2 ≈ 148 169 Hz`, an error of about +24.7 kHz.
+2. The peak is read at the nearest bin, so the error is at most half a bin, `Fs / (2N)`. For less than 1 Hz at 1 MS/s, `N > 500 000`; the next power of two is `N = 524 288` (bin 1.9 Hz). Interpolating between bins gets there with far fewer samples.
+3. The reported frequency scales with the assumed rate: `160 / 200 × 1 MS/s = 0.8 MS/s`, the same mistake as in this lab.
+
+</details>
+
 ## Report checklist
 
 - [ ] Record the assumed `Fs`, FFT size and tone frequency.
