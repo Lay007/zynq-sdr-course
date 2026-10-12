@@ -99,6 +99,14 @@ SER against normalized CFO (fraction of one bin spacing):
 2. At what CFO (in hertz) does a 125 kHz, `SF = 7` link lose half a bin? Compare with a 0.3 ppm
    oscillator offset at 868 MHz.
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. With 800 symbols per point the SF 9 curve reaches the SF 7 value at −9 dB (SER 1.3 %) at about −14.4 dB: a shift of about 5.5–6 dB, close to `10·log10(512/128) = 6.0 dB`. The longer symbol collects four times the energy into one bin.
+2. One bin is `125 kHz / 128 = 977 Hz`, so half a bin is 488 Hz. A 0.3 ppm offset at 868 MHz is 260 Hz, about 0.27 bin: already in the range where the table shows SER rising (0.078 at 0.30 bin and −9 dB). Two oscillators of that quality can differ by twice as much, which is why a CSS receiver estimates the CFO from the preamble before deciding symbols.
+
+</details>
+
 ## Report checklist
 
 - [ ] Include the SER-versus-SNR curve.

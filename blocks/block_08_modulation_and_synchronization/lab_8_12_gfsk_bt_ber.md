@@ -36,8 +36,8 @@ docs/assets/lab812_gfsk_metrics.json
 
 ## What to expect
 
-`BT` sets the 99 % occupied bandwidth (normalised to the symbol rate): 0.079 at BT = 0.3,
-0.099 at BT = 0.5 and 0.123 at BT = 1.0. The constant-envelope error is at floating-point noise
+`BT` sets the 99 % occupied bandwidth (as a fraction of the sample rate, 8 samples per symbol): 0.079 at BT = 0.3,
+0.099 at BT = 0.5 and 0.123 at BT = 1.0, i.e. 0.63, 0.79 and 0.98 of the symbol rate. The constant-envelope error is at floating-point noise
 level (2e-16) and the PAPR is 0 dB for every BT, which is the whole point of the modulation.
 
 The BER sweep (BT = 0.5, about 40 000 bits per point) reads:
@@ -72,9 +72,18 @@ Read this curve for what it is:
 1. Reproduce the noiseless result: run `discriminator_demodulate` on a noiseless waveform for
    BT = 0.3, 0.5 and 1.0. What BER do you get, and what does that say about the choice of `BT`?
 2. Add a moving-average (symbol-length) filter to the received waveform before the
-   discriminator. How much does the Eb/N0 needed for BER 1e-2 fall?
+   discriminator. Does the Eb/N0 needed for BER 1e-2 fall? Try 2, 4 and 8 samples.
 3. Compare the occupied bandwidth against BT. Where is the knee, and how does it
    relate to the ISI you measured in exercise 1?
+
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. Over 20 000 bits: BER 0.199 at BT = 0.3, and 0 at BT = 0.5 and 1.0 (0.187 at BT = 0.4, 0.280 at BT = 0.2). Below BT ≈ 0.5 the Gaussian filter spreads each symbol so far into its neighbours that this detector errs without any noise. `BT` is a bandwidth knob with a cliff behind it for a simple receiver.
+2. No. A symbol-length (8-sample) average lowers the BER at low Eb/N0 (0.33 → 0.15 at 8 dB) but adds its own ISI, which creates a floor near 0.1, so 1e-2 is never reached; 2–3 samples leave the 1e-2 point at 40–42 dB, and from 5 samples errors appear even without noise. The reason is the detector: the sum of the phase differences over a symbol telescopes to the phase difference between its first and last samples, so it averages nothing, and its errors come from a few bit patterns with very little margin. A filter long enough to cut noise also shrinks that margin. A real fix is a matched Gaussian receive filter with a decision at the symbol centre, or sequence detection.
+3. The 99 % bandwidth grows smoothly with BT: 0.066, 0.079, 0.090, 0.098, 0.111 and 0.123 of the sample rate for BT = 0.2, 0.3, 0.4, 0.5, 0.7 and 1.0 (×8 for the symbol rate: 0.53 to 0.98). The knee is not in the bandwidth but in the ISI of exercise 1, which jumps between BT = 0.4 and 0.5. Going from 0.5 to 0.3 saves only about 20 % of bandwidth and costs 20 % bit errors, which is why standards that use BT = 0.3 pair it with better receivers.
+
+</details>
 
 ## Interpretation
 

@@ -81,6 +81,15 @@ The important reading is what is *not* there:
 3. Delay the local code by one chip and measure BER. What does that tell you about why acquisition is
    necessary at all?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. At Eb/N0 = 9 dB the BER stays at 0 up to J/S = 20 dB, then rises: 5e-5 at 22 dB, 1e-4 at 25 dB and 1.6e-3 at 30 dB. That is the order of the 21 dB processing gain: once the interferer exceeds the signal by more than the gain, what is left after despreading is comparable to the noise. For this particular tone frequency the despreading suppression is even 38 dB, which is why the BER rises gently rather than abruptly.
+2. The processing gain drops from 21.0 to 14.9 dB (`10·log10(31)`), and the suppression of the same tone from 38.2 to 11.2 dB. The off-peak periodic autocorrelation of both m-sequences is 1 in magnitude, i.e. −29.8 dB relative to the peak for 31 chips against −42 dB for 127. Acquisition at −8 dB SNR, over 200 trials, succeeds 188 times with 31 chips and 200 times with 127: a shorter code collects less energy per correlation.
+3. BER 0.51: a code shifted by one chip is almost uncorrelated with itself (the off-peak value is −1/127), so despreading returns noise. Spreading gain exists only when the local code is aligned to within a fraction of a chip, which is exactly what acquisition provides before any data can be read.
+
+</details>
+
 ## Interpretation
 
 The 127-chip code has an ideal two-level cyclic autocorrelation and nominal processing gain `10·log10(127) ≈ 21 dB`. Correlation supplies acquisition timing, while despreading distributes a narrowband interferer across the output bandwidth. This robustness costs chip rate, bandwidth and correlator/PN synchronization logic.

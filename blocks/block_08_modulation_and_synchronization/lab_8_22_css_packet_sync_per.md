@@ -92,3 +92,12 @@ of packets. No false alarms in 1000 noise-only trials.
    need to claim PER below 1e-4?
 2. Convert 250 ppm of sample-rate offset into how far a 16-symbol payload drifts, in samples, by its
    last symbol. Why does even the corrected receiver start losing packets at 500 ppm?
+
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. With 0 failures in 1000 packets the 95 % upper bound is about `3/1000 = 3·10⁻³` (rule of three). To claim PER < 10⁻⁴ you need about 30 000 packets without a failure.
+2. From the packet start to the end of the payload there are `(8 + 2 + 2 + 16) × 128 = 3584` chips, so 250 ppm drifts by 0.9 chip and 500 ppm by 1.8 chips; over the 16 payload symbols alone, 0.5 and 1.0 chip. In CSS a timing slip of one chip moves the dechirped peak by one bin, like a CFO of one bin. The corrected receiver removes a constant offset estimated on the preamble, but a sample-rate offset keeps growing through the payload, so at 500 ppm the last symbols are about a bin off again and some packets fail.
+
+</details>
+

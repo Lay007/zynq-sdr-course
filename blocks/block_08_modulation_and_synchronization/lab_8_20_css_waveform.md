@@ -83,6 +83,15 @@ precision; Lab 8.21 shows what noise does to it.
 3. Multiply the received chirp by a small frequency offset (a quarter of a bin). What happens to
    the peak bin and to its height?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. `2^9 = 512` chips, `512 / 125 kHz = 4.096 ms` per symbol, 9 bits per symbol. Each step of SF doubles the symbol time and adds one bit: the bit rate falls and the sensitivity rises.
+2. Symbol 0 dechirps to bin 0 and symbol 127 to bin 127. A CSS symbol is the base chirp cyclically shifted by its value; after multiplying by the conjugate base chirp, a shift of `m` chips becomes a tone at `m` bins, so neighbouring symbols are neighbouring frequencies.
+3. A quarter-bin offset leaves the peak in the same bin (37) but lowers it by 0.91 dB, and the neighbouring bin rises to 9.5 dB below the peak: the tone now sits between bins (scalloping, as in Lab 3.1). At half a bin the two bins would be equal, which is the limit Lab 8.21 measures.
+
+</details>
+
 ## Report checklist
 
 - [ ] Record `SF`, `BW`, sample rate and symbol duration.
