@@ -114,6 +114,15 @@ Each exercise below is a deliberate one-line RTL mutation. Make it, run the benc
 2. Why must the TX keep sending `flush_symbols = 16` zero symbols after the last frame bit? Relate the number to the group delay of the TX and RX RRC filters (65 taps each, 8 samples per symbol).
 3. Which single signal in the waveform would you watch first to find the frame start, and why is `start_offset` a fragile way to find it on real hardware?
 
+<details markdown="1">
+<summary>Answers (checked against the RTL and the bench)</summary>
+
+1. The observed output is in the exercise: this top level has no reference to detect the inversion.
+2. Each 65-tap RRC filter delays the signal by 32 samples, 4 symbols at 8 samples per symbol; TX and RX together delay it by 8 symbols, plus the register latency of the pipeline. Without flush symbols the last frame bits would still be inside the filters when the input stops; 16 zero symbols push them through with margin.
+3. The matched-filter output (or the preamble correlation/lock signal, where there is one): the frame starts where the known preamble pattern appears. `start_offset` hard-codes the total latency in samples, which on hardware depends on the converter FIFOs, the AD936x path and when each block was enabled; it can differ between builds and between boots, as the Block 11 case studies show.
+
+</details>
+
 ## Report checklist
 
 - [ ] Show that `s_ready` throttles the framed source to the 8x upsampler rate.

@@ -135,6 +135,30 @@ Each exercise below is a deliberate one-line RTL mutation. Make it, run the benc
 2. Swap the `busy` and `done` bits in the status read (`{29'd0, core_busy, done_sticky, 1'b0}`). The bench reports `ERROR: busy bit was never observed during the AXI-Lite controlled run`. The datapath is untouched and the design would synthesize, so only a check of the register map catches this kind of error.
 3. Write the same sequence as a short C function using `devmem`-style 32-bit reads and writes, with a poll timeout. Which register do you read to decide that the run finished, and what happens if you read it only once?
 
+<details markdown="1">
+<summary>Answers (checked against the RTL and the bench)</summary>
+
+1. The observed output is in the exercise: a `done` bit that cannot be cleared makes every later run look finished.
+2. The observed output is in the exercise: a register-map error leaves the datapath intact and is caught only by a test of the register map.
+3. A sketch (`rd32`/`wr32` are 32-bit accesses at `base + offset`):
+
+    ```c
+    int run_frame(uintptr_t base, unsigned timeout_ms) {
+        wr32(base + 0x00, 0x4);              /* clear the sticky done bit */
+        wr32(base + 0x00, 0x1);              /* launch one frame */
+        for (unsigned t = 0; t < timeout_ms; ++t) {
+            if (rd32(base + 0x00) & 0x4)     /* done */
+                return (int)rd32(base + 0x18);   /* payload errors */
+            usleep(1000);
+        }
+        return -1;                           /* timed out */
+    }
+    ```
+
+   Read `CONTROL_STATUS` (`0x00`) and wait for the sticky `done` bit (bit 2). A single read right after the launch almost always sees the run still busy, and without the timeout a stuck core hangs the software forever. Clearing `done` first is what makes the poll mean "this run", not "some earlier run".
+
+</details>
+
 ## Report checklist
 
 - [ ] Include the register map.

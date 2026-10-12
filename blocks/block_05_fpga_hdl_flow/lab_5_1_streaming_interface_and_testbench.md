@@ -182,6 +182,15 @@ Each exercise below is a deliberate one-line RTL mutation. Make it, run the benc
 2. Remove the `if (in_valid)` around the data registers so `out_i`/`out_q` load on every clock. The bench still **passes**. Explain why this is correct under the valid-only contract, and name one situation where holding the last valid sample is still worth the clock-enable (a downstream block that ignores `valid`, a waveform that is easier to read, or switching power).
 3. Add a second register stage (latency 2). Before touching the bench, predict which check fires first; then change the reference model's delay so the bench passes again. Record the new latency in the report.
 
+<details markdown="1">
+<summary>Answers (checked against the RTL and the bench)</summary>
+
+1. The observed output is in the exercise: a valid flag that is always high announces garbage as data, and only a check of `valid` on idle cycles catches it.
+2. Under the valid-only contract a consumer looks at the data only when `valid` is high, so what the data registers hold in between is irrelevant and the bench rightly passes. The clock enable still earns its place when something downstream does not honour `valid` (a DAC that samples every clock, an ILA trace read by a human), and it saves switching power because the registers do not toggle on idle cycles.
+3. The first check to fire is the one on the output timing: with latency 2 the first valid output appears one clock later than the reference model expects, so the first comparison fails on valid: the run prints `ERROR at 55000: out_valid=0 expected=1`, followed by the data one sample late (`out=(0,0) expected=(32767,0)`). Delaying the reference model by one more clock makes the bench pass again; the report records latency 2.
+
+</details>
+
 ## Minimal report
 
 The lab report should contain:

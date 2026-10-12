@@ -136,6 +136,15 @@ Each exercise below is a deliberate one-line RTL mutation. Make it, run the benc
 2. The same mechanism would also hide a real polarity bug. Which register or signal should the PS read to know that the lock was inverted, and why is that worth logging on hardware?
 3. What is the probability that 8 random bits match an 8-bit preamble exactly? Relate it to `LOCK_PREAMBLE_BITS` and `LOCK_ERR_TOL`.
 
+<details markdown="1">
+<summary>Answers (checked against the RTL and the bench)</summary>
+
+1. The observed result is in the exercise: the counter accepts a preamble match in either polarity and normalises the payload, so an inverted stream still counts zero payload errors.
+2. Today, none: the polarity is held in the counter's internal `invert_bits` register, and neither the top level nor the AXI-Lite register map (`0x00`–`0x1C`, Lab 5.11) exports it. That is exactly the gap: a hardware polarity bug would pass silently. Export it, for example as a spare bit of `CONTROL_STATUS`, and log it with every run; an inverted lock on a link that should never invert points to a sign error somewhere in the chain.
+3. An exact 8-bit match by random bits has probability `1/256 ≈ 0.4 %`, doubled to about 0.8 % because either polarity is accepted. With `LOCK_ERR_TOL = t` the window accepts up to `t` mismatches: `P = 2 · Σ_{k≤t} C(8,k) / 256`, already 7 % for `t = 1`. Longer lock windows and a small tolerance keep false locks rare; the course default is 8 bits with `LOCK_ERR_TOL = 0`.
+
+</details>
+
 ## Report checklist
 
 - [ ] State the meaning of `start`, `busy` and `done`.

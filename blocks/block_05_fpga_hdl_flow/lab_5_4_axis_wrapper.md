@@ -143,6 +143,15 @@ Each exercise below is a deliberate one-line RTL mutation. Make it, run the benc
 2. Use the simpler ready rule `assign s_axis_tready = m_axis_tready;`. The bench still **passes**. Explain why this version never loses or duplicates data, and what it gives up: an empty output register cannot be filled while the downstream is not ready. Design a check (for example, count cycles for a fixed number of beats under a fixed `tready` pattern) that would tell the two versions apart.
 3. AXI-Stream forbids a source from waiting for `tready` before asserting `tvalid`. Find the line in the RTL that guarantees this for `m_axis_tvalid`.
 
+<details markdown="1">
+<summary>Answers (checked against the RTL and the bench)</summary>
+
+1. The observed output is in the exercise: ignoring backpressure loses beats silently.
+2. With `s_axis_tready = m_axis_tready` a beat is accepted only on a clock when the output register is being emptied, so the register never holds two beats at once and nothing is lost or duplicated. What it gives up is filling an *empty* output register while the downstream is stalled: after every stall the pipeline restarts one beat behind. A check that shows it: send a fixed number of beats while the downstream ready follows a fixed stall pattern (for example one idle clock in three) and count the clocks to finish; the full rule finishes in fewer clocks.
+3. `assign s_axis_tready = (~m_axis_tvalid) || m_axis_tready;` together with `m_axis_tvalid <= s_axis_tvalid;` inside `if (s_axis_tready)`: when the output register is empty, it loads and raises `m_axis_tvalid` regardless of `m_axis_tready`, so the source never waits for ready before asserting valid.
+
+</details>
+
 ## Report checklist
 
 - [ ] Explain `tvalid/tready` handshake.

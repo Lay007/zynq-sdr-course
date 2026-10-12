@@ -144,6 +144,15 @@ Each exercise below is a deliberate one-line RTL mutation. Make it, run the benc
 2. Replace rounding with truncation: `round_q15 = value >>> SHIFT;`. The bench reports 8 errors, for example `out=(11999,0) expected=(12000,0)`. Note that the first one happens at phase 0, where cos = 32767, not 32768: 12000 * 32767 / 32768 = 11999.63, which rounds to 12000 but truncates to 11999. Q1.15 cannot represent +1.0 exactly.
 3. Estimate the spurious-free dynamic range of a 16-entry, 16-bit table and compare with the "about 6 dB per phase-address bit" rule measured in Lab 3.3. What would you change first to improve it: table length or table word width?
 
+<details markdown="1">
+<summary>Answers (checked against the RTL and the bench)</summary>
+
+1. The observed output is in the exercise: the conjugate mixer moves the signal to −fs/16, as in Lab 3.3.
+2. The observed output is in the exercise. Note the cause: Q1.15 cannot represent +1.0, so `cos = 32767`, and truncation instead of rounding turns 11 999.63 into 11 999.
+3. In this RTL the phase accumulator *is* the 4-bit table address (`PHASE_W = 4`, `PHASE_INC = 1`): the phase steps exactly through all 16 entries and nothing is ever truncated, so the only error is the 16-bit amplitude rounding; a 16-entry, 16-bit table stepped this way has spurs at about −100 dBc, the same result as the `Fs/16` case of Lab 3.3. The price is frequency resolution: only multiples of `fs/16` exist. Driven from a wider accumulator truncated to 4 address bits, the "6 dB per address bit" rule predicts about −24 dBc. To improve a general-purpose NCO, lengthen the table (more address bits) first; 16-bit words are already far below the phase-truncation spurs.
+
+</details>
+
 ## Report checklist
 
 - [ ] State input, LUT, product, accumulator and output formats.

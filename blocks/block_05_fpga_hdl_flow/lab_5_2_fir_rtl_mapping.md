@@ -227,6 +227,16 @@ Each exercise below is a deliberate one-line RTL mutation. Make it, run the benc
 3. The coefficients sum to exactly 1.0. Compute the worst-case accumulator width for 16-bit inputs and justify (or shrink) `ACC_W = 40`.
 4. The critical path at 100 MHz is not where it looks. Put a register after the multipliers (latency 2) and synthesize again: WNS stays at -0.125 ns. The timing report shows why: the path now starts at the product registers and still runs through the 40-bit sum, the rounding adder and the saturation compare in one clock (20 levels, 15 of them CARRY4). Register the sum as well and do rounding and saturation in a third clock: WNS becomes +5.35 ns with 12 logic levels (70 LUT, 67 FF, 6 DSP48E1). Both variants were checked bit-exact against this RTL on 2000 random samples, just 1 and 2 clocks later. Which change would you keep in a real design, and what does it cost in latency?
 
+<details markdown="1">
+<summary>Answers (checked against the RTL and the bench)</summary>
+
+1. The observed output is in the exercise: a bit-exact bench sees a 1-LSB bias that any tolerance-based comparison would accept.
+2. A one-LSB coefficient change only shows where the products sit near a rounding boundary, here 4 outputs. A coefficient check needs many vectors spread over the input range, including values that make the products land near half an LSB; a handful of "nice" inputs can miss a wrong coefficient entirely.
+3. All four coefficients are positive and sum to `2^15` (1.0 in Q1.15), so `|Σ x·h| ≤ 2^15 · 2^15 = 2^30`: 31 magnitude bits plus a sign, **32 bits**. `ACC_W = 40` leaves 8 unused guard bits for this filter; 32 is enough. For a general 4-tap filter with `Σ|h|` up to `4 · 2^15` you would need 34 bits.
+4. Keep the third stage: rounding and saturation in their own clock take the path from 20 to 12 logic levels and WNS from −0.125 to +5.35 ns for 2 extra clocks of latency and a few flip-flops. A filter feeding a stream almost never minds two clocks; a feedback loop around it (a PLL, an AGC) would, and that is where you would look for a different split.
+
+</details>
+
 ## Report checklist
 
 - [ ] State FIR format and number of taps.

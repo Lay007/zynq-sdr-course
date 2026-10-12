@@ -117,6 +117,15 @@ Each exercise below is a deliberate one-line RTL mutation. Make it, run the benc
 2. Using the RTL, confirm the 9-cycle latency stage by stage, and say which number changes if `NTAPS` grows from 65 to 129.
 3. The filter is symmetric, so it needs 33 multipliers instead of 65. How many DSP48 slices would a Zynq-7020 use for I and Q together, and what would a time-multiplexed (folded) version at 8 clocks per sample need?
 
+<details markdown="1">
+<summary>Answers (checked against the RTL and the bench)</summary>
+
+1. Truncation is wrong exactly when the discarded fraction is at least half an LSB. The fractions of the products are spread almost uniformly, so close to half of the outputs (1084 of 2312, 47 %) err; the rest either had a fraction below one half or were exact.
+2. Input register for the symmetric tap pairs (1), the multipliers (2), six levels of the adder tree that sums the 33 products (3–8, `⌈log2 33⌉ = 6`) and the rounded, saturated output register (9). With `NTAPS = 129` there are 65 products and the tree needs `⌈log2 65⌉ = 7` levels: the latency becomes 10.
+3. The arithmetic says 33 multipliers per channel, 66 for I and Q. The out-of-context Vivado run of this RTL reports **96 DSP48E1** (Block 5 Vivado evidence): synthesis does not always map a design the way you count it on paper, which is why the course reports measured numbers. Folded over 8 clocks per sample, `⌈33/8⌉ = 5` multipliers per channel, about 10 for both. Better still, most inputs are zero-stuffed: the polyphase version of Lab 5.7 uses 14 DSP48E1 for the upsampler and the filter together.
+
+</details>
+
 ## Report checklist
 
 - [ ] Show that the same `rrc_taps_q15.txt` file feeds both Simulink and RTL.

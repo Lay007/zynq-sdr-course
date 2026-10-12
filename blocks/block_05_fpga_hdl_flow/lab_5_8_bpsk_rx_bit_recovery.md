@@ -107,6 +107,15 @@ Each exercise below is a deliberate one-line RTL mutation. Make it, run the benc
 2. The sampler takes one sample per symbol at a fixed offset. Edit `start_offset` in `tb/bpsk_rx_bit_recovery_meta.txt` and rerun with `--no-generate` (so the file is not regenerated). Observed: 451 (one sample late) still passes; 454 gives `total/payload errors = 68 / 64` and 446 gives `72 / 64`. Half a symbol off, about a quarter of the bits are wrong. Explain both results from the eye diagram of an RRC-filtered BPSK signal: how wide is the open part of the eye?
 3. Why can the matched filter use the same taps as the TX filter? What would change if the channel added a phase rotation (compare with Lab 8.2)?
 
+<details markdown="1">
+<summary>Answers (checked against the RTL and the bench)</summary>
+
+1. The observed output is in the exercise: with nothing to detect the inversion, every bit is wrong.
+2. After TX and RX RRC filtering the pulse is a raised cosine; the eye is open around the symbol centre and closes as the sampling instant moves towards the symbol boundary. One sample (1/8 symbol) off, the eye is still wide open, so 451 passes. The nominal offset is 450, so 454 and 446 are four samples, half a symbol, away: there neighbouring symbols contribute almost as much as the wanted one, for some bit patterns they outweigh it, and about a quarter of the bits fail. A sweep shows the open part of the eye: 448 to 452 (±2 samples) pass, 447 and 453 already give 12 and 16 errors.
+3. A matched filter is the time-reversed conjugate of the transmitted pulse. The RRC pulse is real and symmetric, so it is its own matched filter, and TX RRC followed by RX RRC gives a raised cosine with no inter-symbol interference at the symbol centres. A phase rotation passes through the linear filter unchanged and moves energy from I to Q; a hard decision on I alone then degrades and fails at 90 degrees, so the receiver needs phase recovery (Lab 8.2) before the decision.
+
+</details>
+
 ## Report checklist
 
 - [ ] State that the RX matched filter reuses the same `rrc_taps_q15.txt` as the TX FIR.

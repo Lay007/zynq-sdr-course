@@ -90,6 +90,15 @@ Each exercise below is a deliberate one-line RTL mutation. Make it, run the benc
 2. Why zero-stuffing and not sample-and-hold (repeating the symbol 8 times)? Describe what holding does to the spectrum before the RRC filter.
 3. With zero-stuffing, the average power per output sample drops by a factor of 8. The 65 TX taps in `rtl/bpsk_rrc_tx_fir_taps.mem` sum to about 2.85 (close to the square root of 8), and the largest tap is 0.387. Explain where that scaling comes from and how much headroom it leaves below Q1.15 full scale.
 
+<details markdown="1">
+<summary>Answers (checked against the RTL and the bench)</summary>
+
+1. The observed output is in the exercise: a counter off by one gives a periodic misalignment.
+2. Holding a symbol for 8 samples convolves the impulse train with an 8-sample rectangle: the spectrum is multiplied by a sinc, which droops across the passband and only partly suppresses the images. The RRC filter after it would then shape a rectangle-filtered pulse, so the TX pulse is no longer root-raised-cosine, the RX matched filter no longer matches it, and inter-symbol interference appears. Zero-stuffing keeps the images at full height but leaves the pulse shape entirely to the RRC filter, which removes them.
+3. The taps have unit energy (`Σ h² = 1.000`), so each symbol carries the same energy as one full-scale sample; their sum, 2.85, is `≈ √8`, the DC gain that restores the factor of 8 lost to zero-stuffing. Each output sample is a sum over one polyphase branch, at most `Σ|h[p + 8m]| = 0.55` of the symbol amplitude: about 5.2 dB of headroom below Q1.15 full scale (8.2 dB above the single largest tap, 0.387).
+
+</details>
+
 ## Lab 5.7b: the upsampler and the TX filter as one polyphase filter
 
 The zeros this block inserts are not free downstream: `bpsk_rrc_tx_fir` multiplies them. For output
