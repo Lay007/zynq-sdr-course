@@ -117,6 +117,15 @@ board and what the gap to the ideal is made of.
    that many bits? Why is "BER = 0" on its own weaker than it looks
    (compare [Lab 8.7](/zynq-sdr-course/en/labs/lab-8-7-snr-vs-ber-traps/))?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. `10.6 / 1.6 ≈ 6.6` in amplitude, `20·log10(6.6) ≈ 16.4 dB`, which matches the ~16.5 dB SNR difference: here the SNR is estimated from the EVM, so the two must agree. The OTA cluster is about six to seven times wider.
+2. `2.7 kHz / 240 kSym/s = 0.011` cycle per symbol, about 4.1° per symbol, or about 1140° over a 281-symbol frame: uncorrected, the constellation would spin three times. The reader estimates the frequency offset (a coarse search plus a fine search) and removes it before slicing; the small +Q component is what is left of that estimate. A residual of a few degrees is far from the 90-degree margin of BPSK.
+3. 281 bits each (the board frame is 281 BPSK symbols, and the Lab 11.20 report recovers 281 payload bits). Zero errors in 281 bits bounds the BER below about `3/281 ≈ 1.1·10⁻²` at 95 % confidence. That is a weak statement: it shows the link works, not that its error rate is low, and Lab 8.7 shows links with BER = 0 and almost no margin. A real claim needs many frames and an error count.
+
+</details>
+
 ## Report checklist
 
 - [ ] Both figures reproduced from the commands above.

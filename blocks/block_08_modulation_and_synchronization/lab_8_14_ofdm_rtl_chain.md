@@ -478,6 +478,18 @@ Each exercise changes the equalizer coefficient on line `.coeff_re(16'sd0), .coe
 5. With a 2000 ppm CFO, how many degrees would a receiver be off on every symbol if it applied the previous symbol's coefficient? Compare with the 45-degree margin of a QPSK slicer and with the table's 57.6-degree step. At which offset would such a receiver start to fail?
 6. Run `python tools/ofdm_cfo_pilot_bias.py --ppm 4000` and look at the bias with and without data carriers. Why does a known, deterministic data pattern give a bias rather than random noise, and would more pilots reduce it?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. The observed output is in the exercise: 180 degrees inverts both bits of every symbol.
+2. The observed output is in the exercise: ±90 degrees flips exactly one bit of every Gray-coded symbol, so 48 of 96.
+3. A 45-degree residual puts every point on an axis, i.e. exactly on one of the two decision boundaries; one bit of each symbol is then decided by whatever is left on the other axis (`EQ=(513,1)`: the Q component is a single LSB). In a noiseless fixed-point chain those leftovers are deterministic rounding residues, not random noise, so the count is whatever the rounding happens to give for this data pattern (22), not the 48 a coin flip per bit would average to.
+4. Known symbols or known subcarriers. A training symbol, all of whose carriers are known, gives one coefficient per subcarrier (`H[k] = Y[k]/X[k]`), which is what stage 2d does in RTL; pilots inside every data symbol track what changes afterwards (stage 2b). Lab 8.5 estimates `H[k]` from a known preamble on the even subcarriers, interpolates the odd ones linearly, and removes the residual phase of each payload symbol with four pilots.
+5. One OFDM symbol is 80 samples, so the phase advances by `360° × 2000·10⁻⁶ × 80 = 57.6°` per symbol, the step in the table. Applying the previous symbol's coefficient leaves that whole step as error, more than the 45-degree margin of a QPSK slicer, so it fails. Without noise the limit is `45° / (360° × 80) ≈ 1560 ppm`; with noise it starts failing earlier. That is why the pilot corrector estimates the phase on the *same* symbol.
+6. With data carriers the pilot estimate is biased by 9.19° at 4000 ppm; with pilots only the bias is 0. The CFO leaks energy from every carrier into its neighbours (inter-carrier interference), so the data carriers add a term to each pilot bin. The data pattern in the bench is fixed, so that term is the same complex number every time: a bias, not noise that averages away. More pilots help only if their leakage terms differ; the real fix is to remove the CFO before the FFT, which is what the time-domain corrector of stage 2e does.
+
+</details>
+
 ## Report checklist
 
 - [x] Float vs. fixed-point bit-exact match (shared committed vectors).
