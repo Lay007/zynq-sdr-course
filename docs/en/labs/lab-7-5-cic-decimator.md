@@ -82,6 +82,21 @@ Measured output peak: 219982.910 Hz
 2. Move the blocker to 2.4 MHz (a multiple of the output rate). What rejection do you get, and why?
 3. Design the droop compensation: what gain in dB does a compensation FIR need at 220 kHz?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. | Stages | Droop at 220 kHz | Rejection at 1.85 MHz | Accumulator |
+   |---:|---:|---:|---:|
+   | 3 | −1.43 dB | 39.7 dB | 25 bits |
+   | 4 | −1.91 dB | 53.0 dB | 28 bits |
+   | 5 | −2.39 dB | 66.2 dB | 31 bits |
+
+   Each stage adds about 13 dB of rejection and 3 bits of accumulator, and deepens the droop.
+2. 2.4 MHz is twice the output rate, so it sits exactly in a CIC null: the response is zero in theory, and in practice only quantization and the blocker's exact frequency limit the rejection. It also aliases to 0 Hz, where it would add to the DC offset if it got through.
+3. +1.91 dB at 220 kHz (with 3 stages, +1.43 dB): the inverse of the droop, rising across the passband like `1/|H_CIC(f)|`.
+
+</details>
+
 ## Report checklist
 
 - CIC parameters: `R`, `N`, `M`.

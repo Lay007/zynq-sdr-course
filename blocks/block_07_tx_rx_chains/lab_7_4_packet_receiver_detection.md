@@ -102,6 +102,16 @@ Things worth checking in the plots:
    around, and what would a CFO-tolerant detector do differently? (This is the
    motivation for the CFO estimators of Block 8.)
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. The numbers are in the exercise. A threshold just above the noise floor is fragile because the floor is not fixed: it moves with the preamble length (exercise 3) and with what else is in the stream, and every packet's peak varies with its own SNR. Put the threshold in the middle of the gap between the highest floor value and the weakest true peak.
+2. The detector holds much longer than the exercise suggests: at `noise_rms` 0.5 and 1.0 all 12 packets are still found (mean true peak 0.73 and 0.49). The first miss appears at 1.5 (the weakest packet peaks at 0.18, below the 0.20 threshold), and at 3.0 five of twelve are missed. A false alarm never appears: the metric is normalised by the window's energy, so more noise lowers the floor (99.9th percentile 0.24 → 0.17) as well as the peaks. Misses come first.
+3. True peaks stay at about 0.93, but the floor rises from 0.24 to 0.34 (99.9th percentile) and one false alarm appears at the 0.20 threshold. The floor of a normalised correlation scales as `1/√L`, and halving `L` raises it by `√2`: 0.243 × 1.41 = 0.34. A long preamble buys the gap between "packet" and "anything else".
+4. The matched filter adds the preamble samples coherently; a phase drift of φ across the preamble reduces the sum roughly by `|sinc(φ/2π)|`. A fraction of a radian costs little; once the phase turns through a full cycle the contributions cancel. A CFO-tolerant detector correlates short segments separately and combines their magnitudes, or searches a bank of frequency offsets, or uses a differential (delay-and-multiply) metric that the offset only rotates.
+
+</details>
+
 ## Report checklist
 
 - [ ] State preamble length, threshold, and tolerance.

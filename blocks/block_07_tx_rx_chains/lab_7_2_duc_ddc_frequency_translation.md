@@ -148,6 +148,15 @@ SNR estimate after DDC: 78.94 dB
 3. On real hardware the two LOs differ by about 0.3 ppm (see Lab 11.30). How many hertz of residual
    offset does that leave at 915 MHz after the DDC?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. With a DDC shift of +100 kHz the tone lands at +200 kHz (measured 199 988 Hz) instead of 0 Hz. The spectrum shape is identical, so only knowing where the tone *should* be reveals the mistake; the script's own error line stays small because it compares against the shift you configured.
+2. Observed offset `915.000 + 0.100 − 915.030 = +0.070 MHz`, so the DDC shift is −70 kHz; the run puts the tone at 0 Hz (RX peak 69 983 Hz before the DDC, bin quantization).
+3. `0.3·10⁻⁶ × 915 MHz ≈ 275 Hz`. The DDC removes the planned offset, not the unknown one: this residual is what the CFO estimators of Block 8 measure.
+
+</details>
+
 ## Report checklist
 
 - [ ] State TX LO and RX LO.

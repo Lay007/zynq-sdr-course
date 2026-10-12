@@ -98,6 +98,17 @@ Every stage of the architecture table already has a lab in which its behaviour w
 2. Which stages can be validated at step 1 (pure simulation) of the validation order, and which only at step 4 or 5? Give one failure mode for each that the earlier steps cannot reveal.
 3. Write down how your metrics block will get its phase and timing reference. If it uses the known transmitted symbols, say which ones (preamble only, or the whole frame) and what that does to the BER you report.
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+These are design questions; there is no single number. A complete answer contains:
+
+1. A table with one row per rate change, the filter that guards it and the lab that shows what happens without it: decimation without an anti-alias filter (Labs 2.2, 3.4), a CIC's limited rejection between its nulls (Lab 7.5), interpolation: the zero-stuffing 8× upsampler of Lab 5.7 leaves spectral images at multiples of the symbol rate, and the RRC filter of Lab 5.6 is what removes them.
+2. Pure simulation validates the mapping, filters, synchronization loops and metrics against known vectors. Only steps 4–5 (RF) reveal what the model leaves out: the two oscillators' real offset (Lab 11.30), DC offset and I/Q imbalance of the receiver (Lab 6.5), gain staging and ADC clipping (Lab 6.2), timing gaps that starve the DAC FIFO (Block 11 case studies, case 4).
+3. A receiver must get its phase and timing from the received signal (preamble, pilots, loops). If the metrics block aligns to the *whole* known frame instead, it repairs the receiver's mistakes before counting them and reports a BER that is too low; Labs 8.1 and 8.4 had exactly this "genie" alignment until it was removed. Aligning on the preamble only is honest; say which one you use.
+
+</details>
+
 ## Report checklist
 
 - [ ] Draw TX/RX chain diagram.
