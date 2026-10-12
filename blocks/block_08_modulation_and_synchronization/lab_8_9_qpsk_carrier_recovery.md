@@ -81,6 +81,16 @@ The BER-vs-CFO sweep sends 20 000 symbols per point at Eb/N0 = 12 dB, skips the 
 3. Change `resolve_90deg_ambiguity()` to choose the rotation by the lowest BER over the whole frame, as an earlier version of this script did. Explain why the sweep result does not change here, and why that choice is still wrong for a receiver: it uses the payload as its own reference.
 4. Differential QPSK removes the ambiguity without a preamble. Explain where its roughly 2x BER penalty comes from.
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. The numbers are in the exercise. While the loop is still pulling in, the constellation keeps rotating; the preamble picks the rotation that is right *at that moment*, and once the loop locks the constellation settles somewhere else, so the payload is decoded in a different rotation (BER near 1.0 or 0.5). Resolve the ambiguity only after lock, which is why the default skips 1000 symbols.
+2. The numbers are in the exercise. Higher gains widen the loop bandwidth: faster pull-in and a larger capture range, at the price of more noise passed into the phase estimate. Lower gains are quieter but slower, and beyond some offset pull-in takes longer than the skip window, so the ambiguity is resolved too early again. Loop gains trade acquisition against tracking noise; there is no free setting.
+3. In this clean sweep both rules pick the same rotation, so the table does not change. But choosing by "lowest BER over the frame" compares the payload with the transmitted payload, which a real receiver does not have; it would report a rotation, and a BER, that the receiver could never have found. Only a known preamble (or differential coding) is a legitimate reference.
+4. Differential detection compares each symbol with the previous one. A noise error in one symbol corrupts both differences it takes part in, so errors come in pairs and the BER roughly doubles (and coherent differential decoding loses a little SNR on top). Lab 11.45 uses it on hardware and pays this penalty to remove the rotation problem.
+
+</details>
+
 ## Next steps
 
 - **RTL**: this loop is ported to `blocks/block_05_fpga_hdl_flow/rtl/qpsk_costas.v` (NCO + PI +

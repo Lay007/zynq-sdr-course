@@ -88,6 +88,15 @@ spectral regrowth (12 dB worse than unclipped) would already fail any spectrum m
 3. The AD9363 DAC is 12 bits. How much digital back-off from full scale does the 99th-percentile
    PAPR (about 9.8 dB) require, and how many effective bits does that leave for the average signal?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. Clip ratio 1.6: out-of-band power −21.8 dB below in-band, PAPR 4.4 dB (from 7.2 dB), EVM 7.7 %, BER 0. At 1.3 the out-of-band power is already −18.9 dB and fails the mask. Note that even unclipped the measurement reads −25 dB, set by the 24 dB SNR noise in the empty bins, so a −20 dB requirement is checked only 5 dB above that floor.
+2. With 16-QAM bit errors appear at clip ratio 1.3 (BER 2.6e-4 at EVM 12.6 %) and reach 3.7e-2 at 0.7; QPSK stays at BER 0 down to 0.9 and shows its first errors only at 0.7 (EVM 27 %). The EVM is the same for both at each ratio; at equal average power the distance from a 16-QAM point to its nearest boundary is 2.2 times smaller than for QPSK (0.316 against 0.707), so it tolerates far less EVM.
+3. The peak must fit in full scale, so the average sits 9.8 dB below it. At about 6 dB per bit that costs `9.8 / 6.02 ≈ 1.6` bits: the average signal sees roughly 10.4 effective bits of the 12, and its quantization SNR drops from about 74 to about 64 dB. This is the price of an OFDM waveform's PAPR in the DAC.
+
+</details>
+
 ## Report checklist
 
 - [ ] Include the PAPR CCDF.

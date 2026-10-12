@@ -82,6 +82,16 @@ python blocks/block_08_modulation_and_synchronization/python/qpsk_impairments_be
 3. Replace the Gray mapping with a natural one (dibits 00, 01, 10, 11 on consecutive quadrants). Predict the BER ratio before you run it. A quick simulation of this change gave about 1.4-1.5 times the Gray BER at 0, 4 and 8 dB (for example 1.89e-2 against 1.27e-2 at 4 dB): with natural mapping one of the two neighbouring quadrants differs in both bits, so an average symbol error costs 1.5 bits instead of 1.
 4. The HDL loopback prints `PASS: qpsk_zynq_ber_top loopback recovered 140 QPSK symbols at BER=0 (start_offset=62)`. How many bits is that, and what is the smallest BER this single run can claim?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. 88 against about 76 errors: a difference of 12, while the Poisson standard deviation of 76 is about 8.7. That is 1.4 σ, well inside the noise; the measurement agrees with theory.
+2. `Es/N0 = Eb/N0 + 10·log10(2) = 9.0 dB`. Gray QPSK is two independent BPSK signals on I and Q, each carrying one bit with half the symbol energy, so each bit sees exactly the BPSK Eb/N0. The points are closer for the same *symbol* energy, but each one carries two bits.
+3. The numbers are in the exercise; the prediction is 1.5. A symbol error almost always lands on an adjacent quadrant. With Gray mapping both neighbours differ in one bit; with natural mapping (00, 01, 10, 11 around the circle) one neighbour differs in one bit and the other in two, so a symbol error costs 1.5 bits on average.
+4. 140 symbols × 2 = 280 bits. Zero errors in 280 bits only bounds the BER: below about `3/280 ≈ 1.1·10⁻²` at 95 % confidence. One run proves the datapath works, not that its BER is low.
+
+</details>
+
 ## Next steps
 
 - **Carrier recovery** — a decision-directed Costas loop de-rotates the CFO ring back into four

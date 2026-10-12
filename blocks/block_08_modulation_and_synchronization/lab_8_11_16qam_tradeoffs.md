@@ -83,6 +83,15 @@ repair clipping caused by insufficient headroom.
    the (+1 dB, 8°) imbalance. Does BER stay near the noise-only value of about 1.5e-4?
    Predict first, then run.
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. QPSK reaches 1e-3 at Eb/N0 = 6.79 dB. For Gray 16-QAM the nearest-neighbour approximation `(3/8)·erfc(√(0.4·Eb/N0))` gives 10.52 dB, and the lab's simulation agrees (1.02e-3 at 10.5 dB over 1.6 million bits). Doubling the bits per symbol costs about 3.7 dB.
+2. With drive 1.15 the signal was pushed past full scale, so the saturation counter was busy and clipping, not rounding, set the error floor: adding bits refined values that were already wrong. With drive 1.0 the peaks fit, saturation disappears from 8 bits up and EVM falls about 10× per two bits, the rounding behaviour you expect. Headroom first, then word length.
+3. No: it gets about 20 times worse. The imbalance alone (EVM 14.8 %) causes no errors in a noiseless channel, but at Eb/N0 = 12 dB the BER is 2.8e-3 instead of 1.35e-4 with noise only. The imbalance eats into the distance to the decision boundaries, and noise that would otherwise be harmless now crosses them. A distortion that "costs nothing" without noise is a lost SNR margin with it.
+
+</details>
+
 ## Interpretation
 
 16-QAM doubles payload density relative to QPSK but reduces decision margin. EVM therefore exposes gain/phase imbalance and numeric saturation before BER necessarily becomes large. Increasing word length reduces quantization error, while extra bits cannot repair clipping caused by insufficient headroom.
