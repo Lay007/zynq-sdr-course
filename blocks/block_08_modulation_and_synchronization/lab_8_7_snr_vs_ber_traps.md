@@ -170,6 +170,17 @@ quality, not digital-link correctness.
    blind to it?
 5. Write the engineering conclusion (template below) for the timing-error row.
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. At 480 kSym/s: 50 Hz is 0.0375° per symbol and 154° over 4096 symbols; 100 Hz is 0.075° and 307°; 200 Hz is 0.15° and 614°. Without phase tracking the decisions are right only while the rotation stays inside ±45°. At 50 Hz that holds for the first 1200 symbols; from 45° to 135° one bit of each symbol is wrong and beyond 135° both are, which gives `(2400·1 + 496·2)/8192 ≈ 0.41`, the observed 0.42. A frequency error integrates into a phase error, so any offset is fatal over a long enough record.
+2. The numbers are in the exercise: BER stays 0 up to 2 samples while the EVM is already about 38 %. EVM measures how far the points moved; BER measures whether they crossed a boundary. A link that passes BER = 0 at 38 % EVM has almost no margin left, so an acceptance test needs both.
+3. QPSK decides on the signs of I and Q only, and clipping a symmetric signal preserves signs, so BER cannot leave zero however hard you clip. 16-QAM also decides inner versus outer amplitude on each axis; clipping pulls the outer points towards the inner ones and those decisions fail long before any sign does.
+4. A rotation of 180° inverts both bits of every symbol, so every bit is wrong: BER 1.0, a perfect link with the wrong reference. 45° puts every point on a boundary (BER ≈ 0.25), 90° inverts one bit per symbol (0.5). The aligned EVM is computed after the analysis rotates the received points onto the reference, so it removes exactly the error you are looking for; that alignment is a measurement convenience, not something the receiver can do.
+5. Example: "At 25 dB SNR, sampling 3 of 8 samples (0.375 symbol) away from the matched-filter peak gives BER 0.053 (437/8192 bits) and EVM 66.8 %. The noise is negligible; the errors come from inter-symbol interference. BER returns to 0 for offsets up to 2 samples, but with EVM near 38 %, so the link needs a timing-recovery loop (Lab 8.3), not more SNR." 
+
+</details>
+
 ## Engineering conclusion template
 
 ```text

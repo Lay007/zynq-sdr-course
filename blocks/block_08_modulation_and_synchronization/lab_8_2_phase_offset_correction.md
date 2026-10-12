@@ -133,10 +133,21 @@ BER after decision-directed: 0.000000e+00 (0/8192)
    constellation looks perfect. Why can the 4th-power estimator never tell 0.82 from −0.75, and
    how do a known preamble or differential coding fix it (see
    [Lab 8.7](/zynq-sdr-course/en/labs/lab-8-7-snr-vs-ber-traps/))?
-2. Increase the noise until the decision-directed estimate becomes worse than the blind one.
-   Why does a decision-directed estimator degrade faster at low SNR?
+2. Apply the decision-directed estimator on its own, without the blind step, to an offset of
+   0.3 rad and then 0.6 rad, and raise the noise from 0.055 to 0.5. Compare its bias with the
+   blind estimate. Why does a decision-directed estimator fail when the residual offset and the
+   noise are both large?
 3. Estimate the phase from only the first 64, 256 and 1024 symbols. How does the estimate error
    scale with the number of symbols?
+
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. A 4th power maps every rotation by π/2 to the same value (`e^(j4(φ+π/2)) = e^(j4φ)`), so 0.82 and 0.82 − π/2 = −0.75 rad produce identical `r⁴`. The estimator only sees the constellation, and QPSK looks the same after a quarter turn. A known preamble tells which quadrant is which; differential coding puts the information in phase *changes*, which a constant rotation does not alter.
+2. On its own, the decision-directed estimate is pulled towards zero. With a 0.3 rad offset its bias is −0.012 rad at noise 0.2, −0.075 at 0.3 and −0.20 rad at 0.5, while the blind estimate stays within 0.002 rad; at 0.6 rad the bias is already −0.24 rad at noise 0.2. A symbol pushed across a boundary by noise is decided as the neighbouring point, which lies *closer* to the rotated observation, so wrong decisions agree with the error instead of revealing it. Run after the blind step, as in this lab, the residual is near zero and the decision-directed step never loses: its rms error stays at or below the blind one down to Es/N0 ≈ 0 dB.
+3. Over 200 noise seeds the rms error is 0.0069, 0.0036, 0.0017 and 0.0009 rad for 64, 256, 1024 and 4096 symbols: it halves for every four-fold increase, i.e. it falls as `1/√N`.
+
+</details>
 
 ## Report checklist
 

@@ -144,6 +144,16 @@ Residual phase estimate: 0.650010 rad
 4. Remove the minus sign in `estimate_phase_qpsk` and rerun. Report EVM and BER after correction
    and explain them.
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. Raising to the 4th power multiplies the offset by four, so `angle(r⁴)` advances `2π·4·CFO/Fs` per sample: 0.8π at 100 kHz, 0.96π at 120 kHz. `np.unwrap` needs every step below π *including the noise on each sample*, so close to the theoretical limit a few noisy steps cross π, get unwrapped the wrong way and bend the fitted line: 99 825 Hz at 100 kHz, 103 461 Hz at 110 kHz, 54 913 Hz at 120 kHz. The practical limit is the theoretical one minus a noise margin.
+2. An unwrap error is a cycle slip: one wrong ±2π step shifts every later phase by 2π and tilts the whole line. Below a certain SNR slips start happening, and each one is a large error, not a small one. Over 10 noise seeds the median error is 0.0 Hz at noise 0.035, 479 Hz at 0.2 and 1527 Hz at 0.35.
+3. At noise 0.2 the mean of the products has a median error of 354 Hz against 479 Hz for the line fit (worst cases 1285 and 896 Hz). It never unwraps, so it has no cycle slips and keeps working up to the full ±125 kHz (119 994 Hz at 120 kHz). At low noise it is worse (11 Hz against 0.04 Hz), because the mean of the differences depends almost only on the first and last samples, while a line fit uses all of them.
+4. The phase estimate becomes −0.135 rad, i.e. 0.65 − π/4: the corrected constellation lands on the I/Q axes, exactly on the decision boundaries. EVM after correction is 76.7 % and BER 0.255 (2090/8192): each point now falls on one side of one boundary by chance, so about one bit in four is wrong.
+
+</details>
+
 ## Report checklist
 
 - [ ] State modulation type and symbol count.

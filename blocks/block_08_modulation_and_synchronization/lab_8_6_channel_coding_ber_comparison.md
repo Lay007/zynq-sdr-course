@@ -94,6 +94,15 @@ What the numbers say (and what they do not):
    than equal energy per channel bit (rate 1/2 costs 3 dB, rate 2/3 about 1.8 dB). Do
    the crossover points move, and by how much?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. No. Without bursts the convolutional code gains a lot (at 6 dB: 4.2e-4 against 2.3e-2 uncoded; at 8 dB no errors in 19 200 bits), and the interleaver changes nothing (3.6e-4, within the statistical spread). An interleaver only spreads *clustered* errors; independent AWGN errors are already spread.
+2. Everything degrades: 30-bit bursts starting with probability 0.012 cover roughly a third of the bits (0.012 × 30). Uncoded BER at 8 dB rises from 4.3e-2 to 1.1e-1, and the coded variants are no better than uncoded up to 6 dB; at low SNR the interleaver even hurts (0.37 against 0.30 at 0 dB). Only at 8 dB does the interleaver still help the convolutional code (0.115 → 0.076). When bursts outnumber what the decoder can correct across the interleaver depth, spreading them only spreads the damage.
+3. On the information-bit axis the rate-1/2 curves move 3 dB to the right and the rate-2/3 curves about 1.76 dB, and the picture changes. The plain convolutional code no longer beats uncoded anywhere in the table: its 6 dB channel-bit point (3.8e-2) becomes 9 dB per information bit, where uncoded is already near 3.5e-2. With the interleaver it still wins, but the crossover moves from about 2 dB to between 7 and 9 dB. The LDPC-like code is worse than uncoded everywhere. Coding gain must be quoted per information bit, or a code looks better than it is.
+
+</details>
+
 ## Report checklist
 
 - [ ] Include BER curves for all variants.
