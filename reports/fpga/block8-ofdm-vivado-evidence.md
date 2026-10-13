@@ -15,9 +15,9 @@ one-clock teaching equalizer meets 100 MHz**:
 
 | Block | LUT | FF | DSP48E1 | BRAM | Post-route WNS at 100 MHz | Estimate |
 |---|---:|---:|---:|---:|---:|---:|
-| `ofdm_tx_cp16_path` (mapper, allocator, IFFT64, CP insertion) | 886 | 362 | 4 | 1 | +1.650 ns | about 120 MHz |
+| `ofdm_tx_cp16_path` (mapper, allocator, IFFT64, CP insertion) | 881 | 352 | 4 | 1 | +1.641 ns | about 120 MHz |
 | `ofdm_cp16_remover` | 11 | 8 | 0 | 0 | +5.835 ns | |
-| `ofdm_fft64_sequential` | 833 | 329 | 4 | 1 | +1.487 ns | about 117 MHz |
+| `ofdm_fft64_sequential` | 836 | 319 | 4 | 1 | +1.732 ns | about 121 MHz |
 | `ofdm_subcarrier_extractor` | 16 | 0 | 0 | 0 | combinational, no clock | |
 | `ofdm_one_tap_equalizer` (`PIPELINED = 0`, one clock) | 147 | 72 | 4 | 0 | **-1.077 ns**, 32 failing endpoints | about 90 MHz |
 | `ofdm_pilot_phase_tracker` | 532 | 267 | 0 | 0 | +4.022 ns | |
@@ -27,12 +27,12 @@ one-clock teaching equalizer meets 100 MHz**:
 | `ofdm_channel_equalizer_zf_avg4` (zero-forcing, `TRAIN_SYMBOLS = 4`: estimate averaged over four training symbols) | 1031 | 584 | 10 | 0.5 | +0.553 ns | about 106 MHz |
 | `ofdm_cfo_corrector` (CP correlation, vectoring CORDIC, NCO, pipelined rotation CORDIC) | 2382 | 1519 | 10 | 0 | +2.412 ns | about 132 MHz |
 | `ofdm_qpsk_demapper` | 3 | 0 | 0 | 0 | combinational, no clock | |
-| `ofdm_axi_modem` (TX and RX chains, CFO corrector, zero-forcing channel equalizer, AXI4-Stream/AXI4-Lite) | 5910 | 3215 | 32 | 3.5 | +1.226 ns | about 114 MHz |
+| `ofdm_axi_modem` (TX and RX chains, CFO corrector, zero-forcing channel equalizer, AXI4-Stream/AXI4-Lite) | 5917 | 3195 | 32 | 3.5 | +1.423 ns | about 117 MHz |
 | `ofdm_tx_cp16_path_fabric` (`BRAM_MEMORY = 0`) | 8151 | 2403 | 4 | 0 | +0.832 ns | about 109 MHz |
 | `ofdm_fft64_sequential_fabric` (`BRAM_MEMORY = 0`) | 7307 | 2423 | 4 | 0 | +0.597 ns | about 106 MHz |
 | `ofdm_axi_modem_fabric` (`BRAM_MEMORY = 0`) | 19628 | 7335 | 32 | 1.5 | +0.591 ns | about 106 MHz |
-| `ofdm_tx_cp16_path_qam16` (`MODULATION = 1`: 16-QAM mapper) | 895 | 370 | 4 | 1 | +1.771 ns | about 122 MHz |
-| `ofdm_axi_modem_qam16` (`MODULATION = 1`: 16-QAM mapper and slicer) | 5979 | 3253 | 32 | 3.5 | +0.657 ns | about 107 MHz |
+| `ofdm_tx_cp16_path_qam16` (`MODULATION = 1`: 16-QAM mapper) | 888 | 360 | 4 | 1 | +1.686 ns | about 120 MHz |
+| `ofdm_axi_modem_qam16` (`MODULATION = 1`: 16-QAM mapper and slicer) | 5985 | 3233 | 32 | 3.5 | +0.692 ns | about 107 MHz |
 
 The frequency estimate is `1 / (period - WNS)`; it describes the routed critical path, not a
 characterized maximum clock. Rows with a suffix are the same module with a parameter override.
@@ -49,13 +49,25 @@ registered, so a transform takes 229 compute clocks instead of 222.
 
 | Block | Fabric memory | Block-RAM memory |
 |---|---:|---:|
-| `ofdm_tx_cp16_path` | 8151 LUT, 2403 FF, +0.832 ns | 886 LUT, 362 FF, 1 BRAM, +1.650 ns |
-| `ofdm_fft64_sequential` | 7307 LUT, 2423 FF, +0.597 ns | 833 LUT, 329 FF, 1 BRAM, +1.487 ns |
-| `ofdm_axi_modem` | 19628 LUT, 7335 FF, +0.591 ns | 5910 LUT, 3215 FF, 3.5 BRAM, +1.226 ns |
+| `ofdm_tx_cp16_path` | 8151 LUT, 2403 FF, +0.832 ns | 881 LUT, 352 FF, 1 BRAM, +1.641 ns |
+| `ofdm_fft64_sequential` | 7307 LUT, 2423 FF, +0.597 ns | 836 LUT, 319 FF, 1 BRAM, +1.732 ns |
+| `ofdm_axi_modem` | 19628 LUT, 7335 FF, +0.591 ns | 5917 LUT, 3195 FF, 3.5 BRAM, +1.423 ns |
 
 About a ninth of the transforms' LUTs and more timing margin. All 25 OFDM testbenches pass in both memory
 modes (`python tools/run_ofdm_rtl.py` and `--fabric`), and the one-cycle baseline (`--baseline`)
 keeps fabric memory because block RAM cannot serve its schedule.
+
+## A latch that the block design found
+
+The first build of the PS + DMA block design (issue #48) reported four DRC warnings PDRC-153,
+"gated clock", on `bank_raddr` inside both transforms. The out-of-context runs had shown the cause
+all along, unflagged: 10 `LDCE` cells per transform in the utilization report. `bank_raddr` is
+assigned in a combinational block by bank: in the issue state each butterfly point writes the
+address of the bank its parity selects. The two points of a butterfly always have different parity,
+so both addresses are always written, but synthesis cannot prove it and keeps the old value in the
+"same parity" case: a latch per address bit. Default assignments before the `if` remove them
+without changing behaviour (all 25 OFDM testbenches pass unchanged). The rows above are after the
+fix; `tests/test_ofdm_dma_bd_report.py` now fails if any OFDM build contains a latch.
 
 ## Channel-estimate averaging (`TRAIN_SYMBOLS`)
 

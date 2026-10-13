@@ -47,10 +47,10 @@ check_timing report
 
 Table of Contents
 -----------------
-1. checking no_clock (280)
+1. checking no_clock (0)
 2. checking constant_clock (0)
 3. checking pulse_width_clock (0)
-4. checking unconstrained_internal_endpoints (20)
+4. checking unconstrained_internal_endpoints (0)
 5. checking no_input_delay (0)
 6. checking no_output_delay (0)
 7. checking multiple_clock (0)
@@ -60,63 +60,9 @@ Table of Contents
 11. checking partial_output_delay (0)
 12. checking latch_loops (0)
 
-1. checking no_clock (280)
---------------------------
- There are 10 register/latch pins with no clock driven by root clock pin: u_fft/normalized_ifft/FSM_onehot_state_reg[4]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_fft/normalized_ifft/butterfly_j_reg[0]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_fft/normalized_ifft/butterfly_j_reg[1]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_fft/normalized_ifft/butterfly_j_reg[2]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_fft/normalized_ifft/butterfly_j_reg[3]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_fft/normalized_ifft/butterfly_j_reg[4]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_fft/normalized_ifft/group_base_reg[1]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_fft/normalized_ifft/group_base_reg[2]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_fft/normalized_ifft/group_base_reg[3]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_fft/normalized_ifft/group_base_reg[4]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_fft/normalized_ifft/group_base_reg[5]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_fft/normalized_ifft/stage_reg[0]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_fft/normalized_ifft/stage_reg[1]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_fft/normalized_ifft/stage_reg[2]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_tx/tx_core/ifft/FSM_onehot_state_reg[4]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_tx/tx_core/ifft/butterfly_j_reg[0]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_tx/tx_core/ifft/butterfly_j_reg[1]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_tx/tx_core/ifft/butterfly_j_reg[2]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_tx/tx_core/ifft/butterfly_j_reg[3]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_tx/tx_core/ifft/butterfly_j_reg[4]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_tx/tx_core/ifft/group_base_reg[1]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_tx/tx_core/ifft/group_base_reg[2]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_tx/tx_core/ifft/group_base_reg[3]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_tx/tx_core/ifft/group_base_reg[4]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_tx/tx_core/ifft/group_base_reg[5]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_tx/tx_core/ifft/stage_reg[0]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_tx/tx_core/ifft/stage_reg[1]/Q (HIGH)
-
- There are 10 register/latch pins with no clock driven by root clock pin: u_tx/tx_core/ifft/stage_reg[2]/Q (HIGH)
+1. checking no_clock (0)
+------------------------
+ There are 0 register/latch pins with no clock.
 
 
 2. checking constant_clock (0)
@@ -129,9 +75,9 @@ Table of Contents
  There are 0 register/latch pins which need pulse_width check
 
 
-4. checking unconstrained_internal_endpoints (20)
--------------------------------------------------
- There are 20 pins that are not constrained for maximum delay. (HIGH)
+4. checking unconstrained_internal_endpoints (0)
+------------------------------------------------
+ There are 0 pins that are not constrained for maximum delay.
 
  There are 0 pins that are not constrained for maximum delay due to constant clock.
 
@@ -190,7 +136,7 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
     -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-      0.657        0.000                      0                12734        3.870        0.000                       0                  3694
+      0.692        0.000                      0                12754        3.870        0.000                       0                  3694
 
 
 All user specified timing constraints are met.
@@ -213,7 +159,7 @@ clk    {0.000 5.000}      10.000          100.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
 -----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-clk                 0.657        0.000                      0                12734        3.870        0.000                       0                  3694
+clk                 0.692        0.000                      0                12754        3.870        0.000                       0                  3694
 
 
 ------------------------------------------------------------------------------------------------
@@ -244,7 +190,7 @@ Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing 
 From Clock:  clk
   To Clock:  clk
 
-Setup :            0  Failing Endpoints,  Worst Slack        0.657ns,  Total Violation        0.000ns
+Setup :            0  Failing Endpoints,  Worst Slack        0.692ns,  Total Violation        0.000ns
 Hold  :           NA  Failing Endpoints,  Worst Slack           NA  ,  Total Violation           NA
 PW    :            0  Failing Endpoints,  Worst Slack        3.870ns,  Total Violation        0.000ns
 ---------------------------------------------------------------------------------------------------
@@ -252,91 +198,7 @@ PW    :            0  Failing Endpoints,  Worst Slack        3.870ns,  Total Vio
 
 Max Delay Paths
 --------------------------------------------------------------------------------------
-Slack (MET) :             0.657ns  (required time - arrival time)
-  Source:                 u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
-                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            u_correct/equalizer/g_pipelined.saturation_pending_reg[0]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
-  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        9.305ns  (logic 5.043ns (54.198%)  route 4.262ns (45.802%))
-  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=1 LUT6=1)
-  Clock Path Skew:        -0.075ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.308ns = ( 11.308 - 10.000 )
-    Source Clock Delay      (SCD):    1.480ns
-    Clock Pessimism Removal (CPR):    0.097ns
-  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
-    Total System Jitter     (TSJ):    0.071ns
-    Total Input Jitter      (TIJ):    0.000ns
-    Discrete Jitter          (DJ):    0.000ns
-    Phase Error              (PE):    0.000ns
-
-    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
-  -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.480     1.480    u_correct/equalizer/aclk
-    DSP48_X2Y7           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
-  -------------------------------------------------------------------    -------------------
-    DSP48_X2Y7           DSP48E1 (Prop_dsp48e1_CLK_P[9])
-                                                      0.370     1.850 r  u_correct/equalizer/g_pipelined.s1_ri_reg/P[9]
-                         net (fo=1, routed)           0.770     2.620    u_correct/equalizer/g_pipelined.s1_ri_reg_n_96
-    DSP48_X2Y5           DSP48E1 (Prop_dsp48e1_C[9]_P[0])
-                                                      1.523     4.143 f  u_correct/equalizer/g_pipelined.equalized_im_q29/P[0]
-                         net (fo=1, routed)           0.644     4.787    u_correct/equalizer/g_pipelined.equalized_im_q29_n_105
-    SLICE_X36Y13         LUT1 (Prop_lut1_I0_O)        0.105     4.892 r  u_correct/equalizer/g_pipelined.out_im[0]_i_18/O
-                         net (fo=1, routed)           0.256     5.148    u_correct/equalizer/g_pipelined.out_im[0]_i_18_n_0
-    SLICE_X37Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.480     5.628 r  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_13/CO[3]
-                         net (fo=1, routed)           0.000     5.628    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_13_n_0
-    SLICE_X37Y15         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.098     5.726 r  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_8/CO[3]
-                         net (fo=1, routed)           0.000     5.726    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_8_n_0
-    SLICE_X37Y16         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.098     5.824 r  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3/CO[3]
-                         net (fo=1, routed)           0.000     5.824    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3_n_0
-    SLICE_X37Y17         CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.265     6.089 f  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_2/O[1]
-                         net (fo=2, routed)           0.356     6.445    u_correct_n_66
-    SLICE_X38Y16         LUT1 (Prop_lut1_I0_O)        0.250     6.695 r  g_pipelined.out_im[4]_i_3/O
-                         net (fo=1, routed)           0.396     7.091    g_pipelined.out_im[4]_i_3_n_0
-    SLICE_X38Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     7.585 r  g_pipelined.out_im_reg[4]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.585    g_pipelined.out_im_reg[4]_i_2_n_0
-    SLICE_X38Y18         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.685 r  g_pipelined.out_im_reg[8]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.685    g_pipelined.out_im_reg[8]_i_2_n_0
-    SLICE_X38Y19         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.785 r  g_pipelined.out_im_reg[12]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.785    g_pipelined.out_im_reg[12]_i_2_n_0
-    SLICE_X38Y20         CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.257     8.042 r  g_pipelined.out_im_reg[15]_i_2/O[1]
-                         net (fo=3, routed)           0.748     8.791    u_correct/equalizer/saturate_q151_inferred__1/i__carry_0[1]
-    SLICE_X42Y19         LUT5 (Prop_lut5_I1_O)        0.245     9.036 r  u_correct/equalizer/i__carry_i_4__28/O
-                         net (fo=1, routed)           0.000     9.036    u_correct/equalizer/i__carry_i_4__28_n_0
-    SLICE_X42Y19         CARRY4 (Prop_carry4_S[0]_CO[1])
-                                                      0.381     9.417 r  u_correct/equalizer/saturate_q151_inferred__2/i__carry/CO[1]
-                         net (fo=18, routed)          1.091    10.507    u_correct/equalizer/saturate_q1510_in
-    SLICE_X30Y19         LUT6 (Prop_lut6_I0_O)        0.277    10.784 r  u_correct/equalizer/g_pipelined.saturation_pending[0]_i_1/O
-                         net (fo=1, routed)           0.000    10.784    u_correct/equalizer/g_pipelined.saturation_pending[0]_i_1_n_0
-    SLICE_X30Y19         FDRE                                         r  u_correct/equalizer/g_pipelined.saturation_pending_reg[0]/D
-  -------------------------------------------------------------------    -------------------
-
-                         (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.308    11.308    u_correct/equalizer/aclk
-    SLICE_X30Y19         FDRE                                         r  u_correct/equalizer/g_pipelined.saturation_pending_reg[0]/C
-                         clock pessimism              0.097    11.405
-                         clock uncertainty           -0.035    11.370
-    SLICE_X30Y19         FDRE (Setup_fdre_C_D)        0.072    11.442    u_correct/equalizer/g_pipelined.saturation_pending_reg[0]
-  -------------------------------------------------------------------
-                         required time                         11.442
-                         arrival time                         -10.784
-  -------------------------------------------------------------------
-                         slack                                  0.657
-
-Slack (MET) :             0.913ns  (required time - arrival time)
+Slack (MET) :             0.692ns  (required time - arrival time)
   Source:                 u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
                             (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Destination:            u_correct/equalizer/g_pipelined.saturation_pending_reg[1]/D
@@ -344,11 +206,11 @@ Slack (MET) :             0.913ns  (required time - arrival time)
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        9.046ns  (logic 5.090ns (56.269%)  route 3.956ns (43.731%))
-  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT5=1 LUT6=1)
-  Clock Path Skew:        -0.082ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.308ns = ( 11.308 - 10.000 )
-    Source Clock Delay      (SCD):    1.487ns
+  Data Path Delay:        9.115ns  (logic 5.065ns (55.565%)  route 4.050ns (44.435%))
+  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=1 LUT6=1)
+  Clock Path Skew:        -0.190ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.299ns = ( 11.299 - 10.000 )
+    Source Clock Delay      (SCD):    1.586ns
     Clock Pessimism Removal (CPR):    0.097ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -360,673 +222,67 @@ Slack (MET) :             0.913ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.487     1.487    u_correct/equalizer/aclk
-    DSP48_X2Y4           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+                         net (fo=3693, unset)         1.586     1.586    u_correct/equalizer/aclk
+    DSP48_X3Y9           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
   -------------------------------------------------------------------    -------------------
-    DSP48_X2Y4           DSP48E1 (Prop_dsp48e1_CLK_P[31])
-                                                      0.370     1.857 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
-                         net (fo=2, routed)           0.778     2.635    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
-    DSP48_X2Y6           DSP48E1 (Prop_dsp48e1_C[31]_P[0])
-                                                      1.523     4.158 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
-                         net (fo=1, routed)           0.626     4.784    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
-    SLICE_X36Y13         LUT1 (Prop_lut1_I0_O)        0.105     4.889 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
-                         net (fo=1, routed)           0.398     5.287    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
-    SLICE_X36Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     5.781 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
-                         net (fo=1, routed)           0.000     5.781    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
-    SLICE_X36Y15         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     5.881 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
-                         net (fo=1, routed)           0.000     5.881    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
-    SLICE_X36Y16         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     5.981 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
-                         net (fo=1, routed)           0.000     5.981    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
-    SLICE_X36Y17         CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.257     6.238 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
-                         net (fo=2, routed)           0.483     6.721    round_q29_to_q15_wide2[14]
-    SLICE_X34Y16         LUT1 (Prop_lut1_I0_O)        0.245     6.966 r  g_pipelined.out_re[4]_i_3/O
-                         net (fo=1, routed)           0.256     7.223    g_pipelined.out_re[4]_i_3_n_0
-    SLICE_X34Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     7.717 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.717    g_pipelined.out_re_reg[4]_i_2_n_0
-    SLICE_X34Y18         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.817 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.817    g_pipelined.out_re_reg[8]_i_2_n_0
-    SLICE_X34Y19         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.917 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.917    g_pipelined.out_re_reg[12]_i_2_n_0
-    SLICE_X34Y20         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     8.017 r  g_pipelined.out_re_reg[15]_i_4/CO[3]
-                         net (fo=1, routed)           0.000     8.017    g_pipelined.out_re_reg[15]_i_4_n_0
-    SLICE_X34Y21         CARRY4 (Prop_carry4_CI_O[0])
-                                                      0.178     8.195 f  saturate_q151_carry_i_5__1/O[0]
-                         net (fo=4, routed)           0.614     8.809    u_correct/equalizer/round_q29_to_q15_wide0[16]
-    SLICE_X32Y19         LUT5 (Prop_lut5_I4_O)        0.238     9.047 r  u_correct/equalizer/i__carry_i_3__30/O
-                         net (fo=1, routed)           0.000     9.047    u_correct/equalizer/i__carry_i_3__30_n_0
-    SLICE_X32Y19         CARRY4 (Prop_carry4_S[1]_CO[1])
-                                                      0.409     9.456 r  u_correct/equalizer/saturate_q151_inferred__0/i__carry/CO[1]
-                         net (fo=18, routed)          0.800    10.255    u_correct/equalizer/saturate_q1512_in
-    SLICE_X30Y19         LUT6 (Prop_lut6_I0_O)        0.277    10.532 r  u_correct/equalizer/g_pipelined.saturation_pending[1]_i_1/O
-                         net (fo=1, routed)           0.000    10.532    u_correct/equalizer/g_pipelined.saturation_pending[1]_i_1_n_0
-    SLICE_X30Y19         FDRE                                         r  u_correct/equalizer/g_pipelined.saturation_pending_reg[1]/D
+    DSP48_X3Y9           DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      0.370     1.956 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
+                         net (fo=2, routed)           0.811     2.767    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
+    DSP48_X3Y7           DSP48E1 (Prop_dsp48e1_C[32]_P[0])
+                                                      1.523     4.290 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
+                         net (fo=1, routed)           0.740     5.030    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
+    SLICE_X84Y14         LUT1 (Prop_lut1_I0_O)        0.105     5.135 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
+                         net (fo=1, routed)           0.371     5.506    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
+    SLICE_X83Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     5.986 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, routed)           0.000     5.986    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
+    SLICE_X83Y15         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.084 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, routed)           0.000     6.084    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
+    SLICE_X83Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.182 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     6.182    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
+    SLICE_X83Y17         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     6.447 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, routed)           0.480     6.927    round_q29_to_q15_wide2[14]
+    SLICE_X77Y17         LUT1 (Prop_lut1_I0_O)        0.250     7.177 r  g_pipelined.out_re[4]_i_3/O
+                         net (fo=1, routed)           0.291     7.468    g_pipelined.out_re[4]_i_3_n_0
+    SLICE_X76Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     7.948 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.948    g_pipelined.out_re_reg[4]_i_2_n_0
+    SLICE_X76Y18         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.046 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.046    g_pipelined.out_re_reg[8]_i_2_n_0
+    SLICE_X76Y19         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.144 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.144    g_pipelined.out_re_reg[12]_i_2_n_0
+    SLICE_X76Y20         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.260     8.404 f  g_pipelined.out_re_reg[15]_i_4/O[3]
+                         net (fo=4, routed)           0.629     9.033    u_correct/equalizer/round_q29_to_q15_wide0[15]
+    SLICE_X75Y20         LUT5 (Prop_lut5_I1_O)        0.257     9.290 r  u_correct/equalizer/i__carry_i_3__30/O
+                         net (fo=1, routed)           0.000     9.290    u_correct/equalizer/i__carry_i_3__30_n_0
+    SLICE_X75Y20         CARRY4 (Prop_carry4_S[1]_CO[1])
+                                                      0.408     9.698 r  u_correct/equalizer/saturate_q151_inferred__0/i__carry/CO[1]
+                         net (fo=18, routed)          0.728    10.426    u_correct/equalizer/saturate_q1512_in
+    SLICE_X74Y19         LUT6 (Prop_lut6_I0_O)        0.275    10.701 r  u_correct/equalizer/g_pipelined.saturation_pending[1]_i_1/O
+                         net (fo=1, routed)           0.000    10.701    u_correct/equalizer/g_pipelined.saturation_pending[1]_i_1_n_0
+    SLICE_X74Y19         FDRE                                         r  u_correct/equalizer/g_pipelined.saturation_pending_reg[1]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.308    11.308    u_correct/equalizer/aclk
-    SLICE_X30Y19         FDRE                                         r  u_correct/equalizer/g_pipelined.saturation_pending_reg[1]/C
-                         clock pessimism              0.097    11.405
-                         clock uncertainty           -0.035    11.370
-    SLICE_X30Y19         FDRE (Setup_fdre_C_D)        0.076    11.446    u_correct/equalizer/g_pipelined.saturation_pending_reg[1]
+                         net (fo=3693, unset)         1.299    11.299    u_correct/equalizer/aclk
+    SLICE_X74Y19         FDRE                                         r  u_correct/equalizer/g_pipelined.saturation_pending_reg[1]/C
+                         clock pessimism              0.097    11.396
+                         clock uncertainty           -0.035    11.361
+    SLICE_X74Y19         FDRE (Setup_fdre_C_D)        0.032    11.393    u_correct/equalizer/g_pipelined.saturation_pending_reg[1]
   -------------------------------------------------------------------
-                         required time                         11.446
-                         arrival time                         -10.532
+                         required time                         11.393
+                         arrival time                         -10.701
   -------------------------------------------------------------------
-                         slack                                  0.913
+                         slack                                  0.692
 
-Slack (MET) :             0.963ns  (required time - arrival time)
-  Source:                 u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
-                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            u_correct/equalizer/g_pipelined.out_re_reg[5]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
-  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.951ns  (logic 5.090ns (56.866%)  route 3.861ns (43.134%))
-  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT5=2)
-  Clock Path Skew:        -0.081ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.309ns = ( 11.309 - 10.000 )
-    Source Clock Delay      (SCD):    1.487ns
-    Clock Pessimism Removal (CPR):    0.097ns
-  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
-    Total System Jitter     (TSJ):    0.071ns
-    Total Input Jitter      (TIJ):    0.000ns
-    Discrete Jitter          (DJ):    0.000ns
-    Phase Error              (PE):    0.000ns
-
-    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
-  -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.487     1.487    u_correct/equalizer/aclk
-    DSP48_X2Y4           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
-  -------------------------------------------------------------------    -------------------
-    DSP48_X2Y4           DSP48E1 (Prop_dsp48e1_CLK_P[31])
-                                                      0.370     1.857 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
-                         net (fo=2, routed)           0.778     2.635    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
-    DSP48_X2Y6           DSP48E1 (Prop_dsp48e1_C[31]_P[0])
-                                                      1.523     4.158 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
-                         net (fo=1, routed)           0.626     4.784    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
-    SLICE_X36Y13         LUT1 (Prop_lut1_I0_O)        0.105     4.889 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
-                         net (fo=1, routed)           0.398     5.287    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
-    SLICE_X36Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     5.781 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
-                         net (fo=1, routed)           0.000     5.781    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
-    SLICE_X36Y15         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     5.881 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
-                         net (fo=1, routed)           0.000     5.881    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
-    SLICE_X36Y16         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     5.981 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
-                         net (fo=1, routed)           0.000     5.981    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
-    SLICE_X36Y17         CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.257     6.238 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
-                         net (fo=2, routed)           0.483     6.721    round_q29_to_q15_wide2[14]
-    SLICE_X34Y16         LUT1 (Prop_lut1_I0_O)        0.245     6.966 r  g_pipelined.out_re[4]_i_3/O
-                         net (fo=1, routed)           0.256     7.223    g_pipelined.out_re[4]_i_3_n_0
-    SLICE_X34Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     7.717 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.717    g_pipelined.out_re_reg[4]_i_2_n_0
-    SLICE_X34Y18         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.817 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.817    g_pipelined.out_re_reg[8]_i_2_n_0
-    SLICE_X34Y19         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.917 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.917    g_pipelined.out_re_reg[12]_i_2_n_0
-    SLICE_X34Y20         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     8.017 r  g_pipelined.out_re_reg[15]_i_4/CO[3]
-                         net (fo=1, routed)           0.000     8.017    g_pipelined.out_re_reg[15]_i_4_n_0
-    SLICE_X34Y21         CARRY4 (Prop_carry4_CI_O[0])
-                                                      0.178     8.195 f  saturate_q151_carry_i_5__1/O[0]
-                         net (fo=4, routed)           0.614     8.809    u_correct/equalizer/round_q29_to_q15_wide0[16]
-    SLICE_X32Y19         LUT5 (Prop_lut5_I4_O)        0.238     9.047 r  u_correct/equalizer/i__carry_i_3__30/O
-                         net (fo=1, routed)           0.000     9.047    u_correct/equalizer/i__carry_i_3__30_n_0
-    SLICE_X32Y19         CARRY4 (Prop_carry4_S[1]_CO[1])
-                                                      0.409     9.456 r  u_correct/equalizer/saturate_q151_inferred__0/i__carry/CO[1]
-                         net (fo=18, routed)          0.705    10.161    u_correct/equalizer/saturate_q1512_in
-    SLICE_X31Y18         LUT5 (Prop_lut5_I0_O)        0.277    10.438 r  u_correct/equalizer/g_pipelined.out_re[5]_i_1/O
-                         net (fo=1, routed)           0.000    10.438    u_correct/equalizer/saturate_q15_return[5]
-    SLICE_X31Y18         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[5]/D
-  -------------------------------------------------------------------    -------------------
-
-                         (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.309    11.309    u_correct/equalizer/aclk
-    SLICE_X31Y18         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[5]/C
-                         clock pessimism              0.097    11.406
-                         clock uncertainty           -0.035    11.371
-    SLICE_X31Y18         FDRE (Setup_fdre_C_D)        0.030    11.401    u_correct/equalizer/g_pipelined.out_re_reg[5]
-  -------------------------------------------------------------------
-                         required time                         11.401
-                         arrival time                         -10.438
-  -------------------------------------------------------------------
-                         slack                                  0.963
-
-Slack (MET) :             0.982ns  (required time - arrival time)
-  Source:                 u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
-                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            u_correct/equalizer/g_pipelined.out_im_reg[4]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
-  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.877ns  (logic 5.043ns (56.807%)  route 3.834ns (43.193%))
-  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=2)
-  Clock Path Skew:        -0.138ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.245ns = ( 11.245 - 10.000 )
-    Source Clock Delay      (SCD):    1.480ns
-    Clock Pessimism Removal (CPR):    0.097ns
-  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
-    Total System Jitter     (TSJ):    0.071ns
-    Total Input Jitter      (TIJ):    0.000ns
-    Discrete Jitter          (DJ):    0.000ns
-    Phase Error              (PE):    0.000ns
-
-    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
-  -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.480     1.480    u_correct/equalizer/aclk
-    DSP48_X2Y7           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
-  -------------------------------------------------------------------    -------------------
-    DSP48_X2Y7           DSP48E1 (Prop_dsp48e1_CLK_P[9])
-                                                      0.370     1.850 r  u_correct/equalizer/g_pipelined.s1_ri_reg/P[9]
-                         net (fo=1, routed)           0.770     2.620    u_correct/equalizer/g_pipelined.s1_ri_reg_n_96
-    DSP48_X2Y5           DSP48E1 (Prop_dsp48e1_C[9]_P[0])
-                                                      1.523     4.143 f  u_correct/equalizer/g_pipelined.equalized_im_q29/P[0]
-                         net (fo=1, routed)           0.644     4.787    u_correct/equalizer/g_pipelined.equalized_im_q29_n_105
-    SLICE_X36Y13         LUT1 (Prop_lut1_I0_O)        0.105     4.892 r  u_correct/equalizer/g_pipelined.out_im[0]_i_18/O
-                         net (fo=1, routed)           0.256     5.148    u_correct/equalizer/g_pipelined.out_im[0]_i_18_n_0
-    SLICE_X37Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.480     5.628 r  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_13/CO[3]
-                         net (fo=1, routed)           0.000     5.628    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_13_n_0
-    SLICE_X37Y15         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.098     5.726 r  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_8/CO[3]
-                         net (fo=1, routed)           0.000     5.726    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_8_n_0
-    SLICE_X37Y16         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.098     5.824 r  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3/CO[3]
-                         net (fo=1, routed)           0.000     5.824    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3_n_0
-    SLICE_X37Y17         CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.265     6.089 f  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_2/O[1]
-                         net (fo=2, routed)           0.356     6.445    u_correct_n_66
-    SLICE_X38Y16         LUT1 (Prop_lut1_I0_O)        0.250     6.695 r  g_pipelined.out_im[4]_i_3/O
-                         net (fo=1, routed)           0.396     7.091    g_pipelined.out_im[4]_i_3_n_0
-    SLICE_X38Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     7.585 r  g_pipelined.out_im_reg[4]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.585    g_pipelined.out_im_reg[4]_i_2_n_0
-    SLICE_X38Y18         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.685 r  g_pipelined.out_im_reg[8]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.685    g_pipelined.out_im_reg[8]_i_2_n_0
-    SLICE_X38Y19         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.785 r  g_pipelined.out_im_reg[12]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.785    g_pipelined.out_im_reg[12]_i_2_n_0
-    SLICE_X38Y20         CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.257     8.042 r  g_pipelined.out_im_reg[15]_i_2/O[1]
-                         net (fo=3, routed)           0.748     8.791    u_correct/equalizer/saturate_q151_inferred__1/i__carry_0[1]
-    SLICE_X42Y19         LUT5 (Prop_lut5_I1_O)        0.245     9.036 r  u_correct/equalizer/i__carry_i_4__28/O
-                         net (fo=1, routed)           0.000     9.036    u_correct/equalizer/i__carry_i_4__28_n_0
-    SLICE_X42Y19         CARRY4 (Prop_carry4_S[0]_CO[1])
-                                                      0.381     9.417 r  u_correct/equalizer/saturate_q151_inferred__2/i__carry/CO[1]
-                         net (fo=18, routed)          0.663    10.080    u_correct/equalizer/saturate_q1510_in
-    SLICE_X40Y17         LUT5 (Prop_lut5_I0_O)        0.277    10.357 r  u_correct/equalizer/g_pipelined.out_im[4]_i_1/O
-                         net (fo=1, routed)           0.000    10.357    u_correct/equalizer/saturate_q15_return__0[4]
-    SLICE_X40Y17         FDRE                                         r  u_correct/equalizer/g_pipelined.out_im_reg[4]/D
-  -------------------------------------------------------------------    -------------------
-
-                         (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.245    11.245    u_correct/equalizer/aclk
-    SLICE_X40Y17         FDRE                                         r  u_correct/equalizer/g_pipelined.out_im_reg[4]/C
-                         clock pessimism              0.097    11.342
-                         clock uncertainty           -0.035    11.307
-    SLICE_X40Y17         FDRE (Setup_fdre_C_D)        0.032    11.339    u_correct/equalizer/g_pipelined.out_im_reg[4]
-  -------------------------------------------------------------------
-                         required time                         11.339
-                         arrival time                         -10.357
-  -------------------------------------------------------------------
-                         slack                                  0.982
-
-Slack (MET) :             0.986ns  (required time - arrival time)
-  Source:                 u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
-                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            u_correct/equalizer/g_pipelined.out_im_reg[0]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
-  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.915ns  (logic 5.043ns (56.570%)  route 3.872ns (43.430%))
-  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=2)
-  Clock Path Skew:        -0.136ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.247ns = ( 11.247 - 10.000 )
-    Source Clock Delay      (SCD):    1.480ns
-    Clock Pessimism Removal (CPR):    0.097ns
-  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
-    Total System Jitter     (TSJ):    0.071ns
-    Total Input Jitter      (TIJ):    0.000ns
-    Discrete Jitter          (DJ):    0.000ns
-    Phase Error              (PE):    0.000ns
-
-    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
-  -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.480     1.480    u_correct/equalizer/aclk
-    DSP48_X2Y7           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
-  -------------------------------------------------------------------    -------------------
-    DSP48_X2Y7           DSP48E1 (Prop_dsp48e1_CLK_P[9])
-                                                      0.370     1.850 r  u_correct/equalizer/g_pipelined.s1_ri_reg/P[9]
-                         net (fo=1, routed)           0.770     2.620    u_correct/equalizer/g_pipelined.s1_ri_reg_n_96
-    DSP48_X2Y5           DSP48E1 (Prop_dsp48e1_C[9]_P[0])
-                                                      1.523     4.143 f  u_correct/equalizer/g_pipelined.equalized_im_q29/P[0]
-                         net (fo=1, routed)           0.644     4.787    u_correct/equalizer/g_pipelined.equalized_im_q29_n_105
-    SLICE_X36Y13         LUT1 (Prop_lut1_I0_O)        0.105     4.892 r  u_correct/equalizer/g_pipelined.out_im[0]_i_18/O
-                         net (fo=1, routed)           0.256     5.148    u_correct/equalizer/g_pipelined.out_im[0]_i_18_n_0
-    SLICE_X37Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.480     5.628 r  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_13/CO[3]
-                         net (fo=1, routed)           0.000     5.628    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_13_n_0
-    SLICE_X37Y15         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.098     5.726 r  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_8/CO[3]
-                         net (fo=1, routed)           0.000     5.726    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_8_n_0
-    SLICE_X37Y16         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.098     5.824 r  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3/CO[3]
-                         net (fo=1, routed)           0.000     5.824    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3_n_0
-    SLICE_X37Y17         CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.265     6.089 f  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_2/O[1]
-                         net (fo=2, routed)           0.356     6.445    u_correct_n_66
-    SLICE_X38Y16         LUT1 (Prop_lut1_I0_O)        0.250     6.695 r  g_pipelined.out_im[4]_i_3/O
-                         net (fo=1, routed)           0.396     7.091    g_pipelined.out_im[4]_i_3_n_0
-    SLICE_X38Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     7.585 r  g_pipelined.out_im_reg[4]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.585    g_pipelined.out_im_reg[4]_i_2_n_0
-    SLICE_X38Y18         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.685 r  g_pipelined.out_im_reg[8]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.685    g_pipelined.out_im_reg[8]_i_2_n_0
-    SLICE_X38Y19         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.785 r  g_pipelined.out_im_reg[12]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.785    g_pipelined.out_im_reg[12]_i_2_n_0
-    SLICE_X38Y20         CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.257     8.042 r  g_pipelined.out_im_reg[15]_i_2/O[1]
-                         net (fo=3, routed)           0.748     8.791    u_correct/equalizer/saturate_q151_inferred__1/i__carry_0[1]
-    SLICE_X42Y19         LUT5 (Prop_lut5_I1_O)        0.245     9.036 r  u_correct/equalizer/i__carry_i_4__28/O
-                         net (fo=1, routed)           0.000     9.036    u_correct/equalizer/i__carry_i_4__28_n_0
-    SLICE_X42Y19         CARRY4 (Prop_carry4_S[0]_CO[1])
-                                                      0.381     9.417 r  u_correct/equalizer/saturate_q151_inferred__2/i__carry/CO[1]
-                         net (fo=18, routed)          0.700    10.117    u_correct/equalizer/saturate_q1510_in
-    SLICE_X38Y16         LUT5 (Prop_lut5_I0_O)        0.277    10.394 r  u_correct/equalizer/g_pipelined.out_im[0]_i_1/O
-                         net (fo=1, routed)           0.000    10.394    u_correct/equalizer/saturate_q15_return__0[0]
-    SLICE_X38Y16         FDRE                                         r  u_correct/equalizer/g_pipelined.out_im_reg[0]/D
-  -------------------------------------------------------------------    -------------------
-
-                         (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.247    11.247    u_correct/equalizer/aclk
-    SLICE_X38Y16         FDRE                                         r  u_correct/equalizer/g_pipelined.out_im_reg[0]/C
-                         clock pessimism              0.097    11.344
-                         clock uncertainty           -0.035    11.309
-    SLICE_X38Y16         FDRE (Setup_fdre_C_D)        0.072    11.381    u_correct/equalizer/g_pipelined.out_im_reg[0]
-  -------------------------------------------------------------------
-                         required time                         11.381
-                         arrival time                         -10.394
-  -------------------------------------------------------------------
-                         slack                                  0.986
-
-Slack (MET) :             0.998ns  (required time - arrival time)
-  Source:                 u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
-                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            u_correct/equalizer/g_pipelined.out_re_reg[15]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
-  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.898ns  (logic 5.087ns (57.173%)  route 3.811ns (42.827%))
-  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT5=2)
-  Clock Path Skew:        -0.145ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.245ns = ( 11.245 - 10.000 )
-    Source Clock Delay      (SCD):    1.487ns
-    Clock Pessimism Removal (CPR):    0.097ns
-  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
-    Total System Jitter     (TSJ):    0.071ns
-    Total Input Jitter      (TIJ):    0.000ns
-    Discrete Jitter          (DJ):    0.000ns
-    Phase Error              (PE):    0.000ns
-
-    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
-  -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.487     1.487    u_correct/equalizer/aclk
-    DSP48_X2Y4           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
-  -------------------------------------------------------------------    -------------------
-    DSP48_X2Y4           DSP48E1 (Prop_dsp48e1_CLK_P[31])
-                                                      0.370     1.857 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
-                         net (fo=2, routed)           0.778     2.635    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
-    DSP48_X2Y6           DSP48E1 (Prop_dsp48e1_C[31]_P[0])
-                                                      1.523     4.158 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
-                         net (fo=1, routed)           0.626     4.784    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
-    SLICE_X36Y13         LUT1 (Prop_lut1_I0_O)        0.105     4.889 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
-                         net (fo=1, routed)           0.398     5.287    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
-    SLICE_X36Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     5.781 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
-                         net (fo=1, routed)           0.000     5.781    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
-    SLICE_X36Y15         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     5.881 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
-                         net (fo=1, routed)           0.000     5.881    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
-    SLICE_X36Y16         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     5.981 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
-                         net (fo=1, routed)           0.000     5.981    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
-    SLICE_X36Y17         CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.257     6.238 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
-                         net (fo=2, routed)           0.483     6.721    round_q29_to_q15_wide2[14]
-    SLICE_X34Y16         LUT1 (Prop_lut1_I0_O)        0.245     6.966 r  g_pipelined.out_re[4]_i_3/O
-                         net (fo=1, routed)           0.256     7.223    g_pipelined.out_re[4]_i_3_n_0
-    SLICE_X34Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     7.717 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.717    g_pipelined.out_re_reg[4]_i_2_n_0
-    SLICE_X34Y18         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.817 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.817    g_pipelined.out_re_reg[8]_i_2_n_0
-    SLICE_X34Y19         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.917 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.917    g_pipelined.out_re_reg[12]_i_2_n_0
-    SLICE_X34Y20         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     8.017 r  g_pipelined.out_re_reg[15]_i_4/CO[3]
-                         net (fo=1, routed)           0.000     8.017    g_pipelined.out_re_reg[15]_i_4_n_0
-    SLICE_X34Y21         CARRY4 (Prop_carry4_CI_O[0])
-                                                      0.178     8.195 r  saturate_q151_carry_i_5__1/O[0]
-                         net (fo=4, routed)           0.600     8.795    u_correct/equalizer/round_q29_to_q15_wide0[16]
-    SLICE_X33Y19         LUT5 (Prop_lut5_I4_O)        0.238     9.033 r  u_correct/equalizer/saturate_q151_carry_i_3__1/O
-                         net (fo=1, routed)           0.000     9.033    u_correct/equalizer/saturate_q151_carry_i_3__1_n_0
-    SLICE_X33Y19         CARRY4 (Prop_carry4_S[1]_CO[1])
-                                                      0.408     9.441 r  u_correct/equalizer/saturate_q151_carry/CO[1]
-                         net (fo=18, routed)          0.668    10.109    u_correct/equalizer/saturate_q1511_in
-    SLICE_X32Y18         LUT5 (Prop_lut5_I3_O)        0.275    10.384 r  u_correct/equalizer/g_pipelined.out_re[15]_i_3/O
-                         net (fo=1, routed)           0.000    10.384    u_correct/equalizer/g_pipelined.out_re[15]_i_3_n_0
-    SLICE_X32Y18         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[15]/D
-  -------------------------------------------------------------------    -------------------
-
-                         (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.245    11.245    u_correct/equalizer/aclk
-    SLICE_X32Y18         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[15]/C
-                         clock pessimism              0.097    11.342
-                         clock uncertainty           -0.035    11.307
-    SLICE_X32Y18         FDRE (Setup_fdre_C_D)        0.076    11.383    u_correct/equalizer/g_pipelined.out_re_reg[15]
-  -------------------------------------------------------------------
-                         required time                         11.383
-                         arrival time                         -10.384
-  -------------------------------------------------------------------
-                         slack                                  0.998
-
-Slack (MET) :             1.009ns  (required time - arrival time)
-  Source:                 u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
-                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            u_correct/equalizer/g_pipelined.out_re_reg[3]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
-  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.889ns  (logic 5.090ns (57.261%)  route 3.799ns (42.739%))
-  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT5=2)
-  Clock Path Skew:        -0.143ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.247ns = ( 11.247 - 10.000 )
-    Source Clock Delay      (SCD):    1.487ns
-    Clock Pessimism Removal (CPR):    0.097ns
-  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
-    Total System Jitter     (TSJ):    0.071ns
-    Total Input Jitter      (TIJ):    0.000ns
-    Discrete Jitter          (DJ):    0.000ns
-    Phase Error              (PE):    0.000ns
-
-    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
-  -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.487     1.487    u_correct/equalizer/aclk
-    DSP48_X2Y4           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
-  -------------------------------------------------------------------    -------------------
-    DSP48_X2Y4           DSP48E1 (Prop_dsp48e1_CLK_P[31])
-                                                      0.370     1.857 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
-                         net (fo=2, routed)           0.778     2.635    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
-    DSP48_X2Y6           DSP48E1 (Prop_dsp48e1_C[31]_P[0])
-                                                      1.523     4.158 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
-                         net (fo=1, routed)           0.626     4.784    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
-    SLICE_X36Y13         LUT1 (Prop_lut1_I0_O)        0.105     4.889 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
-                         net (fo=1, routed)           0.398     5.287    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
-    SLICE_X36Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     5.781 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
-                         net (fo=1, routed)           0.000     5.781    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
-    SLICE_X36Y15         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     5.881 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
-                         net (fo=1, routed)           0.000     5.881    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
-    SLICE_X36Y16         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     5.981 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
-                         net (fo=1, routed)           0.000     5.981    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
-    SLICE_X36Y17         CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.257     6.238 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
-                         net (fo=2, routed)           0.483     6.721    round_q29_to_q15_wide2[14]
-    SLICE_X34Y16         LUT1 (Prop_lut1_I0_O)        0.245     6.966 r  g_pipelined.out_re[4]_i_3/O
-                         net (fo=1, routed)           0.256     7.223    g_pipelined.out_re[4]_i_3_n_0
-    SLICE_X34Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     7.717 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.717    g_pipelined.out_re_reg[4]_i_2_n_0
-    SLICE_X34Y18         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.817 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.817    g_pipelined.out_re_reg[8]_i_2_n_0
-    SLICE_X34Y19         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.917 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.917    g_pipelined.out_re_reg[12]_i_2_n_0
-    SLICE_X34Y20         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     8.017 r  g_pipelined.out_re_reg[15]_i_4/CO[3]
-                         net (fo=1, routed)           0.000     8.017    g_pipelined.out_re_reg[15]_i_4_n_0
-    SLICE_X34Y21         CARRY4 (Prop_carry4_CI_O[0])
-                                                      0.178     8.195 f  saturate_q151_carry_i_5__1/O[0]
-                         net (fo=4, routed)           0.614     8.809    u_correct/equalizer/round_q29_to_q15_wide0[16]
-    SLICE_X32Y19         LUT5 (Prop_lut5_I4_O)        0.238     9.047 r  u_correct/equalizer/i__carry_i_3__30/O
-                         net (fo=1, routed)           0.000     9.047    u_correct/equalizer/i__carry_i_3__30_n_0
-    SLICE_X32Y19         CARRY4 (Prop_carry4_S[1]_CO[1])
-                                                      0.409     9.456 r  u_correct/equalizer/saturate_q151_inferred__0/i__carry/CO[1]
-                         net (fo=18, routed)          0.643    10.099    u_correct/equalizer/saturate_q1512_in
-    SLICE_X32Y15         LUT5 (Prop_lut5_I0_O)        0.277    10.376 r  u_correct/equalizer/g_pipelined.out_re[3]_i_1/O
-                         net (fo=1, routed)           0.000    10.376    u_correct/equalizer/saturate_q15_return[3]
-    SLICE_X32Y15         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[3]/D
-  -------------------------------------------------------------------    -------------------
-
-                         (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.247    11.247    u_correct/equalizer/aclk
-    SLICE_X32Y15         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[3]/C
-                         clock pessimism              0.097    11.344
-                         clock uncertainty           -0.035    11.309
-    SLICE_X32Y15         FDRE (Setup_fdre_C_D)        0.076    11.385    u_correct/equalizer/g_pipelined.out_re_reg[3]
-  -------------------------------------------------------------------
-                         required time                         11.385
-                         arrival time                         -10.376
-  -------------------------------------------------------------------
-                         slack                                  1.009
-
-Slack (MET) :             1.021ns  (required time - arrival time)
-  Source:                 u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
-                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            u_correct/equalizer/g_pipelined.out_re_reg[14]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
-  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.894ns  (logic 5.090ns (57.231%)  route 3.804ns (42.769%))
-  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT5=2)
-  Clock Path Skew:        -0.082ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.308ns = ( 11.308 - 10.000 )
-    Source Clock Delay      (SCD):    1.487ns
-    Clock Pessimism Removal (CPR):    0.097ns
-  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
-    Total System Jitter     (TSJ):    0.071ns
-    Total Input Jitter      (TIJ):    0.000ns
-    Discrete Jitter          (DJ):    0.000ns
-    Phase Error              (PE):    0.000ns
-
-    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
-  -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.487     1.487    u_correct/equalizer/aclk
-    DSP48_X2Y4           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
-  -------------------------------------------------------------------    -------------------
-    DSP48_X2Y4           DSP48E1 (Prop_dsp48e1_CLK_P[31])
-                                                      0.370     1.857 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
-                         net (fo=2, routed)           0.778     2.635    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
-    DSP48_X2Y6           DSP48E1 (Prop_dsp48e1_C[31]_P[0])
-                                                      1.523     4.158 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
-                         net (fo=1, routed)           0.626     4.784    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
-    SLICE_X36Y13         LUT1 (Prop_lut1_I0_O)        0.105     4.889 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
-                         net (fo=1, routed)           0.398     5.287    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
-    SLICE_X36Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     5.781 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
-                         net (fo=1, routed)           0.000     5.781    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
-    SLICE_X36Y15         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     5.881 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
-                         net (fo=1, routed)           0.000     5.881    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
-    SLICE_X36Y16         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     5.981 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
-                         net (fo=1, routed)           0.000     5.981    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
-    SLICE_X36Y17         CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.257     6.238 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
-                         net (fo=2, routed)           0.483     6.721    round_q29_to_q15_wide2[14]
-    SLICE_X34Y16         LUT1 (Prop_lut1_I0_O)        0.245     6.966 r  g_pipelined.out_re[4]_i_3/O
-                         net (fo=1, routed)           0.256     7.223    g_pipelined.out_re[4]_i_3_n_0
-    SLICE_X34Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     7.717 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.717    g_pipelined.out_re_reg[4]_i_2_n_0
-    SLICE_X34Y18         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.817 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.817    g_pipelined.out_re_reg[8]_i_2_n_0
-    SLICE_X34Y19         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.917 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.917    g_pipelined.out_re_reg[12]_i_2_n_0
-    SLICE_X34Y20         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     8.017 r  g_pipelined.out_re_reg[15]_i_4/CO[3]
-                         net (fo=1, routed)           0.000     8.017    g_pipelined.out_re_reg[15]_i_4_n_0
-    SLICE_X34Y21         CARRY4 (Prop_carry4_CI_O[0])
-                                                      0.178     8.195 f  saturate_q151_carry_i_5__1/O[0]
-                         net (fo=4, routed)           0.614     8.809    u_correct/equalizer/round_q29_to_q15_wide0[16]
-    SLICE_X32Y19         LUT5 (Prop_lut5_I4_O)        0.238     9.047 r  u_correct/equalizer/i__carry_i_3__30/O
-                         net (fo=1, routed)           0.000     9.047    u_correct/equalizer/i__carry_i_3__30_n_0
-    SLICE_X32Y19         CARRY4 (Prop_carry4_S[1]_CO[1])
-                                                      0.409     9.456 r  u_correct/equalizer/saturate_q151_inferred__0/i__carry/CO[1]
-                         net (fo=18, routed)          0.648    10.103    u_correct/equalizer/saturate_q1512_in
-    SLICE_X31Y19         LUT5 (Prop_lut5_I0_O)        0.277    10.380 r  u_correct/equalizer/g_pipelined.out_re[14]_i_1/O
-                         net (fo=1, routed)           0.000    10.380    u_correct/equalizer/saturate_q15_return[14]
-    SLICE_X31Y19         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[14]/D
-  -------------------------------------------------------------------    -------------------
-
-                         (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.308    11.308    u_correct/equalizer/aclk
-    SLICE_X31Y19         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[14]/C
-                         clock pessimism              0.097    11.405
-                         clock uncertainty           -0.035    11.370
-    SLICE_X31Y19         FDRE (Setup_fdre_C_D)        0.032    11.402    u_correct/equalizer/g_pipelined.out_re_reg[14]
-  -------------------------------------------------------------------
-                         required time                         11.402
-                         arrival time                         -10.380
-  -------------------------------------------------------------------
-                         slack                                  1.021
-
-Slack (MET) :             1.026ns  (required time - arrival time)
-  Source:                 u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
-                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            u_correct/equalizer/g_pipelined.out_re_reg[9]/D
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
-  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.870ns  (logic 5.087ns (57.349%)  route 3.783ns (42.651%))
-  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT5=2)
-  Clock Path Skew:        -0.143ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.247ns = ( 11.247 - 10.000 )
-    Source Clock Delay      (SCD):    1.487ns
-    Clock Pessimism Removal (CPR):    0.097ns
-  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
-    Total System Jitter     (TSJ):    0.071ns
-    Total Input Jitter      (TIJ):    0.000ns
-    Discrete Jitter          (DJ):    0.000ns
-    Phase Error              (PE):    0.000ns
-
-    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
-  -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.487     1.487    u_correct/equalizer/aclk
-    DSP48_X2Y4           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
-  -------------------------------------------------------------------    -------------------
-    DSP48_X2Y4           DSP48E1 (Prop_dsp48e1_CLK_P[31])
-                                                      0.370     1.857 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
-                         net (fo=2, routed)           0.778     2.635    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
-    DSP48_X2Y6           DSP48E1 (Prop_dsp48e1_C[31]_P[0])
-                                                      1.523     4.158 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
-                         net (fo=1, routed)           0.626     4.784    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
-    SLICE_X36Y13         LUT1 (Prop_lut1_I0_O)        0.105     4.889 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
-                         net (fo=1, routed)           0.398     5.287    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
-    SLICE_X36Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     5.781 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
-                         net (fo=1, routed)           0.000     5.781    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
-    SLICE_X36Y15         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     5.881 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
-                         net (fo=1, routed)           0.000     5.881    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
-    SLICE_X36Y16         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     5.981 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
-                         net (fo=1, routed)           0.000     5.981    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
-    SLICE_X36Y17         CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.257     6.238 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
-                         net (fo=2, routed)           0.483     6.721    round_q29_to_q15_wide2[14]
-    SLICE_X34Y16         LUT1 (Prop_lut1_I0_O)        0.245     6.966 r  g_pipelined.out_re[4]_i_3/O
-                         net (fo=1, routed)           0.256     7.223    g_pipelined.out_re[4]_i_3_n_0
-    SLICE_X34Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     7.717 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.717    g_pipelined.out_re_reg[4]_i_2_n_0
-    SLICE_X34Y18         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.817 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.817    g_pipelined.out_re_reg[8]_i_2_n_0
-    SLICE_X34Y19         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.917 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.917    g_pipelined.out_re_reg[12]_i_2_n_0
-    SLICE_X34Y20         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     8.017 r  g_pipelined.out_re_reg[15]_i_4/CO[3]
-                         net (fo=1, routed)           0.000     8.017    g_pipelined.out_re_reg[15]_i_4_n_0
-    SLICE_X34Y21         CARRY4 (Prop_carry4_CI_O[0])
-                                                      0.178     8.195 r  saturate_q151_carry_i_5__1/O[0]
-                         net (fo=4, routed)           0.600     8.795    u_correct/equalizer/round_q29_to_q15_wide0[16]
-    SLICE_X33Y19         LUT5 (Prop_lut5_I4_O)        0.238     9.033 r  u_correct/equalizer/saturate_q151_carry_i_3__1/O
-                         net (fo=1, routed)           0.000     9.033    u_correct/equalizer/saturate_q151_carry_i_3__1_n_0
-    SLICE_X33Y19         CARRY4 (Prop_carry4_S[1]_CO[1])
-                                                      0.408     9.441 f  u_correct/equalizer/saturate_q151_carry/CO[1]
-                         net (fo=18, routed)          0.641    10.082    u_correct/equalizer/saturate_q1511_in
-    SLICE_X32Y15         LUT5 (Prop_lut5_I1_O)        0.275    10.357 r  u_correct/equalizer/g_pipelined.out_re[9]_i_1/O
-                         net (fo=1, routed)           0.000    10.357    u_correct/equalizer/saturate_q15_return[9]
-    SLICE_X32Y15         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[9]/D
-  -------------------------------------------------------------------    -------------------
-
-                         (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.247    11.247    u_correct/equalizer/aclk
-    SLICE_X32Y15         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[9]/C
-                         clock pessimism              0.097    11.344
-                         clock uncertainty           -0.035    11.309
-    SLICE_X32Y15         FDRE (Setup_fdre_C_D)        0.074    11.383    u_correct/equalizer/g_pipelined.out_re_reg[9]
-  -------------------------------------------------------------------
-                         required time                         11.383
-                         arrival time                         -10.357
-  -------------------------------------------------------------------
-                         slack                                  1.026
-
-Slack (MET) :             1.028ns  (required time - arrival time)
+Slack (MET) :             0.743ns  (required time - arrival time)
   Source:                 u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
                             (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Destination:            u_correct/equalizer/g_pipelined.out_re_reg[0]/D
@@ -1034,11 +290,11 @@ Slack (MET) :             1.028ns  (required time - arrival time)
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.866ns  (logic 5.087ns (57.375%)  route 3.779ns (42.625%))
-  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT5=2)
-  Clock Path Skew:        -0.143ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.247ns = ( 11.247 - 10.000 )
-    Source Clock Delay      (SCD):    1.487ns
+  Data Path Delay:        9.066ns  (logic 5.065ns (55.867%)  route 4.001ns (44.133%))
+  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=2)
+  Clock Path Skew:        -0.186ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.303ns = ( 11.303 - 10.000 )
+    Source Clock Delay      (SCD):    1.586ns
     Clock Pessimism Removal (CPR):    0.097ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -1050,68 +306,737 @@ Slack (MET) :             1.028ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.487     1.487    u_correct/equalizer/aclk
-    DSP48_X2Y4           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+                         net (fo=3693, unset)         1.586     1.586    u_correct/equalizer/aclk
+    DSP48_X3Y9           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
   -------------------------------------------------------------------    -------------------
-    DSP48_X2Y4           DSP48E1 (Prop_dsp48e1_CLK_P[31])
-                                                      0.370     1.857 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
-                         net (fo=2, routed)           0.778     2.635    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
-    DSP48_X2Y6           DSP48E1 (Prop_dsp48e1_C[31]_P[0])
-                                                      1.523     4.158 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
-                         net (fo=1, routed)           0.626     4.784    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
-    SLICE_X36Y13         LUT1 (Prop_lut1_I0_O)        0.105     4.889 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
-                         net (fo=1, routed)           0.398     5.287    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
-    SLICE_X36Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     5.781 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
-                         net (fo=1, routed)           0.000     5.781    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
-    SLICE_X36Y15         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     5.881 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
-                         net (fo=1, routed)           0.000     5.881    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
-    SLICE_X36Y16         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     5.981 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
-                         net (fo=1, routed)           0.000     5.981    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
-    SLICE_X36Y17         CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.257     6.238 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
-                         net (fo=2, routed)           0.483     6.721    round_q29_to_q15_wide2[14]
-    SLICE_X34Y16         LUT1 (Prop_lut1_I0_O)        0.245     6.966 r  g_pipelined.out_re[4]_i_3/O
-                         net (fo=1, routed)           0.256     7.223    g_pipelined.out_re[4]_i_3_n_0
-    SLICE_X34Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     7.717 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.717    g_pipelined.out_re_reg[4]_i_2_n_0
-    SLICE_X34Y18         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.817 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.817    g_pipelined.out_re_reg[8]_i_2_n_0
-    SLICE_X34Y19         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.917 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
-                         net (fo=1, routed)           0.000     7.917    g_pipelined.out_re_reg[12]_i_2_n_0
-    SLICE_X34Y20         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     8.017 r  g_pipelined.out_re_reg[15]_i_4/CO[3]
-                         net (fo=1, routed)           0.000     8.017    g_pipelined.out_re_reg[15]_i_4_n_0
-    SLICE_X34Y21         CARRY4 (Prop_carry4_CI_O[0])
-                                                      0.178     8.195 r  saturate_q151_carry_i_5__1/O[0]
-                         net (fo=4, routed)           0.600     8.795    u_correct/equalizer/round_q29_to_q15_wide0[16]
-    SLICE_X33Y19         LUT5 (Prop_lut5_I4_O)        0.238     9.033 r  u_correct/equalizer/saturate_q151_carry_i_3__1/O
-                         net (fo=1, routed)           0.000     9.033    u_correct/equalizer/saturate_q151_carry_i_3__1_n_0
-    SLICE_X33Y19         CARRY4 (Prop_carry4_S[1]_CO[1])
-                                                      0.408     9.441 f  u_correct/equalizer/saturate_q151_carry/CO[1]
-                         net (fo=18, routed)          0.637    10.078    u_correct/equalizer/saturate_q1511_in
-    SLICE_X32Y15         LUT5 (Prop_lut5_I1_O)        0.275    10.353 r  u_correct/equalizer/g_pipelined.out_re[0]_i_1/O
-                         net (fo=1, routed)           0.000    10.353    u_correct/equalizer/saturate_q15_return[0]
-    SLICE_X32Y15         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[0]/D
+    DSP48_X3Y9           DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      0.370     1.956 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
+                         net (fo=2, routed)           0.811     2.767    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
+    DSP48_X3Y7           DSP48E1 (Prop_dsp48e1_C[32]_P[0])
+                                                      1.523     4.290 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
+                         net (fo=1, routed)           0.740     5.030    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
+    SLICE_X84Y14         LUT1 (Prop_lut1_I0_O)        0.105     5.135 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
+                         net (fo=1, routed)           0.371     5.506    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
+    SLICE_X83Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     5.986 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, routed)           0.000     5.986    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
+    SLICE_X83Y15         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.084 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, routed)           0.000     6.084    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
+    SLICE_X83Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.182 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     6.182    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
+    SLICE_X83Y17         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     6.447 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, routed)           0.480     6.927    round_q29_to_q15_wide2[14]
+    SLICE_X77Y17         LUT1 (Prop_lut1_I0_O)        0.250     7.177 r  g_pipelined.out_re[4]_i_3/O
+                         net (fo=1, routed)           0.291     7.468    g_pipelined.out_re[4]_i_3_n_0
+    SLICE_X76Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     7.948 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.948    g_pipelined.out_re_reg[4]_i_2_n_0
+    SLICE_X76Y18         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.046 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.046    g_pipelined.out_re_reg[8]_i_2_n_0
+    SLICE_X76Y19         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.144 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.144    g_pipelined.out_re_reg[12]_i_2_n_0
+    SLICE_X76Y20         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.260     8.404 f  g_pipelined.out_re_reg[15]_i_4/O[3]
+                         net (fo=4, routed)           0.629     9.033    u_correct/equalizer/round_q29_to_q15_wide0[15]
+    SLICE_X75Y20         LUT5 (Prop_lut5_I1_O)        0.257     9.290 r  u_correct/equalizer/i__carry_i_3__30/O
+                         net (fo=1, routed)           0.000     9.290    u_correct/equalizer/i__carry_i_3__30_n_0
+    SLICE_X75Y20         CARRY4 (Prop_carry4_S[1]_CO[1])
+                                                      0.408     9.698 r  u_correct/equalizer/saturate_q151_inferred__0/i__carry/CO[1]
+                         net (fo=18, routed)          0.678    10.377    u_correct/equalizer/saturate_q1512_in
+    SLICE_X77Y17         LUT5 (Prop_lut5_I0_O)        0.275    10.652 r  u_correct/equalizer/g_pipelined.out_re[0]_i_1/O
+                         net (fo=1, routed)           0.000    10.652    u_correct/equalizer/saturate_q15_return[0]
+    SLICE_X77Y17         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[0]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
-                         net (fo=3693, unset)         1.247    11.247    u_correct/equalizer/aclk
-    SLICE_X32Y15         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[0]/C
-                         clock pessimism              0.097    11.344
-                         clock uncertainty           -0.035    11.309
-    SLICE_X32Y15         FDRE (Setup_fdre_C_D)        0.072    11.381    u_correct/equalizer/g_pipelined.out_re_reg[0]
+                         net (fo=3693, unset)         1.303    11.303    u_correct/equalizer/aclk
+    SLICE_X77Y17         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[0]/C
+                         clock pessimism              0.097    11.400
+                         clock uncertainty           -0.035    11.365
+    SLICE_X77Y17         FDRE (Setup_fdre_C_D)        0.030    11.395    u_correct/equalizer/g_pipelined.out_re_reg[0]
   -------------------------------------------------------------------
-                         required time                         11.381
-                         arrival time                         -10.353
+                         required time                         11.395
+                         arrival time                         -10.652
   -------------------------------------------------------------------
-                         slack                                  1.028
+                         slack                                  0.743
+
+Slack (MET) :             0.751ns  (required time - arrival time)
+  Source:                 u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_correct/equalizer/g_pipelined.out_re_reg[6]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        9.059ns  (logic 5.065ns (55.913%)  route 3.994ns (44.087%))
+  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=2)
+  Clock Path Skew:        -0.187ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.302ns = ( 11.302 - 10.000 )
+    Source Clock Delay      (SCD):    1.586ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.586     1.586    u_correct/equalizer/aclk
+    DSP48_X3Y9           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X3Y9           DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      0.370     1.956 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
+                         net (fo=2, routed)           0.811     2.767    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
+    DSP48_X3Y7           DSP48E1 (Prop_dsp48e1_C[32]_P[0])
+                                                      1.523     4.290 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
+                         net (fo=1, routed)           0.740     5.030    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
+    SLICE_X84Y14         LUT1 (Prop_lut1_I0_O)        0.105     5.135 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
+                         net (fo=1, routed)           0.371     5.506    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
+    SLICE_X83Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     5.986 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, routed)           0.000     5.986    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
+    SLICE_X83Y15         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.084 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, routed)           0.000     6.084    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
+    SLICE_X83Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.182 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     6.182    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
+    SLICE_X83Y17         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     6.447 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, routed)           0.480     6.927    round_q29_to_q15_wide2[14]
+    SLICE_X77Y17         LUT1 (Prop_lut1_I0_O)        0.250     7.177 r  g_pipelined.out_re[4]_i_3/O
+                         net (fo=1, routed)           0.291     7.468    g_pipelined.out_re[4]_i_3_n_0
+    SLICE_X76Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     7.948 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.948    g_pipelined.out_re_reg[4]_i_2_n_0
+    SLICE_X76Y18         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.046 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.046    g_pipelined.out_re_reg[8]_i_2_n_0
+    SLICE_X76Y19         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.144 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.144    g_pipelined.out_re_reg[12]_i_2_n_0
+    SLICE_X76Y20         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.260     8.404 f  g_pipelined.out_re_reg[15]_i_4/O[3]
+                         net (fo=4, routed)           0.629     9.033    u_correct/equalizer/round_q29_to_q15_wide0[15]
+    SLICE_X75Y20         LUT5 (Prop_lut5_I1_O)        0.257     9.290 r  u_correct/equalizer/i__carry_i_3__30/O
+                         net (fo=1, routed)           0.000     9.290    u_correct/equalizer/i__carry_i_3__30_n_0
+    SLICE_X75Y20         CARRY4 (Prop_carry4_S[1]_CO[1])
+                                                      0.408     9.698 r  u_correct/equalizer/saturate_q151_inferred__0/i__carry/CO[1]
+                         net (fo=18, routed)          0.671    10.369    u_correct/equalizer/saturate_q1512_in
+    SLICE_X77Y18         LUT5 (Prop_lut5_I0_O)        0.275    10.644 r  u_correct/equalizer/g_pipelined.out_re[6]_i_1/O
+                         net (fo=1, routed)           0.000    10.644    u_correct/equalizer/saturate_q15_return[6]
+    SLICE_X77Y18         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[6]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.302    11.302    u_correct/equalizer/aclk
+    SLICE_X77Y18         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[6]/C
+                         clock pessimism              0.097    11.399
+                         clock uncertainty           -0.035    11.364
+    SLICE_X77Y18         FDRE (Setup_fdre_C_D)        0.032    11.396    u_correct/equalizer/g_pipelined.out_re_reg[6]
+  -------------------------------------------------------------------
+                         required time                         11.396
+                         arrival time                         -10.644
+  -------------------------------------------------------------------
+                         slack                                  0.751
+
+Slack (MET) :             0.761ns  (required time - arrival time)
+  Source:                 u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_correct/equalizer/g_pipelined.out_re_reg[5]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        9.047ns  (logic 5.065ns (55.985%)  route 3.982ns (44.015%))
+  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=2)
+  Clock Path Skew:        -0.187ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.302ns = ( 11.302 - 10.000 )
+    Source Clock Delay      (SCD):    1.586ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.586     1.586    u_correct/equalizer/aclk
+    DSP48_X3Y9           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X3Y9           DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      0.370     1.956 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
+                         net (fo=2, routed)           0.811     2.767    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
+    DSP48_X3Y7           DSP48E1 (Prop_dsp48e1_C[32]_P[0])
+                                                      1.523     4.290 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
+                         net (fo=1, routed)           0.740     5.030    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
+    SLICE_X84Y14         LUT1 (Prop_lut1_I0_O)        0.105     5.135 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
+                         net (fo=1, routed)           0.371     5.506    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
+    SLICE_X83Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     5.986 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, routed)           0.000     5.986    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
+    SLICE_X83Y15         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.084 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, routed)           0.000     6.084    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
+    SLICE_X83Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.182 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     6.182    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
+    SLICE_X83Y17         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     6.447 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, routed)           0.480     6.927    round_q29_to_q15_wide2[14]
+    SLICE_X77Y17         LUT1 (Prop_lut1_I0_O)        0.250     7.177 r  g_pipelined.out_re[4]_i_3/O
+                         net (fo=1, routed)           0.291     7.468    g_pipelined.out_re[4]_i_3_n_0
+    SLICE_X76Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     7.948 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.948    g_pipelined.out_re_reg[4]_i_2_n_0
+    SLICE_X76Y18         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.046 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.046    g_pipelined.out_re_reg[8]_i_2_n_0
+    SLICE_X76Y19         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.144 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.144    g_pipelined.out_re_reg[12]_i_2_n_0
+    SLICE_X76Y20         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.260     8.404 f  g_pipelined.out_re_reg[15]_i_4/O[3]
+                         net (fo=4, routed)           0.629     9.033    u_correct/equalizer/round_q29_to_q15_wide0[15]
+    SLICE_X75Y20         LUT5 (Prop_lut5_I1_O)        0.257     9.290 r  u_correct/equalizer/i__carry_i_3__30/O
+                         net (fo=1, routed)           0.000     9.290    u_correct/equalizer/i__carry_i_3__30_n_0
+    SLICE_X75Y20         CARRY4 (Prop_carry4_S[1]_CO[1])
+                                                      0.408     9.698 r  u_correct/equalizer/saturate_q151_inferred__0/i__carry/CO[1]
+                         net (fo=18, routed)          0.659    10.358    u_correct/equalizer/saturate_q1512_in
+    SLICE_X77Y18         LUT5 (Prop_lut5_I0_O)        0.275    10.633 r  u_correct/equalizer/g_pipelined.out_re[5]_i_1/O
+                         net (fo=1, routed)           0.000    10.633    u_correct/equalizer/saturate_q15_return[5]
+    SLICE_X77Y18         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[5]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.302    11.302    u_correct/equalizer/aclk
+    SLICE_X77Y18         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[5]/C
+                         clock pessimism              0.097    11.399
+                         clock uncertainty           -0.035    11.364
+    SLICE_X77Y18         FDRE (Setup_fdre_C_D)        0.030    11.394    u_correct/equalizer/g_pipelined.out_re_reg[5]
+  -------------------------------------------------------------------
+                         required time                         11.394
+                         arrival time                         -10.633
+  -------------------------------------------------------------------
+                         slack                                  0.761
+
+Slack (MET) :             0.763ns  (required time - arrival time)
+  Source:                 u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_correct/equalizer/g_pipelined.out_re_reg[4]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        9.048ns  (logic 5.065ns (55.981%)  route 3.983ns (44.019%))
+  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=2)
+  Clock Path Skew:        -0.186ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.303ns = ( 11.303 - 10.000 )
+    Source Clock Delay      (SCD):    1.586ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.586     1.586    u_correct/equalizer/aclk
+    DSP48_X3Y9           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X3Y9           DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      0.370     1.956 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
+                         net (fo=2, routed)           0.811     2.767    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
+    DSP48_X3Y7           DSP48E1 (Prop_dsp48e1_C[32]_P[0])
+                                                      1.523     4.290 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
+                         net (fo=1, routed)           0.740     5.030    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
+    SLICE_X84Y14         LUT1 (Prop_lut1_I0_O)        0.105     5.135 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
+                         net (fo=1, routed)           0.371     5.506    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
+    SLICE_X83Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     5.986 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, routed)           0.000     5.986    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
+    SLICE_X83Y15         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.084 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, routed)           0.000     6.084    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
+    SLICE_X83Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.182 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     6.182    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
+    SLICE_X83Y17         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     6.447 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, routed)           0.480     6.927    round_q29_to_q15_wide2[14]
+    SLICE_X77Y17         LUT1 (Prop_lut1_I0_O)        0.250     7.177 r  g_pipelined.out_re[4]_i_3/O
+                         net (fo=1, routed)           0.291     7.468    g_pipelined.out_re[4]_i_3_n_0
+    SLICE_X76Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     7.948 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.948    g_pipelined.out_re_reg[4]_i_2_n_0
+    SLICE_X76Y18         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.046 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.046    g_pipelined.out_re_reg[8]_i_2_n_0
+    SLICE_X76Y19         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.144 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.144    g_pipelined.out_re_reg[12]_i_2_n_0
+    SLICE_X76Y20         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.260     8.404 f  g_pipelined.out_re_reg[15]_i_4/O[3]
+                         net (fo=4, routed)           0.629     9.033    u_correct/equalizer/round_q29_to_q15_wide0[15]
+    SLICE_X75Y20         LUT5 (Prop_lut5_I1_O)        0.257     9.290 r  u_correct/equalizer/i__carry_i_3__30/O
+                         net (fo=1, routed)           0.000     9.290    u_correct/equalizer/i__carry_i_3__30_n_0
+    SLICE_X75Y20         CARRY4 (Prop_carry4_S[1]_CO[1])
+                                                      0.408     9.698 r  u_correct/equalizer/saturate_q151_inferred__0/i__carry/CO[1]
+                         net (fo=18, routed)          0.660    10.358    u_correct/equalizer/saturate_q1512_in
+    SLICE_X77Y17         LUT5 (Prop_lut5_I0_O)        0.275    10.633 r  u_correct/equalizer/g_pipelined.out_re[4]_i_1/O
+                         net (fo=1, routed)           0.000    10.633    u_correct/equalizer/saturate_q15_return[4]
+    SLICE_X77Y17         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[4]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.303    11.303    u_correct/equalizer/aclk
+    SLICE_X77Y17         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[4]/C
+                         clock pessimism              0.097    11.400
+                         clock uncertainty           -0.035    11.365
+    SLICE_X77Y17         FDRE (Setup_fdre_C_D)        0.032    11.397    u_correct/equalizer/g_pipelined.out_re_reg[4]
+  -------------------------------------------------------------------
+                         required time                         11.397
+                         arrival time                         -10.633
+  -------------------------------------------------------------------
+                         slack                                  0.763
+
+Slack (MET) :             0.822ns  (required time - arrival time)
+  Source:                 u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_correct/equalizer/g_pipelined.out_re_reg[1]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.985ns  (logic 5.065ns (56.369%)  route 3.920ns (43.631%))
+  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=2)
+  Clock Path Skew:        -0.188ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.301ns = ( 11.301 - 10.000 )
+    Source Clock Delay      (SCD):    1.586ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.586     1.586    u_correct/equalizer/aclk
+    DSP48_X3Y9           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X3Y9           DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      0.370     1.956 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
+                         net (fo=2, routed)           0.811     2.767    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
+    DSP48_X3Y7           DSP48E1 (Prop_dsp48e1_C[32]_P[0])
+                                                      1.523     4.290 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
+                         net (fo=1, routed)           0.740     5.030    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
+    SLICE_X84Y14         LUT1 (Prop_lut1_I0_O)        0.105     5.135 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
+                         net (fo=1, routed)           0.371     5.506    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
+    SLICE_X83Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     5.986 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, routed)           0.000     5.986    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
+    SLICE_X83Y15         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.084 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, routed)           0.000     6.084    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
+    SLICE_X83Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.182 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     6.182    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
+    SLICE_X83Y17         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     6.447 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, routed)           0.480     6.927    round_q29_to_q15_wide2[14]
+    SLICE_X77Y17         LUT1 (Prop_lut1_I0_O)        0.250     7.177 r  g_pipelined.out_re[4]_i_3/O
+                         net (fo=1, routed)           0.291     7.468    g_pipelined.out_re[4]_i_3_n_0
+    SLICE_X76Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     7.948 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.948    g_pipelined.out_re_reg[4]_i_2_n_0
+    SLICE_X76Y18         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.046 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.046    g_pipelined.out_re_reg[8]_i_2_n_0
+    SLICE_X76Y19         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.144 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.144    g_pipelined.out_re_reg[12]_i_2_n_0
+    SLICE_X76Y20         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.260     8.404 f  g_pipelined.out_re_reg[15]_i_4/O[3]
+                         net (fo=4, routed)           0.629     9.033    u_correct/equalizer/round_q29_to_q15_wide0[15]
+    SLICE_X75Y20         LUT5 (Prop_lut5_I1_O)        0.257     9.290 r  u_correct/equalizer/i__carry_i_3__30/O
+                         net (fo=1, routed)           0.000     9.290    u_correct/equalizer/i__carry_i_3__30_n_0
+    SLICE_X75Y20         CARRY4 (Prop_carry4_S[1]_CO[1])
+                                                      0.408     9.698 r  u_correct/equalizer/saturate_q151_inferred__0/i__carry/CO[1]
+                         net (fo=18, routed)          0.598    10.296    u_correct/equalizer/saturate_q1512_in
+    SLICE_X75Y17         LUT5 (Prop_lut5_I0_O)        0.275    10.571 r  u_correct/equalizer/g_pipelined.out_re[1]_i_1/O
+                         net (fo=1, routed)           0.000    10.571    u_correct/equalizer/saturate_q15_return[1]
+    SLICE_X75Y17         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[1]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.301    11.301    u_correct/equalizer/aclk
+    SLICE_X75Y17         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[1]/C
+                         clock pessimism              0.097    11.398
+                         clock uncertainty           -0.035    11.363
+    SLICE_X75Y17         FDRE (Setup_fdre_C_D)        0.030    11.393    u_correct/equalizer/g_pipelined.out_re_reg[1]
+  -------------------------------------------------------------------
+                         required time                         11.393
+                         arrival time                         -10.571
+  -------------------------------------------------------------------
+                         slack                                  0.822
+
+Slack (MET) :             0.827ns  (required time - arrival time)
+  Source:                 u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_correct/equalizer/g_pipelined.out_re_reg[2]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.982ns  (logic 5.065ns (56.388%)  route 3.917ns (43.612%))
+  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=2)
+  Clock Path Skew:        -0.188ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.301ns = ( 11.301 - 10.000 )
+    Source Clock Delay      (SCD):    1.586ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.586     1.586    u_correct/equalizer/aclk
+    DSP48_X3Y9           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X3Y9           DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      0.370     1.956 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
+                         net (fo=2, routed)           0.811     2.767    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
+    DSP48_X3Y7           DSP48E1 (Prop_dsp48e1_C[32]_P[0])
+                                                      1.523     4.290 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
+                         net (fo=1, routed)           0.740     5.030    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
+    SLICE_X84Y14         LUT1 (Prop_lut1_I0_O)        0.105     5.135 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
+                         net (fo=1, routed)           0.371     5.506    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
+    SLICE_X83Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     5.986 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, routed)           0.000     5.986    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
+    SLICE_X83Y15         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.084 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, routed)           0.000     6.084    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
+    SLICE_X83Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.182 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     6.182    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
+    SLICE_X83Y17         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     6.447 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, routed)           0.480     6.927    round_q29_to_q15_wide2[14]
+    SLICE_X77Y17         LUT1 (Prop_lut1_I0_O)        0.250     7.177 r  g_pipelined.out_re[4]_i_3/O
+                         net (fo=1, routed)           0.291     7.468    g_pipelined.out_re[4]_i_3_n_0
+    SLICE_X76Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     7.948 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.948    g_pipelined.out_re_reg[4]_i_2_n_0
+    SLICE_X76Y18         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.046 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.046    g_pipelined.out_re_reg[8]_i_2_n_0
+    SLICE_X76Y19         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.144 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.144    g_pipelined.out_re_reg[12]_i_2_n_0
+    SLICE_X76Y20         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.260     8.404 f  g_pipelined.out_re_reg[15]_i_4/O[3]
+                         net (fo=4, routed)           0.629     9.033    u_correct/equalizer/round_q29_to_q15_wide0[15]
+    SLICE_X75Y20         LUT5 (Prop_lut5_I1_O)        0.257     9.290 r  u_correct/equalizer/i__carry_i_3__30/O
+                         net (fo=1, routed)           0.000     9.290    u_correct/equalizer/i__carry_i_3__30_n_0
+    SLICE_X75Y20         CARRY4 (Prop_carry4_S[1]_CO[1])
+                                                      0.408     9.698 r  u_correct/equalizer/saturate_q151_inferred__0/i__carry/CO[1]
+                         net (fo=18, routed)          0.595    10.293    u_correct/equalizer/saturate_q1512_in
+    SLICE_X75Y17         LUT5 (Prop_lut5_I0_O)        0.275    10.568 r  u_correct/equalizer/g_pipelined.out_re[2]_i_1/O
+                         net (fo=1, routed)           0.000    10.568    u_correct/equalizer/saturate_q15_return[2]
+    SLICE_X75Y17         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[2]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.301    11.301    u_correct/equalizer/aclk
+    SLICE_X75Y17         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[2]/C
+                         clock pessimism              0.097    11.398
+                         clock uncertainty           -0.035    11.363
+    SLICE_X75Y17         FDRE (Setup_fdre_C_D)        0.032    11.395    u_correct/equalizer/g_pipelined.out_re_reg[2]
+  -------------------------------------------------------------------
+                         required time                         11.395
+                         arrival time                         -10.568
+  -------------------------------------------------------------------
+                         slack                                  0.827
+
+Slack (MET) :             0.869ns  (required time - arrival time)
+  Source:                 u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_correct/equalizer/g_pipelined.out_re_reg[3]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.940ns  (logic 5.065ns (56.657%)  route 3.875ns (43.343%))
+  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=2)
+  Clock Path Skew:        -0.188ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.301ns = ( 11.301 - 10.000 )
+    Source Clock Delay      (SCD):    1.586ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.586     1.586    u_correct/equalizer/aclk
+    DSP48_X3Y9           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X3Y9           DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      0.370     1.956 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
+                         net (fo=2, routed)           0.811     2.767    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
+    DSP48_X3Y7           DSP48E1 (Prop_dsp48e1_C[32]_P[0])
+                                                      1.523     4.290 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
+                         net (fo=1, routed)           0.740     5.030    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
+    SLICE_X84Y14         LUT1 (Prop_lut1_I0_O)        0.105     5.135 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
+                         net (fo=1, routed)           0.371     5.506    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
+    SLICE_X83Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     5.986 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, routed)           0.000     5.986    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
+    SLICE_X83Y15         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.084 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, routed)           0.000     6.084    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
+    SLICE_X83Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.182 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     6.182    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
+    SLICE_X83Y17         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     6.447 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, routed)           0.480     6.927    round_q29_to_q15_wide2[14]
+    SLICE_X77Y17         LUT1 (Prop_lut1_I0_O)        0.250     7.177 r  g_pipelined.out_re[4]_i_3/O
+                         net (fo=1, routed)           0.291     7.468    g_pipelined.out_re[4]_i_3_n_0
+    SLICE_X76Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     7.948 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.948    g_pipelined.out_re_reg[4]_i_2_n_0
+    SLICE_X76Y18         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.046 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.046    g_pipelined.out_re_reg[8]_i_2_n_0
+    SLICE_X76Y19         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.144 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.144    g_pipelined.out_re_reg[12]_i_2_n_0
+    SLICE_X76Y20         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.260     8.404 f  g_pipelined.out_re_reg[15]_i_4/O[3]
+                         net (fo=4, routed)           0.629     9.033    u_correct/equalizer/round_q29_to_q15_wide0[15]
+    SLICE_X75Y20         LUT5 (Prop_lut5_I1_O)        0.257     9.290 r  u_correct/equalizer/i__carry_i_3__30/O
+                         net (fo=1, routed)           0.000     9.290    u_correct/equalizer/i__carry_i_3__30_n_0
+    SLICE_X75Y20         CARRY4 (Prop_carry4_S[1]_CO[1])
+                                                      0.408     9.698 r  u_correct/equalizer/saturate_q151_inferred__0/i__carry/CO[1]
+                         net (fo=18, routed)          0.552    10.250    u_correct/equalizer/saturate_q1512_in
+    SLICE_X75Y17         LUT5 (Prop_lut5_I0_O)        0.275    10.525 r  u_correct/equalizer/g_pipelined.out_re[3]_i_1/O
+                         net (fo=1, routed)           0.000    10.525    u_correct/equalizer/saturate_q15_return[3]
+    SLICE_X75Y17         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[3]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.301    11.301    u_correct/equalizer/aclk
+    SLICE_X75Y17         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[3]/C
+                         clock pessimism              0.097    11.398
+                         clock uncertainty           -0.035    11.363
+    SLICE_X75Y17         FDRE (Setup_fdre_C_D)        0.032    11.395    u_correct/equalizer/g_pipelined.out_re_reg[3]
+  -------------------------------------------------------------------
+                         required time                         11.395
+                         arrival time                         -10.525
+  -------------------------------------------------------------------
+                         slack                                  0.869
+
+Slack (MET) :             0.869ns  (required time - arrival time)
+  Source:                 u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_correct/equalizer/g_pipelined.saturation_pending_reg[0]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.933ns  (logic 5.078ns (56.848%)  route 3.855ns (43.152%))
+  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=1 LUT6=1)
+  Clock Path Skew:        -0.193ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.299ns = ( 11.299 - 10.000 )
+    Source Clock Delay      (SCD):    1.589ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.589     1.589    u_correct/equalizer/aclk
+    DSP48_X3Y8           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X3Y8           DSP48E1 (Prop_dsp48e1_CLK_P[18])
+                                                      0.370     1.959 r  u_correct/equalizer/g_pipelined.s1_ri_reg/P[18]
+                         net (fo=1, routed)           0.773     2.732    u_correct/equalizer/g_pipelined.s1_ri_reg_n_87
+    DSP48_X3Y6           DSP48E1 (Prop_dsp48e1_C[18]_P[0])
+                                                      1.523     4.255 f  u_correct/equalizer/g_pipelined.equalized_im_q29/P[0]
+                         net (fo=1, routed)           0.376     4.631    u_correct/equalizer/g_pipelined.equalized_im_q29_n_105
+    SLICE_X93Y15         LUT1 (Prop_lut1_I0_O)        0.105     4.736 r  u_correct/equalizer/g_pipelined.out_im[0]_i_18/O
+                         net (fo=1, routed)           0.392     5.128    u_correct/equalizer/g_pipelined.out_im[0]_i_18_n_0
+    SLICE_X91Y13         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     5.608 r  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_13/CO[3]
+                         net (fo=1, routed)           0.000     5.608    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_13_n_0
+    SLICE_X91Y14         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     5.706 r  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_8/CO[3]
+                         net (fo=1, routed)           0.000     5.706    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_8_n_0
+    SLICE_X91Y15         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     5.804 r  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     5.804    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3_n_0
+    SLICE_X91Y16         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     6.069 f  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_2/O[1]
+                         net (fo=2, routed)           0.360     6.429    u_correct_n_66
+    SLICE_X93Y15         LUT1 (Prop_lut1_I0_O)        0.250     6.679 r  g_pipelined.out_im[4]_i_3/O
+                         net (fo=1, routed)           0.255     6.934    g_pipelined.out_im[4]_i_3_n_0
+    SLICE_X92Y16         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.494     7.428 r  g_pipelined.out_im_reg[4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.428    g_pipelined.out_im_reg[4]_i_2_n_0
+    SLICE_X92Y17         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.528 r  g_pipelined.out_im_reg[8]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.528    g_pipelined.out_im_reg[8]_i_2_n_0
+    SLICE_X92Y18         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.100     7.628 r  g_pipelined.out_im_reg[12]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.628    g_pipelined.out_im_reg[12]_i_2_n_0
+    SLICE_X92Y19         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.262     7.890 f  g_pipelined.out_im_reg[15]_i_2/O[3]
+                         net (fo=4, routed)           0.556     8.446    u_correct/equalizer/saturate_q151_inferred__1/i__carry_0[3]
+    SLICE_X93Y19         LUT5 (Prop_lut5_I1_O)        0.250     8.696 r  u_correct/equalizer/i__carry_i_3__31/O
+                         net (fo=1, routed)           0.000     8.696    u_correct/equalizer/i__carry_i_3__31_n_0
+    SLICE_X93Y19         CARRY4 (Prop_carry4_S[1]_CO[1])
+                                                      0.408     9.104 r  u_correct/equalizer/saturate_q151_inferred__2/i__carry/CO[1]
+                         net (fo=18, routed)          1.142    10.246    u_correct/equalizer/saturate_q1510_in
+    SLICE_X74Y19         LUT6 (Prop_lut6_I0_O)        0.275    10.521 r  u_correct/equalizer/g_pipelined.saturation_pending[0]_i_1/O
+                         net (fo=1, routed)           0.000    10.521    u_correct/equalizer/g_pipelined.saturation_pending[0]_i_1_n_0
+    SLICE_X74Y19         FDRE                                         r  u_correct/equalizer/g_pipelined.saturation_pending_reg[0]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.299    11.299    u_correct/equalizer/aclk
+    SLICE_X74Y19         FDRE                                         r  u_correct/equalizer/g_pipelined.saturation_pending_reg[0]/C
+                         clock pessimism              0.097    11.396
+                         clock uncertainty           -0.035    11.361
+    SLICE_X74Y19         FDRE (Setup_fdre_C_D)        0.030    11.391    u_correct/equalizer/g_pipelined.saturation_pending_reg[0]
+  -------------------------------------------------------------------
+                         required time                         11.391
+                         arrival time                         -10.521
+  -------------------------------------------------------------------
+                         slack                                  0.869
+
+Slack (MET) :             0.874ns  (required time - arrival time)
+  Source:                 u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            u_correct/equalizer/g_pipelined.out_re_reg[9]/D
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        8.934ns  (logic 5.065ns (56.694%)  route 3.869ns (43.306%))
+  Logic Levels:           14  (CARRY4=9 DSP48E1=1 LUT1=2 LUT5=2)
+  Clock Path Skew:        -0.189ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.300ns = ( 11.300 - 10.000 )
+    Source Clock Delay      (SCD):    1.586ns
+    Clock Pessimism Removal (CPR):    0.097ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.586     1.586    u_correct/equalizer/aclk
+    DSP48_X3Y9           DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
+  -------------------------------------------------------------------    -------------------
+    DSP48_X3Y9           DSP48E1 (Prop_dsp48e1_CLK_P[31])
+                                                      0.370     1.956 r  u_correct/equalizer/g_pipelined.s1_rr_reg/P[31]
+                         net (fo=2, routed)           0.811     2.767    u_correct/equalizer/g_pipelined.s1_rr_reg_n_74
+    DSP48_X3Y7           DSP48E1 (Prop_dsp48e1_C[32]_P[0])
+                                                      1.523     4.290 f  u_correct/equalizer/g_pipelined.equalized_re_q29/P[0]
+                         net (fo=1, routed)           0.740     5.030    u_correct/equalizer/g_pipelined.equalized_re_q29_n_105
+    SLICE_X84Y14         LUT1 (Prop_lut1_I0_O)        0.105     5.135 r  u_correct/equalizer/g_pipelined.out_re[0]_i_18/O
+                         net (fo=1, routed)           0.371     5.506    u_correct/equalizer/g_pipelined.out_re[0]_i_18_n_0
+    SLICE_X83Y14         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     5.986 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13/CO[3]
+                         net (fo=1, routed)           0.000     5.986    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_13_n_0
+    SLICE_X83Y15         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.084 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8/CO[3]
+                         net (fo=1, routed)           0.000     6.084    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_8_n_0
+    SLICE_X83Y16         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     6.182 r  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3/CO[3]
+                         net (fo=1, routed)           0.000     6.182    u_correct/equalizer/g_pipelined.out_re_reg[0]_i_3_n_0
+    SLICE_X83Y17         CARRY4 (Prop_carry4_CI_O[1])
+                                                      0.265     6.447 f  u_correct/equalizer/g_pipelined.out_re_reg[0]_i_2/O[1]
+                         net (fo=2, routed)           0.480     6.927    round_q29_to_q15_wide2[14]
+    SLICE_X77Y17         LUT1 (Prop_lut1_I0_O)        0.250     7.177 r  g_pipelined.out_re[4]_i_3/O
+                         net (fo=1, routed)           0.291     7.468    g_pipelined.out_re[4]_i_3_n_0
+    SLICE_X76Y17         CARRY4 (Prop_carry4_CYINIT_CO[3])
+                                                      0.480     7.948 r  g_pipelined.out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     7.948    g_pipelined.out_re_reg[4]_i_2_n_0
+    SLICE_X76Y18         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.046 r  g_pipelined.out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.046    g_pipelined.out_re_reg[8]_i_2_n_0
+    SLICE_X76Y19         CARRY4 (Prop_carry4_CI_CO[3])
+                                                      0.098     8.144 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, routed)           0.000     8.144    g_pipelined.out_re_reg[12]_i_2_n_0
+    SLICE_X76Y20         CARRY4 (Prop_carry4_CI_O[3])
+                                                      0.260     8.404 f  g_pipelined.out_re_reg[15]_i_4/O[3]
+                         net (fo=4, routed)           0.629     9.033    u_correct/equalizer/round_q29_to_q15_wide0[15]
+    SLICE_X75Y20         LUT5 (Prop_lut5_I1_O)        0.257     9.290 r  u_correct/equalizer/i__carry_i_3__30/O
+                         net (fo=1, routed)           0.000     9.290    u_correct/equalizer/i__carry_i_3__30_n_0
+    SLICE_X75Y20         CARRY4 (Prop_carry4_S[1]_CO[1])
+                                                      0.408     9.698 r  u_correct/equalizer/saturate_q151_inferred__0/i__carry/CO[1]
+                         net (fo=18, routed)          0.546    10.245    u_correct/equalizer/saturate_q1512_in
+    SLICE_X75Y18         LUT5 (Prop_lut5_I0_O)        0.275    10.520 r  u_correct/equalizer/g_pipelined.out_re[9]_i_1/O
+                         net (fo=1, routed)           0.000    10.520    u_correct/equalizer/saturate_q15_return[9]
+    SLICE_X75Y18         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[9]/D
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  aclk (IN)
+                         net (fo=3693, unset)         1.300    11.300    u_correct/equalizer/aclk
+    SLICE_X75Y18         FDRE                                         r  u_correct/equalizer/g_pipelined.out_re_reg[9]/C
+                         clock pessimism              0.097    11.397
+                         clock uncertainty           -0.035    11.362
+    SLICE_X75Y18         FDRE (Setup_fdre_C_D)        0.032    11.394    u_correct/equalizer/g_pipelined.out_re_reg[9]
+  -------------------------------------------------------------------
+                         required time                         11.394
+                         arrival time                         -10.520
+  -------------------------------------------------------------------
+                         slack                                  0.874
 
 
 
@@ -1125,33 +1050,33 @@ Period(ns):         10.000
 Sources:            { aclk }
 
 Check Type        Corner  Lib Pin      Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location      Pin
-Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X0Y16   g_cfo.u_cfo/g_x_reg/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X1Y18   g_cfo.u_cfo/g_y_reg/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X2Y10   g_cfo.u_cfo/m_rr_reg/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X0Y14   g_cfo.u_cfo/r1/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X2Y18   g_cfo.u_cfo/r1__0/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X0Y15   g_cfo.u_cfo/r2/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X2Y19   g_cfo.u_cfo/r2__0/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X1Y0    g_channel_eq.u_channel_eq/s1_ir_reg/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X1Y3    g_channel_eq.u_channel_eq/s1_rr_reg/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X0Y7    u_fft/normalized_ifft/butterfly/g_pipelined.s1_ri_reg/CLK
-Low Pulse Width   Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMA/CLK
-Low Pulse Width   Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMA/CLK
-Low Pulse Width   Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMB/CLK
-Low Pulse Width   Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMB/CLK
-Low Pulse Width   Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMC/CLK
-Low Pulse Width   Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMC/CLK
-Low Pulse Width   Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMD/CLK
-Low Pulse Width   Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMD/CLK
-Low Pulse Width   Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X20Y41  g_cfo.u_cfo/buffer_reg_r1_0_63_12_14/RAMA/CLK
-Low Pulse Width   Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X20Y41  g_cfo.u_cfo/buffer_reg_r1_0_63_12_14/RAMA/CLK
-High Pulse Width  Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMA/CLK
-High Pulse Width  Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMA/CLK
-High Pulse Width  Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMB/CLK
-High Pulse Width  Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMB/CLK
-High Pulse Width  Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMC/CLK
-High Pulse Width  Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMC/CLK
-High Pulse Width  Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMD/CLK
-High Pulse Width  Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X22Y36  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMD/CLK
-High Pulse Width  Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X20Y41  g_cfo.u_cfo/buffer_reg_r1_0_63_12_14/RAMA/CLK
-High Pulse Width  Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X20Y41  g_cfo.u_cfo/buffer_reg_r1_0_63_12_14/RAMA/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X0Y12   g_cfo.u_cfo/g_x_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X0Y8    g_cfo.u_cfo/g_y_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X2Y12   g_cfo.u_cfo/m_rr_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X0Y13   g_cfo.u_cfo/r1/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X0Y10   g_cfo.u_cfo/r1__0/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X0Y14   g_cfo.u_cfo/r2/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X0Y9    g_cfo.u_cfo/r2__0/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X1Y5    g_channel_eq.u_channel_eq/s1_ir_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X0Y5    g_channel_eq.u_channel_eq/s1_rr_reg/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            3.272         10.000      6.728      DSP48_X1Y6    u_fft/normalized_ifft/butterfly/g_pipelined.s1_ri_reg/CLK
+Low Pulse Width   Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMA/CLK
+Low Pulse Width   Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMA/CLK
+Low Pulse Width   Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMB/CLK
+Low Pulse Width   Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMB/CLK
+Low Pulse Width   Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMC/CLK
+Low Pulse Width   Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMC/CLK
+Low Pulse Width   Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMD/CLK
+Low Pulse Width   Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMD/CLK
+Low Pulse Width   Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y30  g_cfo.u_cfo/buffer_reg_r1_0_63_12_14/RAMA/CLK
+Low Pulse Width   Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y30  g_cfo.u_cfo/buffer_reg_r1_0_63_12_14/RAMA/CLK
+High Pulse Width  Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMA/CLK
+High Pulse Width  Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMA/CLK
+High Pulse Width  Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMB/CLK
+High Pulse Width  Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMB/CLK
+High Pulse Width  Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMC/CLK
+High Pulse Width  Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMC/CLK
+High Pulse Width  Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMD/CLK
+High Pulse Width  Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y24  g_cfo.u_cfo/buffer_reg_r1_0_63_0_2/RAMD/CLK
+High Pulse Width  Slow    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y30  g_cfo.u_cfo/buffer_reg_r1_0_63_12_14/RAMA/CLK
+High Pulse Width  Fast    RAMD64E/CLK  n/a            1.130         5.000       3.870      SLICE_X18Y30  g_cfo.u_cfo/buffer_reg_r1_0_63_12_14/RAMA/CLK

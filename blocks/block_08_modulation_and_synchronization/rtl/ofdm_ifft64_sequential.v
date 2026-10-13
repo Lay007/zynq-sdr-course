@@ -313,12 +313,15 @@ module ofdm_ifft64_sequential #(
             bank_wdata[parity6(wb_last1)] = {butterfly_y1_re, butterfly_y1_im};
         end
 
+        // Both read addresses get a value on every path. The two butterfly points
+        // always have different parity, but synthesis cannot prove it, and without
+        // these defaults it inferred a latch for each address bit (LDCE cells,
+        // flagged as gated clocks by DRC once the modem sat in a block design).
+        bank_raddr[0] = next_output_index[5:1];
+        bank_raddr[1] = next_output_index[5:1];
         if (state == STATE_ISSUE) begin
             bank_raddr[parity6(butterfly_index0)] = butterfly_index0[5:1];
             bank_raddr[parity6(butterfly_index1)] = butterfly_index1[5:1];
-        end else begin
-            bank_raddr[0] = next_output_index[5:1];
-            bank_raddr[1] = next_output_index[5:1];
         end
     end
 
