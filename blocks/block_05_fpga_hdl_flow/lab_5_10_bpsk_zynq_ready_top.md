@@ -140,7 +140,7 @@ Each exercise below is a deliberate one-line RTL mutation. Make it, run the benc
 <summary>Answers (checked against the RTL and the bench)</summary>
 
 1. The observed result is in the exercise: the counter accepts a preamble match in either polarity and normalises the payload, so an inverted stream still counts zero payload errors.
-2. Today, none: the polarity is held in the counter's internal `invert_bits` register, and neither the top level nor the AXI-Lite register map (`0x00`–`0x1C`, Lab 5.11) exports it. That is exactly the gap: a hardware polarity bug would pass silently. Export it, for example as a spare bit of `CONTROL_STATUS`, and log it with every run; an inverted lock on a link that should never invert points to a sign error somewhere in the chain.
+2. Today, none: the polarity is held in the counter's internal `invert_bits` register, and neither the top level nor the AXI-Lite register map (`0x00`–`0x1C`, Lab 5.11) exports it. That is exactly the gap: a hardware polarity bug would pass silently. Export it, for example as a spare bit of `CONTROL_STATUS`, and log it with every run; an inverted lock on a link that should never invert points to a sign error somewhere in the chain. Tracked in [issue #64](https://github.com/Lay007/zynq-sdr-course/issues/64), which also covers the QPSK counter, whose `quadrant_swapped` output is left unconnected.
 3. An exact 8-bit match by random bits has probability `1/256 ≈ 0.4 %`, doubled to about 0.8 % because either polarity is accepted. With `LOCK_ERR_TOL = t` the window accepts up to `t` mismatches: `P = 2 · Σ_{k≤t} C(8,k) / 256`, already 7 % for `t = 1`. Longer lock windows and a small tolerance keep false locks rare; the course default is 8 bits with `LOCK_ERR_TOL = 0`.
 
 </details>
