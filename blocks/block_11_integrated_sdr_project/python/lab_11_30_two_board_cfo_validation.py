@@ -289,7 +289,8 @@ def sh(run: ParamikoCommandRunner, command: str) -> str:
 
 
 def quiet_board(run: ParamikoCommandRunner) -> None:
-    run("pkill -9 -f iio_writedev 2>/dev/null; kill $(ps | grep '[m]odem_main' | awk '{print $1}') 2>/dev/null")
+    # BusyBox on these boards has no pkill: stop transmitters by PID (see reset_tx_dma).
+    run("for p in $(ps | grep '[i]io_writedev' | awk '{print $1}'); do kill -9 $p; done; kill $(ps | grep '[m]odem_main' | awk '{print $1}') 2>/dev/null")
     run(f"echo {QUIET_DB} > {PHY}/out_voltage0_hardwaregain")
 
 
@@ -321,7 +322,11 @@ def reset_tx_dma(run: ParamikoCommandRunner) -> None:
     `iio_writedev -c` gets stuck in an unkillable (uninterruptible-DMA) state on this platform
     and keeps the DAC's DMA buffer allocated, so the NEXT run fails with
     'Unable to allocate buffer: Device or resource busy' even after `pkill -9`, `SIGTERM`, or a
-    DDS-core RSTN toggle -- only a driver rebind (or a reboot) clears it. Unbind+rebind of
+    DDS-core RSTN toggle -- only a driver rebind (or a reboot) clears it. (Correction, 2026-10-14:
+    BusyBox on board A has no `pkill` at all -- the command failed silently behind `2>/dev/null`, so
+    the old writers were never killed and kept the buffer. They die at once with `kill -9 <pid>`,
+    which the scripts now use. The rebind below stays: it is still the reliable way to free the
+    DAC buffer.) Unbind+rebind of
     cf_axi_dds tears the buffer down and lets the next allocation succeed. It re-registers the
     DDS core under a NEW iio:deviceN, which is harmless here: the transmitter is addressed by
     name (cf-ad9361-dds-core-lpc), the receiver by name (cf-ad9361-lpc), the DAC source by
@@ -330,7 +335,7 @@ def reset_tx_dma(run: ParamikoCommandRunner) -> None:
     Run at the start of every attempt, so a run self-heals from a previous stuck transmitter
     without rebooting board A.
     """
-    run("pkill -9 -f iio_writedev 2>/dev/null")
+    run("for p in $(ps | grep '[i]io_writedev' | awk '{print $1}'); do kill -9 $p; done")
     dev = sh(run, f"ls {DDS_DRIVER}/ | grep dds-core | head -1")
     if dev:
         run(f"echo {dev} > {DDS_DRIVER}/unbind 2>/dev/null")

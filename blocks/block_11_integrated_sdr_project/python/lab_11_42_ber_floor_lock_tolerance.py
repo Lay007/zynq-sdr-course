@@ -140,7 +140,7 @@ def run(frames: int) -> int:
         print("\nexpected spurious-lock floor at the SHIPPED LOCK_ERR_TOL: see --predict")
     finally:
         try:
-            sh(ra, "pkill -9 -f iio_writedev 2>/dev/null")
+            sh(ra, "for p in $(ps | grep '[i]io_writedev' | awk '{print $1}'); do kill -9 $p; done")
             L.quiet_board(ra)
             L.quiet_board(rb)
             print("\nboth boards quiet (-89.75 dB)")

@@ -105,14 +105,14 @@ def main() -> int:
             try:
                 r = {"mode": mode, **score(rb, args.frames, gains)}
             finally:
-                sh(ra, "pkill -f toggle.sh 2>/dev/null")
+                sh(ra, "for p in $(ps | grep '[t]oggle.sh' | awk '{print $1}'); do kill -9 $p; done")
             r["rx_gain_min"] = min(gains) if gains else None
             r["rx_gain_max"] = max(gains) if gains else None
             res["dynamic"].append(r)
             print(json.dumps(r))
     finally:
         try:
-            sh(ra, "pkill -f toggle.sh 2>/dev/null; pkill -9 -f iio_writedev 2>/dev/null")
+            sh(ra, "for p in $(ps | grep '[t]oggle.sh' | awk '{print $1}'); do kill -9 $p; done; for p in $(ps | grep '[i]io_writedev' | awk '{print $1}'); do kill -9 $p; done")
             L.quiet_board(ra)
             sh(rb, f"echo manual > {PHY}/in_voltage0_gain_control_mode")
             sh(rb, f"echo 71 > {PHY}/in_voltage0_hardwaregain")

@@ -148,7 +148,7 @@ def main() -> int:
                       f" {adc.get('clipped_pct')!s:>6} {lk:4d} {clean:5d}  {err}/{bits}")
     finally:
         try:
-            sh(ra, "pkill -9 -f iio_writedev 2>/dev/null")
+            sh(ra, "for p in $(ps | grep '[i]io_writedev' | awk '{print $1}'); do kill -9 $p; done")
             L.quiet_board(ra)
             L.quiet_board(rb)
             print("both boards quiet (-89.75 dB)")

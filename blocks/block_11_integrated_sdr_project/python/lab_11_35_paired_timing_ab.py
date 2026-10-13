@@ -473,7 +473,7 @@ def main() -> int:
                         )
     finally:
         try:
-            sh(run_a, "pkill -9 -f iio_writedev 2>/dev/null || true")
+            sh(run_a, "for p in $(ps | grep '[i]io_writedev' | awk '{print $1}'); do kill -9 $p; done")
             B.L.quiet_board(run_a)
             B.L.quiet_board(run_b)
             print("both boards quiet (-89.75 dB)")

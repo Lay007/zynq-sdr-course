@@ -151,7 +151,7 @@ def main() -> int:
                   "only one; do not let the offline model overrule this.")
     finally:
         try:
-            L.sh(ra, "pkill -9 -f iio_writedev 2>/dev/null")
+            L.sh(ra, "for p in $(ps | grep '[i]io_writedev' | awk '{print $1}'); do kill -9 $p; done")
             L.quiet_board(ra)
             L.quiet_board(rb)
             print("\nboth boards quiet (-89.75 dB)")

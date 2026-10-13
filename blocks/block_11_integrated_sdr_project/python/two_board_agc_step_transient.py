@@ -178,7 +178,7 @@ def main() -> int:
                     del t_step
     finally:
         try:
-            sh(ra, "pkill -9 -f iio_writedev 2>/dev/null")
+            sh(ra, "for p in $(ps | grep '[i]io_writedev' | awk '{print $1}'); do kill -9 $p; done")
             L.quiet_board(ra)
             sh(rb, f"echo manual > {PHY}/in_voltage0_gain_control_mode")
             sh(rb, f"echo 71 > {PHY}/in_voltage0_hardwaregain")
