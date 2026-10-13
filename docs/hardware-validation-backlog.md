@@ -8,7 +8,7 @@ This page separates documentation work from tasks that require real hardware acc
 |---|---:|---|---|
 | P0 | #25 | Complete safe cabled loopback validation | conducted capture/report are measured; add NanoVNA `S21` for the cable and marked 30 dB attenuator |
 | Done | #26 | Publish and repeat QPSK demo IQ | public 64 KiB synthetic Git LFS payload, SHA256, deterministic rebuild, zero-BER replay and report assets are committed; measured OTA raw-data review remains separate |
-| P2 | #29 | Extend AD9363 gain table | first 915 MHz relative RX/TX sweeps are measured; add calibrated multi-frequency and large-signal points |
+| P2 | #29 | Extend AD9363 gain table | 915 MHz relative sweeps and the two-board large-signal boundary are measured; add passive-path calibration and other frequencies |
 | P2 | #25/#26 | Add final hardware report | report page, figures, limitations |
 
 ## Priority non-hardware follow-up
@@ -25,7 +25,7 @@ This page separates documentation work from tasks that require real hardware acc
 |---:|---|
 | #25 | The safe cabled tone run now has nominal attenuation, gain settings, capture metadata, FFT/metrics and a short conclusion in `reports/hardware/ad9361-conducted-loopback-20260715.md`. Full closure still requires NanoVNA `S21` evidence for the cable and marked 30 dB attenuator. |
 | #26 | Complete for the synthetic replay scope: the public QPSK IQ fixture has a Git LFS payload, manifest, checksum, deterministic rebuild, replay command, zero BER/SER, constellation plot and EVM/SNR summary. This does not close publication review for the separate measured OTA WAV. |
-| #29 | The first relative table is recorded in `reports/hardware/ad9361-gain-overload-table-20260715.md` with safe starting values and limitations. Full closure requires calibrated passive-path loss, multiple frequencies and a controlled large-signal boundary. |
+| #29 | The first relative table is recorded in `reports/hardware/ad9361-gain-overload-table-20260715.md` with safe starting values and limitations. The large-signal boundary is measured on the two-board bench in `reports/hardware/ad9361-two-board-overload-20261013.md` (clipping onset per RX gain, BER under clipping, RSSI saturation). Full closure still requires calibrated passive-path loss and multiple frequencies. |
 
 ## NanoVNA pre-check for safe cabled loopback
 

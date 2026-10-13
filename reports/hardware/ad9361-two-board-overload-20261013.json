@@ -1,0 +1,1052 @@
+{
+  "issue": 29,
+  "bench": "A TX1 -> 0 dB var -> 30 dB fixed -> 3-way splitter -> B RX1 / RTL-SDR / 50 ohm",
+  "carrier_hz": 915000000.0,
+  "sample_rate": 3840000.0,
+  "signal": "Lab 11.45 differential QPSK frame, RRC SPS 8",
+  "mode": "0x2d630",
+  "frames_per_point": 30,
+  "adc_full_scale": 2047,
+  "rows": [
+    {
+      "rx_gain_db": 71,
+      "tx_gain_db": -40,
+      "rssi": "103.25 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 246.0,
+        "peak_dbfs": -18.41,
+        "rms_dbfs": -23.25,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 30,
+      "clean": 29,
+      "single_bit": 1,
+      "gross": 0,
+      "payload_bit_errors": 2,
+      "payload_bits": 7680
+    },
+    {
+      "rx_gain_db": 71,
+      "tx_gain_db": -30,
+      "rssi": "93.50 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 689.0,
+        "peak_dbfs": -9.46,
+        "rms_dbfs": -13.36,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 30,
+      "clean": 30,
+      "single_bit": 0,
+      "gross": 0,
+      "payload_bit_errors": 0,
+      "payload_bits": 7680
+    },
+    {
+      "rx_gain_db": 71,
+      "tx_gain_db": -20,
+      "rssi": "83.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 2048.0,
+        "peak_dbfs": 0.0,
+        "rms_dbfs": -3.27,
+        "clipped_pct": 0.1465
+      },
+      "frames": 30,
+      "locked": 28,
+      "clean": 28,
+      "single_bit": 0,
+      "gross": 0,
+      "payload_bit_errors": 0,
+      "payload_bits": 7168
+    },
+    {
+      "rx_gain_db": 71,
+      "tx_gain_db": -10,
+      "rssi": "80.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 2048.0,
+        "peak_dbfs": 0.0,
+        "rms_dbfs": 1.69,
+        "clipped_pct": 52.8687
+      },
+      "frames": 30,
+      "locked": 27,
+      "clean": 25,
+      "single_bit": 2,
+      "gross": 0,
+      "payload_bit_errors": 10,
+      "payload_bits": 6912
+    },
+    {
+      "rx_gain_db": 71,
+      "tx_gain_db": -5,
+      "rssi": "80.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 2048.0,
+        "peak_dbfs": 0.0,
+        "rms_dbfs": 2.06,
+        "clipped_pct": 28.4149
+      },
+      "frames": 30,
+      "locked": 26,
+      "clean": 22,
+      "single_bit": 3,
+      "gross": 1,
+      "payload_bit_errors": 16,
+      "payload_bits": 6656
+    },
+    {
+      "rx_gain_db": 71,
+      "tx_gain_db": 0,
+      "rssi": "80.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 2048.0,
+        "peak_dbfs": 0.0,
+        "rms_dbfs": 2.5,
+        "clipped_pct": 60.6369
+      },
+      "frames": 30,
+      "locked": 25,
+      "clean": 20,
+      "single_bit": 4,
+      "gross": 1,
+      "payload_bit_errors": 24,
+      "payload_bits": 6400
+    },
+    {
+      "rx_gain_db": 60,
+      "tx_gain_db": -40,
+      "rssi": "102.75 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 81.0,
+        "peak_dbfs": -28.06,
+        "rms_dbfs": -33.77,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 30,
+      "clean": 26,
+      "single_bit": 3,
+      "gross": 1,
+      "payload_bit_errors": 30,
+      "payload_bits": 7680
+    },
+    {
+      "rx_gain_db": 60,
+      "tx_gain_db": -30,
+      "rssi": "92.75 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 217.0,
+        "peak_dbfs": -19.5,
+        "rms_dbfs": -23.97,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 29,
+      "clean": 25,
+      "single_bit": 3,
+      "gross": 1,
+      "payload_bit_errors": 22,
+      "payload_bits": 7424
+    },
+    {
+      "rx_gain_db": 60,
+      "tx_gain_db": -20,
+      "rssi": "82.75 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 659.0,
+        "peak_dbfs": -9.85,
+        "rms_dbfs": -13.89,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 30,
+      "clean": 28,
+      "single_bit": 2,
+      "gross": 0,
+      "payload_bit_errors": 6,
+      "payload_bits": 7680
+    },
+    {
+      "rx_gain_db": 60,
+      "tx_gain_db": -10,
+      "rssi": "73.25 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 2017.0,
+        "peak_dbfs": -0.13,
+        "rms_dbfs": -4.05,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 26,
+      "clean": 26,
+      "single_bit": 0,
+      "gross": 0,
+      "payload_bit_errors": 0,
+      "payload_bits": 6656
+    },
+    {
+      "rx_gain_db": 60,
+      "tx_gain_db": -5,
+      "rssi": "69.25 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 2048.0,
+        "peak_dbfs": 0.0,
+        "rms_dbfs": -0.37,
+        "clipped_pct": 14.6576
+      },
+      "frames": 30,
+      "locked": 25,
+      "clean": 25,
+      "single_bit": 0,
+      "gross": 0,
+      "payload_bit_errors": 0,
+      "payload_bits": 6400
+    },
+    {
+      "rx_gain_db": 60,
+      "tx_gain_db": 0,
+      "rssi": "69.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 2048.0,
+        "peak_dbfs": 0.0,
+        "rms_dbfs": 1.43,
+        "clipped_pct": 50.5157
+      },
+      "frames": 30,
+      "locked": 26,
+      "clean": 21,
+      "single_bit": 5,
+      "gross": 0,
+      "payload_bit_errors": 20,
+      "payload_bits": 6656
+    },
+    {
+      "rx_gain_db": 50,
+      "tx_gain_db": -40,
+      "rssi": "100.50 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 47.0,
+        "peak_dbfs": -32.78,
+        "rms_dbfs": -39.71,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 24,
+      "clean": 20,
+      "single_bit": 1,
+      "gross": 3,
+      "payload_bit_errors": 45,
+      "payload_bits": 6144
+    },
+    {
+      "rx_gain_db": 50,
+      "tx_gain_db": -30,
+      "rssi": "91.25 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 111.0,
+        "peak_dbfs": -25.32,
+        "rms_dbfs": -30.51,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 29,
+      "clean": 24,
+      "single_bit": 5,
+      "gross": 0,
+      "payload_bit_errors": 16,
+      "payload_bits": 7424
+    },
+    {
+      "rx_gain_db": 50,
+      "tx_gain_db": -20,
+      "rssi": "81.25 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 312.0,
+        "peak_dbfs": -16.34,
+        "rms_dbfs": -20.51,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 29,
+      "clean": 28,
+      "single_bit": 1,
+      "gross": 0,
+      "payload_bit_errors": 6,
+      "payload_bits": 7424
+    },
+    {
+      "rx_gain_db": 50,
+      "tx_gain_db": -10,
+      "rssi": "71.75 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 947.0,
+        "peak_dbfs": -6.7,
+        "rms_dbfs": -10.66,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 28,
+      "clean": 27,
+      "single_bit": 0,
+      "gross": 1,
+      "payload_bit_errors": 10,
+      "payload_bits": 7168
+    },
+    {
+      "rx_gain_db": 50,
+      "tx_gain_db": -5,
+      "rssi": "66.75 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 1665.0,
+        "peak_dbfs": -1.8,
+        "rms_dbfs": -5.82,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 27,
+      "clean": 27,
+      "single_bit": 0,
+      "gross": 0,
+      "payload_bit_errors": 0,
+      "payload_bits": 6912
+    },
+    {
+      "rx_gain_db": 50,
+      "tx_gain_db": 0,
+      "rssi": "62.25 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 2048.0,
+        "peak_dbfs": 0.0,
+        "rms_dbfs": -1.13,
+        "clipped_pct": 5.6244
+      },
+      "frames": 30,
+      "locked": 30,
+      "clean": 27,
+      "single_bit": 3,
+      "gross": 0,
+      "payload_bit_errors": 16,
+      "payload_bits": 7680
+    },
+    {
+      "rx_gain_db": 40,
+      "tx_gain_db": -40,
+      "rssi": "94.25 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 33.0,
+        "peak_dbfs": -35.86,
+        "rms_dbfs": -45.54,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 23,
+      "clean": 15,
+      "single_bit": 5,
+      "gross": 3,
+      "payload_bit_errors": 55,
+      "payload_bits": 5888
+    },
+    {
+      "rx_gain_db": 40,
+      "tx_gain_db": -30,
+      "rssi": "90.50 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 49.0,
+        "peak_dbfs": -32.42,
+        "rms_dbfs": -39.64,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 24,
+      "clean": 22,
+      "single_bit": 1,
+      "gross": 1,
+      "payload_bit_errors": 40,
+      "payload_bits": 6144
+    },
+    {
+      "rx_gain_db": 40,
+      "tx_gain_db": -20,
+      "rssi": "81.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 109.0,
+        "peak_dbfs": -25.48,
+        "rms_dbfs": -30.28,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 27,
+      "clean": 26,
+      "single_bit": 1,
+      "gross": 0,
+      "payload_bit_errors": 2,
+      "payload_bits": 6912
+    },
+    {
+      "rx_gain_db": 40,
+      "tx_gain_db": -10,
+      "rssi": "71.50 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 310.0,
+        "peak_dbfs": -16.4,
+        "rms_dbfs": -20.51,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 29,
+      "clean": 28,
+      "single_bit": 1,
+      "gross": 0,
+      "payload_bit_errors": 2,
+      "payload_bits": 7424
+    },
+    {
+      "rx_gain_db": 40,
+      "tx_gain_db": -5,
+      "rssi": "66.75 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 539.0,
+        "peak_dbfs": -11.59,
+        "rms_dbfs": -15.65,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 30,
+      "clean": 29,
+      "single_bit": 1,
+      "gross": 0,
+      "payload_bit_errors": 4,
+      "payload_bits": 7680
+    },
+    {
+      "rx_gain_db": 40,
+      "tx_gain_db": 0,
+      "rssi": "61.75 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 937.0,
+        "peak_dbfs": -6.79,
+        "rms_dbfs": -10.75,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 25,
+      "clean": 25,
+      "single_bit": 0,
+      "gross": 0,
+      "payload_bit_errors": 0,
+      "payload_bits": 6400
+    },
+    {
+      "rx_gain_db": 30,
+      "tx_gain_db": -40,
+      "rssi": "86.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 34.0,
+        "peak_dbfs": -35.6,
+        "rms_dbfs": -46.57,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 14,
+      "clean": 1,
+      "single_bit": 3,
+      "gross": 10,
+      "payload_bit_errors": 289,
+      "payload_bits": 3584
+    },
+    {
+      "rx_gain_db": 30,
+      "tx_gain_db": -30,
+      "rssi": "84.50 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 35.0,
+        "peak_dbfs": -35.35,
+        "rms_dbfs": -43.65,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 23,
+      "clean": 15,
+      "single_bit": 5,
+      "gross": 3,
+      "payload_bit_errors": 63,
+      "payload_bits": 5888
+    },
+    {
+      "rx_gain_db": 30,
+      "tx_gain_db": -20,
+      "rssi": "77.50 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 67.0,
+        "peak_dbfs": -29.71,
+        "rms_dbfs": -35.79,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 22,
+      "clean": 20,
+      "single_bit": 2,
+      "gross": 0,
+      "payload_bit_errors": 12,
+      "payload_bits": 5632
+    },
+    {
+      "rx_gain_db": 30,
+      "tx_gain_db": -10,
+      "rssi": "68.25 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 164.0,
+        "peak_dbfs": -21.93,
+        "rms_dbfs": -26.22,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 25,
+      "clean": 21,
+      "single_bit": 4,
+      "gross": 0,
+      "payload_bit_errors": 12,
+      "payload_bits": 6400
+    },
+    {
+      "rx_gain_db": 30,
+      "tx_gain_db": -5,
+      "rssi": "63.25 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 278.0,
+        "peak_dbfs": -17.35,
+        "rms_dbfs": -21.39,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 27,
+      "clean": 25,
+      "single_bit": 2,
+      "gross": 0,
+      "payload_bit_errors": 6,
+      "payload_bits": 6912
+    },
+    {
+      "rx_gain_db": 30,
+      "tx_gain_db": 0,
+      "rssi": "58.50 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 479.0,
+        "peak_dbfs": -12.62,
+        "rms_dbfs": -16.48,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 29,
+      "clean": 26,
+      "single_bit": 3,
+      "gross": 0,
+      "payload_bit_errors": 8,
+      "payload_bits": 7424
+    },
+    {
+      "rx_gain_db": 20,
+      "tx_gain_db": -40,
+      "rssi": "74.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 27.0,
+        "peak_dbfs": -37.6,
+        "rms_dbfs": -46.99,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 1,
+      "clean": 0,
+      "single_bit": 0,
+      "gross": 1,
+      "payload_bit_errors": 42,
+      "payload_bits": 256
+    },
+    {
+      "rx_gain_db": 20,
+      "tx_gain_db": -30,
+      "rssi": "74.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 28.0,
+        "peak_dbfs": -37.28,
+        "rms_dbfs": -46.63,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 14,
+      "clean": 1,
+      "single_bit": 3,
+      "gross": 10,
+      "payload_bit_errors": 233,
+      "payload_bits": 3584
+    },
+    {
+      "rx_gain_db": 20,
+      "tx_gain_db": -20,
+      "rssi": "72.50 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 37.0,
+        "peak_dbfs": -34.86,
+        "rms_dbfs": -43.52,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 25,
+      "clean": 18,
+      "single_bit": 2,
+      "gross": 5,
+      "payload_bit_errors": 122,
+      "payload_bits": 6400
+    },
+    {
+      "rx_gain_db": 20,
+      "tx_gain_db": -10,
+      "rssi": "65.75 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 66.0,
+        "peak_dbfs": -29.84,
+        "rms_dbfs": -35.9,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 24,
+      "clean": 21,
+      "single_bit": 3,
+      "gross": 0,
+      "payload_bit_errors": 10,
+      "payload_bits": 6144
+    },
+    {
+      "rx_gain_db": 20,
+      "tx_gain_db": -5,
+      "rssi": "61.25 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 99.0,
+        "peak_dbfs": -26.31,
+        "rms_dbfs": -31.26,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 29,
+      "clean": 22,
+      "single_bit": 7,
+      "gross": 0,
+      "payload_bit_errors": 16,
+      "payload_bits": 7424
+    },
+    {
+      "rx_gain_db": 20,
+      "tx_gain_db": 0,
+      "rssi": "56.25 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 160.0,
+        "peak_dbfs": -22.14,
+        "rms_dbfs": -26.43,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 28,
+      "clean": 25,
+      "single_bit": 2,
+      "gross": 1,
+      "payload_bit_errors": 20,
+      "payload_bits": 7168
+    },
+    {
+      "rx_gain_db": 10,
+      "tx_gain_db": -40,
+      "rssi": "64.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 24.0,
+        "peak_dbfs": -38.62,
+        "rms_dbfs": -47.16,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 0,
+      "clean": 0,
+      "single_bit": 0,
+      "gross": 0,
+      "payload_bit_errors": 0,
+      "payload_bits": 0
+    },
+    {
+      "rx_gain_db": 10,
+      "tx_gain_db": -30,
+      "rssi": "64.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 25.0,
+        "peak_dbfs": -38.27,
+        "rms_dbfs": -47.09,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 2,
+      "clean": 0,
+      "single_bit": 1,
+      "gross": 1,
+      "payload_bit_errors": 37,
+      "payload_bits": 512
+    },
+    {
+      "rx_gain_db": 10,
+      "tx_gain_db": -20,
+      "rssi": "64.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 28.0,
+        "peak_dbfs": -37.28,
+        "rms_dbfs": -46.51,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 15,
+      "clean": 3,
+      "single_bit": 5,
+      "gross": 7,
+      "payload_bit_errors": 162,
+      "payload_bits": 3840
+    },
+    {
+      "rx_gain_db": 10,
+      "tx_gain_db": -10,
+      "rssi": "62.50 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 37.0,
+        "peak_dbfs": -34.86,
+        "rms_dbfs": -43.11,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 19,
+      "clean": 13,
+      "single_bit": 2,
+      "gross": 4,
+      "payload_bit_errors": 97,
+      "payload_bits": 4864
+    },
+    {
+      "rx_gain_db": 10,
+      "tx_gain_db": -5,
+      "rssi": "59.50 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 49.0,
+        "peak_dbfs": -32.42,
+        "rms_dbfs": -39.63,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 24,
+      "clean": 18,
+      "single_bit": 5,
+      "gross": 1,
+      "payload_bit_errors": 27,
+      "payload_bits": 6144
+    },
+    {
+      "rx_gain_db": 10,
+      "tx_gain_db": 0,
+      "rssi": "55.25 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 77.0,
+        "peak_dbfs": -28.5,
+        "rms_dbfs": -35.28,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 25,
+      "clean": 21,
+      "single_bit": 4,
+      "gross": 0,
+      "payload_bit_errors": 8,
+      "payload_bits": 6400
+    },
+    {
+      "rx_gain_db": 0,
+      "tx_gain_db": -40,
+      "rssi": "51.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 26.0,
+        "peak_dbfs": -37.93,
+        "rms_dbfs": -47.02,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 0,
+      "clean": 0,
+      "single_bit": 0,
+      "gross": 0,
+      "payload_bit_errors": 0,
+      "payload_bits": 0
+    },
+    {
+      "rx_gain_db": 0,
+      "tx_gain_db": -30,
+      "rssi": "51.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 25.0,
+        "peak_dbfs": -38.27,
+        "rms_dbfs": -46.98,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 0,
+      "clean": 0,
+      "single_bit": 0,
+      "gross": 0,
+      "payload_bit_errors": 0,
+      "payload_bits": 0
+    },
+    {
+      "rx_gain_db": 0,
+      "tx_gain_db": -20,
+      "rssi": "51.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 28.0,
+        "peak_dbfs": -37.28,
+        "rms_dbfs": -46.88,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 0,
+      "clean": 0,
+      "single_bit": 0,
+      "gross": 0,
+      "payload_bit_errors": 0,
+      "payload_bits": 0
+    },
+    {
+      "rx_gain_db": 0,
+      "tx_gain_db": -10,
+      "rssi": "51.00 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 27.0,
+        "peak_dbfs": -37.6,
+        "rms_dbfs": -46.38,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 15,
+      "clean": 1,
+      "single_bit": 7,
+      "gross": 7,
+      "payload_bit_errors": 200,
+      "payload_bits": 3840
+    },
+    {
+      "rx_gain_db": 0,
+      "tx_gain_db": -5,
+      "rssi": "50.25 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 34.0,
+        "peak_dbfs": -35.6,
+        "rms_dbfs": -45.33,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 23,
+      "clean": 10,
+      "single_bit": 6,
+      "gross": 7,
+      "payload_bit_errors": 202,
+      "payload_bits": 5888
+    },
+    {
+      "rx_gain_db": 0,
+      "tx_gain_db": 0,
+      "rssi": "49.50 dB",
+      "adc": {
+        "ok": true,
+        "status": "rc=0",
+        "samples": 65536,
+        "peak": 39.0,
+        "peak_dbfs": -34.41,
+        "rms_dbfs": -43.06,
+        "clipped_pct": 0.0
+      },
+      "frames": 30,
+      "locked": 24,
+      "clean": 17,
+      "single_bit": 4,
+      "gross": 3,
+      "payload_bit_errors": 59,
+      "payload_bits": 6144
+    }
+  ],
+  "rtl": {
+    "silent": {
+      "power_dbfs": -44.46,
+      "clipped_pct": 0.0
+    },
+    "-40": {
+      "power_dbfs": -44.45,
+      "clipped_pct": 0.0
+    },
+    "-30": {
+      "power_dbfs": -44.39,
+      "clipped_pct": 0.0
+    },
+    "-20": {
+      "power_dbfs": -43.65,
+      "clipped_pct": 0.0
+    },
+    "-10": {
+      "power_dbfs": -39.24,
+      "clipped_pct": 0.0
+    },
+    "-5": {
+      "power_dbfs": -35.32,
+      "clipped_pct": 0.0
+    },
+    "0": {
+      "power_dbfs": -30.77,
+      "clipped_pct": 0.0
+    }
+  },
+  "b_rf_bandwidth": "18000000",
+  "a_tx_rf_bandwidth": "18000000"
+}
