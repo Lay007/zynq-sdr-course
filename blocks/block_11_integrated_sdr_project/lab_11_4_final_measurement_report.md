@@ -68,7 +68,7 @@ payload-position readout, decoded-bit readout, differential mode). The control/s
 | RX gain | 50 dB, manual |
 | Frame | 152 symbols = 24-symbol preamble + 256-bit payload (long-preamble differential) |
 | Idle safety | both boards restored to −89.75 dB after every test |
-| Part / tools | xc7z020clg400-2, Vivado 2021.1, timing WNS +0.036 ns (shipped diff image) |
+| Part / tools | xc7z020clg400-2, Vivado 2021.1, timing WNS +0.116 ns (shipped diff image, from its build log) |
 
 ## Results
 
@@ -133,7 +133,7 @@ python tools/run_block5_hdl_smoke.py                       # RTL suite, 36/36
 
 Bitstream identity, timing and utilisation for each milestone are in the private artifact repository
 (`zynq-sdr-course-artifacts`) with generated, verified manifests. The shipped differential image:
-raw `system_top.bit` sha256 `69023a2b…`, WNS +0.036 ns, 176 DSPs.
+raw `system_top.bit` sha256 `69023a2b…`, WNS +0.116 ns, 176 DSPs. (The timing comes from the verifier line of its build log, archived with it; the routed reports of that build were not kept. An earlier version of this report said +0.036 ns, which does not match the build log of this image.)
 
 ## Report checklist
 
