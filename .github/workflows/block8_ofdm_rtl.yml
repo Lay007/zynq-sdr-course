@@ -153,6 +153,17 @@ jobs:
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_cp16_path.sv
           vvp /tmp/tb_ofdm_tx_cp16_path.vvp
 
+      - name: Check the TX level/spectrum bench with 16-QAM (run_ofdm_rtl.py covers QPSK)
+        run: |
+          set -euo pipefail
+          iverilog -g2012 -Wall \
+            -s tb_ofdm_tx_metrics \
+            -Ptb_ofdm_tx_metrics.MODULATION=1 \
+            -o /tmp/tb_ofdm_tx_metrics.vvp \
+            blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v \
+            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_metrics.sv
+          vvp /tmp/tb_ofdm_tx_metrics.vvp
+
       - name: Run every OFDM testbench with the one-cycle baseline IFFT/FFT
         run: python3 tools/run_ofdm_rtl.py --baseline
 

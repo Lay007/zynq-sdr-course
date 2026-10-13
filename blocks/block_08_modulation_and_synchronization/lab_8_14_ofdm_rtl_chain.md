@@ -456,6 +456,70 @@ QPSK and the nearest-neighbour `3/8 erfc(sqrt(Es/N0 / 10))` for Gray 16-QAM. Wha
 The remedy is the usual one: average the estimate over several training symbols, or smooth it
 across neighbouring subcarriers. Each halving of the estimate's noise recovers part of the loss.
 
+## Verification stage 2g: TX level, PAPR and spectrum
+
+Issue #48 asks for the peak and RMS level, the PAPR and back-off, the clipping count and the
+occupied spectrum of the transmitter. `tb_ofdm_tx_metrics.sv` feeds random bits into
+`ofdm_tx_cp16_path` and checks what a measurement relies on (80 samples per symbol, a CP equal to the
+symbol tail, zero IFFT saturation); with `+DUMP=<file>` it writes the samples out.
+`tools/measure_ofdm_tx_metrics.py` runs it and computes the numbers:
+
+```bash
+python tools/measure_ofdm_tx_metrics.py --symbols 400
+```
+
+Full scale is 32768 per component, and a complex sample counts by its magnitude, so a full-scale
+complex tone is 0 dBFS. 400 random symbols (32000 samples), seed 1, RTL simulation:
+
+| | QPSK | 16-QAM |
+|---|---:|---:|
+| RMS level | -18.97 dBFS | -18.97 dBFS |
+| Peak, magnitude / per component | -8.68 / -8.70 dBFS | -8.99 / -9.46 dBFS |
+| PAPR: maximum / exceeded by 1e-2 / by 1e-3 of samples | 10.29 / 6.59 / 8.11 dB | 9.98 / 6.59 / 8.21 dB |
+| PAPR at 1e-3, 4x interpolated | 8.19 dB | 8.31 dB |
+| RTL against a float IFFT of the same subcarriers | SQNR 71.7 dB, at most 2.5 LSB | SQNR 71.5 dB, at most 2.4 LSB |
+| 99 % occupied bandwidth | 52.6 subcarrier spacings | 52.6 |
+| Guard band (`abs(f) >= 28` spacings) / band edge (`>= 31`) | -17.6 / -18.6 dBc | -17.6 / -18.6 dBc |
+
+What to read from it:
+
+- **The level is set by the IFFT scaling, not chosen.** Every butterfly halves, so a bin of
+  amplitude `A` becomes `A/64` in time; 52 used carriers at 32767 give an RMS of
+  `32767 * sqrt(52) / 64`, -19 dBFS. With a PAPR of about 10 dB that leaves 9 dB of headroom
+  that nothing uses.
+- **Both modulations look alike in time.** QPSK and 16-QAM have the same average carrier energy by
+  design, and a sum of 52 independent carriers is close to Gaussian whatever the constellation: the
+  CCDF points agree within 0.1 dB.
+- **The 1x samples already show the peaks.** With 52 of 64 bins used the signal is slightly
+  oversampled, and a 4x interpolated copy is only 0.1 dB higher at 1e-3.
+- **The fixed-point error is far below everything else.** 72 dB SQNR is a few LSB of rounding in the
+  six butterfly stages; the RTL and the float spectra agree to 0.1 dB.
+- **The guard band is not empty, and that is not the RTL.** The float copy has exactly the same
+  -17.6 dBc. Each symbol is a rectangular burst of 80 samples, so every carrier has `sinc`
+  sidelobes that fall off slowly, and at the 1x rate the guard band also collects the sidelobes of
+  the opposite band edge (the spectrum repeats every 64 spacings). Lowering it takes symbol
+  windowing or a TX filter, plus the interpolation filters of the AD9363, none of which this
+  measurement includes.
+
+**Back-off at a 12-bit DAC.** The same script scales the RTL samples to a target RMS, quantizes them
+to 12 bits with saturation (the AD9363 DAC width) and measures the damage on the used carriers:
+
+| RMS at the DAC | Clipped components, QPSK / 16-QAM | EVM, QPSK / 16-QAM | Guard band |
+|---:|---:|---:|---:|
+| -6 dBFS | 266 / 269 (0.42 %) | 2.10 / 2.23 % | -17.5 dBc |
+| -9 dBFS | 2 / 1 | 0.25 / 0.11 % | -17.6 dBc |
+| -12 dBFS | 0 / 0 | 0.07 / 0.07 % | -17.6 dBc |
+| -15 dBFS | 0 / 0 | 0.10 / 0.10 % | -17.6 dBc |
+| -18 dBFS | 0 / 0 | 0.14 / 0.14 % | -17.6 dBc |
+
+Below -12 dBFS the 12-bit quantization noise dominates and the EVM grows as the level drops (at
+-18 dBFS the theory for 12 bits is about 0.15 %); above it the clipping of rare peaks takes over,
+and at -6 dBFS one component in 240 clips. -12 dBFS, which puts the 1e-3 peaks about 4 dB below
+full scale, is the sweet spot, 7 dB above where the RTL leaves the signal. At the native -19 dBFS the
+DAC alone costs about 0.15 % EVM, which is harmless, but the transmitter gives away 7 dB of output
+power. A fixed digital gain before the DAC would recover it; it is not in the RTL yet. Simulation
+only: what the AD9363 and the analog chain do to the spectrum needs the board.
+
 ## What this lab does and does not prove
 
 This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarrier allocator/extractor, streaming 64-point IFFT/FFT, CP insertion/removal, one-tap equalizer, explicit scaling/saturation/overflow counters) and Verification stages 1-2 (float vs. fixed-point, self-checking digital loopback) with real, reproducible, measured evidence: 96/96 bits at BER=0 for both the plain digital loopback and a loopback through a genuine complex channel rotation with the equalizer actually correcting it.
@@ -510,3 +574,4 @@ Each exercise changes the equalizer coefficient on line `.coeff_re(16'sd0), .coe
 - [x] 16-QAM and time-domain CFO correction end to end and in the AXI modem (BER=0 up to 7700 ppm; meets 100 MHz).
 - [x] BER against Es/N0 with AWGN, compared with theory (simulation; about 2-3 dB lost to the single training symbol).
 - [ ] Channel estimate averaged over several training symbols or smoothed across subcarriers.
+- [x] TX level, PAPR and guard-band spectrum measured on the RTL output, with a 12-bit DAC back-off sweep (simulation; the RF spectrum needs the board).
