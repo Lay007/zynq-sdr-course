@@ -1,0 +1,45 @@
+Copyright 1986-2021 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021
+| Date         : normalized
+| Host         : normalized
+| Command      : report_utilization -hierarchical -hierarchical_depth 3 -file <output_dir>/ofdm_dma_utilization_hierarchical.rpt
+| Design       : ofdm_dma_bd_wrapper
+| Device       : 7z020clg400-2
+| Design State : Routed
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Utilization Design Information
+
+Table of Contents
+-----------------
+1. Utilization by Hierarchy
+
+1. Utilization by Hierarchy
+---------------------------
+
++--------------------------+-------------------------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+|         Instance         |                                     Module                                    | Total LUTs | Logic LUTs | LUTRAMs | SRLs |  FFs | RAMB36 | RAMB18 | DSP Blocks |
++--------------------------+-------------------------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+| ofdm_dma_bd_wrapper      |                                                                         (top) |       9859 |       8828 |     822 |  209 | 8715 |      2 |      7 |         32 |
+|   ofdm_dma_bd_i          |                                                                   ofdm_dma_bd |       9859 |       8828 |     822 |  209 | 8715 |      2 |      7 |         32 |
+|     (ofdm_dma_bd_i)      |                                                                   ofdm_dma_bd |          0 |          0 |       0 |    0 |    0 |      0 |      0 |          0 |
+|     axi_dma_0            |                                                       ofdm_dma_bd_axi_dma_0_0 |       1200 |       1105 |       8 |   87 | 1730 |      2 |      0 |          0 |
+|       (axi_dma_0)        |                                                       ofdm_dma_bd_axi_dma_0_0 |          0 |          0 |       0 |    0 |    0 |      0 |      0 |          0 |
+|       U0                 |                                               ofdm_dma_bd_axi_dma_0_0_axi_dma |       1200 |       1105 |       8 |   87 | 1730 |      2 |      0 |          0 |
+|     axi_smc              |                                                         ofdm_dma_bd_axi_smc_0 |       2212 |       1736 |     446 |   30 | 3082 |      0 |      0 |          0 |
+|       (axi_smc)          |                                                         ofdm_dma_bd_axi_smc_0 |          0 |          0 |       0 |    0 |    0 |      0 |      0 |          0 |
+|       inst               |                                                 ofdm_dma_bd_axi_smc_0_bd_e769 |       2212 |       1736 |     446 |   30 | 3082 |      0 |      0 |          0 |
+|     irq_concat           |                                                      ofdm_dma_bd_irq_concat_0 |          0 |          0 |       0 |    0 |    0 |      0 |      0 |          0 |
+|     modem_0              |                                                         ofdm_dma_bd_modem_0_0 |       5914 |       5516 |     368 |   30 | 3195 |      0 |      7 |         32 |
+|       (modem_0)          |                                                         ofdm_dma_bd_modem_0_0 |         72 |         72 |       0 |    0 |    0 |      0 |      2 |          0 |
+|       inst               |                           ofdm_dma_bd_modem_0_0_ofdm_axi_modem_vivado_wrapper |       5843 |       5445 |     368 |   30 | 3195 |      0 |      5 |         32 |
+|     processing_system7_0 |                                            ofdm_dma_bd_processing_system7_0_0 |          0 |          0 |       0 |    0 |    0 |      0 |      0 |          0 |
+|       inst               | ofdm_dma_bd_processing_system7_0_0_processing_system7_v5_5_processing_system7 |          0 |          0 |       0 |    0 |    0 |      0 |      0 |          0 |
+|     ps7_0_axi_periph     |                                                ofdm_dma_bd_ps7_0_axi_periph_0 |        520 |        459 |       0 |   61 |  675 |      0 |      0 |          0 |
+|       s00_couplers       |                                                       s00_couplers_imp_AYJFYE |        405 |        344 |       0 |   61 |  550 |      0 |      0 |          0 |
+|       xbar               |                                                            ofdm_dma_bd_xbar_0 |        115 |        115 |       0 |    0 |  125 |      0 |      0 |          0 |
+|     rst_ps7_0_100M       |                                                  ofdm_dma_bd_rst_ps7_0_100M_0 |         17 |         16 |       0 |    1 |   33 |      0 |      0 |          0 |
+|       U0                 |                                   ofdm_dma_bd_rst_ps7_0_100M_0_proc_sys_reset |         17 |         16 |       0 |    1 |   33 |      0 |      0 |          0 |
++--------------------------+-------------------------------------------------------------------------------+------------+------------+---------+------+------+--------+--------+------------+
+* Note: The sum of lower-level cells may be larger than their parent cells total, due to cross-hierarchy LUT combining

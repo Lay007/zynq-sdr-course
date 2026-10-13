@@ -100,11 +100,11 @@ frame error. With `CFO_PPM` the bench also turns the channel phase by the offset
 CI runs QPSK at 120 and -150 degrees and 16-QAM at 120 degrees under 5000 ppm:
 
 ```text
-PASS: ofdm_axi_modem (MODULATION=0, NORMALIZE=1, CFO 0 ppm) 120-degree channel recovered 480/480 bits in 5 symbols after a training symbol, BER=0; reset, retrain, registers and sticky errors checked
-PASS: ofdm_axi_modem (MODULATION=1, NORMALIZE=1, CFO 5000 ppm) 120-degree channel recovered 960/960 bits in 5 symbols after a training symbol, BER=0; reset, retrain, registers and sticky errors checked
+PASS: ofdm_axi_modem (MODULATION=0, NORMALIZE=1, CFO 0 ppm) 120-degree channel recovered 480/480 bits in 5 symbols after 1 training symbol(s), BER=0; reset, retrain, registers and sticky errors checked
+PASS: ofdm_axi_modem (MODULATION=1, NORMALIZE=1, CFO 5000 ppm) 120-degree channel recovered 960/960 bits in 5 symbols after 1 training symbol(s), BER=0; reset, retrain, registers and sticky errors checked
 ```
 
-The wrapper is not yet connected to the PS, a DMA engine or the AD9361 interface in a block design.
+Stage 3 below puts it in a block design with the PS and an AXI DMA; the AD9361 interface is not connected yet.
 
 ## Pilots: what exists and what does not yet
 
@@ -562,16 +562,76 @@ DAC alone costs about 0.15 % EVM, which is harmless, but the transmitter gives a
 power. A fixed digital gain before the DAC would recover it; it is not in the RTL yet. Simulation
 only: what the AD9363 and the analog chain do to the spectrum needs the board.
 
+## Verification stage 3, built but not run: PS + AXI DMA block design
+
+Stage 3 of issue #48 is a fabric loopback on the Zynq: the PS sends bits, the PL modulates and
+demodulates them, the PS reads them back. Everything except running it on the board can be done
+without the board:
+
+```bash
+python tools/build_block8_ofdm_dma_bd.py --build-dir C:/tmp/ofdm_dma_bd
+```
+
+```mermaid
+flowchart LR
+    DDR[(DDR)] <--> HP0[PS S_AXI_HP0] <--> SMC[AXI SmartConnect] <--> DMA[AXI DMA, simple mode]
+    DMA -- "MM2S: 1 byte per bit pair" --> TXS[modem S_AXIS_TX]
+    TXS --> LOOP["TX samples -> RX samples<br/>(fabric loopback in the wrapper)"]
+    LOOP --> RXS[modem M_AXIS_RX]
+    RXS -- "S2MM: 48 bytes per symbol" --> DMA
+    GP0[PS M_AXI_GP0] --> REGS[modem registers and DMA registers]
+```
+
+`ofdm_axi_modem_vivado_wrapper.v` puts Vivado interface attributes on the modem's ports and closes
+its sample streams inside the fabric, TX output into RX input with no channel;
+`tb_ofdm_axi_modem_vivado_wrapper.sv` drives it the way the DMA will (a byte stream with one `tlast`
+at the end, random backpressure on the output) and checks every bit back in order. The script takes
+the PS settings from the board's own hardware handoff, like the Lab 5.12 mailbox, adds `S_AXI_HP0`,
+`FCLK_CLK0` = 100 MHz and the DMA interrupts, and runs to a bitstream and an XSA. Result
+(Vivado 2021.1, `xc7z020clg400-2`, reports in
+[`reports/fpga/block8_ofdm_dma_bd_raw`](https://github.com/Lay007/zynq-sdr-course/tree/main/reports/fpga/block8_ofdm_dma_bd_raw)):
+
+| | |
+|---|---|
+| Address map | modem registers `0x40000000`, 4 KB; AXI DMA registers `0x40400000`, 64 KB; the DMA reaches DDR through HP0 |
+| Timing at 100 MHz | WNS +0.754 ns, 0 failing endpoints |
+| Utilization | 9859 LUT (18.5 %), 8715 FF, 5.5 BRAM, 32 DSP48E1: modem 5914 LUT, SmartConnect 2212, DMA 1200, GP0 interconnect 520 |
+| DRC | DSP pipelining warnings and 2 advisories; no errors |
+
+Two problems showed up only here. The first automation gave the modem the whole 1 GB `M_AXI_GP0`
+window, so the DMA registers found no free aperture and Vivado *excluded* them with a warning: the
+bitstream built, and the DMA could never have been programmed. The script now narrows the modem
+window first and stops if any register block is missing from the address map. The second was the
+latch in the IFFT, described in the [OOC report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md).
+
+What software would do, per OFDM symbol, with the
+[PG021](https://docs.amd.com/r/en-US/pg021_axi_dma) simple-mode registers:
+
+1. Write the training bit pairs and the data bit pairs (one per byte, the training pattern first)
+   to a buffer in DDR.
+2. Arm the receive side: `S2MM_DMACR` (`0x30`) = 1, `S2MM_DA` (`0x48`) = buffer address,
+   `S2MM_LENGTH` (`0x58`) = 48. The modem ends every symbol with `tlast`, so one transfer is one
+   symbol; re-arm it for the next one.
+3. Start the transmit side: `MM2S_DMACR` (`0x00`) = 1, `MM2S_SA` (`0x18`) = source address,
+   `MM2S_LENGTH` (`0x28`) = number of bytes.
+4. Poll `S2MM_DMASR` (`0x34`) for idle or take the interrupt, then compare the bytes
+   (`{data_index, bits}`) with what was sent, and read the modem's `STATUS`, `CE_TRAINED` and
+   saturation counters at `0x40000000`.
+
+Not done: loading the bitstream and running this on the board (it would be the stage 3 result),
+software of any kind, and the AD9361 sample path, which replaces the internal loopback and needs a
+clock-domain crossing to the AD9361 interface clock.
+
 ## What this lab does and does not prove
 
 This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarrier allocator/extractor, streaming 64-point IFFT/FFT, CP insertion/removal, one-tap equalizer, explicit scaling/saturation/overflow counters) and Verification stages 1-2 (float vs. fixed-point, self-checking digital loopback) with real, reproducible, measured evidence: 96/96 bits at BER=0 for both the plain digital loopback and a loopback through a genuine complex channel rotation with the equalizer actually correcting it.
 
 It does **not** claim:
 
-- Zynq system integration: `ofdm_axi_modem.v` has the AXI4-Stream/AXI4-Lite interfaces and is verified in simulation and out-of-context implementation, but no block design connects it to the PS, a DMA engine or the AD9361 interface;
+- Zynq system integration on the board: a block design with the PS, an AXI DMA and the modem in a fabric loopback builds to a bitstream and meets timing (stage 3 above), but it has not run on a board, no software drives it, and nothing connects the modem to the AD9361 interface;
 - a finished 16-QAM receiver: the AXI modem carries 16-QAM with the CFO corrector (`MODULATION = 1`) and noise runs exist (stage 2f), but the channel is estimated once per training (averaged over up to eight training symbols, which brings the loss against theory down from about 2-3 dB to about 1 dB with four) and is neither tracked nor smoothed across subcarriers, and every run is a simulation;
 - Verification stages 3-5 (PL/fabric loopback on Zynq, safe attenuated AD9361/AD9363 cabled loopback, an independent SDR capture) -- these need the physical board and RF path, neither of which was available while writing this lab;
-- a board-level clock plan. The out-of-context Vivado 2021.1 implementation on `xc7z020clg400-2` ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md)) routes every OFDM block, the pilot corrector and the AXI modem without DRC errors, with the port paths timed as well (0 ns input/output delay). Every clocked block except the one-clock equalizer meets 100 MHz: the TX path and FFT64 with WNS +1.65 / +1.49 ns (about 120 / 117 MHz), the corrector +0.57 ns, the zero-forcing channel equalizer +2.50 ns (+0.55 ns when it averages four training symbols), and the complete AXI modem with it and the CFO corrector +1.23 ns (5910 LUT, 3215 FF, 32 DSP48E1, 3.5 BRAM; the 16-QAM build +0.66 ns, 5979 LUT). That needed the pipelined IFFT/FFT schedule, which is now the default (`PIPELINED = 1`): the butterfly takes four clocks instead of one but accepts one butterfly per clock, so a transform computes in 222 clocks instead of 384. The one-cycle teaching baseline (`PIPELINED = 0`, or `+define+OFDM_IFFT_PIPELINED=0`) missed 100 MHz by about 10 ns (28 logic levels in one clock). The one-clock equalizer (`PIPELINED = 0`, the standalone default) misses by 1.08 ns once its input-port paths are timed; the corrector and the modem use its three-clock `PIPELINED = 1` form. The transforms' working memory is in block RAM by default (`BRAM_MEMORY = 1`: two 32-word banks chosen by the parity of the address, so a butterfly's two points never share a bank): 886 / 833 LUTs instead of 8151 / 7307 with fabric memory, at 229 instead of 222 compute clocks. `--fabric` and `+define+OFDM_IFFT_BRAM=0` select the fabric memory, and the one-cycle baseline always uses it.
+- a board-level clock plan. The out-of-context Vivado 2021.1 implementation on `xc7z020clg400-2` ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md)) routes every OFDM block, the pilot corrector and the AXI modem without DRC errors, with the port paths timed as well (0 ns input/output delay). Every clocked block except the one-clock equalizer meets 100 MHz: the TX path and FFT64 with WNS +1.64 / +1.73 ns (about 120 / 121 MHz), the corrector +0.57 ns, the zero-forcing channel equalizer +2.50 ns (+0.55 ns when it averages four training symbols), and the complete AXI modem with it and the CFO corrector +1.42 ns (5917 LUT, 3195 FF, 32 DSP48E1, 3.5 BRAM; the 16-QAM build +0.69 ns, 5985 LUT). That needed the pipelined IFFT/FFT schedule, which is now the default (`PIPELINED = 1`): the butterfly takes four clocks instead of one but accepts one butterfly per clock, so a transform computes in 222 clocks instead of 384. The one-cycle teaching baseline (`PIPELINED = 0`, or `+define+OFDM_IFFT_PIPELINED=0`) missed 100 MHz by about 10 ns (28 logic levels in one clock). The one-clock equalizer (`PIPELINED = 0`, the standalone default) misses by 1.08 ns once its input-port paths are timed; the corrector and the modem use its three-clock `PIPELINED = 1` form. The transforms' working memory is in block RAM by default (`BRAM_MEMORY = 1`: two 32-word banks chosen by the parity of the address, so a butterfly's two points never share a bank): 881 / 836 LUTs instead of 8151 / 7307 with fabric memory, at 229 instead of 222 compute clocks. `--fabric` and `+define+OFDM_IFFT_BRAM=0` select the fabric memory, and the one-cycle baseline always uses it.
 
 ## Exercises
 
@@ -603,7 +663,8 @@ Each exercise changes the equalizer coefficient on line `.coeff_re(16'sd0), .coe
 - [x] Self-checking RTL equalized loopback through a real complex channel, BER=0, reproducible.
 - [x] Every saturation/overflow counter asserted zero at the tested back-off.
 - [x] AXI4-Stream/AXI4-Lite packaging (`ofdm_axi_modem.v`, BER=0 under random backpressure, register map checked).
-- [ ] Block design with PS, DMA and the AD9361 interface.
+- [x] Block design with PS and AXI DMA, modem in a fabric loopback, built to a bitstream (timing met; not run on a board).
+- [ ] AD9361 interface in the block design.
 - [x] Pilot phase tracker in RTL, bit-exact with its fixed-point model (49 symbols).
 - [x] Tracker coefficient wired into the equalizer (same-symbol correction, BER=0 through 120 and -150 degree channels).
 - [x] Per-subcarrier channel estimation from a training symbol (bit-exact; BER=0 through a 3-path channel, also with a 2000 ppm CFO).
