@@ -56,6 +56,7 @@ def main() -> int:
     ap.add_argument("--toggle", type=float, nargs=2, default=[-30, -10], help="dynamic run: two TX gains")
     ap.add_argument("--period", type=float, default=0.3, help="dynamic run: seconds per level")
     ap.add_argument("--frames", type=int, default=60)
+    ap.add_argument("--dynamic-only", action="store_true", help="skip the static levels")
     ap.add_argument("--bench", required=True)
     ap.add_argument("--json-out", type=Path, required=True)
     args = ap.parse_args()
@@ -92,7 +93,7 @@ def main() -> int:
             sh(rb, f"echo {mode} > {PHY}/in_voltage0_gain_control_mode")
             if mode == "manual":
                 sh(rb, f"echo {args.manual_rx_gain} > {PHY}/in_voltage0_hardwaregain")
-            for tx in args.levels:
+            for tx in ([] if args.dynamic_only else args.levels):
                 sh(ra, f"echo {tx:.2f} > {PHY}/out_voltage0_hardwaregain")
                 time.sleep(1.0)
                 g = sh(rb, f"cat {PHY}/in_voltage0_hardwaregain").strip()

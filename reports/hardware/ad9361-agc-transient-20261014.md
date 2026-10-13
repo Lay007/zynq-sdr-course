@@ -22,8 +22,11 @@ manual (the control), `slow_attack` and `fast_attack`.
   0 and 6.7e-4 under both AGC modes with no gross frames, while a fixed 50 dB gain loses 1-2 whole
   frames out of about 60 at the weakest levels (BER 3.4e-3 to 3.8e-3). A dynamic run that toggles
   the TX gain every 0.3 s also decoded cleanly, **but it is a weak test**: a frame lasts 0.32 ms, so
-  only a small fraction of frames can overlap a transition. Hitting the transition on purpose needs
-  the step synchronised to the frame.
+  only a small fraction of frames can overlap a transition. A second dynamic run with the TX gain toggling every 5-7 ms
+  (300 frames per mode) does stress it, and there the order reverses: **`slow_attack` is the worst
+  (payload BER 1.7e-2, 24 gross frames), manual 50 dB is in between (5.8e-3, 7 gross) and
+  `fast_attack` is the best (1.9e-3, 3 gross).** A gain loop that needs 15 ms to settle, in a channel
+  whose level changes every 5 ms, never settles: its gain readback wandered between 55 and 67 dB.
 
 ## Setup
 
@@ -79,6 +82,13 @@ failed across it (raw values kept in the JSON with `valid: false`).
 | -10 | 0/14592 | 10/14848 | 0/14080 |
 | 0 | 8/14080 | 9/14080 | 2/15104 |
 | toggling -30 <-> -10 every 0.3 s | 10/14848 | 2/13824 | 6/14848 |
+| toggling -30 <-> -10 every 5-7 ms, 300 frames | 399/69120 (7 gross) | 1104/66560 (24 gross) | 135/72192 (3 gross) |
+
+The 5-7 ms run comes from a shell loop on board A (`sleep 0.005` plus the sysfs write; 100
+iterations of the bare sleep took 0.52 s). Raw data:
+[`ad9361-agc-ber-fast-toggle-20261014.json`](ad9361-agc-ber-fast-toggle-20261014.json). Under a fixed
+gain the static points average about 1.9e-3 for these two levels, so the steps themselves cost the
+manual run roughly a factor of three.
 
 The receive gain readback under `slow_attack` was 53 dB at TX -40 dB, 73 dB at -30 and -20 dB and
 53 dB again at -10 and 0 dB (read 1 s after each change). A plausible reading is that its slow
@@ -86,8 +96,9 @@ upward decay had not finished at the first point; this was not checked.
 
 ## Limits and next steps
 
-1. Synchronise the TX step with the frame, so that every frame contains a transition, to measure
-   what a gain change does to Costas and Gardner directly.
+1. Synchronise the TX step with the frame, so that every frame contains a transition at a known
+   symbol, to see what a gain change does to Costas and Gardner directly (the 5-7 ms run only
+   makes transitions frequent, not aligned).
 2. The slow-attack phase step needs either a shared reference between the boards or a single-board
    TX-to-RX loop, where the oscillator wander cancels.
 3. Absolute levels need the passive path's S21 (not measured yet).

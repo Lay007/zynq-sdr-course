@@ -1,0 +1,51 @@
+{
+  "issue": 58,
+  "bench": "A TX1 -> 0 dB var -> 30 dB fixed -> 3-way splitter -> B RX1",
+  "carrier_hz": 915000000.0,
+  "mode_bits": "0x2d630",
+  "manual_rx_gain_db": 50,
+  "toggle_db": [
+    -30,
+    -10
+  ],
+  "period_s": 0.005,
+  "static": [],
+  "dynamic": [
+    {
+      "mode": "manual",
+      "frames": 300,
+      "locked": 270,
+      "clean": 255,
+      "single_bit": 8,
+      "gross": 7,
+      "payload_bit_errors": 399,
+      "payload_bits": 69120,
+      "rx_gain_min": 50.0,
+      "rx_gain_max": 50.0
+    },
+    {
+      "mode": "slow_attack",
+      "frames": 300,
+      "locked": 260,
+      "clean": 217,
+      "single_bit": 19,
+      "gross": 24,
+      "payload_bit_errors": 1104,
+      "payload_bits": 66560,
+      "rx_gain_min": 55.0,
+      "rx_gain_max": 67.0
+    },
+    {
+      "mode": "fast_attack",
+      "frames": 300,
+      "locked": 282,
+      "clean": 266,
+      "single_bit": 13,
+      "gross": 3,
+      "payload_bit_errors": 135,
+      "payload_bits": 72192,
+      "rx_gain_min": 51.0,
+      "rx_gain_max": 73.0
+    }
+  ]
+}
