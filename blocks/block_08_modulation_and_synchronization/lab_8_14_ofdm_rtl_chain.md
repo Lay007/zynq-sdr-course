@@ -82,7 +82,7 @@ Every block uses one clock, synchronous active-low reset, and a single-register 
 | `m_axis_tx` | `tdata = {Q, I}`, Q1.15; 80 samples per symbol, CP first, `tlast` on the 80th |
 | `s_axis_rx` | `tdata = {Q, I}`, Q1.15; 80 samples per symbol, `tlast` on the 80th (a misplaced `tlast` sets the RX frame-error flag) |
 | `m_axis_rx` | QPSK: `tdata[7:0] = {data_index, bits}`; 16-QAM: `tdata[15:0] = {2'b00, data_index, 4'b0000, bits}`, so the index stays byte-aligned. 48 per symbol in FFT bin order (data indices 24..47, then 0..23), `tlast` on the 48th |
-| `s_axi` (AXI4-Lite) | `0x00` ID `"OFDM"`, `0x04` version (`0x00030000`), `0x08` control (bit 0 datapath reset, bit 1 retrain, bit 8 clear sticky errors), `0x0C` status (bit 6: channel trained), `0x10`-`0x18` TX/FFT/EQ saturation counters, `0x1C`/`0x20` TX/RX symbol counters, `0x24` pilot phase, `0x28` correction coefficient, `0x2C` channel-equalizer saturations, `0x30` training symbols completed, `0x34` CFO estimate `theta = -2^24 * 64 * CFO` (CFO in cycles per sample, sign-extended 24-bit), `0x38` build configuration (bit 0 `MODULATION`, 1 `CHANNEL_EQ`, 2 `NORMALIZE`, 3 `CFO_CORR`, 4 `BRAM_MEMORY`) |
+| `s_axi` (AXI4-Lite) | `0x00` ID `"OFDM"`, `0x04` version (`0x00030100`), `0x08` control (bit 0 datapath reset, bit 1 retrain, bit 8 clear sticky errors), `0x0C` status (bit 6: channel trained), `0x10`-`0x18` TX/FFT/EQ saturation counters, `0x1C`/`0x20` TX/RX symbol counters, `0x24` pilot phase, `0x28` correction coefficient, `0x2C` channel-equalizer saturations, `0x30` trainings completed (one per `CE_TRAIN_SYMBOLS` training symbols), `0x34` CFO estimate `theta = -2^24 * 64 * CFO` (CFO in cycles per sample, sign-extended 24-bit), `0x38` build configuration (bit 0 `MODULATION`, 1 `CHANNEL_EQ`, 2 `NORMALIZE`, 3 `CFO_CORR`, 4 `BRAM_MEMORY`, 8:5 `CE_TRAIN_SYMBOLS`) |
 
 The RX chain includes the time-domain CFO corrector of stage 2e (`CFO_CORR = 1`) and the
 per-subcarrier `ofdm_channel_equalizer.v` of stage 2d (`CHANNEL_EQ = 1`, zero-forcing
@@ -456,6 +456,48 @@ QPSK and the nearest-neighbour `3/8 erfc(sqrt(Es/N0 / 10))` for Gray 16-QAM. Wha
 The remedy is the usual one: average the estimate over several training symbols, or smooth it
 across neighbouring subcarriers. Each halving of the estimate's noise recovers part of the loss.
 
+**Averaging over several training symbols.** `ofdm_channel_equalizer` has a `TRAIN_SYMBOLS`
+parameter (1, 2, 4 or 8; the AXI modem passes it on as `CE_TRAIN_SYMBOLS`). The first N symbols
+after reset or retrain are all training symbols; the block adds up their estimates and stores
+`round(sum / N)`, so the noise power on `G` drops N-fold. Only the last one starts the CORDIC pass and
+raises `trained`. `N = 1` is the old estimate bit for bit, and the fixed-point model
+(`average_estimate()` in `tools/ofdm_channel_equalizer_fixed.py`) matches the RTL with `N = 4` on
+its own vector file. The same sweep, same seeds, with four training symbols:
+
+```bash
+python tools/run_ofdm_ber_sweep.py --modulation qpsk --esn0 6 8 10 12 --seeds 4 --train-symbols 4
+python tools/run_ofdm_ber_sweep.py --modulation qam16 --esn0 14 16 18 20 22 --seeds 4 --train-symbols 4
+```
+
+| Modulation | Es/N0, dB | Bit errors, 1 / 4 training symbols | EVM, 1 / 4 | Theory moved by the training loss for N = 4 |
+|---|---:|---:|---:|---:|
+| QPSK | 6 | 3613 / 1723 | 88.6 / 62.8 % | 3.7e-2 (1427 errors) |
+| QPSK | 8 | 1793 / 569 | 68.6 / 48.4 % | 1.2e-2 (473) |
+| QPSK | 10 | 669 / 97 | 52.7 / 37.8 % | 2.3e-3 (90) |
+| QPSK | 12 | 152 / 11 | 40.6 / 29.7 % | 1.9e-4 (7) |
+| 16-QAM | 14 | 2552 / 1323 | 27.5 / 22.4 % | 1.3e-2 (1028) |
+| 16-QAM | 16 | 971 / 337 | 21.6 / 17.8 % | 3.1e-3 (236) |
+| 16-QAM | 18 | 236 / 43 | 17.1 / 14.1 % | 3.3e-4 (25) |
+| 16-QAM | 20 | 31 / 2 | 13.5 / 11.2 % | 1.0e-5 (1) |
+| 16-QAM | 22 | 3 / 0 | 10.7 / 8.9 % | 5.0e-8 (0) |
+
+38400 bits per QPSK point and 76800 per 16-QAM point, as above. The last column moves the AWGN
+curve by the first-order training loss `10*log10(1 + 1/(r*N))`, with `r` the training-to-average
+energy ratio (1 for QPSK, 1.8 for 16-QAM): 0.97 and 0.56 dB for `N = 4`, instead of 3 and 1.9 dB.
+
+- **The loss shrinks as predicted.** QPSK at 10 dB loses 7 times fewer bits and lands on the
+  moved curve (97 errors against 90). EVM agrees too: for ideal QPSK it is `1/sqrt(Es/N0)`, 31.6 % at
+  10 dB, times `sqrt(1 + 1/N)` for the estimate, 35.4 % for `N = 4`; measured 37.8 % (it was 52.7 %).
+- **The heavy tail shrinks with it.** With four looks per carrier, an estimate that comes out small
+  by chance is rarer. At 6 dB the QPSK EVM is 1.12 times its first-order value (62.8 against 56.0 %),
+  where one training symbol gave 1.25 times (88.6 against 70.9 %).
+- **What is left is the pilots and the fixed point.** 16-QAM still sits 1.4-1.7 times above its moved
+  curve at 16-18 dB, the same 0.5 dB or so as before: the per-symbol phase from four noisy pilots.
+- **It costs symbols and almost no logic.** Four training symbols per 100 data symbols is 4 %
+  overhead instead of 1 %, and only on a channel that stays put that long; a moving channel needs
+  tracking instead (still open). The averaging is two more bits in the coefficient memory and an
+  adder: the cost is in the [OOC report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md).
+
 ## Verification stage 2g: TX level, PAPR and spectrum
 
 Issue #48 asks for the peak and RMS level, the PAPR and back-off, the clipping count and the
@@ -527,9 +569,9 @@ This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarri
 It does **not** claim:
 
 - Zynq system integration: `ofdm_axi_modem.v` has the AXI4-Stream/AXI4-Lite interfaces and is verified in simulation and out-of-context implementation, but no block design connects it to the PS, a DMA engine or the AD9361 interface;
-- a finished 16-QAM receiver: the AXI modem carries 16-QAM with the CFO corrector (`MODULATION = 1`) and noise runs exist (stage 2f), but the channel is estimated from a single training symbol and not tracked, which costs about 2-3 dB against theory, and every run is a simulation;
+- a finished 16-QAM receiver: the AXI modem carries 16-QAM with the CFO corrector (`MODULATION = 1`) and noise runs exist (stage 2f), but the channel is estimated once per training (averaged over up to eight training symbols, which brings the loss against theory down from about 2-3 dB to about 1 dB with four) and is neither tracked nor smoothed across subcarriers, and every run is a simulation;
 - Verification stages 3-5 (PL/fabric loopback on Zynq, safe attenuated AD9361/AD9363 cabled loopback, an independent SDR capture) -- these need the physical board and RF path, neither of which was available while writing this lab;
-- a board-level clock plan. The out-of-context Vivado 2021.1 implementation on `xc7z020clg400-2` ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md)) routes every OFDM block, the pilot corrector and the AXI modem without DRC errors, with the port paths timed as well (0 ns input/output delay). Every clocked block except the one-clock equalizer meets 100 MHz: the TX path and FFT64 with WNS +1.65 / +1.49 ns (about 120 / 117 MHz), the corrector +0.57 ns, the zero-forcing channel equalizer +2.68 ns, and the complete AXI modem with it and the CFO corrector +0.85 ns (5895 LUT, 3178 FF, 32 DSP48E1, 3.5 BRAM; the 16-QAM build +0.58 ns, 5966 LUT). That needed the pipelined IFFT/FFT schedule, which is now the default (`PIPELINED = 1`): the butterfly takes four clocks instead of one but accepts one butterfly per clock, so a transform computes in 222 clocks instead of 384. The one-cycle teaching baseline (`PIPELINED = 0`, or `+define+OFDM_IFFT_PIPELINED=0`) missed 100 MHz by about 10 ns (28 logic levels in one clock). The one-clock equalizer (`PIPELINED = 0`, the standalone default) misses by 1.08 ns once its input-port paths are timed; the corrector and the modem use its three-clock `PIPELINED = 1` form. The transforms' working memory is in block RAM by default (`BRAM_MEMORY = 1`: two 32-word banks chosen by the parity of the address, so a butterfly's two points never share a bank): 886 / 833 LUTs instead of 8151 / 7307 with fabric memory, at 229 instead of 222 compute clocks. `--fabric` and `+define+OFDM_IFFT_BRAM=0` select the fabric memory, and the one-cycle baseline always uses it.
+- a board-level clock plan. The out-of-context Vivado 2021.1 implementation on `xc7z020clg400-2` ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md)) routes every OFDM block, the pilot corrector and the AXI modem without DRC errors, with the port paths timed as well (0 ns input/output delay). Every clocked block except the one-clock equalizer meets 100 MHz: the TX path and FFT64 with WNS +1.65 / +1.49 ns (about 120 / 117 MHz), the corrector +0.57 ns, the zero-forcing channel equalizer +2.50 ns (+0.55 ns when it averages four training symbols), and the complete AXI modem with it and the CFO corrector +1.23 ns (5910 LUT, 3215 FF, 32 DSP48E1, 3.5 BRAM; the 16-QAM build +0.66 ns, 5979 LUT). That needed the pipelined IFFT/FFT schedule, which is now the default (`PIPELINED = 1`): the butterfly takes four clocks instead of one but accepts one butterfly per clock, so a transform computes in 222 clocks instead of 384. The one-cycle teaching baseline (`PIPELINED = 0`, or `+define+OFDM_IFFT_PIPELINED=0`) missed 100 MHz by about 10 ns (28 logic levels in one clock). The one-clock equalizer (`PIPELINED = 0`, the standalone default) misses by 1.08 ns once its input-port paths are timed; the corrector and the modem use its three-clock `PIPELINED = 1` form. The transforms' working memory is in block RAM by default (`BRAM_MEMORY = 1`: two 32-word banks chosen by the parity of the address, so a butterfly's two points never share a bank): 886 / 833 LUTs instead of 8151 / 7307 with fabric memory, at 229 instead of 222 compute clocks. `--fabric` and `+define+OFDM_IFFT_BRAM=0` select the fabric memory, and the one-cycle baseline always uses it.
 
 ## Exercises
 
@@ -573,5 +615,5 @@ Each exercise changes the equalizer coefficient on line `.coeff_re(16'sd0), .coe
 - [x] Zero-forcing channel equalizer with a CORDIC `1/abs(G)^2` (bit-exact; grid spread 0.4 % through a 3-path channel; meets 100 MHz) and the channel equalizer in the AXI modem.
 - [x] 16-QAM and time-domain CFO correction end to end and in the AXI modem (BER=0 up to 7700 ppm; meets 100 MHz).
 - [x] BER against Es/N0 with AWGN, compared with theory (simulation; about 2-3 dB lost to the single training symbol).
-- [ ] Channel estimate averaged over several training symbols or smoothed across subcarriers.
+- [x] Channel estimate averaged over several training symbols (`TRAIN_SYMBOLS`, bit-exact with the model; the training loss drops from about 3 / 1.9 dB to about 1 / 0.6 dB with four symbols). Smoothing across subcarriers and channel tracking remain open.
 - [x] TX level, PAPR and guard-band spectrum measured on the RTL output, with a 12-bit DAC back-off sweep (simulation; the RF spectrum needs the board).
