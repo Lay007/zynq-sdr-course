@@ -30,8 +30,8 @@ Table of Contents
 +-------------------------+------+-------+------------+-----------+-------+
 |        Site Type        | Used | Fixed | Prohibited | Available | Util% |
 +-------------------------+------+-------+------------+-----------+-------+
-| Slice LUTs*             |  691 |     0 |          0 |     53200 |  1.30 |
-|   LUT as Logic          |  691 |     0 |          0 |     53200 |  1.30 |
+| Slice LUTs*             |  657 |     0 |          0 |     53200 |  1.23 |
+|   LUT as Logic          |  657 |     0 |          0 |     53200 |  1.23 |
 |   LUT as Memory         |    0 |     0 |          0 |     17400 |  0.00 |
 | Slice Registers         | 3075 |     0 |          0 |    106400 |  2.89 |
 |   Register as Flip Flop | 3075 |     0 |          0 |    106400 |  2.89 |
@@ -150,12 +150,12 @@ Table of Contents
 | FDRE     | 3060 |        Flop & Latch |
 | LUT2     |  290 |                 LUT |
 | DSP48E1  |  192 |    Block Arithmetic |
-| CARRY4   |  169 |          CarryLogic |
-| LUT1     |  156 |                 LUT |
-| LUT4     |  108 |                 LUT |
-| LUT6     |  104 |                 LUT |
-| LUT3     |   82 |                 LUT |
-| LUT5     |   76 |                 LUT |
+| CARRY4   |  161 |          CarryLogic |
+| LUT4     |  124 |                 LUT |
+| LUT1     |  124 |                 LUT |
+| LUT6     |   89 |                 LUT |
+| LUT3     |   81 |                 LUT |
+| LUT5     |   74 |                 LUT |
 | FDSE     |   15 |        Flop & Latch |
 | MUXF7    |    6 |               MuxFx |
 | MUXF8    |    2 |               MuxFx |

@@ -257,8 +257,8 @@ Slack (MET) :             5.144ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[0])
                                                       0.238     4.803 r  matched_filter_i/matched_filter_i/sat_q151__25_carry__2/CO[0]
                          net (fo=16, unplaced)        0.416     5.219    matched_filter_i/matched_filter_i/sat_q151
-                         LUT3 (Prop_lut3_I1_O)        0.317     5.536 r  matched_filter_i/matched_filter_i/out_i[15]_i_1/O
-                         net (fo=1, unplaced)         0.000     5.536    matched_filter_i/matched_filter_i/out_i[15]_i_1_n_0
+                         LUT3 (Prop_lut3_I1_O)        0.317     5.536 r  matched_filter_i/matched_filter_i/out_i[15]_i_1__0/O
+                         net (fo=1, unplaced)         0.000     5.536    matched_filter_i/matched_filter_i/out_i[15]_i_1__0_n_0
                          FDRE                                         r  matched_filter_i/matched_filter_i/out_i_reg[15]/D
   -------------------------------------------------------------------    -------------------
 
@@ -334,8 +334,8 @@ Slack (MET) :             5.144ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[0])
                                                       0.238     4.803 r  matched_filter_i/matched_filter_i/sat_q151_carry__2/CO[0]
                          net (fo=16, unplaced)        0.416     5.219    matched_filter_i/matched_filter_i/sat_q151_carry__2_n_3
-                         LUT3 (Prop_lut3_I1_O)        0.317     5.536 r  matched_filter_i/matched_filter_i/out_q[15]_i_1/O
-                         net (fo=1, unplaced)         0.000     5.536    matched_filter_i/matched_filter_i/out_q[15]_i_1_n_0
+                         LUT3 (Prop_lut3_I1_O)        0.317     5.536 r  matched_filter_i/matched_filter_i/out_q[15]_i_1__0/O
+                         net (fo=1, unplaced)         0.000     5.536    matched_filter_i/matched_filter_i/out_q[15]_i_1__0_n_0
                          FDRE                                         r  matched_filter_i/matched_filter_i/out_q_reg[15]/D
   -------------------------------------------------------------------    -------------------
 
@@ -413,7 +413,7 @@ Slack (MET) :             5.215ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[0])
                                                       0.238     4.732 r  matched_filter_i/matched_filter_i/sat_q151__38_carry__2/CO[0]
                          net (fo=16, unplaced)        0.416     5.148    matched_filter_i/matched_filter_i/sat_q1510_in
-                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_i[12]_i_1/O
+                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_i[12]_i_1__0/O
                          net (fo=1, unplaced)         0.000     5.465    matched_filter_i/matched_filter_i/sat_q15_return__0[12]
                          FDRE                                         r  matched_filter_i/matched_filter_i/out_i_reg[12]/D
   -------------------------------------------------------------------    -------------------
@@ -492,7 +492,7 @@ Slack (MET) :             5.215ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[0])
                                                       0.238     4.732 r  matched_filter_i/matched_filter_i/sat_q151__38_carry__2/CO[0]
                          net (fo=16, unplaced)        0.416     5.148    matched_filter_i/matched_filter_i/sat_q1510_in
-                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_i[14]_i_1/O
+                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_i[14]_i_1__0/O
                          net (fo=1, unplaced)         0.000     5.465    matched_filter_i/matched_filter_i/sat_q15_return__0[14]
                          FDRE                                         r  matched_filter_i/matched_filter_i/out_i_reg[14]/D
   -------------------------------------------------------------------    -------------------
@@ -571,7 +571,7 @@ Slack (MET) :             5.215ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[0])
                                                       0.238     4.732 r  matched_filter_i/matched_filter_i/sat_q151__38_carry__2/CO[0]
                          net (fo=16, unplaced)        0.416     5.148    matched_filter_i/matched_filter_i/sat_q1510_in
-                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_i[2]_i_1/O
+                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_i[2]_i_1__0/O
                          net (fo=1, unplaced)         0.000     5.465    matched_filter_i/matched_filter_i/sat_q15_return__0[2]
                          FDRE                                         r  matched_filter_i/matched_filter_i/out_i_reg[2]/D
   -------------------------------------------------------------------    -------------------
@@ -650,7 +650,7 @@ Slack (MET) :             5.215ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[0])
                                                       0.238     4.732 r  matched_filter_i/matched_filter_i/sat_q151__38_carry__2/CO[0]
                          net (fo=16, unplaced)        0.416     5.148    matched_filter_i/matched_filter_i/sat_q1510_in
-                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_i[4]_i_1/O
+                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_i[4]_i_1__0/O
                          net (fo=1, unplaced)         0.000     5.465    matched_filter_i/matched_filter_i/sat_q15_return__0[4]
                          FDRE                                         r  matched_filter_i/matched_filter_i/out_i_reg[4]/D
   -------------------------------------------------------------------    -------------------
@@ -729,7 +729,7 @@ Slack (MET) :             5.215ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[0])
                                                       0.238     4.732 r  matched_filter_i/matched_filter_i/sat_q151__38_carry__2/CO[0]
                          net (fo=16, unplaced)        0.416     5.148    matched_filter_i/matched_filter_i/sat_q1510_in
-                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_i[6]_i_1/O
+                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_i[6]_i_1__0/O
                          net (fo=1, unplaced)         0.000     5.465    matched_filter_i/matched_filter_i/sat_q15_return__0[6]
                          FDRE                                         r  matched_filter_i/matched_filter_i/out_i_reg[6]/D
   -------------------------------------------------------------------    -------------------
@@ -808,7 +808,7 @@ Slack (MET) :             5.215ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[0])
                                                       0.238     4.732 r  matched_filter_i/matched_filter_i/sat_q151__38_carry__2/CO[0]
                          net (fo=16, unplaced)        0.416     5.148    matched_filter_i/matched_filter_i/sat_q1510_in
-                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_i[8]_i_1/O
+                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_i[8]_i_1__0/O
                          net (fo=1, unplaced)         0.000     5.465    matched_filter_i/matched_filter_i/sat_q15_return__0[8]
                          FDRE                                         r  matched_filter_i/matched_filter_i/out_i_reg[8]/D
   -------------------------------------------------------------------    -------------------
@@ -887,7 +887,7 @@ Slack (MET) :             5.215ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[0])
                                                       0.238     4.732 r  matched_filter_i/matched_filter_i/sat_q151__38_carry__2/CO[0]
                          net (fo=16, unplaced)        0.416     5.148    matched_filter_i/matched_filter_i/sat_q1510_in
-                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_i[9]_i_1/O
+                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_i[9]_i_1__0/O
                          net (fo=1, unplaced)         0.000     5.465    matched_filter_i/matched_filter_i/sat_q15_return__0[9]
                          FDRE                                         r  matched_filter_i/matched_filter_i/out_i_reg[9]/D
   -------------------------------------------------------------------    -------------------
@@ -966,7 +966,7 @@ Slack (MET) :             5.215ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[0])
                                                       0.238     4.732 r  matched_filter_i/matched_filter_i/sat_q151__12_carry__2/CO[0]
                          net (fo=16, unplaced)        0.416     5.148    matched_filter_i/matched_filter_i/sat_q151__12_carry__2_n_3
-                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_q[12]_i_1/O
+                         LUT3 (Prop_lut3_I0_O)        0.317     5.465 r  matched_filter_i/matched_filter_i/out_q[12]_i_1__0/O
                          net (fo=1, unplaced)         0.000     5.465    matched_filter_i/matched_filter_i/sat_q15_return[12]
                          FDRE                                         r  matched_filter_i/matched_filter_i/out_q_reg[12]/D
   -------------------------------------------------------------------    -------------------

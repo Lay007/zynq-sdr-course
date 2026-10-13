@@ -136,7 +136,7 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
     -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-      1.424        0.000                      0                23538        4.500        0.000                       0                  3267
+      1.935        0.000                      0                23538        4.500        0.000                       0                  3267
 
 
 All user specified timing constraints are met.
@@ -159,7 +159,7 @@ clk    {0.000 5.000}      10.000          100.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
 -----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-clk                 1.424        0.000                      0                23538        4.500        0.000                       0                  3267
+clk                 1.935        0.000                      0                23538        4.500        0.000                       0                  3267
 
 
 ------------------------------------------------------------------------------------------------
@@ -190,7 +190,7 @@ Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing 
 From Clock:  clk
   To Clock:  clk
 
-Setup :            0  Failing Endpoints,  Worst Slack        1.424ns,  Total Violation        0.000ns
+Setup :            0  Failing Endpoints,  Worst Slack        1.935ns,  Total Violation        0.000ns
 Hold  :           NA  Failing Endpoints,  Worst Slack           NA  ,  Total Violation           NA
 PW    :            0  Failing Endpoints,  Worst Slack        4.500ns,  Total Violation        0.000ns
 ---------------------------------------------------------------------------------------------------
@@ -198,19 +198,19 @@ PW    :            0  Failing Endpoints,  Worst Slack        4.500ns,  Total Vio
 
 Max Delay Paths
 --------------------------------------------------------------------------------------
-Slack (MET) :             1.424ns  (required time - arrival time)
+Slack (MET) :             1.935ns  (required time - arrival time)
   Source:                 tx_chain_i/pf_valid_reg/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/sum1_q_reg[12]/RSTA
+  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[10]/RSTA
                             (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.086ns  (logic 0.972ns (12.020%)  route 7.114ns (87.980%))
+  Data Path Delay:        7.588ns  (logic 0.979ns (12.902%)  route 6.609ns (87.098%))
   Logic Levels:           3  (LUT2=1 LUT3=1 LUT6=1)
-  Clock Path Skew:        -0.025ns (DCD - SCD + CPR)
+  Clock Path Skew:        -0.012ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    1.410ns = ( 11.410 - 10.000 )
-    Source Clock Delay      (SCD):    1.435ns
+    Source Clock Delay      (SCD):    1.422ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -222,47 +222,47 @@ Slack (MET) :             1.424ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=3266, unset)         1.435     1.435    tx_chain_i/clk
-    SLICE_X64Y82         FDRE                                         r  tx_chain_i/pf_valid_reg/C
+                         net (fo=3266, unset)         1.422     1.422    tx_chain_i/clk
+    SLICE_X57Y76         FDRE                                         r  tx_chain_i/pf_valid_reg/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X64Y82         FDRE (Prop_fdre_C_Q)         0.348     1.783 f  tx_chain_i/pf_valid_reg/Q
-                         net (fo=45, routed)          0.749     2.532    tx_chain_i/pf_valid
-    SLICE_X63Y82         LUT3 (Prop_lut3_I2_O)        0.252     2.784 f  tx_chain_i/busy_INST_0_i_1/O
-                         net (fo=3, routed)           0.362     3.146    tx_chain_i/upsampler_i/done_reg_0
-    SLICE_X63Y82         LUT6 (Prop_lut6_I5_O)        0.267     3.413 r  tx_chain_i/upsampler_i/out_valid_i_2/O
-                         net (fo=6, routed)           2.278     5.691    tx_chain_i/upsampler_i/start_0
-    SLICE_X60Y34         LUT2 (Prop_lut2_I0_O)        0.105     5.796 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
-                         net (fo=2560, routed)        3.726     9.521    rx_chain_i/matched_filter_i/matched_filter_i/rst0
-    DSP48_X0Y2           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/sum1_q_reg[12]/RSTA
+    SLICE_X57Y76         FDRE (Prop_fdre_C_Q)         0.348     1.770 f  tx_chain_i/pf_valid_reg/Q
+                         net (fo=45, routed)          0.677     2.447    tx_chain_i/pf_valid
+    SLICE_X58Y75         LUT3 (Prop_lut3_I2_O)        0.262     2.709 f  tx_chain_i/busy_INST_0_i_1/O
+                         net (fo=3, routed)           0.280     2.989    tx_chain_i/upsampler_i/done_reg_0
+    SLICE_X59Y73         LUT6 (Prop_lut6_I5_O)        0.264     3.253 r  tx_chain_i/upsampler_i/out_valid_i_2/O
+                         net (fo=6, routed)           1.746     4.999    tx_chain_i/upsampler_i/start_0
+    SLICE_X60Y33         LUT2 (Prop_lut2_I0_O)        0.105     5.104 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
+                         net (fo=2560, routed)        3.906     9.010    rx_chain_i/matched_filter_i/matched_filter_i/rst0
+    DSP48_X0Y2           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[10]/RSTA
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=3266, unset)         1.410    11.410    rx_chain_i/matched_filter_i/matched_filter_i/clk
-    DSP48_X0Y2           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/sum1_q_reg[12]/CLK
+    DSP48_X0Y2           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[10]/CLK
                          clock pessimism              0.000    11.410
                          clock uncertainty           -0.035    11.374
     DSP48_X0Y2           DSP48E1 (Setup_dsp48e1_CLK_RSTA)
-                                                     -0.429    10.945    rx_chain_i/matched_filter_i/matched_filter_i/sum1_q_reg[12]
+                                                     -0.429    10.945    rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[10]
   -------------------------------------------------------------------
                          required time                         10.945
-                         arrival time                          -9.521
+                         arrival time                          -9.010
   -------------------------------------------------------------------
-                         slack                                  1.424
+                         slack                                  1.935
 
-Slack (MET) :             1.431ns  (required time - arrival time)
+Slack (MET) :             1.983ns  (required time - arrival time)
   Source:                 tx_chain_i/pf_valid_reg/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/sum1_q_reg[16]/RSTA
+  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[14]/RSTA
                             (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.079ns  (logic 0.972ns (12.031%)  route 7.107ns (87.969%))
+  Data Path Delay:        7.536ns  (logic 0.979ns (12.991%)  route 6.557ns (87.009%))
   Logic Levels:           3  (LUT2=1 LUT3=1 LUT6=1)
-  Clock Path Skew:        -0.025ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.410ns = ( 11.410 - 10.000 )
-    Source Clock Delay      (SCD):    1.435ns
+  Clock Path Skew:        -0.016ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.406ns = ( 11.406 - 10.000 )
+    Source Clock Delay      (SCD):    1.422ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -274,47 +274,47 @@ Slack (MET) :             1.431ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=3266, unset)         1.435     1.435    tx_chain_i/clk
-    SLICE_X64Y82         FDRE                                         r  tx_chain_i/pf_valid_reg/C
+                         net (fo=3266, unset)         1.422     1.422    tx_chain_i/clk
+    SLICE_X57Y76         FDRE                                         r  tx_chain_i/pf_valid_reg/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X64Y82         FDRE (Prop_fdre_C_Q)         0.348     1.783 f  tx_chain_i/pf_valid_reg/Q
-                         net (fo=45, routed)          0.749     2.532    tx_chain_i/pf_valid
-    SLICE_X63Y82         LUT3 (Prop_lut3_I2_O)        0.252     2.784 f  tx_chain_i/busy_INST_0_i_1/O
-                         net (fo=3, routed)           0.362     3.146    tx_chain_i/upsampler_i/done_reg_0
-    SLICE_X63Y82         LUT6 (Prop_lut6_I5_O)        0.267     3.413 r  tx_chain_i/upsampler_i/out_valid_i_2/O
-                         net (fo=6, routed)           2.278     5.691    tx_chain_i/upsampler_i/start_0
-    SLICE_X60Y34         LUT2 (Prop_lut2_I0_O)        0.105     5.796 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
-                         net (fo=2560, routed)        3.718     9.514    rx_chain_i/matched_filter_i/matched_filter_i/rst0
-    DSP48_X0Y0           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/sum1_q_reg[16]/RSTA
+    SLICE_X57Y76         FDRE (Prop_fdre_C_Q)         0.348     1.770 f  tx_chain_i/pf_valid_reg/Q
+                         net (fo=45, routed)          0.677     2.447    tx_chain_i/pf_valid
+    SLICE_X58Y75         LUT3 (Prop_lut3_I2_O)        0.262     2.709 f  tx_chain_i/busy_INST_0_i_1/O
+                         net (fo=3, routed)           0.280     2.989    tx_chain_i/upsampler_i/done_reg_0
+    SLICE_X59Y73         LUT6 (Prop_lut6_I5_O)        0.264     3.253 r  tx_chain_i/upsampler_i/out_valid_i_2/O
+                         net (fo=6, routed)           1.746     4.999    tx_chain_i/upsampler_i/start_0
+    SLICE_X60Y33         LUT2 (Prop_lut2_I0_O)        0.105     5.104 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
+                         net (fo=2560, routed)        3.854     8.958    rx_chain_i/matched_filter_i/matched_filter_i/rst0
+    DSP48_X1Y1           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[14]/RSTA
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=3266, unset)         1.410    11.410    rx_chain_i/matched_filter_i/matched_filter_i/clk
-    DSP48_X0Y0           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/sum1_q_reg[16]/CLK
-                         clock pessimism              0.000    11.410
-                         clock uncertainty           -0.035    11.374
-    DSP48_X0Y0           DSP48E1 (Setup_dsp48e1_CLK_RSTA)
-                                                     -0.429    10.945    rx_chain_i/matched_filter_i/matched_filter_i/sum1_q_reg[16]
+                         net (fo=3266, unset)         1.406    11.406    rx_chain_i/matched_filter_i/matched_filter_i/clk
+    DSP48_X1Y1           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[14]/CLK
+                         clock pessimism              0.000    11.406
+                         clock uncertainty           -0.035    11.370
+    DSP48_X1Y1           DSP48E1 (Setup_dsp48e1_CLK_RSTA)
+                                                     -0.429    10.941    rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[14]
   -------------------------------------------------------------------
-                         required time                         10.945
-                         arrival time                          -9.514
+                         required time                         10.941
+                         arrival time                          -8.958
   -------------------------------------------------------------------
-                         slack                                  1.431
+                         slack                                  1.983
 
-Slack (MET) :             1.445ns  (required time - arrival time)
+Slack (MET) :             2.004ns  (required time - arrival time)
   Source:                 tx_chain_i/pf_valid_reg/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/prod_q_reg[30]/RSTA
+  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]/RSTA
                             (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        8.065ns  (logic 0.972ns (12.052%)  route 7.093ns (87.948%))
+  Data Path Delay:        7.519ns  (logic 0.979ns (13.021%)  route 6.540ns (86.979%))
   Logic Levels:           3  (LUT2=1 LUT3=1 LUT6=1)
-  Clock Path Skew:        -0.025ns (DCD - SCD + CPR)
+  Clock Path Skew:        -0.012ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    1.410ns = ( 11.410 - 10.000 )
-    Source Clock Delay      (SCD):    1.435ns
+    Source Clock Delay      (SCD):    1.422ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -326,47 +326,47 @@ Slack (MET) :             1.445ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=3266, unset)         1.435     1.435    tx_chain_i/clk
-    SLICE_X64Y82         FDRE                                         r  tx_chain_i/pf_valid_reg/C
+                         net (fo=3266, unset)         1.422     1.422    tx_chain_i/clk
+    SLICE_X57Y76         FDRE                                         r  tx_chain_i/pf_valid_reg/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X64Y82         FDRE (Prop_fdre_C_Q)         0.348     1.783 f  tx_chain_i/pf_valid_reg/Q
-                         net (fo=45, routed)          0.749     2.532    tx_chain_i/pf_valid
-    SLICE_X63Y82         LUT3 (Prop_lut3_I2_O)        0.252     2.784 f  tx_chain_i/busy_INST_0_i_1/O
-                         net (fo=3, routed)           0.362     3.146    tx_chain_i/upsampler_i/done_reg_0
-    SLICE_X63Y82         LUT6 (Prop_lut6_I5_O)        0.267     3.413 r  tx_chain_i/upsampler_i/out_valid_i_2/O
-                         net (fo=6, routed)           2.278     5.691    tx_chain_i/upsampler_i/start_0
-    SLICE_X60Y34         LUT2 (Prop_lut2_I0_O)        0.105     5.796 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
-                         net (fo=2560, routed)        3.704     9.500    rx_chain_i/matched_filter_i/matched_filter_i/rst0
-    DSP48_X0Y1           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_q_reg[30]/RSTA
+    SLICE_X57Y76         FDRE (Prop_fdre_C_Q)         0.348     1.770 f  tx_chain_i/pf_valid_reg/Q
+                         net (fo=45, routed)          0.677     2.447    tx_chain_i/pf_valid
+    SLICE_X58Y75         LUT3 (Prop_lut3_I2_O)        0.262     2.709 f  tx_chain_i/busy_INST_0_i_1/O
+                         net (fo=3, routed)           0.280     2.989    tx_chain_i/upsampler_i/done_reg_0
+    SLICE_X59Y73         LUT6 (Prop_lut6_I5_O)        0.264     3.253 r  tx_chain_i/upsampler_i/out_valid_i_2/O
+                         net (fo=6, routed)           1.746     4.999    tx_chain_i/upsampler_i/start_0
+    SLICE_X60Y33         LUT2 (Prop_lut2_I0_O)        0.105     5.104 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
+                         net (fo=2560, routed)        3.836     8.941    rx_chain_i/matched_filter_i/matched_filter_i/rst0
+    DSP48_X0Y1           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]/RSTA
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=3266, unset)         1.410    11.410    rx_chain_i/matched_filter_i/matched_filter_i/clk
-    DSP48_X0Y1           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_q_reg[30]/CLK
+    DSP48_X0Y1           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]/CLK
                          clock pessimism              0.000    11.410
                          clock uncertainty           -0.035    11.374
     DSP48_X0Y1           DSP48E1 (Setup_dsp48e1_CLK_RSTA)
-                                                     -0.429    10.945    rx_chain_i/matched_filter_i/matched_filter_i/prod_q_reg[30]
+                                                     -0.429    10.945    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]
   -------------------------------------------------------------------
                          required time                         10.945
-                         arrival time                          -9.500
+                         arrival time                          -8.941
   -------------------------------------------------------------------
-                         slack                                  1.445
+                         slack                                  2.004
 
-Slack (MET) :             1.681ns  (required time - arrival time)
+Slack (MET) :             2.049ns  (required time - arrival time)
   Source:                 tx_chain_i/pf_valid_reg/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/prod_q_reg[24]/RSTA
+  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[28]/RSTA
                             (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        7.828ns  (logic 0.972ns (12.417%)  route 6.856ns (87.583%))
+  Data Path Delay:        7.470ns  (logic 0.979ns (13.106%)  route 6.491ns (86.894%))
   Logic Levels:           3  (LUT2=1 LUT3=1 LUT6=1)
-  Clock Path Skew:        -0.026ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.409ns = ( 11.409 - 10.000 )
-    Source Clock Delay      (SCD):    1.435ns
+  Clock Path Skew:        -0.016ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.406ns = ( 11.406 - 10.000 )
+    Source Clock Delay      (SCD):    1.422ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -378,47 +378,99 @@ Slack (MET) :             1.681ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=3266, unset)         1.435     1.435    tx_chain_i/clk
-    SLICE_X64Y82         FDRE                                         r  tx_chain_i/pf_valid_reg/C
+                         net (fo=3266, unset)         1.422     1.422    tx_chain_i/clk
+    SLICE_X57Y76         FDRE                                         r  tx_chain_i/pf_valid_reg/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X64Y82         FDRE (Prop_fdre_C_Q)         0.348     1.783 f  tx_chain_i/pf_valid_reg/Q
-                         net (fo=45, routed)          0.749     2.532    tx_chain_i/pf_valid
-    SLICE_X63Y82         LUT3 (Prop_lut3_I2_O)        0.252     2.784 f  tx_chain_i/busy_INST_0_i_1/O
-                         net (fo=3, routed)           0.362     3.146    tx_chain_i/upsampler_i/done_reg_0
-    SLICE_X63Y82         LUT6 (Prop_lut6_I5_O)        0.267     3.413 r  tx_chain_i/upsampler_i/out_valid_i_2/O
-                         net (fo=6, routed)           2.278     5.691    tx_chain_i/upsampler_i/start_0
-    SLICE_X60Y34         LUT2 (Prop_lut2_I0_O)        0.105     5.796 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
-                         net (fo=2560, routed)        3.467     9.263    rx_chain_i/matched_filter_i/matched_filter_i/rst0
-    DSP48_X0Y3           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_q_reg[24]/RSTA
+    SLICE_X57Y76         FDRE (Prop_fdre_C_Q)         0.348     1.770 f  tx_chain_i/pf_valid_reg/Q
+                         net (fo=45, routed)          0.677     2.447    tx_chain_i/pf_valid
+    SLICE_X58Y75         LUT3 (Prop_lut3_I2_O)        0.262     2.709 f  tx_chain_i/busy_INST_0_i_1/O
+                         net (fo=3, routed)           0.280     2.989    tx_chain_i/upsampler_i/done_reg_0
+    SLICE_X59Y73         LUT6 (Prop_lut6_I5_O)        0.264     3.253 r  tx_chain_i/upsampler_i/out_valid_i_2/O
+                         net (fo=6, routed)           1.746     4.999    tx_chain_i/upsampler_i/start_0
+    SLICE_X60Y33         LUT2 (Prop_lut2_I0_O)        0.105     5.104 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
+                         net (fo=2560, routed)        3.787     8.892    rx_chain_i/matched_filter_i/matched_filter_i/rst0
+    DSP48_X1Y0           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[28]/RSTA
+  -------------------------------------------------------------------    -------------------
+
+                         (clock clk rise edge)       10.000    10.000 r
+                                                      0.000    10.000 r  clk (IN)
+                         net (fo=3266, unset)         1.406    11.406    rx_chain_i/matched_filter_i/matched_filter_i/clk
+    DSP48_X1Y0           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[28]/CLK
+                         clock pessimism              0.000    11.406
+                         clock uncertainty           -0.035    11.370
+    DSP48_X1Y0           DSP48E1 (Setup_dsp48e1_CLK_RSTA)
+                                                     -0.429    10.941    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[28]
+  -------------------------------------------------------------------
+                         required time                         10.941
+                         arrival time                          -8.892
+  -------------------------------------------------------------------
+                         slack                                  2.049
+
+Slack (MET) :             2.088ns  (required time - arrival time)
+  Source:                 tx_chain_i/pf_valid_reg/C
+                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[22]/RSTA
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Path Group:             clk
+  Path Type:              Setup (Max at Slow Process Corner)
+  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
+  Data Path Delay:        7.434ns  (logic 0.979ns (13.169%)  route 6.455ns (86.831%))
+  Logic Levels:           3  (LUT2=1 LUT3=1 LUT6=1)
+  Clock Path Skew:        -0.013ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.409ns = ( 11.409 - 10.000 )
+    Source Clock Delay      (SCD):    1.422ns
+    Clock Pessimism Removal (CPR):    0.000ns
+  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
+    Total System Jitter     (TSJ):    0.071ns
+    Total Input Jitter      (TIJ):    0.000ns
+    Discrete Jitter          (DJ):    0.000ns
+    Phase Error              (PE):    0.000ns
+
+    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
+  -------------------------------------------------------------------    -------------------
+                         (clock clk rise edge)        0.000     0.000 r
+                                                      0.000     0.000 r  clk (IN)
+                         net (fo=3266, unset)         1.422     1.422    tx_chain_i/clk
+    SLICE_X57Y76         FDRE                                         r  tx_chain_i/pf_valid_reg/C
+  -------------------------------------------------------------------    -------------------
+    SLICE_X57Y76         FDRE (Prop_fdre_C_Q)         0.348     1.770 f  tx_chain_i/pf_valid_reg/Q
+                         net (fo=45, routed)          0.677     2.447    tx_chain_i/pf_valid
+    SLICE_X58Y75         LUT3 (Prop_lut3_I2_O)        0.262     2.709 f  tx_chain_i/busy_INST_0_i_1/O
+                         net (fo=3, routed)           0.280     2.989    tx_chain_i/upsampler_i/done_reg_0
+    SLICE_X59Y73         LUT6 (Prop_lut6_I5_O)        0.264     3.253 r  tx_chain_i/upsampler_i/out_valid_i_2/O
+                         net (fo=6, routed)           1.746     4.999    tx_chain_i/upsampler_i/start_0
+    SLICE_X60Y33         LUT2 (Prop_lut2_I0_O)        0.105     5.104 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
+                         net (fo=2560, routed)        3.752     8.856    rx_chain_i/matched_filter_i/matched_filter_i/rst0
+    DSP48_X0Y3           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[22]/RSTA
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
                          net (fo=3266, unset)         1.409    11.409    rx_chain_i/matched_filter_i/matched_filter_i/clk
-    DSP48_X0Y3           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_q_reg[24]/CLK
+    DSP48_X0Y3           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[22]/CLK
                          clock pessimism              0.000    11.409
                          clock uncertainty           -0.035    11.373
     DSP48_X0Y3           DSP48E1 (Setup_dsp48e1_CLK_RSTA)
-                                                     -0.429    10.944    rx_chain_i/matched_filter_i/matched_filter_i/prod_q_reg[24]
+                                                     -0.429    10.944    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[22]
   -------------------------------------------------------------------
                          required time                         10.944
-                         arrival time                          -9.263
+                         arrival time                          -8.856
   -------------------------------------------------------------------
-                         slack                                  1.681
+                         slack                                  2.088
 
-Slack (MET) :             1.694ns  (required time - arrival time)
+Slack (MET) :             2.117ns  (required time - arrival time)
   Source:                 tx_chain_i/pf_valid_reg/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/xq_reg[29][0]/R
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[24]/RSTA
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        7.740ns  (logic 0.972ns (12.559%)  route 6.768ns (87.441%))
+  Data Path Delay:        7.403ns  (logic 0.979ns (13.225%)  route 6.424ns (86.775%))
   Logic Levels:           3  (LUT2=1 LUT3=1 LUT6=1)
-  Clock Path Skew:        -0.108ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.327ns = ( 11.327 - 10.000 )
-    Source Clock Delay      (SCD):    1.435ns
+  Clock Path Skew:        -0.015ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.407ns = ( 11.407 - 10.000 )
+    Source Clock Delay      (SCD):    1.422ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -430,46 +482,47 @@ Slack (MET) :             1.694ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=3266, unset)         1.435     1.435    tx_chain_i/clk
-    SLICE_X64Y82         FDRE                                         r  tx_chain_i/pf_valid_reg/C
+                         net (fo=3266, unset)         1.422     1.422    tx_chain_i/clk
+    SLICE_X57Y76         FDRE                                         r  tx_chain_i/pf_valid_reg/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X64Y82         FDRE (Prop_fdre_C_Q)         0.348     1.783 f  tx_chain_i/pf_valid_reg/Q
-                         net (fo=45, routed)          0.749     2.532    tx_chain_i/pf_valid
-    SLICE_X63Y82         LUT3 (Prop_lut3_I2_O)        0.252     2.784 f  tx_chain_i/busy_INST_0_i_1/O
-                         net (fo=3, routed)           0.362     3.146    tx_chain_i/upsampler_i/done_reg_0
-    SLICE_X63Y82         LUT6 (Prop_lut6_I5_O)        0.267     3.413 r  tx_chain_i/upsampler_i/out_valid_i_2/O
-                         net (fo=6, routed)           2.278     5.691    tx_chain_i/upsampler_i/start_0
-    SLICE_X60Y34         LUT2 (Prop_lut2_I0_O)        0.105     5.796 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
-                         net (fo=2560, routed)        3.379     9.175    rx_chain_i/matched_filter_i/matched_filter_i/rst0
-    SLICE_X18Y0          FDRE                                         r  rx_chain_i/matched_filter_i/matched_filter_i/xq_reg[29][0]/R
+    SLICE_X57Y76         FDRE (Prop_fdre_C_Q)         0.348     1.770 f  tx_chain_i/pf_valid_reg/Q
+                         net (fo=45, routed)          0.677     2.447    tx_chain_i/pf_valid
+    SLICE_X58Y75         LUT3 (Prop_lut3_I2_O)        0.262     2.709 f  tx_chain_i/busy_INST_0_i_1/O
+                         net (fo=3, routed)           0.280     2.989    tx_chain_i/upsampler_i/done_reg_0
+    SLICE_X59Y73         LUT6 (Prop_lut6_I5_O)        0.264     3.253 r  tx_chain_i/upsampler_i/out_valid_i_2/O
+                         net (fo=6, routed)           1.746     4.999    tx_chain_i/upsampler_i/start_0
+    SLICE_X60Y33         LUT2 (Prop_lut2_I0_O)        0.105     5.104 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
+                         net (fo=2560, routed)        3.720     8.825    rx_chain_i/matched_filter_i/matched_filter_i/rst0
+    DSP48_X0Y4           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[24]/RSTA
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=3266, unset)         1.327    11.327    rx_chain_i/matched_filter_i/matched_filter_i/clk
-    SLICE_X18Y0          FDRE                                         r  rx_chain_i/matched_filter_i/matched_filter_i/xq_reg[29][0]/C
-                         clock pessimism              0.000    11.327
-                         clock uncertainty           -0.035    11.292
-    SLICE_X18Y0          FDRE (Setup_fdre_C_R)       -0.423    10.869    rx_chain_i/matched_filter_i/matched_filter_i/xq_reg[29][0]
+                         net (fo=3266, unset)         1.407    11.407    rx_chain_i/matched_filter_i/matched_filter_i/clk
+    DSP48_X0Y4           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[24]/CLK
+                         clock pessimism              0.000    11.407
+                         clock uncertainty           -0.035    11.371
+    DSP48_X0Y4           DSP48E1 (Setup_dsp48e1_CLK_RSTA)
+                                                     -0.429    10.942    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[24]
   -------------------------------------------------------------------
-                         required time                         10.869
-                         arrival time                          -9.175
+                         required time                         10.942
+                         arrival time                          -8.825
   -------------------------------------------------------------------
-                         slack                                  1.694
+                         slack                                  2.117
 
-Slack (MET) :             1.694ns  (required time - arrival time)
+Slack (MET) :             2.132ns  (required time - arrival time)
   Source:                 tx_chain_i/pf_valid_reg/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/xq_reg[29][3]/R
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[16]/RSTA
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        7.740ns  (logic 0.972ns (12.559%)  route 6.768ns (87.441%))
+  Data Path Delay:        7.387ns  (logic 0.979ns (13.253%)  route 6.408ns (86.747%))
   Logic Levels:           3  (LUT2=1 LUT3=1 LUT6=1)
-  Clock Path Skew:        -0.108ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.327ns = ( 11.327 - 10.000 )
-    Source Clock Delay      (SCD):    1.435ns
+  Clock Path Skew:        -0.016ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.406ns = ( 11.406 - 10.000 )
+    Source Clock Delay      (SCD):    1.422ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -481,46 +534,47 @@ Slack (MET) :             1.694ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=3266, unset)         1.435     1.435    tx_chain_i/clk
-    SLICE_X64Y82         FDRE                                         r  tx_chain_i/pf_valid_reg/C
+                         net (fo=3266, unset)         1.422     1.422    tx_chain_i/clk
+    SLICE_X57Y76         FDRE                                         r  tx_chain_i/pf_valid_reg/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X64Y82         FDRE (Prop_fdre_C_Q)         0.348     1.783 f  tx_chain_i/pf_valid_reg/Q
-                         net (fo=45, routed)          0.749     2.532    tx_chain_i/pf_valid
-    SLICE_X63Y82         LUT3 (Prop_lut3_I2_O)        0.252     2.784 f  tx_chain_i/busy_INST_0_i_1/O
-                         net (fo=3, routed)           0.362     3.146    tx_chain_i/upsampler_i/done_reg_0
-    SLICE_X63Y82         LUT6 (Prop_lut6_I5_O)        0.267     3.413 r  tx_chain_i/upsampler_i/out_valid_i_2/O
-                         net (fo=6, routed)           2.278     5.691    tx_chain_i/upsampler_i/start_0
-    SLICE_X60Y34         LUT2 (Prop_lut2_I0_O)        0.105     5.796 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
-                         net (fo=2560, routed)        3.379     9.175    rx_chain_i/matched_filter_i/matched_filter_i/rst0
-    SLICE_X18Y0          FDRE                                         r  rx_chain_i/matched_filter_i/matched_filter_i/xq_reg[29][3]/R
+    SLICE_X57Y76         FDRE (Prop_fdre_C_Q)         0.348     1.770 f  tx_chain_i/pf_valid_reg/Q
+                         net (fo=45, routed)          0.677     2.447    tx_chain_i/pf_valid
+    SLICE_X58Y75         LUT3 (Prop_lut3_I2_O)        0.262     2.709 f  tx_chain_i/busy_INST_0_i_1/O
+                         net (fo=3, routed)           0.280     2.989    tx_chain_i/upsampler_i/done_reg_0
+    SLICE_X59Y73         LUT6 (Prop_lut6_I5_O)        0.264     3.253 r  tx_chain_i/upsampler_i/out_valid_i_2/O
+                         net (fo=6, routed)           1.746     4.999    tx_chain_i/upsampler_i/start_0
+    SLICE_X60Y33         LUT2 (Prop_lut2_I0_O)        0.105     5.104 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
+                         net (fo=2560, routed)        3.705     8.809    rx_chain_i/matched_filter_i/matched_filter_i/rst0
+    DSP48_X1Y2           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[16]/RSTA
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=3266, unset)         1.327    11.327    rx_chain_i/matched_filter_i/matched_filter_i/clk
-    SLICE_X18Y0          FDRE                                         r  rx_chain_i/matched_filter_i/matched_filter_i/xq_reg[29][3]/C
-                         clock pessimism              0.000    11.327
-                         clock uncertainty           -0.035    11.292
-    SLICE_X18Y0          FDRE (Setup_fdre_C_R)       -0.423    10.869    rx_chain_i/matched_filter_i/matched_filter_i/xq_reg[29][3]
+                         net (fo=3266, unset)         1.406    11.406    rx_chain_i/matched_filter_i/matched_filter_i/clk
+    DSP48_X1Y2           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[16]/CLK
+                         clock pessimism              0.000    11.406
+                         clock uncertainty           -0.035    11.370
+    DSP48_X1Y2           DSP48E1 (Setup_dsp48e1_CLK_RSTA)
+                                                     -0.429    10.941    rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[16]
   -------------------------------------------------------------------
-                         required time                         10.869
-                         arrival time                          -9.175
+                         required time                         10.941
+                         arrival time                          -8.809
   -------------------------------------------------------------------
-                         slack                                  1.694
+                         slack                                  2.132
 
-Slack (MET) :             1.694ns  (required time - arrival time)
+Slack (MET) :             2.141ns  (required time - arrival time)
   Source:                 tx_chain_i/pf_valid_reg/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/xq_reg[30][0]/R
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]/RSTD
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        7.740ns  (logic 0.972ns (12.559%)  route 6.768ns (87.441%))
+  Data Path Delay:        7.316ns  (logic 0.979ns (13.381%)  route 6.337ns (86.619%))
   Logic Levels:           3  (LUT2=1 LUT3=1 LUT6=1)
-  Clock Path Skew:        -0.108ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.327ns = ( 11.327 - 10.000 )
-    Source Clock Delay      (SCD):    1.435ns
+  Clock Path Skew:        -0.012ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.410ns = ( 11.410 - 10.000 )
+    Source Clock Delay      (SCD):    1.422ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -532,46 +586,47 @@ Slack (MET) :             1.694ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=3266, unset)         1.435     1.435    tx_chain_i/clk
-    SLICE_X64Y82         FDRE                                         r  tx_chain_i/pf_valid_reg/C
+                         net (fo=3266, unset)         1.422     1.422    tx_chain_i/clk
+    SLICE_X57Y76         FDRE                                         r  tx_chain_i/pf_valid_reg/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X64Y82         FDRE (Prop_fdre_C_Q)         0.348     1.783 f  tx_chain_i/pf_valid_reg/Q
-                         net (fo=45, routed)          0.749     2.532    tx_chain_i/pf_valid
-    SLICE_X63Y82         LUT3 (Prop_lut3_I2_O)        0.252     2.784 f  tx_chain_i/busy_INST_0_i_1/O
-                         net (fo=3, routed)           0.362     3.146    tx_chain_i/upsampler_i/done_reg_0
-    SLICE_X63Y82         LUT6 (Prop_lut6_I5_O)        0.267     3.413 r  tx_chain_i/upsampler_i/out_valid_i_2/O
-                         net (fo=6, routed)           2.278     5.691    tx_chain_i/upsampler_i/start_0
-    SLICE_X60Y34         LUT2 (Prop_lut2_I0_O)        0.105     5.796 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
-                         net (fo=2560, routed)        3.379     9.175    rx_chain_i/matched_filter_i/matched_filter_i/rst0
-    SLICE_X18Y0          FDRE                                         r  rx_chain_i/matched_filter_i/matched_filter_i/xq_reg[30][0]/R
+    SLICE_X57Y76         FDRE (Prop_fdre_C_Q)         0.348     1.770 f  tx_chain_i/pf_valid_reg/Q
+                         net (fo=45, routed)          0.677     2.447    tx_chain_i/pf_valid
+    SLICE_X58Y75         LUT3 (Prop_lut3_I2_O)        0.262     2.709 f  tx_chain_i/busy_INST_0_i_1/O
+                         net (fo=3, routed)           0.280     2.989    tx_chain_i/upsampler_i/done_reg_0
+    SLICE_X59Y73         LUT6 (Prop_lut6_I5_O)        0.264     3.253 r  tx_chain_i/upsampler_i/out_valid_i_2/O
+                         net (fo=6, routed)           1.746     4.999    tx_chain_i/upsampler_i/start_0
+    SLICE_X60Y33         LUT2 (Prop_lut2_I0_O)        0.105     5.104 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
+                         net (fo=2560, routed)        3.634     8.738    rx_chain_i/matched_filter_i/matched_filter_i/rst0
+    DSP48_X0Y1           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]/RSTD
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=3266, unset)         1.327    11.327    rx_chain_i/matched_filter_i/matched_filter_i/clk
-    SLICE_X18Y0          FDRE                                         r  rx_chain_i/matched_filter_i/matched_filter_i/xq_reg[30][0]/C
-                         clock pessimism              0.000    11.327
-                         clock uncertainty           -0.035    11.292
-    SLICE_X18Y0          FDRE (Setup_fdre_C_R)       -0.423    10.869    rx_chain_i/matched_filter_i/matched_filter_i/xq_reg[30][0]
+                         net (fo=3266, unset)         1.410    11.410    rx_chain_i/matched_filter_i/matched_filter_i/clk
+    DSP48_X0Y1           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]/CLK
+                         clock pessimism              0.000    11.410
+                         clock uncertainty           -0.035    11.374
+    DSP48_X0Y1           DSP48E1 (Setup_dsp48e1_CLK_RSTD)
+                                                     -0.495    10.879    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]
   -------------------------------------------------------------------
-                         required time                         10.869
-                         arrival time                          -9.175
+                         required time                         10.879
+                         arrival time                          -8.738
   -------------------------------------------------------------------
-                         slack                                  1.694
+                         slack                                  2.141
 
-Slack (MET) :             1.705ns  (required time - arrival time)
+Slack (MET) :             2.159ns  (required time - arrival time)
   Source:                 tx_chain_i/pf_valid_reg/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/sum2_q_reg[8][11]/R
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]/RSTP
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        7.729ns  (logic 0.972ns (12.577%)  route 6.757ns (87.423%))
+  Data Path Delay:        7.497ns  (logic 0.979ns (13.058%)  route 6.518ns (86.942%))
   Logic Levels:           3  (LUT2=1 LUT3=1 LUT6=1)
-  Clock Path Skew:        -0.108ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.327ns = ( 11.327 - 10.000 )
-    Source Clock Delay      (SCD):    1.435ns
+  Clock Path Skew:        -0.012ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.410ns = ( 11.410 - 10.000 )
+    Source Clock Delay      (SCD):    1.422ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -583,46 +638,47 @@ Slack (MET) :             1.705ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=3266, unset)         1.435     1.435    tx_chain_i/clk
-    SLICE_X64Y82         FDRE                                         r  tx_chain_i/pf_valid_reg/C
+                         net (fo=3266, unset)         1.422     1.422    tx_chain_i/clk
+    SLICE_X57Y76         FDRE                                         r  tx_chain_i/pf_valid_reg/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X64Y82         FDRE (Prop_fdre_C_Q)         0.348     1.783 f  tx_chain_i/pf_valid_reg/Q
-                         net (fo=45, routed)          0.749     2.532    tx_chain_i/pf_valid
-    SLICE_X63Y82         LUT3 (Prop_lut3_I2_O)        0.252     2.784 f  tx_chain_i/busy_INST_0_i_1/O
-                         net (fo=3, routed)           0.362     3.146    tx_chain_i/upsampler_i/done_reg_0
-    SLICE_X63Y82         LUT6 (Prop_lut6_I5_O)        0.267     3.413 r  tx_chain_i/upsampler_i/out_valid_i_2/O
-                         net (fo=6, routed)           2.278     5.691    tx_chain_i/upsampler_i/start_0
-    SLICE_X60Y34         LUT2 (Prop_lut2_I0_O)        0.105     5.796 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
-                         net (fo=2560, routed)        3.368     9.164    rx_chain_i/matched_filter_i/matched_filter_i/rst0
-    SLICE_X14Y5          FDRE                                         r  rx_chain_i/matched_filter_i/matched_filter_i/sum2_q_reg[8][11]/R
+    SLICE_X57Y76         FDRE (Prop_fdre_C_Q)         0.348     1.770 f  tx_chain_i/pf_valid_reg/Q
+                         net (fo=45, routed)          0.677     2.447    tx_chain_i/pf_valid
+    SLICE_X58Y75         LUT3 (Prop_lut3_I2_O)        0.262     2.709 f  tx_chain_i/busy_INST_0_i_1/O
+                         net (fo=3, routed)           0.280     2.989    tx_chain_i/upsampler_i/done_reg_0
+    SLICE_X59Y73         LUT6 (Prop_lut6_I5_O)        0.264     3.253 r  tx_chain_i/upsampler_i/out_valid_i_2/O
+                         net (fo=6, routed)           1.746     4.999    tx_chain_i/upsampler_i/start_0
+    SLICE_X60Y33         LUT2 (Prop_lut2_I0_O)        0.105     5.104 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
+                         net (fo=2560, routed)        3.815     8.919    rx_chain_i/matched_filter_i/matched_filter_i/rst0
+    DSP48_X0Y1           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]/RSTP
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=3266, unset)         1.327    11.327    rx_chain_i/matched_filter_i/matched_filter_i/clk
-    SLICE_X14Y5          FDRE                                         r  rx_chain_i/matched_filter_i/matched_filter_i/sum2_q_reg[8][11]/C
-                         clock pessimism              0.000    11.327
-                         clock uncertainty           -0.035    11.292
-    SLICE_X14Y5          FDRE (Setup_fdre_C_R)       -0.423    10.869    rx_chain_i/matched_filter_i/matched_filter_i/sum2_q_reg[8][11]
+                         net (fo=3266, unset)         1.410    11.410    rx_chain_i/matched_filter_i/matched_filter_i/clk
+    DSP48_X0Y1           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]/CLK
+                         clock pessimism              0.000    11.410
+                         clock uncertainty           -0.035    11.374
+    DSP48_X0Y1           DSP48E1 (Setup_dsp48e1_CLK_RSTP)
+                                                     -0.296    11.078    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]
   -------------------------------------------------------------------
-                         required time                         10.869
-                         arrival time                          -9.164
+                         required time                         11.078
+                         arrival time                          -8.919
   -------------------------------------------------------------------
-                         slack                                  1.705
+                         slack                                  2.159
 
-Slack (MET) :             1.705ns  (required time - arrival time)
+Slack (MET) :             2.169ns  (required time - arrival time)
   Source:                 tx_chain_i/pf_valid_reg/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/sum2_q_reg[8][12]/R
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
+  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[15]/RSTA
+                            (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        7.729ns  (logic 0.972ns (12.577%)  route 6.757ns (87.423%))
+  Data Path Delay:        7.347ns  (logic 0.979ns (13.326%)  route 6.368ns (86.674%))
   Logic Levels:           3  (LUT2=1 LUT3=1 LUT6=1)
-  Clock Path Skew:        -0.108ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.327ns = ( 11.327 - 10.000 )
-    Source Clock Delay      (SCD):    1.435ns
+  Clock Path Skew:        -0.020ns (DCD - SCD + CPR)
+    Destination Clock Delay (DCD):    1.402ns = ( 11.402 - 10.000 )
+    Source Clock Delay      (SCD):    1.422ns
     Clock Pessimism Removal (CPR):    0.000ns
   Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
     Total System Jitter     (TSJ):    0.071ns
@@ -634,83 +690,33 @@ Slack (MET) :             1.705ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=3266, unset)         1.435     1.435    tx_chain_i/clk
-    SLICE_X64Y82         FDRE                                         r  tx_chain_i/pf_valid_reg/C
+                         net (fo=3266, unset)         1.422     1.422    tx_chain_i/clk
+    SLICE_X57Y76         FDRE                                         r  tx_chain_i/pf_valid_reg/C
   -------------------------------------------------------------------    -------------------
-    SLICE_X64Y82         FDRE (Prop_fdre_C_Q)         0.348     1.783 f  tx_chain_i/pf_valid_reg/Q
-                         net (fo=45, routed)          0.749     2.532    tx_chain_i/pf_valid
-    SLICE_X63Y82         LUT3 (Prop_lut3_I2_O)        0.252     2.784 f  tx_chain_i/busy_INST_0_i_1/O
-                         net (fo=3, routed)           0.362     3.146    tx_chain_i/upsampler_i/done_reg_0
-    SLICE_X63Y82         LUT6 (Prop_lut6_I5_O)        0.267     3.413 r  tx_chain_i/upsampler_i/out_valid_i_2/O
-                         net (fo=6, routed)           2.278     5.691    tx_chain_i/upsampler_i/start_0
-    SLICE_X60Y34         LUT2 (Prop_lut2_I0_O)        0.105     5.796 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
-                         net (fo=2560, routed)        3.368     9.164    rx_chain_i/matched_filter_i/matched_filter_i/rst0
-    SLICE_X14Y5          FDRE                                         r  rx_chain_i/matched_filter_i/matched_filter_i/sum2_q_reg[8][12]/R
-  -------------------------------------------------------------------    -------------------
-
-                         (clock clk rise edge)       10.000    10.000 r
-                                                      0.000    10.000 r  clk (IN)
-                         net (fo=3266, unset)         1.327    11.327    rx_chain_i/matched_filter_i/matched_filter_i/clk
-    SLICE_X14Y5          FDRE                                         r  rx_chain_i/matched_filter_i/matched_filter_i/sum2_q_reg[8][12]/C
-                         clock pessimism              0.000    11.327
-                         clock uncertainty           -0.035    11.292
-    SLICE_X14Y5          FDRE (Setup_fdre_C_R)       -0.423    10.869    rx_chain_i/matched_filter_i/matched_filter_i/sum2_q_reg[8][12]
-  -------------------------------------------------------------------
-                         required time                         10.869
-                         arrival time                          -9.164
-  -------------------------------------------------------------------
-                         slack                                  1.705
-
-Slack (MET) :             1.705ns  (required time - arrival time)
-  Source:                 tx_chain_i/pf_valid_reg/C
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            rx_chain_i/matched_filter_i/matched_filter_i/sum2_q_reg[8][13]/R
-                            (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Path Group:             clk
-  Path Type:              Setup (Max at Slow Process Corner)
-  Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        7.729ns  (logic 0.972ns (12.577%)  route 6.757ns (87.423%))
-  Logic Levels:           3  (LUT2=1 LUT3=1 LUT6=1)
-  Clock Path Skew:        -0.108ns (DCD - SCD + CPR)
-    Destination Clock Delay (DCD):    1.327ns = ( 11.327 - 10.000 )
-    Source Clock Delay      (SCD):    1.435ns
-    Clock Pessimism Removal (CPR):    0.000ns
-  Clock Uncertainty:      0.035ns  ((TSJ^2 + TIJ^2)^1/2 + DJ) / 2 + PE
-    Total System Jitter     (TSJ):    0.071ns
-    Total Input Jitter      (TIJ):    0.000ns
-    Discrete Jitter          (DJ):    0.000ns
-    Phase Error              (PE):    0.000ns
-
-    Location             Delay type                Incr(ns)  Path(ns)    Netlist Resource(s)
-  -------------------------------------------------------------------    -------------------
-                         (clock clk rise edge)        0.000     0.000 r
-                                                      0.000     0.000 r  clk (IN)
-                         net (fo=3266, unset)         1.435     1.435    tx_chain_i/clk
-    SLICE_X64Y82         FDRE                                         r  tx_chain_i/pf_valid_reg/C
-  -------------------------------------------------------------------    -------------------
-    SLICE_X64Y82         FDRE (Prop_fdre_C_Q)         0.348     1.783 f  tx_chain_i/pf_valid_reg/Q
-                         net (fo=45, routed)          0.749     2.532    tx_chain_i/pf_valid
-    SLICE_X63Y82         LUT3 (Prop_lut3_I2_O)        0.252     2.784 f  tx_chain_i/busy_INST_0_i_1/O
-                         net (fo=3, routed)           0.362     3.146    tx_chain_i/upsampler_i/done_reg_0
-    SLICE_X63Y82         LUT6 (Prop_lut6_I5_O)        0.267     3.413 r  tx_chain_i/upsampler_i/out_valid_i_2/O
-                         net (fo=6, routed)           2.278     5.691    tx_chain_i/upsampler_i/start_0
-    SLICE_X60Y34         LUT2 (Prop_lut2_I0_O)        0.105     5.796 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
-                         net (fo=2560, routed)        3.368     9.164    rx_chain_i/matched_filter_i/matched_filter_i/rst0
-    SLICE_X14Y5          FDRE                                         r  rx_chain_i/matched_filter_i/matched_filter_i/sum2_q_reg[8][13]/R
+    SLICE_X57Y76         FDRE (Prop_fdre_C_Q)         0.348     1.770 f  tx_chain_i/pf_valid_reg/Q
+                         net (fo=45, routed)          0.677     2.447    tx_chain_i/pf_valid
+    SLICE_X58Y75         LUT3 (Prop_lut3_I2_O)        0.262     2.709 f  tx_chain_i/busy_INST_0_i_1/O
+                         net (fo=3, routed)           0.280     2.989    tx_chain_i/upsampler_i/done_reg_0
+    SLICE_X59Y73         LUT6 (Prop_lut6_I5_O)        0.264     3.253 r  tx_chain_i/upsampler_i/out_valid_i_2/O
+                         net (fo=6, routed)           1.746     4.999    tx_chain_i/upsampler_i/start_0
+    SLICE_X60Y33         LUT2 (Prop_lut2_I0_O)        0.105     5.104 r  tx_chain_i/upsampler_i/out_valid_i_1__0/O
+                         net (fo=2560, routed)        3.664     8.769    rx_chain_i/matched_filter_i/matched_filter_i/rst0
+    DSP48_X1Y5           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[15]/RSTA
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=3266, unset)         1.327    11.327    rx_chain_i/matched_filter_i/matched_filter_i/clk
-    SLICE_X14Y5          FDRE                                         r  rx_chain_i/matched_filter_i/matched_filter_i/sum2_q_reg[8][13]/C
-                         clock pessimism              0.000    11.327
-                         clock uncertainty           -0.035    11.292
-    SLICE_X14Y5          FDRE (Setup_fdre_C_R)       -0.423    10.869    rx_chain_i/matched_filter_i/matched_filter_i/sum2_q_reg[8][13]
+                         net (fo=3266, unset)         1.402    11.402    rx_chain_i/matched_filter_i/matched_filter_i/clk
+    DSP48_X1Y5           DSP48E1                                      r  rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[15]/CLK
+                         clock pessimism              0.000    11.402
+                         clock uncertainty           -0.035    11.366
+    DSP48_X1Y5           DSP48E1 (Setup_dsp48e1_CLK_RSTA)
+                                                     -0.429    10.937    rx_chain_i/matched_filter_i/matched_filter_i/sum1_i_reg[15]
   -------------------------------------------------------------------
-                         required time                         10.869
-                         arrival time                          -9.164
+                         required time                         10.937
+                         arrival time                          -8.769
   -------------------------------------------------------------------
-                         slack                                  1.705
+                         slack                                  2.169
 
 
 
@@ -724,33 +730,33 @@ Period(ns):         10.000
 Sources:            { clk }
 
 Check Type        Corner  Lib Pin      Reference Pin  Required(ns)  Actual(ns)  Slack(ns)  Location      Pin
-Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X2Y22   rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[0]/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X4Y13   rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[10]/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X3Y9    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[12]/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X4Y10   rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[14]/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X3Y7    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[16]/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X4Y4    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[18]/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X3Y1    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X3Y2    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[22]/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X2Y16   rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[24]/CLK
-Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X2Y12   rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[26]/CLK
-Low Pulse Width   Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X64Y83  ber_complete_latched_reg/C
-Low Pulse Width   Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X64Y83  ber_complete_latched_reg/C
-Low Pulse Width   Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X64Y82  done_reg/C
-Low Pulse Width   Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X64Y82  done_reg/C
-Low Pulse Width   Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X58Y71  rx_idle_counter_reg[0]/C
-Low Pulse Width   Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X58Y71  rx_idle_counter_reg[0]/C
-Low Pulse Width   Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X58Y73  rx_idle_counter_reg[10]/C
-Low Pulse Width   Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X58Y73  rx_idle_counter_reg[10]/C
-Low Pulse Width   Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X58Y73  rx_idle_counter_reg[11]/C
-Low Pulse Width   Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X58Y73  rx_idle_counter_reg[11]/C
-High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X64Y83  ber_complete_latched_reg/C
-High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X64Y83  ber_complete_latched_reg/C
-High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X64Y82  done_reg/C
-High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X64Y82  done_reg/C
-High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X58Y71  rx_idle_counter_reg[0]/C
-High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X58Y71  rx_idle_counter_reg[0]/C
-High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X58Y73  rx_idle_counter_reg[10]/C
-High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X58Y73  rx_idle_counter_reg[10]/C
-High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X58Y73  rx_idle_counter_reg[11]/C
-High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X58Y73  rx_idle_counter_reg[11]/C
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X2Y16   rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[0]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X2Y9    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[10]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X2Y7    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[12]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X0Y11   rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[14]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X0Y13   rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[16]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X0Y8    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[18]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X0Y1    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[20]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X0Y3    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[22]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X0Y4    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[24]/CLK
+Min Period        n/a     DSP48E1/CLK  n/a            2.997         10.000      7.003      DSP48_X2Y4    rx_chain_i/matched_filter_i/matched_filter_i/prod_i_reg[26]/CLK
+Low Pulse Width   Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X60Y73  ber_complete_latched_reg/C
+Low Pulse Width   Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X60Y73  ber_complete_latched_reg/C
+Low Pulse Width   Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X59Y73  done_reg/C
+Low Pulse Width   Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X59Y73  done_reg/C
+Low Pulse Width   Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X65Y64  rx_idle_counter_reg[0]/C
+Low Pulse Width   Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X65Y64  rx_idle_counter_reg[0]/C
+Low Pulse Width   Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X65Y66  rx_idle_counter_reg[10]/C
+Low Pulse Width   Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X65Y66  rx_idle_counter_reg[10]/C
+Low Pulse Width   Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X65Y66  rx_idle_counter_reg[11]/C
+Low Pulse Width   Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X65Y66  rx_idle_counter_reg[11]/C
+High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X60Y73  ber_complete_latched_reg/C
+High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X60Y73  ber_complete_latched_reg/C
+High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X59Y73  done_reg/C
+High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X59Y73  done_reg/C
+High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X65Y64  rx_idle_counter_reg[0]/C
+High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X65Y64  rx_idle_counter_reg[0]/C
+High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X65Y66  rx_idle_counter_reg[10]/C
+High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X65Y66  rx_idle_counter_reg[10]/C
+High Pulse Width  Slow    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X65Y66  rx_idle_counter_reg[11]/C
+High Pulse Width  Fast    FDRE/C       n/a            0.500         5.000       4.500      SLICE_X65Y66  rx_idle_counter_reg[11]/C

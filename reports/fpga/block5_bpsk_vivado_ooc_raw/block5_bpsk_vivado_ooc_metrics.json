@@ -572,7 +572,7 @@
       "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
       "post_synthesis": {
         "utilization": {
-          "lut": 252,
+          "lut": 218,
           "ff": 2333,
           "bram_tiles": 0.0,
           "dsp": 96
@@ -592,25 +592,25 @@
       },
       "post_route": {
         "utilization": {
-          "lut": 251,
+          "lut": 218,
           "ff": 2333,
           "bram_tiles": 0.0,
           "dsp": 96
         },
         "timing": {
-          "wns_ns": 2.699,
+          "wns_ns": 3.704,
           "tns_ns": 0.0,
           "failing_endpoints": 0,
           "total_endpoints": 14994,
           "timing_met": true,
           "clock_name": "clk",
           "clock_period_ns": 10.0,
-          "data_path_delay_ns": 6.888,
+          "data_path_delay_ns": 5.649,
           "logic_levels": 0,
-          "fmax_est_mhz": 136.968
+          "fmax_est_mhz": 158.831
         },
-        "routable_nets": 6327,
-        "fully_routed_nets": 6327,
+        "routable_nets": 6286,
+        "fully_routed_nets": 6286,
         "nets_with_routing_errors": 0,
         "drc_violations": 125,
         "drc_errors": 0
@@ -827,7 +827,7 @@
       "tool_version": "Vivado v.2021.1 (win64) Build 3247384 Thu Jun 10 19:36:33 MDT 2021",
       "post_synthesis": {
         "utilization": {
-          "lut": 691,
+          "lut": 657,
           "ff": 3075,
           "bram_tiles": 0.0,
           "dsp": 192
@@ -847,25 +847,25 @@
       },
       "post_route": {
         "utilization": {
-          "lut": 686,
+          "lut": 653,
           "ff": 3075,
           "bram_tiles": 0.0,
           "dsp": 192
         },
         "timing": {
-          "wns_ns": 1.424,
+          "wns_ns": 1.935,
           "tns_ns": 0.0,
           "failing_endpoints": 0,
           "total_endpoints": 23538,
           "timing_met": true,
           "clock_name": "clk",
           "clock_period_ns": 10.0,
-          "data_path_delay_ns": 8.086,
+          "data_path_delay_ns": 7.588,
           "logic_levels": 3,
-          "fmax_est_mhz": 116.604
+          "fmax_est_mhz": 123.993
         },
-        "routable_nets": 11053,
-        "fully_routed_nets": 11053,
+        "routable_nets": 11014,
+        "fully_routed_nets": 11014,
         "nets_with_routing_errors": 0,
         "drc_violations": 249,
         "drc_errors": 0

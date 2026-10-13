@@ -88,11 +88,16 @@ end else begin : g_timing_recovery
 end
 endgenerate
 
+// The inverted modes use ~x, not -x. The matched filter saturates at -32768, and in W-bit two's
+// complement -(-32768) is -32768 again: a saturated "1" symbol stayed negative under -x, the
+// inverted stream was corrupted and the frame never locked (seen on silicon in fabric loopback,
+// reproduced by tb_bpsk_decision_mode). For the sign decision downstream (bit = x < 0), ~x = -x-1
+// gives exactly the complement of the non-inverted decision for every x, including 0 and -32768.
 assign decision_sample =
     (decision_mode == 2'b00) ? sym_i :
-    (decision_mode == 2'b01) ? -sym_i :
+    (decision_mode == 2'b01) ? ~sym_i :
     (decision_mode == 2'b10) ? sym_q :
-                               -sym_q;
+                               ~sym_q;
 
 bpsk_hard_decision decision_i (
     .clk(clk),
