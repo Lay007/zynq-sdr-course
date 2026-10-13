@@ -307,16 +307,16 @@ RTSTAT-10#1 Warning
 No routable loads
 76 net(s) have no routable loads. The problem bus(es) and/or net(s) are u_tx/cp16/sample_im_mem_reg_0_63_0_2/DOA,
 u_tx/cp16/sample_im_mem_reg_0_63_12_14/DOA,
-u_tx/cp16/sample_im_mem_reg_0_63_12_14/DOB,
 u_tx/cp16/sample_im_mem_reg_0_63_3_5/DOA,
 u_tx/cp16/sample_im_mem_reg_0_63_6_8/DOA,
 u_tx/cp16/sample_im_mem_reg_0_63_9_11/DOA,
+u_tx/cp16/sample_im_mem_reg_0_63_9_11/DOB,
 u_tx/cp16/sample_re_mem_reg_0_63_0_2/DOA,
 u_tx/cp16/sample_re_mem_reg_0_63_0_2/DOB,
 u_tx/cp16/sample_re_mem_reg_0_63_12_14/DOA,
 u_tx/cp16/sample_re_mem_reg_0_63_15_15/DOA,
+u_tx/cp16/sample_re_mem_reg_0_63_15_15/DOB,
 u_tx/cp16/sample_re_mem_reg_0_63_3_5/DOA,
-u_tx/cp16/sample_re_mem_reg_0_63_3_5/DOB,
 u_tx/cp16/sample_re_mem_reg_0_63_6_8/DOA,
 u_tx/cp16/sample_re_mem_reg_0_63_9_11/DOA,
 u_tx/cp16/sample_re_mem_reg_0_63_9_11/DOB (the first 15 of 38 listed).

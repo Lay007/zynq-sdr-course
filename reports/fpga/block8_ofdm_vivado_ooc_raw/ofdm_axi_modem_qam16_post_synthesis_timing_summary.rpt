@@ -190,7 +190,7 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
     -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-      1.637        0.000                      0                12671        3.870        0.000                       0                  3654
+      1.637        0.000                      0                12728        3.870        0.000                       0                  3691
 
 
 All user specified timing constraints are met.
@@ -213,7 +213,7 @@ clk    {0.000 5.000}      10.000          100.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
 -----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-clk                 1.637        0.000                      0                12671        3.870        0.000                       0                  3654
+clk                 1.637        0.000                      0                12728        3.870        0.000                       0                  3691
 
 
 ------------------------------------------------------------------------------------------------
@@ -276,7 +276,7 @@ Slack (MET) :             1.637ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.787     0.787    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.787     0.787    u_correct/equalizer/aclk
                          DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -298,7 +298,7 @@ Slack (MET) :             1.637ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     5.305 f  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_2/O[1]
-                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_65
+                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_66
                          LUT1 (Prop_lut1_I0_O)        0.245     5.801 r  g_pipelined.out_im[4]_i_3/O
                          net (fo=1, unplaced)         0.258     6.059    g_pipelined.out_im[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
@@ -325,7 +325,7 @@ Slack (MET) :             1.637ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.748    10.748    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.748    10.748    u_correct/equalizer/aclk
                          FDRE                                         r  u_correct/equalizer/g_pipelined.saturation_pending_reg[0]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -360,7 +360,7 @@ Slack (MET) :             1.637ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.787     0.787    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.787     0.787    u_correct/equalizer/aclk
                          DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_rr_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -395,7 +395,7 @@ Slack (MET) :             1.637ns  (required time - arrival time)
                                                       0.100     6.761 r  g_pipelined.out_re_reg[12]_i_2/CO[3]
                          net (fo=1, unplaced)         0.000     6.761    g_pipelined.out_re_reg[12]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     7.030 r  g_pipelined.out_re_reg[15]_i_3/O[1]
+                                                      0.269     7.030 r  g_pipelined.out_re_reg[15]_i_4/O[1]
                          net (fo=3, unplaced)         0.490     7.520    u_correct/equalizer/round_q29_to_q15_wide0[13]
                          LUT5 (Prop_lut5_I1_O)        0.245     7.765 r  u_correct/equalizer/i__carry_i_4__27/O
                          net (fo=1, unplaced)         0.000     7.765    u_correct/equalizer/i__carry_i_4__27_n_0
@@ -409,7 +409,7 @@ Slack (MET) :             1.637ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.748    10.748    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.748    10.748    u_correct/equalizer/aclk
                          FDRE                                         r  u_correct/equalizer/g_pipelined.saturation_pending_reg[1]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -444,7 +444,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.787     0.787    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.787     0.787    u_correct/equalizer/aclk
                          DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -466,7 +466,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     5.305 f  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_2/O[1]
-                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_65
+                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_66
                          LUT1 (Prop_lut1_I0_O)        0.245     5.801 r  g_pipelined.out_im[4]_i_3/O
                          net (fo=1, unplaced)         0.258     6.059    g_pipelined.out_im[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
@@ -493,7 +493,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.748    10.748    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.748    10.748    u_correct/equalizer/aclk
                          FDRE                                         r  u_correct/equalizer/g_pipelined.out_im_reg[0]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -528,7 +528,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.787     0.787    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.787     0.787    u_correct/equalizer/aclk
                          DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -550,7 +550,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     5.305 f  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_2/O[1]
-                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_65
+                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_66
                          LUT1 (Prop_lut1_I0_O)        0.245     5.801 r  g_pipelined.out_im[4]_i_3/O
                          net (fo=1, unplaced)         0.258     6.059    g_pipelined.out_im[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
@@ -577,7 +577,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.748    10.748    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.748    10.748    u_correct/equalizer/aclk
                          FDRE                                         r  u_correct/equalizer/g_pipelined.out_im_reg[10]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -612,7 +612,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.787     0.787    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.787     0.787    u_correct/equalizer/aclk
                          DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -634,7 +634,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     5.305 f  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_2/O[1]
-                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_65
+                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_66
                          LUT1 (Prop_lut1_I0_O)        0.245     5.801 r  g_pipelined.out_im[4]_i_3/O
                          net (fo=1, unplaced)         0.258     6.059    g_pipelined.out_im[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
@@ -661,7 +661,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.748    10.748    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.748    10.748    u_correct/equalizer/aclk
                          FDRE                                         r  u_correct/equalizer/g_pipelined.out_im_reg[11]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -696,7 +696,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.787     0.787    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.787     0.787    u_correct/equalizer/aclk
                          DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -718,7 +718,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     5.305 f  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_2/O[1]
-                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_65
+                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_66
                          LUT1 (Prop_lut1_I0_O)        0.245     5.801 r  g_pipelined.out_im[4]_i_3/O
                          net (fo=1, unplaced)         0.258     6.059    g_pipelined.out_im[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
@@ -745,7 +745,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.748    10.748    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.748    10.748    u_correct/equalizer/aclk
                          FDRE                                         r  u_correct/equalizer/g_pipelined.out_im_reg[12]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -780,7 +780,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.787     0.787    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.787     0.787    u_correct/equalizer/aclk
                          DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -802,7 +802,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     5.305 f  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_2/O[1]
-                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_65
+                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_66
                          LUT1 (Prop_lut1_I0_O)        0.245     5.801 r  g_pipelined.out_im[4]_i_3/O
                          net (fo=1, unplaced)         0.258     6.059    g_pipelined.out_im[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
@@ -829,7 +829,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.748    10.748    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.748    10.748    u_correct/equalizer/aclk
                          FDRE                                         r  u_correct/equalizer/g_pipelined.out_im_reg[13]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -864,7 +864,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.787     0.787    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.787     0.787    u_correct/equalizer/aclk
                          DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -886,7 +886,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     5.305 f  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_2/O[1]
-                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_65
+                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_66
                          LUT1 (Prop_lut1_I0_O)        0.245     5.801 r  g_pipelined.out_im[4]_i_3/O
                          net (fo=1, unplaced)         0.258     6.059    g_pipelined.out_im[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
@@ -913,7 +913,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.748    10.748    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.748    10.748    u_correct/equalizer/aclk
                          FDRE                                         r  u_correct/equalizer/g_pipelined.out_im_reg[14]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -948,7 +948,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.787     0.787    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.787     0.787    u_correct/equalizer/aclk
                          DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -970,7 +970,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     5.305 f  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_2/O[1]
-                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_65
+                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_66
                          LUT1 (Prop_lut1_I0_O)        0.245     5.801 r  g_pipelined.out_im[4]_i_3/O
                          net (fo=1, unplaced)         0.258     6.059    g_pipelined.out_im[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
@@ -997,7 +997,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.748    10.748    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.748    10.748    u_correct/equalizer/aclk
                          FDRE                                         r  u_correct/equalizer/g_pipelined.out_im_reg[1]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -1032,7 +1032,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.787     0.787    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.787     0.787    u_correct/equalizer/aclk
                          DSP48E1                                      r  u_correct/equalizer/g_pipelined.s1_ri_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[31])
@@ -1054,7 +1054,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
                          net (fo=1, unplaced)         0.000     5.036    u_correct/equalizer/g_pipelined.out_im_reg[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     5.305 f  u_correct/equalizer/g_pipelined.out_im_reg[0]_i_2/O[1]
-                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_65
+                         net (fo=2, unplaced)         0.251     5.556    u_correct_n_66
                          LUT1 (Prop_lut1_I0_O)        0.245     5.801 r  g_pipelined.out_im[4]_i_3/O
                          net (fo=1, unplaced)         0.258     6.059    g_pipelined.out_im[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
@@ -1081,7 +1081,7 @@ Slack (MET) :             1.728ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  aclk (IN)
-                         net (fo=3653, unset)         0.748    10.748    u_correct/equalizer/aclk
+                         net (fo=3690, unset)         0.748    10.748    u_correct/equalizer/aclk
                          FDRE                                         r  u_correct/equalizer/g_pipelined.out_im_reg[2]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712

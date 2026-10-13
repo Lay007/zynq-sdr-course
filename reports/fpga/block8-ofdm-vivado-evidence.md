@@ -22,16 +22,17 @@ one-clock teaching equalizer meets 100 MHz**:
 | `ofdm_one_tap_equalizer` (`PIPELINED = 0`, one clock) | 147 | 72 | 4 | 0 | **-1.077 ns**, 32 failing endpoints | about 90 MHz |
 | `ofdm_pilot_phase_tracker` | 532 | 267 | 0 | 0 | +4.022 ns | |
 | `ofdm_pilot_phase_corrector` (tracker, symbol buffer, pipelined equalizer) | 707 | 364 | 4 | 1 | +0.568 ns | about 106 MHz |
-| `ofdm_channel_equalizer` (per-subcarrier, training symbol, `NORMALIZE = 0`) | 331 | 141 | 4 | 1 | +0.962 ns | about 111 MHz |
-| `ofdm_channel_equalizer_zf` (the same, `NORMALIZE = 1`: zero-forcing, CORDIC `1/abs(G)^2`) | 966 | 538 | 10 | 0.5 | +2.677 ns | about 137 MHz |
+| `ofdm_channel_equalizer` (per-subcarrier, training symbol, `NORMALIZE = 0`) | 367 | 142 | 4 | 1 | +0.789 ns | about 109 MHz |
+| `ofdm_channel_equalizer_zf` (the same, `NORMALIZE = 1`: zero-forcing, CORDIC `1/abs(G)^2`) | 1000 | 575 | 10 | 0.5 | +2.504 ns | about 133 MHz |
+| `ofdm_channel_equalizer_zf_avg4` (zero-forcing, `TRAIN_SYMBOLS = 4`: estimate averaged over four training symbols) | 1031 | 584 | 10 | 0.5 | +0.553 ns | about 106 MHz |
 | `ofdm_cfo_corrector` (CP correlation, vectoring CORDIC, NCO, pipelined rotation CORDIC) | 2382 | 1519 | 10 | 0 | +2.412 ns | about 132 MHz |
 | `ofdm_qpsk_demapper` | 3 | 0 | 0 | 0 | combinational, no clock | |
-| `ofdm_axi_modem` (TX and RX chains, CFO corrector, zero-forcing channel equalizer, AXI4-Stream/AXI4-Lite) | 5895 | 3178 | 32 | 3.5 | +0.853 ns | about 109 MHz |
+| `ofdm_axi_modem` (TX and RX chains, CFO corrector, zero-forcing channel equalizer, AXI4-Stream/AXI4-Lite) | 5910 | 3215 | 32 | 3.5 | +1.226 ns | about 114 MHz |
 | `ofdm_tx_cp16_path_fabric` (`BRAM_MEMORY = 0`) | 8151 | 2403 | 4 | 0 | +0.832 ns | about 109 MHz |
 | `ofdm_fft64_sequential_fabric` (`BRAM_MEMORY = 0`) | 7307 | 2423 | 4 | 0 | +0.597 ns | about 106 MHz |
-| `ofdm_axi_modem_fabric` (`BRAM_MEMORY = 0`) | 19602 | 7295 | 32 | 1.5 | +0.220 ns | about 102 MHz |
+| `ofdm_axi_modem_fabric` (`BRAM_MEMORY = 0`) | 19628 | 7335 | 32 | 1.5 | +0.591 ns | about 106 MHz |
 | `ofdm_tx_cp16_path_qam16` (`MODULATION = 1`: 16-QAM mapper) | 895 | 370 | 4 | 1 | +1.771 ns | about 122 MHz |
-| `ofdm_axi_modem_qam16` (`MODULATION = 1`: 16-QAM mapper and slicer) | 5966 | 3216 | 32 | 3.5 | +0.584 ns | about 106 MHz |
+| `ofdm_axi_modem_qam16` (`MODULATION = 1`: 16-QAM mapper and slicer) | 5979 | 3253 | 32 | 3.5 | +0.657 ns | about 107 MHz |
 
 The frequency estimate is `1 / (period - WNS)`; it describes the routed critical path, not a
 characterized maximum clock. Rows with a suffix are the same module with a parameter override.
@@ -50,11 +51,26 @@ registered, so a transform takes 229 compute clocks instead of 222.
 |---|---:|---:|
 | `ofdm_tx_cp16_path` | 8151 LUT, 2403 FF, +0.832 ns | 886 LUT, 362 FF, 1 BRAM, +1.650 ns |
 | `ofdm_fft64_sequential` | 7307 LUT, 2423 FF, +0.597 ns | 833 LUT, 329 FF, 1 BRAM, +1.487 ns |
-| `ofdm_axi_modem` | 19602 LUT, 7295 FF, +0.220 ns | 5895 LUT, 3178 FF, 3.5 BRAM, +0.853 ns |
+| `ofdm_axi_modem` | 19628 LUT, 7335 FF, +0.591 ns | 5910 LUT, 3215 FF, 3.5 BRAM, +1.226 ns |
 
-About a ninth of the transforms' LUTs and more timing margin. All 23 OFDM testbenches pass in both memory
+About a ninth of the transforms' LUTs and more timing margin. All 25 OFDM testbenches pass in both memory
 modes (`python tools/run_ofdm_rtl.py` and `--fabric`), and the one-cycle baseline (`--baseline`)
 keeps fabric memory because block RAM cannot serve its schedule.
+
+## Channel-estimate averaging (`TRAIN_SYMBOLS`)
+
+`ofdm_channel_equalizer_zf_avg4` is the zero-forcing equalizer averaging its estimate over four
+training symbols (Lab 8.14 stage 2f). The cost is 31 LUTs, 9 flip-flops (the training-symbol counter
+and the wider read register) and 2 more bits per coefficient, still in distributed RAM: 1031 LUT
+against 1000 for the same build with one symbol, whose row above already includes the counter. The slack drops from +2.504 to +0.553 ns: the new worst path runs from the
+input register through the estimate, the running sum and the rounding into the coefficient memory,
+three carry chains in one clock.
+
+The first version rounded the average the way the rest of the chain does, in sign-magnitude form
+(negate, add half, shift, negate back). That put two more negations on this path and left
+**+0.025 ns**. For a negative `v`, `-((-v + N/2) >> L)` equals `(v + N/2 - 1) >>> L`, so the same
+rounding needs one adder whose only extra input is the sign bit; that version is bit-exact with the
+model and gives +0.553 ns.
 
 ## Zero-forcing equalizer: rounding over three clocks
 

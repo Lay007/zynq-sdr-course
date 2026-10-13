@@ -30,13 +30,13 @@ Table of Contents
 +----------------------------+------+-------+------------+-----------+-------+
 |          Site Type         | Used | Fixed | Prohibited | Available | Util% |
 +----------------------------+------+-------+------------+-----------+-------+
-| Slice LUTs*                | 1042 |     0 |          0 |     53200 |  1.96 |
-|   LUT as Logic             |  925 |     0 |          0 |     53200 |  1.74 |
+| Slice LUTs*                | 1055 |     0 |          0 |     53200 |  1.98 |
+|   LUT as Logic             |  938 |     0 |          0 |     53200 |  1.76 |
 |   LUT as Memory            |  117 |     0 |          0 |     17400 |  0.67 |
 |     LUT as Distributed RAM |  104 |     0 |            |           |       |
 |     LUT as Shift Register  |   13 |     0 |            |           |       |
-| Slice Registers            |  535 |     0 |          0 |    106400 |  0.50 |
-|   Register as Flip Flop    |  535 |     0 |          0 |    106400 |  0.50 |
+| Slice Registers            |  572 |     0 |          0 |    106400 |  0.54 |
+|   Register as Flip Flop    |  572 |     0 |          0 |    106400 |  0.54 |
 |   Register as Latch        |    0 |     0 |          0 |    106400 |  0.00 |
 | F7 Muxes                   |    0 |     0 |          0 |     26600 |  0.00 |
 | F8 Muxes                   |    0 |     0 |          0 |     13300 |  0.00 |
@@ -59,7 +59,7 @@ Table of Contents
 | 0     |          Yes |           - |          Set |
 | 0     |          Yes |           - |        Reset |
 | 1     |          Yes |         Set |            - |
-| 534   |          Yes |       Reset |            - |
+| 571   |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -150,15 +150,15 @@ Table of Contents
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| FDRE     |  534 |        Flop & Latch |
-| LUT5     |  308 |                 LUT |
-| LUT6     |  257 |                 LUT |
-| LUT2     |  157 |                 LUT |
-| LUT3     |  128 |                 LUT |
-| CARRY4   |  109 |          CarryLogic |
+| FDRE     |  571 |        Flop & Latch |
+| LUT5     |  289 |                 LUT |
+| LUT6     |  282 |                 LUT |
+| LUT2     |  156 |                 LUT |
+| LUT3     |  146 |                 LUT |
+| CARRY4   |  119 |          CarryLogic |
+| LUT4     |  115 |                 LUT |
 | RAMD64E  |  104 |  Distributed Memory |
-| LUT4     |   75 |                 LUT |
-| LUT1     |   74 |                 LUT |
+| LUT1     |   68 |                 LUT |
 | SRL16E   |   13 |  Distributed Memory |
 | DSP48E1  |   10 |    Block Arithmetic |
 | RAMB18E1 |    1 |        Block Memory |

@@ -302,18 +302,17 @@ module ofdm_channel_equalizer #(
     wire signed [GW-1:0] sum_re = (s0_train_first ? {GW{1'b0}} : s0_acc_re) + est_re_x;
     wire signed [GW-1:0] sum_im = (s0_train_first ? {GW{1'b0}} : s0_acc_im) + est_im_x;
 
-    function automatic signed [GW-1:0] average;   // round(value / N), half away from zero
+    // round(value / N), half away from zero, with one adder: for negative v,
+    // -((-v + N/2) >> L) equals (v + N/2 - 1) >>> L, so the sign bit is the only
+    // difference. (The sign-magnitude form put two negations on the path into the
+    // coefficient memory and left 0.025 ns of slack at 100 MHz.)
+    function automatic signed [GW-1:0] average;
         input signed [GW-1:0] value;
-        reg signed [GW-1:0] magnitude;
         begin
             if (TRAIN_LOG2 == 0)
                 average = value;
-            else if (value >= 0)
-                average = (value + (1 <<< (TRAIN_LOG2 - 1))) >>> TRAIN_LOG2;
-            else begin
-                magnitude = -value;
-                average = -((magnitude + (1 <<< (TRAIN_LOG2 - 1))) >>> TRAIN_LOG2);
-            end
+            else
+                average = (value + (1 <<< (TRAIN_LOG2 - 1)) - {{(GW-1){1'b0}}, value[GW-1]}) >>> TRAIN_LOG2;
         end
     endfunction
 

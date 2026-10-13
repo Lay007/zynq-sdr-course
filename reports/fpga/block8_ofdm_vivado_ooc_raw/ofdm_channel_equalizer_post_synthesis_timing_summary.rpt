@@ -136,7 +136,7 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
     -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-      1.213        0.000                      0                  693        4.500        0.000                       0                   149
+      1.213        0.000                      0                  663        4.500        0.000                       0                   150
 
 
 All user specified timing constraints are met.
@@ -159,7 +159,7 @@ clk    {0.000 5.000}      10.000          100.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
 -----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-clk                 1.213        0.000                      0                  693        4.500        0.000                       0                   149
+clk                 1.213        0.000                      0                  663        4.500        0.000                       0                   150
 
 
 ------------------------------------------------------------------------------------------------
@@ -199,7 +199,7 @@ PW    :            0  Failing Endpoints,  Worst Slack        4.500ns,  Total Vio
 Max Delay Paths
 --------------------------------------------------------------------------------------
 Slack (MET) :             1.213ns  (required time - arrival time)
-  Source:                 s1_ir_reg/CLK
+  Source:                 s1_rr_reg/CLK
                             (rising edge-triggered cell DSP48E1 clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Destination:            saturation_pending_reg[0]/D
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
@@ -222,51 +222,51 @@ Slack (MET) :             1.213ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=148, unset)          0.787     0.787    clk
-                         DSP48E1                                      r  s1_ir_reg/CLK
+                         net (fo=149, unset)          0.787     0.787    clk
+                         DSP48E1                                      r  s1_rr_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[33])
-                                                      0.370     1.157 r  s1_ir_reg/P[33]
-                         net (fo=2, unplaced)         0.646     1.803    s1_ir_reg_n_72
+                                                      0.370     1.157 r  s1_rr_reg/P[33]
+                         net (fo=2, unplaced)         0.646     1.803    s1_rr_reg_n_72
                          DSP48E1 (Prop_dsp48e1_C[34]_P[0])
-                                                      1.523     3.326 f  z_im/P[0]
-                         net (fo=1, unplaced)         0.646     3.971    z_im_n_105
-                         LUT1 (Prop_lut1_I0_O)        0.105     4.076 r  out_im[0]_i_3/O
-                         net (fo=1, unplaced)         0.258     4.334    out_im[0]_i_3_n_0
+                                                      1.523     3.326 f  z_re/P[0]
+                         net (fo=1, unplaced)         0.646     3.971    z_re_n_105
+                         LUT1 (Prop_lut1_I0_O)        0.105     4.076 r  out_re[0]_i_3/O
+                         net (fo=1, unplaced)         0.258     4.334    out_re[0]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_O[3])
-                                                      0.561     4.895 f  out_im_reg[0]_i_2/O[3]
-                         net (fo=2, unplaced)         0.530     5.425    out_im_reg[0]_i_2_n_4
-                         LUT1 (Prop_lut1_I0_O)        0.250     5.675 r  out_im[4]_i_3/O
-                         net (fo=1, unplaced)         0.258     5.933    out_im[4]_i_3_n_0
+                                                      0.561     4.895 f  out_re_reg[0]_i_2/O[3]
+                         net (fo=2, unplaced)         0.530     5.425    rounded2[4]
+                         LUT1 (Prop_lut1_I0_O)        0.250     5.675 r  out_re[4]_i_3/O
+                         net (fo=1, unplaced)         0.258     5.933    out_re[4]_i_3_n_0
                          CARRY4 (Prop_carry4_CYINIT_CO[3])
-                                                      0.494     6.427 r  out_im_reg[4]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.008     6.435    out_im_reg[4]_i_2_n_0
+                                                      0.494     6.427 r  out_re_reg[4]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.008     6.435    out_re_reg[4]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.535 r  out_im_reg[8]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     6.535    out_im_reg[8]_i_2_n_0
+                                                      0.100     6.535 r  out_re_reg[8]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     6.535    out_re_reg[8]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.635 r  out_im_reg[12]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     6.635    out_im_reg[12]_i_2_n_0
+                                                      0.100     6.635 r  out_re_reg[12]_i_2/CO[3]
+                         net (fo=1, unplaced)         0.000     6.635    out_re_reg[12]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.735 r  out_im_reg[15]_i_3/CO[3]
-                         net (fo=1, unplaced)         0.000     6.735    out_im_reg[15]_i_3_n_0
+                                                      0.100     6.735 r  out_re_reg[15]_i_4/CO[3]
+                         net (fo=1, unplaced)         0.000     6.735    out_re_reg[15]_i_4_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.835 r  out_im_reg[15]_i_69/CO[3]
-                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_69_n_0
+                                                      0.100     6.835 r  out_re_reg[15]_i_71/CO[3]
+                         net (fo=1, unplaced)         0.000     6.835    out_re_reg[15]_i_71_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.935 r  out_im_reg[15]_i_57/CO[3]
-                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_57_n_0
+                                                      0.100     6.935 r  out_re_reg[15]_i_55/CO[3]
+                         net (fo=1, unplaced)         0.000     6.935    out_re_reg[15]_i_55_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.035 r  out_im_reg[15]_i_55/CO[3]
-                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_55_n_0
+                                                      0.100     7.035 r  out_re_reg[15]_i_53/CO[3]
+                         net (fo=1, unplaced)         0.000     7.035    out_re_reg[15]_i_53_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     7.304 f  out_im_reg[15]_i_31/O[1]
-                         net (fo=4, unplaced)         0.496     7.800    out_im_reg[15]_i_31_n_6
-                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_12/O
-                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_12_n_0
+                                                      0.269     7.304 f  out_re_reg[15]_i_32/O[1]
+                         net (fo=4, unplaced)         0.496     7.800    rounded0[30]
+                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_re[15]_i_19/O
+                         net (fo=1, unplaced)         0.000     8.065    out_re[15]_i_19_n_0
                          CARRY4 (Prop_carry4_DI[0]_CO[2])
-                                                      0.509     8.574 r  out_im_reg[15]_i_4/CO[2]
-                         net (fo=18, unplaced)        0.641     9.215    is_sat_return0
+                                                      0.509     8.574 r  out_re_reg[15]_i_6/CO[2]
+                         net (fo=18, unplaced)        0.641     9.215    is_sat_return01_in
                          LUT6 (Prop_lut6_I1_O)        0.252     9.467 r  saturation_pending[0]_i_1/O
                          net (fo=1, unplaced)         0.000     9.467    saturation_pending[0]_i_1_n_0
                          FDRE                                         r  saturation_pending_reg[0]/D
@@ -274,7 +274,7 @@ Slack (MET) :             1.213ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=148, unset)          0.748    10.748    clk
+                         net (fo=149, unset)          0.748    10.748    clk
                          FDRE                                         r  saturation_pending_reg[0]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -309,7 +309,7 @@ Slack (MET) :             1.213ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=148, unset)          0.787     0.787    clk
+                         net (fo=149, unset)          0.787     0.787    clk
                          DSP48E1                                      r  s1_rr_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[33])
@@ -338,21 +338,21 @@ Slack (MET) :             1.213ns  (required time - arrival time)
                                                       0.100     6.735 r  out_re_reg[15]_i_4/CO[3]
                          net (fo=1, unplaced)         0.000     6.735    out_re_reg[15]_i_4_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.835 r  out_re_reg[15]_i_70/CO[3]
-                         net (fo=1, unplaced)         0.000     6.835    out_re_reg[15]_i_70_n_0
+                                                      0.100     6.835 r  out_re_reg[15]_i_71/CO[3]
+                         net (fo=1, unplaced)         0.000     6.835    out_re_reg[15]_i_71_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.935 r  out_re_reg[15]_i_58/CO[3]
-                         net (fo=1, unplaced)         0.000     6.935    out_re_reg[15]_i_58_n_0
+                                                      0.100     6.935 r  out_re_reg[15]_i_55/CO[3]
+                         net (fo=1, unplaced)         0.000     6.935    out_re_reg[15]_i_55_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.035 r  out_re_reg[15]_i_56/CO[3]
-                         net (fo=1, unplaced)         0.000     7.035    out_re_reg[15]_i_56_n_0
+                                                      0.100     7.035 r  out_re_reg[15]_i_53/CO[3]
+                         net (fo=1, unplaced)         0.000     7.035    out_re_reg[15]_i_53_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     7.304 f  out_re_reg[15]_i_32/O[1]
                          net (fo=4, unplaced)         0.496     7.800    rounded0[30]
-                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_re[15]_i_13/O
-                         net (fo=1, unplaced)         0.000     8.065    out_re[15]_i_13_n_0
+                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_re[15]_i_19/O
+                         net (fo=1, unplaced)         0.000     8.065    out_re[15]_i_19_n_0
                          CARRY4 (Prop_carry4_DI[0]_CO[2])
-                                                      0.509     8.574 r  out_re_reg[15]_i_5/CO[2]
+                                                      0.509     8.574 r  out_re_reg[15]_i_6/CO[2]
                          net (fo=18, unplaced)        0.641     9.215    is_sat_return01_in
                          LUT6 (Prop_lut6_I1_O)        0.252     9.467 r  saturation_pending[1]_i_1/O
                          net (fo=1, unplaced)         0.000     9.467    saturation_pending[1]_i_1_n_0
@@ -361,7 +361,7 @@ Slack (MET) :             1.213ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=148, unset)          0.748    10.748    clk
+                         net (fo=149, unset)          0.748    10.748    clk
                          FDRE                                         r  saturation_pending_reg[1]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -381,7 +381,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
   Data Path Delay:        8.445ns  (logic 5.198ns (61.550%)  route 3.247ns (38.450%))
-  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT5=1)
+  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -396,7 +396,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=148, unset)          0.787     0.787    clk
+                         net (fo=149, unset)          0.787     0.787    clk
                          DSP48E1                                      r  s1_ir_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[33])
@@ -425,30 +425,30 @@ Slack (MET) :             1.448ns  (required time - arrival time)
                                                       0.100     6.735 r  out_im_reg[15]_i_3/CO[3]
                          net (fo=1, unplaced)         0.000     6.735    out_im_reg[15]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.835 r  out_im_reg[15]_i_69/CO[3]
-                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_69_n_0
+                                                      0.100     6.835 r  out_im_reg[15]_i_70/CO[3]
+                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_70_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.935 r  out_im_reg[15]_i_57/CO[3]
-                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_57_n_0
+                                                      0.100     6.935 r  out_im_reg[15]_i_54/CO[3]
+                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_54_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.035 r  out_im_reg[15]_i_55/CO[3]
-                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_55_n_0
+                                                      0.100     7.035 r  out_im_reg[15]_i_52/CO[3]
+                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_52_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     7.304 f  out_im_reg[15]_i_31/O[1]
                          net (fo=4, unplaced)         0.496     7.800    out_im_reg[15]_i_31_n_6
-                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_12/O
-                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_12_n_0
+                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_18/O
+                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_18_n_0
                          CARRY4 (Prop_carry4_DI[0]_CO[2])
-                                                      0.509     8.574 f  out_im_reg[15]_i_4/CO[2]
+                                                      0.509     8.574 f  out_im_reg[15]_i_5/CO[2]
                          net (fo=18, unplaced)        0.406     8.980    is_sat_return0
-                         LUT5 (Prop_lut5_I1_O)        0.252     9.232 r  out_im[0]_i_1/O
-                         net (fo=1, unplaced)         0.000     9.232    round_sat_return__0[0]
+                         LUT6 (Prop_lut6_I3_O)        0.252     9.232 r  out_im[0]_i_1/O
+                         net (fo=1, unplaced)         0.000     9.232    out_im[0]_i_1_n_0
                          FDRE                                         r  out_im_reg[0]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=148, unset)          0.748    10.748    clk
+                         net (fo=149, unset)          0.748    10.748    clk
                          FDRE                                         r  out_im_reg[0]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -468,7 +468,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
   Data Path Delay:        8.445ns  (logic 5.198ns (61.550%)  route 3.247ns (38.450%))
-  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT5=1)
+  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -483,7 +483,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=148, unset)          0.787     0.787    clk
+                         net (fo=149, unset)          0.787     0.787    clk
                          DSP48E1                                      r  s1_ir_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[33])
@@ -512,30 +512,30 @@ Slack (MET) :             1.448ns  (required time - arrival time)
                                                       0.100     6.735 r  out_im_reg[15]_i_3/CO[3]
                          net (fo=1, unplaced)         0.000     6.735    out_im_reg[15]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.835 r  out_im_reg[15]_i_69/CO[3]
-                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_69_n_0
+                                                      0.100     6.835 r  out_im_reg[15]_i_70/CO[3]
+                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_70_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.935 r  out_im_reg[15]_i_57/CO[3]
-                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_57_n_0
+                                                      0.100     6.935 r  out_im_reg[15]_i_54/CO[3]
+                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_54_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.035 r  out_im_reg[15]_i_55/CO[3]
-                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_55_n_0
+                                                      0.100     7.035 r  out_im_reg[15]_i_52/CO[3]
+                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_52_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     7.304 f  out_im_reg[15]_i_31/O[1]
                          net (fo=4, unplaced)         0.496     7.800    out_im_reg[15]_i_31_n_6
-                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_12/O
-                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_12_n_0
+                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_18/O
+                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_18_n_0
                          CARRY4 (Prop_carry4_DI[0]_CO[2])
-                                                      0.509     8.574 f  out_im_reg[15]_i_4/CO[2]
+                                                      0.509     8.574 f  out_im_reg[15]_i_5/CO[2]
                          net (fo=18, unplaced)        0.406     8.980    is_sat_return0
-                         LUT5 (Prop_lut5_I1_O)        0.252     9.232 r  out_im[10]_i_1/O
-                         net (fo=1, unplaced)         0.000     9.232    round_sat_return__0[10]
+                         LUT6 (Prop_lut6_I3_O)        0.252     9.232 r  out_im[10]_i_1/O
+                         net (fo=1, unplaced)         0.000     9.232    out_im[10]_i_1_n_0
                          FDRE                                         r  out_im_reg[10]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=148, unset)          0.748    10.748    clk
+                         net (fo=149, unset)          0.748    10.748    clk
                          FDRE                                         r  out_im_reg[10]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -555,7 +555,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
   Data Path Delay:        8.445ns  (logic 5.198ns (61.550%)  route 3.247ns (38.450%))
-  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT5=1)
+  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -570,7 +570,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=148, unset)          0.787     0.787    clk
+                         net (fo=149, unset)          0.787     0.787    clk
                          DSP48E1                                      r  s1_ir_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[33])
@@ -599,30 +599,30 @@ Slack (MET) :             1.448ns  (required time - arrival time)
                                                       0.100     6.735 r  out_im_reg[15]_i_3/CO[3]
                          net (fo=1, unplaced)         0.000     6.735    out_im_reg[15]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.835 r  out_im_reg[15]_i_69/CO[3]
-                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_69_n_0
+                                                      0.100     6.835 r  out_im_reg[15]_i_70/CO[3]
+                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_70_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.935 r  out_im_reg[15]_i_57/CO[3]
-                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_57_n_0
+                                                      0.100     6.935 r  out_im_reg[15]_i_54/CO[3]
+                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_54_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.035 r  out_im_reg[15]_i_55/CO[3]
-                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_55_n_0
+                                                      0.100     7.035 r  out_im_reg[15]_i_52/CO[3]
+                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_52_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     7.304 f  out_im_reg[15]_i_31/O[1]
                          net (fo=4, unplaced)         0.496     7.800    out_im_reg[15]_i_31_n_6
-                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_12/O
-                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_12_n_0
+                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_18/O
+                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_18_n_0
                          CARRY4 (Prop_carry4_DI[0]_CO[2])
-                                                      0.509     8.574 f  out_im_reg[15]_i_4/CO[2]
+                                                      0.509     8.574 f  out_im_reg[15]_i_5/CO[2]
                          net (fo=18, unplaced)        0.406     8.980    is_sat_return0
-                         LUT5 (Prop_lut5_I1_O)        0.252     9.232 r  out_im[11]_i_1/O
-                         net (fo=1, unplaced)         0.000     9.232    round_sat_return__0[11]
+                         LUT6 (Prop_lut6_I3_O)        0.252     9.232 r  out_im[11]_i_1/O
+                         net (fo=1, unplaced)         0.000     9.232    out_im[11]_i_1_n_0
                          FDRE                                         r  out_im_reg[11]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=148, unset)          0.748    10.748    clk
+                         net (fo=149, unset)          0.748    10.748    clk
                          FDRE                                         r  out_im_reg[11]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -642,7 +642,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
   Data Path Delay:        8.445ns  (logic 5.198ns (61.550%)  route 3.247ns (38.450%))
-  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT5=1)
+  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -657,7 +657,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=148, unset)          0.787     0.787    clk
+                         net (fo=149, unset)          0.787     0.787    clk
                          DSP48E1                                      r  s1_ir_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[33])
@@ -686,30 +686,30 @@ Slack (MET) :             1.448ns  (required time - arrival time)
                                                       0.100     6.735 r  out_im_reg[15]_i_3/CO[3]
                          net (fo=1, unplaced)         0.000     6.735    out_im_reg[15]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.835 r  out_im_reg[15]_i_69/CO[3]
-                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_69_n_0
+                                                      0.100     6.835 r  out_im_reg[15]_i_70/CO[3]
+                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_70_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.935 r  out_im_reg[15]_i_57/CO[3]
-                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_57_n_0
+                                                      0.100     6.935 r  out_im_reg[15]_i_54/CO[3]
+                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_54_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.035 r  out_im_reg[15]_i_55/CO[3]
-                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_55_n_0
+                                                      0.100     7.035 r  out_im_reg[15]_i_52/CO[3]
+                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_52_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     7.304 f  out_im_reg[15]_i_31/O[1]
                          net (fo=4, unplaced)         0.496     7.800    out_im_reg[15]_i_31_n_6
-                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_12/O
-                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_12_n_0
+                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_18/O
+                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_18_n_0
                          CARRY4 (Prop_carry4_DI[0]_CO[2])
-                                                      0.509     8.574 f  out_im_reg[15]_i_4/CO[2]
+                                                      0.509     8.574 f  out_im_reg[15]_i_5/CO[2]
                          net (fo=18, unplaced)        0.406     8.980    is_sat_return0
-                         LUT5 (Prop_lut5_I1_O)        0.252     9.232 r  out_im[12]_i_1/O
-                         net (fo=1, unplaced)         0.000     9.232    round_sat_return__0[12]
+                         LUT6 (Prop_lut6_I3_O)        0.252     9.232 r  out_im[12]_i_1/O
+                         net (fo=1, unplaced)         0.000     9.232    out_im[12]_i_1_n_0
                          FDRE                                         r  out_im_reg[12]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=148, unset)          0.748    10.748    clk
+                         net (fo=149, unset)          0.748    10.748    clk
                          FDRE                                         r  out_im_reg[12]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -729,7 +729,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
   Data Path Delay:        8.445ns  (logic 5.198ns (61.550%)  route 3.247ns (38.450%))
-  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT5=1)
+  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -744,7 +744,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=148, unset)          0.787     0.787    clk
+                         net (fo=149, unset)          0.787     0.787    clk
                          DSP48E1                                      r  s1_ir_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[33])
@@ -773,30 +773,30 @@ Slack (MET) :             1.448ns  (required time - arrival time)
                                                       0.100     6.735 r  out_im_reg[15]_i_3/CO[3]
                          net (fo=1, unplaced)         0.000     6.735    out_im_reg[15]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.835 r  out_im_reg[15]_i_69/CO[3]
-                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_69_n_0
+                                                      0.100     6.835 r  out_im_reg[15]_i_70/CO[3]
+                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_70_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.935 r  out_im_reg[15]_i_57/CO[3]
-                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_57_n_0
+                                                      0.100     6.935 r  out_im_reg[15]_i_54/CO[3]
+                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_54_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.035 r  out_im_reg[15]_i_55/CO[3]
-                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_55_n_0
+                                                      0.100     7.035 r  out_im_reg[15]_i_52/CO[3]
+                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_52_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     7.304 f  out_im_reg[15]_i_31/O[1]
                          net (fo=4, unplaced)         0.496     7.800    out_im_reg[15]_i_31_n_6
-                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_12/O
-                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_12_n_0
+                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_18/O
+                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_18_n_0
                          CARRY4 (Prop_carry4_DI[0]_CO[2])
-                                                      0.509     8.574 f  out_im_reg[15]_i_4/CO[2]
+                                                      0.509     8.574 f  out_im_reg[15]_i_5/CO[2]
                          net (fo=18, unplaced)        0.406     8.980    is_sat_return0
-                         LUT5 (Prop_lut5_I1_O)        0.252     9.232 r  out_im[13]_i_1/O
-                         net (fo=1, unplaced)         0.000     9.232    round_sat_return__0[13]
+                         LUT6 (Prop_lut6_I3_O)        0.252     9.232 r  out_im[13]_i_1/O
+                         net (fo=1, unplaced)         0.000     9.232    out_im[13]_i_1_n_0
                          FDRE                                         r  out_im_reg[13]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=148, unset)          0.748    10.748    clk
+                         net (fo=149, unset)          0.748    10.748    clk
                          FDRE                                         r  out_im_reg[13]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -816,7 +816,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
   Data Path Delay:        8.445ns  (logic 5.198ns (61.550%)  route 3.247ns (38.450%))
-  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT5=1)
+  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -831,7 +831,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=148, unset)          0.787     0.787    clk
+                         net (fo=149, unset)          0.787     0.787    clk
                          DSP48E1                                      r  s1_ir_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[33])
@@ -860,30 +860,30 @@ Slack (MET) :             1.448ns  (required time - arrival time)
                                                       0.100     6.735 r  out_im_reg[15]_i_3/CO[3]
                          net (fo=1, unplaced)         0.000     6.735    out_im_reg[15]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.835 r  out_im_reg[15]_i_69/CO[3]
-                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_69_n_0
+                                                      0.100     6.835 r  out_im_reg[15]_i_70/CO[3]
+                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_70_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.935 r  out_im_reg[15]_i_57/CO[3]
-                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_57_n_0
+                                                      0.100     6.935 r  out_im_reg[15]_i_54/CO[3]
+                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_54_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.035 r  out_im_reg[15]_i_55/CO[3]
-                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_55_n_0
+                                                      0.100     7.035 r  out_im_reg[15]_i_52/CO[3]
+                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_52_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     7.304 f  out_im_reg[15]_i_31/O[1]
                          net (fo=4, unplaced)         0.496     7.800    out_im_reg[15]_i_31_n_6
-                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_12/O
-                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_12_n_0
+                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_18/O
+                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_18_n_0
                          CARRY4 (Prop_carry4_DI[0]_CO[2])
-                                                      0.509     8.574 f  out_im_reg[15]_i_4/CO[2]
+                                                      0.509     8.574 f  out_im_reg[15]_i_5/CO[2]
                          net (fo=18, unplaced)        0.406     8.980    is_sat_return0
-                         LUT5 (Prop_lut5_I1_O)        0.252     9.232 r  out_im[14]_i_1/O
-                         net (fo=1, unplaced)         0.000     9.232    round_sat_return__0[14]
+                         LUT6 (Prop_lut6_I3_O)        0.252     9.232 r  out_im[14]_i_1/O
+                         net (fo=1, unplaced)         0.000     9.232    out_im[14]_i_1_n_0
                          FDRE                                         r  out_im_reg[14]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=148, unset)          0.748    10.748    clk
+                         net (fo=149, unset)          0.748    10.748    clk
                          FDRE                                         r  out_im_reg[14]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -903,7 +903,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
   Data Path Delay:        8.445ns  (logic 5.198ns (61.550%)  route 3.247ns (38.450%))
-  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT5=1)
+  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -918,7 +918,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=148, unset)          0.787     0.787    clk
+                         net (fo=149, unset)          0.787     0.787    clk
                          DSP48E1                                      r  s1_ir_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[33])
@@ -947,30 +947,30 @@ Slack (MET) :             1.448ns  (required time - arrival time)
                                                       0.100     6.735 r  out_im_reg[15]_i_3/CO[3]
                          net (fo=1, unplaced)         0.000     6.735    out_im_reg[15]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.835 r  out_im_reg[15]_i_69/CO[3]
-                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_69_n_0
+                                                      0.100     6.835 r  out_im_reg[15]_i_70/CO[3]
+                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_70_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.935 r  out_im_reg[15]_i_57/CO[3]
-                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_57_n_0
+                                                      0.100     6.935 r  out_im_reg[15]_i_54/CO[3]
+                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_54_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.035 r  out_im_reg[15]_i_55/CO[3]
-                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_55_n_0
+                                                      0.100     7.035 r  out_im_reg[15]_i_52/CO[3]
+                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_52_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     7.304 r  out_im_reg[15]_i_31/O[1]
+                                                      0.269     7.304 f  out_im_reg[15]_i_31/O[1]
                          net (fo=4, unplaced)         0.496     7.800    out_im_reg[15]_i_31_n_6
-                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_17/O
-                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_17_n_0
+                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_18/O
+                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_18_n_0
                          CARRY4 (Prop_carry4_DI[0]_CO[2])
-                                                      0.509     8.574 f  out_im_reg[15]_i_5/CO[2]
-                         net (fo=18, unplaced)        0.406     8.980    is_sat_return00_in
-                         LUT5 (Prop_lut5_I4_O)        0.252     9.232 r  out_im[15]_i_1/O
+                                                      0.509     8.574 r  out_im_reg[15]_i_5/CO[2]
+                         net (fo=18, unplaced)        0.406     8.980    is_sat_return0
+                         LUT6 (Prop_lut6_I5_O)        0.252     9.232 r  out_im[15]_i_1/O
                          net (fo=1, unplaced)         0.000     9.232    out_im[15]_i_1_n_0
                          FDRE                                         r  out_im_reg[15]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=148, unset)          0.748    10.748    clk
+                         net (fo=149, unset)          0.748    10.748    clk
                          FDRE                                         r  out_im_reg[15]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -990,7 +990,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
   Data Path Delay:        8.445ns  (logic 5.198ns (61.550%)  route 3.247ns (38.450%))
-  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT5=1)
+  Logic Levels:           15  (CARRY4=10 DSP48E1=1 LUT1=2 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -1005,7 +1005,7 @@ Slack (MET) :             1.448ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=148, unset)          0.787     0.787    clk
+                         net (fo=149, unset)          0.787     0.787    clk
                          DSP48E1                                      r  s1_ir_reg/CLK
   -------------------------------------------------------------------    -------------------
                          DSP48E1 (Prop_dsp48e1_CLK_P[33])
@@ -1034,30 +1034,30 @@ Slack (MET) :             1.448ns  (required time - arrival time)
                                                       0.100     6.735 r  out_im_reg[15]_i_3/CO[3]
                          net (fo=1, unplaced)         0.000     6.735    out_im_reg[15]_i_3_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.835 r  out_im_reg[15]_i_69/CO[3]
-                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_69_n_0
+                                                      0.100     6.835 r  out_im_reg[15]_i_70/CO[3]
+                         net (fo=1, unplaced)         0.000     6.835    out_im_reg[15]_i_70_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     6.935 r  out_im_reg[15]_i_57/CO[3]
-                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_57_n_0
+                                                      0.100     6.935 r  out_im_reg[15]_i_54/CO[3]
+                         net (fo=1, unplaced)         0.000     6.935    out_im_reg[15]_i_54_n_0
                          CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     7.035 r  out_im_reg[15]_i_55/CO[3]
-                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_55_n_0
+                                                      0.100     7.035 r  out_im_reg[15]_i_52/CO[3]
+                         net (fo=1, unplaced)         0.000     7.035    out_im_reg[15]_i_52_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
                                                       0.269     7.304 f  out_im_reg[15]_i_31/O[1]
                          net (fo=4, unplaced)         0.496     7.800    out_im_reg[15]_i_31_n_6
-                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_12/O
-                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_12_n_0
+                         LUT4 (Prop_lut4_I0_O)        0.265     8.065 r  out_im[15]_i_18/O
+                         net (fo=1, unplaced)         0.000     8.065    out_im[15]_i_18_n_0
                          CARRY4 (Prop_carry4_DI[0]_CO[2])
-                                                      0.509     8.574 f  out_im_reg[15]_i_4/CO[2]
+                                                      0.509     8.574 f  out_im_reg[15]_i_5/CO[2]
                          net (fo=18, unplaced)        0.406     8.980    is_sat_return0
-                         LUT5 (Prop_lut5_I1_O)        0.252     9.232 r  out_im[1]_i_1/O
-                         net (fo=1, unplaced)         0.000     9.232    round_sat_return__0[1]
+                         LUT6 (Prop_lut6_I3_O)        0.252     9.232 r  out_im[1]_i_1/O
+                         net (fo=1, unplaced)         0.000     9.232    out_im[1]_i_1_n_0
                          FDRE                                         r  out_im_reg[1]/D
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=148, unset)          0.748    10.748    clk
+                         net (fo=149, unset)          0.748    10.748    clk
                          FDRE                                         r  out_im_reg[1]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712

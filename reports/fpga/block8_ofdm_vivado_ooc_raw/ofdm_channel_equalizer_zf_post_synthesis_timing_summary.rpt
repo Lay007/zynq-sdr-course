@@ -136,7 +136,7 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
     -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-      3.256        0.000                      0                 2769        3.870        0.000                       0                   663
+      3.256        0.000                      0                 2843        3.870        0.000                       0                   700
 
 
 All user specified timing constraints are met.
@@ -159,7 +159,7 @@ clk    {0.000 5.000}      10.000          100.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
 -----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-clk                 3.256        0.000                      0                 2769        3.870        0.000                       0                   663
+clk                 3.256        0.000                      0                 2843        3.870        0.000                       0                   700
 
 
 ------------------------------------------------------------------------------------------------
@@ -222,7 +222,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=662, unset)          0.787     0.787    clk
+                         net (fo=699, unset)          0.787     0.787    clk
                          FDRE                                         r  n_bin_reg[0]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  n_bin_reg[0]/Q
@@ -238,7 +238,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=662, unset)          0.748    10.748    clk
+                         net (fo=699, unset)          0.748    10.748    clk
                          DSP48E1                                      r  n_e_reg/CLK
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -274,7 +274,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=662, unset)          0.787     0.787    clk
+                         net (fo=699, unset)          0.787     0.787    clk
                          FDRE                                         r  n_bin_reg[0]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  n_bin_reg[0]/Q
@@ -290,7 +290,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=662, unset)          0.748    10.748    clk
+                         net (fo=699, unset)          0.748    10.748    clk
                          DSP48E1                                      r  n_e_reg/CLK
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -326,7 +326,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=662, unset)          0.787     0.787    clk
+                         net (fo=699, unset)          0.787     0.787    clk
                          FDRE                                         r  n_bin_reg[0]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  n_bin_reg[0]/Q
@@ -342,7 +342,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=662, unset)          0.748    10.748    clk
+                         net (fo=699, unset)          0.748    10.748    clk
                          DSP48E1                                      r  n_e_reg/CLK
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -378,7 +378,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=662, unset)          0.787     0.787    clk
+                         net (fo=699, unset)          0.787     0.787    clk
                          FDRE                                         r  n_bin_reg[0]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  n_bin_reg[0]/Q
@@ -394,7 +394,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=662, unset)          0.748    10.748    clk
+                         net (fo=699, unset)          0.748    10.748    clk
                          DSP48E1                                      r  n_e_reg/CLK
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -430,7 +430,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=662, unset)          0.787     0.787    clk
+                         net (fo=699, unset)          0.787     0.787    clk
                          FDRE                                         r  n_bin_reg[0]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  n_bin_reg[0]/Q
@@ -446,7 +446,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=662, unset)          0.748    10.748    clk
+                         net (fo=699, unset)          0.748    10.748    clk
                          DSP48E1                                      r  n_e_reg/CLK
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -482,7 +482,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=662, unset)          0.787     0.787    clk
+                         net (fo=699, unset)          0.787     0.787    clk
                          FDRE                                         r  n_bin_reg[0]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  n_bin_reg[0]/Q
@@ -498,7 +498,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=662, unset)          0.748    10.748    clk
+                         net (fo=699, unset)          0.748    10.748    clk
                          DSP48E1                                      r  n_e_reg/CLK
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -534,7 +534,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=662, unset)          0.787     0.787    clk
+                         net (fo=699, unset)          0.787     0.787    clk
                          FDRE                                         r  n_bin_reg[0]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  n_bin_reg[0]/Q
@@ -550,7 +550,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=662, unset)          0.748    10.748    clk
+                         net (fo=699, unset)          0.748    10.748    clk
                          DSP48E1                                      r  n_e_reg/CLK
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -586,7 +586,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=662, unset)          0.787     0.787    clk
+                         net (fo=699, unset)          0.787     0.787    clk
                          FDRE                                         r  n_bin_reg[0]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  n_bin_reg[0]/Q
@@ -602,7 +602,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=662, unset)          0.748    10.748    clk
+                         net (fo=699, unset)          0.748    10.748    clk
                          DSP48E1                                      r  n_e_reg/CLK
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -638,7 +638,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=662, unset)          0.787     0.787    clk
+                         net (fo=699, unset)          0.787     0.787    clk
                          FDRE                                         r  n_bin_reg[0]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  n_bin_reg[0]/Q
@@ -654,7 +654,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=662, unset)          0.748    10.748    clk
+                         net (fo=699, unset)          0.748    10.748    clk
                          DSP48E1                                      r  n_e_reg/CLK
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
@@ -690,7 +690,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=662, unset)          0.787     0.787    clk
+                         net (fo=699, unset)          0.787     0.787    clk
                          FDRE                                         r  n_bin_reg[0]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  n_bin_reg[0]/Q
@@ -706,7 +706,7 @@ Slack (MET) :             3.256ns  (required time - arrival time)
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=662, unset)          0.748    10.748    clk
+                         net (fo=699, unset)          0.748    10.748    clk
                          DSP48E1                                      r  n_e_reg/CLK
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
