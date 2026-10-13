@@ -17,6 +17,11 @@ only; the noise is $dist_normal with fixed seeds, so the run is repeatable.
 Every data symbol of a run shares ONE noisy channel estimate, so a single run
 measures the BER of one training realization; --seeds N repeats each point with
 N noise seeds (N training realizations) and sums the errors.
+
+--train-symbols N sends the training symbol N times and averages the estimate
+over them (ofdm_channel_equalizer TRAIN_SYMBOLS = N). The last column is then the
+theory moved by the first-order training loss 10*log10(1 + 1/(r*N)) dB, with r the
+training-to-average energy ratio: 1 for QPSK, 1.8 for 16-QAM (outer points).
 """
 
 from __future__ import annotations
@@ -42,8 +47,13 @@ def theory_ber(modulation: str, esn0_db: float) -> float:
     return 3.0 / 8.0 * math.erfc(math.sqrt(esn0 / 10.0))
 
 
+def training_loss_db(modulation: str, train_symbols: int) -> float:
+    ratio = 1.0 if modulation == "qpsk" else 1.8
+    return 10.0 * math.log10(1.0 + 1.0 / (ratio * train_symbols))
+
+
 def run_point(work: Path, modulation: str, esn0_db: float, symbols: int, channel: int, cfo_ppm: int, seed: int,
-              cfo_corr: bool = True):
+              cfo_corr: bool = True, train_symbols: int = 1):
     output = work / "point.vvp"
     params = {
         "MODULATION": 1 if modulation == "qam16" else 0,
@@ -54,6 +64,7 @@ def run_point(work: Path, modulation: str, esn0_db: float, symbols: int, channel
         "CFO_PPM": cfo_ppm,
         "NOISE_SEED": seed,
         "USE_CFO_CORR": int(cfo_corr),
+        "TRAIN_SYMBOLS": train_symbols,
     }
     subprocess.run(
         ["iverilog", "-g2012", "-s", BENCH, *[f"-P{BENCH}.{k}={v}" for k, v in params.items()],
@@ -77,6 +88,8 @@ def main() -> int:
     parser.add_argument("--seed", type=int, default=11)
     parser.add_argument("--seeds", type=int, default=1, help="noise seeds (training realizations) per point")
     parser.add_argument("--no-cfo-corr", action="store_true", help="bypass the time-domain CFO corrector")
+    parser.add_argument("--train-symbols", type=int, choices=(1, 2, 4, 8), default=1,
+                        help="training symbols the channel estimate is averaged over")
     args = parser.parse_args()
     for command in ("iverilog", "vvp"):
         if shutil.which(command) is None:
@@ -84,19 +97,22 @@ def main() -> int:
 
     print(f"{args.modulation.upper()} OFDM RTL, channel {args.channel}, CFO {args.cfo_ppm} ppm, "
           f"{args.symbols} data symbols x {args.seeds} noise seeds per point (from {args.seed}), "
-          f"CFO corrector {'off' if args.no_cfo_corr else 'on'}")
-    print(" Es/N0 dB    bit errors / bits       BER   EVM %   theory BER   theory BER, -3 dB")
+          f"CFO corrector {'off' if args.no_cfo_corr else 'on'}, {args.train_symbols} training symbol(s)")
+    loss = training_loss_db(args.modulation, args.train_symbols)
+    print(f" Es/N0 dB    bit errors / bits       BER   EVM %   theory BER   theory BER, -3 dB"
+          f"   theory, -{loss:.2f} dB")
     with TemporaryDirectory(prefix="course-ofdm-ber-") as temporary:
         for esn0 in args.esn0:
             errors = bits = 0
             evm_sq = 0.0
             for seed in range(args.seed, args.seed + args.seeds):
                 e, b, v = run_point(Path(temporary), args.modulation, esn0, args.symbols,
-                                    args.channel, args.cfo_ppm, seed, not args.no_cfo_corr)
+                                    args.channel, args.cfo_ppm, seed, not args.no_cfo_corr, args.train_symbols)
                 errors, bits, evm_sq = errors + e, bits + b, evm_sq + v * v
             evm = math.sqrt(evm_sq / args.seeds)
             print(f"{esn0:8.1f} {errors:10d} / {bits:<8d} {errors / bits:10.2e} {evm:7.2f} "
-                  f"{theory_ber(args.modulation, esn0):12.2e} {theory_ber(args.modulation, esn0 - 3.0):19.2e}")
+                  f"{theory_ber(args.modulation, esn0):12.2e} {theory_ber(args.modulation, esn0 - 3.0):19.2e}"
+                  f" {theory_ber(args.modulation, esn0 - loss):17.2e}")
     return 0
 
 

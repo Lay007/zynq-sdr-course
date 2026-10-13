@@ -29,6 +29,14 @@
 //          reference is 1.0, not 0.707): every carrier on the same grid, which
 //          a 16-QAM slicer needs, with headroom for noise.
 //
+// TRAIN_SYMBOLS = N (1, 2, 4 or 8) averages the estimate over N consecutive
+// training symbols: G[k] = round(sum of the N estimates / N), rounded half away
+// from zero like everything else. Each symbol carries its own noise, so the
+// noise on G drops N-fold in power; the transmitter must send the training
+// pattern N times. Only the last training symbol starts the CORDIC pass and
+// raises `trained`, so train_count counts trainings, not training symbols.
+// N = 1 is the original single-symbol estimate, bit for bit.
+//
 // Pilots are equalized too, so ofdm_pilot_phase_corrector downstream measures
 // only the phase that changed since the training symbol (residual CFO, drift).
 //
@@ -49,7 +57,8 @@
 // ready (after the CORDIC pass when NORMALIZE = 1).
 module ofdm_channel_equalizer #(
     parameter integer SHIFT = 4,
-    parameter integer NORMALIZE = 0
+    parameter integer NORMALIZE = 0,
+    parameter integer TRAIN_SYMBOLS = 1
 ) (
     input  wire                clk,
     input  wire                resetn,
@@ -75,6 +84,16 @@ module ofdm_channel_equalizer #(
 );
 
     localparam integer CORDIC_ITERS = 17;
+    localparam integer TRAIN_LOG2 = (TRAIN_SYMBOLS >= 8) ? 3 : (TRAIN_SYMBOLS >= 4) ? 2 :
+                                    (TRAIN_SYMBOLS >= 2) ? 1 : 0;
+    // Coefficient memory width: one estimate is 18 bits, a sum of N needs log2(N) more.
+    localparam integer GW = 18 + TRAIN_LOG2;
+
+    initial
+        if (TRAIN_SYMBOLS != (1 << TRAIN_LOG2)) begin
+            $display("ofdm_channel_equalizer: TRAIN_SYMBOLS must be 1, 2, 4 or 8");
+            $finish;
+        end
 
     // Training pattern on the 48 data carriers (index in the allocator's
     // data_k order): {I bit, Q bit}; bit 1 -> negative component, as in the
@@ -186,16 +205,18 @@ module ofdm_channel_equalizer #(
         end
     endfunction
 
-    reg signed [17:0] g_re [0:63];
-    reg signed [17:0] g_im [0:63];
+    // Between training symbols these hold the running sum; after the last one, the
+    // average, which fits in the low 18 bits.
+    reg signed [GW-1:0] g_re [0:63];
+    reg signed [GW-1:0] g_im [0:63];
     reg        [16:0] inv_m [0:63];   // NORMALIZE = 1: CORDIC quotient z
     reg        [5:0]  inv_sh [0:63];  // NORMALIZE = 1: output shift 37 - s
 
     integer init_k;
     initial
         for (init_k = 0; init_k < 64; init_k = init_k + 1) begin
-            g_re[init_k] = 18'sd0;
-            g_im[init_k] = 18'sd0;
+            g_re[init_k] = {GW{1'b0}};
+            g_im[init_k] = {GW{1'b0}};
             inv_m[init_k] = 17'd0;
             inv_sh[init_k] = 6'd37;
         end
@@ -203,6 +224,10 @@ module ofdm_channel_equalizer #(
     // Stage 0: registered input bin and its coefficient.
     reg               s0_valid;
     reg               s0_train;
+    reg               s0_train_first;   // first training symbol: start a new sum
+    reg               s0_train_final;   // last training symbol: store the average
+    reg signed [GW-1:0] s0_acc_re;      // running sum read for this bin
+    reg signed [GW-1:0] s0_acc_im;
     reg signed [15:0] s0_re;
     reg signed [15:0] s0_im;
     reg signed [17:0] s0_g_re;
@@ -271,6 +296,27 @@ module ofdm_channel_equalizer #(
     wire signed [17:0] est_re = !ref_now[3] ? 18'sd0 : (ref_now[0] ? ar + bi : ar);
     wire signed [17:0] est_im = !ref_now[3] ? 18'sd0 : (ref_now[0] ? ai - br : ai);
 
+    // Running sum, and on the last training symbol the rounded average.
+    wire signed [GW-1:0] est_re_x = est_re;   // sign-extended
+    wire signed [GW-1:0] est_im_x = est_im;
+    wire signed [GW-1:0] sum_re = (s0_train_first ? {GW{1'b0}} : s0_acc_re) + est_re_x;
+    wire signed [GW-1:0] sum_im = (s0_train_first ? {GW{1'b0}} : s0_acc_im) + est_im_x;
+
+    function automatic signed [GW-1:0] average;   // round(value / N), half away from zero
+        input signed [GW-1:0] value;
+        reg signed [GW-1:0] magnitude;
+        begin
+            if (TRAIN_LOG2 == 0)
+                average = value;
+            else if (value >= 0)
+                average = (value + (1 <<< (TRAIN_LOG2 - 1))) >>> TRAIN_LOG2;
+            else begin
+                magnitude = -value;
+                average = -((magnitude + (1 <<< (TRAIN_LOG2 - 1))) >>> TRAIN_LOG2);
+            end
+        end
+    endfunction
+
     // ---- NORMALIZE = 1: sequential CORDIC division 1/|G|^2 per bin ----
     localparam [2:0] N_IDLE = 3'd0, N_LOAD = 3'd1, N_LZ = 3'd2, N_SHIFT = 3'd3, N_ITER = 3'd4, N_STORE = 3'd5;
     reg [2:0]         n_state;
@@ -284,8 +330,10 @@ module ofdm_channel_equalizer #(
     reg [18:0]        n_step;   // 2^(16-i)
     reg               norm_busy;
 
-    wire signed [17:0] n_gr = g_re[n_bin];
-    wire signed [17:0] n_gi = g_im[n_bin];
+    wire signed [GW-1:0] n_gr_full = g_re[n_bin];
+    wire signed [GW-1:0] n_gi_full = g_im[n_bin];
+    wire signed [17:0] n_gr = n_gr_full[17:0];
+    wire signed [17:0] n_gi = n_gi_full[17:0];
 
     function [5:0] leading_shift;   // left shift that puts the top 1 at bit 35
         input [35:0] value;
@@ -299,12 +347,16 @@ module ofdm_channel_equalizer #(
     endfunction
 
     reg mode_train;   // the symbol now entering is a training symbol
+    reg [3:0] train_sym;   // which training symbol of TRAIN_SYMBOLS is entering
+    wire signed [GW-1:0] in_g_re = g_re[bin_index];
+    wire signed [GW-1:0] in_g_im = g_im[bin_index];
     wire stall = out_valid && !out_ready;
     assign bin_ready = resetn && !stall && !norm_busy;
 
     always @(posedge clk) begin
         if (!resetn) begin
             mode_train <= 1'b1;
+            train_sym <= 4'd0;
             trained <= 1'b0;
             train_count <= 16'd0;
             saturation_count <= 32'd0;
@@ -321,6 +373,8 @@ module ofdm_channel_equalizer #(
             out_index <= 6'd0;
             out_last <= 1'b0;
             s0_train <= 1'b0;
+            s0_train_first <= 1'b0;
+            s0_train_final <= 1'b0;
             s1_train <= 1'b0;
             n_state <= N_IDLE;
             n_bin <= 6'd0;
@@ -334,6 +388,8 @@ module ofdm_channel_equalizer #(
             saturation_pending <= 2'd0;
             if (retrain)
                 mode_train <= 1'b1;
+            if (retrain)
+                train_sym <= 4'd0;
 
             // CORDIC pass over all 64 bins after a training symbol. Gated by
             // the parameter so that with NORMALIZE = 0 synthesis removes the
@@ -392,18 +448,29 @@ module ofdm_channel_equalizer #(
                 s0_valid <= bin_valid && bin_ready;
                 if (bin_valid && bin_ready) begin
                     s0_train <= mode_train;
+                    s0_train_first <= (train_sym == 4'd0);
+                    s0_train_final <= (train_sym == TRAIN_SYMBOLS - 1);
                     s0_re <= bin_re;
                     s0_im <= bin_im;
-                    s0_g_re <= g_re[bin_index];
-                    s0_g_im <= g_im[bin_index];
+                    s0_acc_re <= in_g_re;
+                    s0_acc_im <= in_g_im;
+                    s0_g_re <= in_g_re[17:0];
+                    s0_g_im <= in_g_im[17:0];
                     s0_m <= inv_m[bin_index];
                     s0_sh <= inv_sh[bin_index];
                     s0_index <= bin_index;
                     s0_last <= bin_last;
-                    if (bin_last && mode_train && !retrain)
-                        mode_train <= 1'b0;
-                    // The last training bin: hold the input until 1/|G|^2 is ready.
-                    if ((NORMALIZE != 0) && bin_last && mode_train)
+                    if (bin_last && mode_train && !retrain) begin
+                        if (train_sym == TRAIN_SYMBOLS - 1) begin
+                            mode_train <= 1'b0;
+                            train_sym <= 4'd0;
+                        end else begin
+                            train_sym <= train_sym + 4'd1;
+                        end
+                    end
+                    // The last bin of the last training symbol: hold the input
+                    // until 1/|G|^2 is ready.
+                    if ((NORMALIZE != 0) && bin_last && mode_train && (train_sym == TRAIN_SYMBOLS - 1))
                         norm_busy <= 1'b1;
                 end
 
@@ -411,9 +478,9 @@ module ofdm_channel_equalizer #(
                 s1_valid <= s0_valid && !s0_train;
                 s1_train <= s0_train;
                 if (s0_valid && s0_train) begin
-                    g_re[s0_index] <= est_re;
-                    g_im[s0_index] <= est_im;
-                    if (s0_last) begin
+                    g_re[s0_index] <= s0_train_final ? average(sum_re) : sum_re;
+                    g_im[s0_index] <= s0_train_final ? average(sum_im) : sum_im;
+                    if (s0_last && s0_train_final) begin
                         if (NORMALIZE != 0) begin
                             n_bin <= 6'd0;
                             n_state <= N_LOAD;

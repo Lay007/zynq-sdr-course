@@ -8,6 +8,9 @@ pilots: +1, +1, +1, -1 at bins 7, 43, 57 and 21). Data symbols leave as
     Z[k] = round(Y[k] * conj(G[k]) / 2^SHIFT), saturated to Q1.15,
 rounding to nearest with halves away from zero. Null and guard bins give 0.
 
+With N training symbols (the RTL's TRAIN_SYMBOLS = N, a power of two up to 8)
+G[k] is the sum of the N estimates divided by N, rounded half away from zero.
+
 With normalize=True (the RTL's NORMALIZE = 1) every used bin also gets
 1/|G[k]|^2 from a linear-mode CORDIC division (see inverse()), and data bins
 leave as round((Y * conj(G)) * z / 2^sh) = 2^14 * Y / G, saturated.
@@ -125,14 +128,29 @@ def equalize_normalized(y: tuple[int, int], g: tuple[int, int], inv: tuple[int, 
     return (zr, zi), int(sr) + int(si)
 
 
+def average_estimate(trainings: list[list[tuple[int, int]]]) -> list[tuple[int, int]]:
+    """G[k] over N training symbols: round(sum of the estimates / N), N = 1, 2, 4 or 8."""
+    n = len(trainings)
+    if n not in (1, 2, 4, 8):
+        raise ValueError("the number of training symbols must be 1, 2, 4 or 8")
+    log2 = n.bit_length() - 1
+    g = []
+    for k in range(64):
+        sr = sum(estimate(k, t[k])[0] for t in trainings)
+        si = sum(estimate(k, t[k])[1] for t in trainings)
+        g.append((_round_shift(sr, log2), _round_shift(si, log2)) if log2 else (sr, si))
+    return g
+
+
 def equalize_frame(
     training: list[tuple[int, int]],
     data_symbols: list[list[tuple[int, int]]],
     shift: int = DEFAULT_SHIFT,
     normalize: bool = False,
+    more_training: list[list[tuple[int, int]]] | None = None,
 ) -> tuple[list[list[tuple[int, int]]], list[list[int]]]:
-    """Train on one 64-bin symbol, then equalize each 64-bin data symbol."""
-    g = [estimate(k, training[k]) for k in range(64)]
+    """Train on one 64-bin symbol (plus more_training, averaged), then equalize each data symbol."""
+    g = average_estimate([training, *(more_training or [])])
     inv = [inverse(gr * gr + gi * gi) for gr, gi in g]
     out: list[list[tuple[int, int]]] = []
     sats: list[list[int]] = []

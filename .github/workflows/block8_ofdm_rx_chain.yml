@@ -9,6 +9,7 @@ on:
       - "verification/vectors/block08_ofdm_pilot_tracker_vectors.txt"
       - "verification/vectors/block08_ofdm_channel_eq_vectors.txt"
       - "verification/vectors/block08_ofdm_channel_eq_norm_vectors.txt"
+      - "verification/vectors/block08_ofdm_channel_eq_norm_avg4_vectors.txt"
       - "verification/vectors/block08_ofdm_cfo_vectors.txt"
       - ".github/workflows/block8_ofdm_rx_chain.yml"
   pull_request:
@@ -18,6 +19,7 @@ on:
       - "verification/vectors/block08_ofdm_pilot_tracker_vectors.txt"
       - "verification/vectors/block08_ofdm_channel_eq_vectors.txt"
       - "verification/vectors/block08_ofdm_channel_eq_norm_vectors.txt"
+      - "verification/vectors/block08_ofdm_channel_eq_norm_avg4_vectors.txt"
       - "verification/vectors/block08_ofdm_cfo_vectors.txt"
       - ".github/workflows/block8_ofdm_rx_chain.yml"
   workflow_dispatch:
@@ -161,13 +163,15 @@ jobs:
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_pilot_corrected_loopback.sv
           vvp /tmp/tb_ofdm_cfo.vvp
 
-      - name: Check per-subcarrier channel equalizer against the fixed-point vectors
+      - name: Check per-subcarrier channel equalizer against the fixed-point vectors (1 and 4 training symbols)
         run: |
           set -euo pipefail
-          for normalize in 0 1; do
+          for case in "0 1" "1 1" "1 4"; do
+            set -- $case
             iverilog -g2012 -Wall \
               -s tb_ofdm_channel_equalizer \
-              -Ptb_ofdm_channel_equalizer.NORMALIZE=$normalize \
+              -Ptb_ofdm_channel_equalizer.NORMALIZE=$1 \
+              -Ptb_ofdm_channel_equalizer.TRAIN_SYMBOLS=$2 \
               -o /tmp/tb_ofdm_channel_equalizer.vvp \
               blocks/block_08_modulation_and_synchronization/rtl/ofdm_channel_equalizer.v \
               blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_channel_equalizer.sv
@@ -211,32 +215,34 @@ jobs:
             blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_cfo_corrector.sv
           vvp /tmp/tb_ofdm_cfo_corrector.vvp
 
-      - name: Check 16-QAM through multipath and a 6000 ppm CFO (BER 0, EVM limits)
+      - name: Check 16-QAM through multipath and a 6000 ppm CFO (BER 0, EVM limits; 1 and 4 training symbols)
         run: |
           set -euo pipefail
-          for case in "1 0 2" "1 6000 2" "2 6000 3"; do
+          for case in "1 0 2 1" "1 6000 2 1" "2 6000 3 1" "1 6000 2 4"; do
             set -- $case
             iverilog -g2012 -Wall \
               -s tb_ofdm_tx_rx_qam16_loopback \
               -Ptb_ofdm_tx_rx_qam16_loopback.CHANNEL=$1 \
               -Ptb_ofdm_tx_rx_qam16_loopback.CFO_PPM=$2 \
               -Ptb_ofdm_tx_rx_qam16_loopback.EVM_LIMIT_PCT=$3 \
+              -Ptb_ofdm_tx_rx_qam16_loopback.TRAIN_SYMBOLS=$4 \
               -o /tmp/tb_ofdm_qam16.vvp \
               blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v \
               blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_tx_rx_qam16_loopback.sv
             vvp /tmp/tb_ofdm_qam16.vvp
           done
 
-      - name: Check AXI4-Stream/AXI4-Lite OFDM modem wrapper (QPSK, and 16-QAM under a 5000 ppm CFO)
+      - name: Check AXI4-Stream/AXI4-Lite OFDM modem wrapper (QPSK, and 16-QAM under a 5000 ppm CFO; 1 and 4 training symbols)
         run: |
           set -euo pipefail
-          for case in "120 0 0" "-150 0 0" "120 1 5000"; do
+          for case in "120 0 0 1" "-150 0 0 1" "120 1 5000 1" "120 1 5000 4"; do
             set -- $case
             iverilog -g2012 -Wall \
               -s tb_ofdm_axi_modem \
               -Ptb_ofdm_axi_modem.ANGLE_DEG=$1 \
               -Ptb_ofdm_axi_modem.MODULATION=$2 \
               -Ptb_ofdm_axi_modem.CFO_PPM=$3 \
+              -Ptb_ofdm_axi_modem.TRAIN_SYMBOLS=$4 \
               -o /tmp/tb_ofdm_axi_modem.vvp \
               blocks/block_08_modulation_and_synchronization/rtl/ofdm_*.v \
               blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_axi_modem.sv

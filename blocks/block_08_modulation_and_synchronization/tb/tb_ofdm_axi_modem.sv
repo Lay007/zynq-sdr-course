@@ -19,6 +19,8 @@ module tb_ofdm_axi_modem;
     parameter integer MODULATION = 0;
     // Carrier offset of the TX->RX link, 1e-6 cycles per sample.
     parameter integer CFO_PPM = 0;
+    // Training symbols per training (the modem's CE_TRAIN_SYMBOLS).
+    parameter integer TRAIN_SYMBOLS = 1;
     localparam integer BITS_W = (MODULATION != 0) ? 4 : 2;
     localparam integer RXW = (MODULATION != 0) ? 16 : 8;
     localparam integer IDX_LO = (MODULATION != 0) ? 8 : 2;
@@ -137,7 +139,7 @@ module tb_ofdm_axi_modem;
     assign s_axis_rx_tlast = inject_rx ? inject_last : m_axis_tx_tlast;
     assign m_axis_tx_tready = !inject_rx && s_axis_rx_tready && link_open;
 
-    ofdm_axi_modem #(.NORMALIZE(NORMALIZE), .MODULATION(MODULATION)) dut (
+    ofdm_axi_modem #(.NORMALIZE(NORMALIZE), .MODULATION(MODULATION), .CE_TRAIN_SYMBOLS(TRAIN_SYMBOLS)) dut (
         .aclk(aclk), .aresetn(aresetn),
         .s_axis_tx_tvalid(s_axis_tx_tvalid), .s_axis_tx_tready(s_axis_tx_tready),
         .s_axis_tx_tdata(s_axis_tx_tdata), .s_axis_tx_tlast(1'b0),
@@ -365,11 +367,12 @@ module tb_ofdm_axi_modem;
 
         // 1. Identification.
         expect_reg(REG_ID, 32'h4F46444D);
-        expect_reg(REG_VERSION, 32'h00030000);
+        expect_reg(REG_VERSION, 32'h00030100);
         expect_reg(REG_STATUS, 32'd0);
 
-        // 2. Training symbol, then traffic through the rotated channel.
-        send_training_symbol();
+        // 2. Training symbol(s), then traffic through the rotated channel.
+        for (i = 0; i < TRAIN_SYMBOLS; i = i + 1)
+            send_training_symbol();
         for (i = 0; i < SYMBOLS; i = i + 1)
             send_data_symbol();
         wait_pairs(PAIRS);
@@ -387,7 +390,8 @@ module tb_ofdm_axi_modem;
         expect_reg(REG_EQ_SAT, 32'd0);
         expect_reg(REG_CE_SAT, 32'd0);
         expect_reg(REG_CE_TRAINED, 32'd1);
-        expect_reg(REG_CONFIG, {27'd0, (`OFDM_IFFT_BRAM != 0), 1'b1, (NORMALIZE != 0), 1'b1, (MODULATION != 0)});
+        expect_reg(REG_CONFIG, {23'd0, TRAIN_SYMBOLS[3:0], (`OFDM_IFFT_BRAM != 0), 1'b1, (NORMALIZE != 0), 1'b1,
+                                (MODULATION != 0)});
         axi_read(REG_CFO_THETA, word);
         // theta = -2^24 * 64 * CFO: within 1 % of that, or 3000 units at CFO 0
         if (word[31:24] !== {8{word[23]}} ||
@@ -396,7 +400,7 @@ module tb_ofdm_axi_modem;
             $display("FAIL CFO_THETA %0d for a %0d ppm offset", $signed(word), CFO_PPM);
             errors = errors + 1;
         end
-        expect_reg(REG_TX_SYMBOLS, SYMBOLS + 1);
+        expect_reg(REG_TX_SYMBOLS, SYMBOLS + TRAIN_SYMBOLS);
         expect_reg(REG_RX_SYMBOLS, SYMBOLS);
         axi_read(REG_PHASE, word);
         // Without a CFO the channel phase is gone after the equalizer; with one,
@@ -425,22 +429,24 @@ module tb_ofdm_axi_modem;
         expect_reg(REG_COEFF, {16'd0, 16'd16384});
         expect_reg(REG_CE_TRAINED, 32'd0);
         expect_reg(REG_STATUS, 32'd0);
-        send_training_symbol();
+        for (i = 0; i < TRAIN_SYMBOLS; i = i + 1)
+            send_training_symbol();
         send_data_symbol();
         wait_pairs(PAIRS + 48);
         expect_reg(REG_STATUS, 32'h40);
         expect_reg(REG_CE_TRAINED, 32'd1);
         expect_reg(REG_RX_SYMBOLS, 32'd1);
 
-        // 5. Retrain through CONTROL[1]: the next symbol trains again.
+        // 5. Retrain through CONTROL[1]: the next symbol(s) train again.
         axi_write(REG_CONTROL, 32'h2);
         expect_reg(REG_CONTROL, 32'h0);
-        send_training_symbol();
+        for (i = 0; i < TRAIN_SYMBOLS; i = i + 1)
+            send_training_symbol();
         send_data_symbol();
         wait_pairs(PAIRS + 96);
         expect_reg(REG_CE_TRAINED, 32'd2);
         expect_reg(REG_RX_SYMBOLS, 32'd2);
-        expect_reg(REG_TX_SYMBOLS, 32'd4);
+        expect_reg(REG_TX_SYMBOLS, 2 * TRAIN_SYMBOLS + 2);
         if (bit_errors != 0) begin
             $display("FAIL BER nonzero after reset/retrain: %0d bit errors", bit_errors);
             errors = errors + 1;
@@ -475,8 +481,8 @@ module tb_ofdm_axi_modem;
         expect_reg(REG_CONTROL, 32'h0);
 
         if (errors == 0) begin
-            $display("PASS: ofdm_axi_modem (MODULATION=%0d, NORMALIZE=%0d, CFO %0d ppm) %0d-degree channel recovered %0d/%0d bits in %0d symbols after a training symbol, BER=0; reset, retrain, registers and sticky errors checked",
-                     MODULATION, NORMALIZE, CFO_PPM, ANGLE_DEG, BITS_W * (PAIRS + 96), BITS_W * (PAIRS + 96), SYMBOLS + 2);
+            $display("PASS: ofdm_axi_modem (MODULATION=%0d, NORMALIZE=%0d, CFO %0d ppm) %0d-degree channel recovered %0d/%0d bits in %0d symbols after %0d training symbol(s), BER=0; reset, retrain, registers and sticky errors checked",
+                     MODULATION, NORMALIZE, CFO_PPM, ANGLE_DEG, BITS_W * (PAIRS + 96), BITS_W * (PAIRS + 96), SYMBOLS + 2, TRAIN_SYMBOLS);
             $finish;
         end else begin
             $display("FAIL tb_ofdm_axi_modem errors=%0d", errors);

@@ -8,7 +8,9 @@ symbols, 64 natural-order bins per symbol, one bin per line, in decimal:
 
 symbol 0 is the training symbol (exp_* are 0 and not checked). A second file,
 block08_ofdm_channel_eq_norm_vectors.txt, holds the same frames with the
-expected outputs of the NORMALIZE = 1 (zero-forcing, CORDIC 1/|G|^2) mode. Expected values
+expected outputs of the NORMALIZE = 1 (zero-forcing, CORDIC 1/|G|^2) mode. A third,
+block08_ofdm_channel_eq_norm_avg4_vectors.txt, is NORMALIZE = 1 with TRAIN_SYMBOLS = 4:
+symbols 0-3 are training symbols, each with its own noise, averaged. Expected values
 come from the bit-exact model in tools/ofdm_channel_equalizer_fixed.py. The
 Verilog testbench resets the block before every frame. pytest checks that the
 committed file matches the model.
@@ -35,6 +37,8 @@ from tools.ofdm_channel_equalizer_fixed import (
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT = ROOT / "verification" / "vectors" / "block08_ofdm_channel_eq_vectors.txt"
 NORMALIZED_OUT = ROOT / "verification" / "vectors" / "block08_ofdm_channel_eq_norm_vectors.txt"
+AVERAGED_OUT = ROOT / "verification" / "vectors" / "block08_ofdm_channel_eq_norm_avg4_vectors.txt"
+AVERAGED_TRAIN_SYMBOLS = 4
 QPSK = 23170
 PILOT = 32767
 SCALE = 1.0 / 64.0
@@ -87,7 +91,8 @@ def _receive(values: list[complex], response, gain: float, noise: float, rng: ra
     return bins
 
 
-def build_frames() -> list[tuple[list[tuple[int, int]], list[list[tuple[int, int]]]]]:
+def build_frames(train_symbols: int = 1) -> list[tuple[list[list[tuple[int, int]]], list[list[tuple[int, int]]]]]:
+    """Frames of (training symbols, data symbols); train_symbols = 1 gives the original vectors."""
     rng = random.Random(4848)
     flat = _channel([(1.0, 0.0, 0)])
     lab85 = _channel([(1.0, 0.0, 0), (0.28, 0.35, 2), (0.12, -0.8, 4)])
@@ -104,7 +109,7 @@ def build_frames() -> list[tuple[list[tuple[int, int]], list[list[tuple[int, int
     ]
     frames = []
     for response, gain, noise, *data_gain in cases:
-        training = _receive(_training_values(), response, gain, noise, rng)
+        training = [_receive(_training_values(), response, gain, noise, rng) for _ in range(train_symbols)]
         data_scale = gain * data_gain[0] if data_gain else gain
         data = []
         for _ in range(2):
@@ -117,13 +122,14 @@ def build_frames() -> list[tuple[list[tuple[int, int]], list[list[tuple[int, int
 def render(frames, normalize: bool = False) -> str:
     lines = []
     for f, (training, data) in enumerate(frames):
-        for k, (yr, yi) in enumerate(training):
-            lines.append(f"{f} 0 {k} {yr} {yi} 0 0 0")
-        outputs, sats = equalize_frame(training, data, normalize=normalize)
-        for s, symbol in enumerate(data, start=1):
+        for t, symbol in enumerate(training):
             for k, (yr, yi) in enumerate(symbol):
-                zr, zi = outputs[s - 1][k]
-                lines.append(f"{f} {s} {k} {yr} {yi} {zr} {zi} {sats[s - 1][k]}")
+                lines.append(f"{f} {t} {k} {yr} {yi} 0 0 0")
+        outputs, sats = equalize_frame(training[0], data, normalize=normalize, more_training=training[1:])
+        for s, symbol in enumerate(data, start=len(training)):
+            for k, (yr, yi) in enumerate(symbol):
+                zr, zi = outputs[s - len(training)][k]
+                lines.append(f"{f} {s} {k} {yr} {yi} {zr} {zi} {sats[s - len(training)][k]}")
     return "\n".join(lines) + "\n"
 
 
@@ -131,11 +137,14 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", type=Path, default=DEFAULT_OUT)
     parser.add_argument("--normalized-out", type=Path, default=NORMALIZED_OUT)
+    parser.add_argument("--averaged-out", type=Path, default=AVERAGED_OUT)
     args = parser.parse_args()
     frames = build_frames()
-    for path, normalize in ((args.out, False), (args.normalized_out, True)):
+    averaged = build_frames(AVERAGED_TRAIN_SYMBOLS)
+    for path, chosen, normalize in ((args.out, frames, False), (args.normalized_out, frames, True),
+                                    (args.averaged_out, averaged, True)):
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(render(frames, normalize), encoding="utf-8", newline="\n")
+        path.write_text(render(chosen, normalize), encoding="utf-8", newline="\n")
         print(f"wrote {path}")
     return 0
 

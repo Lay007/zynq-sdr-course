@@ -24,10 +24,11 @@
 // The wrapper only renames and packs signals; the datapath modules and their
 // arithmetic are unchanged.
 //
-// With CHANNEL_EQ = 1 the first received symbol after reset (aresetn or
-// CONTROL[0]) and after CONTROL[1] is a training symbol: the transmitter must
-// send the fixed pattern of ofdm_channel_equalizer train_bits() as one OFDM
-// symbol (48 bit pairs in data_k order). It produces no m_axis_rx output;
+// With CHANNEL_EQ = 1 the first CE_TRAIN_SYMBOLS received symbols after reset
+// (aresetn or CONTROL[0]) and after CONTROL[1] are training symbols: the
+// transmitter must send the fixed pattern of ofdm_channel_equalizer
+// train_bits() as that many OFDM symbols (48 bit pairs each, in data_k order),
+// and the estimate is averaged over them. They produce no m_axis_rx output;
 // STATUS[6] rises when the per-subcarrier coefficients are ready. NORMALIZE = 1
 // selects the zero-forcing mode (CORDIC 1/|G|^2): every data carrier then
 // leaves the equalizer on one amplitude grid. Stream formats:
@@ -46,7 +47,7 @@
 //
 // AXI4-Lite register map (32-bit, byte addresses):
 //   0x00 ID          "OFDM" (0x4F46444D)
-//   0x04 VERSION     0x00030000
+//   0x04 VERSION     0x00030100
 //   0x08 CONTROL     [0] datapath reset, held while 1 (clears every counter)
 //                    [1] write 1: the next received symbol is a training symbol;
 //                        also restarts the CFO estimate
@@ -64,11 +65,11 @@
 //   0x28 COEFF       [31:16] imaginary, [15:0] real part of the last Q2.14
 //                    correction coefficient
 //   0x2C CE_SAT      channel equalizer saturations
-//   0x30 CE_TRAINED  training symbols completed
+//   0x30 CE_TRAINED  trainings completed (one per CE_TRAIN_SYMBOLS training symbols)
 //   0x34 CFO_THETA   CP-correlation angle, sign-extended (2*pi = 2^24); the
 //                    estimated CFO is -theta / 2^24 / 64 cycles per sample
 //   0x38 CONFIG      build: [0] MODULATION [1] CHANNEL_EQ [2] NORMALIZE
-//                    [3] CFO_CORR [4] BRAM_MEMORY
+//                    [3] CFO_CORR [4] BRAM_MEMORY [8:5] CE_TRAIN_SYMBOLS
 // All counters count from the last reset (aresetn or CONTROL[0]).
 module ofdm_axi_modem #(
     parameter integer AXI_ADDR_W = 6,
@@ -78,7 +79,9 @@ module ofdm_axi_modem #(
     parameter integer CHANNEL_EQ = 1,
     parameter integer NORMALIZE = 1,
     parameter integer MODULATION = 0,
-    parameter integer CFO_CORR = 1
+    parameter integer CFO_CORR = 1,
+    // Training symbols the channel estimate is averaged over: 1, 2, 4 or 8.
+    parameter integer CE_TRAIN_SYMBOLS = 1
 ) (
     input  wire                         aclk,
     input  wire                         aresetn,
@@ -147,7 +150,7 @@ module ofdm_axi_modem #(
         end
     endgenerate
     localparam [AXI_DATA_W-1:0] CORE_ID = 32'h4F46444D; // "OFDM"
-    localparam [AXI_DATA_W-1:0] CORE_VERSION = 32'h00030000;
+    localparam [AXI_DATA_W-1:0] CORE_VERSION = 32'h00030100;
 
     reg datapath_reset;
     wire core_resetn = aresetn && !datapath_reset;
@@ -316,7 +319,7 @@ module ofdm_axi_modem #(
 
     generate
         if (CHANNEL_EQ != 0) begin : g_channel_eq
-            ofdm_channel_equalizer #(.NORMALIZE(NORMALIZE)) u_channel_eq (
+            ofdm_channel_equalizer #(.NORMALIZE(NORMALIZE), .TRAIN_SYMBOLS(CE_TRAIN_SYMBOLS)) u_channel_eq (
                 .clk(aclk),
                 .resetn(core_resetn),
                 .retrain(retrain_pulse),
@@ -508,8 +511,8 @@ module ofdm_axi_modem #(
             REG_CE_SAT: read_word = ce_saturation_count;
             REG_CE_TRAINED: read_word = {16'd0, ce_train_count};
             REG_CFO_THETA: read_word = {{8{cfo_theta[23]}}, cfo_theta};
-            REG_CONFIG: read_word = {27'd0, (BRAM_MEMORY != 0), (CFO_CORR != 0), (NORMALIZE != 0),
-                                     (CHANNEL_EQ != 0), (MODULATION != 0)};
+            REG_CONFIG: read_word = {23'd0, CE_TRAIN_SYMBOLS[3:0], (BRAM_MEMORY != 0), (CFO_CORR != 0),
+                                     (NORMALIZE != 0), (CHANNEL_EQ != 0), (MODULATION != 0)};
             default: read_word = {AXI_DATA_W{1'b0}};
         endcase
     end

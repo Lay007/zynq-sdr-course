@@ -24,6 +24,9 @@
 // time-domain noise of variance 2*sigma^2 per sample into 2*sigma^2/64 per bin,
 // so sigma = sqrt(|X|^2 / (128 * Es/N0)) with |X|^2 = 2 * 23170^2 (QPSK) or
 // the 16-QAM average (the same energy). tools/run_ofdm_ber_sweep.py sweeps it.
+// TRAIN_SYMBOLS = N sends the training symbol N times and averages the channel
+// estimate over them (ofdm_channel_equalizer TRAIN_SYMBOLS); each copy gets its
+// own noise.
 module tb_ofdm_tx_rx_qam16_loopback;
     parameter integer MODULATION = 1;
     parameter integer ESN0_DB10 = 0;
@@ -34,7 +37,8 @@ module tb_ofdm_tx_rx_qam16_loopback;
     parameter integer USE_CFO_CORR = 1;
     parameter integer SYMBOLS = 6;
     parameter integer EVM_LIMIT_PCT = 0;
-    localparam integer TOTAL_SYMBOLS = SYMBOLS + 1;
+    parameter integer TRAIN_SYMBOLS = 1;
+    localparam integer TOTAL_SYMBOLS = SYMBOLS + TRAIN_SYMBOLS;
     localparam integer PAIRS = 48 * TOTAL_SYMBOLS;
     localparam integer BITS_W = (MODULATION != 0) ? 4 : 2;
 
@@ -203,7 +207,7 @@ module tb_ofdm_tx_rx_qam16_loopback;
         .busy(), .total_saturation_count(), .conjugation_saturation_count()
     );
 
-    ofdm_channel_equalizer #(.NORMALIZE(1)) channel_eq (
+    ofdm_channel_equalizer #(.NORMALIZE(1), .TRAIN_SYMBOLS(TRAIN_SYMBOLS)) channel_eq (
         .clk(clk), .resetn(resetn), .retrain(1'b0),
         .bin_valid(fft_bin_valid), .bin_ready(fft_bin_ready),
         .bin_re(fft_bin_re), .bin_im(fft_bin_im),
@@ -264,7 +268,7 @@ module tb_ofdm_tx_rx_qam16_loopback;
 
     // ---- scoring ----
     reg [3:0] expected_bits [0:PAIRS-1];
-    integer rx_symbol = 1;       // the training symbol never reaches the demapper
+    integer rx_symbol = TRAIN_SYMBOLS;   // training symbols never reach the demapper
     integer recovered_count = 0;
     integer bit_errors = 0;
     integer errors = 0;
@@ -367,7 +371,7 @@ module tb_ofdm_tx_rx_qam16_loopback;
 
         for (i = 0; i < PAIRS; i = i + 1) begin
             d = i % 48;
-            if (i < 48)
+            if (i < 48 * TRAIN_SYMBOLS)
                 // Training symbol: train_bits() signs (16-QAM: on the outer points).
                 value = (MODULATION != 0) ? {d[0] ^ d[3], 1'b0, d[1] ^ d[2] ^ d[4], 1'b0}
                                           : {2'b00, d[0] ^ d[3], d[1] ^ d[2] ^ d[4]};
@@ -387,8 +391,8 @@ module tb_ofdm_tx_rx_qam16_loopback;
         end
 
         evm = (ref_sum > 0.0) ? 100.0 * $sqrt(err_sum / ref_sum) : 0.0;
-        $display("RESULT modulation=%0d channel=%0d cfo_ppm=%0d cfo_corr=%0d esn0_db10=%0d sigma=%0d data_symbols=%0d bit_errors=%0d bits=%0d evm_pct=%0.2f theta=%0d ce_sat=%0d",
-                 MODULATION, CHANNEL, CFO_PPM, USE_CFO_CORR, ESN0_DB10, sigma_int, SYMBOLS, bit_errors,
+        $display("RESULT modulation=%0d channel=%0d cfo_ppm=%0d cfo_corr=%0d esn0_db10=%0d sigma=%0d train_symbols=%0d data_symbols=%0d bit_errors=%0d bits=%0d evm_pct=%0.2f theta=%0d ce_sat=%0d",
+                 MODULATION, CHANNEL, CFO_PPM, USE_CFO_CORR, ESN0_DB10, sigma_int, TRAIN_SYMBOLS, SYMBOLS, bit_errors,
                  BITS_W * data_pairs, evm, cc_theta, ce_saturation_count);
         if (recovered_count != data_pairs) begin
             $display("FAIL expected %0d recovered symbols, got %0d", data_pairs, recovered_count);

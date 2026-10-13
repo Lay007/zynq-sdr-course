@@ -5,8 +5,16 @@ import math
 import random
 from pathlib import Path
 
-from tools.generate_ofdm_channel_eq_vectors import DEFAULT_OUT, NORMALIZED_OUT, build_frames, render
+from tools.generate_ofdm_channel_eq_vectors import (
+    AVERAGED_OUT,
+    AVERAGED_TRAIN_SYMBOLS,
+    DEFAULT_OUT,
+    NORMALIZED_OUT,
+    build_frames,
+    render,
+)
 from tools.ofdm_channel_equalizer_fixed import (
+    average_estimate,
     data_index_for_bin,
     equalize,
     equalize_normalized,
@@ -22,6 +30,32 @@ def test_committed_vectors_match_the_model() -> None:
     frames = build_frames()
     assert Path(DEFAULT_OUT).read_text(encoding="utf-8") == render(frames)
     assert Path(NORMALIZED_OUT).read_text(encoding="utf-8") == render(frames, normalize=True)
+    averaged = build_frames(AVERAGED_TRAIN_SYMBOLS)
+    assert Path(AVERAGED_OUT).read_text(encoding="utf-8") == render(averaged, normalize=True)
+
+
+def test_averaging_rounds_half_away_from_zero_and_reduces_estimate_noise() -> None:
+    k = 1  # a data bin; its reference signs are (-1, -1)
+    assert train_reference(k) == (-1, -1)
+    # G = (-yr - yi, yr - yi): Y = (1, 0) and (2, 0) give sums (-3, 3) over two symbols.
+    assert average_estimate([[(1, 0)] * 64, [(2, 0)] * 64])[k] == (-2, 2)       # -1.5 -> -2, 1.5 -> 2
+    assert average_estimate([[(0, 0)] * 64] * 4)[k] == (0, 0)
+    try:
+        average_estimate([[(0, 0)] * 64] * 3)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("three training symbols must be rejected")
+    # Four noisy looks at one carrier: the averaged estimate has about a quarter of the error power.
+    rng = random.Random(5)
+    clean = estimate(k, (362, 362))
+    err1 = err4 = 0.0
+    for _ in range(400):
+        looks = [[(362 + round(rng.gauss(0, 40)), 362 + round(rng.gauss(0, 40)))] * 64 for _ in range(4)]
+        g1, g4 = average_estimate(looks[:1])[k], average_estimate(looks)[k]
+        err1 += (g1[0] - clean[0]) ** 2 + (g1[1] - clean[1]) ** 2
+        err4 += (g4[0] - clean[0]) ** 2 + (g4[1] - clean[1]) ** 2
+    assert 0.18 < err4 / err1 < 0.33
 
 
 def test_cordic_inverse_is_accurate() -> None:
