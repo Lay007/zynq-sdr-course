@@ -9,7 +9,7 @@ This page separates documentation work from tasks that require real hardware acc
 | P0 | #25 | Complete safe cabled loopback validation | conducted capture/report are measured; add NanoVNA `S21` for the cable and marked 30 dB attenuator |
 | Done | #26 | Publish and repeat QPSK demo IQ | public 64 KiB synthetic Git LFS payload, SHA256, deterministic rebuild, zero-BER replay and report assets are committed; measured OTA raw-data review remains separate |
 | P2 | #29 | Extend AD9363 gain table | 915 MHz relative sweeps and the two-board large-signal boundary are measured; add passive-path calibration and other frequencies |
-| P2 | #58 | AGC gain-transition phase experiment | gain-step amplitude/phase transients and static/dynamic modem BER are measured on two boards (`reports/hardware/ad9361-agc-transient-20261014.md`); still needed: steps synchronised to frames, and a common-reference or single-board setup to resolve the slow-attack phase step |
+| P2 | #58 | AGC gain-transition phase experiment | gain-step amplitude/phase transients are measured on two boards (the AGC modem BER runs were invalidated and must be repeated) (`reports/hardware/ad9361-agc-transient-20261014.md`); still needed: steps synchronised to frames, and a common-reference or single-board setup to resolve the slow-attack phase step |
 | P2 | #25/#26 | Add final hardware report | report page, figures, limitations |
 
 ## Priority non-hardware follow-up

@@ -1,4 +1,5 @@
 {
+  "validity": "Invalid as a whole: three earlier 0.3 s toggling loops were still running on board A during this run (pkill missing on its BusyBox); see the report's correction.",
   "issue": 58,
   "bench": "A TX1 -> 0 dB var -> 30 dB fixed -> 3-way splitter -> B RX1",
   "carrier_hz": 915000000.0,

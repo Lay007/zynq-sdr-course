@@ -18,15 +18,16 @@ manual (the control), `slow_attack` and `fast_attack`.
   On the up step 0.46-0.63 % of the samples clip while it settles. Its phase step **could not be
   resolved**: over a 15 ms gap the phase between the two boards' independent oscillators wanders by
   5-14 degrees RMS, which is as large as the measured steps (-9 to -16, +13 to +31 degrees).
-- **The modem is not hurt by AGC at these levels.** Lab 11.45 frames decode at a payload BER between
-  0 and 6.7e-4 under both AGC modes with no gross frames, while a fixed 50 dB gain loses 1-2 whole
-  frames out of about 60 at the weakest levels (BER 3.4e-3 to 3.8e-3). A dynamic run that toggles
-  the TX gain every 0.3 s also decoded cleanly, **but it is a weak test**: a frame lasts 0.32 ms, so
-  only a small fraction of frames can overlap a transition. A second dynamic run with the TX gain toggling every 5-7 ms
-  (300 frames per mode) does stress it, and there the order reverses: **`slow_attack` is the worst
-  (payload BER 1.7e-2, 24 gross frames), manual 50 dB is in between (5.8e-3, 7 gross) and
-  `fast_attack` is the best (1.9e-3, 3 gross).** A gain loop that needs 15 ms to settle, in a channel
-  whose level changes every 5 ms, never settles: its gain readback wandered between 55 and 67 dB.
+- **Correction (same night): most of the modem measurements below are invalid.** The scripts
+  stopped board A's background processes with `pkill`, which board A's BusyBox does not have, so
+  the TX-gain toggling loop of each dynamic run kept running after it. Every point measured after
+  the first dynamic run had board A's TX gain jumping between -30 and -10 dB underneath it. Valid:
+  the manual-gain static points and the manual-gain 0.3 s dynamic run (they ran before or as the
+  first loop). Invalid: all `slow_attack` and `fast_attack` modem points, and the whole 5-7 ms
+  run, which also had the three earlier loops running. The earlier conclusion that the 5-7 ms run
+  "reverses the order" (slow_attack worst, fast_attack best) is withdrawn. The transient
+  measurements above ran before any loop existed and are not affected. The scripts now stop
+  processes by PID (commit `c5997c4`); the modem part has to be re-measured.
 
 ## Setup
 
@@ -74,28 +75,32 @@ failed across it (raw values kept in the JSON with `valid: false`).
 
 ## Modem results (payload bit errors / bits)
 
-| TX gain, dB | manual 50 dB | slow_attack | fast_attack |
+**Only the manual-gain column is valid** (see the correction above); the other cells are kept
+because they are the raw record, marked as contaminated.
+
+| TX gain, dB | manual 50 dB | slow_attack (invalid) | fast_attack (invalid) |
 |---:|---|---|---|
 | -40 | 43/12544 (1 gross) | 2/14336 | 2/14848 |
 | -30 | 55/14592 (2 gross) | 0/14592 | 8/14848 |
 | -20 | 10/14592 (1 gross) | 0/14080 | 2/15104 |
 | -10 | 0/14592 | 10/14848 | 0/14080 |
 | 0 | 8/14080 | 9/14080 | 2/15104 |
-| toggling -30 <-> -10 every 0.3 s | 10/14848 | 2/13824 | 6/14848 |
-| toggling -30 <-> -10 every 5-7 ms, 300 frames | 399/69120 (7 gross) | 1104/66560 (24 gross) | 135/72192 (3 gross) |
+| toggling -30 <-> -10 every 0.3 s | 10/14848 | 2/13824 (invalid) | 6/14848 (invalid) |
+| toggling every 5-7 ms, 300 frames (whole run invalid) | 399/69120 (7 gross) | 1104/66560 (24 gross) | 135/72192 (3 gross) |
 
 The 5-7 ms run comes from a shell loop on board A (`sleep 0.005` plus the sysfs write; 100
 iterations of the bare sleep took 0.52 s). Raw data:
 [`ad9361-agc-ber-fast-toggle-20261014.json`](ad9361-agc-ber-fast-toggle-20261014.json). Under a fixed
-gain the static points average about 1.9e-3 for these two levels, so the steps themselves cost the
-manual run roughly a factor of three.
+gain the static points average about 1.9e-3 for these two levels; this comparison is withdrawn
+together with the run.
 
 The receive gain readback under `slow_attack` was 53 dB at TX -40 dB, 73 dB at -30 and -20 dB and
-53 dB again at -10 and 0 dB (read 1 s after each change). A plausible reading is that its slow
-upward decay had not finished at the first point; this was not checked.
+53 dB again at -10 and 0 dB. That pattern is explained by the leftover toggling loop moving the
+real input level underneath the static points, not by the AGC.
 
 ## Limits and next steps
 
+0. Re-measure the AGC modem points with the fixed scripts (every loop stopped by PID).
 1. Synchronise the TX step with the frame, so that every frame contains a transition at a known
    symbol, to see what a gain change does to Costas and Gardner directly (the 5-7 ms run only
    makes transitions frequent, not aligned).

@@ -1,4 +1,5 @@
 {
+  "validity": "Only the manual-gain points (static and dynamic) are valid. All slow_attack and fast_attack points ran with an earlier TX toggling loop still running on board A (pkill missing on its BusyBox); see the report's correction.",
   "issue": 58,
   "bench": "A TX1 -> 0 dB var -> 30 dB fixed -> 3-way splitter -> B RX1",
   "carrier_hz": 915000000.0,
