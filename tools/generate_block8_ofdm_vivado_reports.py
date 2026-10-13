@@ -36,6 +36,7 @@ TOPS: tuple[tuple[str, str | None], ...] = (
 # Extra configurations: (report name, top module, clock port, parameter overrides)
 VARIANTS: tuple[tuple[str, str, str, str], ...] = (
     ("ofdm_channel_equalizer_zf", "ofdm_channel_equalizer", "clk", "NORMALIZE=1"),
+    ("ofdm_channel_equalizer_zf_avg4", "ofdm_channel_equalizer", "clk", "NORMALIZE=1,TRAIN_SYMBOLS=4"),
     ("ofdm_tx_cp16_path_fabric", "ofdm_tx_cp16_path", "clk", "BRAM_MEMORY=0"),
     ("ofdm_fft64_sequential_fabric", "ofdm_fft64_sequential", "clk", "BRAM_MEMORY=0"),
     ("ofdm_axi_modem_fabric", "ofdm_axi_modem", "aclk", "BRAM_MEMORY=0"),
@@ -52,9 +53,10 @@ def run_vivado(
     command = [
         "cmd.exe", "/c", str(vivado_bin), "-mode", "batch", "-nojournal", "-nolog",
         "-source", str(TCL_SCRIPT), "-tclargs",
-        # cmd.exe splits .bat arguments at '=', so NAME=VALUE travels as NAME:VALUE.
+        # cmd.exe splits .bat arguments at '=' and ',', so NAME=VALUE,NAME=VALUE travels
+        # as NAME:VALUE+NAME:VALUE.
         str(output_dir), part, f"{period_ns:.3f}", top, clock or "none", report_name or top,
-        generics.replace("=", ":"),
+        generics.replace("=", ":").replace(",", "+"),
     ]
     # Vivado drops helper files (e.g. tight_setup_hold_pins.txt) into its working
     # directory; keep them with the reports instead of the repository root.

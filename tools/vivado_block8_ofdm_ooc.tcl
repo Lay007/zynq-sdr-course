@@ -16,7 +16,8 @@ if {[llength $argv] >= 6} {
 }
 set generic_args {}
 if {[llength $argv] >= 7 && [lindex $argv 6] ne ""} {
-    foreach generic [split [lindex $argv 6] ","] {
+    # Separated by "," or "+" (cmd.exe splits .bat arguments at ",").
+    foreach generic [split [lindex $argv 6] ",+"] {
         lappend generic_args -generic [string map {: =} $generic]
     }
 }
