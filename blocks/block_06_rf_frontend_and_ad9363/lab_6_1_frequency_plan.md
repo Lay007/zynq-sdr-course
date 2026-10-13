@@ -122,6 +122,16 @@ These are the sizes of the error terms for the example plan, computed from the f
 3. The peak appears at -100 kHz instead of +100 kHz. List two causes from the list above and a quick test that separates them.
 4. How long a capture do you need for a 1 Hz FFT bin at 2.4 MS/s, and what limits the frequency resolution before you reach it?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. `8.9 kHz / 915 MHz ≈ 9.7 ppm`. The observed offset is TX minus RX, so either the TX LO is about 9.7 ppm high or the RX LO about 9.7 ppm low (or a mix). One measurement separates them: receive a reference you trust (a GPS-disciplined signal generator, or a broadcast carrier of known frequency) with the same receiver. If the receiver reads it correctly, the error is in the transmitter.
+2. At 2.4 MS/s the complex band is −1.2 to +1.2 MHz, so +1.3 MHz wraps to −1.1 MHz. With a complex receiver negative frequencies are real, distinct frequencies, so the alias looks like a genuine signal 1.1 MHz *below* the LO, not like a folded copy; nothing in the spectrum marks it as an alias.
+3. Two causes from the list: a sign convention mistake (the transmitter really sends −100 kHz, for example a conjugated DDS or a wrong DUC sign) or an I/Q swap or conjugation in the receiver or the file reader. Retune the receiver LO by +10 kHz. If the transmitter really sends −100 kHz, the peak moves to −110 kHz like any real signal; if the receiver mirrors the spectrum, the peak moves the other way, to −90 kHz.
+4. A 1 Hz bin needs `N = Fs / 1 Hz = 2.4·10⁶` samples, a 1 s capture. Long before that the oscillators limit you: a 0.1 ppm drift is 92 Hz at 915 MHz, and phase noise and temperature drift smear the tone over many 1 Hz bins. The resolution is then set by the oscillators' stability over the capture, not by the FFT length.
+
+</details>
+
 ## Report checklist
 
 - [ ] State TX center frequency.

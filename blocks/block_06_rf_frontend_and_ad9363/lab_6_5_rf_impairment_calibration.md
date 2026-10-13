@@ -102,6 +102,15 @@ How to read these numbers:
    the image, and what does that tell you about signals near 0 Hz in a zero-IF
    receiver?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. Without the gain mismatch (skew only) the image rejection is 24.9 dB; without the skew (gain mismatch only) it is 20.2 dB. Removing the 1.7 dB gain mismatch helps more, so it is the larger contributor here, as the first-order formula predicts: `ε ≈ 0.22` against `φ ≈ 0.11 rad`.
+2. The "before" rejection does not change (19.2 dB): it is set by the impairments. The "after" rejection does: 87.9 dB with half the noise and 68.2 dB with double the noise, against 78.8 dB by default. After calibration the residual image is set by how well the correction was estimated from noisy samples and by the noise in the image bin, not by the impairment.
+3. At 5 kHz the tone, the DC/LO-leakage spike and the image all sit within ±5 kHz of 0 Hz (tone at 0 dB, DC at −9.2 dB, image at −19.2 dB). The long synthetic record still separates them and the calibration still works (image −74.7 dB, DC −51.6 dB after). On real hardware this is where zero-IF hurts: a DC-removal filter that also removes 5 kHz takes the signal with it (the Block 11 DC-blocker case, Lab 11.41), and the image of anything near 0 Hz lands right next to it. That is why receivers tune the wanted signal away from 0 Hz (Lab 6.7).
+
+</details>
+
 ## Report checklist
 
 - [ ] Show before/after spectrum and constellation.

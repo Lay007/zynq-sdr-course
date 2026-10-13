@@ -182,6 +182,15 @@ iio_attr -c ad9361-phy voltage0 hardwaregain 10
 2. Write the minimum sequence of attribute writes that turns this idle state into the RX setting of Lab 6.1 (915 MHz, 2.4 MS/s, 2 MHz, manual gain). Which of them must come before the others?
 3. Which attributes must you write, and in which order, to make the TX actually radiate, and which ones must you restore afterwards to return to this safe state?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. `iio_attr` filters channels with `-i` (input channels only) and `-o` (output channels only). Without them a channel name matches every channel of that name, input and output alike, so the example session's `voltage0` commands address both the RX and the TX channel; `hardwaregain 10` is meant for the RX, and a TX attenuation of +10 dB is not a valid value. Write `iio_attr -i -c ad9361-phy voltage0 hardwaregain 10` for the RX and `iio_attr -o -c ad9361-phy voltage0 hardwaregain -20` for the TX.
+2. RX LO `altvoltage0 frequency 915000000`; `-i voltage0 sampling_frequency 2400000`; `-i voltage0 rf_bandwidth 2000000`; `-i voltage0 gain_control_mode manual`; `-i voltage0 hardwaregain <gain>`. The sample rate goes before the bandwidth (the driver may re-plan the filters when the rate changes, so set the bandwidth last), and the gain mode must be `manual` before the gain is written, otherwise the AGC owns the gain and overrides the value.
+3. To radiate: TX LO `altvoltage1 frequency`, **`altvoltage1 powerdown 0`** (the LO is off in the idle state), `-o voltage0 hardwaregain` to the attenuation you need (start at strong attenuation, for example −60 dB, behind an external attenuator), then start the data source (DDS tone or DMA). To return to the safe state: stop the source, `-o voltage0 hardwaregain -89.75`, `altvoltage1 powerdown 1`. Forgetting `powerdown 0` is the silent failure described above: everything looks configured and nothing leaves the antenna.
+
+</details>
+
 ## What to include in the report
 
 - exact commands used;

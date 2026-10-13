@@ -121,6 +121,15 @@ In this model the noise is added after the gain, like ADC noise, so the SNR grow
 3. Add a two-tone test (two tones 10 bins apart) and find the gain where third-order intermodulation products first rise above the noise. Is that lower or higher than the gain where the clipping counter becomes non-zero?
 4. When you have a real capture, write a manifest for `--manifest` and compare the real SNR/SFDR-vs-gain curve with the synthetic one. Where is the knee?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. In the synthetic sweep the median-bin SNR keeps rising through the clipping point: 75.4 dB at 30 dB, 78.6 dB at 32 dB and 79.6 dB at 34 dB, while the SFDR collapses from 64.1 to 24.1 and 19.1 dB and thousands of samples clip. Clipping puts its energy into a few harmonic bins, which barely move the median, so a sweep judged by median SNR picks the most clipped setting as "best".
+2. With the noise scaled like the tone, the SNR stays at about 45.5 dB at every gain and the SFDR at about 34 dB until clipping; clipping starts earlier (3 clipped samples at 24 dB, 376 at 27 dB) because the amplified noise peaks reach full scale first. When the front end's own noise dominates, more gain cannot improve SNR; it only moves you towards overload. Gain helps only while the ADC's noise dominates.
+3. In this model the third-order products appear only together with clipping: below 31 dB the IM3 bins stay at the noise floor (within ±6 dB), and at 31 dB they jump to 23.7 dB above it as 648 samples clip. The model's only nonlinearity is the hard clipper. A real front end compresses before the ADC clips (LNA and mixer), so on hardware IM3 rises at a lower gain than the clipping counter suggests, which is why a two-tone test belongs in the sweep.
+4. This needs a real capture. Expect the SNR to rise with gain while the ADC noise dominates, flatten once the front-end noise dominates, and the SFDR to drop sharply at the knee where compression or clipping starts; the best setting is just below that knee.
+
+</details>
 
 ## Common mistakes
 

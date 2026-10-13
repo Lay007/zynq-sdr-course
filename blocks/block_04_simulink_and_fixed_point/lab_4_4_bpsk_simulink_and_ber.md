@@ -114,6 +114,15 @@ Without MATLAB, the same yardstick is available in Python: [Lab 8.8](/zynq-sdr-c
 2. How many bits per point would you need so that the 10 dB point has at least 100 errors? How long would that take at the 240 kSym/s of the hardware frame?
 3. The RX RMSE is 6.1e-5 while the TX RMSE is exactly 0. Which blocks sit between the two measurement points, and which of them rounds?
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. Exact (Clopper–Pearson) 95 % intervals over 200 000 bits: 1 error gives 1.3·10⁻⁷ to 2.8·10⁻⁵, which contains the theory value 3.9·10⁻⁶; 38 errors give 1.34·10⁻⁴ to 2.61·10⁻⁴, which contains 1.91·10⁻⁴. Neither point contradicts theory; the 10 dB point simply says almost nothing.
+2. At a BER of 3.9·10⁻⁶, 100 errors need about `100 / 3.9·10⁻⁶ ≈ 2.6·10⁷` bits. At 240 kSym/s, one bit per BPSK symbol, that is about 107 s of uninterrupted frames, more with framing overhead and gaps between bursts.
+3. The TX waveform is the Block 11 handoff itself, so the TX comparison is exact. Between the two measurement points sits the RX RRC matched filter: 65 quantized coefficients and a long sum rounded back to Q1.15. Output rounding alone would give about 0.3 LSB rms; the observed 2 LSB (6.1·10⁻⁵) says the coefficient quantization of the matched filter dominates. This page was not re-run (MATLAB is not in CI), so treat that split as the expected explanation, not a measurement.
+
+</details>
+
 ## Report checklist
 
 - [ ] Show the Simulink TX overlay against the MATLAB reference.

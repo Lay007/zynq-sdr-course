@@ -132,6 +132,15 @@ Overload flag: False
 3. Write down the expected offset for a real capture where the TX LO is 915.000 MHz, the digital
    tone is +100 kHz and the RX LO is 914.950 MHz.
 
+<details markdown="1">
+<summary>Answers (checked by running the lab script)</summary>
+
+1. With 16 384 points the bin is 146 Hz instead of 36.6 Hz, so the frequency error grows from 12.2 to 48.8 Hz (the peak is read at the nearest bin), and the "SNR" falls from 74.06 to 68.03 dB, exactly 6 dB. The tone's energy still lands in one bin, but each bin now collects four times the noise bandwidth: the noise floor rises from −79.9 to −73.8 dBFS. Peak-over-median SNR is always tied to the FFT length.
+2. Scaling the synthetic signal, the clipping counter becomes non-zero at a tone amplitude of about 0.93 (the tone plus the spur and noise peaks reach full scale). Above it a product appears at −300 kHz, three times the tone offset on the *opposite* side: −46 dBc at amplitude 0.99, −30 dBc at 1.1. Clipping I and Q separately distorts a complex tone into odd harmonics at −3f, +5f, ..., so on a real capture an overload can look like a mirror spur.
+3. `915.000 + 0.100 − 914.950 = +0.150 MHz`: the tone appears at +150 kHz.
+
+</details>
+
 ## Report checklist
 
 - [ ] Attach or reference metadata JSON.
