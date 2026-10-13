@@ -71,6 +71,7 @@ wire bpsk_timed_out;
 wire [INDEX_W-1:0] bpsk_received_bits;
 wire [INDEX_W-1:0] bpsk_total_errors;
 wire [INDEX_W-1:0] bpsk_payload_errors;
+wire bpsk_lock_inverted;
 wire bpsk_recovered_valid_debug;
 wire bpsk_recovered_bit_debug;
 wire bpsk_symbol_valid_debug;
@@ -88,6 +89,7 @@ wire [INDEX_W-1:0] qpsk_payload_bit_errors;
 wire [31:0] qpsk_payload_error_segments;
 wire [INDEX_W-1:0] qpsk_first_payload_error_index;
 wire [INDEX_W-1:0] qpsk_last_payload_error_index;
+wire [1:0] qpsk_rotation_index;
 wire qpsk_symbol_valid_debug;
 wire qpsk_recovered_valid_debug;
 wire [1:0] qpsk_recovered_dibit_debug;
@@ -107,6 +109,9 @@ wire core_timed_out  = mod_qpsk ? qpsk_timed_out : bpsk_timed_out;
 wire [INDEX_W-1:0] received_bits  = mod_qpsk ? qpsk_received_symbols : bpsk_received_bits;
 wire [INDEX_W-1:0] total_errors   = mod_qpsk ? qpsk_total_bit_errors : bpsk_total_errors;
 wire [INDEX_W-1:0] payload_errors = mod_qpsk ? qpsk_payload_bit_errors : bpsk_payload_errors;
+// Constellation rotation the BER counter resolved, in units of 90 degrees (issue #64).
+// BPSK has only 0 and 180 degrees, so its lock_inverted flag maps to index 2.
+wire [1:0] rotation_index = mod_qpsk ? qpsk_rotation_index : {bpsk_lock_inverted, 1'b0};
 wire recovered_valid_debug = mod_qpsk ? 1'b0 : bpsk_recovered_valid_debug;
 wire recovered_bit_debug   = mod_qpsk ? 1'b0 : bpsk_recovered_bit_debug;
 wire symbol_valid_debug    = mod_qpsk ? qpsk_symbol_valid_debug : bpsk_symbol_valid_debug;
@@ -132,6 +137,7 @@ reg timeout_sticky_sample = 1'b0;
 reg [INDEX_W-1:0] received_bits_sample = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] total_errors_sample = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] payload_errors_sample = {INDEX_W{1'b0}};
+reg [1:0] rotation_index_sample = 2'd0;
 reg [31:0] payload_error_segments_sample = 32'd0;
 reg [INDEX_W-1:0] first_payload_error_index_sample = {INDEX_W{1'b1}};
 reg [INDEX_W-1:0] last_payload_error_index_sample = {INDEX_W{1'b1}};
@@ -373,6 +379,7 @@ bpsk_zynq_ber_top #(
     .received_bits(bpsk_received_bits),
     .total_errors(bpsk_total_errors),
     .payload_errors(bpsk_payload_errors),
+    .lock_inverted(bpsk_lock_inverted),
     .debug_recovered_valid(bpsk_recovered_valid_debug),
     .debug_recovered_bit(bpsk_recovered_bit_debug),
     .debug_symbol_valid(bpsk_symbol_valid_debug),
@@ -451,6 +458,7 @@ qpsk_zynq_ber_top #(
     .payload_error_segments(qpsk_payload_error_segments),
     .first_payload_error_index(qpsk_first_payload_error_index),
     .last_payload_error_index(qpsk_last_payload_error_index),
+    .rotation_index(qpsk_rotation_index),
     .debug_recovered_valid(qpsk_recovered_valid_debug),
     .debug_recovered_dibit(qpsk_recovered_dibit_debug),
     .debug_symbol_valid(qpsk_symbol_valid_debug),
@@ -594,6 +602,7 @@ always @(posedge sample_clk) begin
         received_bits_sample <= {INDEX_W{1'b0}};
         total_errors_sample <= {INDEX_W{1'b0}};
         payload_errors_sample <= {INDEX_W{1'b0}};
+        rotation_index_sample <= 2'd0;
         payload_error_segments_sample <= 32'd0;
         first_payload_error_index_sample <= {INDEX_W{1'b1}};
         last_payload_error_index_sample <= {INDEX_W{1'b1}};
@@ -638,6 +647,7 @@ always @(posedge sample_clk) begin
             received_bits_sample <= {INDEX_W{1'b0}};
             total_errors_sample <= {INDEX_W{1'b0}};
             payload_errors_sample <= {INDEX_W{1'b0}};
+            rotation_index_sample <= 2'd0;
             payload_error_segments_sample <= 32'd0;
             first_payload_error_index_sample <= {INDEX_W{1'b1}};
             last_payload_error_index_sample <= {INDEX_W{1'b1}};
@@ -738,6 +748,7 @@ always @(posedge sample_clk) begin
             received_bits_sample <= received_bits;
             total_errors_sample <= total_errors;
             payload_errors_sample <= payload_errors;
+            rotation_index_sample <= rotation_index;
             payload_error_segments_sample <= mod_qpsk ? qpsk_payload_error_segments : 32'd0;
             first_payload_error_index_sample <= mod_qpsk ? qpsk_first_payload_error_index : {INDEX_W{1'b1}};
             last_payload_error_index_sample <= mod_qpsk ? qpsk_last_payload_error_index : {INDEX_W{1'b1}};
@@ -774,7 +785,7 @@ always @(posedge ctrl_clk) begin
         timing_error_meta_ctrl <= 3'd0;
         timing_error_sync_ctrl <= 3'd0;
     end else begin
-        status_meta_ctrl <= {16'd0, SPS[7:0], 3'd0, control_sync[4], timeout_sticky_sample, done_sticky_sample, core_busy, control_sync[0]};
+        status_meta_ctrl <= {16'd0, SPS[7:0], 1'b0, rotation_index_sample, control_sync[4], timeout_sticky_sample, done_sticky_sample, core_busy, control_sync[0]};
         status_sync_ctrl <= status_meta_ctrl;
         received_meta_ctrl <= {{(32-INDEX_W){1'b0}}, received_bits_sample};
         received_sync_ctrl <= received_meta_ctrl;

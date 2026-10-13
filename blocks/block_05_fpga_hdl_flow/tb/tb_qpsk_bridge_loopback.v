@@ -22,6 +22,7 @@ reg ctrl_resetn = 1'b0;
 reg sample_resetn = 1'b0;
 
 reg [31:0] gp_ctrl = 32'd0;
+reg [1:0]  best_rot = 2'd3;
 // --- decoded-bit readout check (gp_ctrl[16]) -------------------------------
 // The QPSK path exposes no decoded bits without this, so the readout itself needs a
 // test: on the clean loopback the captured window must CONTAIN the frame ROM exactly.
@@ -137,6 +138,7 @@ initial begin
             best_rx  = gp_received_bits[INDEX_W-1:0];
             best_segments = gp_tx_valid_count;
             best_position = gp_rx_valid_count;
+            best_rot = gp_status[6:5];        // resolved rotation, k*90 deg (issue #64)
         end
 
         // clear sticky done and let the core return to idle before next offset
@@ -193,6 +195,12 @@ initial begin
 
     $display("QPSK bridge loopback sweep: best start_offset=%0d received=%0d/%0d symbols, bit_errors=%0d/%0d",
              best_so, best_rx, SYMS, best_err, 2*SYMS);
+    if (best_rot !== 2'd0) begin
+        // Costas is off (gp_ctrl[10]=0) and the loopback is straight, so nothing rotates
+        // the constellation: gp_status[6:5] must read 0.
+        $display("FAIL: gp_status[6:5] rotation_index=%0d on the unrotated loopback, expected 0", best_rot);
+        $fatal(1);
+    end
     if (best_so >= 0 && best_err == 0 &&
         best_segments == 32'd0 && best_position == 32'hffff_ffff)
         $display("PASS: qpsk bridge loopback recovered %0d QPSK symbols at BER=0 (start_offset=%0d)",
