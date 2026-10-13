@@ -136,7 +136,7 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
     -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-      4.347        0.000                      0                  705        4.500        0.000                       0                   203
+      4.356        0.000                      0                  707        4.500        0.000                       0                   204
 
 
 All user specified timing constraints are met.
@@ -159,7 +159,7 @@ clk    {0.000 5.000}      10.000          100.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
 -----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-clk                 4.347        0.000                      0                  705        4.500        0.000                       0                   203
+clk                 4.356        0.000                      0                  707        4.500        0.000                       0                   204
 
 
 ------------------------------------------------------------------------------------------------
@@ -190,7 +190,7 @@ Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing 
 From Clock:  clk
   To Clock:  clk
 
-Setup :            0  Failing Endpoints,  Worst Slack        4.347ns,  Total Violation        0.000ns
+Setup :            0  Failing Endpoints,  Worst Slack        4.356ns,  Total Violation        0.000ns
 Hold  :           NA  Failing Endpoints,  Worst Slack           NA  ,  Total Violation           NA
 PW    :            0  Failing Endpoints,  Worst Slack        4.500ns,  Total Violation        0.000ns
 ---------------------------------------------------------------------------------------------------
@@ -198,7 +198,7 @@ PW    :            0  Failing Endpoints,  Worst Slack        4.500ns,  Total Vio
 
 Max Delay Paths
 --------------------------------------------------------------------------------------
-Slack (MET) :             4.347ns  (required time - arrival time)
+Slack (MET) :             4.356ns  (required time - arrival time)
   Source:                 acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Destination:            payload_errors_reg[0]/R
@@ -206,7 +206,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.051ns  (logic 2.326ns (46.050%)  route 2.725ns (53.950%))
+  Data Path Delay:        5.042ns  (logic 2.309ns (45.795%)  route 2.733ns (54.205%))
   Logic Levels:           8  (CARRY4=5 LUT2=1 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
@@ -222,7 +222,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=202, unset)          0.787     0.787    clk
+                         net (fo=203, unset)          0.787     0.787    clk
                          FDRE                                         r  acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  acq_index_reg[4]/Q
@@ -233,38 +233,38 @@ Slack (MET) :             4.347ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[3])
                                                       0.100     2.597 r  acq_index_reg[8]_i_2/CO[3]
                          net (fo=1, unplaced)         0.000     2.597    acq_index_reg[8]_i_2_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.697 r  acq_index_reg[12]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     2.697    acq_index_reg[12]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     2.966 r  acq_index_reg[15]_i_4/O[1]
-                         net (fo=2, unplaced)         0.483     3.449    busy2[14]
-                         LUT4 (Prop_lut4_I0_O)        0.245     3.694 r  frame_limit_reg[15]_i_8/O
-                         net (fo=1, unplaced)         0.000     3.694    frame_limit_reg[15]_i_8_n_0
-                         CARRY4 (Prop_carry4_S[0]_CO[1])
-                                                      0.381     4.075 r  frame_limit_reg_reg[15]_i_4/CO[1]
-                         net (fo=7, unplaced)         0.275     4.350    frame_limit_reg_reg[15]_i_4_n_2
-                         LUT2 (Prop_lut2_I0_O)        0.277     4.627 r  received_bits[15]_i_5/O
-                         net (fo=21, unplaced)        0.408     5.035    received_bits[15]_i_5_n_0
-                         LUT6 (Prop_lut6_I4_O)        0.105     5.140 r  payload_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.838    payload_errors[15]_i_1_n_0
+                                                      0.269     2.866 r  acq_index_reg[12]_i_2/O[1]
+                         net (fo=2, unplaced)         0.486     3.352    busy2[10]
+                         LUT4 (Prop_lut4_I0_O)        0.245     3.597 r  frame_limit_reg[15]_i_11/O
+                         net (fo=1, unplaced)         0.000     3.597    frame_limit_reg[15]_i_11_n_0
+                         CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.314     3.911 r  frame_limit_reg_reg[15]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.008     3.919    frame_limit_reg_reg[15]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.150     4.069 r  frame_limit_reg_reg[15]_i_4/CO[1]
+                         net (fo=6, unplaced)         0.272     4.341    frame_limit_reg_reg[15]_i_4_n_2
+                         LUT2 (Prop_lut2_I0_O)        0.277     4.618 r  received_bits[15]_i_4/O
+                         net (fo=21, unplaced)        0.408     5.026    received_bits[15]_i_4_n_0
+                         LUT6 (Prop_lut6_I4_O)        0.105     5.131 r  payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.829    payload_errors[15]_i_1_n_0
                          FDRE                                         r  payload_errors_reg[0]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=202, unset)          0.748    10.748    clk
+                         net (fo=203, unset)          0.748    10.748    clk
                          FDRE                                         r  payload_errors_reg[0]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_R)       -0.527    10.185    payload_errors_reg[0]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.838
+                         arrival time                          -5.829
   -------------------------------------------------------------------
-                         slack                                  4.347
+                         slack                                  4.356
 
-Slack (MET) :             4.347ns  (required time - arrival time)
+Slack (MET) :             4.356ns  (required time - arrival time)
   Source:                 acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Destination:            payload_errors_reg[10]/R
@@ -272,7 +272,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.051ns  (logic 2.326ns (46.050%)  route 2.725ns (53.950%))
+  Data Path Delay:        5.042ns  (logic 2.309ns (45.795%)  route 2.733ns (54.205%))
   Logic Levels:           8  (CARRY4=5 LUT2=1 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
@@ -288,7 +288,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=202, unset)          0.787     0.787    clk
+                         net (fo=203, unset)          0.787     0.787    clk
                          FDRE                                         r  acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  acq_index_reg[4]/Q
@@ -299,38 +299,38 @@ Slack (MET) :             4.347ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[3])
                                                       0.100     2.597 r  acq_index_reg[8]_i_2/CO[3]
                          net (fo=1, unplaced)         0.000     2.597    acq_index_reg[8]_i_2_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.697 r  acq_index_reg[12]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     2.697    acq_index_reg[12]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     2.966 r  acq_index_reg[15]_i_4/O[1]
-                         net (fo=2, unplaced)         0.483     3.449    busy2[14]
-                         LUT4 (Prop_lut4_I0_O)        0.245     3.694 r  frame_limit_reg[15]_i_8/O
-                         net (fo=1, unplaced)         0.000     3.694    frame_limit_reg[15]_i_8_n_0
-                         CARRY4 (Prop_carry4_S[0]_CO[1])
-                                                      0.381     4.075 r  frame_limit_reg_reg[15]_i_4/CO[1]
-                         net (fo=7, unplaced)         0.275     4.350    frame_limit_reg_reg[15]_i_4_n_2
-                         LUT2 (Prop_lut2_I0_O)        0.277     4.627 r  received_bits[15]_i_5/O
-                         net (fo=21, unplaced)        0.408     5.035    received_bits[15]_i_5_n_0
-                         LUT6 (Prop_lut6_I4_O)        0.105     5.140 r  payload_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.838    payload_errors[15]_i_1_n_0
+                                                      0.269     2.866 r  acq_index_reg[12]_i_2/O[1]
+                         net (fo=2, unplaced)         0.486     3.352    busy2[10]
+                         LUT4 (Prop_lut4_I0_O)        0.245     3.597 r  frame_limit_reg[15]_i_11/O
+                         net (fo=1, unplaced)         0.000     3.597    frame_limit_reg[15]_i_11_n_0
+                         CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.314     3.911 r  frame_limit_reg_reg[15]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.008     3.919    frame_limit_reg_reg[15]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.150     4.069 r  frame_limit_reg_reg[15]_i_4/CO[1]
+                         net (fo=6, unplaced)         0.272     4.341    frame_limit_reg_reg[15]_i_4_n_2
+                         LUT2 (Prop_lut2_I0_O)        0.277     4.618 r  received_bits[15]_i_4/O
+                         net (fo=21, unplaced)        0.408     5.026    received_bits[15]_i_4_n_0
+                         LUT6 (Prop_lut6_I4_O)        0.105     5.131 r  payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.829    payload_errors[15]_i_1_n_0
                          FDRE                                         r  payload_errors_reg[10]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=202, unset)          0.748    10.748    clk
+                         net (fo=203, unset)          0.748    10.748    clk
                          FDRE                                         r  payload_errors_reg[10]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_R)       -0.527    10.185    payload_errors_reg[10]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.838
+                         arrival time                          -5.829
   -------------------------------------------------------------------
-                         slack                                  4.347
+                         slack                                  4.356
 
-Slack (MET) :             4.347ns  (required time - arrival time)
+Slack (MET) :             4.356ns  (required time - arrival time)
   Source:                 acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Destination:            payload_errors_reg[11]/R
@@ -338,7 +338,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.051ns  (logic 2.326ns (46.050%)  route 2.725ns (53.950%))
+  Data Path Delay:        5.042ns  (logic 2.309ns (45.795%)  route 2.733ns (54.205%))
   Logic Levels:           8  (CARRY4=5 LUT2=1 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
@@ -354,7 +354,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=202, unset)          0.787     0.787    clk
+                         net (fo=203, unset)          0.787     0.787    clk
                          FDRE                                         r  acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  acq_index_reg[4]/Q
@@ -365,38 +365,38 @@ Slack (MET) :             4.347ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[3])
                                                       0.100     2.597 r  acq_index_reg[8]_i_2/CO[3]
                          net (fo=1, unplaced)         0.000     2.597    acq_index_reg[8]_i_2_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.697 r  acq_index_reg[12]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     2.697    acq_index_reg[12]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     2.966 r  acq_index_reg[15]_i_4/O[1]
-                         net (fo=2, unplaced)         0.483     3.449    busy2[14]
-                         LUT4 (Prop_lut4_I0_O)        0.245     3.694 r  frame_limit_reg[15]_i_8/O
-                         net (fo=1, unplaced)         0.000     3.694    frame_limit_reg[15]_i_8_n_0
-                         CARRY4 (Prop_carry4_S[0]_CO[1])
-                                                      0.381     4.075 r  frame_limit_reg_reg[15]_i_4/CO[1]
-                         net (fo=7, unplaced)         0.275     4.350    frame_limit_reg_reg[15]_i_4_n_2
-                         LUT2 (Prop_lut2_I0_O)        0.277     4.627 r  received_bits[15]_i_5/O
-                         net (fo=21, unplaced)        0.408     5.035    received_bits[15]_i_5_n_0
-                         LUT6 (Prop_lut6_I4_O)        0.105     5.140 r  payload_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.838    payload_errors[15]_i_1_n_0
+                                                      0.269     2.866 r  acq_index_reg[12]_i_2/O[1]
+                         net (fo=2, unplaced)         0.486     3.352    busy2[10]
+                         LUT4 (Prop_lut4_I0_O)        0.245     3.597 r  frame_limit_reg[15]_i_11/O
+                         net (fo=1, unplaced)         0.000     3.597    frame_limit_reg[15]_i_11_n_0
+                         CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.314     3.911 r  frame_limit_reg_reg[15]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.008     3.919    frame_limit_reg_reg[15]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.150     4.069 r  frame_limit_reg_reg[15]_i_4/CO[1]
+                         net (fo=6, unplaced)         0.272     4.341    frame_limit_reg_reg[15]_i_4_n_2
+                         LUT2 (Prop_lut2_I0_O)        0.277     4.618 r  received_bits[15]_i_4/O
+                         net (fo=21, unplaced)        0.408     5.026    received_bits[15]_i_4_n_0
+                         LUT6 (Prop_lut6_I4_O)        0.105     5.131 r  payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.829    payload_errors[15]_i_1_n_0
                          FDRE                                         r  payload_errors_reg[11]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=202, unset)          0.748    10.748    clk
+                         net (fo=203, unset)          0.748    10.748    clk
                          FDRE                                         r  payload_errors_reg[11]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_R)       -0.527    10.185    payload_errors_reg[11]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.838
+                         arrival time                          -5.829
   -------------------------------------------------------------------
-                         slack                                  4.347
+                         slack                                  4.356
 
-Slack (MET) :             4.347ns  (required time - arrival time)
+Slack (MET) :             4.356ns  (required time - arrival time)
   Source:                 acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Destination:            payload_errors_reg[12]/R
@@ -404,7 +404,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.051ns  (logic 2.326ns (46.050%)  route 2.725ns (53.950%))
+  Data Path Delay:        5.042ns  (logic 2.309ns (45.795%)  route 2.733ns (54.205%))
   Logic Levels:           8  (CARRY4=5 LUT2=1 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
@@ -420,7 +420,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=202, unset)          0.787     0.787    clk
+                         net (fo=203, unset)          0.787     0.787    clk
                          FDRE                                         r  acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  acq_index_reg[4]/Q
@@ -431,38 +431,38 @@ Slack (MET) :             4.347ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[3])
                                                       0.100     2.597 r  acq_index_reg[8]_i_2/CO[3]
                          net (fo=1, unplaced)         0.000     2.597    acq_index_reg[8]_i_2_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.697 r  acq_index_reg[12]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     2.697    acq_index_reg[12]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     2.966 r  acq_index_reg[15]_i_4/O[1]
-                         net (fo=2, unplaced)         0.483     3.449    busy2[14]
-                         LUT4 (Prop_lut4_I0_O)        0.245     3.694 r  frame_limit_reg[15]_i_8/O
-                         net (fo=1, unplaced)         0.000     3.694    frame_limit_reg[15]_i_8_n_0
-                         CARRY4 (Prop_carry4_S[0]_CO[1])
-                                                      0.381     4.075 r  frame_limit_reg_reg[15]_i_4/CO[1]
-                         net (fo=7, unplaced)         0.275     4.350    frame_limit_reg_reg[15]_i_4_n_2
-                         LUT2 (Prop_lut2_I0_O)        0.277     4.627 r  received_bits[15]_i_5/O
-                         net (fo=21, unplaced)        0.408     5.035    received_bits[15]_i_5_n_0
-                         LUT6 (Prop_lut6_I4_O)        0.105     5.140 r  payload_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.838    payload_errors[15]_i_1_n_0
+                                                      0.269     2.866 r  acq_index_reg[12]_i_2/O[1]
+                         net (fo=2, unplaced)         0.486     3.352    busy2[10]
+                         LUT4 (Prop_lut4_I0_O)        0.245     3.597 r  frame_limit_reg[15]_i_11/O
+                         net (fo=1, unplaced)         0.000     3.597    frame_limit_reg[15]_i_11_n_0
+                         CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.314     3.911 r  frame_limit_reg_reg[15]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.008     3.919    frame_limit_reg_reg[15]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.150     4.069 r  frame_limit_reg_reg[15]_i_4/CO[1]
+                         net (fo=6, unplaced)         0.272     4.341    frame_limit_reg_reg[15]_i_4_n_2
+                         LUT2 (Prop_lut2_I0_O)        0.277     4.618 r  received_bits[15]_i_4/O
+                         net (fo=21, unplaced)        0.408     5.026    received_bits[15]_i_4_n_0
+                         LUT6 (Prop_lut6_I4_O)        0.105     5.131 r  payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.829    payload_errors[15]_i_1_n_0
                          FDRE                                         r  payload_errors_reg[12]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=202, unset)          0.748    10.748    clk
+                         net (fo=203, unset)          0.748    10.748    clk
                          FDRE                                         r  payload_errors_reg[12]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_R)       -0.527    10.185    payload_errors_reg[12]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.838
+                         arrival time                          -5.829
   -------------------------------------------------------------------
-                         slack                                  4.347
+                         slack                                  4.356
 
-Slack (MET) :             4.347ns  (required time - arrival time)
+Slack (MET) :             4.356ns  (required time - arrival time)
   Source:                 acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Destination:            payload_errors_reg[13]/R
@@ -470,7 +470,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.051ns  (logic 2.326ns (46.050%)  route 2.725ns (53.950%))
+  Data Path Delay:        5.042ns  (logic 2.309ns (45.795%)  route 2.733ns (54.205%))
   Logic Levels:           8  (CARRY4=5 LUT2=1 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
@@ -486,7 +486,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=202, unset)          0.787     0.787    clk
+                         net (fo=203, unset)          0.787     0.787    clk
                          FDRE                                         r  acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  acq_index_reg[4]/Q
@@ -497,38 +497,38 @@ Slack (MET) :             4.347ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[3])
                                                       0.100     2.597 r  acq_index_reg[8]_i_2/CO[3]
                          net (fo=1, unplaced)         0.000     2.597    acq_index_reg[8]_i_2_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.697 r  acq_index_reg[12]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     2.697    acq_index_reg[12]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     2.966 r  acq_index_reg[15]_i_4/O[1]
-                         net (fo=2, unplaced)         0.483     3.449    busy2[14]
-                         LUT4 (Prop_lut4_I0_O)        0.245     3.694 r  frame_limit_reg[15]_i_8/O
-                         net (fo=1, unplaced)         0.000     3.694    frame_limit_reg[15]_i_8_n_0
-                         CARRY4 (Prop_carry4_S[0]_CO[1])
-                                                      0.381     4.075 r  frame_limit_reg_reg[15]_i_4/CO[1]
-                         net (fo=7, unplaced)         0.275     4.350    frame_limit_reg_reg[15]_i_4_n_2
-                         LUT2 (Prop_lut2_I0_O)        0.277     4.627 r  received_bits[15]_i_5/O
-                         net (fo=21, unplaced)        0.408     5.035    received_bits[15]_i_5_n_0
-                         LUT6 (Prop_lut6_I4_O)        0.105     5.140 r  payload_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.838    payload_errors[15]_i_1_n_0
+                                                      0.269     2.866 r  acq_index_reg[12]_i_2/O[1]
+                         net (fo=2, unplaced)         0.486     3.352    busy2[10]
+                         LUT4 (Prop_lut4_I0_O)        0.245     3.597 r  frame_limit_reg[15]_i_11/O
+                         net (fo=1, unplaced)         0.000     3.597    frame_limit_reg[15]_i_11_n_0
+                         CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.314     3.911 r  frame_limit_reg_reg[15]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.008     3.919    frame_limit_reg_reg[15]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.150     4.069 r  frame_limit_reg_reg[15]_i_4/CO[1]
+                         net (fo=6, unplaced)         0.272     4.341    frame_limit_reg_reg[15]_i_4_n_2
+                         LUT2 (Prop_lut2_I0_O)        0.277     4.618 r  received_bits[15]_i_4/O
+                         net (fo=21, unplaced)        0.408     5.026    received_bits[15]_i_4_n_0
+                         LUT6 (Prop_lut6_I4_O)        0.105     5.131 r  payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.829    payload_errors[15]_i_1_n_0
                          FDRE                                         r  payload_errors_reg[13]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=202, unset)          0.748    10.748    clk
+                         net (fo=203, unset)          0.748    10.748    clk
                          FDRE                                         r  payload_errors_reg[13]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_R)       -0.527    10.185    payload_errors_reg[13]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.838
+                         arrival time                          -5.829
   -------------------------------------------------------------------
-                         slack                                  4.347
+                         slack                                  4.356
 
-Slack (MET) :             4.347ns  (required time - arrival time)
+Slack (MET) :             4.356ns  (required time - arrival time)
   Source:                 acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Destination:            payload_errors_reg[14]/R
@@ -536,7 +536,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.051ns  (logic 2.326ns (46.050%)  route 2.725ns (53.950%))
+  Data Path Delay:        5.042ns  (logic 2.309ns (45.795%)  route 2.733ns (54.205%))
   Logic Levels:           8  (CARRY4=5 LUT2=1 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
@@ -552,7 +552,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=202, unset)          0.787     0.787    clk
+                         net (fo=203, unset)          0.787     0.787    clk
                          FDRE                                         r  acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  acq_index_reg[4]/Q
@@ -563,38 +563,38 @@ Slack (MET) :             4.347ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[3])
                                                       0.100     2.597 r  acq_index_reg[8]_i_2/CO[3]
                          net (fo=1, unplaced)         0.000     2.597    acq_index_reg[8]_i_2_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.697 r  acq_index_reg[12]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     2.697    acq_index_reg[12]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     2.966 r  acq_index_reg[15]_i_4/O[1]
-                         net (fo=2, unplaced)         0.483     3.449    busy2[14]
-                         LUT4 (Prop_lut4_I0_O)        0.245     3.694 r  frame_limit_reg[15]_i_8/O
-                         net (fo=1, unplaced)         0.000     3.694    frame_limit_reg[15]_i_8_n_0
-                         CARRY4 (Prop_carry4_S[0]_CO[1])
-                                                      0.381     4.075 r  frame_limit_reg_reg[15]_i_4/CO[1]
-                         net (fo=7, unplaced)         0.275     4.350    frame_limit_reg_reg[15]_i_4_n_2
-                         LUT2 (Prop_lut2_I0_O)        0.277     4.627 r  received_bits[15]_i_5/O
-                         net (fo=21, unplaced)        0.408     5.035    received_bits[15]_i_5_n_0
-                         LUT6 (Prop_lut6_I4_O)        0.105     5.140 r  payload_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.838    payload_errors[15]_i_1_n_0
+                                                      0.269     2.866 r  acq_index_reg[12]_i_2/O[1]
+                         net (fo=2, unplaced)         0.486     3.352    busy2[10]
+                         LUT4 (Prop_lut4_I0_O)        0.245     3.597 r  frame_limit_reg[15]_i_11/O
+                         net (fo=1, unplaced)         0.000     3.597    frame_limit_reg[15]_i_11_n_0
+                         CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.314     3.911 r  frame_limit_reg_reg[15]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.008     3.919    frame_limit_reg_reg[15]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.150     4.069 r  frame_limit_reg_reg[15]_i_4/CO[1]
+                         net (fo=6, unplaced)         0.272     4.341    frame_limit_reg_reg[15]_i_4_n_2
+                         LUT2 (Prop_lut2_I0_O)        0.277     4.618 r  received_bits[15]_i_4/O
+                         net (fo=21, unplaced)        0.408     5.026    received_bits[15]_i_4_n_0
+                         LUT6 (Prop_lut6_I4_O)        0.105     5.131 r  payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.829    payload_errors[15]_i_1_n_0
                          FDRE                                         r  payload_errors_reg[14]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=202, unset)          0.748    10.748    clk
+                         net (fo=203, unset)          0.748    10.748    clk
                          FDRE                                         r  payload_errors_reg[14]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_R)       -0.527    10.185    payload_errors_reg[14]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.838
+                         arrival time                          -5.829
   -------------------------------------------------------------------
-                         slack                                  4.347
+                         slack                                  4.356
 
-Slack (MET) :             4.347ns  (required time - arrival time)
+Slack (MET) :             4.356ns  (required time - arrival time)
   Source:                 acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Destination:            payload_errors_reg[15]/R
@@ -602,7 +602,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.051ns  (logic 2.326ns (46.050%)  route 2.725ns (53.950%))
+  Data Path Delay:        5.042ns  (logic 2.309ns (45.795%)  route 2.733ns (54.205%))
   Logic Levels:           8  (CARRY4=5 LUT2=1 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
@@ -618,7 +618,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=202, unset)          0.787     0.787    clk
+                         net (fo=203, unset)          0.787     0.787    clk
                          FDRE                                         r  acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  acq_index_reg[4]/Q
@@ -629,38 +629,38 @@ Slack (MET) :             4.347ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[3])
                                                       0.100     2.597 r  acq_index_reg[8]_i_2/CO[3]
                          net (fo=1, unplaced)         0.000     2.597    acq_index_reg[8]_i_2_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.697 r  acq_index_reg[12]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     2.697    acq_index_reg[12]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     2.966 r  acq_index_reg[15]_i_4/O[1]
-                         net (fo=2, unplaced)         0.483     3.449    busy2[14]
-                         LUT4 (Prop_lut4_I0_O)        0.245     3.694 r  frame_limit_reg[15]_i_8/O
-                         net (fo=1, unplaced)         0.000     3.694    frame_limit_reg[15]_i_8_n_0
-                         CARRY4 (Prop_carry4_S[0]_CO[1])
-                                                      0.381     4.075 r  frame_limit_reg_reg[15]_i_4/CO[1]
-                         net (fo=7, unplaced)         0.275     4.350    frame_limit_reg_reg[15]_i_4_n_2
-                         LUT2 (Prop_lut2_I0_O)        0.277     4.627 r  received_bits[15]_i_5/O
-                         net (fo=21, unplaced)        0.408     5.035    received_bits[15]_i_5_n_0
-                         LUT6 (Prop_lut6_I4_O)        0.105     5.140 r  payload_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.838    payload_errors[15]_i_1_n_0
+                                                      0.269     2.866 r  acq_index_reg[12]_i_2/O[1]
+                         net (fo=2, unplaced)         0.486     3.352    busy2[10]
+                         LUT4 (Prop_lut4_I0_O)        0.245     3.597 r  frame_limit_reg[15]_i_11/O
+                         net (fo=1, unplaced)         0.000     3.597    frame_limit_reg[15]_i_11_n_0
+                         CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.314     3.911 r  frame_limit_reg_reg[15]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.008     3.919    frame_limit_reg_reg[15]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.150     4.069 r  frame_limit_reg_reg[15]_i_4/CO[1]
+                         net (fo=6, unplaced)         0.272     4.341    frame_limit_reg_reg[15]_i_4_n_2
+                         LUT2 (Prop_lut2_I0_O)        0.277     4.618 r  received_bits[15]_i_4/O
+                         net (fo=21, unplaced)        0.408     5.026    received_bits[15]_i_4_n_0
+                         LUT6 (Prop_lut6_I4_O)        0.105     5.131 r  payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.829    payload_errors[15]_i_1_n_0
                          FDRE                                         r  payload_errors_reg[15]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=202, unset)          0.748    10.748    clk
+                         net (fo=203, unset)          0.748    10.748    clk
                          FDRE                                         r  payload_errors_reg[15]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_R)       -0.527    10.185    payload_errors_reg[15]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.838
+                         arrival time                          -5.829
   -------------------------------------------------------------------
-                         slack                                  4.347
+                         slack                                  4.356
 
-Slack (MET) :             4.347ns  (required time - arrival time)
+Slack (MET) :             4.356ns  (required time - arrival time)
   Source:                 acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Destination:            payload_errors_reg[1]/R
@@ -668,7 +668,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.051ns  (logic 2.326ns (46.050%)  route 2.725ns (53.950%))
+  Data Path Delay:        5.042ns  (logic 2.309ns (45.795%)  route 2.733ns (54.205%))
   Logic Levels:           8  (CARRY4=5 LUT2=1 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
@@ -684,7 +684,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=202, unset)          0.787     0.787    clk
+                         net (fo=203, unset)          0.787     0.787    clk
                          FDRE                                         r  acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  acq_index_reg[4]/Q
@@ -695,38 +695,38 @@ Slack (MET) :             4.347ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[3])
                                                       0.100     2.597 r  acq_index_reg[8]_i_2/CO[3]
                          net (fo=1, unplaced)         0.000     2.597    acq_index_reg[8]_i_2_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.697 r  acq_index_reg[12]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     2.697    acq_index_reg[12]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     2.966 r  acq_index_reg[15]_i_4/O[1]
-                         net (fo=2, unplaced)         0.483     3.449    busy2[14]
-                         LUT4 (Prop_lut4_I0_O)        0.245     3.694 r  frame_limit_reg[15]_i_8/O
-                         net (fo=1, unplaced)         0.000     3.694    frame_limit_reg[15]_i_8_n_0
-                         CARRY4 (Prop_carry4_S[0]_CO[1])
-                                                      0.381     4.075 r  frame_limit_reg_reg[15]_i_4/CO[1]
-                         net (fo=7, unplaced)         0.275     4.350    frame_limit_reg_reg[15]_i_4_n_2
-                         LUT2 (Prop_lut2_I0_O)        0.277     4.627 r  received_bits[15]_i_5/O
-                         net (fo=21, unplaced)        0.408     5.035    received_bits[15]_i_5_n_0
-                         LUT6 (Prop_lut6_I4_O)        0.105     5.140 r  payload_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.838    payload_errors[15]_i_1_n_0
+                                                      0.269     2.866 r  acq_index_reg[12]_i_2/O[1]
+                         net (fo=2, unplaced)         0.486     3.352    busy2[10]
+                         LUT4 (Prop_lut4_I0_O)        0.245     3.597 r  frame_limit_reg[15]_i_11/O
+                         net (fo=1, unplaced)         0.000     3.597    frame_limit_reg[15]_i_11_n_0
+                         CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.314     3.911 r  frame_limit_reg_reg[15]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.008     3.919    frame_limit_reg_reg[15]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.150     4.069 r  frame_limit_reg_reg[15]_i_4/CO[1]
+                         net (fo=6, unplaced)         0.272     4.341    frame_limit_reg_reg[15]_i_4_n_2
+                         LUT2 (Prop_lut2_I0_O)        0.277     4.618 r  received_bits[15]_i_4/O
+                         net (fo=21, unplaced)        0.408     5.026    received_bits[15]_i_4_n_0
+                         LUT6 (Prop_lut6_I4_O)        0.105     5.131 r  payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.829    payload_errors[15]_i_1_n_0
                          FDRE                                         r  payload_errors_reg[1]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=202, unset)          0.748    10.748    clk
+                         net (fo=203, unset)          0.748    10.748    clk
                          FDRE                                         r  payload_errors_reg[1]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_R)       -0.527    10.185    payload_errors_reg[1]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.838
+                         arrival time                          -5.829
   -------------------------------------------------------------------
-                         slack                                  4.347
+                         slack                                  4.356
 
-Slack (MET) :             4.347ns  (required time - arrival time)
+Slack (MET) :             4.356ns  (required time - arrival time)
   Source:                 acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Destination:            payload_errors_reg[2]/R
@@ -734,7 +734,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.051ns  (logic 2.326ns (46.050%)  route 2.725ns (53.950%))
+  Data Path Delay:        5.042ns  (logic 2.309ns (45.795%)  route 2.733ns (54.205%))
   Logic Levels:           8  (CARRY4=5 LUT2=1 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
@@ -750,7 +750,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=202, unset)          0.787     0.787    clk
+                         net (fo=203, unset)          0.787     0.787    clk
                          FDRE                                         r  acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  acq_index_reg[4]/Q
@@ -761,38 +761,38 @@ Slack (MET) :             4.347ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[3])
                                                       0.100     2.597 r  acq_index_reg[8]_i_2/CO[3]
                          net (fo=1, unplaced)         0.000     2.597    acq_index_reg[8]_i_2_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.697 r  acq_index_reg[12]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     2.697    acq_index_reg[12]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     2.966 r  acq_index_reg[15]_i_4/O[1]
-                         net (fo=2, unplaced)         0.483     3.449    busy2[14]
-                         LUT4 (Prop_lut4_I0_O)        0.245     3.694 r  frame_limit_reg[15]_i_8/O
-                         net (fo=1, unplaced)         0.000     3.694    frame_limit_reg[15]_i_8_n_0
-                         CARRY4 (Prop_carry4_S[0]_CO[1])
-                                                      0.381     4.075 r  frame_limit_reg_reg[15]_i_4/CO[1]
-                         net (fo=7, unplaced)         0.275     4.350    frame_limit_reg_reg[15]_i_4_n_2
-                         LUT2 (Prop_lut2_I0_O)        0.277     4.627 r  received_bits[15]_i_5/O
-                         net (fo=21, unplaced)        0.408     5.035    received_bits[15]_i_5_n_0
-                         LUT6 (Prop_lut6_I4_O)        0.105     5.140 r  payload_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.838    payload_errors[15]_i_1_n_0
+                                                      0.269     2.866 r  acq_index_reg[12]_i_2/O[1]
+                         net (fo=2, unplaced)         0.486     3.352    busy2[10]
+                         LUT4 (Prop_lut4_I0_O)        0.245     3.597 r  frame_limit_reg[15]_i_11/O
+                         net (fo=1, unplaced)         0.000     3.597    frame_limit_reg[15]_i_11_n_0
+                         CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.314     3.911 r  frame_limit_reg_reg[15]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.008     3.919    frame_limit_reg_reg[15]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.150     4.069 r  frame_limit_reg_reg[15]_i_4/CO[1]
+                         net (fo=6, unplaced)         0.272     4.341    frame_limit_reg_reg[15]_i_4_n_2
+                         LUT2 (Prop_lut2_I0_O)        0.277     4.618 r  received_bits[15]_i_4/O
+                         net (fo=21, unplaced)        0.408     5.026    received_bits[15]_i_4_n_0
+                         LUT6 (Prop_lut6_I4_O)        0.105     5.131 r  payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.829    payload_errors[15]_i_1_n_0
                          FDRE                                         r  payload_errors_reg[2]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=202, unset)          0.748    10.748    clk
+                         net (fo=203, unset)          0.748    10.748    clk
                          FDRE                                         r  payload_errors_reg[2]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_R)       -0.527    10.185    payload_errors_reg[2]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.838
+                         arrival time                          -5.829
   -------------------------------------------------------------------
-                         slack                                  4.347
+                         slack                                  4.356
 
-Slack (MET) :             4.347ns  (required time - arrival time)
+Slack (MET) :             4.356ns  (required time - arrival time)
   Source:                 acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Destination:            payload_errors_reg[3]/R
@@ -800,7 +800,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.051ns  (logic 2.326ns (46.050%)  route 2.725ns (53.950%))
+  Data Path Delay:        5.042ns  (logic 2.309ns (45.795%)  route 2.733ns (54.205%))
   Logic Levels:           8  (CARRY4=5 LUT2=1 LUT4=1 LUT6=1)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
@@ -816,7 +816,7 @@ Slack (MET) :             4.347ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  clk (IN)
-                         net (fo=202, unset)          0.787     0.787    clk
+                         net (fo=203, unset)          0.787     0.787    clk
                          FDRE                                         r  acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  acq_index_reg[4]/Q
@@ -827,36 +827,36 @@ Slack (MET) :             4.347ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[3])
                                                       0.100     2.597 r  acq_index_reg[8]_i_2/CO[3]
                          net (fo=1, unplaced)         0.000     2.597    acq_index_reg[8]_i_2_n_0
-                         CARRY4 (Prop_carry4_CI_CO[3])
-                                                      0.100     2.697 r  acq_index_reg[12]_i_2/CO[3]
-                         net (fo=1, unplaced)         0.000     2.697    acq_index_reg[12]_i_2_n_0
                          CARRY4 (Prop_carry4_CI_O[1])
-                                                      0.269     2.966 r  acq_index_reg[15]_i_4/O[1]
-                         net (fo=2, unplaced)         0.483     3.449    busy2[14]
-                         LUT4 (Prop_lut4_I0_O)        0.245     3.694 r  frame_limit_reg[15]_i_8/O
-                         net (fo=1, unplaced)         0.000     3.694    frame_limit_reg[15]_i_8_n_0
-                         CARRY4 (Prop_carry4_S[0]_CO[1])
-                                                      0.381     4.075 r  frame_limit_reg_reg[15]_i_4/CO[1]
-                         net (fo=7, unplaced)         0.275     4.350    frame_limit_reg_reg[15]_i_4_n_2
-                         LUT2 (Prop_lut2_I0_O)        0.277     4.627 r  received_bits[15]_i_5/O
-                         net (fo=21, unplaced)        0.408     5.035    received_bits[15]_i_5_n_0
-                         LUT6 (Prop_lut6_I4_O)        0.105     5.140 r  payload_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.838    payload_errors[15]_i_1_n_0
+                                                      0.269     2.866 r  acq_index_reg[12]_i_2/O[1]
+                         net (fo=2, unplaced)         0.486     3.352    busy2[10]
+                         LUT4 (Prop_lut4_I0_O)        0.245     3.597 r  frame_limit_reg[15]_i_11/O
+                         net (fo=1, unplaced)         0.000     3.597    frame_limit_reg[15]_i_11_n_0
+                         CARRY4 (Prop_carry4_S[3]_CO[3])
+                                                      0.314     3.911 r  frame_limit_reg_reg[15]_i_8/CO[3]
+                         net (fo=1, unplaced)         0.008     3.919    frame_limit_reg_reg[15]_i_8_n_0
+                         CARRY4 (Prop_carry4_CI_CO[1])
+                                                      0.150     4.069 r  frame_limit_reg_reg[15]_i_4/CO[1]
+                         net (fo=6, unplaced)         0.272     4.341    frame_limit_reg_reg[15]_i_4_n_2
+                         LUT2 (Prop_lut2_I0_O)        0.277     4.618 r  received_bits[15]_i_4/O
+                         net (fo=21, unplaced)        0.408     5.026    received_bits[15]_i_4_n_0
+                         LUT6 (Prop_lut6_I4_O)        0.105     5.131 r  payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.829    payload_errors[15]_i_1_n_0
                          FDRE                                         r  payload_errors_reg[3]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  clk (IN)
-                         net (fo=202, unset)          0.748    10.748    clk
+                         net (fo=203, unset)          0.748    10.748    clk
                          FDRE                                         r  payload_errors_reg[3]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
                          FDRE (Setup_fdre_C_R)       -0.527    10.185    payload_errors_reg[3]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.838
+                         arrival time                          -5.829
   -------------------------------------------------------------------
-                         slack                                  4.347
+                         slack                                  4.356
 
 
 

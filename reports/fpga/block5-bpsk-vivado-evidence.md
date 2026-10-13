@@ -31,9 +31,9 @@ the NCO mixer miss by a fraction of a nanosecond.
 | 5.8 | `bpsk_symbol_timing_recovery_pipelined0` (the same module, `PIPELINED = 0`) | 338 | 201 | 2 | 0 | **-9.390 ns**, 122 failing endpoints | about 52 MHz |
 | 5.9 | `bpsk_frame_bit_source` | 36 | 18 | 0 | 0 | +5.225 ns | |
 | 5.9 | `bpsk_framed_tx_chain` | 213 | 593 | 96 | 0 | +3.946 ns | about 165 MHz |
-| 5.9 | `bpsk_ber_counter` | 287 | 203 | 0 | 0 | +2.826 ns | about 139 MHz |
-| 5.10 | `bpsk_zynq_ber_top` | 688 | 3074 | 192 | 0 | +1.659 ns | about 120 MHz |
-| 5.11 | `bpsk_zynq_ber_axi_lite` | 595 | 1995 | 144 | 0 | +1.124 ns | about 113 MHz |
+| 5.9 | `bpsk_ber_counter` | 289 | 204 | 0 | 0 | +2.781 ns | about 139 MHz |
+| 5.10 | `bpsk_zynq_ber_top` | 686 | 3075 | 192 | 0 | +1.424 ns | about 117 MHz |
+| 5.11 | `bpsk_zynq_ber_axi_lite` | 595 | 1996 | 144 | 0 | +1.667 ns | about 120 MHz |
 
 The frequency estimate is `1 / (period - WNS)`; it describes the routed critical path, not a
 characterized maximum clock. These are module-level numbers, not a board design: the integrated
@@ -99,9 +99,11 @@ and requires every output symbol to match in I and Q; the model bit check and th
 with the loop enabled pass unchanged.
 
 **The remaining critical paths are fanout, not logic.** In the two top-level designs the worst
-path has 0-1 logic levels and is more than 94 % routing: a valid signal driving the clock enables
-of the matched filter's adder tree (Lab 5.10), and the AXI reset driving the reset pins of the
-filter's product registers (Lab 5.11).
+path has 1-3 logic levels and is 88-99 % routing: the per-frame RX restart (`rst || frame_start`)
+driving 2560 reset pins of the matched filter (Lab 5.10), and the AXI reset driving the reset pins
+of the TX filter's product registers (Lab 5.11). Which fanout path comes out worst moves between
+runs: the last three rows were re-run after the lock-polarity flag of issue #64 (one flip-flop
+each), and the Lab 5.10 worst path changed from the matched filter's clock enables to its resets.
 
 ## The four introductory modules (Labs 5.1-5.4)
 

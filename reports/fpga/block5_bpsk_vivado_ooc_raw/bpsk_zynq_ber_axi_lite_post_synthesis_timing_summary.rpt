@@ -136,7 +136,7 @@ Table of Contents
 
     WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
     -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-      4.307        0.000                      0                16260        4.500        0.000                       0                  2139
+      4.304        0.000                      0                16261        4.500        0.000                       0                  2140
 
 
 All user specified timing constraints are met.
@@ -159,7 +159,7 @@ clk    {0.000 5.000}      10.000          100.000
 
 Clock             WNS(ns)      TNS(ns)  TNS Failing Endpoints  TNS Total Endpoints     WPWS(ns)     TPWS(ns)  TPWS Failing Endpoints  TPWS Total Endpoints
 -----             -------      -------  ---------------------  -------------------     --------     --------  ----------------------  --------------------
-clk                 4.307        0.000                      0                16260        4.500        0.000                       0                  2139
+clk                 4.304        0.000                      0                16261        4.500        0.000                       0                  2140
 
 
 ------------------------------------------------------------------------------------------------
@@ -190,7 +190,7 @@ Path Group    From Clock    To Clock          WNS(ns)      TNS(ns)  TNS Failing 
 From Clock:  clk
   To Clock:  clk
 
-Setup :            0  Failing Endpoints,  Worst Slack        4.307ns,  Total Violation        0.000ns
+Setup :            0  Failing Endpoints,  Worst Slack        4.304ns,  Total Violation        0.000ns
 Hold  :           NA  Failing Endpoints,  Worst Slack           NA  ,  Total Violation           NA
 PW    :            0  Failing Endpoints,  Worst Slack        4.500ns,  Total Violation        0.000ns
 ---------------------------------------------------------------------------------------------------
@@ -198,16 +198,16 @@ PW    :            0  Failing Endpoints,  Worst Slack        4.500ns,  Total Vio
 
 Max Delay Paths
 --------------------------------------------------------------------------------------
-Slack (MET) :             4.307ns  (required time - arrival time)
+Slack (MET) :             4.304ns  (required time - arrival time)
   Source:                 core_i/ber_counter_i/acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            core_i/ber_counter_i/total_errors_reg[0]/R
+  Destination:            core_i/ber_counter_i/payload_errors_reg[0]/R
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.091ns  (logic 2.253ns (44.255%)  route 2.838ns (55.745%))
-  Logic Levels:           8  (CARRY4=5 LUT4=2 LUT6=1)
+  Data Path Delay:        5.094ns  (logic 2.253ns (44.229%)  route 2.841ns (55.771%))
+  Logic Levels:           8  (CARRY4=5 LUT4=1 LUT6=2)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -222,7 +222,7 @@ Slack (MET) :             4.307ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
+                         net (fo=2139, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
                          FDRE                                         r  core_i/ber_counter_i/acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  core_i/ber_counter_i/acq_index_reg[4]/Q
@@ -244,36 +244,36 @@ Slack (MET) :             4.307ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[1])
                                                       0.150     4.122 r  core_i/ber_counter_i/busy1_inferred__0/i__carry__0/CO[1]
                          net (fo=6, unplaced)         0.272     4.394    core_i/ber_counter_i/busy1_inferred__0/i__carry__0_n_2
-                         LUT6 (Prop_lut6_I5_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
-                         net (fo=18, unplaced)        0.404     5.075    core_i/ber_counter_i/received_bits[15]_i_2_n_0
-                         LUT4 (Prop_lut4_I3_O)        0.105     5.180 r  core_i/ber_counter_i/total_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.878    core_i/ber_counter_i/total_errors[15]_i_1_n_0
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[0]/R
+                         LUT6 (Prop_lut6_I3_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
+                         net (fo=20, unplaced)        0.407     5.078    core_i/ber_counter_i/received_bits[15]_i_2_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.105     5.183 r  core_i/ber_counter_i/payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.881    core_i/ber_counter_i/payload_errors[15]_i_1_n_0
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[0]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[0]/C
+                         net (fo=2139, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[0]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/total_errors_reg[0]
+                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/payload_errors_reg[0]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.878
+                         arrival time                          -5.881
   -------------------------------------------------------------------
-                         slack                                  4.307
+                         slack                                  4.304
 
-Slack (MET) :             4.307ns  (required time - arrival time)
+Slack (MET) :             4.304ns  (required time - arrival time)
   Source:                 core_i/ber_counter_i/acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            core_i/ber_counter_i/total_errors_reg[10]/R
+  Destination:            core_i/ber_counter_i/payload_errors_reg[10]/R
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.091ns  (logic 2.253ns (44.255%)  route 2.838ns (55.745%))
-  Logic Levels:           8  (CARRY4=5 LUT4=2 LUT6=1)
+  Data Path Delay:        5.094ns  (logic 2.253ns (44.229%)  route 2.841ns (55.771%))
+  Logic Levels:           8  (CARRY4=5 LUT4=1 LUT6=2)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -288,7 +288,7 @@ Slack (MET) :             4.307ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
+                         net (fo=2139, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
                          FDRE                                         r  core_i/ber_counter_i/acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  core_i/ber_counter_i/acq_index_reg[4]/Q
@@ -310,36 +310,36 @@ Slack (MET) :             4.307ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[1])
                                                       0.150     4.122 r  core_i/ber_counter_i/busy1_inferred__0/i__carry__0/CO[1]
                          net (fo=6, unplaced)         0.272     4.394    core_i/ber_counter_i/busy1_inferred__0/i__carry__0_n_2
-                         LUT6 (Prop_lut6_I5_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
-                         net (fo=18, unplaced)        0.404     5.075    core_i/ber_counter_i/received_bits[15]_i_2_n_0
-                         LUT4 (Prop_lut4_I3_O)        0.105     5.180 r  core_i/ber_counter_i/total_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.878    core_i/ber_counter_i/total_errors[15]_i_1_n_0
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[10]/R
+                         LUT6 (Prop_lut6_I3_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
+                         net (fo=20, unplaced)        0.407     5.078    core_i/ber_counter_i/received_bits[15]_i_2_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.105     5.183 r  core_i/ber_counter_i/payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.881    core_i/ber_counter_i/payload_errors[15]_i_1_n_0
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[10]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[10]/C
+                         net (fo=2139, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[10]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/total_errors_reg[10]
+                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/payload_errors_reg[10]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.878
+                         arrival time                          -5.881
   -------------------------------------------------------------------
-                         slack                                  4.307
+                         slack                                  4.304
 
-Slack (MET) :             4.307ns  (required time - arrival time)
+Slack (MET) :             4.304ns  (required time - arrival time)
   Source:                 core_i/ber_counter_i/acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            core_i/ber_counter_i/total_errors_reg[11]/R
+  Destination:            core_i/ber_counter_i/payload_errors_reg[11]/R
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.091ns  (logic 2.253ns (44.255%)  route 2.838ns (55.745%))
-  Logic Levels:           8  (CARRY4=5 LUT4=2 LUT6=1)
+  Data Path Delay:        5.094ns  (logic 2.253ns (44.229%)  route 2.841ns (55.771%))
+  Logic Levels:           8  (CARRY4=5 LUT4=1 LUT6=2)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -354,7 +354,7 @@ Slack (MET) :             4.307ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
+                         net (fo=2139, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
                          FDRE                                         r  core_i/ber_counter_i/acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  core_i/ber_counter_i/acq_index_reg[4]/Q
@@ -376,36 +376,36 @@ Slack (MET) :             4.307ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[1])
                                                       0.150     4.122 r  core_i/ber_counter_i/busy1_inferred__0/i__carry__0/CO[1]
                          net (fo=6, unplaced)         0.272     4.394    core_i/ber_counter_i/busy1_inferred__0/i__carry__0_n_2
-                         LUT6 (Prop_lut6_I5_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
-                         net (fo=18, unplaced)        0.404     5.075    core_i/ber_counter_i/received_bits[15]_i_2_n_0
-                         LUT4 (Prop_lut4_I3_O)        0.105     5.180 r  core_i/ber_counter_i/total_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.878    core_i/ber_counter_i/total_errors[15]_i_1_n_0
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[11]/R
+                         LUT6 (Prop_lut6_I3_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
+                         net (fo=20, unplaced)        0.407     5.078    core_i/ber_counter_i/received_bits[15]_i_2_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.105     5.183 r  core_i/ber_counter_i/payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.881    core_i/ber_counter_i/payload_errors[15]_i_1_n_0
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[11]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[11]/C
+                         net (fo=2139, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[11]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/total_errors_reg[11]
+                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/payload_errors_reg[11]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.878
+                         arrival time                          -5.881
   -------------------------------------------------------------------
-                         slack                                  4.307
+                         slack                                  4.304
 
-Slack (MET) :             4.307ns  (required time - arrival time)
+Slack (MET) :             4.304ns  (required time - arrival time)
   Source:                 core_i/ber_counter_i/acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            core_i/ber_counter_i/total_errors_reg[12]/R
+  Destination:            core_i/ber_counter_i/payload_errors_reg[12]/R
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.091ns  (logic 2.253ns (44.255%)  route 2.838ns (55.745%))
-  Logic Levels:           8  (CARRY4=5 LUT4=2 LUT6=1)
+  Data Path Delay:        5.094ns  (logic 2.253ns (44.229%)  route 2.841ns (55.771%))
+  Logic Levels:           8  (CARRY4=5 LUT4=1 LUT6=2)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -420,7 +420,7 @@ Slack (MET) :             4.307ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
+                         net (fo=2139, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
                          FDRE                                         r  core_i/ber_counter_i/acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  core_i/ber_counter_i/acq_index_reg[4]/Q
@@ -442,36 +442,36 @@ Slack (MET) :             4.307ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[1])
                                                       0.150     4.122 r  core_i/ber_counter_i/busy1_inferred__0/i__carry__0/CO[1]
                          net (fo=6, unplaced)         0.272     4.394    core_i/ber_counter_i/busy1_inferred__0/i__carry__0_n_2
-                         LUT6 (Prop_lut6_I5_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
-                         net (fo=18, unplaced)        0.404     5.075    core_i/ber_counter_i/received_bits[15]_i_2_n_0
-                         LUT4 (Prop_lut4_I3_O)        0.105     5.180 r  core_i/ber_counter_i/total_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.878    core_i/ber_counter_i/total_errors[15]_i_1_n_0
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[12]/R
+                         LUT6 (Prop_lut6_I3_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
+                         net (fo=20, unplaced)        0.407     5.078    core_i/ber_counter_i/received_bits[15]_i_2_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.105     5.183 r  core_i/ber_counter_i/payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.881    core_i/ber_counter_i/payload_errors[15]_i_1_n_0
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[12]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[12]/C
+                         net (fo=2139, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[12]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/total_errors_reg[12]
+                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/payload_errors_reg[12]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.878
+                         arrival time                          -5.881
   -------------------------------------------------------------------
-                         slack                                  4.307
+                         slack                                  4.304
 
-Slack (MET) :             4.307ns  (required time - arrival time)
+Slack (MET) :             4.304ns  (required time - arrival time)
   Source:                 core_i/ber_counter_i/acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            core_i/ber_counter_i/total_errors_reg[13]/R
+  Destination:            core_i/ber_counter_i/payload_errors_reg[13]/R
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.091ns  (logic 2.253ns (44.255%)  route 2.838ns (55.745%))
-  Logic Levels:           8  (CARRY4=5 LUT4=2 LUT6=1)
+  Data Path Delay:        5.094ns  (logic 2.253ns (44.229%)  route 2.841ns (55.771%))
+  Logic Levels:           8  (CARRY4=5 LUT4=1 LUT6=2)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -486,7 +486,7 @@ Slack (MET) :             4.307ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
+                         net (fo=2139, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
                          FDRE                                         r  core_i/ber_counter_i/acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  core_i/ber_counter_i/acq_index_reg[4]/Q
@@ -508,36 +508,36 @@ Slack (MET) :             4.307ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[1])
                                                       0.150     4.122 r  core_i/ber_counter_i/busy1_inferred__0/i__carry__0/CO[1]
                          net (fo=6, unplaced)         0.272     4.394    core_i/ber_counter_i/busy1_inferred__0/i__carry__0_n_2
-                         LUT6 (Prop_lut6_I5_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
-                         net (fo=18, unplaced)        0.404     5.075    core_i/ber_counter_i/received_bits[15]_i_2_n_0
-                         LUT4 (Prop_lut4_I3_O)        0.105     5.180 r  core_i/ber_counter_i/total_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.878    core_i/ber_counter_i/total_errors[15]_i_1_n_0
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[13]/R
+                         LUT6 (Prop_lut6_I3_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
+                         net (fo=20, unplaced)        0.407     5.078    core_i/ber_counter_i/received_bits[15]_i_2_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.105     5.183 r  core_i/ber_counter_i/payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.881    core_i/ber_counter_i/payload_errors[15]_i_1_n_0
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[13]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[13]/C
+                         net (fo=2139, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[13]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/total_errors_reg[13]
+                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/payload_errors_reg[13]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.878
+                         arrival time                          -5.881
   -------------------------------------------------------------------
-                         slack                                  4.307
+                         slack                                  4.304
 
-Slack (MET) :             4.307ns  (required time - arrival time)
+Slack (MET) :             4.304ns  (required time - arrival time)
   Source:                 core_i/ber_counter_i/acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            core_i/ber_counter_i/total_errors_reg[14]/R
+  Destination:            core_i/ber_counter_i/payload_errors_reg[14]/R
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.091ns  (logic 2.253ns (44.255%)  route 2.838ns (55.745%))
-  Logic Levels:           8  (CARRY4=5 LUT4=2 LUT6=1)
+  Data Path Delay:        5.094ns  (logic 2.253ns (44.229%)  route 2.841ns (55.771%))
+  Logic Levels:           8  (CARRY4=5 LUT4=1 LUT6=2)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -552,7 +552,7 @@ Slack (MET) :             4.307ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
+                         net (fo=2139, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
                          FDRE                                         r  core_i/ber_counter_i/acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  core_i/ber_counter_i/acq_index_reg[4]/Q
@@ -574,36 +574,36 @@ Slack (MET) :             4.307ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[1])
                                                       0.150     4.122 r  core_i/ber_counter_i/busy1_inferred__0/i__carry__0/CO[1]
                          net (fo=6, unplaced)         0.272     4.394    core_i/ber_counter_i/busy1_inferred__0/i__carry__0_n_2
-                         LUT6 (Prop_lut6_I5_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
-                         net (fo=18, unplaced)        0.404     5.075    core_i/ber_counter_i/received_bits[15]_i_2_n_0
-                         LUT4 (Prop_lut4_I3_O)        0.105     5.180 r  core_i/ber_counter_i/total_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.878    core_i/ber_counter_i/total_errors[15]_i_1_n_0
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[14]/R
+                         LUT6 (Prop_lut6_I3_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
+                         net (fo=20, unplaced)        0.407     5.078    core_i/ber_counter_i/received_bits[15]_i_2_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.105     5.183 r  core_i/ber_counter_i/payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.881    core_i/ber_counter_i/payload_errors[15]_i_1_n_0
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[14]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[14]/C
+                         net (fo=2139, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[14]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/total_errors_reg[14]
+                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/payload_errors_reg[14]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.878
+                         arrival time                          -5.881
   -------------------------------------------------------------------
-                         slack                                  4.307
+                         slack                                  4.304
 
-Slack (MET) :             4.307ns  (required time - arrival time)
+Slack (MET) :             4.304ns  (required time - arrival time)
   Source:                 core_i/ber_counter_i/acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            core_i/ber_counter_i/total_errors_reg[15]/R
+  Destination:            core_i/ber_counter_i/payload_errors_reg[15]/R
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.091ns  (logic 2.253ns (44.255%)  route 2.838ns (55.745%))
-  Logic Levels:           8  (CARRY4=5 LUT4=2 LUT6=1)
+  Data Path Delay:        5.094ns  (logic 2.253ns (44.229%)  route 2.841ns (55.771%))
+  Logic Levels:           8  (CARRY4=5 LUT4=1 LUT6=2)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -618,7 +618,7 @@ Slack (MET) :             4.307ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
+                         net (fo=2139, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
                          FDRE                                         r  core_i/ber_counter_i/acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  core_i/ber_counter_i/acq_index_reg[4]/Q
@@ -640,36 +640,36 @@ Slack (MET) :             4.307ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[1])
                                                       0.150     4.122 r  core_i/ber_counter_i/busy1_inferred__0/i__carry__0/CO[1]
                          net (fo=6, unplaced)         0.272     4.394    core_i/ber_counter_i/busy1_inferred__0/i__carry__0_n_2
-                         LUT6 (Prop_lut6_I5_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
-                         net (fo=18, unplaced)        0.404     5.075    core_i/ber_counter_i/received_bits[15]_i_2_n_0
-                         LUT4 (Prop_lut4_I3_O)        0.105     5.180 r  core_i/ber_counter_i/total_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.878    core_i/ber_counter_i/total_errors[15]_i_1_n_0
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[15]/R
+                         LUT6 (Prop_lut6_I3_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
+                         net (fo=20, unplaced)        0.407     5.078    core_i/ber_counter_i/received_bits[15]_i_2_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.105     5.183 r  core_i/ber_counter_i/payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.881    core_i/ber_counter_i/payload_errors[15]_i_1_n_0
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[15]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[15]/C
+                         net (fo=2139, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[15]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/total_errors_reg[15]
+                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/payload_errors_reg[15]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.878
+                         arrival time                          -5.881
   -------------------------------------------------------------------
-                         slack                                  4.307
+                         slack                                  4.304
 
-Slack (MET) :             4.307ns  (required time - arrival time)
+Slack (MET) :             4.304ns  (required time - arrival time)
   Source:                 core_i/ber_counter_i/acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            core_i/ber_counter_i/total_errors_reg[1]/R
+  Destination:            core_i/ber_counter_i/payload_errors_reg[1]/R
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.091ns  (logic 2.253ns (44.255%)  route 2.838ns (55.745%))
-  Logic Levels:           8  (CARRY4=5 LUT4=2 LUT6=1)
+  Data Path Delay:        5.094ns  (logic 2.253ns (44.229%)  route 2.841ns (55.771%))
+  Logic Levels:           8  (CARRY4=5 LUT4=1 LUT6=2)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -684,7 +684,7 @@ Slack (MET) :             4.307ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
+                         net (fo=2139, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
                          FDRE                                         r  core_i/ber_counter_i/acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  core_i/ber_counter_i/acq_index_reg[4]/Q
@@ -706,36 +706,36 @@ Slack (MET) :             4.307ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[1])
                                                       0.150     4.122 r  core_i/ber_counter_i/busy1_inferred__0/i__carry__0/CO[1]
                          net (fo=6, unplaced)         0.272     4.394    core_i/ber_counter_i/busy1_inferred__0/i__carry__0_n_2
-                         LUT6 (Prop_lut6_I5_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
-                         net (fo=18, unplaced)        0.404     5.075    core_i/ber_counter_i/received_bits[15]_i_2_n_0
-                         LUT4 (Prop_lut4_I3_O)        0.105     5.180 r  core_i/ber_counter_i/total_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.878    core_i/ber_counter_i/total_errors[15]_i_1_n_0
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[1]/R
+                         LUT6 (Prop_lut6_I3_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
+                         net (fo=20, unplaced)        0.407     5.078    core_i/ber_counter_i/received_bits[15]_i_2_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.105     5.183 r  core_i/ber_counter_i/payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.881    core_i/ber_counter_i/payload_errors[15]_i_1_n_0
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[1]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[1]/C
+                         net (fo=2139, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[1]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/total_errors_reg[1]
+                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/payload_errors_reg[1]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.878
+                         arrival time                          -5.881
   -------------------------------------------------------------------
-                         slack                                  4.307
+                         slack                                  4.304
 
-Slack (MET) :             4.307ns  (required time - arrival time)
+Slack (MET) :             4.304ns  (required time - arrival time)
   Source:                 core_i/ber_counter_i/acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            core_i/ber_counter_i/total_errors_reg[2]/R
+  Destination:            core_i/ber_counter_i/payload_errors_reg[2]/R
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.091ns  (logic 2.253ns (44.255%)  route 2.838ns (55.745%))
-  Logic Levels:           8  (CARRY4=5 LUT4=2 LUT6=1)
+  Data Path Delay:        5.094ns  (logic 2.253ns (44.229%)  route 2.841ns (55.771%))
+  Logic Levels:           8  (CARRY4=5 LUT4=1 LUT6=2)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -750,7 +750,7 @@ Slack (MET) :             4.307ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
+                         net (fo=2139, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
                          FDRE                                         r  core_i/ber_counter_i/acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  core_i/ber_counter_i/acq_index_reg[4]/Q
@@ -772,36 +772,36 @@ Slack (MET) :             4.307ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[1])
                                                       0.150     4.122 r  core_i/ber_counter_i/busy1_inferred__0/i__carry__0/CO[1]
                          net (fo=6, unplaced)         0.272     4.394    core_i/ber_counter_i/busy1_inferred__0/i__carry__0_n_2
-                         LUT6 (Prop_lut6_I5_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
-                         net (fo=18, unplaced)        0.404     5.075    core_i/ber_counter_i/received_bits[15]_i_2_n_0
-                         LUT4 (Prop_lut4_I3_O)        0.105     5.180 r  core_i/ber_counter_i/total_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.878    core_i/ber_counter_i/total_errors[15]_i_1_n_0
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[2]/R
+                         LUT6 (Prop_lut6_I3_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
+                         net (fo=20, unplaced)        0.407     5.078    core_i/ber_counter_i/received_bits[15]_i_2_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.105     5.183 r  core_i/ber_counter_i/payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.881    core_i/ber_counter_i/payload_errors[15]_i_1_n_0
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[2]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[2]/C
+                         net (fo=2139, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[2]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/total_errors_reg[2]
+                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/payload_errors_reg[2]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.878
+                         arrival time                          -5.881
   -------------------------------------------------------------------
-                         slack                                  4.307
+                         slack                                  4.304
 
-Slack (MET) :             4.307ns  (required time - arrival time)
+Slack (MET) :             4.304ns  (required time - arrival time)
   Source:                 core_i/ber_counter_i/acq_index_reg[4]/C
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
-  Destination:            core_i/ber_counter_i/total_errors_reg[3]/R
+  Destination:            core_i/ber_counter_i/payload_errors_reg[3]/R
                             (rising edge-triggered cell FDRE clocked by clk  {rise@0.000ns fall@5.000ns period=10.000ns})
   Path Group:             clk
   Path Type:              Setup (Max at Slow Process Corner)
   Requirement:            10.000ns  (clk rise@10.000ns - clk rise@0.000ns)
-  Data Path Delay:        5.091ns  (logic 2.253ns (44.255%)  route 2.838ns (55.745%))
-  Logic Levels:           8  (CARRY4=5 LUT4=2 LUT6=1)
+  Data Path Delay:        5.094ns  (logic 2.253ns (44.229%)  route 2.841ns (55.771%))
+  Logic Levels:           8  (CARRY4=5 LUT4=1 LUT6=2)
   Clock Path Skew:        -0.039ns (DCD - SCD + CPR)
     Destination Clock Delay (DCD):    0.748ns = ( 10.748 - 10.000 )
     Source Clock Delay      (SCD):    0.787ns
@@ -816,7 +816,7 @@ Slack (MET) :             4.307ns  (required time - arrival time)
   -------------------------------------------------------------------    -------------------
                          (clock clk rise edge)        0.000     0.000 r
                                                       0.000     0.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
+                         net (fo=2139, unset)         0.787     0.787    core_i/ber_counter_i/s_axi_aclk
                          FDRE                                         r  core_i/ber_counter_i/acq_index_reg[4]/C
   -------------------------------------------------------------------    -------------------
                          FDRE (Prop_fdre_C_Q)         0.303     1.090 r  core_i/ber_counter_i/acq_index_reg[4]/Q
@@ -838,25 +838,25 @@ Slack (MET) :             4.307ns  (required time - arrival time)
                          CARRY4 (Prop_carry4_CI_CO[1])
                                                       0.150     4.122 r  core_i/ber_counter_i/busy1_inferred__0/i__carry__0/CO[1]
                          net (fo=6, unplaced)         0.272     4.394    core_i/ber_counter_i/busy1_inferred__0/i__carry__0_n_2
-                         LUT6 (Prop_lut6_I5_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
-                         net (fo=18, unplaced)        0.404     5.075    core_i/ber_counter_i/received_bits[15]_i_2_n_0
-                         LUT4 (Prop_lut4_I3_O)        0.105     5.180 r  core_i/ber_counter_i/total_errors[15]_i_1/O
-                         net (fo=16, unplaced)        0.698     5.878    core_i/ber_counter_i/total_errors[15]_i_1_n_0
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[3]/R
+                         LUT6 (Prop_lut6_I3_O)        0.277     4.671 r  core_i/ber_counter_i/received_bits[15]_i_2/O
+                         net (fo=20, unplaced)        0.407     5.078    core_i/ber_counter_i/received_bits[15]_i_2_n_0
+                         LUT6 (Prop_lut6_I5_O)        0.105     5.183 r  core_i/ber_counter_i/payload_errors[15]_i_1/O
+                         net (fo=16, unplaced)        0.698     5.881    core_i/ber_counter_i/payload_errors[15]_i_1_n_0
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[3]/R
   -------------------------------------------------------------------    -------------------
 
                          (clock clk rise edge)       10.000    10.000 r
                                                       0.000    10.000 r  s_axi_aclk (IN)
-                         net (fo=2138, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
-                         FDRE                                         r  core_i/ber_counter_i/total_errors_reg[3]/C
+                         net (fo=2139, unset)         0.748    10.748    core_i/ber_counter_i/s_axi_aclk
+                         FDRE                                         r  core_i/ber_counter_i/payload_errors_reg[3]/C
                          clock pessimism              0.000    10.748
                          clock uncertainty           -0.035    10.712
-                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/total_errors_reg[3]
+                         FDRE (Setup_fdre_C_R)       -0.527    10.185    core_i/ber_counter_i/payload_errors_reg[3]
   -------------------------------------------------------------------
                          required time                         10.185
-                         arrival time                          -5.878
+                         arrival time                          -5.881
   -------------------------------------------------------------------
-                         slack                                  4.307
+                         slack                                  4.304
 
 
 

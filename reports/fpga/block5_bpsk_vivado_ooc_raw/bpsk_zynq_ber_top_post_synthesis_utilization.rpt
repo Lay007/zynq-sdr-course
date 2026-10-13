@@ -30,11 +30,11 @@ Table of Contents
 +-------------------------+------+-------+------------+-----------+-------+
 |        Site Type        | Used | Fixed | Prohibited | Available | Util% |
 +-------------------------+------+-------+------------+-----------+-------+
-| Slice LUTs*             |  692 |     0 |          0 |     53200 |  1.30 |
-|   LUT as Logic          |  692 |     0 |          0 |     53200 |  1.30 |
+| Slice LUTs*             |  691 |     0 |          0 |     53200 |  1.30 |
+|   LUT as Logic          |  691 |     0 |          0 |     53200 |  1.30 |
 |   LUT as Memory         |    0 |     0 |          0 |     17400 |  0.00 |
-| Slice Registers         | 3074 |     0 |          0 |    106400 |  2.89 |
-|   Register as Flip Flop | 3074 |     0 |          0 |    106400 |  2.89 |
+| Slice Registers         | 3075 |     0 |          0 |    106400 |  2.89 |
+|   Register as Flip Flop | 3075 |     0 |          0 |    106400 |  2.89 |
 |   Register as Latch     |    0 |     0 |          0 |    106400 |  0.00 |
 | F7 Muxes                |    6 |     0 |          0 |     26600 |  0.02 |
 | F8 Muxes                |    2 |     0 |          0 |     13300 |  0.02 |
@@ -57,7 +57,7 @@ Table of Contents
 | 0     |          Yes |           - |          Set |
 | 0     |          Yes |           - |        Reset |
 | 15    |          Yes |         Set |            - |
-| 3059  |          Yes |       Reset |            - |
+| 3060  |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -147,14 +147,14 @@ Table of Contents
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| FDRE     | 3059 |        Flop & Latch |
-| LUT2     |  287 |                 LUT |
+| FDRE     | 3060 |        Flop & Latch |
+| LUT2     |  290 |                 LUT |
 | DSP48E1  |  192 |    Block Arithmetic |
 | CARRY4   |  169 |          CarryLogic |
 | LUT1     |  156 |                 LUT |
-| LUT6     |  109 |                 LUT |
-| LUT4     |  106 |                 LUT |
-| LUT3     |   84 |                 LUT |
+| LUT4     |  108 |                 LUT |
+| LUT6     |  104 |                 LUT |
+| LUT3     |   82 |                 LUT |
 | LUT5     |   76 |                 LUT |
 | FDSE     |   15 |        Flop & Latch |
 | MUXF7    |    6 |               MuxFx |

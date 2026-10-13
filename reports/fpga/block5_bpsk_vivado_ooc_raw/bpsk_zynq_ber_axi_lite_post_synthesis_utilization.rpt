@@ -33,8 +33,8 @@ Table of Contents
 | Slice LUTs*             |  602 |     0 |          0 |     53200 |  1.13 |
 |   LUT as Logic          |  602 |     0 |          0 |     53200 |  1.13 |
 |   LUT as Memory         |    0 |     0 |          0 |     17400 |  0.00 |
-| Slice Registers         | 1995 |     0 |          0 |    106400 |  1.88 |
-|   Register as Flip Flop | 1995 |     0 |          0 |    106400 |  1.88 |
+| Slice Registers         | 1996 |     0 |          0 |    106400 |  1.88 |
+|   Register as Flip Flop | 1996 |     0 |          0 |    106400 |  1.88 |
 |   Register as Latch     |    0 |     0 |          0 |    106400 |  0.00 |
 | F7 Muxes                |    6 |     0 |          0 |     26600 |  0.02 |
 | F8 Muxes                |    2 |     0 |          0 |     13300 |  0.02 |
@@ -57,7 +57,7 @@ Table of Contents
 | 0     |          Yes |           - |          Set |
 | 0     |          Yes |           - |        Reset |
 | 13    |          Yes |         Set |            - |
-| 1982  |          Yes |       Reset |            - |
+| 1983  |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -147,15 +147,15 @@ Table of Contents
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| FDRE     | 1982 |        Flop & Latch |
+| FDRE     | 1983 |        Flop & Latch |
 | LUT2     |  237 |                 LUT |
 | DSP48E1  |  144 |    Block Arithmetic |
 | CARRY4   |  136 |          CarryLogic |
-| LUT6     |  129 |                 LUT |
+| LUT6     |  132 |                 LUT |
 | LUT4     |  110 |                 LUT |
 | LUT1     |  108 |                 LUT |
-| LUT5     |   65 |                 LUT |
-| LUT3     |   52 |                 LUT |
+| LUT5     |   63 |                 LUT |
+| LUT3     |   50 |                 LUT |
 | FDSE     |   13 |        Flop & Latch |
 | MUXF7    |    6 |               MuxFx |
 | MUXF8    |    2 |               MuxFx |

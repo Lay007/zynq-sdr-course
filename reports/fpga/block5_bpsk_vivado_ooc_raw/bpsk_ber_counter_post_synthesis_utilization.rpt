@@ -30,11 +30,11 @@ Table of Contents
 +-------------------------+------+-------+------------+-----------+-------+
 |        Site Type        | Used | Fixed | Prohibited | Available | Util% |
 +-------------------------+------+-------+------------+-----------+-------+
-| Slice LUTs*             |  291 |     0 |          0 |     53200 |  0.55 |
-|   LUT as Logic          |  291 |     0 |          0 |     53200 |  0.55 |
+| Slice LUTs*             |  292 |     0 |          0 |     53200 |  0.55 |
+|   LUT as Logic          |  292 |     0 |          0 |     53200 |  0.55 |
 |   LUT as Memory         |    0 |     0 |          0 |     17400 |  0.00 |
-| Slice Registers         |  203 |     0 |          0 |    106400 |  0.19 |
-|   Register as Flip Flop |  203 |     0 |          0 |    106400 |  0.19 |
+| Slice Registers         |  204 |     0 |          0 |    106400 |  0.19 |
+|   Register as Flip Flop |  204 |     0 |          0 |    106400 |  0.19 |
 |   Register as Latch     |    0 |     0 |          0 |    106400 |  0.00 |
 | F7 Muxes                |    4 |     0 |          0 |     26600 |  0.02 |
 | F8 Muxes                |    1 |     0 |          0 |     13300 | <0.01 |
@@ -57,7 +57,7 @@ Table of Contents
 | 0     |          Yes |           - |          Set |
 | 0     |          Yes |           - |        Reset |
 | 45    |          Yes |         Set |            - |
-| 158   |          Yes |       Reset |            - |
+| 159   |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -146,15 +146,15 @@ Table of Contents
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| FDRE     |  158 |        Flop & Latch |
+| FDRE     |  159 |        Flop & Latch |
 | LUT4     |  111 |                 LUT |
-| LUT6     |   78 |                 LUT |
+| LUT6     |   80 |                 LUT |
 | LUT2     |   72 |                 LUT |
 | CARRY4   |   48 |          CarryLogic |
 | FDSE     |   45 |        Flop & Latch |
-| LUT5     |   42 |                 LUT |
+| LUT5     |   40 |                 LUT |
 | LUT3     |   37 |                 LUT |
-| LUT1     |   25 |                 LUT |
+| LUT1     |   24 |                 LUT |
 | MUXF7    |    4 |               MuxFx |
 | MUXF8    |    1 |               MuxFx |
 +----------+------+---------------------+
