@@ -133,7 +133,7 @@ This lab uses the same map as Lab 5.11:
 
 | Offset | Name | Meaning |
 |---|---|---|
-| `0x00` | `CONTROL_STATUS` | write bit `0` to start, read bit `1` for `busy`, read/write bit `2` for sticky `done` |
+| `0x00` | `CONTROL_STATUS` | write bit `0` to start, read bit `1` for `busy`, read/write bit `2` for sticky `done`, read bit `3` for `lock_inverted` (added with issue #64; a bitstream built before it reads `0` there) |
 | `0x04` | `FRAME_BIT_COUNT` | total transmitted and compared bits |
 | `0x08` | `PREAMBLE_COUNT` | preamble bits excluded from payload BER |
 | `0x0C` | `START_OFFSET` | deterministic sample index for decisions |

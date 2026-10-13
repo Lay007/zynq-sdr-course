@@ -57,7 +57,7 @@ Base address: `0x79040000`
 | `0x000` | `axi_gpreg` version register |
 | `0x004` | `axi_gpreg` ID register, expected `0x4250534B` |
 | `0x404` | GPREG0 output: control word, bit `0` = start edge, bit `1` = clear sticky done, bits `3:2` = RX decision mode (`I`, `-I`, `Q`, `-Q`) |
-| `0x408` | GPREG0 input: status word, bit `0` = synchronized start level, bit `1` = busy, bit `2` = sticky done, bit `3` = sticky RX timeout/abort |
+| `0x408` | GPREG0 input: status word, bit `0` = synchronized start level, bit `1` = busy, bit `2` = sticky done, bit `3` = sticky RX timeout/abort, bit `4` = QPSK mode (`gp_ctrl[4]`), bits `6:5` = constellation rotation resolved by the BER counter in units of 90 degrees, latched at `done` (BPSK reads `0` or `2`; added with issue #64, so bitstreams built before it read `0`), bits `15:8` = `SPS` |
 | `0x444` | GPREG1 output: `FRAME_BIT_COUNT` |
 | `0x448` | GPREG1 input: `RECEIVED_BITS` |
 | `0x484` | GPREG2 output: `PREAMBLE_COUNT` |

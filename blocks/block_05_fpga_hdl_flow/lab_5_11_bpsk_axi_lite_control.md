@@ -52,7 +52,7 @@ PASS: bpsk_zynq_ber_axi_lite completed without errors
 
 | Address | Name | Access | Meaning |
 |---|---|---|---|
-| `0x00` | `CONTROL_STATUS` | `W/RO` | bit `0`: write `1` to launch one frame; bit `1`: `busy`; bit `2`: `done` sticky, clear by writing `1` to bit `2` |
+| `0x00` | `CONTROL_STATUS` | `W/RO` | bit `0`: write `1` to launch one frame; bit `1`: `busy`; bit `2`: `done` sticky, clear by writing `1` to bit `2`; bit `3` (read-only): `lock_inverted`, the last run locked on the inverted preamble (180 degrees, see Lab 5.10) |
 | `0x04` | `FRAME_BIT_COUNT` | `RW` | number of bits to transmit and compare |
 | `0x08` | `PREAMBLE_COUNT` | `RW` | number of preamble bits excluded from payload BER |
 | `0x0C` | `START_OFFSET` | `RW` | deterministic matched-filter sample index for symbol decisions |
