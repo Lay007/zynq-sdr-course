@@ -1,4 +1,4 @@
-# AD9361 two-board gain and overload grid — 2026-10-13
+# AD9361 two-board gain and overload grid, 2026-10-13
 
 ## Result
 
