@@ -41,6 +41,10 @@ module bpsk_ber_counter #(
     // of these in parallel on differently-rotated bit streams and pick the branch
     // that actually acquired the frame (see qpsk_ber_counter's quadrant resolve).
     output wire                     lock_acquired,
+    // 1 when the frame was acquired on the inverted preamble (180-degree polarity) and
+    // the payload is being inverted back. Cleared on start, held after done until the
+    // next start, so software can read it with the error counts (issue #64).
+    output reg                      lock_inverted,
     // Normalized application payload stream after frame lock and optional
     // 180-degree inversion. The preamble is intentionally not replayed.
     output wire                     payload_out_valid,
@@ -97,6 +101,16 @@ function [INDEX_W-1:0] count_matches(input [WIN-1:0] w, input inv);
 endfunction
 
 assign lock_acquired = locked;
+
+// invert_bits itself is cleared when the frame completes; keep the value of the last
+// locked cycle for the reader.
+always @(posedge clk) begin
+    if (rst || (start && !busy && (frame_bit_count != 0))) begin
+        lock_inverted <= 1'b0;
+    end else if (locked) begin
+        lock_inverted <= invert_bits;
+    end
+end
 assign payload_out_valid = busy && locked && in_valid &&
                            (received_bits >= preamble_limit_reg);
 assign payload_out_bit = invert_bits ? ~in_bit : in_bit;

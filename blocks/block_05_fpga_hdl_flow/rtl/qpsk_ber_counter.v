@@ -52,6 +52,10 @@ module qpsk_ber_counter #(
     output wire                     busy,
     output wire                     done,
     output wire                     quadrant_swapped, // 1 = branch B won (90/270 deg)
+    // Resolved rotation of the received constellation in units of 90 degrees:
+    // 0 = 0, 1 = 90, 2 = 180, 3 = 270 (branch B adds 90, an inverted lock adds 180).
+    // Held after done until the next start (issue #64).
+    output wire [1:0]               rotation_index,
     // Serial, normalized payload bits after preamble lock. Bit 0 of each
     // recovered dibit appears first, matching the course ROM/bus convention.
     output wire                     payload_out_valid,
@@ -115,6 +119,7 @@ wire [INDEX_W-1:0] frame_bit_count = symbol_count << 1;   // 2 bits per QPSK sym
 wire lock_a, lock_b;
 wire payload_valid_a, payload_valid_b;
 wire payload_bit_a, payload_bit_b;
+wire inv_a, inv_b;
 reg  winner_valid = 1'b0;
 reg  winner_b     = 1'b0;   // 0 = branch A, 1 = branch B
 
@@ -160,6 +165,7 @@ bpsk_ber_counter #(
     .busy(busy_a),
     .done(done_a),
     .lock_acquired(lock_a),
+    .lock_inverted(inv_a),
     .payload_out_valid(payload_valid_a),
     .payload_out_bit(payload_bit_a),
     .received_bits(recv_a),
@@ -188,6 +194,7 @@ bpsk_ber_counter #(
     .busy(busy_b),
     .done(done_b),
     .lock_acquired(lock_b),
+    .lock_inverted(inv_b),
     .payload_out_valid(payload_valid_b),
     .payload_out_bit(payload_bit_b),
     .received_bits(recv_b),
@@ -204,6 +211,7 @@ bpsk_ber_counter #(
 assign busy = winner_valid ? (winner_b ? busy_b : busy_a) : (busy_a || busy_b);
 assign done = winner_valid ? (winner_b ? done_b : done_a) : (done_a && done_b);
 assign quadrant_swapped = winner_valid && winner_b;
+assign rotation_index = winner_valid ? {(winner_b ? inv_b : inv_a), winner_b} : 2'b00;
 // winner_valid is registered one clock after a branch raises lock. During that
 // first payload bit, select directly from the lock wires so no bit is lost.
 wire payload_select_b = winner_valid ? winner_b : (!lock_a && lock_b);

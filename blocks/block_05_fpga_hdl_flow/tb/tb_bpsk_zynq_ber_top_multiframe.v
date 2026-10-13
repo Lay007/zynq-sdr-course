@@ -40,6 +40,7 @@ wire signed [W-1:0] delayed_rx_q;
 wire [INDEX_W-1:0] received_bits;
 wire [INDEX_W-1:0] total_errors;
 wire [INDEX_W-1:0] payload_errors;
+wire lock_inverted;
 wire timed_out;
 
 integer wait_cycles;
@@ -84,6 +85,7 @@ bpsk_zynq_ber_top #(
     .received_bits(received_bits),
     .total_errors(total_errors),
     .payload_errors(payload_errors),
+    .lock_inverted(lock_inverted),
     .debug_recovered_valid(),
     .debug_recovered_bit(),
     .debug_symbol_valid(),
@@ -173,6 +175,11 @@ initial begin
         if (received_bits != frame_bit_count_cfg) begin
             $display("ERROR: frame %0d received_bits=%0d expected=%0d",
                      frame_idx, received_bits, frame_bit_count_cfg);
+            $fatal(1);
+        end
+        if (lock_inverted !== 1'b1) begin
+            // Issue #64: the flag must be re-resolved for every frame, not left over.
+            $display("ERROR: frame %0d lock_inverted=%0b on the sign-inverted loopback", frame_idx, lock_inverted);
             $fatal(1);
         end
         if (total_errors != 0 || payload_errors != 0) begin

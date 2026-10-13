@@ -32,6 +32,7 @@ wire signed [W-1:0] delayed_rx_q;
 wire [INDEX_W-1:0] received_bits;
 wire [INDEX_W-1:0] total_errors;
 wire [INDEX_W-1:0] payload_errors;
+wire lock_inverted;
 
 integer wait_cycles;
 integer meta_fd;
@@ -77,6 +78,7 @@ bpsk_zynq_ber_top #(
     .received_bits(received_bits),
     .total_errors(total_errors),
     .payload_errors(payload_errors),
+    .lock_inverted(lock_inverted),
     .debug_recovered_valid(),
     .debug_recovered_bit(),
     .debug_symbol_valid(),
@@ -177,6 +179,13 @@ initial begin
     end
     if (received_bits != frame_bit_count_cfg) begin
         $display("ERROR: received_bits=%0d expected=%0d", received_bits, frame_bit_count_cfg);
+        $fatal(1);
+    end
+    if (lock_inverted !== 1'b1) begin
+        // Issue #64: this bench sign-inverts the loopback on purpose, so the counter must
+        // lock on the inverted preamble and say so. A polarity bug in the chain (Lab 5.10,
+        // exercise 1) cancels the inversion: payload errors stay 0, but this flag drops.
+        $display("ERROR: lock_inverted=%0b on the sign-inverted loopback, expected 1", lock_inverted);
         $fatal(1);
     end
     if (total_errors != 0 || payload_errors != 0) begin

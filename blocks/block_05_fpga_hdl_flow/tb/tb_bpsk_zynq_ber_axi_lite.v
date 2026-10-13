@@ -339,6 +339,12 @@ initial begin
         $display("ERROR: expected done=1 and busy=0 after completion, got 0x%08x", readback_word);
         $fatal(1);
     end
+    if (!readback_word[3]) begin
+        // Issue #64: the loopback is sign-inverted on purpose, so CONTROL_STATUS bit 3
+        // (lock_inverted) must be set.
+        $display("ERROR: CONTROL_STATUS lock_inverted (bit 3) clear on the sign-inverted loopback: 0x%08x", readback_word);
+        $fatal(1);
+    end
 
     axi_read(REG_RECEIVED_BITS, readback_word);
     if (readback_word[INDEX_W-1:0] !== frame_bit_count_cfg) begin

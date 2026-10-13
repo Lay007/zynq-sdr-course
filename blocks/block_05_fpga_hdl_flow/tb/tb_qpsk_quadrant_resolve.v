@@ -8,6 +8,10 @@
 // Rotation commutes with the DC blocker and the matched filter (both are per-axis with real
 // coefficients), so rotating the raw samples rotates the recovered symbols identically.
 //
+// The Costas lock point itself is arbitrary, but its phase detector is 90-degree periodic,
+// so rotating the input by r*90 must move the counter's rotation_index by exactly r
+// relative to the unrotated run (issue #64).
+//
 // Before the dual-branch frame-sync in qpsk_ber_counter, 90 and 270 degrees never locked --
 // on hardware that lost about half of all bursts.
 
@@ -25,6 +29,7 @@ module tb_qpsk_quadrant_resolve;
   reg [1:0] rot;
   integer n, so, w, r;
   integer best_err, best_so, failures;
+  reg [1:0] best_rix, base_rix;
   reg [INDEX_W-1:0] rxsyms, errs;
 
   wire rxdv;
@@ -39,6 +44,7 @@ module tb_qpsk_quadrant_resolve;
       .debug_symbol_valid(), .debug_symbol_i(), .debug_symbol_q());
 
   wire cbusy, cdone, cswap;
+  wire [1:0] crix;
   wire [INDEX_W-1:0] rsym, terr;
 
   qpsk_ber_counter #(.INDEX_W(INDEX_W), .MAX_FRAME_BITS(512),
@@ -46,7 +52,7 @@ module tb_qpsk_quadrant_resolve;
       .clk(clk), .rst(rst), .start(cnt_start), .abort(1'b0),
       .symbol_count(SYMS[INDEX_W-1:0]), .preamble_count(16'd24),
       .in_valid(rxdv), .in_dibit(rxdibit),
-      .busy(cbusy), .done(cdone), .quadrant_swapped(cswap),
+      .busy(cbusy), .done(cdone), .quadrant_swapped(cswap), .rotation_index(crix),
       .received_symbols(rsym), .total_bit_errors(terr));
 
   always #5 clk = ~clk;
@@ -91,6 +97,7 @@ module tb_qpsk_quadrant_resolve;
         if (rxsyms == SYMS[INDEX_W-1:0] && errs < best_err) begin
           best_err = errs;
           best_so = so;
+          best_rix = crix;
         end
       end
       if (best_so < 0) begin
@@ -101,8 +108,14 @@ module tb_qpsk_quadrant_resolve;
                  r * 90, best_err, EXPECT_BITS, best_so);
         failures = failures + 1;
       end else begin
-        $display("  rotation %0d deg: locked, %0d/%0d bit errors (offset %0d, branch %0s)",
-                 r * 90, best_err, EXPECT_BITS, best_so, cswap ? "B(90/270)" : "A(0/180)");
+        if (r == 0) base_rix = best_rix;
+        $display("  rotation %0d deg: locked, %0d/%0d bit errors (offset %0d, rotation_index %0d = %0d deg)",
+                 r * 90, best_err, EXPECT_BITS, best_so, best_rix, best_rix * 90);
+        if (r != 0 && (best_rix - base_rix) != rot) begin
+          $display("FAIL: rotation %0d deg -- rotation_index moved by %0d, expected %0d",
+                   r * 90, (best_rix - base_rix) & 2'b11, r);
+          failures = failures + 1;
+        end
       end
     end
 

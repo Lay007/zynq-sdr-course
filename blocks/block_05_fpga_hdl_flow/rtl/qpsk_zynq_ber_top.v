@@ -66,6 +66,7 @@ module qpsk_zynq_ber_top #(
     output wire [INDEX_W-1:0]       received_symbols,
     output wire [INDEX_W-1:0]       total_bit_errors,
     output wire [INDEX_W-1:0]       payload_bit_errors,
+    output wire [1:0]               rotation_index,  // resolved constellation rotation, k*90 deg
     output wire [31:0]              payload_error_segments,
     output wire [INDEX_W-1:0]       first_payload_error_index,
     output wire [INDEX_W-1:0]       last_payload_error_index,
@@ -240,6 +241,7 @@ qpsk_ber_counter #(
     .in_dibit(recovered_dibit),
     .busy(ber_busy),
     .done(ber_done),
+    .rotation_index(rotation_index),
     .received_symbols(received_symbols),
     .total_bit_errors(total_bit_errors),
     .payload_bit_errors(payload_bit_errors),

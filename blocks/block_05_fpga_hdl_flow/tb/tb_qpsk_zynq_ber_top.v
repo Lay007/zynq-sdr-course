@@ -26,6 +26,7 @@ wire signed [W-1:0] tx_q;
 wire timed_out;
 wire [INDEX_W-1:0] received_symbols;
 wire [INDEX_W-1:0] total_bit_errors;
+wire [1:0] rotation_index;
 
 integer so, w;
 integer best_err = 32'h7fffffff;
@@ -33,6 +34,7 @@ integer best_so = -1;
 integer best_rx = 0;
 reg [INDEX_W-1:0] rxsyms;
 reg [INDEX_W-1:0] errs;
+reg [1:0] best_rot = 2'b00;
 
 qpsk_zynq_ber_top #(
     .W(W),
@@ -65,6 +67,7 @@ qpsk_zynq_ber_top #(
     .timed_out(timed_out),
     .received_symbols(received_symbols),
     .total_bit_errors(total_bit_errors),
+    .rotation_index(rotation_index),
     .debug_symbol_valid(),
     .debug_symbol_i(),
     .debug_symbol_q()
@@ -92,7 +95,7 @@ initial begin
         rxsyms = received_symbols;
         errs = total_bit_errors;
         if (rxsyms == SYMS[INDEX_W-1:0] && errs < best_err) begin
-            best_err = errs; best_so = so; best_rx = rxsyms;
+            best_err = errs; best_so = so; best_rx = rxsyms; best_rot = rotation_index;
         end
 
         w = 0;
@@ -102,6 +105,12 @@ initial begin
 
     $display("QPSK loopback sweep: best start_offset=%0d received=%0d/%0d symbols, bit_errors=%0d/%0d",
              best_so, best_rx, SYMS, best_err, 2*SYMS);
+    if (best_so >= 0 && best_err == 0 && best_rot != 2'b00) begin
+        // Issue #64: TX straight into RX with the Costas loop off - nothing rotates the
+        // constellation, so the counter must report rotation 0.
+        $display("FAIL: rotation_index=%0d on the unrotated loopback, expected 0", best_rot);
+        $fatal(1);
+    end
     if (best_so >= 0 && best_err == 0)
         $display("PASS: qpsk_zynq_ber_top loopback recovered %0d QPSK symbols at BER=0 (start_offset=%0d)",
                  SYMS, best_so);

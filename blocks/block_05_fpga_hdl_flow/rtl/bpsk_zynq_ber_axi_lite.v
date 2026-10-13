@@ -57,6 +57,7 @@ localparam [AXI_DATA_W-1:0] CORE_ID = 32'h4250534B; // "BPSK"
 
 wire internal_rst = ~s_axi_aresetn;
 wire core_busy;
+wire core_lock_inverted;
 wire core_done;
 wire [INDEX_W-1:0] received_bits;
 wire [INDEX_W-1:0] total_errors;
@@ -110,6 +111,7 @@ bpsk_zynq_ber_top #(
     .preamble_count(preamble_count_reg),
     .start_offset(start_offset_reg),
     .busy(core_busy),
+    .lock_inverted(core_lock_inverted),
     .done(core_done),
     .tx_valid(tx_valid),
     .tx_i(tx_i),
@@ -130,7 +132,7 @@ bpsk_zynq_ber_top #(
 
 always @(*) begin
     case (s_axi_araddr)
-        REG_CONTROL_STATUS: read_word = {29'd0, done_sticky, core_busy, 1'b0};
+        REG_CONTROL_STATUS: read_word = {28'd0, core_lock_inverted, done_sticky, core_busy, 1'b0};
         REG_FRAME_BIT_COUNT: read_word = {{(AXI_DATA_W-INDEX_W){1'b0}}, frame_bit_count_reg};
         REG_PREAMBLE_COUNT: read_word = {{(AXI_DATA_W-INDEX_W){1'b0}}, preamble_count_reg};
         REG_START_OFFSET: read_word = {{(AXI_DATA_W-INDEX_W){1'b0}}, start_offset_reg};

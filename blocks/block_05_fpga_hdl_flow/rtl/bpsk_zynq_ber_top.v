@@ -37,6 +37,7 @@ module bpsk_zynq_ber_top #(
     output wire [INDEX_W-1:0]       received_bits,
     output wire [INDEX_W-1:0]       total_errors,
     output wire [INDEX_W-1:0]       payload_errors,
+    output wire                     lock_inverted,   // frame acquired on the inverted preamble
     output wire                     debug_recovered_valid,
     output wire                     debug_recovered_bit,
     output wire                     debug_symbol_valid,
@@ -141,6 +142,7 @@ bpsk_ber_counter #(
     .in_bit(recovered_bit),
     .busy(ber_busy),
     .done(ber_done),
+    .lock_inverted(lock_inverted),
     .received_bits(received_bits),
     .total_errors(total_errors),
     .payload_errors(payload_errors)
