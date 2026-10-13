@@ -100,3 +100,20 @@ def test_lists_are_not_glued_to_a_paragraph():
             if LIST_ITEM.match(lines[number]) and not NOT_PARAGRAPH.match(previous):
                 glued.append(f"{path.relative_to(ROOT)}:{number + 1}")
     assert not glued, f"list directly under a paragraph line (add a blank line): {glued}"
+
+
+INCLUDE_LINE = re.compile(r'^--8<-- "([^"]+)"', re.MULTILINE)
+EXERCISES = re.compile(r"^#{2,3} (Exercises|Упражнения)\s*$", re.MULTILINE)
+
+
+def test_exercises_have_answers():
+    """Labs of Blocks 2-8 with an exercise list carry checked answers in a <details> block."""
+    missing = []
+    for path in sorted((ROOT / "docs").glob("*/labs/lab-[2-8]-*.md")):
+        text = path.read_text(encoding="utf-8")
+        match = INCLUDE_LINE.search(text)
+        if match:
+            text = (ROOT / match.group(1)).read_text(encoding="utf-8")
+        if EXERCISES.search(text) and "<details" not in text:
+            missing.append(str(path.relative_to(ROOT)))
+    assert not missing, f"exercises without an answers block: {missing}"
