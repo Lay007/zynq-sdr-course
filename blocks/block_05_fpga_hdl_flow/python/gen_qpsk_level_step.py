@@ -57,7 +57,27 @@ def main() -> int:
     ap.add_argument("--seed", type=int, default=58)
     ap.add_argument("--prev", type=int, default=0, help="samples of the preceding frame before the first full one")
     ap.add_argument("--cases", nargs="+", default=["none", "low", "down", "up"])
+    ap.add_argument("--stream", choices=["steady", "saw_down"], default=None,
+                    help="instead of the cases, write tmp/level_step/qpsk_stream_<name>.mem: board A's "
+                         "cyclic buffer (steady, or a 20 dB drop at symbol 60 every 8 frames with a slow "
+                         "return), --samples long, for tb_qpsk_dc_bursts.v")
     args = ap.parse_args()
+    if args.stream:
+        from two_board_agc_frame_step import stepped_buffer  # noqa: PLC0415
+        iq = stepped_buffer(32, 8, 60, args.step_db, "high" if args.stream == "steady" else "saw_down")
+        wave = (iq[0::2] + 1j * iq[1::2]).astype(complex) / (0.70 * 32767) * args.peak
+        wave = np.tile(wave, int(np.ceil(args.samples / len(wave))))[:args.samples]
+        n = np.arange(args.samples)
+        rng = np.random.default_rng(args.seed)
+        x = wave * np.exp(2j * np.pi * args.cfo_hz / FS * n)
+        x += args.noise_rms / np.sqrt(2) * (rng.standard_normal(args.samples) + 1j * rng.standard_normal(args.samples))
+        i = np.clip(np.round(x.real), -2048, 2047).astype(np.int64) & 0xFFFF
+        q = np.clip(np.round(x.imag), -2048, 2047).astype(np.int64) & 0xFFFF
+        OUT_DIR.mkdir(parents=True, exist_ok=True)
+        path = OUT_DIR / f"qpsk_stream_{args.stream}.mem"
+        path.write_text("".join(f"{a:04x}{b:04x}\n" for a, b in zip(i, q)), encoding="ascii")
+        print(path.name, args.samples)
+        return 0
     for case in args.cases:
         x = make_case(case, peak=args.peak, step_db=args.step_db, step_symbol=args.step_symbol,
                       lead=args.lead, n_total=args.samples, cfo_hz=args.cfo_hz,

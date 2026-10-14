@@ -1,0 +1,71 @@
+{
+  "cfo_hz": 500.0,
+  "rows": [
+    {
+      "stream": "steady",
+      "setting": "kept across frames",
+      "bursts": 80,
+      "locked": 62,
+      "clean": 62,
+      "gross": 0,
+      "payload_errors": 0,
+      "payload_bits": 15872,
+      "hung": 0
+    },
+    {
+      "stream": "steady",
+      "setting": "reset every frame",
+      "bursts": 80,
+      "locked": 53,
+      "clean": 49,
+      "gross": 0,
+      "payload_errors": 16,
+      "payload_bits": 13568,
+      "hung": 0
+    },
+    {
+      "stream": "steady",
+      "setting": "DC blocker off",
+      "bursts": 80,
+      "locked": 62,
+      "clean": 61,
+      "gross": 0,
+      "payload_errors": 3,
+      "payload_bits": 15872,
+      "hung": 0
+    },
+    {
+      "stream": "saw_down",
+      "setting": "kept across frames",
+      "bursts": 80,
+      "locked": 62,
+      "clean": 59,
+      "gross": 1,
+      "payload_errors": 21,
+      "payload_bits": 15872,
+      "hung": 0
+    },
+    {
+      "stream": "saw_down",
+      "setting": "reset every frame",
+      "bursts": 80,
+      "locked": 46,
+      "clean": 29,
+      "gross": 6,
+      "payload_errors": 300,
+      "payload_bits": 11776,
+      "hung": 0
+    },
+    {
+      "stream": "saw_down",
+      "setting": "DC blocker off",
+      "bursts": 80,
+      "locked": 60,
+      "clean": 59,
+      "gross": 0,
+      "payload_errors": 3,
+      "payload_bits": 15360,
+      "hung": 0
+    }
+  ]
+}

@@ -32,6 +32,12 @@ module qpsk_zynq_ber_top #(
     // 0 (default) compiles the coarse-CFO estimator out of the RX chain for the stock timing-clean
     // bitstream; set to 1 only for the two-board fabric-CFO build (see qpsk_rx_bit_recovery_chain).
     parameter integer COARSE_ENABLE = 0,
+    // DC blocker across frames (issue #66). 1: its estimate is reset only by rst and is kept from
+    // frame to frame (the receiver gets samples only during a burst, so between bursts it simply
+    // holds), with a long time constant of 2^DC_BLOCK_K_MAX samples, so one preamble is a small
+    // part of the average. 0: the estimate restarts at every frame, as before.
+    parameter integer DC_PERSIST = 1,
+    parameter integer DC_BLOCK_K_MAX = 13,
     parameter MEM_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_frame_bits.mem",
     parameter COEF_FILE = "blocks/block_05_fpga_hdl_flow/rtl/bpsk_rrc_tx_fir_taps.mem"
 ) (
@@ -177,6 +183,7 @@ qpsk_rx_bit_recovery_chain #(
     .COSTAS_SIG_THRESH(RX_SIG_THRESH),
     .TIMING_RECOVERY_ENABLE(TIMING_RECOVERY_ENABLE),
     .COARSE_ENABLE(COARSE_ENABLE),
+    .DC_BLOCK_K_MAX(DC_PERSIST ? DC_BLOCK_K_MAX : 10),
     .COEF_FILE(COEF_FILE)
 ) rx_chain_i (
     .clk(clk),
@@ -184,6 +191,8 @@ qpsk_rx_bit_recovery_chain #(
     .rst(rst || frame_start),
     // ... but optionally let the carrier loop keep the phase it already found
     .rst_carrier(rst || (frame_start && !costas_hold_phase)),
+    // ... and keep the DC estimate across frames unless DC_PERSIST = 0
+    .rst_dc(DC_PERSIST ? rst : (rst || frame_start)),
     .dc_block_en(dc_block_en),
     .costas_en(costas_en),
     // Runtime coarse-CFO enable. The bridge drives this from a gp_ctrl bit so the fabric receiver

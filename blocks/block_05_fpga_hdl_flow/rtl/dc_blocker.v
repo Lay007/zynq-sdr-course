@@ -46,6 +46,14 @@
 //
 // acc holds mean << K, so each time K increments the stored estimate is re-scaled by one
 // left shift to represent the same mean. Miss that and the estimate halves at every step.
+//
+// Resetting every frame has its own cost (issue #66). At the preamble the running mean covers
+// only a few hundred samples, and the differential preamble repeats one symbol, so the block
+// subtracts part of the preamble; on two boards that cost frame locks and bits, and after a
+// sudden 20 dB level drop the offset learned on the strong signal was most of the weak one.
+// qpsk_zynq_ber_top therefore no longer resets this block per frame (DC_PERSIST = 1, through
+// the chain's rst_dc) and uses K_MAX = 13: the estimate is kept from burst to burst and
+// averages over several frames. Benches that drive the chain directly still reset it per run.
 
 `timescale 1ns/1ps
 

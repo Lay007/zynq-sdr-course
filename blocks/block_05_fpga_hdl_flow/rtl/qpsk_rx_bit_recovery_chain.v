@@ -39,6 +39,10 @@ module qpsk_rx_bit_recovery_chain #(
     // usual "start every frame from zero phase"; hold it low across frames to keep the
     // acquired carrier phase (see qpsk_costas.rst_phase).
     input  wire                     rst_carrier,
+    // Reset for the DC blocker's estimate only. Tie to `rst` to learn the DC from zero in every
+    // frame. Holding it low across frames keeps the estimate, which then averages over many frames
+    // instead of mostly over the current preamble (issue #66, see qpsk_zynq_ber_top DC_PERSIST).
+    input  wire                     rst_dc,
     input  wire                     dc_block_en,   // 1 = subtract LO-leakage DC (OTA); 0 = passthrough
     input  wire                     costas_en,     // 1 = carrier tracking (OTA); 0 = passthrough
     input  wire                     coarse_cfo_en, // 1 = strip bulk inter-board CFO before Costas; 0 = passthrough
@@ -69,9 +73,12 @@ module qpsk_rx_bit_recovery_chain #(
 // dominates a real over-the-air capture. Passthrough when dc_block_en=0 keeps the
 // clean fabric-loopback path effectively unchanged (DC-free input -> ~0 subtracted).
 //
-// Note the reset below is rst, which the top level drives as (rst || frame_start): this
-// block reconverges every frame, which is why its estimate starts as a running average
-// rather than a fixed-tau leak. See dc_blocker.v for the measurement that forced this.
+// The reset below is rst_dc. Tied to rst, which the top level drives as (rst || frame_start),
+// the block reconverges every frame, which is why its estimate starts as a running average
+// rather than a fixed-tau leak (see dc_blocker.v). But then, at the preamble, the estimate is
+// the mean of only a few hundred samples, of which the preamble's repeated symbol is a large
+// part, so the block subtracts part of the preamble itself. qpsk_zynq_ber_top therefore keeps
+// the estimate across frames by default (DC_PERSIST, issue #66).
 wire dc_valid;
 wire signed [W-1:0] dc_i;
 wire signed [W-1:0] dc_q;
@@ -80,7 +87,7 @@ dc_blocker #(
     .K_MAX(DC_BLOCK_K_MAX)
 ) dc_blocker_i (
     .clk(clk),
-    .rst(rst),
+    .rst(rst_dc),
     .enable(dc_block_en),
     .in_valid(in_valid),
     .in_i(in_i),
