@@ -1,0 +1,233 @@
+{
+  "issue": 58,
+  "bench": "A TX1 -> 0 dB var -> 30 dB fixed -> 3-way splitter -> B RX1",
+  "carrier_hz": 915000000.0,
+  "mode_bits": "0x2d630",
+  "manual_rx_gain_db": 50,
+  "toggle_db": [
+    -30,
+    -10
+  ],
+  "period_s": 0.3,
+  "static": [
+    {
+      "mode": "manual",
+      "tx_gain_db": -40,
+      "rx_gain": "50.000000 dB",
+      "frames": 100,
+      "locked": 76,
+      "clean": 60,
+      "single_bit": 12,
+      "gross": 4,
+      "payload_bit_errors": 113,
+      "payload_bits": 19456
+    },
+    {
+      "mode": "manual",
+      "tx_gain_db": -30,
+      "rx_gain": "50.000000 dB",
+      "frames": 100,
+      "locked": 94,
+      "clean": 89,
+      "single_bit": 5,
+      "gross": 0,
+      "payload_bit_errors": 9,
+      "payload_bits": 24064
+    },
+    {
+      "mode": "manual",
+      "tx_gain_db": -20,
+      "rx_gain": "50.000000 dB",
+      "frames": 100,
+      "locked": 95,
+      "clean": 90,
+      "single_bit": 5,
+      "gross": 0,
+      "payload_bit_errors": 16,
+      "payload_bits": 24320
+    },
+    {
+      "mode": "manual",
+      "tx_gain_db": -10,
+      "rx_gain": "50.000000 dB",
+      "frames": 100,
+      "locked": 96,
+      "clean": 95,
+      "single_bit": 0,
+      "gross": 1,
+      "payload_bit_errors": 10,
+      "payload_bits": 24576
+    },
+    {
+      "mode": "manual",
+      "tx_gain_db": 0,
+      "rx_gain": "50.000000 dB",
+      "frames": 100,
+      "locked": 91,
+      "clean": 87,
+      "single_bit": 3,
+      "gross": 1,
+      "payload_bit_errors": 32,
+      "payload_bits": 23296
+    },
+    {
+      "mode": "slow_attack",
+      "tx_gain_db": -40,
+      "rx_gain": "73.000000 dB",
+      "frames": 100,
+      "locked": 99,
+      "clean": 98,
+      "single_bit": 1,
+      "gross": 0,
+      "payload_bit_errors": 4,
+      "payload_bits": 25344
+    },
+    {
+      "mode": "slow_attack",
+      "tx_gain_db": -30,
+      "rx_gain": "73.000000 dB",
+      "frames": 100,
+      "locked": 98,
+      "clean": 96,
+      "single_bit": 2,
+      "gross": 0,
+      "payload_bit_errors": 8,
+      "payload_bits": 25088
+    },
+    {
+      "mode": "slow_attack",
+      "tx_gain_db": -20,
+      "rx_gain": "63.000000 dB",
+      "frames": 100,
+      "locked": 98,
+      "clean": 98,
+      "single_bit": 0,
+      "gross": 0,
+      "payload_bit_errors": 0,
+      "payload_bits": 25088
+    },
+    {
+      "mode": "slow_attack",
+      "tx_gain_db": -10,
+      "rx_gain": "53.000000 dB",
+      "frames": 100,
+      "locked": 92,
+      "clean": 91,
+      "single_bit": 1,
+      "gross": 0,
+      "payload_bit_errors": 2,
+      "payload_bits": 23552
+    },
+    {
+      "mode": "slow_attack",
+      "tx_gain_db": 0,
+      "rx_gain": "40.000000 dB",
+      "frames": 100,
+      "locked": 91,
+      "clean": 90,
+      "single_bit": 1,
+      "gross": 0,
+      "payload_bit_errors": 6,
+      "payload_bits": 23296
+    },
+    {
+      "mode": "fast_attack",
+      "tx_gain_db": -40,
+      "rx_gain": "69.000000 dB",
+      "frames": 100,
+      "locked": 96,
+      "clean": 93,
+      "single_bit": 2,
+      "gross": 1,
+      "payload_bit_errors": 40,
+      "payload_bits": 24576
+    },
+    {
+      "mode": "fast_attack",
+      "tx_gain_db": -30,
+      "rx_gain": "73.000000 dB",
+      "frames": 100,
+      "locked": 97,
+      "clean": 95,
+      "single_bit": 2,
+      "gross": 0,
+      "payload_bit_errors": 5,
+      "payload_bits": 24832
+    },
+    {
+      "mode": "fast_attack",
+      "tx_gain_db": -20,
+      "rx_gain": "63.000000 dB",
+      "frames": 100,
+      "locked": 95,
+      "clean": 95,
+      "single_bit": 0,
+      "gross": 0,
+      "payload_bit_errors": 0,
+      "payload_bits": 24320
+    },
+    {
+      "mode": "fast_attack",
+      "tx_gain_db": -10,
+      "rx_gain": "52.000000 dB",
+      "frames": 100,
+      "locked": 91,
+      "clean": 90,
+      "single_bit": 1,
+      "gross": 0,
+      "payload_bit_errors": 2,
+      "payload_bits": 23296
+    },
+    {
+      "mode": "fast_attack",
+      "tx_gain_db": 0,
+      "rx_gain": "38.000000 dB",
+      "frames": 100,
+      "locked": 88,
+      "clean": 88,
+      "single_bit": 0,
+      "gross": 0,
+      "payload_bit_errors": 0,
+      "payload_bits": 22528
+    }
+  ],
+  "dynamic": [
+    {
+      "mode": "manual",
+      "frames": 100,
+      "locked": 94,
+      "clean": 88,
+      "single_bit": 6,
+      "gross": 0,
+      "payload_bit_errors": 24,
+      "payload_bits": 24064,
+      "rx_gain_min": 50.0,
+      "rx_gain_max": 50.0
+    },
+    {
+      "mode": "slow_attack",
+      "frames": 100,
+      "locked": 94,
+      "clean": 91,
+      "single_bit": 3,
+      "gross": 0,
+      "payload_bit_errors": 10,
+      "payload_bits": 24064,
+      "rx_gain_min": 73.0,
+      "rx_gain_max": 73.0
+    },
+    {
+      "mode": "fast_attack",
+      "frames": 100,
+      "locked": 95,
+      "clean": 94,
+      "single_bit": 1,
+      "gross": 0,
+      "payload_bit_errors": 4,
+      "payload_bits": 24320,
+      "rx_gain_min": 53.0,
+      "rx_gain_max": 73.0
+    }
+  ],
+  "board_b_image_md5": "850248999392476f5dd8aeb912e6705b"
+}

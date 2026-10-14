@@ -71,6 +71,10 @@ def main() -> int:
            "static": [], "dynamic": []}
     try:
         L.quiet_board(rb)
+        res["board_b_image_md5"] = sh(rb, "mkdir -p /tmp/sd; mount -t vfat /dev/mmcblk0p1 /tmp/sd 2>/dev/null; "
+                                          "md5sum /tmp/sd/system_top.bit").split()[0]
+        if sh(ra, "ps | grep -c '[t]oggle.sh'").strip() != "0":
+            raise RuntimeError("a TX toggling loop is already running on board A")
         sh(rb, f"echo {int(args.carrier)} > {PHY}/out_altvoltage0_RX_LO_frequency")
         sh(rb, f"echo {int(L.SAMPLE_RATE)} > {PHY}/in_voltage_sampling_frequency 2>/dev/null")
         L.quiet_board(ra)
@@ -106,6 +110,11 @@ def main() -> int:
                 r = {"mode": mode, **score(rb, args.frames, gains)}
             finally:
                 sh(ra, "for p in $(ps | grep '[t]oggle.sh' | awk '{print $1}'); do kill -9 $p; done")
+            # A loop left running would move the TX level under every later point (it happened once,
+            # when the scripts used pkill, which board A does not have): refuse to continue.
+            left = sh(ra, "ps | grep -c '[t]oggle.sh'").strip()
+            if left != "0":
+                raise RuntimeError(f"{left} TX toggling loop(s) still running on board A")
             r["rx_gain_min"] = min(gains) if gains else None
             r["rx_gain_max"] = max(gains) if gains else None
             res["dynamic"].append(r)
