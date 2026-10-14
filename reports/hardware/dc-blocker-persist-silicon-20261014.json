@@ -442,5 +442,5 @@
     "card_md5": "615086f66d552a91df163976b0e4f62e",
     "time": "2026-10-14 19:30"
   },
-  "selfota_note": "Single board: B TX1 -> var att 0 dB -> 30 dB -> splitter -> B RX1, TX 0 dB, RX 60 dB manual, 915 MHz both LOs, DAC channels set to the DMA source by devmem (B's device tree has no DAC driver). RTL-SDR on the splitter: B emits a continuous carrier at the LO, about 20 dB above the modem burst, so the receiver sees a large DC. 'old' = image 8fb3a6a5 (#65, per-frame reset), 'new' = 3d492301 (#66)."
+  "selfota_note": "Single board: B TX1 -> var att 0 dB -> 30 dB -> splitter -> B RX1, TX 0 dB, RX 60 dB manual, 915 MHz both LOs, DAC channels set to the DMA source by devmem (B's device tree has no DAC driver). B emits a continuous carrier at the LO. Board A on the splitter: during a burst the carrier is 3 dB below the burst (780 vs 1103 counts RMS); the 20 dB RTL-SDR figure was a time average over bursts with ~3 % duty. 'old' = image 8fb3a6a5 (#65, per-frame reset), 'new' = 3d492301 (#66)."
 }

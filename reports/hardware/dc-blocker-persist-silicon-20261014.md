@@ -76,8 +76,12 @@ RX LOs both at 915 MHz (no CFO), TX 0 dB, RX 60 dB manual. Board B's device tree
 so the DAC channels were put on the DMA input by `devmem` (`0x79024418` etc. = 2), where the
 bridge muxes in the modem burst; with the default DDS source nothing was transmitted.
 
-The RTL-SDR on the splitter shows what makes this case hard: board B emits a continuous carrier at
-the LO, about 20 dB above the modem burst, so the receiver sees a DC far larger than the signal.
+What makes this case hard: board B emits a continuous carrier at its LO. On the RTL-SDR's
+time-averaged spectrum it is about 20 dB above the modem signal, but the bursts occupy only about
+3 % of the time there. Board A, connected to the free splitter output afterwards, measured it
+properly: during a burst the carrier is 3 dB below the burst (780 against 1103 counts RMS), and it
+stays on between bursts. At B's own receiver this carrier is a DC component as strong as the
+signal.
 The link is marginal (the burst only locks from about 60 dB of RX gain), which is why the clean
 counts are low in every column. 100 frames each, locked / clean / gross:
 
@@ -88,7 +92,7 @@ counts are low in every column. 100 frames each, locked / clean / gross:
 
 - With the old per-frame reset, the DC blocker made the single-board link fail completely; with the
   kept estimate a quarter of the frames lock.
-- Even here, with a DC much larger than the signal, the receiver does better with the DC blocker
+- Even here, with a DC about as strong as the signal, the receiver does better with the DC blocker
   off. The AD9361's own DC correction seems to remove the carrier before the samples reach the
   fabric. Assumed, not checked: the July self-OTA result that motivated the blocker came from a
   different board and setup.
