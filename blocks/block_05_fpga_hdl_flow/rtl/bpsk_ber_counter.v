@@ -16,9 +16,13 @@ module bpsk_ber_counter #(
     // locks at exactly one alignment = the true frame start, independent of the
     // pre-frame transient / loopback-latency jitter (and overrides start_offset).
     parameter integer LOCK_PREAMBLE_BITS = 8,
-    // OTA robustness: LOCK_ERR_TOL = 0 keeps the exact sequential match (bit-identical
-    // to the original clean-loopback behaviour, zero regression). LOCK_ERR_TOL > 0
-    // switches to a sliding LOCK_PREAMBLE_BITS-wide correlation lock that fires at the
+    // Acquisition uses a sliding LOCK_PREAMBLE_BITS-wide correlation window. With
+    // LOCK_ERR_TOL = 0 it needs an exact match; it used to be a sequential matcher that
+    // restarted from the current bit on a mismatch and never backed up, so extra 0 bits
+    // in front of the frame (the preamble starts with 00000) walked it past the true start
+    // and it locked misaligned, ~half the bits wrong (issue #65, seen on silicon at early
+    // start offsets). The sequential matcher is kept only for preambles shorter than the
+    // window. LOCK_ERR_TOL > 0: the correlation lock fires at the
     // first window whose match count >= LOCK_PREAMBLE_BITS - LOCK_ERR_TOL, tolerating a
     // few over-the-air preamble bit errors instead of resetting and false-locking on
     // the leading-zeros run (which floored real self-OTA captures at ~44%). Use a wide
@@ -82,7 +86,7 @@ reg [INDEX_W-1:0] payload_quarter3_reg = {INDEX_W{1'b0}};
 reg [INDEX_W-1:0] payload_index = {INDEX_W{1'b0}};
 integer idx;
 
-// --- sliding-window correlation lock state (used only when LOCK_ERR_TOL > 0) ---
+// --- sliding-window correlation lock state (any LOCK_ERR_TOL; exact match when it is 0) ---
 reg [WIN-1:0] win_sr = {WIN{1'b0}};
 reg [INDEX_W-1:0] win_fill = {INDEX_W{1'b0}};
 
@@ -209,8 +213,9 @@ always @(posedge clk) begin
             win_sr <= {WIN{1'b0}};
             win_fill <= {INDEX_W{1'b0}};
         end else if (busy && in_valid) begin
-            if (!locked && acquisition_enabled_reg && (LOCK_ERR_TOL > 0)) begin
-                // ---- sliding-window correlation lock (OTA-robust) ----
+            if (!locked && acquisition_enabled_reg &&
+                ((LOCK_ERR_TOL > 0) || (lock_preamble_limit_reg == WIN[INDEX_W-1:0]))) begin
+                // ---- sliding-window correlation lock (exact when LOCK_ERR_TOL = 0) ----
                 win_sr <= next_win;
                 if (win_fill < WIN[INDEX_W-1:0]) win_fill <= win_fill + 1'b1;
                 if (corr_hit) begin
@@ -234,7 +239,7 @@ always @(posedge clk) begin
                     end
                 end
             end else if (!locked && acquisition_enabled_reg) begin
-                // ---- original exact sequential match (LOCK_ERR_TOL == 0) ----
+                // ---- sequential match: only for a preamble shorter than the lock window ----
                 if (acq_index == {INDEX_W{1'b0}}) begin
                     if (lock_preamble_limit_reg == {{(INDEX_W-1){1'b0}}, 1'b1}) begin
                         locked <= 1'b1;

@@ -30,14 +30,14 @@ Table of Contents
 +-------------------------+------+-------+------------+-----------+-------+
 |        Site Type        | Used | Fixed | Prohibited | Available | Util% |
 +-------------------------+------+-------+------------+-----------+-------+
-| Slice LUTs*             |  657 |     0 |          0 |     53200 |  1.23 |
-|   LUT as Logic          |  657 |     0 |          0 |     53200 |  1.23 |
+| Slice LUTs*             |  686 |     0 |          0 |     53200 |  1.29 |
+|   LUT as Logic          |  686 |     0 |          0 |     53200 |  1.29 |
 |   LUT as Memory         |    0 |     0 |          0 |     17400 |  0.00 |
-| Slice Registers         | 3075 |     0 |          0 |    106400 |  2.89 |
-|   Register as Flip Flop | 3075 |     0 |          0 |    106400 |  2.89 |
+| Slice Registers         | 3085 |     0 |          0 |    106400 |  2.90 |
+|   Register as Flip Flop | 3085 |     0 |          0 |    106400 |  2.90 |
 |   Register as Latch     |    0 |     0 |          0 |    106400 |  0.00 |
 | F7 Muxes                |    6 |     0 |          0 |     26600 |  0.02 |
-| F8 Muxes                |    2 |     0 |          0 |     13300 |  0.02 |
+| F8 Muxes                |    1 |     0 |          0 |     13300 | <0.01 |
 +-------------------------+------+-------+------------+-----------+-------+
 * Warning! The Final LUT count, after physical optimizations and full implementation, is typically lower. Run opt_design after synthesis, if not already completed, for a more realistic count.
 
@@ -56,8 +56,8 @@ Table of Contents
 | 0     |          Yes |           - |            - |
 | 0     |          Yes |           - |          Set |
 | 0     |          Yes |           - |        Reset |
-| 15    |          Yes |         Set |            - |
-| 3060  |          Yes |       Reset |            - |
+| 74    |          Yes |         Set |            - |
+| 3011  |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
 
 
@@ -147,18 +147,18 @@ Table of Contents
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| FDRE     | 3060 |        Flop & Latch |
-| LUT2     |  290 |                 LUT |
+| FDRE     | 3011 |        Flop & Latch |
+| LUT2     |  312 |                 LUT |
 | DSP48E1  |  192 |    Block Arithmetic |
 | CARRY4   |  161 |          CarryLogic |
-| LUT4     |  124 |                 LUT |
-| LUT1     |  124 |                 LUT |
-| LUT6     |   89 |                 LUT |
-| LUT3     |   81 |                 LUT |
-| LUT5     |   74 |                 LUT |
-| FDSE     |   15 |        Flop & Latch |
+| LUT4     |  137 |                 LUT |
+| LUT1     |  126 |                 LUT |
+| LUT3     |  111 |                 LUT |
+| LUT6     |  102 |                 LUT |
+| FDSE     |   74 |        Flop & Latch |
+| LUT5     |   51 |                 LUT |
 | MUXF7    |    6 |               MuxFx |
-| MUXF8    |    2 |               MuxFx |
+| MUXF8    |    1 |               MuxFx |
 +----------+------+---------------------+
 
 

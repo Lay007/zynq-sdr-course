@@ -157,6 +157,7 @@ TESTS = (
     HdlTest("tb_bpsk_framed_loopback", COMMON_BPSK + (tb("tb_bpsk_framed_loopback.v"),)),
     HdlTest("tb_bpsk_zynq_ber_top", BPSK_TOP + (tb("tb_bpsk_zynq_ber_top.v"),)),
     HdlTest("tb_bpsk_decision_mode", BPSK_TOP + (tb("tb_bpsk_decision_mode.v"),)),
+    HdlTest("tb_bpsk_lock_leading_bits", rtl("bpsk_ber_counter.v") + (tb("tb_bpsk_lock_leading_bits.v"),)),
     HdlTest(
         "tb_ber_counter_rotation",
         rtl("bpsk_ber_counter.v", "qpsk_ber_counter.v") + (tb("tb_ber_counter_rotation.v"),),

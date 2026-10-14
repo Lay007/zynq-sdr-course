@@ -31,9 +31,9 @@ the NCO mixer miss by a fraction of a nanosecond.
 | 5.8 | `bpsk_symbol_timing_recovery_pipelined0` (the same module, `PIPELINED = 0`) | 338 | 201 | 2 | 0 | **-9.390 ns**, 122 failing endpoints | about 52 MHz |
 | 5.9 | `bpsk_frame_bit_source` | 36 | 18 | 0 | 0 | +5.225 ns | |
 | 5.9 | `bpsk_framed_tx_chain` | 213 | 593 | 96 | 0 | +3.946 ns | about 165 MHz |
-| 5.9 | `bpsk_ber_counter` | 289 | 204 | 0 | 0 | +2.781 ns | about 139 MHz |
-| 5.10 | `bpsk_zynq_ber_top` | 653 | 3075 | 192 | 0 | +1.935 ns | about 124 MHz |
-| 5.11 | `bpsk_zynq_ber_axi_lite` | 595 | 1996 | 144 | 0 | +1.667 ns | about 120 MHz |
+| 5.9 | `bpsk_ber_counter` | 323 | 215 | 0 | 0 | +1.844 ns | about 123 MHz |
+| 5.10 | `bpsk_zynq_ber_top` | 676 | 3085 | 192 | 0 | +1.436 ns | about 117 MHz |
+| 5.11 | `bpsk_zynq_ber_axi_lite` | 626 | 2007 | 144 | 0 | +1.752 ns | about 121 MHz |
 
 The frequency estimate is `1 / (period - WNS)`; it describes the routed critical path, not a
 characterized maximum clock. These are module-level numbers, not a board design: the integrated
@@ -99,7 +99,7 @@ and requires every output symbol to match in I and Q; the model bit check and th
 with the loop enabled pass unchanged.
 
 **The remaining critical paths are fanout, not logic.** In the two top-level designs the worst
-path has 1-3 logic levels and is 87-99 % routing: the per-frame RX restart (`rst || frame_start`)
+path has 1-3 logic levels and is 88-99 % routing: the per-frame RX restart (`rst || frame_start`)
 driving 2560 reset pins of the matched filter (Lab 5.10), and the AXI reset driving the reset pins
 of the TX filter's product registers (Lab 5.11). Which fanout path comes out worst moves between
 runs: the last three rows were re-run after the lock-polarity flag of issue #64 (one flip-flop

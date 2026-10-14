@@ -125,13 +125,13 @@ The course runner generates the vectors, compiles, simulates and turns any `FAIL
 python tools/run_block5_hdl_smoke.py --test tb_bpsk_zynq_ber_top
 ```
 
-In Vivado 2021.1 this top places and routes on `xc7z020clg400-2` at 100 MHz with +1.935 ns of
-slack, using 653 LUTs, 3075 flip-flops and **192 of the 220 DSP48E1 slices (87 %)**
+In Vivado 2021.1 this top places and routes on `xc7z020clg400-2` at 100 MHz with +1.436 ns of
+slack, using 676 LUTs, 3085 flip-flops and **192 of the 220 DSP48E1 slices (87 %)**
 ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block5-bpsk-vivado-evidence.md)): the TX pulse-shaping filter and the RX matched filter take 96 each
 (Lab 5.6). Anything else that needs multipliers on the same device, such as a carrier loop or a
 second channel, would not fit. The worst path is a fan-out, not arithmetic: the per-frame RX
 restart (`rst || frame_start`) driving 2560 reset pins of the matched filter, 3 logic levels and
-87 % routing.
+88 % routing.
 
 ## Exercises
 
