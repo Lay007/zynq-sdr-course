@@ -67,7 +67,30 @@ last column is the same measurement on the #65 image, earlier the same day
 - Measured, and not hidden: on this conducted two-board bench the receiver is still a little better
   with the DC blocker off (drop: 2 gross instead of 7; fewer single-bit errors). The kept estimate
   still holds a few percent of the signal's own mean.
-- Not tested on silicon: the single-board self-OTA path that the DC blocker was built for. There
-  the LO-leakage DC is about as large as the signal and does not change from burst to burst, so
-  keeping the estimate should help rather than hurt, but this bench has board B's TX unconnected.
-  The self-OTA capture benches still pass, through the chain with a per-run reset.
+- Single-board self-OTA: measured later the same day, see below.
+
+## Single board: board B's own burst through the cable
+
+Recabled: B TX1 -> variable attenuator (0 dB) -> 30 dB -> splitter -> B RX1, board A off. TX and
+RX LOs both at 915 MHz (no CFO), TX 0 dB, RX 60 dB manual. Board B's device tree has no DAC driver,
+so the DAC channels were put on the DMA input by `devmem` (`0x79024418` etc. = 2), where the
+bridge muxes in the modem burst; with the default DDS source nothing was transmitted.
+
+The RTL-SDR on the splitter shows what makes this case hard: board B emits a continuous carrier at
+the LO, about 20 dB above the modem burst, so the receiver sees a DC far larger than the signal.
+The link is marginal (the burst only locks from about 60 dB of RX gain), which is why the clean
+counts are low in every column. 100 frames each, locked / clean / gross:
+
+| | #65 image (DC reset every frame) | this image (DC kept) |
+|---|---|---|
+| DC blocker on | **0 / 0 / 0** | 24 / 4 / 14 |
+| DC blocker off | 62 / 32 / 15 | 53 / 40 / 9 |
+
+- With the old per-frame reset, the DC blocker made the single-board link fail completely; with the
+  kept estimate a quarter of the frames lock.
+- Even here, with a DC much larger than the signal, the receiver does better with the DC blocker
+  off. The AD9361's own DC correction seems to remove the carrier before the samples reach the
+  fabric. Assumed, not checked: the July self-OTA result that motivated the blocker came from a
+  different board and setup.
+- One session, one board, marginal SNR; the DC-off columns of the two images (62 and 53 locked)
+  differ by about the run-to-run spread.

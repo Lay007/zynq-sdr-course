@@ -361,5 +361,86 @@
       }
     ],
     "board_b_image_md5": "b6635144f1e86724d8c7bfd676804a7b"
-  }
+  },
+  "selfota_new": {
+    "bench": "B TX1 -> var att 0 dB -> 30 dB -> 3-way splitter -> B RX1 (single-board self-OTA), 915 MHz; strong continuous carrier at the LO from B (RTL-SDR: ~20 dB above the modem signal)",
+    "tx_gain_db": 0.0,
+    "rx_gain_db": 60,
+    "points": [
+      {
+        "setting": "dc_on",
+        "mode_bits": "0x2d630",
+        "frames": 100,
+        "locked": 24,
+        "clean": 4,
+        "single_bit": 6,
+        "gross": 14,
+        "payload_bit_errors": 442,
+        "payload_bits": 6144
+      },
+      {
+        "setting": "dc_off",
+        "mode_bits": "0x2d430",
+        "frames": 100,
+        "locked": 53,
+        "clean": 40,
+        "single_bit": 4,
+        "gross": 9,
+        "payload_bit_errors": 199,
+        "payload_bits": 13568
+      }
+    ],
+    "readback": [
+      "3840000",
+      "3840000",
+      "915000000",
+      "0.000000",
+      "dB",
+      "71.75",
+      "dB"
+    ],
+    "card_md5": "b6635144f1e86724d8c7bfd676804a7b",
+    "time": "2026-10-14 19:27"
+  },
+  "selfota_old": {
+    "bench": "B TX1 -> var att 0 dB -> 30 dB -> 3-way splitter -> B RX1 (single-board self-OTA), 915 MHz; strong continuous carrier at the LO from B (RTL-SDR: ~20 dB above the modem signal)",
+    "tx_gain_db": 0.0,
+    "rx_gain_db": 60,
+    "points": [
+      {
+        "setting": "dc_on",
+        "mode_bits": "0x2d630",
+        "frames": 100,
+        "locked": 0,
+        "clean": 0,
+        "single_bit": 0,
+        "gross": 0,
+        "payload_bit_errors": 0,
+        "payload_bits": 0
+      },
+      {
+        "setting": "dc_off",
+        "mode_bits": "0x2d430",
+        "frames": 100,
+        "locked": 62,
+        "clean": 32,
+        "single_bit": 15,
+        "gross": 15,
+        "payload_bit_errors": 328,
+        "payload_bits": 15872
+      }
+    ],
+    "readback": [
+      "3840000",
+      "3840000",
+      "915000000",
+      "0.000000",
+      "dB",
+      "113.00",
+      "dB"
+    ],
+    "card_md5": "615086f66d552a91df163976b0e4f62e",
+    "time": "2026-10-14 19:30"
+  },
+  "selfota_note": "Single board: B TX1 -> var att 0 dB -> 30 dB -> splitter -> B RX1, TX 0 dB, RX 60 dB manual, 915 MHz both LOs, DAC channels set to the DMA source by devmem (B's device tree has no DAC driver). RTL-SDR on the splitter: B emits a continuous carrier at the LO, about 20 dB above the modem burst, so the receiver sees a large DC. 'old' = image 8fb3a6a5 (#65, per-frame reset), 'new' = 3d492301 (#66)."
 }
