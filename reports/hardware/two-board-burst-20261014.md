@@ -26,9 +26,11 @@ Per-setting rows are in the JSON; the six settings give the same picture.
   signal (about 0.5-0.7 of it). An attempt that starts in silence ends without a frame.
 - **Why (from the RTL, `qpsk_zynq_ber_top`).** The receive window is fixed when the receiver is
   armed: the symbol sampler emits `symbol_count + RX_SAMPLE_MARGIN` = 152 + 256 = 408 symbols
-  (0.85 ms) and stops. The signal-present gate holds the decisions back while there is only noise.
-  When the sampler stops, no more symbols arrive and the idle watchdog (`RX_IDLE_TIMEOUT_CYCLES`
-  = 4096) ends the attempt. On the board, a failed attempt is already finished at the first status
+  (0.85 ms) and stops. When the sampler stops, no more symbols arrive and the idle watchdog
+  (`RX_IDLE_TIMEOUT_CYCLES` = 4096) ends the attempt. (A first version of this report also said
+  that the signal-present gate holds the decisions back in silence. That is not so at 71 dB: the
+  board's noise alone, 16 counts rms at the ADC, keeps the gate's fixed `|I|+|Q| >= 8` threshold
+  open, as the #68 simulations with that noise level show.) On the board, a failed attempt is already finished at the first status
   read: status `0x81C` (done + timeout), 0 symbols received. This design came from self-OTA, where
   the same core transmits the frame when it is armed, so the frame is known to arrive within the
   margin.
