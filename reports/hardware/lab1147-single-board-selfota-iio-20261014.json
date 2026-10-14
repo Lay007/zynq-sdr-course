@@ -1,0 +1,37 @@
+{
+  "lab": "11.47",
+  "carrier_hz": 915000000.0,
+  "tx_gain_db": 0.0,
+  "rx_gain_db": 60,
+  "mode_bits": "0x2d630",
+  "zero_stream": true,
+  "offsets": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "temp_before_c": 65.0,
+  "zero_stream_log": "iio_writedev cyclic zeros (DAC driver present)",
+  "frames": 48,
+  "locked": 31,
+  "clean": 29,
+  "payload_bit_errors": 6,
+  "payload_bits": 7936,
+  "locked_per_offset": {
+    "0": 5,
+    "1": 5,
+    "2": 1,
+    "3": 0,
+    "4": 2,
+    "5": 6,
+    "6": 6,
+    "7": 6
+  },
+  "zero_stream_running_after": 0,
+  "temp_after_c": 65.2
+}

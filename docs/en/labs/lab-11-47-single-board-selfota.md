@@ -35,6 +35,12 @@ missing). Two consequences:
    0x...D8), the burst is not transmitted at all.
 2. Nothing runs the vendor TX DMA. That is the subject of the next section.
 
+Update, same day: board B's device tree turned out to differ from board A's by exactly this one node
+(`cf-ad9361-dds-core-lpc@79024000`). With board A's device tree installed on B (the old one kept on
+the card as `devicetree.dtb.course_nodds`), B has the DAC IIO device, and a cyclic `iio_writedev`
+buffer of zeros keeps the vendor stream alive just like on board A. The script uses that path when
+the device exists and falls back to `dac_zero_stream` otherwise.
+
 ## A DAC that holds its last sample
 
 With the channels on the DMA input the burst does go out, but an RTL-SDR on the splitter shows a

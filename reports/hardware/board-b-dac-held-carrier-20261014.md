@@ -83,6 +83,11 @@ sampler on the symbol boundary. On the other six offsets 36 of 36 frames locked 
 - The earlier single-board DC blocker comparison
   ([`dc-blocker-persist-silicon-20261014.md`](dc-blocker-persist-silicon-20261014.md)) was taken
   with this carrier present, and it dominated the result.
+- Later the same day board B got board A's device tree, which differs from B's only by the DAC
+  core node. B then has the DAC IIO device, and a cyclic `iio_writedev` buffer of zeros does the
+  same job (Lab 11.47 with all eight offsets: 31 of 48 locked, 29 clean, 6 bit errors; the misses
+  are the offsets on the symbol edge). The previous tree is on the card as
+  `devicetree.dtb.course_nodds`.
 - Not done: a fix in the mux. It would need a write cadence of its own when the vendor stream is
   dead, without reintroducing the occupancy staircase that its comment documents.
 - Board B maintenance: after one warm reboot, its static network script did not run (random MAC,
