@@ -1,0 +1,182 @@
+{
+  "issue": 48,
+  "stage": 3,
+  "host": "192.168.40.1",
+  "bit": "tools/build_block8_ofdm_dma_bd.py output impl_1/ofdm_dma_bd_wrapper.bit (WNS +0.754 ns, commit dc3e9e8)",
+  "bit_sha256": "ce6cea62aa7c83c5832c16390a7cb17d355fbbbac4ade6df1fd3cabee0b7949b",
+  "fpga_manager_bin_sha256": "21ae8c6f3256eec82c2644c79b4f7b5dd69afcad5047569ff215115a74fa4c8d",
+  "program_source": "blocks\\block_08_modulation_and_synchronization\\sw\\ofdm_dma_loopback.c",
+  "program_sha256": "dae7e4b876faeb24e36df61d59ccb4f9fe2c06b39993944891c124226746f03a",
+  "runs": [
+    {
+      "seed": 18645,
+      "exit": 0,
+      "stderr_or_extra": [],
+      "id": "0x4f46444d",
+      "version": "0x00030100",
+      "config": "0x0000003e",
+      "tx_phys": "0x3fc0c000",
+      "rx_phys": "0x3fc79000",
+      "symbols_per_run": 80,
+      "runs": 100,
+      "bits": 768000,
+      "bit_errors": 0,
+      "missing_or_duplicate_bytes": 0,
+      "symbols_complete": 8000,
+      "failed_runs": 0,
+      "dma_errors": 0,
+      "tx_symbols_last_run": 81,
+      "rx_symbols_last_run": 80,
+      "ce_trained_last_run": 1,
+      "saturations": {
+        "tx": 0,
+        "fft": 0,
+        "eq": 0,
+        "ce": 0
+      },
+      "status_frame_error_bits": "0x00",
+      "trained": 1,
+      "dma_time_us_per_run": 480.5
+    },
+    {
+      "seed": 1,
+      "exit": 0,
+      "stderr_or_extra": [],
+      "id": "0x4f46444d",
+      "version": "0x00030100",
+      "config": "0x0000003e",
+      "tx_phys": "0x301b2000",
+      "rx_phys": "0x3fc68000",
+      "symbols_per_run": 80,
+      "runs": 100,
+      "bits": 768000,
+      "bit_errors": 0,
+      "missing_or_duplicate_bytes": 0,
+      "symbols_complete": 8000,
+      "failed_runs": 0,
+      "dma_errors": 0,
+      "tx_symbols_last_run": 81,
+      "rx_symbols_last_run": 80,
+      "ce_trained_last_run": 1,
+      "saturations": {
+        "tx": 0,
+        "fft": 0,
+        "eq": 0,
+        "ce": 0
+      },
+      "status_frame_error_bits": "0x00",
+      "trained": 1,
+      "dma_time_us_per_run": 481.5
+    },
+    {
+      "seed": 48879,
+      "exit": 0,
+      "stderr_or_extra": [],
+      "id": "0x4f46444d",
+      "version": "0x00030100",
+      "config": "0x0000003e",
+      "tx_phys": "0x3fc2d000",
+      "rx_phys": "0x300cd000",
+      "symbols_per_run": 80,
+      "runs": 100,
+      "bits": 768000,
+      "bit_errors": 0,
+      "missing_or_duplicate_bytes": 0,
+      "symbols_complete": 8000,
+      "failed_runs": 0,
+      "dma_errors": 0,
+      "tx_symbols_last_run": 81,
+      "rx_symbols_last_run": 80,
+      "ce_trained_last_run": 1,
+      "saturations": {
+        "tx": 0,
+        "fft": 0,
+        "eq": 0,
+        "ce": 0
+      },
+      "status_frame_error_bits": "0x00",
+      "trained": 1,
+      "dma_time_us_per_run": 479.7
+    },
+    {
+      "seed": 8230,
+      "exit": 0,
+      "stderr_or_extra": [],
+      "id": "0x4f46444d",
+      "version": "0x00030100",
+      "config": "0x0000003e",
+      "tx_phys": "0x3019d000",
+      "rx_phys": "0x3013f000",
+      "symbols_per_run": 80,
+      "runs": 100,
+      "bits": 768000,
+      "bit_errors": 0,
+      "missing_or_duplicate_bytes": 0,
+      "symbols_complete": 8000,
+      "failed_runs": 0,
+      "dma_errors": 0,
+      "tx_symbols_last_run": 81,
+      "rx_symbols_last_run": 80,
+      "ce_trained_last_run": 1,
+      "saturations": {
+        "tx": 0,
+        "fft": 0,
+        "eq": 0,
+        "ce": 0
+      },
+      "status_frame_error_bits": "0x00",
+      "trained": 1,
+      "dma_time_us_per_run": 480.2
+    }
+  ],
+  "before": {
+    "uname": "Linux pluto 5.15.0 #7 SMP PREEMPT Sun Nov 3 04:49:37 PST 2024 armv7l GNU/Linux",
+    "fclk0_ctrl": "0x00200500",
+    "iio_names": [
+      "ad9361-phy",
+      "xadc",
+      "cf-ad9361-dds-core-lpc",
+      "cf-ad9361-lpc"
+    ]
+  },
+  "unbound": {
+    "79024000.cf-ad9361-dds-core-lpc": "unbound",
+    "79020000.cf-ad9361-lpc": "unbound",
+    "7c420000.dma": "unbound",
+    "7c400000.dma": "unbound"
+  },
+  "fpga_state": "operating",
+  "dmesg_after_load": [
+    "cf_axi_dds 79024000.cf-ad9361-dds-core-lpc: Analog Devices CF_AXI_DDS_DDS MASTER (9.01.b) at 0x79024000 mapped to 0x2fa87e96, probed DDS AD9364",
+    "cf_axi_dds 79024000.cf-ad9361-dds-core-lpc: Analog Devices CF_AXI_DDS_DDS MASTER (9.01.b) at 0x79024000 mapped to 0x9a26a152, probed DDS AD9364",
+    "cf_axi_dds 79024000.cf-ad9361-dds-core-lpc: Analog Devices CF_AXI_DDS_DDS MASTER (9.01.b) at 0x79024000 mapped to 0x6de9b6af, probed DDS AD9364",
+    "cf_axi_dds 79024000.cf-ad9361-dds-core-lpc: Analog Devices CF_AXI_DDS_DDS MASTER (9.01.b) at 0x79024000 mapped to 0xd7c5a0fa, probed DDS AD9364",
+    "fpga_manager fpga0: writing ofdm_dma_bd.bin to Xilinx Zynq FPGA Manager"
+  ],
+  "modem_id": "0x4F46444D",
+  "dmesg_after_runs": [
+    "cf_axi_dds 79024000.cf-ad9361-dds-core-lpc: Analog Devices CF_AXI_DDS_DDS MASTER (9.01.b) at 0x79024000 mapped to 0x2fa87e96, probed DDS AD9364",
+    "cf_axi_dds 79024000.cf-ad9361-dds-core-lpc: Analog Devices CF_AXI_DDS_DDS MASTER (9.01.b) at 0x79024000 mapped to 0x9a26a152, probed DDS AD9364",
+    "cf_axi_dds 79024000.cf-ad9361-dds-core-lpc: Analog Devices CF_AXI_DDS_DDS MASTER (9.01.b) at 0x79024000 mapped to 0x6de9b6af, probed DDS AD9364",
+    "cf_axi_dds 79024000.cf-ad9361-dds-core-lpc: Analog Devices CF_AXI_DDS_DDS MASTER (9.01.b) at 0x79024000 mapped to 0xd7c5a0fa, probed DDS AD9364",
+    "fpga_manager fpga0: writing ofdm_dma_bd.bin to Xilinx Zynq FPGA Manager"
+  ],
+  "reboot_seconds": 78.2,
+  "after_reboot": {
+    "iio_names": [
+      "ad9361-phy",
+      "xadc",
+      "cf-ad9361-dds-core-lpc",
+      "cf-ad9361-lpc"
+    ],
+    "ad9361_dmesg": [
+      "OF: fdt: Machine model: FISH Ball PlutoSDR Rev.A (Z7020/AD9361)",
+      "Calibrating delay loop (skipped), value calculated using timer frequency.. 333.33 BogoMIPS (lpj=1666666)",
+      "ad9361 spi0.0: ad9361_probe : enter (ad9361)",
+      "ad9361 spi0.0: ad9361_probe : AD936x Rev 0 successfully initialized",
+      "cf_axi_dds 79024000.cf-ad9361-dds-core-lpc: Analog Devices CF_AXI_DDS_DDS MASTER (9.01.b) at 0x79024000 mapped to 0x(ptrval), probed DDS AD9364",
+      "cf_axi_adc 79020000.cf-ad9361-lpc: ADI AIM (10.01.b) at 0x79020000 mapped to 0x(ptrval) probed ADC AD9361 as MASTER"
+    ]
+  },
+  "board": "board A of the course bench"
+}

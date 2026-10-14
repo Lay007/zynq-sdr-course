@@ -104,7 +104,7 @@ PASS: ofdm_axi_modem (MODULATION=0, NORMALIZE=1, CFO 0 ppm) 120-degree channel r
 PASS: ofdm_axi_modem (MODULATION=1, NORMALIZE=1, CFO 5000 ppm) 120-degree channel recovered 960/960 bits in 5 symbols after 1 training symbol(s), BER=0; reset, retrain, registers and sticky errors checked
 ```
 
-Stage 3 below puts it in a block design with the PS and an AXI DMA; the AD9361 interface is not connected yet.
+Stage 3 below puts it in a block design with the PS and an AXI DMA and runs it on a board; the AD9361 interface is not connected yet.
 
 ## Pilots: what exists and what does not yet
 
@@ -562,11 +562,10 @@ DAC alone costs about 0.15 % EVM, which is harmless, but the transmitter gives a
 power. A fixed digital gain before the DAC would recover it; it is not in the RTL yet. Simulation
 only: what the AD9363 and the analog chain do to the spectrum needs the board.
 
-## Verification stage 3, built but not run: PS + AXI DMA block design
+## Verification stage 3: PS + AXI DMA block design, run on a board
 
 Stage 3 of issue #48 is a fabric loopback on the Zynq: the PS sends bits, the PL modulates and
-demodulates them, the PS reads them back. Everything except running it on the board can be done
-without the board:
+demodulates them, the PS reads them back. The design is built without the board:
 
 ```bash
 python tools/build_block8_ofdm_dma_bd.py --build-dir C:/tmp/ofdm_dma_bd
@@ -604,23 +603,48 @@ bitstream built, and the DMA could never have been programmed. The script now na
 window first and stops if any register block is missing from the address map. The second was the
 latch in the IFFT, described in the [OOC report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md).
 
-What software would do, per OFDM symbol, with the
+### Running it on the board
+
+`tools/run_ofdm_dma_board.py` loads the bitstream into a Zynq-7020 board with Linux and runs
+[`sw/ofdm_dma_loopback.c`](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/sw/ofdm_dma_loopback.c),
+a C program built with the Vitis `arm-linux-gnueabihf-gcc -static`. It uses the
 [PG021](https://docs.amd.com/r/en-US/pg021_axi_dma) simple-mode registers:
 
 1. Write the training bit pairs and the data bit pairs (one per byte, the training pattern first)
    to a buffer in DDR.
-2. Arm the receive side: `S2MM_DMACR` (`0x30`) = 1, `S2MM_DA` (`0x48`) = buffer address,
+2. Start the transmit side: `MM2S_DMACR` (`0x00`) = 1, `MM2S_SA` (`0x18`) = source address,
+   `MM2S_LENGTH` (`0x28`) = number of bytes.
+3. Arm the receive side: `S2MM_DMACR` (`0x30`) = 1, `S2MM_DA` (`0x48`) = buffer address,
    `S2MM_LENGTH` (`0x58`) = 48. The modem ends every symbol with `tlast`, so one transfer is one
    symbol; re-arm it for the next one.
-3. Start the transmit side: `MM2S_DMACR` (`0x00`) = 1, `MM2S_SA` (`0x18`) = source address,
-   `MM2S_LENGTH` (`0x28`) = number of bytes.
-4. Poll `S2MM_DMASR` (`0x34`) for idle or take the interrupt, then compare the bytes
-   (`{data_index, bits}`) with what was sent, and read the modem's `STATUS`, `CE_TRAINED` and
-   saturation counters at `0x40000000`.
+4. Wait for the `IOC` bit (12) of `S2MM_DMASR` (`0x34`); it is set at the end of a transfer even with
+   interrupts disabled. Then compare the bytes (`{data_index, bits}`) with what was sent, and read the
+   modem's `STATUS`, `CE_TRAINED` and saturation counters at `0x40000000`.
 
-Not done: loading the bitstream and running this on the board (it would be the stage 3 result),
-software of any kind, and the AD9361 sample path, which replaces the internal loopback and needs a
-clock-domain crossing to the AD9361 interface clock.
+There is no kernel driver, so two details matter:
+
+- **Physical addresses.** The DMA needs physical addresses. The program locks one page per buffer
+  and reads its physical frame from `/proc/self/pagemap`.
+- **Caches.** HP0 is not coherent with the CPU caches: a value the CPU wrote may still sit in a
+  cache when the DMA reads DDR, and a dirty cache line written back later can overwrite what the
+  DMA stored. The program reads and writes the buffers only through an uncached `/dev/mem`
+  mapping. It first sweeps a 4 MB scratch area to push out any dirty lines left from the page
+  being cleared.
+
+Before loading, the script unbinds the drivers of the board's own PL cores, so that no kernel code
+touches registers that disappear with the new bitstream. Afterwards it warm-reboots the board back
+to its own image.
+
+Result on the course bench board ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/hardware/ofdm-dma-fabric-loopback-20261014.md)):
+
+- 4 seeds × 100 runs × 80 data symbols: 3 072 000 bits out and back, **0 bit errors**, no missing
+  bytes, no DMA errors and no saturation in any counter;
+- every run trained the equalizer once (81 symbols sent, 80 received);
+- one run took about 480 us (about 16 Mbit/s), mostly the CPU re-arming S2MM for every symbol.
+
+The bitstream has no AD9361 path; it is a fabric loopback. Connecting the modem to the AD9361 needs
+a clock-domain crossing to the AD9361 interface clock and is the next step (stage 4: attenuated RF
+loopback).
 
 ## What this lab does and does not prove
 
@@ -628,9 +652,9 @@ This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarri
 
 It does **not** claim:
 
-- Zynq system integration on the board: a block design with the PS, an AXI DMA and the modem in a fabric loopback builds to a bitstream and meets timing (stage 3 above), but it has not run on a board, no software drives it, and nothing connects the modem to the AD9361 interface;
+- Zynq system integration on the board: a block design with the PS, an AXI DMA and the modem in a fabric loopback builds, meets timing and runs on a board with 0 errors in 3 072 000 bits (stage 3 above), but nothing connects the modem to the AD9361 interface yet;
 - a finished 16-QAM receiver: the AXI modem carries 16-QAM with the CFO corrector (`MODULATION = 1`) and noise runs exist (stage 2f), but the channel is estimated once per training (averaged over up to eight training symbols, which brings the loss against theory down from about 2-3 dB to about 1 dB with four) and is neither tracked nor smoothed across subcarriers, and every run is a simulation;
-- Verification stages 3-5 (PL/fabric loopback on Zynq, safe attenuated AD9361/AD9363 cabled loopback, an independent SDR capture) -- these need the physical board and RF path, neither of which was available while writing this lab;
+- Verification stages 4-5 (safe attenuated AD9361/AD9363 cabled loopback, an independent SDR capture of the OFDM modem's own RF output);
 - a board-level clock plan. The out-of-context Vivado 2021.1 implementation on `xc7z020clg400-2` ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md)) routes every OFDM block, the pilot corrector and the AXI modem without DRC errors, with the port paths timed as well (0 ns input/output delay). Every clocked block except the one-clock equalizer meets 100 MHz: the TX path and FFT64 with WNS +1.64 / +1.73 ns (about 120 / 121 MHz), the corrector +0.57 ns, the zero-forcing channel equalizer +2.50 ns (+0.55 ns when it averages four training symbols), and the complete AXI modem with it and the CFO corrector +1.42 ns (5917 LUT, 3195 FF, 32 DSP48E1, 3.5 BRAM; the 16-QAM build +0.69 ns, 5985 LUT). That needed the pipelined IFFT/FFT schedule, which is now the default (`PIPELINED = 1`): the butterfly takes four clocks instead of one but accepts one butterfly per clock, so a transform computes in 222 clocks instead of 384. The one-cycle teaching baseline (`PIPELINED = 0`, or `+define+OFDM_IFFT_PIPELINED=0`) missed 100 MHz by about 10 ns (28 logic levels in one clock). The one-clock equalizer (`PIPELINED = 0`, the standalone default) misses by 1.08 ns once its input-port paths are timed; the corrector and the modem use its three-clock `PIPELINED = 1` form. The transforms' working memory is in block RAM by default (`BRAM_MEMORY = 1`: two 32-word banks chosen by the parity of the address, so a butterfly's two points never share a bank): 881 / 836 LUTs instead of 8151 / 7307 with fabric memory, at 229 instead of 222 compute clocks. `--fabric` and `+define+OFDM_IFFT_BRAM=0` select the fabric memory, and the one-cycle baseline always uses it.
 
 ## Exercises
@@ -663,7 +687,7 @@ Each exercise changes the equalizer coefficient on line `.coeff_re(16'sd0), .coe
 - [x] Self-checking RTL equalized loopback through a real complex channel, BER=0, reproducible.
 - [x] Every saturation/overflow counter asserted zero at the tested back-off.
 - [x] AXI4-Stream/AXI4-Lite packaging (`ofdm_axi_modem.v`, BER=0 under random backpressure, register map checked).
-- [x] Block design with PS and AXI DMA, modem in a fabric loopback, built to a bitstream (timing met; not run on a board).
+- [x] Block design with PS and AXI DMA, modem in a fabric loopback, built to a bitstream and run on a board (0 errors in 3 072 000 bits).
 - [ ] AD9361 interface in the block design.
 - [x] Pilot phase tracker in RTL, bit-exact with its fixed-point model (49 symbols).
 - [x] Tracker coefficient wired into the equalizer (same-symbol correction, BER=0 through 120 and -150 degree channels).
