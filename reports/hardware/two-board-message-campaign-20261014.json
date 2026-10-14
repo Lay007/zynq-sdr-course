@@ -1,0 +1,99 @@
+{
+  "issue": 55,
+  "whiten": true,
+  "carrier_hz": 915000000.0,
+  "tx_gain_db": -10.0,
+  "rx_gain_db": 50,
+  "mode_bits": "0x2d630",
+  "frame_symbols": 152,
+  "preamble_bits": 48,
+  "messages": [
+    {
+      "sequence": 100,
+      "text": "msg 00 from A, seq 100",
+      "receptions": 20,
+      "locked": 20,
+      "crc_ok_and_match": 19,
+      "crc_bad": 1
+    },
+    {
+      "sequence": 101,
+      "text": "msg 01 from A, seq 101",
+      "receptions": 20,
+      "locked": 20,
+      "crc_ok_and_match": 17,
+      "crc_bad": 3
+    },
+    {
+      "sequence": 102,
+      "text": "msg 02 from A, seq 102",
+      "receptions": 20,
+      "locked": 18,
+      "crc_ok_and_match": 17,
+      "crc_bad": 1
+    },
+    {
+      "sequence": 103,
+      "text": "msg 03 from A, seq 103",
+      "receptions": 20,
+      "locked": 20,
+      "crc_ok_and_match": 19,
+      "crc_bad": 1
+    },
+    {
+      "sequence": 104,
+      "text": "msg 04 from A, seq 104",
+      "receptions": 20,
+      "locked": 20,
+      "crc_ok_and_match": 19,
+      "crc_bad": 1
+    },
+    {
+      "sequence": 105,
+      "text": "msg 05 from A, seq 105",
+      "receptions": 20,
+      "locked": 20,
+      "crc_ok_and_match": 20,
+      "crc_bad": 0
+    },
+    {
+      "sequence": 106,
+      "text": "msg 06 from A, seq 106",
+      "receptions": 20,
+      "locked": 19,
+      "crc_ok_and_match": 19,
+      "crc_bad": 0
+    },
+    {
+      "sequence": 107,
+      "text": "msg 07 from A, seq 107",
+      "receptions": 20,
+      "locked": 20,
+      "crc_ok_and_match": 20,
+      "crc_bad": 0
+    },
+    {
+      "sequence": 108,
+      "text": "msg 08 from A, seq 108",
+      "receptions": 20,
+      "locked": 20,
+      "crc_ok_and_match": 20,
+      "crc_bad": 0
+    },
+    {
+      "sequence": 109,
+      "text": "msg 09 from A, seq 109",
+      "receptions": 20,
+      "locked": 19,
+      "crc_ok_and_match": 19,
+      "crc_bad": 0
+    }
+  ],
+  "summary": {
+    "receptions": 200,
+    "locked": 196,
+    "delivered": 189,
+    "per_all": 0.055,
+    "per_locked": 0.0357
+  }
+}

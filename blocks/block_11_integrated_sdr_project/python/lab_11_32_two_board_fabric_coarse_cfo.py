@@ -104,8 +104,10 @@ def diff_encode_bits(bits: np.ndarray) -> np.ndarray:
     """Info dibits -> differentially-encoded absolute symbol dibits, matching qpsk_diff_encoder.v.
 
     Phase index p = {d1, d0^d1}; transmitted p[k] = (p[k-1] + p_of(info[k])) mod 4; the emitted dibit
-    is dibit_of_p(p[k]). Encoding ONE frame (p starts at 0) then tiling is seamless because the frame's
-    total increment is 0 mod 4, so info[0] of the next copy still decodes right at the wrap.
+    is dibit_of_p(p[k]). Encoding ONE frame (p starts at 0) then tiling is seamless only if the frame's
+    total increment is 0 mod 4, so info[0] of the next copy still decodes right at the wrap. That holds
+    for the ROM frame, not in general: a whitened packet advances by 2 quarters and every boundary then
+    breaks the next preamble (two_board_message.frame_iq encodes the whole buffer instead).
     """
     out = np.empty_like(bits)
     p_acc = 0

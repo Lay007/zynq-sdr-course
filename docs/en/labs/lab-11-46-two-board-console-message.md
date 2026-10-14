@@ -200,6 +200,35 @@ RX sequence=17 bytes=18 crc=OK payload="Hello from board A"
 
 That is the primary acceptance criterion.
 
+### As run on the course bench (2026-10-14)
+
+The first two-board message crossed the conducted RF path by a shorter route than the one above,
+reusing what already works on silicon:
+
+- **Board A** replays a Lab 11.45 frame whose 256-bit payload is the packet-v1 frame, using
+  `iio_writedev`.
+- **Board B** receives it with its fabric QPSK modem. The host reads the recovered bits from the
+  bridge's decoded-bit register (`gp_ctrl[16]`) and checks the CRC.
+
+```text
+python blocks/block_11_integrated_sdr_project/python/two_board_message.py send "Hello from board A" --sequence 17 --whiten
+TX sequence=17 bytes=18 payload="Hello from board A"
+RX sequence=17 bytes=18 crc=OK payload="Hello from board A"
+```
+
+Ten messages × 20 receptions: 189 of 200 delivered intact, PER 5.5 %. All 11 failures were a missed
+lock or a CRC failure; no corrupted message was accepted ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/hardware/two-board-message-20261014.md)).
+
+Two lessons from getting there:
+
+- A differential frame cannot simply be tiled unless its total phase increment is a whole turn;
+  otherwise every frame boundary carries a phase jump that breaks the next preamble.
+- A packet padded with zeros becomes a long run of one repeated symbol. PN9 whitening of the
+  payload (on both ends) fixed it: 24 of 24 instead of 17 of 24.
+
+What is still open in this stage: the PS/PL mailbox and the board-side console. Here the text is
+printed by the host from board B's receiver output, not by a program on board B.
+
 ## Record in the report
 
 - bitstream/build identity on both boards;
