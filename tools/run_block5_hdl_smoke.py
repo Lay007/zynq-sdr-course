@@ -70,6 +70,7 @@ QPSK_RX_CHAIN = rtl(
     "qpsk_symbol_timing_recovery.v",
     "qpsk_coarse_cfo.v",
     "qpsk_costas.v",
+    "qpsk_packet_detect.v",
     "qpsk_hard_decision.v",
     "qpsk_rx_bit_recovery_chain.v",
 )

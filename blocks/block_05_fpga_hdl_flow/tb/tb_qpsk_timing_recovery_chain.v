@@ -45,7 +45,7 @@ wire tr_valid;
 wire signed [W-1:0] tr_i;
 wire signed [W-1:0] tr_q;
 qpsk_symbol_timing_recovery #(.W(W), .SPS(8), .INDEX_W(16)) timing_loop (
-    .clk(clk), .rst(rst), .in_valid(tr_mf_valid), .in_i(tr_mf_i), .in_q(tr_mf_q),
+    .clk(clk), .rst(rst), .hold(1'b0), .in_valid(tr_mf_valid), .in_i(tr_mf_i), .in_q(tr_mf_q),
     .start_offset(TR_OFFSET[15:0]), .symbol_count(N_SYM[15:0]),
     .out_valid(tr_valid), .out_i(tr_i), .out_q(tr_q),
     .timing_mu(), .timing_omega(), .timing_error()

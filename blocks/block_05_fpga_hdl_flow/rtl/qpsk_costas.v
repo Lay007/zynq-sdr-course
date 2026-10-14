@@ -76,6 +76,9 @@ module qpsk_costas #(
     // 14). With force_track the frequency integrator still pulls in the CFO, but the phase stays
     // smooth. 0 = ordinary behaviour (absolute QPSK).
     input  wire                 force_track,
+    // 1 = hold theta and freq, as the freeze gate does: the parent's packet detector sees only
+    // noise (listen mode, issue #68). 0 = the freeze gate alone decides, as before.
+    input  wire                 hold,
     input  wire                 in_valid,
     input  wire signed [W-1:0]  in_i,
     input  wire signed [W-1:0]  in_q,
@@ -397,7 +400,7 @@ always @(posedge clk) begin
     if (rst_phase) begin
         theta <= {PHASE_W{1'b0}};
         freq  <= {PHASE_W{1'b0}};
-    end else if (in_valid && enable && loop_run) begin
+    end else if (in_valid && enable && loop_run && !hold) begin
         // PI loop + NCO accumulate (phase wraps naturally at PHASE_W).
         // Frozen (held) while no signal is present, so the loop does not wander
         // on the pre-frame noise and acquires cleanly when the burst arrives.
@@ -419,7 +422,7 @@ always @(posedge clk) begin
             out_q <= enable ? y_q : in_q;
             // Count only the symbols the loop actually ran on, so the acquisition window
             // starts when the burst arrives, not when the (silent) frame window opens.
-            if (enable && loop_run && acquiring) acq_cnt <= acq_cnt + 1'b1;
+            if (enable && loop_run && !hold && acquiring) acq_cnt <= acq_cnt + 1'b1;
         end
     end
 end

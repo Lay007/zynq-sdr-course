@@ -35,6 +35,7 @@ qpsk_symbol_timing_recovery #(
 ) dut (
     .clk(clk),
     .rst(rst),
+    .hold(1'b0),
     .in_valid(in_valid),
     .in_i(in_i),
     .in_q(in_q),

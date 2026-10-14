@@ -43,6 +43,12 @@ module qpsk_rx_bit_recovery_chain #(
     // frame. Holding it low across frames keeps the estimate, which then averages over many frames
     // instead of mostly over the current preamble (issue #66, see qpsk_zynq_ber_top DC_PERSIST).
     input  wire                     rst_dc,
+    // 1 = listen mode (issue #68): hold the Gardner timing loop and the Costas loop while the
+    // packet detector sees only noise. Without this both loops update on the noise between
+    // packets and random-walk (the sign-only Gardner integrator and the Costas frequency term
+    // are unbounded), so after a long silence they are off when the packet arrives.
+    // 0 = the loops run on every symbol, as before.
+    input  wire                     listen_en,
     input  wire                     dc_block_en,   // 1 = subtract LO-leakage DC (OTA); 0 = passthrough
     input  wire                     costas_en,     // 1 = carrier tracking (OTA); 0 = passthrough
     input  wire                     coarse_cfo_en, // 1 = strip bulk inter-board CFO before Costas; 0 = passthrough
@@ -57,6 +63,9 @@ module qpsk_rx_bit_recovery_chain #(
     input  wire [INDEX_W-1:0]       symbol_count,
     output wire                     out_valid,
     output wire [1:0]               out_dibit,
+    // 1 while the packet detector sees a packet (more than noise). Used by the listening top
+    // level to keep the frame sync off the noise between packets.
+    output wire                     packet_present,
     output wire                     debug_symbol_valid,
     output wire signed [W-1:0]      debug_symbol_i,
     output wire signed [W-1:0]      debug_symbol_q,
@@ -143,6 +152,12 @@ qpsk_mf_phase_picker #(
     .phase()
 );
 
+// Packet present? Compares the symbol amplitude with the noise level (qpsk_packet_detect).
+// It runs on the selected symbol stream and is reset only with rst_dc, so the noise estimate
+// survives from one reception to the next, as the DC estimate does.
+wire pkt_present;
+wire loop_hold = listen_en && !pkt_present;
+
 generate
 if (TIMING_RECOVERY_ENABLE) begin : g_qpsk_timing_recovery
     wire fixed_valid;
@@ -171,7 +186,7 @@ if (TIMING_RECOVERY_ENABLE) begin : g_qpsk_timing_recovery
         .W(W), .SPS(SPS), .INDEX_W(INDEX_W),
         .K1_TERM_VALUE(TIMING_K1_TERM), .K2_TERM_VALUE(TIMING_K2_TERM)
     ) continuous_timing_i (
-        .clk(clk), .rst(rst),
+        .clk(clk), .rst(rst), .hold(loop_hold),
         .in_valid(picked_valid), .in_i(picked_i), .in_q(picked_q),
         .start_offset(start_offset), .symbol_count(symbol_count),
         .out_valid(loop_valid), .out_i(loop_i), .out_q(loop_q),
@@ -216,6 +231,17 @@ end else begin : g_fixed_timing
     assign timing_error = 3'sd0;
 end
 endgenerate
+
+qpsk_packet_detect #(
+    .W(W)
+) packet_detect_i (
+    .clk(clk),
+    .rst(rst_dc),
+    .in_valid(sym_valid),
+    .in_i(sym_i),
+    .in_q(sym_q),
+    .present(pkt_present)
+);
 
 // Feedforward coarse-CFO removal, ahead of the Costas loop. Two independent-oscillator boards
 // sit tens of kHz apart -- far outside the Costas pull-in (a few hundred Hz), so the loop alone
@@ -278,6 +304,7 @@ qpsk_costas #(
     .rst_phase(rst_carrier),
     .enable(costas_en),
     .force_track(diff_en),
+    .hold(loop_hold),
     .in_valid(cfo_out_valid),
     .in_i(cfo_out_i),
     .in_q(cfo_out_q),
@@ -318,6 +345,7 @@ qpsk_hard_decision decision_i (
     .out_dibit(out_dibit)
 );
 
+assign packet_present = pkt_present;
 assign debug_symbol_valid = cos_valid;
 assign debug_symbol_i = cos_i;
 assign debug_symbol_q = cos_q;

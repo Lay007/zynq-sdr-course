@@ -56,6 +56,7 @@ qpsk_zynq_ber_top #(
     .phase_pick_en(1'b0),             // clean loopback: timing picker off (passthrough)
     .costas_hold_phase(1'b0),          // clean loopback: no phase carried between frames
     .diff_en(1'b0),                    // absolute QPSK; differential mode has its own bench
+    .listen_en(1'b0),                  // self-loopback: the fixed window is enough
     .busy(busy),
     .done(done),
     .tx_valid(tx_valid),

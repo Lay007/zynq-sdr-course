@@ -60,6 +60,12 @@ module qpsk_zynq_ber_top #(
     // rotation cancels and the frame-sync quadrant ambiguity disappears. 0 = ordinary absolute QPSK
     // (bit-identical, for the coherent loopback). See qpsk_diff_encoder/decoder, Lab 11.43.
     input  wire                     diff_en,
+    // 1 = listen for a packet from another transmitter (issue #68). 0 = the receive window is the
+    // frame plus RX_SAMPLE_MARGIN symbols after start, which fits self-OTA, where this core sends
+    // the frame it waits for. 1 = the sampler runs for up to 2^INDEX_W - 1 symbols (136 ms at
+    // 480 kSym/s), so a packet that arrives any time in that window is found; the idle watchdog then
+    // watches the sampler instead of the decisions, which the signal gate holds back in silence.
+    input  wire                     listen_en,
     output wire                     busy,
     output reg                      done,
     output wire                     tx_valid,
@@ -109,6 +115,10 @@ wire rx_raw_valid;
 wire [1:0] rx_raw_dibit;
 wire recovered_valid;
 wire [1:0] recovered_dibit;
+// Differential decoder output, before the listen-mode gate.
+wire dd_valid;
+wire [1:0] dd_dibit;
+wire packet_present;
 
 assign debug_recovered_valid = recovered_valid;
 assign debug_recovered_dibit = recovered_dibit;
@@ -193,6 +203,8 @@ qpsk_rx_bit_recovery_chain #(
     .rst_carrier(rst || (frame_start && !costas_hold_phase)),
     // ... and keep the DC estimate across frames unless DC_PERSIST = 0
     .rst_dc(DC_PERSIST ? rst : (rst || frame_start)),
+    // ... and in listen mode hold the timing loop through the silence before the packet
+    .listen_en(listen_en),
     .dc_block_en(dc_block_en),
     .costas_en(costas_en),
     // Runtime coarse-CFO enable. The bridge drives this from a gp_ctrl bit so the fabric receiver
@@ -207,8 +219,9 @@ qpsk_rx_bit_recovery_chain #(
     .in_i(rx_i),
     .in_q(rx_q),
     .start_offset(start_offset),
-    // sampler emits margin extra symbols so a latency-delayed OTA frame still fits
-    .symbol_count(symbol_count + RX_SAMPLE_MARGIN[INDEX_W-1:0]),
+    // sampler emits margin extra symbols so a latency-delayed OTA frame still fits;
+    // in listen mode it runs for the whole counter range
+    .symbol_count(listen_en ? {INDEX_W{1'b1}} : symbol_count + RX_SAMPLE_MARGIN[INDEX_W-1:0]),
     .out_valid(rx_raw_valid),
     .out_dibit(rx_raw_dibit),
     .debug_symbol_valid(debug_symbol_valid),
@@ -216,7 +229,8 @@ qpsk_rx_bit_recovery_chain #(
     .debug_symbol_q(debug_symbol_q),
     .timing_mu(timing_mu),
     .timing_omega(timing_omega),
-    .timing_error(timing_error)
+    .timing_error(timing_error),
+    .packet_present(packet_present)
 );
 
 // Differential decoder: recovers info from consecutive-symbol phase differences, so a whole-burst
@@ -229,9 +243,40 @@ qpsk_diff_decoder diff_decoder_i (
     .enable(diff_en),
     .in_valid(rx_raw_valid),
     .in_dibit(rx_raw_dibit),
-    .out_valid(recovered_valid),
-    .out_dibit(recovered_dibit)
+    .out_valid(dd_valid),
+    .out_dibit(dd_dibit)
 );
+
+// Listen mode: keep the frame sync off the noise between packets. Over a long wait the
+// correlator would otherwise test tens of thousands of noise positions, and with LOCK_ERR_TOL = 1
+// and four rotation hypotheses a false lock (a "frame" with about half its bits wrong) becomes
+// likely (about 1 in 5 over 30 ms in simulation). The decisions are delayed by LISTEN_DELAY
+// symbols and passed only while the packet detector sees a packet, plus LISTEN_HANG symbols
+// after it stops; the delay lets the first symbols of the packet, which arrive before the
+// detector has decided, through as well. Outside listen mode the decisions pass unchanged.
+localparam integer LISTEN_DELAY = 16;
+localparam integer LISTEN_HANG = 64;
+reg [2*LISTEN_DELAY-1:0] listen_sr = {(2*LISTEN_DELAY){1'b0}};
+reg [4:0] listen_fill = 5'd0;
+reg [6:0] listen_hang = 7'd0;
+wire listen_open = packet_present || (listen_hang != 7'd0);
+
+always @(posedge clk) begin
+    if (rst || frame_start) begin
+        listen_sr   <= {(2*LISTEN_DELAY){1'b0}};
+        listen_fill <= 5'd0;
+        listen_hang <= 7'd0;
+    end else if (dd_valid) begin
+        listen_sr <= {listen_sr[2*LISTEN_DELAY-3:0], dd_dibit};
+        if (listen_fill != LISTEN_DELAY[4:0]) listen_fill <= listen_fill + 1'b1;
+        if (packet_present) listen_hang <= LISTEN_HANG[6:0];
+        else if (listen_hang != 7'd0) listen_hang <= listen_hang - 1'b1;
+    end
+end
+
+assign recovered_valid = listen_en ? (dd_valid && (listen_fill == LISTEN_DELAY[4:0]) && listen_open)
+                                   : dd_valid;
+assign recovered_dibit = listen_en ? listen_sr[2*LISTEN_DELAY-1 -: 2] : dd_dibit;
 
 qpsk_ber_counter #(
     .INDEX_W(INDEX_W),
@@ -273,7 +318,9 @@ always @(posedge clk) begin
         if (frame_start) begin
             rx_idle_counter <= {RX_IDLE_TIMEOUT_W{1'b0}};
         end else if (ber_busy) begin
-            if (recovered_valid) begin
+            // Listen mode: silence before the packet is expected, so the watchdog only ends the
+            // attempt once the sampler itself has stopped (its window is used up).
+            if (listen_en ? debug_symbol_valid : recovered_valid) begin
                 rx_idle_counter <= {RX_IDLE_TIMEOUT_W{1'b0}};
             end else if (rx_idle_counter == RX_IDLE_TIMEOUT_CYCLES - 1) begin
                 ber_abort <= 1'b1;

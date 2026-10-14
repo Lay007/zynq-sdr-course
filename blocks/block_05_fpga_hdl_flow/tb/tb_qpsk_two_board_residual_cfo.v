@@ -26,7 +26,7 @@ module tb_qpsk_two_board_residual_cfo;
       .W(W), .SPS(8), .INDEX_W(INDEX_W),
       .COSTAS_SIG_THRESH(8), .COARSE_ENABLE(1)
   ) old_rx (
-      .clk(clk), .rst(rst), .rst_carrier(rst), .rst_dc(rst),
+      .clk(clk), .rst(rst), .rst_carrier(rst), .listen_en(1'b0), .rst_dc(rst),
       .dc_block_en(1'b1), .costas_en(1'b1), .diff_en(1'b0), .coarse_cfo_en(1'b1), .phase_pick_en(1'b0),
       .in_valid(in_valid), .in_i(in_i), .in_q(in_q),
       .start_offset(16'd2), .symbol_count(CHAIN_SYMS[15:0]),
@@ -39,7 +39,7 @@ module tb_qpsk_two_board_residual_cfo;
       .COSTAS_KP_LOG_TRACK(7), .COSTAS_ACQ_SYMBOLS(64), .COSTAS_KI_LOG(4),
       .COSTAS_SIG_THRESH(8), .COARSE_ENABLE(1)
   ) tuned_rx (
-      .clk(clk), .rst(rst), .rst_carrier(rst), .rst_dc(rst),
+      .clk(clk), .rst(rst), .rst_carrier(rst), .listen_en(1'b0), .rst_dc(rst),
       .dc_block_en(1'b1), .costas_en(1'b1), .diff_en(1'b0), .coarse_cfo_en(1'b1), .phase_pick_en(1'b0),
       .in_valid(in_valid), .in_i(in_i), .in_q(in_q),
       .start_offset(16'd2), .symbol_count(CHAIN_SYMS[15:0]),

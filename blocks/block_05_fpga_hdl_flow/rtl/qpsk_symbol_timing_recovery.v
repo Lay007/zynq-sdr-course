@@ -26,6 +26,9 @@ module qpsk_symbol_timing_recovery #(
 ) (
     input  wire                     clk,
     input  wire                     rst,
+    // 1 = hold omega and the integrator (the parent sees only noise, issue #68): the NCO keeps
+    // running at the held step. 0 = update on every symbol, as before.
+    input  wire                     hold,
     input  wire                     in_valid,
     input  wire signed [W-1:0]      in_i,
     input  wire signed [W-1:0]      in_q,
@@ -143,8 +146,10 @@ always @(posedge clk) begin
             end else if (emitted < symbol_count) begin
                 if (nco < w_step) begin
                     if (parity == 1'b0) begin
-                        integ          <= integ_next;
-                        w_step         <= w_clamped;
+                        if (!hold) begin
+                            integ      <= integ_next;
+                            w_step     <= w_clamped;
+                        end
                         y_on_prev_i    <= y_i;
                         y_on_prev_q    <= y_q;
                         out_valid      <= 1'b1;

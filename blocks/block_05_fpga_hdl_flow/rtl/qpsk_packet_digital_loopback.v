@@ -91,7 +91,7 @@ wire [1:0] recovered_dibit;
 qpsk_rx_bit_recovery_chain #(
     .W(W), .SPS(SPS), .INDEX_W(INDEX_W), .COEF_FILE(COEF_FILE)
 ) rx_chain_i (
-    .clk(clk), .rst(rst || frame_start), .rst_carrier(rst || frame_start), .rst_dc(rst || frame_start),
+    .clk(clk), .rst(rst || frame_start), .rst_carrier(rst || frame_start), .listen_en(1'b0), .rst_dc(rst || frame_start),
     .dc_block_en(1'b0), .costas_en(1'b0), .coarse_cfo_en(1'b0),
     .phase_pick_en(1'b0), .timing_recovery_en(1'b0), .diff_en(1'b0),
     .in_valid(tx_valid), .in_i(tx_i), .in_q(tx_q),

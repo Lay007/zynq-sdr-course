@@ -51,7 +51,7 @@ module tb_qpsk_costas_multiburst #(
   wire [1:0] rxdibit;
   qpsk_rx_bit_recovery_chain #(.W(W), .SPS(8), .INDEX_W(INDEX_W),
                                .COSTAS_KP_LOG_ACQ(KPA), .COSTAS_KP_LOG_TRACK(KPT)) rxc (
-      .clk(clk), .rst(chain_rst), .rst_carrier(carrier_rst), .rst_dc(chain_rst),
+      .clk(clk), .rst(chain_rst), .rst_carrier(carrier_rst), .listen_en(1'b0), .rst_dc(chain_rst),
       .dc_block_en(1'b1), .costas_en(1'b1), .diff_en(1'b0), .coarse_cfo_en(1'b0), .phase_pick_en(1'b0),
       .in_valid(rx_valid), .in_i(rx_i), .in_q(rx_q),
       .start_offset(start_offset), .symbol_count(CHAIN_SYMS[INDEX_W-1:0]),

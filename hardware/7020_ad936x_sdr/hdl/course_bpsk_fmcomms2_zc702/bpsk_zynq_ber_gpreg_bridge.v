@@ -311,6 +311,12 @@ wire qpsk_timing_recovery_en = control_sync[14];
 // link the host transmitter emits an already-differential frame, so only the RX bit matters there.
 wire qpsk_diff_en = control_sync[17];
 
+// gp_ctrl[18]=1 puts the QPSK receiver in listen mode (issue #68): after start it waits up to
+// 65535 symbols (136 ms) for a packet from another board instead of the frame + 256-symbol
+// window that self-OTA needs. An attempt with no packet ends with the timeout status bit once
+// that window is used up. 0 keeps every existing lab bit-identical.
+wire qpsk_listen_en = control_sync[18];
+
 // gp_ctrl[8]=1 feeds the raw-ADC CDC FIFO from AD9361 RX channel 2 (adc_input2 =
 // adc_data_i1/q1) instead of channel 1. control_sync lives on sample_clk, while
 // this mux feeds memory written on adc_input_clk; synchronize the quasi-static
@@ -443,6 +449,7 @@ qpsk_zynq_ber_top #(
     .phase_pick_en(qpsk_phase_pick_en),
     .timing_recovery_en(qpsk_timing_recovery_en),
     .diff_en(qpsk_diff_en),
+    .listen_en(qpsk_listen_en),
     .busy(qpsk_busy),
     .done(qpsk_done),
     .tx_valid(qpsk_tx_valid),
