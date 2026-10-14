@@ -61,11 +61,10 @@ second frame.
 
 - Measured: the fabric receive chain of Lab 11.45 does not survive a sudden 20 dB drop of its input
   in the middle of a frame, and does survive the same rise and slow changes of 2.5 dB per frame.
-- Assumed, not checked: a loop whose error signal scales with the input amplitude (Costas phase
-  detector, Gardner timing detector, or the DC blocker relative to the signal) loses its loop
-  gain by 20 dB or more at the drop and cannot hold the residual frequency and timing offsets of
-  the two boards for the rest of the frame. A simulation of the chain with the same stepped input
-  would show which loop it is.
+- Found afterwards ([`dc-blocker-level-step-20261014.md`](dc-blocker-level-step-20261014.md)): the
+  DC blocker. Its running-mean estimate, learned on the strong signal, is comparable to the weak
+  signal after the drop. With the DC blocker off the drop costs nothing (4 gross frames instead of
+  35), and the RTL simulation of the receiver reproduces both cases.
 - For #58 itself: with the level changing every frame the AGC modes neither help nor hurt. The
   earlier 5-7 ms toggling result (fast_attack best, slow_attack worst) is a different regime, where
   the AGC has time to act between steps.
