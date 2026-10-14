@@ -109,6 +109,11 @@ frame format. The difference was not investigated.
 
 ## Limits
 
+- **What the PER means.** Board A replays the packet cyclically, so each reception on B is a
+  fresh chance to catch one of many identical copies in a continuous stream. The PER above is the
+  probability that one reception attempt fails on that stream, not the loss rate of single-shot
+  packets. A transmitter that sends each packet once (the mailbox design of Lab 11.46) is needed
+  for that.
 - One board pair, one RF setting (915 MHz, conducted, TX -10 / RX 50 dB), one session.
 - The PS/PL mailbox of Lab 11.46 is not in this path. It passes its own echo test on board A
   (`tools/run_mailbox_board.py`) but does not feed the modem yet.
