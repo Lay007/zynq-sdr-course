@@ -1,0 +1,32 @@
+{
+  "lab": "11.47",
+  "carrier_hz": 915000000.0,
+  "tx_gain_db": 0.0,
+  "rx_gain_db": 60,
+  "mode_bits": "0x2d630",
+  "zero_stream": false,
+  "offsets": [
+    0,
+    1,
+    2,
+    5,
+    6,
+    7
+  ],
+  "temp_before_c": 61.8,
+  "frames": 60,
+  "locked": 5,
+  "clean": 0,
+  "payload_bit_errors": 220,
+  "payload_bits": 1280,
+  "locked_per_offset": {
+    "0": 0,
+    "1": 1,
+    "2": 3,
+    "5": 1,
+    "6": 0,
+    "7": 0
+  },
+  "zero_stream_running_after": 0,
+  "temp_after_c": 62.1
+}

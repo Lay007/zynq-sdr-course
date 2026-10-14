@@ -347,6 +347,7 @@ nav:
           - "Лабораторная 11.38 — ZynqSDR TX → запись IQ → офлайн-приёмник": ru/labs/lab-11-38-hardware-tx-iq-capture-offline-rx.md
           - "Лабораторная 11.45 — Дифференциальный QPSK + длинная преамбула": ru/labs/lab-11-45-differential-long-preamble.md
           - "Лабораторная 11.46 — Сообщение из одной Zynq-консоли в другую": ru/labs/lab-11-46-two-board-console-message.md
+          - "Лабораторная 11.47 — Плата принимает собственную пачку": ru/labs/lab-11-47-single-board-selfota.md
       - "Блок 11 — разборы случаев отладки":
           - "Обзор: восемь случаев отладки": ru/block11-case-studies.md
           - "Лабораторная 11.8 — Overlay gpreg BPSK для AD9361": ru/labs/lab-11-8-axi-gpreg-bpsk-overlay.md
@@ -536,6 +537,7 @@ nav:
           - "Lab 11.38 — ZynqSDR TX → IQ capture → offline receiver": en/labs/lab-11-38-hardware-tx-iq-capture-offline-rx.md
           - "Lab 11.45 — Differential QPSK + a longer preamble": en/labs/lab-11-45-differential-long-preamble.md
           - "Lab 11.46 — A message from one Zynq console to another": en/labs/lab-11-46-two-board-console-message.md
+          - "Lab 11.47 — One board receives its own burst": en/labs/lab-11-47-single-board-selfota.md
       - "Block 11 — bring-up case studies":
           - "Overview: eight debugging cases": block11-case-studies.md
           - "Lab 11.8 — AD9361 gpreg BPSK overlay": en/labs/lab-11-8-axi-gpreg-bpsk-overlay.md

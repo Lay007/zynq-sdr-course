@@ -1,0 +1,33 @@
+{
+  "lab": "11.47",
+  "carrier_hz": 915000000.0,
+  "tx_gain_db": 0.0,
+  "rx_gain_db": 60,
+  "mode_bits": "0x2d630",
+  "zero_stream": true,
+  "offsets": [
+    0,
+    1,
+    2,
+    5,
+    6,
+    7
+  ],
+  "temp_before_c": 61.6,
+  "zero_stream_log": "dac_zero_stream: cyclic zeros from 0x32081000, pid 5172",
+  "frames": 60,
+  "locked": 52,
+  "clean": 52,
+  "payload_bit_errors": 0,
+  "payload_bits": 13312,
+  "locked_per_offset": {
+    "0": 10,
+    "1": 8,
+    "2": 4,
+    "5": 10,
+    "6": 10,
+    "7": 10
+  },
+  "zero_stream_running_after": 0,
+  "temp_after_c": 62.0
+}
