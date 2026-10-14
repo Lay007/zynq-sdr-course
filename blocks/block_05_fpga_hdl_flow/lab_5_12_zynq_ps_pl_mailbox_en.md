@@ -186,10 +186,10 @@ Result of that build (normalized reports in [`reports/fpga/block5_mailbox_bd_raw
 |---|---|
 | Mailbox segment | `SEG_mailbox_0_reg0`, offset `0x40000000`, range `0x1000` (4 KB) |
 | FCLK_CLK0 | 100.000 MHz |
-| Timing at 100 MHz | WNS +3.508 ns, 0 failing endpoints |
-| Utilization | 1060 LUT, 1844 FF, 0 BRAM, 0 DSP (mailbox 636 LUT / 1265 FF, AXI interconnect 407 LUT) |
+| Timing at 100 MHz | WNS +3.359 ns, 0 failing endpoints |
+| Utilization | 1017 LUT, 1700 FF, 0 BRAM, 0 DSP (mailbox 636 LUT / 1241 FF, AXI interconnect 364 LUT) |
 | DRC | 0 violations |
-| Outputs | bitstream and XSA (not committed, not loaded on a board) |
+| Outputs | bitstream and XSA (not committed); loaded and tested on board A, see below |
 
 What executing the recipe found:
 
@@ -200,6 +200,29 @@ What executing the recipe found:
 - With four parallel jobs on a 16 GB machine the IP syntheses ran out of memory; one job at a time completes.
 
 `0x40000000` is simply the start of the `M_AXI_GP0` window, which is why Vivado picked it. It is still a build-time fact: record the address your own build reports, not this one.
+
+### On the board (2026-10-14)
+
+`tools/run_mailbox_board.py` loads the bitstream into board A with `fpga_manager` and drives the
+mailbox with `devmem`, then warm-reboots the board back to its own image. The first run read 0 from
+every register and every write had no effect. The Vivado-facing wrapper passed all 32 address bits
+to the core, whose register offsets are 0x00..0xAC, while the interconnect hands the slave the
+**full** address, `0x40000000 + offset`. The core bench addresses the core with 8-bit offsets from
+zero, so it could not see this. The wrapper now passes `addr[7:0]`, and a new bench,
+`tb_zynq_message_mailbox_vivado_wrapper.sv`, repeats the core checks through the wrapper at the
+board's addresses. It failed 16 checks before the fix.
+
+After the rebuild, on board A ([raw results](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/hardware/mailbox-echo-board-a-20261014.json)):
+
+```text
+TX sequence=17 bytes=18 payload="Hello from board A"
+RX sequence=17 bytes=18 crc=OK payload="Hello from board A"
+```
+
+- 200 random messages of 0-64 bytes came back intact.
+- Length 80 came back as 64 with the frame-error flag.
+- A second message before `RX_ACK` kept the first and set `RX_OVERFLOW` (status `0xE`); `RX_ACK`
+  cleared it (status `0x2`).
 
 ## Part C — move to the radio link
 

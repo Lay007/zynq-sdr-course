@@ -57,13 +57,18 @@ module zynq_message_mailbox_vivado_wrapper (
     input  wire        s_axi_aresetn
 );
 
+// The block-design interconnect hands the slave the FULL address (0x40000000 + offset on the course
+// board). The core compares the address with its register offsets 0x00..0xAC, so only the offset
+// bits may reach it. Feeding all 32 bits made every register read 0 and every write miss on board A
+// (issue #55, 2026-10-14); tb_zynq_message_mailbox_vivado_wrapper.sv checks this at the board's
+// addresses. The 4 KB segment leaves bits [11:8] zero at every valid offset.
 zynq_message_mailbox_axi_lite #(
-    .AXI_ADDR_W(32),
+    .AXI_ADDR_W(8),
     .AXI_DATA_W(32)
 ) mailbox_i (
     .s_axi_aclk(s_axi_aclk),
     .s_axi_aresetn(s_axi_aresetn),
-    .s_axi_awaddr(s_axi_awaddr),
+    .s_axi_awaddr(s_axi_awaddr[7:0]),
     .s_axi_awvalid(s_axi_awvalid),
     .s_axi_awready(s_axi_awready),
     .s_axi_wdata(s_axi_wdata),
@@ -73,7 +78,7 @@ zynq_message_mailbox_axi_lite #(
     .s_axi_bresp(s_axi_bresp),
     .s_axi_bvalid(s_axi_bvalid),
     .s_axi_bready(s_axi_bready),
-    .s_axi_araddr(s_axi_araddr),
+    .s_axi_araddr(s_axi_araddr[7:0]),
     .s_axi_arvalid(s_axi_arvalid),
     .s_axi_arready(s_axi_arready),
     .s_axi_rdata(s_axi_rdata),

@@ -1,0 +1,51 @@
+{
+  "issue": 55,
+  "stage": 2,
+  "host": "192.168.40.1",
+  "bit_sha256": "834e6bca841a99094aa76520a0ff4ab6b00b1e84b80aac09a10761f3e887bd69",
+  "base": "0x40000000",
+  "checks": {
+    "id_version": {
+      "id": "0x4D424F58",
+      "version": "0x00010000",
+      "pass": true
+    },
+    "hello": {
+      "rx_sequence": 17,
+      "rx_length": 18,
+      "meta": 1,
+      "payload": "Hello from board A",
+      "pass": true,
+      "status_before_ack": "0x6",
+      "status_after_ack": "0x2"
+    },
+    "random_echo": {
+      "messages": 200,
+      "failures": 0,
+      "first_failures": [],
+      "pass": true
+    },
+    "too_long": {
+      "rx_length": 64,
+      "meta": 2,
+      "pass": true
+    },
+    "overflow": {
+      "status_after_second": "0xe",
+      "kept_sequence": 1001,
+      "kept_payload": "first",
+      "status_after_ack": "0x2",
+      "pass": true,
+      "first_status": "0x6"
+    }
+  },
+  "fpga_state": "operating",
+  "rebooted": true,
+  "after_reboot_iio": [
+    "ad9361-phy",
+    "xadc",
+    "cf-ad9361-dds-core-lpc",
+    "cf-ad9361-lpc"
+  ],
+  "all_pass": true
+}

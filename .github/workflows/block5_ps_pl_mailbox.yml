@@ -7,12 +7,14 @@ on:
       - "blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_axi_lite.v"
       - "blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_vivado_wrapper.v"
       - "blocks/block_05_fpga_hdl_flow/tb/tb_zynq_message_mailbox_axi_lite.sv"
+      - "blocks/block_05_fpga_hdl_flow/tb/tb_zynq_message_mailbox_vivado_wrapper.sv"
       - ".github/workflows/block5_ps_pl_mailbox.yml"
   pull_request:
     paths:
       - "blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_axi_lite.v"
       - "blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_vivado_wrapper.v"
       - "blocks/block_05_fpga_hdl_flow/tb/tb_zynq_message_mailbox_axi_lite.sv"
+      - "blocks/block_05_fpga_hdl_flow/tb/tb_zynq_message_mailbox_vivado_wrapper.sv"
       - ".github/workflows/block5_ps_pl_mailbox.yml"
   workflow_dispatch:
 
@@ -49,3 +51,13 @@ jobs:
             -o /tmp/zynq_message_mailbox_vivado_wrapper.vvp \
             blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_axi_lite.v \
             blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_vivado_wrapper.v
+
+      - name: Run the wrapper at the board's addresses (0x40000000 + offset)
+        run: |
+          iverilog -g2012 -Wall \
+            -s tb_zynq_message_mailbox_vivado_wrapper \
+            -o /tmp/tb_zynq_message_mailbox_vivado_wrapper.vvp \
+            blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_axi_lite.v \
+            blocks/block_05_fpga_hdl_flow/rtl/zynq_message_mailbox_vivado_wrapper.v \
+            blocks/block_05_fpga_hdl_flow/tb/tb_zynq_message_mailbox_vivado_wrapper.sv
+          vvp /tmp/tb_zynq_message_mailbox_vivado_wrapper.vvp
