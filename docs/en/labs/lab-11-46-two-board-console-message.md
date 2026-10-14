@@ -226,8 +226,22 @@ Two lessons from getting there:
 - A packet padded with zeros becomes a long run of one repeated symbol. PN9 whitening of the
   payload (on both ends) fixed it: 24 of 24 instead of 17 of 24.
 
-What is still open in this stage: the PS/PL mailbox and the board-side console. Here the text is
-printed by the host from board B's receiver output, not by a program on board B.
+
+From the board consoles, with no Python on the boards: `sw/zmsg.c`, built with the Vitis
+`arm-linux-gnueabihf-gcc -static`, does the same on both ends.
+
+```text
+board-a$ ./zmsg send "Hello from board A" --seq 17
+TX sequence=17 bytes=18 payload="Hello from board A"
+board-b$ ./zmsg receive
+RX sequence=17 bytes=18 crc=OK payload="Hello from board A"
+board-a$ ./zmsg stop
+```
+
+Ten messages × 20 receptions from the consoles: 200 of 200 delivered, PER 0.
+
+What is still open in this stage: the PS/PL mailbox feeding the modem. The mailbox passes its own
+echo test on board A (Lab 5.12), but the message above goes from the console to the modem without it.
 
 ## Record in the report
 

@@ -69,9 +69,47 @@ receptions each:
 Every failure was either a missed lock (4) or caught by the CRC (7); no corrupted message was
 accepted.
 
+## From the board consoles: `zmsg`
+
+`blocks/block_11_integrated_sdr_project/sw/zmsg.c` does both ends on the boards themselves, which
+have no Python. It is built with the Vitis `arm-linux-gnueabihf-gcc -static`.
+
+- **`zmsg send` (board A)** builds the same frame as `two_board_message.py`: packet-v1, PN9,
+  continuous differential encoding, RRC from the FPGA's own taps. Its output file is identical,
+  sample for sample, to the Python waveform, and it takes 40 ms on the board. It then starts the
+  cyclic `iio_writedev`.
+- **`zmsg receive` (board B)** runs the fabric bursts through `/dev/mem`, reads the decoded-bit
+  register, de-whitens and checks the CRC.
+
+`tools/gen_zmsg_tables.py` writes the preamble and RRC tables into the C source from the FPGA's
+`.mem` files, and `tests/test_zmsg_tables.py` checks that they stay equal.
+
+One timing detail mattered. The receiver reports done at the end of the frame, but its sampler
+still emits the 256-symbol margin (about 0.5 ms), and those symbols shift through the decoded-bit
+register. Read immediately, the register gave 3 good packets out of 17. After waiting 5 ms it
+gave 39 of 40. The Python tool never hit this, because each `devmem` call takes milliseconds.
+
+```text
+board-a$ ./zmsg send "Hello from board A" --seq 17
+TX sequence=17 bytes=18 payload="Hello from board A"
+board-b$ ./zmsg receive
+RX sequence=17 bytes=18 crc=OK payload="Hello from board A"
+```
+
+Campaign from the consoles: ten messages (`"board console msg NN"`, 20 bytes, sequences 200-209),
+`zmsg receive --count 20 --attempts 20` each. Raw data:
+[`two-board-message-zmsg-campaign-20261014.json`](two-board-message-zmsg-campaign-20261014.json).
+
+| receptions | locked | delivered intact | CRC failed | wrong message accepted | PER |
+|---:|---:|---:|---:|---:|---:|
+| 200 | 200 | **200** | 0 | 0 | **0** (95 % upper bound about 1.5 %) |
+
+This is better than the host-driven campaign above (5.5 %), with the same RF settings and the same
+frame format. The difference was not investigated.
+
 ## Limits
 
 - One board pair, one RF setting (915 MHz, conducted, TX -10 / RX 50 dB), one session.
-- The receiving end's text comes from the host, not from a program on board B; the PS/PL
-  mailbox and the board-side console of Lab 11.46 are still to be run on hardware.
+- The PS/PL mailbox of Lab 11.46 is not in this path. It passes its own echo test on board A
+  (`tools/run_mailbox_board.py`) but does not feed the modem yet.
 - The whitening is a host-side extension of packet-v1, not part of the RTL codec.
