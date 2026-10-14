@@ -108,6 +108,8 @@ between 53 and 73 dB without following the level.
    locked to the frame, a 20 dB drop in the middle of a frame loses the rest of that frame under
    every gain mode, manual included, while a 20 dB rise does no harm. The weak point is the fabric
    receive chain, not the AD9361 gain control.
-2. The slow-attack phase step needs either a shared reference between the boards or a single-board
-   TX-to-RX loop, where the oscillator wander cancels.
+2. Done on one board, where TX and RX share the reference
+   ([`ad9361-agc-phase-single-board-20261014.md`](ad9361-agc-phase-single-board-20261014.md)):
+   slow_attack and fast_attack both rotate the signal by about 6.5 degrees for a 73 <-> 60 dB
+   gain change; slow_attack spreads it over 6-9 ms.
 3. Absolute levels need the passive path's S21 (not measured yet).
