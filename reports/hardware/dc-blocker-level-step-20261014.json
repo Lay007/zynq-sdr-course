@@ -1,0 +1,703 @@
+{
+  "issue": 58,
+  "note": "DC blocker (gp_ctrl[9], mode bit 0x200) on vs off, board B image 8fb3a6a5, Lab 11.45 differential mode, manual RX gain 50 dB, TX -10 dB, 915 MHz",
+  "silicon_steps_dc_off": {
+    "issue": 58,
+    "bench": "A TX1 -> var att 0 dB -> 30 dB -> 3-way splitter -> B RX1 (RTL-SDR, 50 ohm on the other ports), 915 MHz",
+    "carrier_hz": 915000000.0,
+    "mode_bits": "0x2d430",
+    "tx_gain_db": -10.0,
+    "step_db": 20.0,
+    "frames_per_level": 8,
+    "n_frames": 32,
+    "manual_rx_gain_db": 50,
+    "points": [
+      {
+        "shape": "saw_down",
+        "position_symbols": 60,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 298,
+        "clean": 292,
+        "single_bit": 2,
+        "gross": 4,
+        "payload_bit_errors": 171,
+        "payload_bits": 76288,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      },
+      {
+        "shape": "triangle",
+        "position_symbols": null,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 298,
+        "clean": 296,
+        "single_bit": 0,
+        "gross": 2,
+        "payload_bit_errors": 74,
+        "payload_bits": 76288,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      }
+    ],
+    "board_b_image_md5": "615086f66d552a91df163976b0e4f62e"
+  },
+  "silicon_steady_dc_on": {
+    "issue": 58,
+    "bench": "A TX1 -> var att 0 dB -> 30 dB -> 3-way splitter -> B RX1 (RTL-SDR, 50 ohm on the other ports), 915 MHz",
+    "carrier_hz": 915000000.0,
+    "mode_bits": "0x2d630",
+    "tx_gain_db": -10.0,
+    "step_db": 20.0,
+    "frames_per_level": 8,
+    "n_frames": 32,
+    "manual_rx_gain_db": 50,
+    "points": [
+      {
+        "shape": "high",
+        "position_symbols": null,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 284,
+        "clean": 278,
+        "single_bit": 6,
+        "gross": 0,
+        "payload_bit_errors": 21,
+        "payload_bits": 72704,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      },
+      {
+        "shape": "low",
+        "position_symbols": null,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 283,
+        "clean": 259,
+        "single_bit": 17,
+        "gross": 7,
+        "payload_bit_errors": 318,
+        "payload_bits": 72448,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      },
+      {
+        "shape": "triangle",
+        "position_symbols": null,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 287,
+        "clean": 267,
+        "single_bit": 17,
+        "gross": 3,
+        "payload_bit_errors": 107,
+        "payload_bits": 73472,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      }
+    ],
+    "board_b_image_md5": "615086f66d552a91df163976b0e4f62e"
+  },
+  "silicon_steady_dc_off": {
+    "issue": 58,
+    "bench": "A TX1 -> var att 0 dB -> 30 dB -> 3-way splitter -> B RX1 (RTL-SDR, 50 ohm on the other ports), 915 MHz",
+    "carrier_hz": 915000000.0,
+    "mode_bits": "0x2d430",
+    "tx_gain_db": -10.0,
+    "step_db": 20.0,
+    "frames_per_level": 8,
+    "n_frames": 32,
+    "manual_rx_gain_db": 50,
+    "points": [
+      {
+        "shape": "high",
+        "position_symbols": null,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 300,
+        "clean": 299,
+        "single_bit": 1,
+        "gross": 0,
+        "payload_bit_errors": 1,
+        "payload_bits": 76800,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      },
+      {
+        "shape": "low",
+        "position_symbols": null,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 299,
+        "clean": 297,
+        "single_bit": 2,
+        "gross": 0,
+        "payload_bit_errors": 4,
+        "payload_bits": 76544,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      },
+      {
+        "shape": "triangle",
+        "position_symbols": null,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 297,
+        "clean": 291,
+        "single_bit": 4,
+        "gross": 2,
+        "payload_bit_errors": 83,
+        "payload_bits": 76032,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      }
+    ],
+    "board_b_image_md5": "615086f66d552a91df163976b0e4f62e"
+  },
+  "simulation": {
+    "bench": "blocks/block_05_fpga_hdl_flow/tb/tb_qpsk_level_step.v via tools/run_qpsk_level_step_sim.py",
+    "rows": [
+      {
+        "cfo_hz": 0.0,
+        "prev": 0,
+        "case": "none",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 30.5
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 30.5
+        }
+      },
+      {
+        "cfo_hz": 0.0,
+        "prev": 0,
+        "case": "low",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 2.6
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 3.1
+        }
+      },
+      {
+        "cfo_hz": 0.0,
+        "prev": 0,
+        "case": "down",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 4.3
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 4.3
+        }
+      },
+      {
+        "cfo_hz": 0.0,
+        "prev": 0,
+        "case": "up",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 25.3
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 30.5
+        }
+      },
+      {
+        "cfo_hz": 0.0,
+        "prev": 400,
+        "case": "none",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 36.5
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 35.1
+        }
+      },
+      {
+        "cfo_hz": 0.0,
+        "prev": 400,
+        "case": "low",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 3.6
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 3.6
+        }
+      },
+      {
+        "cfo_hz": 0.0,
+        "prev": 400,
+        "case": "down",
+        "dc_on": {
+          "received": 40,
+          "payload_errors": 0,
+          "mean_dc": 21.9
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 27.5
+        }
+      },
+      {
+        "cfo_hz": 0.0,
+        "prev": 400,
+        "case": "up",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 16.9
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 16.8
+        }
+      },
+      {
+        "cfo_hz": 0.0,
+        "prev": 900,
+        "case": "none",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 35.4
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 35.4
+        }
+      },
+      {
+        "cfo_hz": 0.0,
+        "prev": 900,
+        "case": "low",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 3.6
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 3.6
+        }
+      },
+      {
+        "cfo_hz": 0.0,
+        "prev": 900,
+        "case": "down",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 62,
+          "mean_dc": 29.8
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 29.8
+        }
+      },
+      {
+        "cfo_hz": 0.0,
+        "prev": 900,
+        "case": "up",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 12.2
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 12.2
+        }
+      },
+      {
+        "cfo_hz": 500.0,
+        "prev": 0,
+        "case": "none",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 31.9
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 32.0
+        }
+      },
+      {
+        "cfo_hz": 500.0,
+        "prev": 0,
+        "case": "low",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 3.2
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 3.2
+        }
+      },
+      {
+        "cfo_hz": 500.0,
+        "prev": 0,
+        "case": "down",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 2,
+          "mean_dc": 2.5
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 2.5
+        }
+      },
+      {
+        "cfo_hz": 500.0,
+        "prev": 0,
+        "case": "up",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 34.8
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 34.8
+        }
+      },
+      {
+        "cfo_hz": 500.0,
+        "prev": 400,
+        "case": "none",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 30.9
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 27.8
+        }
+      },
+      {
+        "cfo_hz": 500.0,
+        "prev": 400,
+        "case": "low",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 2,
+          "mean_dc": 2.9
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 2.9
+        }
+      },
+      {
+        "cfo_hz": 500.0,
+        "prev": 400,
+        "case": "down",
+        "dc_on": {
+          "received": 0,
+          "payload_errors": 0,
+          "mean_dc": 20.7
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 26.3
+        }
+      },
+      {
+        "cfo_hz": 500.0,
+        "prev": 400,
+        "case": "up",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 2,
+          "mean_dc": 17.0
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 17.0
+        }
+      },
+      {
+        "cfo_hz": 500.0,
+        "prev": 900,
+        "case": "none",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 36.0
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 35.9
+        }
+      },
+      {
+        "cfo_hz": 500.0,
+        "prev": 900,
+        "case": "low",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 3.7
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 3.7
+        }
+      },
+      {
+        "cfo_hz": 500.0,
+        "prev": 900,
+        "case": "down",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 60,
+          "mean_dc": 33.8
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 33.8
+        }
+      },
+      {
+        "cfo_hz": 500.0,
+        "prev": 900,
+        "case": "up",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 12.6
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 12.5
+        }
+      },
+      {
+        "cfo_hz": 3000.0,
+        "prev": 0,
+        "case": "none",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 1,
+          "mean_dc": 51.9
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 48.4
+        }
+      },
+      {
+        "cfo_hz": 3000.0,
+        "prev": 0,
+        "case": "low",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 18,
+          "mean_dc": 4.8
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 7,
+          "mean_dc": 4.8
+        }
+      },
+      {
+        "cfo_hz": 3000.0,
+        "prev": 0,
+        "case": "down",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 55,
+          "mean_dc": 14.3
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 9,
+          "mean_dc": 10.7
+        }
+      },
+      {
+        "cfo_hz": 3000.0,
+        "prev": 0,
+        "case": "up",
+        "dc_on": {
+          "received": 90,
+          "payload_errors": 0,
+          "mean_dc": 42.7
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 42.7
+        }
+      },
+      {
+        "cfo_hz": 3000.0,
+        "prev": 400,
+        "case": "none",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 47.6
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 47.6
+        }
+      },
+      {
+        "cfo_hz": 3000.0,
+        "prev": 400,
+        "case": "low",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 15,
+          "mean_dc": 4.9
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 5,
+          "mean_dc": 4.9
+        }
+      },
+      {
+        "cfo_hz": 3000.0,
+        "prev": 400,
+        "case": "down",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 77,
+          "mean_dc": 28.9
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 28.9
+        }
+      },
+      {
+        "cfo_hz": 3000.0,
+        "prev": 400,
+        "case": "up",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 31.8
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 31.8
+        }
+      },
+      {
+        "cfo_hz": 3000.0,
+        "prev": 900,
+        "case": "none",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 53.1
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 53.1
+        }
+      },
+      {
+        "cfo_hz": 3000.0,
+        "prev": 900,
+        "case": "low",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 18,
+          "mean_dc": 5.3
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 5,
+          "mean_dc": 5.3
+        }
+      },
+      {
+        "cfo_hz": 3000.0,
+        "prev": 900,
+        "case": "down",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 75,
+          "mean_dc": 42.2
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 0,
+          "mean_dc": 42.2
+        }
+      },
+      {
+        "cfo_hz": 3000.0,
+        "prev": 900,
+        "case": "up",
+        "dc_on": {
+          "received": 152,
+          "payload_errors": 5,
+          "mean_dc": 17.5
+        },
+        "dc_off": {
+          "received": 152,
+          "payload_errors": 1,
+          "mean_dc": 17.4
+        }
+      }
+    ]
+  }
+}

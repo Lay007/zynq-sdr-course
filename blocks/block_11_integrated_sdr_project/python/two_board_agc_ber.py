@@ -29,10 +29,10 @@ MODE = 0x10 | 0x20 | 0x200 | 0x400 | 0x1000 | POS | 0x4000 | 0x20000   # Lab 11.
 GROSS = 8
 
 
-def score(rb, frames: int, gain_samples: list | None = None) -> dict:
+def score(rb, frames: int, gain_samples: list | None = None, mode_bits: int = MODE) -> dict:
     clean = single = gross = err = bits = 0
     for k in range(frames):
-        row = qpsk_ber_once(rb, BASE, B.LONG_FRAME_SYMBOLS, k % 8, mode_bits=MODE,
+        row = qpsk_ber_once(rb, BASE, B.LONG_FRAME_SYMBOLS, k % 8, mode_bits=mode_bits,
                             preamble_bits=B.LONG_PREAMBLE_BITS)
         if gain_samples is not None and k % 5 == 0:
             gain_samples.append(float(L.sh(rb, f"cat {PHY}/in_voltage0_hardwaregain").split()[0]))

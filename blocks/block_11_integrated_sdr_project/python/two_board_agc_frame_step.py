@@ -106,6 +106,8 @@ def main() -> int:
     ap.add_argument("--n-frames", type=int, default=30, help="frames in the cyclic buffer")
     ap.add_argument("--frames", type=int, default=100, help="frames scored per point")
     ap.add_argument("--no-reference", action="store_true", help="skip the constant-level points")
+    ap.add_argument("--clear-mode-bits", type=lambda s: int(s, 0), default=0,
+                    help="receiver mode bits to clear, e.g. 0x200 = DC blocker off")
     ap.add_argument("--bench", required=True)
     ap.add_argument("--json-out", type=Path, required=True)
     args = ap.parse_args()
@@ -115,7 +117,7 @@ def main() -> int:
     ra = L.runner_for("192.168.40.1", "root", "analog", 22, 25.0)
     rb = L.runner_for("192.168.20.1", "root", "analog", 22, 40.0)
     sh = L.sh
-    res = {"issue": 58, "bench": args.bench, "carrier_hz": args.carrier, "mode_bits": hex(MODE),
+    res = {"issue": 58, "bench": args.bench, "carrier_hz": args.carrier, "mode_bits": hex(MODE & ~args.clear_mode_bits),
            "tx_gain_db": args.tx_gain, "step_db": args.step_db, "frames_per_level": args.frames_per_level,
            "n_frames": args.n_frames, "manual_rx_gain_db": args.manual_rx_gain, "points": []}
     cases = [] if args.no_reference else [("high", None), ("low", None)]
@@ -139,7 +141,7 @@ def main() -> int:
                     sh(rb, f"echo {args.manual_rx_gain} > {PHY}/in_voltage0_hardwaregain")
                 time.sleep(1.0)
                 gains: list[float] = []
-                r = {"shape": level, "position_symbols": pos, "mode": mode, **score(rb, args.frames, gains)}
+                r = {"shape": level, "position_symbols": pos, "mode": mode, **score(rb, args.frames, gains, MODE & ~args.clear_mode_bits)}
                 r["rx_gain_min"], r["rx_gain_max"] = min(gains), max(gains)
                 res["points"].append(r)
                 print(json.dumps(r), flush=True)
