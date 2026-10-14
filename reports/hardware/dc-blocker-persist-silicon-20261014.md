@@ -98,3 +98,8 @@ counts are low in every column. 100 frames each, locked / clean / gross:
   different board and setup.
 - One session, one board, marginal SNR; the DC-off columns of the two images (62 and 53 locked)
   differ by about the run-to-run spread.
+- Later the same day the carrier was traced to the DAC holding the last burst sample, and removed
+  with a zero DAC stream ([`board-b-dac-held-carrier-20261014.md`](board-b-dac-held-carrier-20261014.md)).
+  Without it, 100 frames each, locked / clean: #65 image DC on 62/60, DC off 73/70; this image
+  DC on 75/75 and DC off 75/75, with 0 payload bit errors. The kept estimate helps here too, and the
+  DC blocker no longer costs anything on one board.

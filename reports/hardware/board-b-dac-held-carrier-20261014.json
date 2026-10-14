@@ -1,0 +1,184 @@
+{
+  "date": "2026-10-14",
+  "board": "B (FishBall, 192.168.20.1), image 3d492301 unless noted",
+  "bench": "B TX1 -> var att 0 dB -> 30 dB -> 3-way splitter -> B RX1 / A RX1 / RTL-SDR; LOs 915 MHz",
+  "rtl_sdr_line_over_floor_db": {
+    "TX -89.75 dB, DAC source DMA": 20.2,
+    "TX 0 dB, DAC source DDS (boot default, DDS scale 0)": 14.5,
+    "TX 0 dB, DAC source DMA, no vendor stream (held last burst sample)": 87.7,
+    "TX 0 dB, DAC source ZERO": 13.5,
+    "TX LO powered down": 12.9,
+    "TX 0 dB, DMA + zero stream running, no bursts": 18.4,
+    "zero stream, after bursts": 20.0,
+    "zero stream stopped (FIFO last word = 0)": 17.0
+  },
+  "board_a_view": {
+    "carrier_rms_counts": 780,
+    "burst_rms_counts": 1103,
+    "carrier_offset_hz": 365,
+    "burst_us": 300,
+    "note": "carrier stays on between bursts; 3 dB below the burst during it"
+  },
+  "selfota_100_frames": {
+    "new": {
+      "bench": "B TX1 -> var att 0 dB -> 30 dB -> 3-way splitter -> B RX1 (single-board self-OTA), 915 MHz; strong continuous carrier at the LO from B (RTL-SDR: ~20 dB above the modem signal)",
+      "tx_gain_db": 0.0,
+      "rx_gain_db": 60,
+      "points": [
+        {
+          "setting": "dc_on",
+          "mode_bits": "0x2d630",
+          "frames": 100,
+          "locked": 24,
+          "clean": 4,
+          "single_bit": 6,
+          "gross": 14,
+          "payload_bit_errors": 442,
+          "payload_bits": 6144
+        },
+        {
+          "setting": "dc_off",
+          "mode_bits": "0x2d430",
+          "frames": 100,
+          "locked": 53,
+          "clean": 40,
+          "single_bit": 4,
+          "gross": 9,
+          "payload_bit_errors": 199,
+          "payload_bits": 13568
+        }
+      ],
+      "readback": [
+        "3840000",
+        "3840000",
+        "915000000",
+        "0.000000",
+        "dB",
+        "71.75",
+        "dB"
+      ],
+      "card_md5": "b6635144f1e86724d8c7bfd676804a7b",
+      "time": "2026-10-14 19:27"
+    },
+    "old": {
+      "bench": "B TX1 -> var att 0 dB -> 30 dB -> 3-way splitter -> B RX1 (single-board self-OTA), 915 MHz; strong continuous carrier at the LO from B (RTL-SDR: ~20 dB above the modem signal)",
+      "tx_gain_db": 0.0,
+      "rx_gain_db": 60,
+      "points": [
+        {
+          "setting": "dc_on",
+          "mode_bits": "0x2d630",
+          "frames": 100,
+          "locked": 0,
+          "clean": 0,
+          "single_bit": 0,
+          "gross": 0,
+          "payload_bit_errors": 0,
+          "payload_bits": 0
+        },
+        {
+          "setting": "dc_off",
+          "mode_bits": "0x2d430",
+          "frames": 100,
+          "locked": 62,
+          "clean": 32,
+          "single_bit": 15,
+          "gross": 15,
+          "payload_bit_errors": 328,
+          "payload_bits": 15872
+        }
+      ],
+      "readback": [
+        "3840000",
+        "3840000",
+        "915000000",
+        "0.000000",
+        "dB",
+        "113.00",
+        "dB"
+      ],
+      "card_md5": "615086f66d552a91df163976b0e4f62e",
+      "time": "2026-10-14 19:30"
+    },
+    "new_zero": {
+      "bench": "B TX1 -> var att 0 dB -> 30 dB -> 3-way splitter -> B RX1 (single-board self-OTA), 915 MHz; strong continuous carrier at the LO from B (RTL-SDR: ~20 dB above the modem signal)",
+      "tx_gain_db": 0.0,
+      "rx_gain_db": 60,
+      "points": [
+        {
+          "setting": "dc_on",
+          "mode_bits": "0x2d630",
+          "frames": 100,
+          "locked": 75,
+          "clean": 75,
+          "single_bit": 0,
+          "gross": 0,
+          "payload_bit_errors": 0,
+          "payload_bits": 19200
+        },
+        {
+          "setting": "dc_off",
+          "mode_bits": "0x2d430",
+          "frames": 100,
+          "locked": 75,
+          "clean": 75,
+          "single_bit": 0,
+          "gross": 0,
+          "payload_bit_errors": 0,
+          "payload_bits": 19200
+        }
+      ],
+      "readback": [
+        "3840000",
+        "3840000",
+        "915000000",
+        "0.000000",
+        "dB",
+        "113.00",
+        "dB"
+      ],
+      "card_md5": "b6635144f1e86724d8c7bfd676804a7b",
+      "time": "2026-10-14 20:01"
+    },
+    "old_zero": {
+      "bench": "B TX1 -> var att 0 dB -> 30 dB -> 3-way splitter -> B RX1 (single-board self-OTA), 915 MHz; strong continuous carrier at the LO from B (RTL-SDR: ~20 dB above the modem signal)",
+      "tx_gain_db": 0.0,
+      "rx_gain_db": 60,
+      "points": [
+        {
+          "setting": "dc_on",
+          "mode_bits": "0x2d630",
+          "frames": 100,
+          "locked": 62,
+          "clean": 60,
+          "single_bit": 2,
+          "gross": 0,
+          "payload_bit_errors": 4,
+          "payload_bits": 15872
+        },
+        {
+          "setting": "dc_off",
+          "mode_bits": "0x2d430",
+          "frames": 100,
+          "locked": 73,
+          "clean": 70,
+          "single_bit": 3,
+          "gross": 0,
+          "payload_bit_errors": 9,
+          "payload_bits": 18688
+        }
+      ],
+      "readback": [
+        "3840000",
+        "3840000",
+        "915000000",
+        "0.000000",
+        "dB",
+        "113.00",
+        "dB"
+      ],
+      "card_md5": "615086f66d552a91df163976b0e4f62e",
+      "time": "2026-10-14 20:13"
+    }
+  }
+}
