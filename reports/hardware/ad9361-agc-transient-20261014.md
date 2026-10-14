@@ -104,9 +104,10 @@ between 53 and 73 dB without following the level.
 
 ## Limits and next steps
 
-1. Synchronise the TX step with the frame, so that every frame contains a transition at a known
-   symbol, to see what a gain change does to Costas and Gardner directly (the 5-7 ms run only
-   makes transitions frequent, not aligned).
+1. Done in [`ad9361-agc-frame-step-20261014.md`](ad9361-agc-frame-step-20261014.md): with the step
+   locked to the frame, a 20 dB drop in the middle of a frame loses the rest of that frame under
+   every gain mode, manual included, while a 20 dB rise does no harm. The weak point is the fabric
+   receive chain, not the AD9361 gain control.
 2. The slow-attack phase step needs either a shared reference between the boards or a single-board
    TX-to-RX loop, where the oscillator wander cancels.
 3. Absolute levels need the passive path's S21 (not measured yet).
