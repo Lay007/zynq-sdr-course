@@ -51,10 +51,26 @@ def zynq_temp(r) -> float:
 
 
 def stop_zero_stream(r) -> None:
-    L.sh(r, "for p in $(ps | grep '[d]ac_zero_stream' | awk '{print $1}'); do kill $p; done; sleep 0.3")
+    L.sh(r, "for p in $(ps | grep -E '[d]ac_zero_stream|[i]io_writedev' | awk '{print $1}'); do kill $p; done; sleep 0.3")
+
+
+def has_dac_driver(r) -> bool:
+    return "cf-ad9361-dds-core-lpc" in L.sh(r, "cat /sys/bus/iio/devices/iio:device*/name")
 
 
 def start_zero_stream(r, binary: Path) -> str:
+    """Keep the vendor DAC stream alive with zeros.
+
+    With a DAC driver in the device tree (as on board A) a cyclic iio_writedev buffer of zeros does
+    it; without one, dac_zero_stream drives the TX DMA directly."""
+    if has_dac_driver(r):
+        L.sh(r, "dd if=/dev/zero of=/tmp/zeros.bin bs=4096 count=1 2>/dev/null")
+        L.start_detached(r, "nohup iio_writedev -c -b 1024 -s 1024 cf-ad9361-dds-core-lpc voltage0 voltage1 "
+                            "< /tmp/zeros.bin > /tmp/dzs.log 2>&1 &")
+        time.sleep(2.0)
+        if L.sh(r, "ps | grep -c '[i]io_writedev'").strip() == "0":
+            raise RuntimeError(f"iio_writedev zero stream did not start: {L.sh(r, 'cat /tmp/dzs.log')}")
+        return "iio_writedev cyclic zeros (DAC driver present)"
     upload_bytes_via_ssh_cat(r, payload=binary.read_bytes(), remote_path="/tmp/dac_zero_stream")
     L.sh(r, "chmod +x /tmp/dac_zero_stream")
     drv = L.sh(r, "readlink -f /sys/bus/platform/devices/7c420000.dma/driver").strip()
@@ -119,7 +135,7 @@ def main() -> int:
         try:
             L.quiet_board(r)
             stop_zero_stream(r)
-            res["zero_stream_running_after"] = int(L.sh(r, "ps | grep -c '[d]ac_zero_stream'").strip() or 0)
+            res["zero_stream_running_after"] = int(L.sh(r, "ps | grep -cE '[d]ac_zero_stream|[i]io_writedev'").strip() or 0)
             res["temp_after_c"] = zynq_temp(r)
         finally:
             r.client.close()
