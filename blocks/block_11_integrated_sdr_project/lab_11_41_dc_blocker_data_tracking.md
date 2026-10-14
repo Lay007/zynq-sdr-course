@@ -170,6 +170,35 @@ shows a small cluster at bit 88, but that is the non-production path with the kn
 drift that motivated the Gardner loop ([Lab 11.34](/zynq-sdr-course/en/labs/lab-11-34-continuous-qpsk-timing-recovery/)), not
 a DC-blocker effect. Result: `docs/assets/lab1141_dc_blocker_live_validation.json`.
 
+## A second step: keep the estimate across frames (issue #66)
+
+The running average fixed bit 189, but it still restarts at every frame start. At the preamble it
+has seen only a few hundred samples, and the differential preamble of Lab 11.45 repeats one
+symbol, so a large part of the "DC" it subtracts there is the preamble itself. Two measurements on
+the two-board bench in October 2026 showed what that costs ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/hardware/dc-blocker-level-step-20261014.md)):
+
+- with the DC blocker on, 5-6 % of the frames did not lock and there were more single-bit
+  errors than with it off;
+- after a sudden 20 dB level drop in the middle of a frame, the offset learned on the strong signal
+  was most of the weak one, and practically every such frame was lost (35 gross frames out of 279;
+  4 with the blocker off).
+
+The fix keeps the estimate from frame to frame instead of resetting it: `qpsk_zynq_ber_top` has
+`DC_PERSIST = 1` and a time constant of 2^13 samples. The receiver gets samples only during a
+reception, so between receptions the estimate simply holds, and one preamble is now a small part of
+the average. `dc_blocker.v` did not change; only the moment when it is reset did.
+
+A restart of the mean on a detected level drop was tried first. It helped a single reception that
+starts from reset, but once the estimate was kept across frames it made things worse (56 instead of
+62 locked out of 80 in simulation): every restart brings back the short window, which learns the
+next preamble again.
+
+On silicon, 300 frames each ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/hardware/dc-blocker-persist-silicon-20261014.md)): with the DC blocker on, 300 of 300 frames lock at a
+steady level (284 before), a 20 dB drop costs 7 gross frames instead of 35, and the differential
+two-board link decoded 200 of 200 frames clean. On this conducted two-board bench the receiver is
+still slightly better with the blocker off (2 gross frames on the drop). The single-board self-OTA
+path, for which the blocker exists, was not re-measured on silicon.
+
 ## What this lab is really about
 
 Five labs were spent measuring the right quantity in the wrong place. The instrument was correct, the

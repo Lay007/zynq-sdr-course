@@ -1,0 +1,365 @@
+{
+  "issue": 66,
+  "image_sha256": "3d492301e92befbe89b1fd7e781283c9ece371db02c21fbc5d81ba98df7f4457",
+  "source_commit": "0220cfe",
+  "regression": {
+    "date": "2026-10-14 17:39",
+    "fabric": {
+      "bpsk_dm00": {
+        "full_frames": 40,
+        "of": 40,
+        "bit_errors": 0,
+        "rotation": {
+          "0": 40
+        }
+      },
+      "bpsk_dm01": {
+        "full_frames": 40,
+        "of": 40,
+        "bit_errors": 0,
+        "rotation": {
+          "2": 40
+        }
+      },
+      "qpsk": {
+        "full_frames": 40,
+        "of": 40,
+        "bit_errors": 0,
+        "rotation": {
+          "0": 40
+        }
+      }
+    },
+    "link": {
+      "absolute": {
+        "frames": 200,
+        "lost": 4,
+        "clean": 191,
+        "payload_errors": 699,
+        "payload_bits": 50176,
+        "rotation_of_clean_frames": {
+          "2": 48,
+          "0": 50,
+          "3": 43,
+          "1": 50
+        }
+      },
+      "differential": {
+        "frames": 200,
+        "lost": 0,
+        "clean": 200,
+        "payload_errors": 0,
+        "payload_bits": 51200,
+        "rotation_of_clean_frames": {
+          "0": 200
+        }
+      }
+    },
+    "card_md5": "b6635144f1e86724d8c7bfd676804a7b",
+    "signature": "0x4250534B",
+    "offset_sweep_bpsk": {
+      "dm00": {
+        "50": [
+          279,
+          0,
+          0
+        ],
+        "52": [
+          279,
+          67,
+          0
+        ],
+        "54": [
+          280,
+          0,
+          0
+        ],
+        "56": [
+          280,
+          0,
+          0
+        ],
+        "58": [
+          280,
+          0,
+          0
+        ],
+        "60": [
+          280,
+          67,
+          0
+        ],
+        "62": [
+          281,
+          0,
+          0
+        ],
+        "64": [
+          281,
+          0,
+          0
+        ],
+        "66": [
+          281,
+          0,
+          0
+        ],
+        "68": [
+          281,
+          67,
+          0
+        ],
+        "70": [
+          270,
+          132,
+          0
+        ],
+        "72": [
+          270,
+          132,
+          0
+        ],
+        "74": [
+          270,
+          132,
+          0
+        ]
+      },
+      "dm01": {
+        "50": [
+          279,
+          0,
+          2
+        ],
+        "52": [
+          279,
+          67,
+          2
+        ],
+        "54": [
+          280,
+          0,
+          2
+        ],
+        "56": [
+          280,
+          0,
+          2
+        ],
+        "58": [
+          280,
+          0,
+          2
+        ],
+        "60": [
+          280,
+          67,
+          2
+        ],
+        "62": [
+          281,
+          0,
+          2
+        ],
+        "64": [
+          281,
+          0,
+          2
+        ],
+        "66": [
+          281,
+          0,
+          2
+        ],
+        "68": [
+          281,
+          67,
+          2
+        ],
+        "70": [
+          270,
+          132,
+          2
+        ],
+        "72": [
+          270,
+          132,
+          2
+        ],
+        "74": [
+          270,
+          132,
+          2
+        ]
+      }
+    }
+  },
+  "sawdown_dc_off": {
+    "issue": 58,
+    "bench": "A TX1 -> var att 0 dB -> 30 dB -> 3-way splitter -> B RX1 (RTL-SDR, 50 ohm on the other ports), 915 MHz",
+    "carrier_hz": 915000000.0,
+    "mode_bits": "0x2d430",
+    "tx_gain_db": -10.0,
+    "step_db": 20.0,
+    "frames_per_level": 8,
+    "n_frames": 32,
+    "manual_rx_gain_db": 50,
+    "points": [
+      {
+        "shape": "saw_down",
+        "position_symbols": 60,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 299,
+        "clean": 294,
+        "single_bit": 3,
+        "gross": 2,
+        "payload_bit_errors": 35,
+        "payload_bits": 76544,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      }
+    ],
+    "board_b_image_md5": "b6635144f1e86724d8c7bfd676804a7b"
+  },
+  "sawdown_dc_on": {
+    "issue": 58,
+    "bench": "A TX1 -> var att 0 dB -> 30 dB -> 3-way splitter -> B RX1 (RTL-SDR, 50 ohm on the other ports), 915 MHz",
+    "carrier_hz": 915000000.0,
+    "mode_bits": "0x2d630",
+    "tx_gain_db": -10.0,
+    "step_db": 20.0,
+    "frames_per_level": 8,
+    "n_frames": 32,
+    "manual_rx_gain_db": 50,
+    "points": [
+      {
+        "shape": "saw_down",
+        "position_symbols": 60,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 298,
+        "clean": 279,
+        "single_bit": 12,
+        "gross": 7,
+        "payload_bit_errors": 172,
+        "payload_bits": 76288,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      }
+    ],
+    "board_b_image_md5": "b6635144f1e86724d8c7bfd676804a7b"
+  },
+  "steady_dc_off": {
+    "issue": 58,
+    "bench": "A TX1 -> var att 0 dB -> 30 dB -> 3-way splitter -> B RX1 (RTL-SDR, 50 ohm on the other ports), 915 MHz",
+    "carrier_hz": 915000000.0,
+    "mode_bits": "0x2d430",
+    "tx_gain_db": -10.0,
+    "step_db": 20.0,
+    "frames_per_level": 8,
+    "n_frames": 32,
+    "manual_rx_gain_db": 50,
+    "points": [
+      {
+        "shape": "high",
+        "position_symbols": null,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 300,
+        "clean": 299,
+        "single_bit": 1,
+        "gross": 0,
+        "payload_bit_errors": 1,
+        "payload_bits": 76800,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      },
+      {
+        "shape": "low",
+        "position_symbols": null,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 300,
+        "clean": 298,
+        "single_bit": 2,
+        "gross": 0,
+        "payload_bit_errors": 11,
+        "payload_bits": 76800,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      },
+      {
+        "shape": "triangle",
+        "position_symbols": null,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 300,
+        "clean": 296,
+        "single_bit": 3,
+        "gross": 1,
+        "payload_bit_errors": 37,
+        "payload_bits": 76800,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      }
+    ],
+    "board_b_image_md5": "b6635144f1e86724d8c7bfd676804a7b"
+  },
+  "steady_dc_on": {
+    "issue": 58,
+    "bench": "A TX1 -> var att 0 dB -> 30 dB -> 3-way splitter -> B RX1 (RTL-SDR, 50 ohm on the other ports), 915 MHz",
+    "carrier_hz": 915000000.0,
+    "mode_bits": "0x2d630",
+    "tx_gain_db": -10.0,
+    "step_db": 20.0,
+    "frames_per_level": 8,
+    "n_frames": 32,
+    "manual_rx_gain_db": 50,
+    "points": [
+      {
+        "shape": "high",
+        "position_symbols": null,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 300,
+        "clean": 299,
+        "single_bit": 0,
+        "gross": 1,
+        "payload_bit_errors": 101,
+        "payload_bits": 76800,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      },
+      {
+        "shape": "low",
+        "position_symbols": null,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 299,
+        "clean": 294,
+        "single_bit": 3,
+        "gross": 2,
+        "payload_bit_errors": 38,
+        "payload_bits": 76544,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      },
+      {
+        "shape": "triangle",
+        "position_symbols": null,
+        "mode": "manual",
+        "frames": 300,
+        "locked": 300,
+        "clean": 291,
+        "single_bit": 7,
+        "gross": 2,
+        "payload_bit_errors": 159,
+        "payload_bits": 76800,
+        "rx_gain_min": 50.0,
+        "rx_gain_max": 50.0
+      }
+    ],
+    "board_b_image_md5": "b6635144f1e86724d8c7bfd676804a7b"
+  }
+}
