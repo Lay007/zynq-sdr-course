@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-14 06:18",
+  "fabric": {
+    "bpsk_dm00": {
+      "full_frames": 40,
+      "of": 40,
+      "bit_errors": 0,
+      "rotation": {
+        "0": 40
+      }
+    },
+    "bpsk_dm01": {
+      "full_frames": 40,
+      "of": 40,
+      "bit_errors": 0,
+      "rotation": {
+        "2": 40
+      }
+    },
+    "qpsk": {
+      "full_frames": 40,
+      "of": 40,
+      "bit_errors": 0,
+      "rotation": {
+        "0": 40
+      }
+    }
+  },
+  "link": {
+    "absolute": {
+      "frames": 200,
+      "lost": 18,
+      "clean": 160,
+      "payload_errors": 2591,
+      "payload_bits": 46592,
+      "rotation_of_clean_frames": {
+        "3": 33,
+        "0": 38,
+        "1": 46,
+        "2": 43
+      }
+    },
+    "differential": {
+      "frames": 200,
+      "lost": 19,
+      "clean": 180,
+      "payload_errors": 2,
+      "payload_bits": 46336,
+      "rotation_of_clean_frames": {
+        "0": 180
+      }
+    }
+  },
+  "card_md5": "850248999392476f5dd8aeb912e6705b",
+  "signature": "0x4250534B"
+}
