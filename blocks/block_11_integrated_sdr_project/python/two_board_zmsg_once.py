@@ -9,7 +9,11 @@ number and text, --interval seconds apart. At the end the receiver log is compar
 sent: delivered (distinct sequence numbers with the right text), lost, duplicates, and messages
 that passed the CRC but were never sent in this run (wrong_accepted).
 
-Both boards need /root/zmsg built from blocks/block_11_integrated_sdr_project/sw/zmsg.c. The
+--receiver zmbox makes board B receive into the PS/PL mailbox instead (zmbox listen, Lab 11.49:
+the fabric de-whitens, checks the CRC and fills the mailbox RX registers; needs the mailbox image).
+
+Both boards need /root/zmsg built from blocks/block_11_integrated_sdr_project/sw/zmsg.c (and board B
+/root/zmbox for --receiver zmbox; board B runs from a RAM disk, so copy them again after a reboot). The
 script runs `zmsg stop` on board A first: a transmitter killed with kill -9 by an earlier tool
 leaves its cyclic buffer playing, and a listening receiver would hear it.
 
@@ -26,8 +30,9 @@ from pathlib import Path
 import lab_11_30_two_board_cfo_validation as L
 from lab_11_47_single_board_selfota import zynq_temp
 
-RX_LINE = re.compile(r'RX sequence=(\d+) bytes=(\d+) crc=OK payload="(.*)"')
+RX_LINE = re.compile(r'RX sequence=(\d+) bytes=(\d+) (?:crc=OK|meta=CRC_OK) payload="(.*)"')
 SUMMARY = re.compile(r"receptions (\d+), locked (\d+), delivered (\d+), crc failures (\d+), timeouts (\d+)")
+ZMBOX_SUMMARY = re.compile(r"listened ([\d.]+) s, delivered (\d+), overflows seen (\d+)")
 
 
 def main() -> int:
@@ -38,6 +43,8 @@ def main() -> int:
     ap.add_argument("--tx-gain", type=float, default=-30.0)
     ap.add_argument("--rx-gain", type=int, default=71)
     ap.add_argument("--no-listen", action="store_true", help="receiver without listen mode, for comparison")
+    ap.add_argument("--receiver", choices=["zmsg", "zmbox"], default="zmsg",
+                    help="board B receives with zmsg (PS reads the decoded bits) or zmbox (the PS/PL mailbox)")
     ap.add_argument("--max-temp", type=float, default=78.0, help="refuse to start if board B is hotter (no fan)")
     ap.add_argument("--json-out", type=Path, required=True)
     args = ap.parse_args()
@@ -54,8 +61,12 @@ def main() -> int:
         listen = "" if args.no_listen else "--listen "
         budget = args.messages * (args.interval + 1.5) + 30
         # --count is large so that duplicates could not end the receiver early; it is stopped below.
-        L.start_detached(rb, f"cd /root && nohup ./zmsg receive {listen}--count {10 * args.messages} --attempts 1000000 "
-                             f"--timeout {budget:.0f} --rx-gain {args.rx_gain} --quiet > /tmp/zrx.log 2>&1 &")
+        if args.receiver == "zmbox":
+            L.start_detached(rb, f"cd /root && nohup ./zmbox listen --timeout {budget:.0f} --rx-gain {args.rx_gain} "
+                                 "> /tmp/zrx.log 2>&1 &")
+        else:
+            L.start_detached(rb, f"cd /root && nohup ./zmsg receive {listen}--count {10 * args.messages} --attempts 1000000 "
+                                 f"--timeout {budget:.0f} --rx-gain {args.rx_gain} --quiet > /tmp/zrx.log 2>&1 &")
         time.sleep(3)
         for k in range(args.messages):
             seq = 1000 + k
@@ -65,7 +76,7 @@ def main() -> int:
             sent.append({"seq": seq, "text": text, "tx": out})
             time.sleep(args.interval)
         time.sleep(3)
-        L.sh(rb, "for p in $(ps | grep '[z]msg receive' | awk '{print $1}'); do kill $p; done; sleep 1")
+        L.sh(rb, "for p in $(ps | grep -E '[z]msg receive|[z]mbox listen' | awk '{print $1}'); do kill $p; done; sleep 1")
         log = L.sh(rb, "cat /tmp/zrx.log")
     finally:
         L.sh(ra, "cd /root && ./zmsg stop")
@@ -86,10 +97,13 @@ def main() -> int:
         else:
             wrong += 1
     st = SUMMARY.search(log)
+    zst = ZMBOX_SUMMARY.search(log)
     summary = {"sent": len(sent), "delivered": len(got), "lost": [s for s in by_seq if s not in got],
                "duplicates": sum(v - 1 for v in got.values()), "wrong_accepted": wrong,
                "receiver": dict(zip(("receptions", "locked", "delivered_lines", "crc_failures", "timeouts"),
-                                    map(int, st.groups()))) if st else None,
+                                    map(int, st.groups()))) if st else (
+                   {"listened_s": float(zst[1]), "delivered_lines": int(zst[2]), "overflows": int(zst[3])} if zst else None),
+               "receiver_tool": args.receiver,
                "listen": not args.no_listen, "lead": args.lead, "tx_gain_db": args.tx_gain, "rx_gain_db": args.rx_gain,
                "interval_s": args.interval, "board_b_zynq_c": [round(t_before, 1), round(t_after, 1)]}
     print(json.dumps({k: v for k, v in summary.items() if k != "lost"}), "lost:", summary["lost"][:20])
