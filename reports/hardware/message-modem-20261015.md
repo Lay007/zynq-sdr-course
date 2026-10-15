@@ -1,8 +1,9 @@
 # Message modem: the Lab 5.12 mailbox with the QPSK modem behind it (#55), 2026-10-15
 
-Status: the design is built and runs on board B; the measurement on a defined RF path (board B TX1
-cabled to RX1 through attenuators) is **still to be done**. Everything below that comes from the
-board was measured without that cable and is labelled so.
+Status: the design is built and runs on board B. Receiving a message from board A into board B's
+mailbox is measured on the usual conducted bench. Sending from board B's own mailbox and receiving
+it back on board B needs a cable from B TX1 to B RX1 that was not there; those numbers are
+**still to be done**, and what was seen without the cable is labelled so.
 
 ## What was built
 
@@ -79,7 +80,39 @@ board A, `zmsg receive --listen` on board B), 100 sent, 97 delivered, none wrong
 Note: board B runs from a RAM disk, so the tools in `/root` (`zmsg`, `zmbox`) are gone after every
 reboot, including the one that loads a new image, and have to be copied again.
 
+## Receiving a message from another board into the mailbox
+
+Source commit `1cfec38`, image `issue55-mailbox-listen` (sha256 `530e0571...`; WNS +0.100 ns,
+WHS +0.039 ns, 39909 LUT). CONTROL bit 2 (RX_LISTEN) makes the mailbox listen: the bridge runs
+listening attempts (listen mode of #68, forced on for these attempts) one after another; a frame
+with a matching CRC goes to the RX registers under the Lab 5.12 rules (RX_VALID, RX_ACK,
+RX_OVERFLOW), anything else is dropped and the next attempt starts. CONTROL bit 3 (RX_STOP) ends
+it; STATUS bit 4 shows it. TX_START is refused while listening. The burst lead-in became 64 symbols
+by default everywhere (fabric message source, `zmsg`, the Python tools), see
+[single-message-corruption-20261015.md](single-message-corruption-20261015.md).
+
+Simulation: `tb_message_modem_listen` connects two copies of the wrapper; T sends two messages,
+R listens and delivers both. (The first version of the testbench made the background noise one bit
+too narrow, which turned it into nearly full-scale values; R then caught the first message by luck
+and lost the second. The fix was in the testbench.) Block 5 HDL smoke: 45 of 45.
+
+On the bench (board A TX1 -> 30 dB -> splitter -> board B RX1, 915 MHz, board B at 71 dB): board A
+sends with `zmsg send --once`, board B listens with `zmbox listen`, which only uses the mailbox
+registers; the CRC check and the de-whitening happen in the fabric
+(`two_board_zmsg_once.py --receiver zmbox`, raw data
+[`message-mailbox-listen-20261015.json`](message-mailbox-listen-20261015.json)):
+
+| TX | sent | delivered into the mailbox | wrong message accepted | duplicates |
+|---:|---:|---:|---:|---:|
+| -30 dB | 500 | 498 | 0 | 0 |
+| -50 dB | 200 | 168 | 0 | 0 |
+
+The PS-side receiver (`zmsg receive --listen`, which reads the decoded bits and checks the CRC in
+software) delivered 498 of 500 under the same conditions, so moving the link layer into the fabric
+costs nothing. At -50 dB the mailbox got 168 of 200; the PS-side receiver with the older 32-symbol
+lead-in had 159 of 200 there.
+
 ## Still to do
 
-- Board B TX1 -> attenuators (at least 30 dB) -> board B RX1: messages vs TX gain, a long run.
+- Board B TX1 -> attenuators (at least 30 dB) -> board B RX1: `zmbox send` vs TX gain, a long run.
 - Lab 11.49 text (EN/RU).
