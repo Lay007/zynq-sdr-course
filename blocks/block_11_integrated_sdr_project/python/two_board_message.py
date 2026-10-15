@@ -85,6 +85,34 @@ def frame_iq(packet: bytes, n_frames: int = 28, whiten: bool = False) -> np.ndar
     return iq
 
 
+def once_iq(packet: bytes, whiten: bool = False, lead: int = 32, pad_head: int = 8, pad_tail: int = 256) -> np.ndarray:
+    """int16 IQ of one Lab 11.45 frame carrying `packet`, for sending once (zmsg send --once).
+
+    pad_head silent symbols, `lead` training symbols alternating between phase states 0 and 2
+    (ending in 2), one reference symbol in state 0 (the differential encoder's starting state), the
+    frame, pad_tail silent symbols; linear (not circular) RRC. Why the lead-in and the reference:
+    Lab 11.48. zmsg.c builds the same buffer; tests/test_zmsg_once.py compares the two models.
+    """
+    if len(packet) != PACKET_SIZE:
+        raise ValueError("packet-v1 frames are 32 bytes")
+    payload = np.unpackbits(np.frombuffer(packet, dtype=np.uint8), bitorder="little")
+    if whiten:
+        payload = payload ^ WHITEN
+    fb = B.diff_encode_bits(np.concatenate([B.long_frame_bits()[:PRE], payload]))
+    s0 = (1 + 1j) / np.sqrt(2.0)
+    frame = ((1.0 - 2.0 * fb[0::2]) + 1j * (1.0 - 2.0 * fb[1::2])) / np.sqrt(2.0)
+    train = np.array([-s0 if (lead - k) % 2 else s0 for k in range(lead)], dtype=complex)
+    sym = np.concatenate([np.zeros(pad_head, complex), train, [s0], frame, np.zeros(pad_tail, complex)])
+    up = np.zeros(len(sym) * L.SPS, dtype=complex)
+    up[:: L.SPS] = sym
+    wave = np.convolve(up, L.load_rrc_taps())[: len(up)]
+    wave = wave * (0.70 * 32767 / np.max(np.abs(wave)))
+    iq = np.zeros(len(wave) * 2, dtype=np.int16)
+    iq[0::2] = np.round(wave.real).astype(np.int16)
+    iq[1::2] = np.round(wave.imag).astype(np.int16)
+    return iq
+
+
 def a_transmit(ra, packet: bytes, carrier: float, tx_gain: float, whiten: bool = False) -> None:
     iq = frame_iq(packet, whiten=whiten)
     n = len(iq) // 2

@@ -289,8 +289,12 @@ def sh(run: ParamikoCommandRunner, command: str) -> str:
 
 
 def quiet_board(run: ParamikoCommandRunner) -> None:
-    # BusyBox on these boards has no pkill: stop transmitters by PID (see reset_tx_dma).
-    run("for p in $(ps | grep '[i]io_writedev' | awk '{print $1}'); do kill -9 $p; done; kill $(ps | grep '[m]odem_main' | awk '{print $1}') 2>/dev/null")
+    # BusyBox on these boards has no pkill: stop transmitters by PID (see reset_tx_dma). A plain kill
+    # first: iio_writedev then closes its buffer. After kill -9 the DAC kept playing the old cyclic
+    # buffer, which a later one-shot transmission (zmsg send --once, Lab 11.48) put back on the air.
+    run("for p in $(ps | grep '[i]io_writedev' | awk '{print $1}'); do kill $p; done; sleep 1; "
+        "for p in $(ps | grep '[i]io_writedev' | awk '{print $1}'); do kill -9 $p; done; "
+        "kill $(ps | grep '[m]odem_main' | awk '{print $1}') 2>/dev/null")
     run(f"echo {QUIET_DB} > {PHY}/out_voltage0_hardwaregain")
 
 
