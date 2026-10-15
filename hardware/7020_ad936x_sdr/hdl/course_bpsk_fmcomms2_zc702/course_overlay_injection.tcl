@@ -135,6 +135,9 @@ proc course_bpsk_apply_overlay {overlay_mode} {
   # BPSK bridge only while its burst path is active.
   set course_dac_fifo_source_mux [create_bd_cell -type module -reference course_dac_fifo_source_mux course_dac_fifo_source_mux]
   ad_connect bpsk_bridge_bd/tx_path_active course_dac_fifo_source_mux/select_bpsk
+  # Write cadence from the FIFO's own read request (issue #67), aligned with the unpacker's answer.
+  ad_connect util_ad9361_divclk/clk_out course_dac_fifo_source_mux/clk
+  ad_connect axi_ad9361_dac_fifo/din_valid_0 course_dac_fifo_source_mux/fifo_rd_req
   ad_connect bpsk_bridge_bd/tx_sample_bus course_dac_fifo_source_mux/bpsk_tx_sample_bus
 
   course_disconnect_bd_pin axi_ad9361_dac_fifo/din_data_0

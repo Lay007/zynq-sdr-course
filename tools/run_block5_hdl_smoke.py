@@ -215,6 +215,8 @@ TESTS = (
     HdlTest("tb_message_modem_loopback",
             QPSK_BRIDGE + rtl("zynq_message_mailbox_axi_lite.v")
             + (BRIDGE_DIR / "bpsk_zynq_ber_bridge_bd.v", tb("tb_message_modem_loopback.v"))),
+    HdlTest("tb_course_dac_fifo_source_mux",
+            (BRIDGE_DIR / "course_dac_fifo_source_mux.v", tb("tb_course_dac_fifo_source_mux.v"))),
     HdlTest("tb_message_modem_listen",
             QPSK_BRIDGE + rtl("zynq_message_mailbox_axi_lite.v")
             + (BRIDGE_DIR / "bpsk_zynq_ber_bridge_bd.v", tb("tb_message_modem_listen.v"))),
