@@ -526,8 +526,10 @@ static int cmd_receive(int count, int attempts, int rx_gain, long lo, int whiten
         /* The counter reports done at the end of the frame, but the sampler keeps emitting the
          * RX_SAMPLE_MARGIN (256) symbols after it, about 0.5 ms, and those still shift through the
          * decoded-bit register. Read it only after they are out (the Python tool never noticed:
-         * one devmem call takes milliseconds). */
-        usleep(5000);
+         * one devmem call takes milliseconds). Only after a frame: when listening, a wait after
+         * every timeout would leave the receiver deaf for 5 ms of every ~140 ms attempt. */
+        if (s & 0x4)
+            usleep(5000);
         uint32_t recv = rd(R_RECV);
         if (getenv("ZMSG_DEBUG"))
             fprintf(stderr, "%.4f attempt %d status 0x%03x recv %u\n", now_s(), k, s, recv);
