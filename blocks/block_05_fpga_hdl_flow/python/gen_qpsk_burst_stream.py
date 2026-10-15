@@ -35,14 +35,20 @@ def main() -> int:
     ap.add_argument("--noise-rms", type=float, default=16.0, help="board B at 71 dB: 16 counts rms")
     ap.add_argument("--seed", type=int, default=68)
     ap.add_argument("--ref", action="store_true", help="reference symbol before each frame (two_board_burst.burst_iq)")
+    ap.add_argument("--lead", type=int, default=0, help="training symbols before the reference (burst_iq)")
+    ap.add_argument("--jitter", action="store_true",
+                    help="delay each period's frame by a random 0..7 samples (random symbol timing phase, as on the board)")
     ap.add_argument("--name", default=None, help="output file name in tmp/listen/ (default from --gap)")
     args = ap.parse_args()
 
     if args.gap < 0:
         wave = np.zeros(args.samples, complex)
     else:
-        iq = burst_iq(args.gap, ref=args.ref).astype(float)
-        wave = np.tile((iq[0::2] + 1j * iq[1::2]) / (0.70 * 32767) * args.peak, args.periods)
+        iq = burst_iq(args.gap, ref=args.ref, lead=args.lead).astype(float)
+        one = (iq[0::2] + 1j * iq[1::2]) / (0.70 * 32767) * args.peak
+        jrng = np.random.default_rng(args.seed + 1)
+        wave = np.concatenate([np.roll(one, int(jrng.integers(0, 8)) if args.jitter else 0)
+                               for _ in range(args.periods)])
     n = np.arange(wave.size)
     rng = np.random.default_rng(args.seed)
     x = wave * np.exp(2j * np.pi * args.cfo_hz / FS * n) + complex(*args.dc)

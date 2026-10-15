@@ -29,17 +29,26 @@ from two_board_agc_ber import MODE, PHY, score
 LISTEN_BIT = 1 << 18
 
 
-def burst_iq(gap_frames: int, ref: bool = False) -> np.ndarray:
+def burst_iq(gap_frames: int, ref: bool = False, lead: int = 0) -> np.ndarray:
     """int16 IQ: one RRC-shaped frame then gap_frames frame lengths of zeros, circular.
 
     ref=True puts one reference symbol (phase state 0, the differential encoder's starting state)
     in front of the frame. A differential receiver decodes each symbol against the one before it;
     after silence that one is noise, so without the reference the first frame symbol decodes
     wrong in about 3 cases of 4 and the frame sync, which needs 23 of the first 24 bits, misses.
+
+    lead > 0 (implies the reference) puts that many training symbols before the reference,
+    alternating between phase states 2 and 0 (180-degree flips, a transition every symbol for the
+    timing loop). After silence the receiver's timing and carrier loops need some symbols to
+    settle; without a lead-in that happens on the first preamble symbols, which the frame sync
+    needs (issue #68).
     """
     fb = B.diff_encode_bits(B.long_frame_bits())
     frame = ((1.0 - 2.0 * fb[0::2]) + 1j * (1.0 - 2.0 * fb[1::2])) / np.sqrt(2.0)
-    head = np.array([(1 + 1j) / np.sqrt(2.0)]) if ref else np.zeros(0, dtype=complex)
+    # A continuous stream (gap 0) needs no reference: the previous frame provides it.
+    s0 = (1 + 1j) / np.sqrt(2.0)
+    train = np.array([-s0 if (lead - k) % 2 else s0 for k in range(lead)], dtype=complex)
+    head = np.concatenate([train, [s0]]) if (ref or lead) and gap_frames > 0 else np.zeros(0, dtype=complex)
     sym = np.concatenate([head, frame, np.zeros(len(frame) * gap_frames - len(head), dtype=complex)])
     if gap_frames == 0:
         sym = np.tile(frame, 28)
@@ -65,13 +74,14 @@ def main() -> int:
     ap.add_argument("--frames", type=int, default=100)
     ap.add_argument("--listen", action="store_true", help="receiver listen mode, gp_ctrl[18] (#68)")
     ap.add_argument("--ref", action="store_true", help="reference symbol before each burst")
+    ap.add_argument("--lead", type=int, default=0, help="training symbols before the reference (implies --ref)")
     ap.add_argument("--json-out", type=Path, required=True)
     args = ap.parse_args()
 
     ra = L.runner_for("192.168.40.1", "root", "analog", 22, 30.0)
     rb = L.runner_for("192.168.20.1", "root", "analog", 22, 40.0)
     mode_bits = MODE | (LISTEN_BIT if args.listen else 0)
-    res = {"carrier_hz": args.carrier, "mode_bits": hex(mode_bits), "listen": args.listen, "ref_symbol": args.ref, "frames": args.frames,
+    res = {"carrier_hz": args.carrier, "mode_bits": hex(mode_bits), "listen": args.listen, "ref_symbol": args.ref or args.lead > 0, "lead_symbols": args.lead, "frames": args.frames,
            "frame_us": B.LONG_FRAME_SYMBOLS * L.SPS / L.SAMPLE_RATE * 1e6, "points": []}
     try:
         L.quiet_board(ra)
@@ -81,7 +91,7 @@ def main() -> int:
         L.sh(rb, f"echo {int(L.SAMPLE_RATE)} > {PHY}/in_voltage_sampling_frequency; "
                  f"echo {int(args.carrier)} > {PHY}/out_altvoltage0_RX_LO_frequency")
         for gap in args.gaps:
-            iq = burst_iq(gap, ref=args.ref)
+            iq = burst_iq(gap, ref=args.ref, lead=args.lead)
             n = len(iq) // 2
             L.sh(ra, "for p in $(ps | grep '[i]io_writedev' | awk '{print $1}'); do kill -9 $p; done")
             L.reset_tx_dma(ra)

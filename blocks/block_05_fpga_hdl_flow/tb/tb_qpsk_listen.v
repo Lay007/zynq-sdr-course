@@ -71,6 +71,13 @@ module tb_qpsk_listen;
   reg to_seen;
   always @(posedge clk) if (start) to_seen <= 1'b0; else if (timed_out) to_seen <= 1'b1;
 
+`ifdef DUMPDIB
+  // Every dibit that reaches the BER counter, with the reception number, for offline analysis.
+  integer dib_fd;
+  initial dib_fd = $fopen("tmp/listen/dibits.txt", "w");
+  always @(posedge clk) if (dut.recovered_valid) $fwrite(dib_fd, "%0d %0d %0d\n", b, dut.recovered_dibit, dut.ber_counter_i.winner_valid);
+`endif
+
 `ifdef REWIND_TEST
   // Experiment: when the packet detector drops, put the loops back to their reset state.
   reg prev_present = 1'b0;
