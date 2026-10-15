@@ -99,7 +99,12 @@ bpsk_zynq_ber_gpreg_bridge #(
     // digital loopback: DAC stream straight back into the ADC capture tap
     .capture_in_valid(burst_out_valid),
     .capture_in_i(burst_out_i),
-    .capture_in_q(burst_out_q)
+    .capture_in_q(burst_out_q),
+    .msg_tx_bits(256'd0),
+    .msg_tx_toggle(1'b0),
+    .msg_rx_bits(),
+    .msg_rx_toggle(),
+    .msg_rx_locked()
 );
 
 always #5 ctrl_clk = ~ctrl_clk;      // 100 MHz control

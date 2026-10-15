@@ -14,12 +14,26 @@
 //   * RX payload/meta remain stable while RX_VALID=1 until RX_ACK;
 //   * a new completed echo while RX_VALID=1 preserves the old RX snapshot and
 //     sets RX_OVERFLOW.
+//
+// MODE = 1 (Lab 11.49, issue #55): the same registers, but TX_START sends the message through the
+// QPSK modem of the gpreg bridge instead of echoing it. The core builds a packet-v1 frame from
+// TX_SEQUENCE (low 16 bits), TX_LENGTH (at most 27 bytes) and TX_DATA (bytes little-endian in the
+// words): length, sequence, payload, zero padding, CRC-16/CCITT-FALSE over bytes 0..29, LSB first,
+// then PN9-whitened, exactly like zmsg and two_board_message.py. The bridge transmits it once and,
+// on a single board with TX1 cabled to RX1, receives it; the core de-whitens the received bits,
+// checks the CRC and fills the RX registers: RX_META.CRC_OK when the CRC matches and the length is
+// valid, RX_META.FRAME_ERROR when no frame was received or the length is out of range. A TX_LENGTH
+// over 27 is not sent and completes at once with FRAME_ERROR. The modem handshake crosses clock
+// domains with toggles: modem_tx_bits is stable before modem_tx_toggle changes, and the bridge
+// keeps modem_rx_bits stable after it changes modem_rx_toggle.
 
 `timescale 1ns/1ps
 
 module zynq_message_mailbox_axi_lite #(
     parameter integer AXI_ADDR_W = 8,
-    parameter integer AXI_DATA_W = 32
+    parameter integer AXI_DATA_W = 32,
+    parameter integer MODE = 0,                  // 0 = PL echo (Lab 5.12), 1 = QPSK modem (Lab 11.49)
+    parameter integer MODEM_TIMEOUT = 50000000   // AXI clocks to wait for the modem (0.5 s at 100 MHz)
 ) (
     input  wire                         s_axi_aclk,
     input  wire                         s_axi_aresetn,
@@ -44,13 +58,23 @@ module zynq_message_mailbox_axi_lite #(
     output reg  [AXI_DATA_W-1:0]        s_axi_rdata,
     output reg  [1:0]                   s_axi_rresp,
     output reg                          s_axi_rvalid,
-    input  wire                         s_axi_rready
+    input  wire                         s_axi_rready,
+
+    // MODE = 1 only (leave unconnected in MODE = 0)
+    output reg  [255:0]                 modem_tx_bits,
+    output reg                          modem_tx_toggle,
+    input  wire [255:0]                 modem_rx_bits,
+    input  wire                         modem_rx_toggle,
+    input  wire                         modem_rx_locked
 );
 
 localparam integer AXI_STRB_W = AXI_DATA_W / 8;
 localparam integer MAILBOX_WORDS = 16;
 localparam [31:0] CORE_ID = 32'h4D424F58;      // "MBOX"
-localparam [31:0] CORE_VERSION = 32'h00010000;
+localparam [31:0] CORE_VERSION = (MODE == 1) ? 32'h00020000 : 32'h00010000;
+localparam integer MAX_PAYLOAD = 27;
+// PN9 (x^9 + x^5 + 1, seed 0x1FF), bit i = the i-th output bit; the same sequence as zmsg.c.
+localparam [255:0] PN9 = 256'h0ccac9fb4937e5a8513b2f61aa721884022323ab638951b3e78b72904ce8fbc1;
 
 localparam [AXI_ADDR_W-1:0] REG_ID          = 8'h00;
 localparam [AXI_ADDR_W-1:0] REG_VERSION     = 8'h04;
@@ -81,6 +105,9 @@ reg [31:0] rx_data [0:MAILBOX_WORDS-1];
 
 reg tx_busy;
 reg tx_done;
+reg modem_wait;
+reg [31:0] modem_timer;
+reg [2:0] modem_rx_sync;
 reg rx_valid;
 reg rx_overflow;
 reg echo_pending;
@@ -111,6 +138,48 @@ function [AXI_DATA_W-1:0] apply_wstrb;
         end
     end
 endfunction
+
+// --- MODE = 1: packet-v1 framing ---------------------------------------------------------------
+function [15:0] crc16_ccitt_false;    // over bytes 0..29 of a packet held LSB-first in pkt[239:0]
+    input [239:0] pkt;
+    integer b, i;
+    reg [15:0] c;
+    begin
+        c = 16'hFFFF;
+        for (b = 0; b < 30; b = b + 1) begin
+            c = c ^ {pkt[8*b +: 8], 8'h00};
+            for (i = 0; i < 8; i = i + 1)
+                c = c[15] ? ((c << 1) ^ 16'h1021) : (c << 1);
+        end
+        crc16_ccitt_false = c;
+    end
+endfunction
+
+reg [255:0] tx_packet;                // packet-v1 built from the TX registers, before whitening
+integer pb;
+always @(*) begin
+    tx_packet = 256'd0;
+    tx_packet[7:0] = tx_length[7:0];
+    tx_packet[15:8] = tx_sequence[7:0];
+    tx_packet[23:16] = tx_sequence[15:8];
+    for (pb = 0; pb < MAX_PAYLOAD; pb = pb + 1)
+        if (pb < tx_length)
+            tx_packet[8*(3 + pb) +: 8] = tx_data[pb / 4][8*(pb % 4) +: 8];
+    tx_packet[255:240] = crc16_ccitt_false(tx_packet[239:0]);
+end
+
+wire [255:0] rx_packet = modem_rx_bits ^ PN9;
+wire [15:0]  rx_crc = crc16_ccitt_false(rx_packet[239:0]);
+wire         rx_crc_ok = (rx_crc == rx_packet[255:240]);
+wire [7:0]   rx_len = rx_packet[7:0];
+wire         rx_toggle_edge = modem_rx_sync[2] ^ modem_rx_sync[1];
+reg  [223:0] rx_payload;            // the received payload bytes, zero beyond RX length
+always @(*) begin
+    rx_payload = 224'd0;
+    for (pb = 0; pb < MAX_PAYLOAD; pb = pb + 1)
+        if (pb < rx_len)
+            rx_payload[8*pb +: 8] = rx_packet[8*(3 + pb) +: 8];
+end
 
 always @(*) begin
     read_word = {AXI_DATA_W{1'b0}};
@@ -169,6 +238,11 @@ always @(posedge s_axi_aclk) begin
         rx_valid <= 1'b0;
         rx_overflow <= 1'b0;
         echo_pending <= 1'b0;
+        modem_wait <= 1'b0;
+        modem_timer <= 32'd0;
+        modem_rx_sync <= 3'd0;
+        modem_tx_bits <= 256'd0;
+        modem_tx_toggle <= 1'b0;
 
         for (idx = 0; idx < MAILBOX_WORDS; idx = idx + 1) begin
             tx_data[idx] <= 32'd0;
@@ -198,6 +272,36 @@ always @(posedge s_axi_aclk) begin
                     rx_data[idx] <= tx_data[idx];
                 end
                 rx_valid <= 1'b1;
+            end
+        end
+
+        // MODE = 1: wait for the modem's answer (or give up), then fill RX like the echo does.
+        modem_rx_sync <= {modem_rx_sync[1:0], (MODE == 1) ? modem_rx_toggle : 1'b0};
+        if (MODE == 1 && modem_wait) begin
+            modem_timer <= modem_timer + 1'b1;
+            if (rx_toggle_edge || modem_timer == MODEM_TIMEOUT) begin
+                modem_wait <= 1'b0;
+                tx_busy <= 1'b0;
+                tx_done <= 1'b1;
+                if (rx_valid) begin
+                    rx_overflow <= 1'b1;
+                end else begin
+                    rx_valid <= 1'b1;
+                    for (idx = 0; idx < MAILBOX_WORDS; idx = idx + 1)
+                        rx_data[idx] <= 32'd0;
+                    if (rx_toggle_edge && modem_rx_locked) begin
+                        rx_sequence <= {16'd0, rx_packet[23:8]};
+                        rx_length <= (rx_len <= MAX_PAYLOAD) ? {24'd0, rx_len} : 32'd0;
+                        rx_meta <= (rx_len > MAX_PAYLOAD) ? RX_META_FRAME_ERROR
+                                 : (rx_crc_ok ? RX_META_CRC_OK : 32'd0);
+                        for (idx = 0; idx < 7; idx = idx + 1)     // 27 payload bytes = 7 words
+                            rx_data[idx] <= rx_payload[32*idx +: 32];
+                    end else begin
+                        rx_sequence <= 32'd0;
+                        rx_length <= 32'd0;
+                        rx_meta <= RX_META_FRAME_ERROR;           // no frame received
+                    end
+                end
             end
         end
 
@@ -233,7 +337,18 @@ always @(posedge s_axi_aclk) begin
                         !tx_busy) begin
                         tx_busy <= 1'b1;
                         tx_done <= 1'b0;
-                        echo_pending <= 1'b1;
+                        if (MODE == 0) begin
+                            echo_pending <= 1'b1;
+                        end else if (tx_length > MAX_PAYLOAD) begin
+                            // Not sendable: complete at once (next cycle) with FRAME_ERROR.
+                            modem_wait <= 1'b1;
+                            modem_timer <= MODEM_TIMEOUT;
+                        end else begin
+                            modem_tx_bits <= tx_packet ^ PN9;
+                            modem_tx_toggle <= ~modem_tx_toggle;
+                            modem_wait <= 1'b1;
+                            modem_timer <= 32'd0;
+                        end
                     end
                 end
 

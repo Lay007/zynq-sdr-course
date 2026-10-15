@@ -49,7 +49,7 @@ module tb_qpsk_dc_bursts;
     .symbol_count(SYMS[INDEX_W-1:0]), .preamble_count(PRE_BITS[INDEX_W-1:0]),
     .start_offset(16'd0),
     .dc_block_en(`DC_EN), .costas_en(1'b1), .coarse_cfo_en(1'b0), .phase_pick_en(1'b1),
-    .timing_recovery_en(1'b1), .costas_hold_phase(1'b0), .diff_en(1'b1), .listen_en(1'b0),
+    .timing_recovery_en(1'b1), .costas_hold_phase(1'b0), .diff_en(1'b1), .listen_en(1'b0), .msg_mode(1'b0), .msg_bits(256'd0),
     .busy(busy), .done(done),
     .tx_valid(), .tx_i(), .tx_q(),
     .rx_valid(rx_valid), .rx_i(rx_i), .rx_q(rx_q),

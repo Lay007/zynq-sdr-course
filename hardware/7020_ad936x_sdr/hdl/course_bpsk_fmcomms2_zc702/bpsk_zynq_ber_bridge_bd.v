@@ -44,7 +44,31 @@ module bpsk_zynq_ber_bridge_bd #(
     output wire [31:0]              gp_capture_debug,
     output wire                     tx_path_active,
     output wire [(2*W):0]           tx_sample_bus,
-    input  wire [(2*W):0]           rx_sample_bus
+    input  wire [(2*W):0]           rx_sample_bus,
+    // Message mailbox (Lab 11.49): the Lab 5.12 register contract, with the modem behind it
+    // (zynq_message_mailbox_axi_lite MODE = 1). AXI-Lite slave on the CPU clock; only the low 8
+    // address bits reach the core (the interconnect passes the full address, see Lab 5.12).
+    input  wire                     s_axi_aclk,
+    input  wire                     s_axi_aresetn,
+    input  wire [31:0]              s_axi_awaddr,
+    input  wire [2:0]               s_axi_awprot,
+    input  wire                     s_axi_awvalid,
+    output wire                     s_axi_awready,
+    input  wire [31:0]              s_axi_wdata,
+    input  wire [3:0]               s_axi_wstrb,
+    input  wire                     s_axi_wvalid,
+    output wire                     s_axi_wready,
+    output wire [1:0]               s_axi_bresp,
+    output wire                     s_axi_bvalid,
+    input  wire                     s_axi_bready,
+    input  wire [31:0]              s_axi_araddr,
+    input  wire [2:0]               s_axi_arprot,
+    input  wire                     s_axi_arvalid,
+    output wire                     s_axi_arready,
+    output wire [31:0]              s_axi_rdata,
+    output wire [1:0]               s_axi_rresp,
+    output wire                     s_axi_rvalid,
+    input  wire                     s_axi_rready
 );
 
 wire                    tx_valid;
@@ -53,6 +77,43 @@ wire signed [W-1:0]     tx_q;
 wire                    rx_valid;
 wire signed [W-1:0]     rx_i;
 wire signed [W-1:0]     rx_q;
+
+wire [255:0]            msg_tx_bits;
+wire                    msg_tx_toggle;
+wire [255:0]            msg_rx_bits;
+wire                    msg_rx_toggle;
+wire                    msg_rx_locked;
+
+zynq_message_mailbox_axi_lite #(
+    .AXI_ADDR_W(8),
+    .AXI_DATA_W(32),
+    .MODE(1)
+) mailbox_i (
+    .s_axi_aclk(s_axi_aclk),
+    .s_axi_aresetn(s_axi_aresetn),
+    .s_axi_awaddr(s_axi_awaddr[7:0]),
+    .s_axi_awvalid(s_axi_awvalid),
+    .s_axi_awready(s_axi_awready),
+    .s_axi_wdata(s_axi_wdata),
+    .s_axi_wstrb(s_axi_wstrb),
+    .s_axi_wvalid(s_axi_wvalid),
+    .s_axi_wready(s_axi_wready),
+    .s_axi_bresp(s_axi_bresp),
+    .s_axi_bvalid(s_axi_bvalid),
+    .s_axi_bready(s_axi_bready),
+    .s_axi_araddr(s_axi_araddr[7:0]),
+    .s_axi_arvalid(s_axi_arvalid),
+    .s_axi_arready(s_axi_arready),
+    .s_axi_rdata(s_axi_rdata),
+    .s_axi_rresp(s_axi_rresp),
+    .s_axi_rvalid(s_axi_rvalid),
+    .s_axi_rready(s_axi_rready),
+    .modem_tx_bits(msg_tx_bits),
+    .modem_tx_toggle(msg_tx_toggle),
+    .modem_rx_bits(msg_rx_bits),
+    .modem_rx_toggle(msg_rx_toggle),
+    .modem_rx_locked(msg_rx_locked)
+);
 
 assign tx_sample_bus = {tx_valid, tx_i, tx_q};
 assign rx_valid = rx_sample_bus[2*W];
@@ -100,7 +161,12 @@ bpsk_zynq_ber_gpreg_bridge #(
     .burst_out_q(tx_q),
     .capture_in_valid(rx_valid),
     .capture_in_i(rx_i),
-    .capture_in_q(rx_q)
+    .capture_in_q(rx_q),
+    .msg_tx_bits(msg_tx_bits),
+    .msg_tx_toggle(msg_tx_toggle),
+    .msg_rx_bits(msg_rx_bits),
+    .msg_rx_toggle(msg_rx_toggle),
+    .msg_rx_locked(msg_rx_locked)
 );
 
 endmodule

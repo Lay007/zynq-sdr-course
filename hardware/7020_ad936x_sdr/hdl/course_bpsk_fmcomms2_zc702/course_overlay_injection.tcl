@@ -97,6 +97,8 @@ proc course_bpsk_apply_overlay {overlay_mode} {
   ad_connect axi_ad9361/adc_valid_i1 bpsk_bridge_bd/adc_input2_valid
   ad_connect util_ad9361_divclk/clk_out bpsk_bridge_bd/sample_clk
   ad_connect util_ad9361_divclk_reset/peripheral_aresetn bpsk_bridge_bd/sample_resetn
+  # Message mailbox inside the bridge wrapper (Lab 11.49): AXI-Lite slave on the CPU interconnect.
+  ad_cpu_interconnect 0x79050000 bpsk_bridge_bd
 
   ad_connect axi_gpreg_bpsk/up_gp_out_0 bpsk_bridge_bd/gp_ctrl
   ad_connect axi_gpreg_bpsk/up_gp_out_1 bpsk_bridge_bd/gp_frame_bit_count

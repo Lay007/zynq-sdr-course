@@ -57,6 +57,8 @@ qpsk_zynq_ber_top #(
     .costas_hold_phase(1'b0),          // clean loopback: no phase carried between frames
     .diff_en(1'b0),                    // absolute QPSK; differential mode has its own bench
     .listen_en(1'b0),                  // self-loopback: the fixed window is enough
+    .msg_mode(1'b0),                   // the ROM frame
+    .msg_bits(256'd0),
     .busy(busy),
     .done(done),
     .tx_valid(tx_valid),

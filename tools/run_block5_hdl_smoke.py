@@ -88,6 +88,7 @@ QPSK_TOP = merge(
         "bpsk_rrc_tx_fir.v",
         "qpsk_framed_tx_chain.v",
         "qpsk_frame_dibit_source.v",
+        "qpsk_message_dibit_source.v",
         "qpsk_diff_encoder.v",
         "qpsk_diff_decoder.v",
         "bpsk_ber_counter.v",
@@ -103,6 +104,7 @@ QPSK_BRIDGE = merge(
         "qpsk_symbol_mapper.v",
         "qpsk_framed_tx_chain.v",
         "qpsk_frame_dibit_source.v",
+        "qpsk_message_dibit_source.v",
         "qpsk_diff_encoder.v",
         "qpsk_diff_decoder.v",
         "qpsk_ber_counter.v",
@@ -210,6 +212,9 @@ TESTS = (
     HdlTest("tb_qpsk_rx_costas", QPSK_RX_BENCH + (tb("tb_qpsk_rx_costas.v"),)),
     HdlTest("tb_qpsk_costas_stress", QPSK_RX_BENCH + (tb("tb_qpsk_costas_stress.v"),)),
     HdlTest("tb_qpsk_bridge_loopback", QPSK_BRIDGE + (tb("tb_qpsk_bridge_loopback.v"),)),
+    HdlTest("tb_message_modem_loopback",
+            QPSK_BRIDGE + rtl("zynq_message_mailbox_axi_lite.v")
+            + (BRIDGE_DIR / "bpsk_zynq_ber_bridge_bd.v", tb("tb_message_modem_loopback.v"))),
     HdlTest(
         "tb_bridge_rx_lclk_fifo",
         (BRIDGE_DIR / "bridge_rx_lclk_fifo.v", tb("tb_bridge_rx_lclk_fifo.v")),

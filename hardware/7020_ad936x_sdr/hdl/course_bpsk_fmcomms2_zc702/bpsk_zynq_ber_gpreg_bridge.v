@@ -49,7 +49,17 @@ module bpsk_zynq_ber_gpreg_bridge #(
     output wire signed [W-1:0]      burst_out_q,
     input  wire                     capture_in_valid,
     input  wire signed [W-1:0]      capture_in_i,
-    input  wire signed [W-1:0]      capture_in_q
+    input  wire signed [W-1:0]      capture_in_q,
+    // Message mailbox (Lab 11.49, zynq_message_mailbox_axi_lite MODE = 1), AXI clock domain.
+    // A change of msg_tx_toggle starts one QPSK burst that carries msg_tx_bits (256 whitened
+    // packet bits, stable before the toggle). When that attempt ends, msg_rx_bits holds the 256
+    // payload bits the receiver decoded, msg_rx_locked says whether a frame was received, and
+    // msg_rx_toggle changes. Tie msg_tx_toggle to 0 when no mailbox is connected.
+    input  wire [255:0]             msg_tx_bits,
+    input  wire                     msg_tx_toggle,
+    output reg  [255:0]             msg_rx_bits,
+    output reg                      msg_rx_toggle,
+    output reg                      msg_rx_locked
 );
 
 localparam [31:0] SIGNATURE = 32'h4250534B; // "BPSK"
@@ -198,7 +208,12 @@ reg [9:0] decision_negative_count_lsb_sample = 10'd0;
 (* ASYNC_REG = "TRUE" *) reg [2:0] timing_error_meta_ctrl = 3'd0;
 (* ASYNC_REG = "TRUE" *) reg [2:0] timing_error_sync_ctrl = 3'd0;
 
-wire start_edge = control_sync[0] && !control_sync_d[0];
+// A burst starts on a rising gp_ctrl[0] or on a message from the mailbox (msg_tx_toggle).
+(* ASYNC_REG = "TRUE" *) reg [2:0] msg_tx_sync = 3'd0;
+always @(posedge sample_clk) msg_tx_sync <= {msg_tx_sync[1:0], msg_tx_toggle};
+wire msg_start_edge = msg_tx_sync[2] ^ msg_tx_sync[1];
+wire start_edge = (control_sync[0] && !control_sync_d[0]) || msg_start_edge;
+reg msg_mode_sample = 1'b0;   // this burst carries a mailbox message
 wire clear_done_edge = control_sync[1] && !control_sync_d[1];
 wire [1:0] rx_decision_mode = control_sync[3:2];
 wire adc_input_sample_nonzero = (adc_input_i != {W{1'b0}}) || (adc_input_q != {W{1'b0}});
@@ -450,6 +465,8 @@ qpsk_zynq_ber_top #(
     .timing_recovery_en(qpsk_timing_recovery_en),
     .diff_en(qpsk_diff_en),
     .listen_en(qpsk_listen_en),
+    .msg_mode(msg_mode_sample),
+    .msg_bits(msg_tx_bits),
     .busy(qpsk_busy),
     .done(qpsk_done),
     .tx_valid(qpsk_tx_valid),
@@ -557,6 +574,49 @@ always @(posedge ctrl_clk) begin
         4'd9: rx_bits_rdata <= {22'd0, rx_bits_count};
         default: rx_bits_rdata <= 32'd0;
     endcase
+end
+
+// Message reception: when a mailbox burst ends (done or timeout), wait a few clocks for the
+// counters to settle, then hand the decoded payload to the mailbox. The register is frozen by then
+// (done_sticky_sample), and its last 256 bits are the payload: payload bit j sits at
+// rx_bits_shift[2*(127 - j/2) + j%2], the same map the PS-side tools use.
+wire [255:0] msg_rx_payload;
+genvar gj;
+generate
+    for (gj = 0; gj < 256; gj = gj + 1) begin : g_msg_payload
+        assign msg_rx_payload[gj] = rx_bits_shift[2*(127 - gj/2) + gj%2];
+    end
+endgenerate
+
+reg       msg_cap_armed = 1'b0;
+reg [2:0] msg_cap_delay = 3'd0;
+always @(posedge sample_clk) begin
+    if (!sample_resetn) begin
+        msg_mode_sample <= 1'b0;
+        msg_cap_armed <= 1'b0;
+        msg_cap_delay <= 3'd0;
+        msg_rx_bits <= 256'd0;
+        msg_rx_toggle <= 1'b0;
+        msg_rx_locked <= 1'b0;
+    end else begin
+        if (start_edge) begin
+            msg_mode_sample <= msg_start_edge;
+            msg_cap_armed <= msg_start_edge;
+            msg_cap_delay <= 3'd0;
+        end else if (msg_cap_armed && msg_cap_delay == 3'd0 && (core_done || core_timed_out)) begin
+            msg_cap_delay <= 3'd1;
+        end else if (msg_cap_delay != 3'd0) begin
+            if (msg_cap_delay == 3'd7) begin
+                msg_cap_armed <= 1'b0;
+                msg_cap_delay <= 3'd0;
+                msg_rx_locked <= done_sticky_sample && (received_bits_sample == frame_bit_count_cfg);
+                msg_rx_bits <= msg_rx_payload;
+                msg_rx_toggle <= ~msg_rx_toggle;
+            end else begin
+                msg_cap_delay <= msg_cap_delay + 1'b1;
+            end
+        end
+    end
 end
 
 reg [2*W-1:0] cap_rdata = {(2*W){1'b0}};

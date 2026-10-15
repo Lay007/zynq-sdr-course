@@ -66,6 +66,11 @@ module qpsk_zynq_ber_top #(
     // 480 kSym/s), so a packet that arrives any time in that window is found; the idle watchdog then
     // watches the sampler instead of the decisions, which the signal gate holds back in silence.
     input  wire                     listen_en,
+    // 1 at start = this burst carries a message (issue #55, Lab 11.49): the transmitter sends the
+    // burst head of Lab 11.48 and the frame preamble followed by msg_bits (256 whitened packet bits
+    // from the mailbox) instead of the ROM frame. The receiver is unchanged. 0 = the ROM frame.
+    input  wire                     msg_mode,
+    input  wire [255:0]             msg_bits,
     output wire                     busy,
     output reg                      done,
     output wire                     tx_valid,
@@ -104,6 +109,9 @@ wire [1:0] src_dibit;
 wire src_last;
 wire src_ready;
 wire src_busy;
+wire rom_valid, rom_last, rom_busy, msg_valid, msg_last, msg_busy;
+wire [1:0] rom_dibit, msg_dibit;
+reg msg_active = 1'b0;   // latched at frame_start
 wire tx_busy;
 // Differential encoder output (absolute symbol dibit) into the TX chain.
 wire enc_valid;
@@ -136,15 +144,43 @@ qpsk_frame_dibit_source #(
 ) source_i (
     .clk(clk),
     .rst(rst),
-    .start(frame_start),
+    .start(frame_start && !msg_mode),
     .symbol_count(symbol_count),
-    .out_ready(src_ready),
-    .out_valid(src_valid),
-    .out_dibit(src_dibit),
-    .out_last(src_last),
-    .busy(src_busy),
+    .out_ready(src_ready && !msg_active),
+    .out_valid(rom_valid),
+    .out_dibit(rom_dibit),
+    .out_last(rom_last),
+    .busy(rom_busy),
     .done()
 );
+
+qpsk_message_dibit_source #(
+    .MAX_FRAME_BITS(MAX_FRAME_BITS),
+    .MEM_FILE(MEM_FILE)
+) message_source_i (
+    .clk(clk),
+    .rst(rst),
+    .start(frame_start && msg_mode),
+    .msg_bits(msg_bits),
+    .out_ready(src_ready && msg_active),
+    .out_valid(msg_valid),
+    .out_dibit(msg_dibit),
+    .out_last(msg_last),
+    .busy(msg_busy),
+    .done()
+);
+
+always @(posedge clk) begin
+    if (rst)
+        msg_active <= 1'b0;
+    else if (frame_start)
+        msg_active <= msg_mode;
+end
+
+assign src_valid = msg_active ? msg_valid : rom_valid;
+assign src_dibit = msg_active ? msg_dibit : rom_dibit;
+assign src_last  = msg_active ? msg_last  : rom_last;
+assign src_busy  = rom_busy || msg_busy;
 
 // Differential encoder: phase-accumulates the info dibits into absolute symbols. Combinational and
 // handshake-transparent, so it drops into the backpressured source->TX path with no added latency.
