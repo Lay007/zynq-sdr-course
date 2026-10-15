@@ -1,0 +1,220 @@
+{
+ "messages_per_point": 200,
+ "points": [
+  {
+   "tx_gain_db": 0.0,
+   "sent": 200,
+   "crc_ok": 199,
+   "crc_bad": 0,
+   "frame_error": 1,
+   "no_answer": 0,
+   "wrong_payload_with_crc_ok": 0,
+   "sequences_in_order": true,
+   "board_b_zynq_c": [
+    67.1,
+    66.3
+   ]
+  },
+  {
+   "tx_gain_db": -10.0,
+   "sent": 200,
+   "crc_ok": 187,
+   "crc_bad": 10,
+   "frame_error": 3,
+   "no_answer": 0,
+   "wrong_payload_with_crc_ok": 0,
+   "sequences_in_order": true,
+   "board_b_zynq_c": [
+    67.8,
+    67.3
+   ]
+  },
+  {
+   "tx_gain_db": -20.0,
+   "sent": 200,
+   "crc_ok": 27,
+   "crc_bad": 145,
+   "frame_error": 28,
+   "no_answer": 0,
+   "wrong_payload_with_crc_ok": 0,
+   "sequences_in_order": true,
+   "board_b_zynq_c": [
+    67.3,
+    66.6
+   ]
+  },
+  {
+   "tx_gain_db": -30.0,
+   "sent": 200,
+   "crc_ok": 0,
+   "crc_bad": 1,
+   "frame_error": 199,
+   "no_answer": 0,
+   "wrong_payload_with_crc_ok": 0,
+   "sequences_in_order": true,
+   "board_b_zynq_c": [
+    67.4,
+    67.5
+   ]
+  },
+  {
+   "tx_gain_db": -40.0,
+   "sent": 200,
+   "crc_ok": 100,
+   "crc_bad": 75,
+   "frame_error": 25,
+   "no_answer": 0,
+   "wrong_payload_with_crc_ok": 0,
+   "sequences_in_order": true,
+   "board_b_zynq_c": [
+    67.4,
+    67.4
+   ]
+  }
+ ],
+ "second_run_50_per_point": {
+  "messages_per_point": 50,
+  "points": [
+   {
+    "tx_gain_db": -25.0,
+    "sent": 50,
+    "crc_ok": 15,
+    "crc_bad": 26,
+    "frame_error": 9,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     67.1,
+     66.4
+    ]
+   },
+   {
+    "tx_gain_db": -30.0,
+    "sent": 50,
+    "crc_ok": 9,
+    "crc_bad": 25,
+    "frame_error": 16,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     67.1,
+     67.2
+    ]
+   },
+   {
+    "tx_gain_db": -35.0,
+    "sent": 50,
+    "crc_ok": 16,
+    "crc_bad": 21,
+    "frame_error": 13,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     67.4,
+     67.1
+    ]
+   },
+   {
+    "tx_gain_db": -40.0,
+    "sent": 50,
+    "crc_ok": 0,
+    "crc_bad": 0,
+    "frame_error": 50,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     67.1,
+     67.1
+    ]
+   },
+   {
+    "tx_gain_db": -45.0,
+    "sent": 50,
+    "crc_ok": 7,
+    "crc_bad": 28,
+    "frame_error": 15,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     67.5,
+     67.4
+    ]
+   },
+   {
+    "tx_gain_db": -50.0,
+    "sent": 50,
+    "crc_ok": 15,
+    "crc_bad": 22,
+    "frame_error": 13,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     66.9,
+     67.8
+    ]
+   },
+   {
+    "tx_gain_db": -60.0,
+    "sent": 50,
+    "crc_ok": 5,
+    "crc_bad": 24,
+    "frame_error": 21,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     67.3,
+     67.7
+    ]
+   },
+   {
+    "tx_gain_db": -89.0,
+    "sent": 50,
+    "crc_ok": 0,
+    "crc_bad": 1,
+    "frame_error": 49,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     67.8,
+     67.5
+    ]
+   }
+  ]
+ },
+ "regression_two_board_listen": {
+  "sent": 100,
+  "delivered": 97,
+  "lost": [
+   1023,
+   1028,
+   1040
+  ],
+  "duplicates": 0,
+  "wrong_accepted": 0,
+  "receiver": {
+   "receptions": 748,
+   "locked": 106,
+   "delivered_lines": 97,
+   "crc_failures": 9,
+   "timeouts": 642
+  },
+  "listen": true,
+  "lead": 32,
+  "tx_gain_db": -30.0,
+  "rx_gain_db": 71,
+  "interval_s": 0.5,
+  "board_b_zynq_c": [
+   65.7,
+   66.2
+  ]
+ },
+ "note": "board B, image 2a4cc8e9 (source b0ffa65), NO cable between B TX1 and B RX1: the message reaches RX1 through an uncontrolled leakage path"
+}

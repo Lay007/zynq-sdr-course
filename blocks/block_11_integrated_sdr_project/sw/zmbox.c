@@ -1,0 +1,289 @@
+/*
+ * zmbox - Lab 11.49: send a text message through the PS/PL mailbox and the fabric QPSK modem on one
+ * board (board B, TX1 cabled to RX1 through at least 30 dB), and read what came back.
+ *
+ *   board-b$ ./zmbox send "Hello from the mailbox" --seq 17
+ *   TX sequence=17 bytes=22 payload="Hello from the mailbox"
+ *   RX sequence=17 bytes=22 meta=CRC_OK payload="Hello from the mailbox"
+ *   board-b$ ./zmbox stop
+ *
+ * The program uses only the Lab 5.12 register contract: TX_SEQUENCE, TX_LENGTH, TX_DATA, TX_START,
+ * then STATUS.RX_VALID, RX_SEQUENCE, RX_LENGTH, RX_META, RX_DATA, RX_ACK. Packet-v1 framing, CRC,
+ * whitening, the burst and the reception all happen in the fabric (mailbox MODE = 1 inside the
+ * bridge wrapper at 0x79050000). Before that it sets up the radio the way Lab 11.47 does: the DAC
+ * channels to the DMA input, a cyclic iio_writedev buffer of zeros so the DAC FIFO is fed between
+ * bursts, LOs and gains, and the modem mode words in the gpreg block at 0x79040000.
+ *
+ * Build: arm-linux-gnueabihf-gcc -O2 -static -o zmbox zmbox.c
+ */
+#define _GNU_SOURCE
+#include <dirent.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/mman.h>
+#include <time.h>
+#include <unistd.h>
+
+#define GP_BASE 0x79040000u
+#define MB_BASE 0x79050000u
+#define DAC_BASE 0x79024000u
+#define MODE 0x2D630u           /* Lab 11.45: QPSK, raw ADC, DC blocker, Costas, phase pick, Gardner, diff */
+#define FS 3840000
+
+/* Lab 5.12 mailbox registers */
+#define MB_ID 0x00
+#define MB_VERSION 0x04
+#define MB_CONTROL 0x08
+#define MB_STATUS 0x0C
+#define MB_TX_SEQUENCE 0x10
+#define MB_TX_LENGTH 0x14
+#define MB_TX_DATA0 0x20
+#define MB_RX_SEQUENCE 0x60
+#define MB_RX_LENGTH 0x64
+#define MB_RX_META 0x68
+#define MB_RX_DATA0 0x70
+
+static char phy[128];
+static volatile uint32_t *gp, *mb, *dac;
+
+static double now_s(void)
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return ts.tv_sec + ts.tv_nsec * 1e-9;
+}
+
+static int find_phy(void)
+{
+    char p[256], name[64];
+    for (int i = 0; i < 8; i++) {
+        snprintf(p, sizeof p, "/sys/bus/iio/devices/iio:device%d/name", i);
+        FILE *f = fopen(p, "r");
+        if (!f)
+            continue;
+        if (fgets(name, sizeof name, f) && strncmp(name, "ad9361-phy", 10) == 0) {
+            snprintf(phy, sizeof phy, "/sys/bus/iio/devices/iio:device%d", i);
+            fclose(f);
+            return 0;
+        }
+        fclose(f);
+    }
+    return -1;
+}
+
+static void attr(const char *name, const char *value)
+{
+    char p[256];
+    snprintf(p, sizeof p, "%s/%s", phy, name);
+    FILE *f = fopen(p, "w");
+    if (!f) {
+        fprintf(stderr, "cannot write %s\n", p);
+        return;
+    }
+    fputs(value, f);
+    fclose(f);
+}
+
+static int zero_stream_running(void)
+{
+    DIR *d = opendir("/proc");
+    struct dirent *e;
+    char p[300], comm[64];
+    int n = 0;
+    while (d && (e = readdir(d))) {
+        int pid = atoi(e->d_name);
+        if (pid <= 0)
+            continue;
+        snprintf(p, sizeof p, "/proc/%d/comm", pid);
+        FILE *f = fopen(p, "r");
+        if (!f)
+            continue;
+        if (fgets(comm, sizeof comm, f) && strncmp(comm, "iio_writedev", 12) == 0)
+            n++;
+        fclose(f);
+    }
+    if (d)
+        closedir(d);
+    return n;
+}
+
+static volatile uint32_t *map(int fd, uint32_t base)
+{
+    void *m = mmap(NULL, 0x1000, PROT_READ | PROT_WRITE, MAP_SHARED, fd, base);
+    return m == MAP_FAILED ? NULL : (volatile uint32_t *)m;
+}
+
+static uint32_t mbr(uint32_t off) { return mb[off / 4]; }
+static void mbw(uint32_t off, uint32_t v) { mb[off / 4] = v; }
+static void gpw(uint32_t off, uint32_t v) { gp[(0x400 + off) / 4] = v; }
+
+static int open_regs(void)
+{
+    int fd = open("/dev/mem", O_RDWR | O_SYNC);
+    if (fd < 0) {
+        perror("/dev/mem");
+        return -1;
+    }
+    gp = map(fd, GP_BASE);
+    mb = map(fd, MB_BASE);
+    dac = map(fd, DAC_BASE);
+    if (!gp || !mb || !dac) {
+        perror("mmap");
+        return -1;
+    }
+    if (gp[0x508 / 4] != 0x4250534Bu) {
+        fprintf(stderr, "no course modem at 0x%08x\n", GP_BASE);
+        return -1;
+    }
+    if (mbr(MB_ID) != 0x4D424F58u || mbr(MB_VERSION) != 0x00020000u) {
+        fprintf(stderr, "no message mailbox (MODE 1) at 0x%08x: id 0x%08x version 0x%08x\n", MB_BASE,
+                mbr(MB_ID), mbr(MB_VERSION));
+        return -1;
+    }
+    return 0;
+}
+
+static void radio_setup(double tx_gain, int rx_gain, long lo, int offset)
+{
+    char v[64];
+    snprintf(v, sizeof v, "%d", FS);
+    attr("in_voltage_sampling_frequency", v);
+    snprintf(v, sizeof v, "%ld", lo);
+    attr("out_altvoltage0_RX_LO_frequency", v);
+    attr("out_altvoltage1_TX_LO_frequency", v);
+    attr("in_voltage0_gain_control_mode", "manual");
+    snprintf(v, sizeof v, "%d", rx_gain);
+    attr("in_voltage0_hardwaregain", v);
+    /* Keep the DAC FIFO fed with zeros between bursts (Lab 11.47). */
+    if (!zero_stream_running()) {
+        int16_t zero[2 * 1024] = {0};
+        FILE *f = fopen("/tmp/zmbox_zero.bin", "wb");
+        if (f) {
+            fwrite(zero, sizeof zero, 1, f);
+            fclose(f);
+        }
+        if (system("nohup iio_writedev -c -b 1024 -s 1024 cf-ad9361-dds-core-lpc voltage0 voltage1 "
+                   "< /tmp/zmbox_zero.bin > /dev/null 2>&1 &") != 0)
+            fprintf(stderr, "could not start the zero stream\n");
+        usleep(500000);
+    }
+    /* DAC channels to the DMA input, where the bridge muxes the burst in. */
+    for (int c = 0; c < 4; c++)
+        dac[(0x418 + 0x40 * c) / 4] = 2;
+    dac[0x044 / 4] = 1;
+    snprintf(v, sizeof v, "%.2f", tx_gain);
+    attr("out_voltage0_hardwaregain", v);
+    attr("out_altvoltage1_TX_LO_powerdown", "0");
+    /* Modem mode words: the Lab 11.45 frame (152 symbols, 48-bit preamble). */
+    gpw(0x44, 152);
+    gpw(0x84, 48);
+    gpw(0xC4, (uint32_t)offset);
+    gpw(0x04, MODE);
+}
+
+static int send(const char *text, int seq, int quiet)
+{
+    int len = (int)strlen(text);
+    if (len > 27)
+        fprintf(stderr, "payload is %d bytes; the mailbox modem sends at most 27 (expect FRAME_ERROR)\n", len);
+    uint8_t buf[64] = {0};
+    memcpy(buf, text, len > 64 ? 64 : len);
+    mbw(MB_CONTROL, 2);                       /* drop an old unread message */
+    mbw(MB_TX_SEQUENCE, (uint32_t)seq);
+    mbw(MB_TX_LENGTH, (uint32_t)len);
+    for (int w = 0; w < 16; w++)
+        mbw(MB_TX_DATA0 + 4 * w, buf[4 * w] | (buf[4 * w + 1] << 8) | (buf[4 * w + 2] << 16) | ((uint32_t)buf[4 * w + 3] << 24));
+    if (!quiet)
+        printf("TX sequence=%d bytes=%d payload=\"%s\"\n", seq, len, text);
+    mbw(MB_CONTROL, 1);                       /* TX_START */
+    double t_end = now_s() + 1.0;
+    uint32_t st = 0;
+    while (now_s() < t_end && !((st = mbr(MB_STATUS)) & 0x4))
+        usleep(100);
+    if (!(st & 0x4)) {
+        printf("RX nothing (status 0x%x)\n", st);
+        return 1;
+    }
+    uint32_t meta = mbr(MB_RX_META), rlen = mbr(MB_RX_LENGTH), rseq = mbr(MB_RX_SEQUENCE);
+    char out[65] = {0};
+    for (int w = 0; w < 7; w++) {
+        uint32_t d = mbr(MB_RX_DATA0 + 4 * w);
+        for (int b = 0; b < 4; b++)
+            out[4 * w + b] = (char)((d >> (8 * b)) & 0xFF);
+    }
+    mbw(MB_CONTROL, 2);                       /* RX_ACK */
+    const char *m = (meta & 1) ? "CRC_OK" : (meta & 2) ? "FRAME_ERROR" : "CRC_BAD";
+    printf("RX sequence=%u bytes=%u meta=%s payload=\"%.*s\"\n", rseq, rlen, m, (int)(rlen <= 27 ? rlen : 0), out);
+    fflush(stdout);
+    return (meta & 1) && rseq == (uint32_t)(seq & 0xFFFF) && rlen == (uint32_t)len && !memcmp(out, text, len) ? 0 : 1;
+}
+
+static void stop(void)
+{
+    DIR *d = opendir("/proc");
+    struct dirent *e;
+    char p[300], comm[64];
+    while (d && (e = readdir(d))) {
+        int pid = atoi(e->d_name);
+        if (pid <= 0)
+            continue;
+        snprintf(p, sizeof p, "/proc/%d/comm", pid);
+        FILE *f = fopen(p, "r");
+        if (!f)
+            continue;
+        if (fgets(comm, sizeof comm, f) && strncmp(comm, "iio_writedev", 12) == 0)
+            kill(pid, SIGTERM);              /* SIGTERM: iio_writedev stops the DMA (Lab 11.48) */
+        fclose(f);
+    }
+    if (d)
+        closedir(d);
+    attr("out_voltage0_hardwaregain", "-89.75");
+    attr("out_altvoltage1_TX_LO_powerdown", "1");
+    printf("transmitter stopped\n");
+}
+
+int main(int argc, char **argv)
+{
+    if (argc < 2) {
+        fprintf(stderr, "usage: zmbox send <text> [--seq N] [--count N] [--tx-gain dB] [--rx-gain dB] [--lo Hz] [--offset N] [--quiet]\n"
+                        "       zmbox stop\n");
+        return 2;
+    }
+    if (find_phy()) {
+        fprintf(stderr, "ad9361-phy not found\n");
+        return 2;
+    }
+    if (!strcmp(argv[1], "stop")) {
+        stop();
+        return 0;
+    }
+    int seq = 0, count = 1, rx_gain = 60, offset = 1, quiet = 0;
+    double tx_gain = 0.0;
+    long lo = 915000000L;
+    for (int i = 3; i < argc; i++) {
+        if (!strcmp(argv[i], "--seq") && i + 1 < argc) seq = atoi(argv[++i]);
+        else if (!strcmp(argv[i], "--count") && i + 1 < argc) count = atoi(argv[++i]);
+        else if (!strcmp(argv[i], "--tx-gain") && i + 1 < argc) tx_gain = atof(argv[++i]);
+        else if (!strcmp(argv[i], "--rx-gain") && i + 1 < argc) rx_gain = atoi(argv[++i]);
+        else if (!strcmp(argv[i], "--lo") && i + 1 < argc) lo = atol(argv[++i]);
+        else if (!strcmp(argv[i], "--offset") && i + 1 < argc) offset = atoi(argv[++i]);
+        else if (!strcmp(argv[i], "--quiet")) quiet = 1;
+    }
+    if (strcmp(argv[1], "send") || argc < 3) {
+        fprintf(stderr, "unknown command\n");
+        return 2;
+    }
+    if (open_regs())
+        return 2;
+    radio_setup(tx_gain, rx_gain, lo, offset);
+    int ok = 0;
+    for (int k = 0; k < count; k++)
+        ok += send(argv[2], (seq + k) & 0xFFFF, quiet) == 0;
+    if (count > 1)
+        fprintf(stderr, "sent %d, delivered %d\n", count, ok);
+    return ok == count ? 0 : 1;
+}
