@@ -114,7 +114,10 @@ took four fixes in the tool, each found on the bench:
 2. **A click before every message.** Rewriting the TX settings (sample rate, LO, gain) retunes the
    chip even when nothing changes. Board A's own recording showed a 34-sample click, three times
    stronger than the message, about 65 ms before it; a listening receiver takes it for a packet.
-   The settings are now written only when they differ.
+   The settings are now written only when they differ. (That change wrote integer attributes with
+   a fraction, `915000000.00`, which the driver rejects; it went unnoticed while the LO was already
+   at 915 MHz and showed up after a cold boot of board A, LO at 2.4 GHz, as nothing transmitted.
+   Fixed in the evening of 2026-10-15; the results here were taken with the LO already set.)
 3. **Lost start pulses.** The tool wrote the start bit high and low with two back-to-back `mmap`
    writes. The bridge samples `gp_ctrl` through a two-flop synchronizer in the modem's clock
    domain, and about one start in seven was missed (status `0x810`: idle, neither done nor

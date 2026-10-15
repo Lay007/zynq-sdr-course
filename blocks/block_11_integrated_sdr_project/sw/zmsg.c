@@ -244,7 +244,12 @@ static void attr_num(const char *name, double value, double tol)
         if (same)
             return;
     }
-    snprintf(buf, sizeof buf, "%.2f", value);
+    /* Integer attributes (frequencies, powerdown) must be written without a fraction: the driver
+     * rejected "915000000.00", and after a cold boot (TX LO at 2.4 GHz) nothing was transmitted. */
+    if (value == (double)(long long)value)
+        snprintf(buf, sizeof buf, "%lld", (long long)value);
+    else
+        snprintf(buf, sizeof buf, "%.2f", value);
     attr(name, buf);
 }
 
