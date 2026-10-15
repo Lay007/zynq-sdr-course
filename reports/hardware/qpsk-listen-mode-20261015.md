@@ -98,6 +98,56 @@ The threshold is where it is for the continuous stream
 | gap 19, weak (TX -50 level), listen, lead 32 | 20 | 20 | 0 |
 | noise only, listen | 1 | 0 | 0 (ended by timeout after the 65535-symbol window) |
 
+## Messages sent once, from the board consoles
+
+`zmsg` (Lab 11.46) got the same burst format and the listen mode: `zmsg send --once` builds
+silence, the 32-symbol lead-in, the reference symbol and one packet-v1 frame, and transmits it one
+time; `zmsg receive --listen` re-arms the listening receiver until messages arrive. Getting there
+took four fixes in the tool, each found on the bench:
+
+1. **The one-shot buffer was cut short.** A plain (non-cyclic) `iio_writedev` queues its buffer and
+   closes it at once, and the close stops the DMA. Board A recorded its own transmission through
+   the splitter: only about 1000 samples went out, and the decoded frames had about 50 % errors from
+   payload bit ~120 on. The message buffer is now followed by 16 buffers of zeros; the kernel has 4
+   blocks, so queueing them waits until the message has gone out. Twelve recorded transmissions
+   were then all 1470-1480 samples long, as computed.
+2. **A click before every message.** Rewriting the TX settings (sample rate, LO, gain) retunes the
+   chip even when nothing changes. Board A's own recording showed a 34-sample click, three times
+   stronger than the message, about 65 ms before it; a listening receiver takes it for a packet.
+   The settings are now written only when they differ.
+3. **Lost start pulses.** The tool wrote the start bit high and low with two back-to-back `mmap`
+   writes. The bridge samples `gp_ctrl` through a two-flop synchronizer in the modem's clock
+   domain, and about one start in seven was missed (status `0x810`: idle, neither done nor
+   timeout). Worse, the tool then took the old symbol count as a fresh frame and printed the
+   previous message again. Start and clear are now held for 20 µs, and only the done bit counts as
+   a reception. (`devmem` is slow enough never to hit this. The earlier cyclic `zmsg` campaign was
+   re-measured: 199 of 200 instead of 200 of 200, see
+   [two-board-message-20261014.md](two-board-message-20261014.md).)
+4. **The old message came back.** After a cyclic `iio_writedev` was killed with `kill -9`, board A's
+   DAC kept playing its buffer, silent only while the TX LO was off. The next `send --once` turned
+   the LO on and the listening receiver decoded the old message: in a reproduction, all 10
+   "deliveries" were the stale one. Transmitters are now stopped with SIGTERM first, `zmsg stop`
+   drains the DAC with a short cyclic zero buffer, and `quiet_board` in the Python tools tries a
+   plain `kill` before `kill -9`.
+
+Results with the final tool (md5 `94431cd8`), one message every 0.9 s on average, board B at
+manual 71 dB (`two_board_zmsg_once.py`, raw data
+[`zmsg-once-20261015.json`](zmsg-once-20261015.json)):
+
+| receiver | TX | sent | delivered | wrong message accepted | duplicates |
+|---|---:|---:|---:|---:|---:|
+| listen | -30 dB | 500 | **494 (98.8 %)** | 0 | 0 |
+| listen | -50 dB | 200 | 159 (79.5 %) | 0 | 0 |
+| fixed window | -30 dB | 100 | 6 | 0 | 0 |
+
+The receiver also locked on frames whose CRC failed: 54 of 548 locks at -30 dB in listen mode, and
+49 of 55 in the fixed window, where 20 213 short attempts let the frame sync see noise every time
+(about 16.5 million bits; at the 6e-6 per bit of a random 24-bit match this gives a few tens of
+false locks, the observed order). The CRC rejected all of them. Which of the listen-mode failures
+are false locks on noise and which are real messages decoded with errors was not established. At
+-50 dB about 20 % of the messages were lost, more than the 11-13 % of frames that were not clean
+in the sensitivity sweep at the same level. The cause of the difference was not investigated.
+
 ## Limits
 
 - **Listen mode needs gaps.** The detector's noise estimate is a long average. At gap 1 (signal
@@ -107,5 +157,5 @@ The threshold is where it is for the continuous stream
 - The first reception after a reset or an image load can fail while the noise estimate settles.
 - The board results are for one board pair, one carrier, conducted, at about 70 C on board B; one
   run per point except steps H and L.
-- The lead-in is a host-side burst format (`two_board_burst.burst_iq`); the fabric transmitter and
-  the message tools (Lab 11.46, zmsg) do not use it yet.
+- The lead-in exists in the host tools (`two_board_burst.burst_iq`, `two_board_message.once_iq`) and
+  in `zmsg send --once`; the fabric transmitter does not use it.

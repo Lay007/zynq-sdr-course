@@ -238,7 +238,15 @@ RX sequence=17 bytes=18 crc=OK payload="Hello from board A"
 board-a$ ./zmsg stop
 ```
 
-Ten messages × 20 receptions from the consoles: 200 of 200 delivered, PER 0.
+Ten messages × 20 receptions from the consoles: 199 of 200 delivered, one CRC failure, no wrong
+message accepted (re-measured on 2026-10-15). The first measurement, 200 of 200, was made with a
+version of `zmsg` that sometimes lost its start pulse and then read the previous frame again.
+With a transmitter that repeats one message that can only turn a missed reception into a
+counted one, so the number was rechecked after the fix (see Lab 11.48).
+
+Board A here repeats the message cyclically, and each reception on board B catches one of many
+copies. Sending a message once, the way a real radio does, needs a receiver that waits for it:
+that is Lab 11.48, with `zmsg send --once` and `zmsg receive --listen`.
 
 What is still open in this stage: the PS/PL mailbox feeding the modem. The mailbox passes its own
 echo test on board A (Lab 5.12), but the message above goes from the console to the modem without it.

@@ -152,6 +152,44 @@ The first prints the gross frames of the run with their error positions, if ther
 course bench it printed `locked 1000/1000, clean 1000, gross 0`. The long run gave 10 000 locked,
 9986 clean, 9 gross (0.09 %).
 
+## Step 5. A message from the console, sent once
+
+Everything so far used board A's cyclic buffer with silence in it. The board-console tool of
+Lab 11.46 now does the real thing: `zmsg send --once` puts one packet on the air, with the lead-in
+and the reference in front, and `zmsg receive --listen` keeps re-arming the listening receiver.
+
+```text
+board-b$ ./zmsg receive --listen --timeout 60 --rx-gain 71
+board-a$ ./zmsg stop
+transmitter stopped
+board-a$ ./zmsg send "Hello from board A" --seq 17 --once --tx-gain -30
+TX once sequence=17 bytes=18 payload="Hello from board A" lead=32
+board-b:  RX sequence=17 bytes=18 crc=OK payload="Hello from board A"
+board-b:  receptions 30, locked 1, delivered 1, crc failures 0, timeouts 29
+```
+
+Run `zmsg stop` on board A before the first `--once` if any other tool used the transmitter: a
+transmitter killed with `kill -9` leaves its cyclic buffer playing in the DAC, and a listening
+receiver will hear that old message the moment the LO is switched on again. That actually happened
+on the bench, and it was one of four problems in the tool that only showed up with single
+messages; the report lists all four.
+
+```bash
+cd blocks/block_11_integrated_sdr_project/python
+python two_board_zmsg_once.py --messages 500 --json-out zmsg_once.json
+```
+
+The script starts the listening receiver on board B, sends the messages from board A one by one
+and compares what arrived with what was sent. On the course bench (TX -30 dB, board B at 71 dB):
+
+| receiver | sent | delivered | wrong message accepted |
+|---|---:|---:|---:|
+| listen | 500 | 494 | 0 |
+| fixed window (`--no-listen`) | 100 | 6 | 0 |
+
+At TX -50 dB, 159 of 200 arrived. No message that was not sent was ever accepted: every frame that
+locked on something else failed the CRC.
+
 ## The whole picture
 
 Board B with image `3406e253`, TX -30 dB, 100 attempts per point:
@@ -188,6 +226,9 @@ parallel it took about half an hour on the course PC.
 3. The reference symbol is phase state 0, not any other state. What would happen with state 1?
 4. Try `--lead 8` and `--lead 16`. What would you measure to decide how long the lead-in has to be,
    and why should the answer depend on the signal level?
+5. The first version of `zmsg receive` lost about one start pulse in seven and then printed the
+   previous message again. Python tools doing the same register writes with `devmem` never lost
+   one. Why?
 
 <details markdown="1">
 <summary>Answers</summary>
@@ -209,6 +250,13 @@ parallel it took about half an hour on the course PC.
    several TX levels. The loops settle in a number of symbols that depends on the signal-to-noise
    ratio, so a lead-in that is enough at -30 dB may not be at -50 dB. The course bench measured 32
    only; shorter values are untested.
+5. The start bit lives in a register written from the processor's clock domain and read by the
+   modem in its own clock domain, through a two-flop synchronizer. Two `mmap` writes in a row
+   (bit high, bit low) are at most a few hundred nanoseconds apart, about one period of the modem
+   clock, so the synchronizer sometimes never sees the high level. `devmem` starts a process for every
+   access, so its pulse lasts milliseconds. `zmsg` now holds the bit for 20 µs, and it counts a
+   reception only when the done bit is set, because the received-symbol count still holds the
+   value of the previous frame.
 
 </details>
 
@@ -217,14 +265,16 @@ parallel it took about half an hour on the course PC.
 - [`two-board-burst-20261014.md`](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/hardware/two-board-burst-20261014.md):
   step 1, the fixed window on the board;
 - [`qpsk-listen-mode-20261015.md`](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/hardware/qpsk-listen-mode-20261015.md):
-  the listen mode, the reference symbol and the lead-in on the board and in simulation, with all
-  the runs;
+  the listen mode, the reference symbol and the lead-in on the board and in simulation, the
+  single-shot `zmsg` messages and the four tool fixes, with all the runs;
+- [`two-board-message-20261014.md`](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/hardware/two-board-message-20261014.md):
+  the cyclic message campaign of Lab 11.46 and its re-measurement after the `zmsg` fixes;
 - issue [#68](https://github.com/Lay007/zynq-sdr-course/issues/68).
 
 ## What this lab does and does not show
 
 It shows a receiver that waits up to 136 ms for a packet sent once and decodes it as reliably as
-a continuous stream, and that the burst format matters as much as the receiver. It does not show a
-transmitter that sends a message once: board A still replays a cyclic buffer with silence in it, and
-the lead-in exists only in the host-side `burst_iq`. The fabric transmitter and the message tools
-of Lab 11.46 do not use it yet. All numbers are from one board pair, one carrier, a conducted path.
+a continuous stream, that the burst format matters as much as the receiver, and a text message sent
+once from one board console and received on the other. It does not show the fabric transmitter
+sending such a burst (only the host tools and `zmsg` build the lead-in), nor the PS/PL mailbox of
+Lab 5.12 feeding the modem. All numbers are from one board pair, one carrier, a conducted path.

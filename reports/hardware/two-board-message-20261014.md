@@ -107,6 +107,16 @@ Campaign from the consoles: ten messages (`"board console msg NN"`, 20 bytes, se
 This is better than the host-driven campaign above (5.5 %), with the same RF settings and the same
 frame format. The difference was not investigated.
 
+**Correction, 2026-10-15.** That version of `zmsg receive` pulsed the start bit with two
+back-to-back `mmap` writes, which the bridge's clock-domain crossing missed about once in seven
+attempts, and it took a frame as received from the symbol count alone. A missed start therefore
+re-read the previous frame. With board A repeating one message, that can only turn a missed
+reception into a counted one, so the 200 of 200 above may be optimistic. Re-measured with the start
+and done-bit fixes in place (the receive path of commit 995cb11), same settings: 200 locked, **199 delivered**, 1 CRC failure, no wrong
+message accepted. Raw data:
+[`two-board-message-zmsg-campaign-20261015-recheck.json`](two-board-message-zmsg-campaign-20261015-recheck.json).
+The fixes are described in [qpsk-listen-mode-20261015.md](qpsk-listen-mode-20261015.md).
+
 ## Limits
 
 - **What the PER means.** Board A replays the packet cyclically, so each reception on B is a

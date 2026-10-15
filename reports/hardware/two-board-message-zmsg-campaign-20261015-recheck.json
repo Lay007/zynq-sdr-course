@@ -1,0 +1,128 @@
+{
+  "tool": "blocks/block_11_integrated_sdr_project/sw/zmsg.c",
+  "carrier_hz": 915000000.0,
+  "tx_gain_db": -10,
+  "rx_gain_db": 50,
+  "temp_b_before_c": 66.7,
+  "messages": [
+    {
+      "sequence": 200,
+      "text": "board console msg 00",
+      "tx": "TX sequence=200 bytes=20 payload=\"board console msg 00\"",
+      "receptions": 20,
+      "locked": 20,
+      "delivered": 20,
+      "crc_failures": 0,
+      "delivered_matching": 20,
+      "other_sequence": 0
+    },
+    {
+      "sequence": 201,
+      "text": "board console msg 01",
+      "tx": "TX sequence=201 bytes=20 payload=\"board console msg 01\"",
+      "receptions": 20,
+      "locked": 20,
+      "delivered": 20,
+      "crc_failures": 0,
+      "delivered_matching": 20,
+      "other_sequence": 0
+    },
+    {
+      "sequence": 202,
+      "text": "board console msg 02",
+      "tx": "TX sequence=202 bytes=20 payload=\"board console msg 02\"",
+      "receptions": 20,
+      "locked": 20,
+      "delivered": 20,
+      "crc_failures": 0,
+      "delivered_matching": 20,
+      "other_sequence": 0
+    },
+    {
+      "sequence": 203,
+      "text": "board console msg 03",
+      "tx": "TX sequence=203 bytes=20 payload=\"board console msg 03\"",
+      "receptions": 20,
+      "locked": 20,
+      "delivered": 20,
+      "crc_failures": 0,
+      "delivered_matching": 20,
+      "other_sequence": 0
+    },
+    {
+      "sequence": 204,
+      "text": "board console msg 04",
+      "tx": "TX sequence=204 bytes=20 payload=\"board console msg 04\"",
+      "receptions": 20,
+      "locked": 20,
+      "delivered": 20,
+      "crc_failures": 0,
+      "delivered_matching": 20,
+      "other_sequence": 0
+    },
+    {
+      "sequence": 205,
+      "text": "board console msg 05",
+      "tx": "TX sequence=205 bytes=20 payload=\"board console msg 05\"",
+      "receptions": 20,
+      "locked": 20,
+      "delivered": 20,
+      "crc_failures": 0,
+      "delivered_matching": 20,
+      "other_sequence": 0
+    },
+    {
+      "sequence": 206,
+      "text": "board console msg 06",
+      "tx": "TX sequence=206 bytes=20 payload=\"board console msg 06\"",
+      "receptions": 20,
+      "locked": 20,
+      "delivered": 20,
+      "crc_failures": 0,
+      "delivered_matching": 20,
+      "other_sequence": 0
+    },
+    {
+      "sequence": 207,
+      "text": "board console msg 07",
+      "tx": "TX sequence=207 bytes=20 payload=\"board console msg 07\"",
+      "receptions": 20,
+      "locked": 20,
+      "delivered": 19,
+      "crc_failures": 1,
+      "delivered_matching": 19,
+      "other_sequence": 0
+    },
+    {
+      "sequence": 208,
+      "text": "board console msg 08",
+      "tx": "TX sequence=208 bytes=20 payload=\"board console msg 08\"",
+      "receptions": 20,
+      "locked": 20,
+      "delivered": 20,
+      "crc_failures": 0,
+      "delivered_matching": 20,
+      "other_sequence": 0
+    },
+    {
+      "sequence": 209,
+      "text": "board console msg 09",
+      "tx": "TX sequence=209 bytes=20 payload=\"board console msg 09\"",
+      "receptions": 20,
+      "locked": 20,
+      "delivered": 20,
+      "crc_failures": 0,
+      "delivered_matching": 20,
+      "other_sequence": 0
+    }
+  ],
+  "temp_b_after_c": 65.7,
+  "summary": {
+    "receptions": 200,
+    "locked": 200,
+    "delivered": 199,
+    "crc_failures": 1,
+    "wrong_message_accepted": 0,
+    "per": 0.005
+  }
+}
