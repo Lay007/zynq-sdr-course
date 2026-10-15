@@ -83,6 +83,7 @@ wire                    msg_tx_toggle;
 wire [255:0]            msg_rx_bits;
 wire                    msg_rx_toggle;
 wire                    msg_rx_locked;
+wire                    msg_listen_toggle;
 
 zynq_message_mailbox_axi_lite #(
     .AXI_ADDR_W(8),
@@ -112,7 +113,8 @@ zynq_message_mailbox_axi_lite #(
     .modem_tx_toggle(msg_tx_toggle),
     .modem_rx_bits(msg_rx_bits),
     .modem_rx_toggle(msg_rx_toggle),
-    .modem_rx_locked(msg_rx_locked)
+    .modem_rx_locked(msg_rx_locked),
+    .modem_listen_toggle(msg_listen_toggle)
 );
 
 assign tx_sample_bus = {tx_valid, tx_i, tx_q};
@@ -164,6 +166,7 @@ bpsk_zynq_ber_gpreg_bridge #(
     .capture_in_q(rx_q),
     .msg_tx_bits(msg_tx_bits),
     .msg_tx_toggle(msg_tx_toggle),
+    .msg_listen_toggle(msg_listen_toggle),
     .msg_rx_bits(msg_rx_bits),
     .msg_rx_toggle(msg_rx_toggle),
     .msg_rx_locked(msg_rx_locked)

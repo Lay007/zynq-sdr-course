@@ -19,7 +19,7 @@
  *   scale -> cyclic iio_writedev on cf-ad9361-dds-core-lpc.
  *
  * send --once: the same frame, sent one time instead of cyclically: silence, a training lead-in of
- *   --lead symbols (default 32, alternating phase states 0 and 2), one reference symbol in state 0
+ *   --lead symbols (default 64, alternating phase states 0 and 2), one reference symbol in state 0
  *   (the differential encoder's starting state), the frame, silence. A plain (non-cyclic)
  *   iio_writedev transmits the buffer once. Why the lead-in and the reference: Lab 11.48.
  *
@@ -597,7 +597,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "ad9361-phy not found\n");
         return 2;
     }
-    int seq = 0, whiten = 1, count = 1, attempts = 32, rx_gain = 50, quiet = 0, once = 0, lead = 32, listen = 0;
+    int seq = 0, whiten = 1, count = 1, attempts = 32, rx_gain = 50, quiet = 0, once = 0, lead = 64, listen = 0;
     double timeout = 10.0;
     double tx_gain = -10.0;
     long lo = 915000000L;

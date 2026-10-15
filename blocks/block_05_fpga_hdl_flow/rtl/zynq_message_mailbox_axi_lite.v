@@ -26,6 +26,14 @@
 // over 27 is not sent and completes at once with FRAME_ERROR. The modem handshake crosses clock
 // domains with toggles: modem_tx_bits is stable before modem_tx_toggle changes, and the bridge
 // keeps modem_rx_bits stable after it changes modem_rx_toggle.
+//
+// MODE = 1 can also receive a message sent by another board (Lab 11.49): CONTROL.RX_LISTEN (bit 2)
+// starts continuous listening. The core asks the bridge for listening attempts (listen mode of
+// issue #68, no message transmitted) one after another; a frame whose CRC matches is delivered to
+// the RX registers under the same rules as above (RX_VALID, RX_ACK, RX_OVERFLOW), and anything
+// else (no frame, CRC failure, a length out of range) is dropped and the next attempt starts.
+// CONTROL.RX_STOP (bit 3) ends listening; STATUS bit 4 shows it. TX_START is ignored while
+// listening, and RX_LISTEN while a transmission is in progress.
 
 `timescale 1ns/1ps
 
@@ -65,7 +73,8 @@ module zynq_message_mailbox_axi_lite #(
     output reg                          modem_tx_toggle,
     input  wire [255:0]                 modem_rx_bits,
     input  wire                         modem_rx_toggle,
-    input  wire                         modem_rx_locked
+    input  wire                         modem_rx_locked,
+    output reg                          modem_listen_toggle
 );
 
 localparam integer AXI_STRB_W = AXI_DATA_W / 8;
@@ -90,6 +99,8 @@ localparam [AXI_ADDR_W-1:0] REG_RX_DATA0    = 8'h70;
 
 localparam [31:0] CONTROL_TX_START = 32'h00000001;
 localparam [31:0] CONTROL_RX_ACK   = 32'h00000002;
+localparam [31:0] CONTROL_RX_LISTEN = 32'h00000004;
+localparam [31:0] CONTROL_RX_STOP   = 32'h00000008;
 
 localparam [31:0] RX_META_CRC_OK      = 32'h00000001;
 localparam [31:0] RX_META_FRAME_ERROR = 32'h00000002;
@@ -106,6 +117,9 @@ reg [31:0] rx_data [0:MAILBOX_WORDS-1];
 reg tx_busy;
 reg tx_done;
 reg modem_wait;
+reg listening;          // RX_LISTEN given, not stopped
+reg listen_inflight;    // a listening attempt is running in the bridge
+reg [31:0] listen_timer;
 reg [31:0] modem_timer;
 reg [2:0] modem_rx_sync;
 reg rx_valid;
@@ -189,7 +203,7 @@ always @(*) begin
         REG_ID:          read_word = CORE_ID;
         REG_VERSION:     read_word = CORE_VERSION;
         REG_CONTROL:     read_word = {AXI_DATA_W{1'b0}};
-        REG_STATUS:      read_word = {28'd0, rx_overflow, rx_valid, tx_done, tx_busy};
+        REG_STATUS:      read_word = {27'd0, listening, rx_overflow, rx_valid, tx_done, tx_busy};
         REG_TX_SEQUENCE: read_word = tx_sequence;
         REG_TX_LENGTH:   read_word = tx_length;
         REG_RX_SEQUENCE: read_word = rx_sequence;
@@ -243,6 +257,10 @@ always @(posedge s_axi_aclk) begin
         modem_rx_sync <= 3'd0;
         modem_tx_bits <= 256'd0;
         modem_tx_toggle <= 1'b0;
+        modem_listen_toggle <= 1'b0;
+        listening <= 1'b0;
+        listen_inflight <= 1'b0;
+        listen_timer <= 32'd0;
 
         for (idx = 0; idx < MAILBOX_WORDS; idx = idx + 1) begin
             tx_data[idx] <= 32'd0;
@@ -305,6 +323,29 @@ always @(posedge s_axi_aclk) begin
             end
         end
 
+        // MODE = 1, listening: deliver a good frame, drop anything else, start the next attempt.
+        if (MODE == 1 && listen_inflight) begin
+            listen_timer <= listen_timer + 1'b1;
+            if (rx_toggle_edge || listen_timer == MODEM_TIMEOUT) begin
+                listen_inflight <= listening;
+                listen_timer <= 32'd0;
+                if (listening)
+                    modem_listen_toggle <= ~modem_listen_toggle;   // next attempt
+                if (listening && rx_toggle_edge && modem_rx_locked && rx_crc_ok && rx_len <= MAX_PAYLOAD) begin
+                    if (rx_valid) begin
+                        rx_overflow <= 1'b1;
+                    end else begin
+                        rx_valid <= 1'b1;
+                        rx_sequence <= {16'd0, rx_packet[23:8]};
+                        rx_length <= {24'd0, rx_len};
+                        rx_meta <= RX_META_CRC_OK;
+                        for (idx = 0; idx < MAILBOX_WORDS; idx = idx + 1)
+                            rx_data[idx] <= (idx < 7) ? rx_payload[32*idx +: 32] : 32'd0;
+                    end
+                end
+            end
+        end
+
         s_axi_awready <= (!awaddr_valid) && (!s_axi_bvalid);
         s_axi_wready <= (!wdata_valid) && (!s_axi_bvalid);
         s_axi_arready <= (!s_axi_rvalid);
@@ -332,9 +373,23 @@ always @(posedge s_axi_aclk) begin
                         rx_overflow <= 1'b0;
                     end
 
+                    if (MODE == 1 && wstrb_latched[0] &&
+                        (wdata_latched & CONTROL_RX_STOP) != 0) begin
+                        listening <= 1'b0;
+                    end else if (MODE == 1 && wstrb_latched[0] &&
+                                 (wdata_latched & CONTROL_RX_LISTEN) != 0 &&
+                                 !tx_busy && !listening) begin
+                        listening <= 1'b1;
+                        if (!listen_inflight) begin
+                            listen_inflight <= 1'b1;
+                            listen_timer <= 32'd0;
+                            modem_listen_toggle <= ~modem_listen_toggle;
+                        end
+                    end
+
                     if (wstrb_latched[0] &&
                         (wdata_latched & CONTROL_TX_START) != 0 &&
-                        !tx_busy) begin
+                        !tx_busy && !listening && !listen_inflight) begin
                         tx_busy <= 1'b1;
                         tx_done <= 1'b0;
                         if (MODE == 0) begin

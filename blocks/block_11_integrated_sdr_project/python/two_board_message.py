@@ -85,7 +85,7 @@ def frame_iq(packet: bytes, n_frames: int = 28, whiten: bool = False) -> np.ndar
     return iq
 
 
-def once_iq(packet: bytes, whiten: bool = False, lead: int = 32, pad_head: int = 8, pad_tail: int = 256) -> np.ndarray:
+def once_iq(packet: bytes, whiten: bool = False, lead: int = 64, pad_head: int = 8, pad_tail: int = 256) -> np.ndarray:
     """int16 IQ of one Lab 11.45 frame carrying `packet`, for sending once (zmsg send --once).
 
     pad_head silent symbols, `lead` training symbols alternating between phase states 0 and 2

@@ -7,6 +7,11 @@
  *   RX sequence=17 bytes=22 meta=CRC_OK payload="Hello from the mailbox"
  *   board-b$ ./zmbox stop
  *
+ * or receive a message that another board sends once (board A: zmsg send --once, Lab 11.48):
+ *
+ *   board-b$ ./zmbox listen --timeout 60
+ *   RX sequence=17 bytes=18 meta=CRC_OK payload="Hello from board A"
+ *
  * The program uses only the Lab 5.12 register contract: TX_SEQUENCE, TX_LENGTH, TX_DATA, TX_START,
  * then STATUS.RX_VALID, RX_SEQUENCE, RX_LENGTH, RX_META, RX_DATA, RX_ACK. Packet-v1 framing, CRC,
  * whitening, the burst and the reception all happen in the fabric (mailbox MODE = 1 inside the
@@ -222,6 +227,56 @@ static int send(const char *text, int seq, int quiet)
     return (meta & 1) && rseq == (uint32_t)(seq & 0xFFFF) && rlen == (uint32_t)len && !memcmp(out, text, len) ? 0 : 1;
 }
 
+static volatile sig_atomic_t stop_requested;
+static void on_term(int sig) { (void)sig; stop_requested = 1; }
+
+/* CONTROL.RX_LISTEN: the mailbox keeps listening (listen mode of issue #68) and delivers every
+ * frame whose CRC matches; print each one, acknowledge it, until count or timeout. */
+static int listen_loop(int count, double timeout, int rx_gain, long lo)
+{
+    char v[64];
+    snprintf(v, sizeof v, "%d", FS);
+    attr("in_voltage_sampling_frequency", v);
+    snprintf(v, sizeof v, "%ld", lo);
+    attr("out_altvoltage0_RX_LO_frequency", v);
+    attr("in_voltage0_gain_control_mode", "manual");
+    snprintf(v, sizeof v, "%d", rx_gain);
+    attr("in_voltage0_hardwaregain", v);
+    gpw(0x44, 152);
+    gpw(0x84, 48);
+    gpw(0xC4, 0);
+    gpw(0x04, MODE);
+    signal(SIGTERM, on_term);
+    signal(SIGINT, on_term);
+    mbw(MB_CONTROL, 2);                       /* RX_ACK: start empty */
+    mbw(MB_CONTROL, 4);                       /* RX_LISTEN */
+    int got = 0, overflows = 0;
+    double t_end = now_s() + timeout;
+    while (!stop_requested && got < count && now_s() < t_end) {
+        uint32_t st = mbr(MB_STATUS);
+        if (!(st & 0x4)) {
+            usleep(1000);
+            continue;
+        }
+        overflows += (st & 0x8) != 0;
+        uint32_t meta = mbr(MB_RX_META), rlen = mbr(MB_RX_LENGTH), rseq = mbr(MB_RX_SEQUENCE);
+        char out[29] = {0};
+        for (int w = 0; w < 7; w++) {
+            uint32_t d = mbr(MB_RX_DATA0 + 4 * w);
+            for (int b = 0; b < 4; b++)
+                out[4 * w + b] = (char)((d >> (8 * b)) & 0xFF);
+        }
+        mbw(MB_CONTROL, 2);                   /* RX_ACK */
+        got++;
+        printf("RX sequence=%u bytes=%u meta=%s payload=\"%.*s\"\n", rseq, rlen, (meta & 1) ? "CRC_OK" : "?",
+               (int)(rlen <= 27 ? rlen : 0), out);
+        fflush(stdout);
+    }
+    mbw(MB_CONTROL, 8);                       /* RX_STOP */
+    fprintf(stderr, "listened %.1f s, delivered %d, overflows seen %d\n", timeout - (t_end - now_s()), got, overflows);
+    return got ? 0 : 1;
+}
+
 static void stop(void)
 {
     DIR *d = opendir("/proc");
@@ -250,6 +305,7 @@ int main(int argc, char **argv)
 {
     if (argc < 2) {
         fprintf(stderr, "usage: zmbox send <text> [--seq N] [--count N] [--tx-gain dB] [--rx-gain dB] [--lo Hz] [--offset N] [--quiet]\n"
+                        "       zmbox listen [--count N] [--timeout s] [--rx-gain dB] [--lo Hz]\n"
                         "       zmbox stop\n");
         return 2;
     }
@@ -261,11 +317,12 @@ int main(int argc, char **argv)
         stop();
         return 0;
     }
-    int seq = 0, count = 1, rx_gain = 60, offset = 1, quiet = 0;
-    double tx_gain = 0.0;
+    int seq = 0, count = -1, rx_gain = -1, offset = 1, quiet = 0;
+    double tx_gain = 0.0, timeout = 60.0;
     long lo = 915000000L;
-    for (int i = 3; i < argc; i++) {
+    for (int i = strcmp(argv[1], "send") ? 2 : 3; i < argc; i++) {
         if (!strcmp(argv[i], "--seq") && i + 1 < argc) seq = atoi(argv[++i]);
+        else if (!strcmp(argv[i], "--timeout") && i + 1 < argc) timeout = atof(argv[++i]);
         else if (!strcmp(argv[i], "--count") && i + 1 < argc) count = atoi(argv[++i]);
         else if (!strcmp(argv[i], "--tx-gain") && i + 1 < argc) tx_gain = atof(argv[++i]);
         else if (!strcmp(argv[i], "--rx-gain") && i + 1 < argc) rx_gain = atoi(argv[++i]);
@@ -273,10 +330,19 @@ int main(int argc, char **argv)
         else if (!strcmp(argv[i], "--offset") && i + 1 < argc) offset = atoi(argv[++i]);
         else if (!strcmp(argv[i], "--quiet")) quiet = 1;
     }
+    if (!strcmp(argv[1], "listen")) {
+        if (open_regs())
+            return 2;
+        return listen_loop(count < 0 ? 1000000 : count, timeout, rx_gain < 0 ? 71 : rx_gain, lo);
+    }
     if (strcmp(argv[1], "send") || argc < 3) {
         fprintf(stderr, "unknown command\n");
         return 2;
     }
+    if (count < 0)
+        count = 1;
+    if (rx_gain < 0)
+        rx_gain = 60;
     if (open_regs())
         return 2;
     radio_setup(tx_gain, rx_gain, lo, offset);

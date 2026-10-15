@@ -34,7 +34,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--messages", type=int, default=100)
     ap.add_argument("--interval", type=float, default=0.5, help="seconds between messages")
-    ap.add_argument("--lead", type=int, default=32, help="training symbols before the reference symbol")
+    ap.add_argument("--lead", type=int, default=64, help="training symbols before the reference symbol (64: Lab 11.49)")
     ap.add_argument("--tx-gain", type=float, default=-30.0)
     ap.add_argument("--rx-gain", type=int, default=71)
     ap.add_argument("--no-listen", action="store_true", help="receiver without listen mode, for comparison")

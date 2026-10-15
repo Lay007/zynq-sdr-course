@@ -14,7 +14,7 @@
 `timescale 1ns/1ps
 
 module qpsk_message_dibit_source #(
-    parameter integer LEAD_FLIPS = 32,
+    parameter integer LEAD_FLIPS = 64,   // 32 was enough after short pauses; 64 after long ones (Lab 11.49)
     parameter integer PRE_DIBITS = 24,
     parameter integer MSG_DIBITS = 128,
     parameter integer MAX_FRAME_BITS = 512,
