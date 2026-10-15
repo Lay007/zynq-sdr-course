@@ -153,6 +153,25 @@ messages. At
 -50 dB about 20 % of the messages were lost, more than the 11-13 % of frames that were not clean
 in the sensitivity sweep at the same level. The cause of the difference was not investigated.
 
+### Where the lost messages go
+
+A second pair of runs logged every receiver attempt with its time (`ZMSG_DEBUG=1`) and, for a
+frame that failed the CRC, its raw packet. For every lost message the expected arrival time was
+interpolated from its neighbours, and the log was checked for a lock within ±0.25 s:
+
+| TX | sent | lost | locked, CRC failed | no lock at all | at the edge of the run |
+|---:|---:|---:|---:|---:|---:|
+| -30 dB | 300 | 5 | 4 | 1 | 0 |
+| -50 dB | 200 | 49 | 41 | 7 | 1 |
+
+At 0.1 noise locks per second, about 0.05 of them would fall into such a window by chance, so the
+lost messages were mostly received, but with wrong bits, rather than missed. At -30 dB the wrong
+bits of three of them were isolated symbol errors (in differential decoding one wrong symbol spoils
+two neighbouring dibits: payload bits 160/162; 201/202, 220/222, 236/239) and a burst over the
+second half of one frame (from bit 146 on); the fourth was random throughout, probably a noise
+lock. None of them looked like a cut transmission. Why a single message is corrupted more often
+(about 1 % at -30 dB) than a ROM frame of the long cyclic run (0.14 % not clean) was not resolved.
+
 ## Limits
 
 - **Listen mode needs gaps.** The detector's noise estimate is a long average. At gap 1 (signal

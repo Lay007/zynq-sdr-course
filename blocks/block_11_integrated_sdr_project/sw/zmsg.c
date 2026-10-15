@@ -569,6 +569,12 @@ static int cmd_receive(int count, int attempts, int rx_gain, long lo, int whiten
             bad++;
             if (!quiet)
                 printf("RX frame locked, crc=BAD\n");
+            if (getenv("ZMSG_DEBUG")) {
+                fprintf(stderr, "bad packet");
+                for (int i = 0; i < PKT_BYTES; i++)
+                    fprintf(stderr, " %02x", pkt[i]);
+                fprintf(stderr, "\n");
+            }
         }
     }
     gp[(0x400 + R_CTRL) / 4] = 0;
