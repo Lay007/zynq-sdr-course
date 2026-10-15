@@ -244,6 +244,10 @@ RX mailbox
 
 The educational point is that **the PS console application stays the same while the PL datapath becomes a real modem**.
 
+This step is done in Lab 11.49: the same registers
+(with `MODE = 1` of the core, version `0x00020000`) send a message through the QPSK modem and also
+receive messages that another board sends.
+
 ## Checks
 
 - [ ] explain PS and PL in your own words;

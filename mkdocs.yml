@@ -349,6 +349,7 @@ nav:
           - "Лабораторная 11.46 — Сообщение из одной Zynq-консоли в другую": ru/labs/lab-11-46-two-board-console-message.md
           - "Лабораторная 11.47 — Плата принимает собственную пачку": ru/labs/lab-11-47-single-board-selfota.md
           - "Лабораторная 11.48 — Приёмник, который ждёт пакет": ru/labs/lab-11-48-listening-receiver.md
+          - "Лабораторная 11.49 — Mailbox разговаривает с модемом": ru/labs/lab-11-49-message-mailbox-modem.md
       - "Блок 11 — разборы случаев отладки":
           - "Обзор: восемь случаев отладки": ru/block11-case-studies.md
           - "Лабораторная 11.8 — Overlay gpreg BPSK для AD9361": ru/labs/lab-11-8-axi-gpreg-bpsk-overlay.md
@@ -540,6 +541,7 @@ nav:
           - "Lab 11.46 — A message from one Zynq console to another": en/labs/lab-11-46-two-board-console-message.md
           - "Lab 11.47 — One board receives its own burst": en/labs/lab-11-47-single-board-selfota.md
           - "Lab 11.48 — A receiver that waits for the packet": en/labs/lab-11-48-listening-receiver.md
+          - "Lab 11.49 — The mailbox talks to the modem": en/labs/lab-11-49-message-mailbox-modem.md
       - "Block 11 — bring-up case studies":
           - "Overview: eight debugging cases": block11-case-studies.md
           - "Lab 11.8 — AD9361 gpreg BPSK overlay": en/labs/lab-11-8-axi-gpreg-bpsk-overlay.md

@@ -1,9 +1,8 @@
 # Message modem: the Lab 5.12 mailbox with the QPSK modem behind it (#55), 2026-10-15
 
-Status: the design is built and runs on board B. Receiving a message from board A into board B's
-mailbox is measured on the usual conducted bench. Sending from board B's own mailbox and receiving
-it back on board B needs a cable from B TX1 to B RX1 that was not there; those numbers are
-**still to be done**, and what was seen without the cable is labelled so.
+Status: the design is built, runs on board B and is measured in both uses: one board sending
+through its mailbox and receiving its own burst through a cable, and board A sending a message into
+board B's mailbox.
 
 ## What was built
 
@@ -41,7 +40,7 @@ directives, WNS +0.100 ns, WHS +0.030 ns, 86174 of 86174 nets routed, 39169 LUT 
 the #68 image, mostly the CRC and PN9 logic), DSPs and BRAM unchanged. The hardware handoff lists
 `bpsk_bridge_bd/s_axi` at 0x79050000-0x7905FFFF.
 
-## On board B, without the cable (preliminary)
+## On board B, without a cable (midday)
 
 `sw/zmbox.c` sends a message from board B's console using only the mailbox registers, after
 setting up the radio as in Lab 11.47 (DAC channels to the DMA input, a cyclic zero buffer, LOs and
@@ -72,7 +71,7 @@ leakage path on the board or in the chip. Messages per point, board B at 60 dB, 
 No message was ever accepted with a wrong payload. Below -10 dB the result does not follow the TX
 gain and is not repeatable between runs (the two -30 and -40 dB rows), so this path cannot be
 used for measurements; it only shows that the whole chain, registers to RF and back, works on the
-silicon. The numbers for the lab need the cable.
+silicon. The cabled measurement is in the next section but one.
 
 Regression on the same image: two-board single-shot messages of Lab 11.48 (`zmsg send --once` on
 board A, `zmsg receive --listen` on board B), 100 sent, 97 delivered, none wrong.
@@ -112,7 +111,29 @@ software) delivered 498 of 500 under the same conditions, so moving the link lay
 costs nothing. At -50 dB the mailbox got 168 of 200; the PS-side receiver with the older 32-symbol
 lead-in had 159 of 200 there.
 
+## One board, cabled
+
+Evening, same image (`530e0571`): board B TX1 -> variable attenuator (0 dB) -> 30 dB -> 3-way
+splitter -> board B RX1 (the other outputs: board A RX1 and the RTL-SDR), board B at 60 dB manual.
+`zmbox send` with 200 messages per point (raw data
+[`message-mailbox-one-board-20261015.json`](message-mailbox-one-board-20261015.json)):
+
+| TX gain | 0 | -10 | -20 | -30 | -35 | -38 | -40 | -42 | -45 | -50 | -60 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| CRC_OK of 200 | 163 | 200 | 199 | 199 | 200 | 198 | 80 | 19 | 13 | 125 | 1 |
+
+A long run at TX -20 dB: **5000 of 5000** messages delivered with CRC_OK. No message was ever
+accepted with a wrong payload.
+
+From -10 to -38 dB the link is clean. At 0 dB the receiver is probably overloaded (60 dB of gain with
+only about 35 dB of path loss). Between -40 and -50 dB the result is not monotonic: it collapses at
+-42 to -45 dB and partly recovers at -50 dB. The TX attenuator itself follows its setting to about
+0.5 dB (#29), so that is not the cause. A plausible one is the leakage path seen at midday: without
+any cable board B still received its own burst, at a level that hardly followed the TX gain, so
+that path bypasses the attenuator. With the cable, the two paths add up with different delays, and
+around -42 dB they are of similar strength, which would act like two-path fading. Not checked.
+
 ## Still to do
 
-- Board B TX1 -> attenuators (at least 30 dB) -> board B RX1: `zmbox send` vs TX gain, a long run.
-- Lab 11.49 text (EN/RU).
+- Nothing for #55 itself. Possible follow-ups: a queue in the mailbox (it holds one message), and
+  the check of the leakage explanation above.

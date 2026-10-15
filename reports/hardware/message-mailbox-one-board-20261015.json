@@ -1,0 +1,202 @@
+{
+ "date": "2026-10-15",
+ "bench": "board B TX1 -> variable attenuator (0 dB) -> 30 dB -> 3-way splitter -> board B RX1 (other outputs: board A RX1, RTL-SDR); board B at 60 dB manual, 915 MHz",
+ "image_sha256": "530e0571255ed3f88ed9cc18db23422c8df8d80738dbf84cf7ffbc0694b33f15",
+ "sweep": {
+  "messages_per_point": 200,
+  "points": [
+   {
+    "tx_gain_db": 0.0,
+    "sent": 200,
+    "crc_ok": 163,
+    "crc_bad": 37,
+    "frame_error": 0,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     59.9,
+     59.6
+    ]
+   },
+   {
+    "tx_gain_db": -10.0,
+    "sent": 200,
+    "crc_ok": 200,
+    "crc_bad": 0,
+    "frame_error": 0,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     59.9,
+     59.4
+    ]
+   },
+   {
+    "tx_gain_db": -20.0,
+    "sent": 200,
+    "crc_ok": 199,
+    "crc_bad": 1,
+    "frame_error": 0,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     59.9,
+     59.2
+    ]
+   },
+   {
+    "tx_gain_db": -30.0,
+    "sent": 200,
+    "crc_ok": 199,
+    "crc_bad": 0,
+    "frame_error": 1,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     59.3,
+     60.4
+    ]
+   },
+   {
+    "tx_gain_db": -40.0,
+    "sent": 200,
+    "crc_ok": 45,
+    "crc_bad": 131,
+    "frame_error": 24,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     59.9,
+     60.3
+    ]
+   },
+   {
+    "tx_gain_db": -50.0,
+    "sent": 200,
+    "crc_ok": 125,
+    "crc_bad": 66,
+    "frame_error": 9,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     59.6,
+     59.6
+    ]
+   },
+   {
+    "tx_gain_db": -60.0,
+    "sent": 200,
+    "crc_ok": 1,
+    "crc_bad": 39,
+    "frame_error": 160,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     59.9,
+     59.7
+    ]
+   }
+  ]
+ },
+ "fine": {
+  "messages_per_point": 200,
+  "points": [
+   {
+    "tx_gain_db": -35.0,
+    "sent": 200,
+    "crc_ok": 200,
+    "crc_bad": 0,
+    "frame_error": 0,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     60.4,
+     60.3
+    ]
+   },
+   {
+    "tx_gain_db": -38.0,
+    "sent": 200,
+    "crc_ok": 198,
+    "crc_bad": 1,
+    "frame_error": 1,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     60.9,
+     60.2
+    ]
+   },
+   {
+    "tx_gain_db": -40.0,
+    "sent": 200,
+    "crc_ok": 80,
+    "crc_bad": 103,
+    "frame_error": 17,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     60.3,
+     60.3
+    ]
+   },
+   {
+    "tx_gain_db": -42.0,
+    "sent": 200,
+    "crc_ok": 19,
+    "crc_bad": 130,
+    "frame_error": 51,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     61.0,
+     61.0
+    ]
+   },
+   {
+    "tx_gain_db": -45.0,
+    "sent": 200,
+    "crc_ok": 13,
+    "crc_bad": 154,
+    "frame_error": 33,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     59.9,
+     61.2
+    ]
+   }
+  ]
+ },
+ "soak_tx-20": {
+  "messages_per_point": 5000,
+  "points": [
+   {
+    "tx_gain_db": -20.0,
+    "sent": 5000,
+    "crc_ok": 5000,
+    "crc_bad": 0,
+    "frame_error": 0,
+    "no_answer": 0,
+    "wrong_payload_with_crc_ok": 0,
+    "sequences_in_order": true,
+    "board_b_zynq_c": [
+     60.8,
+     60.9
+    ]
+   }
+  ]
+ }
+}
