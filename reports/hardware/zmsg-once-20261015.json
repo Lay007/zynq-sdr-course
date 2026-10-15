@@ -4232,6 +4232,82 @@
     }
    ],
    "rx_log": "RX sequence=1008 bytes=16 crc=OK payload=\"single shot 0008\"\nRX sequence=1032 bytes=16 crc=OK payload=\"single shot 0032\"\nRX sequence=1051 bytes=16 crc=OK payload=\"single shot 0051\"\nRX sequence=1064 bytes=16 crc=OK payload=\"single shot 0064\"\nRX sequence=1065 bytes=16 crc=OK payload=\"single shot 0065\"\nRX sequence=1089 bytes=16 crc=OK payload=\"single shot 0089\"\nreceptions 20213, locked 55, delivered 6, crc failures 49, timeouts 20158"
+  },
+  "silence_a_lo_off_300s": {
+   "seconds": 300,
+   "a_state": "off",
+   "summary": "receptions 2154, locked 33, delivered 0, crc failures 33, timeouts 2121",
+   "board_b_zynq_c": [
+    65.0,
+    66.8
+   ],
+   "rx_lines": [
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD"
+   ]
+  },
+  "silence_a_lo_on_300s": {
+   "seconds": 300,
+   "a_state": "lo",
+   "summary": "receptions 2150, locked 21, delivered 0, crc failures 21, timeouts 2129",
+   "board_b_zynq_c": [
+    67.3,
+    66.7
+   ],
+   "rx_lines": [
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD",
+    "RX frame locked, crc=BAD"
+   ]
   }
  }
 }

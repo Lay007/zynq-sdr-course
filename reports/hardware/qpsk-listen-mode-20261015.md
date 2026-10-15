@@ -143,8 +143,13 @@ manual 71 dB (`two_board_zmsg_once.py`, raw data
 The receiver also locked on frames whose CRC failed: 54 of 548 locks at -30 dB in listen mode, and
 49 of 55 in the fixed window, where 20 213 short attempts let the frame sync see noise every time
 (about 16.5 million bits; at the 6e-6 per bit of a random 24-bit match this gives a few tens of
-false locks, the observed order). The CRC rejected all of them. Which of the listen-mode failures
-are false locks on noise and which are real messages decoded with errors was not established. At
+false locks, the observed order). The CRC rejected all of them. The listen-mode failures are
+false locks on noise too: with board A sending nothing, board B listening for 300 s locked 33 times
+with its TX LO off and 21 times with the LO on, every time with a failed CRC. That is 0.07-0.11 per
+second, the rate of the campaign (54 in about 490 s of listening). At the per-bit probability of a
+random match, it means the packet detector lets noise through to the frame sync for roughly 1-2 %
+of the time; each such lock costs the receiver a few milliseconds, too little to explain the lost
+messages. At
 -50 dB about 20 % of the messages were lost, more than the 11-13 % of frames that were not clean
 in the sensitivity sweep at the same level. The cause of the difference was not investigated.
 
