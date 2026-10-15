@@ -248,8 +248,10 @@ parallel it took about half an hour on the course PC.
    in state 2 would cost two bits and lose every frame.
 4. Count gross frames over a run long enough to see a 0.1 % effect (thousands of frames), at
    several TX levels. The loops settle in a number of symbols that depends on the signal-to-noise
-   ratio, so a lead-in that is enough at -30 dB may not be at -50 dB. The course bench measured 32
-   only; shorter values are untested.
+   ratio, so a lead-in that is enough at -30 dB may not be at -50 dB. The length of the silence
+   matters too: after 0.3 s of silence, 32 symbols left 3 of 1003 frames corrupted and 64 or 128
+   none of 1000, so the tools now use 64 (report `single-message-corruption-20261015.md`).
+   Shorter values than 32 are untested.
 5. The start bit lives in a register written from the processor's clock domain and read by the
    modem in its own clock domain, through a two-flop synchronizer. Two `mmap` writes in a row
    (bit high, bit low) are at most a few hundred nanoseconds apart, about one period of the modem
