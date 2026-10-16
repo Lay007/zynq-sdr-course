@@ -5,7 +5,9 @@
 // continuous sample stream, as from an ADC: T's burst while T transmits, small pseudo-random noise
 // otherwise (the packet detector of the listen mode needs the noise to learn its level). Checks: R
 // delivers the message with CRC_OK, sequence, length and bytes; R keeps listening and also delivers
-// a second message after RX_ACK; RX_STOP ends listening; TX_START is refused while listening.
+// a second message after RX_ACK; RX_STOP ends listening; TX_START is refused while listening; R
+// puts nothing on its DAC stream while it listens (on the bench a listening board sent a frame
+// at every re-armed attempt, every 136 ms).
 
 `timescale 1ns/1ps
 
@@ -38,6 +40,10 @@ always @(posedge sample_clk) lfsr <= {lfsr[14:0], lfsr[15] ^ lfsr[13] ^ lfsr[12]
 wire signed [W-1:0] noise_i = {{(W-2){lfsr[2]}}, lfsr[1:0]};   // -4..3
 wire signed [W-1:0] noise_q = {{(W-2){lfsr[7]}}, lfsr[6:5]};
 wire [2*W:0] r_rx_bus = t_tx_bus[2*W] ? t_tx_bus : {1'b1, noise_i, noise_q};
+
+// R only listens: count what it sends to its DAC.
+integer r_tx_samples = 0;
+always @(posedge sample_clk) if (r_tx_bus[2*W]) r_tx_samples = r_tx_samples + 1;
 
 genvar gi;
 generate
@@ -240,6 +246,10 @@ initial begin
     axi_write(1, 32'h08, 32'h8);                       // RX_STOP
     axi_read(1, 32'h0C); check("R STATUS after RX_STOP", {31'd0, rd[4]}, 32'd0);
 
+    if (r_tx_samples != 0) begin
+        errors = errors + 1;
+        $display("FAIL: the listening R put %0d samples on its DAC stream", r_tx_samples);
+    end
     if (errors == 0)
         $display("PASS tb_message_modem_listen: two messages from T delivered to the listening R");
     else

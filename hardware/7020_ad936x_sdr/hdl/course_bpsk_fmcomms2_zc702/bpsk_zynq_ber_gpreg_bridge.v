@@ -947,8 +947,15 @@ assign tx_path_active = tx_path_active_sample;
 
 // DAC-facing TX stream: the selected modem drives the mux; BPSK mode is
 // bit-identical to the original single-core bridge.
-assign burst_out_valid = tx_mux_valid;
-assign burst_out_i     = tx_mux_i;
-assign burst_out_q     = tx_mux_q;
+//
+// A listening attempt has nothing to send, but it starts the core like any other attempt, and the
+// QPSK transmitter played its ROM frame (without the lead-in) on every re-arm: a listening board
+// put a frame on the air every 136 ms, which collided with the other board's messages and, through
+// its own TX->RX leakage, took the attempt it was listening with. Keep the DAC stream silent then;
+// the fabric loopback (rx_fabric_loop) still sees the modem.
+wire tx_to_dac = !(qpsk_listen_en && !msg_mode_sample);
+assign burst_out_valid = tx_mux_valid && tx_to_dac;
+assign burst_out_i     = tx_to_dac ? tx_mux_i : {W{1'b0}};
+assign burst_out_q     = tx_to_dac ? tx_mux_q : {W{1'b0}};
 
 endmodule
