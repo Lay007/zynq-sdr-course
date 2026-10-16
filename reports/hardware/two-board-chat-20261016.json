@@ -1,0 +1,166 @@
+{
+ "date": "2026-10-16",
+ "bench": "board A TX1 -> variable attenuator (30 dB) -> splitter -> {50 ohm, board B RX1, RTL-SDR}; board B TX1 -> 30 dB -> board A RX1; 915 MHz, RX manual 71 dB on both",
+ "chat_runs": [
+  {
+   "name": "chat_first",
+   "note": "image 0b5b0762 both boards; zmbox before both fixes; 10 rounds",
+   "rounds": 10,
+   "tx_gain_a": -30.0,
+   "tx_gain_b": -30.0,
+   "a_to_b_delivered": 7,
+   "b_to_a_delivered": 7,
+   "not_sent": 0,
+   "temp_b": 71.2
+  },
+  {
+   "name": "chat_debug30",
+   "note": "same, ZMBOX_DEBUG=1; 30 rounds",
+   "rounds": 30,
+   "tx_gain_a": -30.0,
+   "tx_gain_b": -30.0,
+   "a_to_b_delivered": 11,
+   "b_to_a_delivered": 19,
+   "not_sent": 0,
+   "temp_b": 70.4
+  },
+  {
+   "name": "chat_a_only",
+   "note": "same, board B in chat but silent; 20 rounds",
+   "rounds": 20,
+   "tx_gain_a": -30.0,
+   "tx_gain_b": -30.0,
+   "a_to_b_delivered": 12,
+   "b_to_a_delivered": 0,
+   "not_sent": 0,
+   "temp_b": 69.5
+  },
+  {
+   "name": "chat_dac_fix",
+   "note": "zmbox with TX1-only DMA source; 30 rounds",
+   "rounds": 30,
+   "tx_gain_a": -30.0,
+   "tx_gain_b": -30.0,
+   "a_to_b_delivered": 28,
+   "b_to_a_delivered": 22,
+   "not_sent": 0,
+   "temp_b": 70.0
+  },
+  {
+   "name": "chat_dac_fix_b40",
+   "note": "same, B at TX -40",
+   "rounds": 30,
+   "tx_gain_a": -30.0,
+   "tx_gain_b": -40.0,
+   "a_to_b_delivered": 21,
+   "b_to_a_delivered": 26,
+   "not_sent": 0,
+   "temp_b": 69.6
+  },
+  {
+   "name": "chat_dac_fix_b20",
+   "note": "same, B at TX -20",
+   "rounds": 30,
+   "tx_gain_a": -30.0,
+   "tx_gain_b": -20.0,
+   "a_to_b_delivered": 23,
+   "b_to_a_delivered": 20,
+   "not_sent": 0,
+   "temp_b": 69.8
+  },
+  {
+   "name": "chat_attr_fix",
+   "note": "zmbox also with write-if-changed settings; still image 0b5b0762 (#69 open)",
+   "rounds": 30,
+   "tx_gain_a": -30.0,
+   "tx_gain_b": -30.0,
+   "a_to_b_delivered": 20,
+   "b_to_a_delivered": 20,
+   "not_sent": 0,
+   "temp_b": 68.7
+  },
+  {
+   "name": "chat_issue69",
+   "note": "image 2f5cc35d (#69 fix) both boards; 30 rounds",
+   "rounds": 30,
+   "tx_gain_a": -30.0,
+   "tx_gain_b": -30.0,
+   "a_to_b_delivered": 30,
+   "b_to_a_delivered": 25,
+   "not_sent": 0,
+   "temp_b": 68.9
+  },
+  {
+   "name": "chat_issue69_b40",
+   "note": "same, B at TX -40",
+   "rounds": 30,
+   "tx_gain_a": -30.0,
+   "tx_gain_b": -40.0,
+   "a_to_b_delivered": 30,
+   "b_to_a_delivered": 28,
+   "not_sent": 0,
+   "temp_b": 68.4
+  },
+  {
+   "name": "chat_issue69_b20",
+   "note": "same, B at TX -20",
+   "rounds": 30,
+   "tx_gain_a": -30.0,
+   "tx_gain_b": -20.0,
+   "a_to_b_delivered": 29,
+   "b_to_a_delivered": 24,
+   "not_sent": 0,
+   "temp_b": 69.6
+  },
+  {
+   "name": "chat_issue69_b50",
+   "note": "same, B at TX -50; 50 rounds",
+   "rounds": 50,
+   "tx_gain_a": -30.0,
+   "tx_gain_b": -50.0,
+   "a_to_b_delivered": 47,
+   "b_to_a_delivered": 45,
+   "not_sent": 0,
+   "temp_b": 68.3
+  }
+ ],
+ "single_measurements": {
+  "issue67_gap_level_db_over_txoff_noise": {
+   "image_before_fix_4fc4aa80_no_dma": 40.3,
+   "image_0b5b0762_no_dma": 9.8,
+   "image_0b5b0762_zero_stream": 9.8,
+   "note": "board B sends 3 fabric bursts with no DMA stream, board A records; strongest line 0.3 kHz holds 89-93 % of the gap power"
+  },
+  "dma_once_burst_samples_on_air": {
+   "after_zmbox_all_four_channels_on_dma": 883,
+   "fabric_burst": 1866,
+   "old_image_before_zmbox": 1766,
+   "cyclic_stream_period_correlation": {
+    "608_samples_bad": 0.995,
+    "1216_samples_fixed": 0.813,
+    "608_after_fix": 0.067
+   }
+  },
+  "zmbox_send_a_to_b_40": {
+   "before_write_if_changed": 6,
+   "after": 40,
+   "zmsg_once_dma_same_setup": 40
+  },
+  "listening_board_air_2p5s": {
+   "image_0b5b0762": "a 1344-sample frame every 138 ms (17 bursts for 6 typed lines)",
+   "image_2f5cc35d": "TX calibration at LO turn-on only"
+  },
+  "a_to_b_listening_in_chat_tx_on": {
+   "image_0b5b0762": "12 of 20",
+   "image_2f5cc35d": "30 of 30"
+  },
+  "b_to_a_one_way_a_tx_off_40": {
+   "b_tx_-30": 35,
+   "b_tx_-50": 40
+  },
+  "own_tx_effect_40": {
+   "b_talks_every_3s": 39,
+   "b_silent": 39
+  }
+ }
+}
