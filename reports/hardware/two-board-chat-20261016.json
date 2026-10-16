@@ -162,5 +162,55 @@
    "b_talks_every_3s": 39,
    "b_silent": 39
   }
+ },
+ "night_and_morning_20261017": {
+  "levels": "board A TX -30 dB, board B TX -50 dB, RX 71 dB",
+  "full_chat_100_rounds": {
+   "a_to_b": 90,
+   "b_to_a": 85,
+   "missing_a_to_b": [
+    2,
+    6,
+    10,
+    22,
+    25,
+    42,
+    45,
+    64,
+    69,
+    73
+   ],
+   "missing_b_to_a": [
+    6,
+    9,
+    11,
+    12,
+    17,
+    18,
+    37,
+    38,
+    45,
+    47,
+    49,
+    50,
+    56,
+    72,
+    77
+   ]
+  },
+  "pieces": {
+   "b_zmbox_send_a_listen_txoff": "59 of 60",
+   "b_zmbox_send_a_chat_silent_txon": "60 of 60",
+   "b_zmbox_send_a_chat_talks_m30_1p5s_before": "59 of 60",
+   "b_chat_sender_a_listen_txoff": "58 of 60",
+   "b_chat_sender_a_chat_silent_txon": "74 of 80",
+   "a_zmbox_send_b_chat_talks_1p5s_before": "39 of 40",
+   "a_zmbox_send_b_chat_silent": "39 of 40"
+  },
+  "full_chat_300_rounds_not_used": {
+   "a_to_b": 271,
+   "b_to_a": 225,
+   "why_not_used": "ran after three runs whose SSH connections were reset after ~18 min; leftover programs on the boards not excluded"
+  }
  }
 }

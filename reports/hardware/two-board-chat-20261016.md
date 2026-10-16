@@ -98,9 +98,30 @@ With board A only listening (TX off), board B's messages arrived 35 of 40 at -30
 at -50 dB, so at -20...-30 dB board A's receiver at 71 dB is overdriven. That is a property of
 the bench, not of the chat.
 
-What is left at the quiet setting, 3 of 50 and 5 of 50, is not explained. All lost lines failed
-before frame lock. A board's own transmission does not cause it: with board B typing a line every
-3 s and board A's message 1.5 s later, 39 of 40 arrived, and 39 of 40 with board B silent.
+What is left at the quiet setting is not explained. All lost lines failed before frame lock, and
+no line ever failed the CRC. The night of 2026-10-16/17 and the morning after added longer runs and
+took the chat apart, one piece at a time (board B at -50 dB, board A at -30 dB):
+
+| arrangement | received |
+|---|---:|
+| full chat, 100 rounds, A -> B | 90 of 100 |
+| full chat, 100 rounds, B -> A | 85 of 100 |
+| B sends with `zmbox send`, A only listens (TX off) | 59 of 60 |
+| B sends with `zmbox send`, A listens in chat (TX on, silent) | 60 of 60 |
+| B sends with `zmbox send`, A listens in chat and talks at -30 dB 1.5 s before each message | 59 of 60 |
+| B sends from `zmbox chat`, A only listens (TX off) | 58 of 60 |
+| B sends from `zmbox chat`, A listens in chat (TX on, silent) | 74 of 80 |
+| A sends with `zmbox send`, B talks in chat 1.5 s before each message / B silent | 39 of 40 / 39 of 40 |
+
+Each piece loses 0-3 %, both boards in chat together 7-15 %. Neither the receiving board's own TX
+being on nor its own transmission explains it alone; the combination of a sender in chat and a
+receiver in chat looks worse (74 of 80), but with 60-80 messages per row the difference is weak
+evidence. The cause is open.
+
+A 300-round chat in the night gave 271 and 225 of 300. It ran right after three longer runs that
+broke off when their SSH connections were reset after about 18 minutes, and whether their programs
+were still running on the boards during the chat is unknown, so that run is listed in the raw data
+but not used here. Runs since then are kept under 10 minutes.
 
 ## Limits
 
