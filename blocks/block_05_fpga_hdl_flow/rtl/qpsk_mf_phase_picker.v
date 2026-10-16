@@ -19,6 +19,12 @@
 // frame, not merely between bursts -- and no amount of carrier-loop tuning touches that.
 //
 // Pass-through when `enable` is low, so the coherent fabric loopback stays bit-identical.
+//
+// When enabled, the input passes one register stage first, with |I|+|Q| and the signal test
+// already computed: the matched filter's output register -> magnitude -> threshold -> the
+// accumulator controls was ten logic levels and failed timing by up to 1.1 ns on one
+// placement (issue #69 image). The stage delays the stream by one clock and changes nothing
+// else: the same samples, the same phase decision, the same tap.
 
 `timescale 1ns/1ps
 
@@ -63,15 +69,39 @@ localparam integer ACC_W = 20;
 integer k;
 
 // ---------------------------------------------------------------------------
+// Input register stage (see the header): everything below works on these.
+// ---------------------------------------------------------------------------
+reg                 v_r = 1'b0;
+reg signed [W-1:0]  i_r = {W{1'b0}};
+reg signed [W-1:0]  q_r = {W{1'b0}};
+reg [W:0]           mag = {(W+1){1'b0}};
+reg                 sig_present = 1'b0;
+wire [W-1:0] abs_in_i = in_i[W-1] ? (~in_i + 1'b1) : in_i;
+wire [W-1:0] abs_in_q = in_q[W-1] ? (~in_q + 1'b1) : in_q;
+wire [W:0]   mag_in   = {1'b0, abs_in_i} + {1'b0, abs_in_q};
+
+always @(posedge clk) begin
+    if (rst) begin
+        v_r <= 1'b0;
+    end else begin
+        v_r <= in_valid;
+    end
+    i_r <= in_i;
+    q_r <= in_q;
+    mag <= mag_in;
+    sig_present <= (SIG_THRESH == 0) || (mag_in >= SIG_THRESH[W:0]);
+end
+
+// ---------------------------------------------------------------------------
 // Delay line. Written on in_valid, so its index is in samples, not clocks.
 // ---------------------------------------------------------------------------
 reg signed [W-1:0] dl_i [0:DEPTH-1];
 reg signed [W-1:0] dl_q [0:DEPTH-1];
 
 always @(posedge clk) begin
-    if (in_valid) begin
-        dl_i[0] <= in_i;
-        dl_q[0] <= in_q;
+    if (v_r) begin
+        dl_i[0] <= i_r;
+        dl_q[0] <= q_r;
         for (k = 1; k < DEPTH; k = k + 1) begin
             dl_i[k] <= dl_i[k-1];
             dl_q[k] <= dl_q[k-1];
@@ -82,10 +112,7 @@ end
 // ---------------------------------------------------------------------------
 // Signal gate and per-phase energy accumulators.
 // ---------------------------------------------------------------------------
-wire [W-1:0] abs_i = in_i[W-1] ? (~in_i + 1'b1) : in_i;
-wire [W-1:0] abs_q = in_q[W-1] ? (~in_q + 1'b1) : in_q;
-wire [W:0]   mag   = {1'b0, abs_i} + {1'b0, abs_q};
-wire sig_present = (SIG_THRESH == 0) || (mag >= SIG_THRESH[W:0]);
+// mag and sig_present are the registered |I|+|Q| and signal test of the stage above.
 
 reg [2:0]  ph_cnt = 3'd0;                  // sample phase of the newest sample
 reg [15:0] win_cnt = 16'd0;
@@ -125,7 +152,7 @@ always @(posedge clk) begin
         final_best_ph  <= 3'd0;
         final_best_acc <= {ACC_W{1'b0}};
         for (k = 0; k < 8; k = k + 1) acc[k] <= {ACC_W{1'b0}};
-    end else if (in_valid) begin
+    end else if (v_r) begin
         ph_cnt <= ph_cnt + 3'd1;
         if (!locked) begin
             if (!measuring) begin
@@ -181,7 +208,7 @@ always @(*) begin
     endcase
 end
 
-assign out_valid    = enable ? (in_valid && locked) : in_valid;
+assign out_valid    = enable ? (v_r && locked) : in_valid;
 assign out_i        = enable ? tapped_i : in_i;
 assign out_q        = enable ? tapped_q : in_q;
 assign phase_locked = locked;
