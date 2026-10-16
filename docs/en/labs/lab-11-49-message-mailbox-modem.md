@@ -213,3 +213,6 @@ straight into the mailbox, with the packet checked in the fabric, as reliably as
 receiver. It does not show a queue (one message at a time), and it uses the Lab 11.45 receiver with
 its limits (Lab 11.48: listening needs pauses between packets). All numbers are from one board pair,
 one carrier, a conducted path.
+
+[Lab 11.50](lab-11-50-two-board-chat.md) runs the mailbox in both directions at once, as a chat
+between the two boards, and finds three faults that the one-way setup of this lab hid.
