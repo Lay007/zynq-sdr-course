@@ -12,6 +12,11 @@
  *   board-b$ ./zmbox listen --timeout 60
  *   RX sequence=17 bytes=18 meta=CRC_OK payload="Hello from board A"
  *
+ * or chat between two boards that both run the mailbox image (Lab 11.50): every line typed is
+ * sent, everything received is printed:
+ *
+ *   board-a$ ./zmbox chat --name A        board-b$ ./zmbox chat --name B
+ *
  * The program uses only the Lab 5.12 register contract: TX_SEQUENCE, TX_LENGTH, TX_DATA, TX_START,
  * then STATUS.RX_VALID, RX_SEQUENCE, RX_LENGTH, RX_META, RX_DATA, RX_ACK. Packet-v1 framing, CRC,
  * whitening, the burst and the reception all happen in the fabric (mailbox MODE = 1 inside the
@@ -31,6 +36,8 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <time.h>
+#include <math.h>
+#include <poll.h>
 #include <unistd.h>
 
 #define GP_BASE 0x79040000u
@@ -80,11 +87,27 @@ static int find_phy(void)
     return -1;
 }
 
+/* Written only when the value differs: rewriting the LO or the sample rate retunes the chip even
+ * when nothing changes, and the TX calibration that follows puts tens of milliseconds of a strong
+ * signal on the air right before the burst (as in zmsg, Lab 11.48). */
 static void attr(const char *name, const char *value)
 {
-    char p[256];
+    char p[256], cur[64];
     snprintf(p, sizeof p, "%s/%s", phy, name);
-    FILE *f = fopen(p, "w");
+    FILE *f = fopen(p, "r");
+    if (f) {
+        int same = 0;
+        if (fgets(cur, sizeof cur, f)) {
+            char *end;
+            double a = strtod(cur, &end), b;
+            cur[strcspn(cur, "\n")] = 0;
+            same = !strcmp(cur, value) || (end != cur && sscanf(value, "%lf", &b) == 1 && fabs(a - b) <= 0.01);
+        }
+        fclose(f);
+        if (same)
+            return;
+    }
+    f = fopen(p, "w");
     if (!f) {
         fprintf(stderr, "cannot write %s\n", p);
         return;
@@ -163,8 +186,9 @@ static void radio_setup(double tx_gain, int rx_gain, long lo, int offset)
     attr("in_voltage0_gain_control_mode", "manual");
     snprintf(v, sizeof v, "%d", rx_gain);
     attr("in_voltage0_hardwaregain", v);
-    /* Keep the DAC FIFO fed with zeros between bursts (Lab 11.47). */
-    if (!zero_stream_running()) {
+    /* Keep the DAC FIFO fed with zeros between bursts (Lab 11.47). Images with the #67 fix write
+     * zeros into the FIFO by themselves; ZMBOX_NO_ZERO_STREAM=1 skips the stream to check that. */
+    if (!getenv("ZMBOX_NO_ZERO_STREAM") && !zero_stream_running()) {
         int16_t zero[2 * 1024] = {0};
         FILE *f = fopen("/tmp/zmbox_zero.bin", "wb");
         if (f) {
@@ -176,9 +200,12 @@ static void radio_setup(double tx_gain, int rx_gain, long lo, int offset)
             fprintf(stderr, "could not start the zero stream\n");
         usleep(500000);
     }
-    /* DAC channels to the DMA input, where the bridge muxes the burst in. */
+    /* TX1 (I0, Q0) to the DMA input, where the bridge muxes the burst in; TX2 to zero. Only two
+     * channels: the DAC core enables a channel in the unpacker exactly when its source is DMA, so
+     * with all four on DMA a later two-channel buffer (zmsg) is unpacked as four channels and TX1
+     * plays every second sample, twice as fast. */
     for (int c = 0; c < 4; c++)
-        dac[(0x418 + 0x40 * c) / 4] = 2;
+        dac[(0x418 + 0x40 * c) / 4] = c < 2 ? 2 : 3;
     dac[0x044 / 4] = 1;
     snprintf(v, sizeof v, "%.2f", tx_gain);
     attr("out_voltage0_hardwaregain", v);
@@ -277,6 +304,93 @@ static int listen_loop(int count, double timeout, int rx_gain, long lo)
     return got ? 0 : 1;
 }
 
+/* Read the RX registers into text and acknowledge; returns the RX length. */
+static uint32_t take_rx(uint32_t *seq, uint32_t *meta, char *out)
+{
+    *meta = mbr(MB_RX_META);
+    uint32_t rlen = mbr(MB_RX_LENGTH);
+    *seq = mbr(MB_RX_SEQUENCE);
+    for (int w = 0; w < 7; w++) {
+        uint32_t d = mbr(MB_RX_DATA0 + 4 * w);
+        for (int b = 0; b < 4; b++)
+            out[4 * w + b] = (char)((d >> (8 * b)) & 0xFF);
+    }
+    out[rlen <= 27 ? rlen : 0] = 0;
+    mbw(MB_CONTROL, 2);                       /* RX_ACK */
+    return rlen;
+}
+
+/* Chat: listen all the time; a typed line stops listening, goes out with TX_START (the board
+ * also hears its own burst in that attempt, which is discarded), then listening resumes. */
+static int chat(const char *name, double tx_gain, int rx_gain, long lo)
+{
+    radio_setup(tx_gain, rx_gain, lo, 1);
+    signal(SIGTERM, on_term);
+    signal(SIGINT, on_term);
+    mbw(MB_CONTROL, 2);
+    mbw(MB_CONTROL, 4);                       /* RX_LISTEN */
+    printf("chat as %s: type a line (at most 27 bytes with the name) and press Enter; Ctrl-C ends\n", name);
+    fflush(stdout);
+    int seq = 1;
+    char line[128], out[29];
+    struct pollfd pfd = {.fd = 0, .events = POLLIN};
+    while (!stop_requested) {
+        uint32_t st = mbr(MB_STATUS), rseq, meta;
+        if (st & 0x4) {
+            take_rx(&rseq, &meta, out);
+            if (meta & 1) {
+                printf("<< %s\n", out);
+                fflush(stdout);
+            } else if (getenv("ZMBOX_DEBUG")) {
+                printf("-- packet dropped, meta 0x%x seq %u at %.3f s\n", meta, rseq, now_s());
+                fflush(stdout);
+            }
+        }
+        if (poll(&pfd, 1, 20) <= 0)
+            continue;
+        if (!fgets(line, sizeof line, stdin))
+            break;
+        line[strcspn(line, "\r\n")] = 0;
+        if (!line[0])
+            continue;
+        char msg[192];
+        snprintf(msg, sizeof msg, "%.16s: %.120s", name, line);
+        if (strlen(msg) > 27)
+            msg[27] = 0;
+        mbw(MB_CONTROL, 8);                   /* RX_STOP */
+        uint8_t buf[64] = {0};
+        int len = (int)strlen(msg);
+        memcpy(buf, msg, len);
+        mbw(MB_TX_SEQUENCE, (uint32_t)seq++);
+        mbw(MB_TX_LENGTH, (uint32_t)len);
+        for (int w = 0; w < 8; w++)
+            mbw(MB_TX_DATA0 + 4 * w, buf[4 * w] | (buf[4 * w + 1] << 8) | (buf[4 * w + 2] << 16) | ((uint32_t)buf[4 * w + 3] << 24));
+        /* The listening attempt in flight ends within its 136 ms window; TX_START is refused
+         * until then, so retry until the mailbox reports TX_BUSY or TX_DONE. */
+        double t_end = now_s() + 1.0;
+        int started = 0;
+        while (now_s() < t_end && !started) {
+            mbw(MB_CONTROL, 1);
+            /* TX_DONE stays set from the previous message, so only TX_BUSY tells that this
+             * TX_START was taken; a send with its own reception lasts over a millisecond. */
+            for (int i = 0; i < 200 && !started; i++)
+                started = (mbr(MB_STATUS) & 0x1) != 0;
+            if (!started)
+                usleep(2000);
+        }
+        t_end = now_s() + 1.0;
+        while (started && now_s() < t_end && !(mbr(MB_STATUS) & 0x4))
+            usleep(500);
+        if (mbr(MB_STATUS) & 0x4)
+            take_rx(&rseq, &meta, out);       /* our own burst, heard on our own RX */
+        printf(">> %s%s\n", msg, started ? "" : "   (not sent: mailbox busy)");
+        fflush(stdout);
+        mbw(MB_CONTROL, 4);                   /* RX_LISTEN again */
+    }
+    mbw(MB_CONTROL, 8);
+    return 0;
+}
+
 static void stop(void)
 {
     DIR *d = opendir("/proc");
@@ -306,6 +420,7 @@ int main(int argc, char **argv)
     if (argc < 2) {
         fprintf(stderr, "usage: zmbox send <text> [--seq N] [--count N] [--tx-gain dB] [--rx-gain dB] [--lo Hz] [--offset N] [--quiet]\n"
                         "       zmbox listen [--count N] [--timeout s] [--rx-gain dB] [--lo Hz]\n"
+                        "       zmbox chat [--name X] [--tx-gain dB] [--rx-gain dB] [--lo Hz]\n"
                         "       zmbox stop\n");
         return 2;
     }
@@ -329,6 +444,15 @@ int main(int argc, char **argv)
         else if (!strcmp(argv[i], "--lo") && i + 1 < argc) lo = atol(argv[++i]);
         else if (!strcmp(argv[i], "--offset") && i + 1 < argc) offset = atoi(argv[++i]);
         else if (!strcmp(argv[i], "--quiet")) quiet = 1;
+    }
+    if (!strcmp(argv[1], "chat")) {
+        const char *name = "?";
+        for (int i = 2; i + 1 < argc; i++)
+            if (!strcmp(argv[i], "--name"))
+                name = argv[i + 1];
+        if (open_regs())
+            return 2;
+        return chat(name, tx_gain, rx_gain < 0 ? 71 : rx_gain, lo);
     }
     if (!strcmp(argv[1], "listen")) {
         if (open_regs())
