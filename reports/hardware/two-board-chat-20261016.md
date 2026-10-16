@@ -33,7 +33,7 @@ offset by the difference between the two boards' references. The zero stream is 
 ## A message that came out half as long
 
 Board A's one-shot `zmsg send --once`, delivered 494 of 500 on Lab 11.48, now reached nobody
-(0 of 20). Board B recorded it: 883 samples instead of about 1766, and a cyclic `zmsg` stream that
+(0 of 20). Recorded on the other board it was about 880 samples long instead of about 1766, and a cyclic `zmsg` stream that
 repeated every 608 samples, half a frame. The new mux was the obvious suspect. A simulation of the
 real ADI blocks (`util_upack2`, `util_rfifo`) with both mux versions showed the same FIFO writes for
 every clock ratio, and booting the old image settled it: right after boot the old image sent the
@@ -64,8 +64,8 @@ lead-in). A listening attempt starts the core through the same edge as a transmi
 QPSK transmitter played its frame each time. That frame collides with the other board's message
 and, through the board's own TX->RX leakage, occupies the attempt it was listening with.
 
-Earlier results did not show this because the listening board had its TX LO off: 498 of 500 on
-Lab 11.49 and 5000 of 5000 on one board.
+Earlier results did not show this. In Lab 11.49 the listening board had its TX LO off (498 of
+500), and the one-board run of 5000 of 5000 never listened.
 
 The fix keeps the DAC-facing stream silent during a listening attempt (the fabric loopback still
 sees the modem). `tb_message_modem_listen` now also counts what the listening copy sends: 2764
@@ -77,8 +77,9 @@ results). The kept image met timing with the ExtraNetDelay_high variant: WNS +0.
 WHS +0.041 ns.
 
 On silicon, board B listening in chat with its TX on puts nothing on the air apart from the
-calibration when the LO comes on, and board A's messages to it arrive 30 of 30 (12 of 20 on the
-old image).
+calibration when the LO comes on, and board A's messages to it arrive 30 of 30. In the chat itself,
+with both `zmbox` fixes and TX -30 dB on both boards, the old image delivered 20 of 30 in each
+direction and the new one 30 and 25 (next section).
 
 ## The chat, both boards on the new image
 
