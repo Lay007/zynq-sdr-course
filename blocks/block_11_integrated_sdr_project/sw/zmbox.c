@@ -369,6 +369,13 @@ static int chat(const char *name, double tx_gain, int rx_gain, long lo)
          * until then, so retry until the mailbox reports TX_BUSY or TX_DONE. */
         double t_end = now_s() + 1.0;
         int started = 0;
+        /* Wait out the listening attempt in flight (at most 136 ms) before TX_START (#70). Sending
+         * as soon as the mailbox takes TX_START puts the burst at the end of our listening window,
+         * and the other board's window started at the same moment as ours (both restarted on the
+         * last exchange): the burst arrived at the very end of its window, and 7-9 % were lost.
+         * After a fixed wait the burst goes out at a moment set by the typed line instead. */
+        const char *dly = getenv("ZMBOX_TX_DELAY_MS");
+        usleep((useconds_t)((dly ? atof(dly) : 140.0) * 1000.0));
         while (now_s() < t_end && !started) {
             mbw(MB_CONTROL, 1);
             /* TX_DONE stays set from the previous message, so only TX_BUSY tells that this
