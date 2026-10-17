@@ -48,7 +48,7 @@ Everything from Lab 5.12 stays, at the base address 0x79050000:
 | offset | register | in this lab |
 |---|---|---|
 | 0x00 | ID | `0x4D424F58` ("MBOX"), unchanged |
-| 0x04 | VERSION | `0x00020000` (the echo is `0x00010000`) |
+| 0x04 | VERSION | `0x00020000` (the echo is `0x00010000`); `0x00020001` when RX_STOP also ends the listening attempt in flight (issue #71) |
 | 0x08 | CONTROL | bit 0 TX_START, bit 1 RX_ACK as before; **bit 2 RX_LISTEN, bit 3 RX_STOP** |
 | 0x0C | STATUS | bits 0-3 as before (TX_BUSY, TX_DONE, RX_VALID, RX_OVERFLOW); **bit 4 LISTENING** |
 | 0x10, 0x14 | TX_SEQUENCE, TX_LENGTH | at most 27 bytes; a longer message is not sent and completes with FRAME_ERROR |

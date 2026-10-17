@@ -60,6 +60,9 @@ module bpsk_zynq_ber_gpreg_bridge #(
     // A change of msg_listen_toggle starts one listening attempt (listen mode of issue #68 forced
     // on, the ROM frame on the TX side as usual); its result comes back like a message's.
     input  wire                     msg_listen_toggle,
+    // A change of msg_stop_toggle (RX_STOP, issue #71) ends the listening attempt in flight at once,
+    // unless a packet is being received; its result comes back as usual. Tie to 0 when unused.
+    input  wire                     msg_stop_toggle,
     output reg  [255:0]             msg_rx_bits,
     output reg                      msg_rx_toggle,
     output reg                      msg_rx_locked
@@ -218,6 +221,9 @@ wire msg_start_edge = msg_tx_sync[2] ^ msg_tx_sync[1];
 (* ASYNC_REG = "TRUE" *) reg [2:0] msg_listen_sync = 3'd0;
 always @(posedge sample_clk) msg_listen_sync <= {msg_listen_sync[1:0], msg_listen_toggle};
 wire msg_listen_edge = msg_listen_sync[2] ^ msg_listen_sync[1];
+(* ASYNC_REG = "TRUE" *) reg [2:0] msg_stop_sync = 3'd0;
+always @(posedge sample_clk) msg_stop_sync <= {msg_stop_sync[1:0], msg_stop_toggle};
+wire msg_stop_edge = msg_stop_sync[2] ^ msg_stop_sync[1];
 wire start_edge = (control_sync[0] && !control_sync_d[0]) || msg_start_edge || msg_listen_edge;
 reg msg_mode_sample = 1'b0;   // this burst carries a mailbox message
 reg msg_listen_sample = 1'b0; // this attempt listens for a message from another board
@@ -338,6 +344,17 @@ wire qpsk_diff_en = control_sync[17];
 // window that self-OTA needs. An attempt with no packet ends with the timeout status bit once
 // that window is used up. 0 keeps every existing lab bit-identical.
 wire qpsk_listen_en = control_sync[18] || msg_listen_sample;
+
+// Issue #71: RX_STOP ends the listening attempt in flight. The request is held until that attempt
+// ends, and only taken while a listening attempt is actually running, so a late stop cannot cut
+// short a later attempt.
+reg msg_abort_pending = 1'b0;
+always @(posedge sample_clk) begin
+    if (sample_rst || qpsk_done || qpsk_timed_out || start_edge)
+        msg_abort_pending <= 1'b0;
+    else if (msg_stop_edge && msg_listen_sample && qpsk_busy)
+        msg_abort_pending <= 1'b1;
+end
 
 // gp_ctrl[8]=1 feeds the raw-ADC CDC FIFO from AD9361 RX channel 2 (adc_input2 =
 // adc_data_i1/q1) instead of channel 1. control_sync lives on sample_clk, while
@@ -472,6 +489,7 @@ qpsk_zynq_ber_top #(
     .timing_recovery_en(qpsk_timing_recovery_en),
     .diff_en(qpsk_diff_en),
     .listen_en(qpsk_listen_en),
+    .abort_listen(msg_abort_pending),
     .msg_mode(msg_mode_sample),
     .msg_bits(msg_tx_bits),
     .busy(qpsk_busy),

@@ -33,7 +33,9 @@
 // the RX registers under the same rules as above (RX_VALID, RX_ACK, RX_OVERFLOW), and anything
 // else (no frame, CRC failure, a length out of range) is dropped and the next attempt starts.
 // CONTROL.RX_STOP (bit 3) ends listening; STATUS bit 4 shows it. TX_START is ignored while
-// listening, and RX_LISTEN while a transmission is in progress.
+// listening, and RX_LISTEN while a transmission is in progress. RX_STOP also asks the bridge to end
+// the listening attempt in flight at once (modem_stop_toggle, issue #71); the bridge does so unless
+// a packet is coming in, and TX_START is taken as soon as the attempt has ended.
 
 `timescale 1ns/1ps
 
@@ -74,13 +76,16 @@ module zynq_message_mailbox_axi_lite #(
     input  wire [255:0]                 modem_rx_bits,
     input  wire                         modem_rx_toggle,
     input  wire                         modem_rx_locked,
-    output reg                          modem_listen_toggle
+    output reg                          modem_listen_toggle,
+    output reg                          modem_stop_toggle
 );
 
 localparam integer AXI_STRB_W = AXI_DATA_W / 8;
 localparam integer MAILBOX_WORDS = 16;
 localparam [31:0] CORE_ID = 32'h4D424F58;      // "MBOX"
-localparam [31:0] CORE_VERSION = (MODE == 1) ? 32'h00020000 : 32'h00010000;
+// MODE = 1: 0x00020000 = Lab 11.49; 0x00020001 = RX_STOP also ends the listening attempt in flight
+// (issue #71), so software need not wait for the listening window before TX_START.
+localparam [31:0] CORE_VERSION = (MODE == 1) ? 32'h00020001 : 32'h00010000;
 localparam integer MAX_PAYLOAD = 27;
 // PN9 (x^9 + x^5 + 1, seed 0x1FF), bit i = the i-th output bit; the same sequence as zmsg.c.
 localparam [255:0] PN9 = 256'h0ccac9fb4937e5a8513b2f61aa721884022323ab638951b3e78b72904ce8fbc1;
@@ -258,6 +263,7 @@ always @(posedge s_axi_aclk) begin
         modem_tx_bits <= 256'd0;
         modem_tx_toggle <= 1'b0;
         modem_listen_toggle <= 1'b0;
+        modem_stop_toggle <= 1'b0;
         listening <= 1'b0;
         listen_inflight <= 1'b0;
         listen_timer <= 32'd0;
@@ -376,6 +382,8 @@ always @(posedge s_axi_aclk) begin
                     if (MODE == 1 && wstrb_latched[0] &&
                         (wdata_latched & CONTROL_RX_STOP) != 0) begin
                         listening <= 1'b0;
+                        if (listen_inflight)
+                            modem_stop_toggle <= ~modem_stop_toggle;   // end the attempt now (#71)
                     end else if (MODE == 1 && wstrb_latched[0] &&
                                  (wdata_latched & CONTROL_RX_LISTEN) != 0 &&
                                  !tx_busy && !listening) begin

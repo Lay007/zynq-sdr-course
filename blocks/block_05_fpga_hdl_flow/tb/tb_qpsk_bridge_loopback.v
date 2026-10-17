@@ -103,6 +103,7 @@ bpsk_zynq_ber_gpreg_bridge #(
     .msg_tx_bits(256'd0),
     .msg_tx_toggle(1'b0),
     .msg_listen_toggle(1'b0),
+    .msg_stop_toggle(1'b0),
     .msg_rx_bits(),
     .msg_rx_toggle(),
     .msg_rx_locked()

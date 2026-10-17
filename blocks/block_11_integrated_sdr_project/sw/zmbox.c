@@ -170,7 +170,7 @@ static int open_regs(void)
         fprintf(stderr, "no course modem at 0x%08x\n", GP_BASE);
         return -1;
     }
-    if (mbr(MB_ID) != 0x4D424F58u || mbr(MB_VERSION) != 0x00020000u) {
+    if (mbr(MB_ID) != 0x4D424F58u || (mbr(MB_VERSION) & 0xFFFF0000u) != 0x00020000u) {
         fprintf(stderr, "no message mailbox (MODE 1) at 0x%08x: id 0x%08x version 0x%08x\n", MB_BASE,
                 mbr(MB_ID), mbr(MB_VERSION));
         return -1;
@@ -341,8 +341,12 @@ static int send_frame(uint32_t seq, const uint8_t *data, int len)
      * and the other board's window started at the same moment as ours (both restarted on the
      * last exchange): the burst arrived at the very end of its window, and 7-9 % were lost.
      * After a fixed wait the burst goes out at a moment set by the typed line instead. */
+    /* A mailbox of version 0x00020001 or later ends the attempt itself on RX_STOP (#71), and on
+     * that image the receiver no longer loses a packet at the window edge (#70): no wait needed. */
     const char *dly = getenv("ZMBOX_TX_DELAY_MS");
-    usleep((useconds_t)((dly ? atof(dly) : 140.0) * 1000.0));
+    double wait_ms = dly ? atof(dly) : (mbr(MB_VERSION) >= 0x00020001u ? 0.0 : 140.0);
+    if (wait_ms > 0)
+        usleep((useconds_t)(wait_ms * 1000.0));
     double t_end = now_s() + 1.0;
     int started = 0;
     while (now_s() < t_end && !started) {

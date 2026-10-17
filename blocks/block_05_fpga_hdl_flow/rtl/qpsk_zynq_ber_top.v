@@ -69,6 +69,10 @@ module qpsk_zynq_ber_top #(
     // attempt ends after 2^INDEX_W - 1 symbols only once no packet is being received, so a packet
     // that starts at the very end of the window is still received whole.
     input  wire                     listen_en,
+    // Level, issue #71: while high, a listening attempt ends at once (as a timeout) unless a packet
+    // is being received. The mailbox raises it on RX_STOP, so that TX_START need not wait for the
+    // rest of the listening window. Tie to 0 when unused.
+    input  wire                     abort_listen,
     // 1 at start = this burst carries a message (issue #55, Lab 11.49): the transmitter sends the
     // burst head of Lab 11.48 and the frame preamble followed by msg_bits (256 whitened packet bits
     // from the mailbox) instead of the ROM frame. The receiver is unchanged. 0 = the ROM frame.
@@ -363,6 +367,11 @@ always @(posedge clk) begin
         end else if (ber_busy && listen_en && listen_window == {INDEX_W{1'b1}}
                      && !listen_open && received_symbols == {INDEX_W{1'b0}}) begin
             // Listen window used up and no packet in progress: end the attempt as a timeout.
+            ber_abort <= 1'b1;
+            timed_out <= 1'b1;
+        end else if (ber_busy && listen_en && abort_listen
+                     && !listen_open && received_symbols == {INDEX_W{1'b0}}) begin
+            // Listening stopped (#71): end the attempt now, unless a packet is coming in (#70).
             ber_abort <= 1'b1;
             timed_out <= 1'b1;
         end else if (ber_busy) begin

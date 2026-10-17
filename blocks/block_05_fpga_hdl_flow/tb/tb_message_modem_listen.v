@@ -7,7 +7,8 @@
 // delivers the message with CRC_OK, sequence, length and bytes; R keeps listening and also delivers
 // a second message after RX_ACK; RX_STOP ends listening; TX_START is refused while listening; R
 // puts nothing on its DAC stream while it listens (on the bench a listening board sent a frame
-// at every re-armed attempt, every 136 ms).
+// at every re-armed attempt, every 136 ms); after RX_STOP, R takes TX_START within microseconds
+// instead of at the end of its listening window (issue #71).
 
 `timescale 1ns/1ps
 
@@ -169,7 +170,8 @@ task axi_read(input integer who, input [31:0] off);
     end
 endtask
 
-integer errors = 0, k, waited;
+integer errors = 0, k, waited, r_tx_listening = 0;
+reg [63:0] t_stop;
 reg [8*16-1:0] text1 = "listen to this 1";
 reg [8*16-1:0] text2 = "and to this one!";
 
@@ -243,12 +245,33 @@ initial begin
     send_from_t(32'h0000_0A02, text2);
     expect_at_r(32'h0000_0A02, text2);
 
+    repeat (2000) @(posedge sample_clk);                // R is in a fresh listening attempt by now
+    r_tx_listening = r_tx_samples;                      // what R sent while it listened
     axi_write(1, 32'h08, 32'h8);                       // RX_STOP
     axi_read(1, 32'h0C); check("R STATUS after RX_STOP", {31'd0, rd[4]}, 32'd0);
-
-    if (r_tx_samples != 0) begin
+    // #71: the listening attempt in flight ends at once, so TX_START is taken right away
+    t_stop = $time;
+    waited = 0;
+    rd = 0;
+    while (!rd[0] && waited < 20000) begin
+        axi_write(1, 32'h08, 32'h1);                   // TX_START
+        axi_read(1, 32'h0C);
+        waited = waited + 1;
+    end
+    if (!rd[0]) begin
         errors = errors + 1;
-        $display("FAIL: the listening R put %0d samples on its DAC stream", r_tx_samples);
+        $display("FAIL: R did not take TX_START after RX_STOP");
+    end else begin
+        $display("R took TX_START %0d ns after RX_STOP", $time - t_stop);
+        if ($time - t_stop > 64'd100_000) begin           // 100 us (time unit ns); a listening window is 4.2 ms here
+            errors = errors + 1;
+            $display("FAIL: TX_START waited for the listening window instead of ending it");
+        end
+    end
+
+    if (r_tx_listening != 0) begin
+        errors = errors + 1;
+        $display("FAIL: the listening R put %0d samples on its DAC stream", r_tx_listening);
     end
     if (errors == 0)
         $display("PASS tb_message_modem_listen: two messages from T delivered to the listening R");

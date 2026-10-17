@@ -122,7 +122,7 @@ initial begin
     repeat (10) @(posedge ctrl_clk);
 
     axi_read(32'h00); check("ID", rd, 32'h4D424F58);
-    axi_read(32'h04); check("VERSION (modem)", rd, 32'h0002_0000);
+    axi_read(32'h04); check("VERSION (modem)", rd, 32'h0002_0001);   // 0x00020001: RX_STOP ends the attempt (#71)
 
     // modem mode words, as the PS sets them before using the mailbox
     gp_ctrl = MODE;
