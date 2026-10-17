@@ -212,5 +212,76 @@
    "b_to_a": 225,
    "why_not_used": "ran after three runs whose SSH connections were reset after ~18 min; leftover programs on the boards not excluded"
   }
+ },
+ "issue70_20261017": {
+  "interleaved_100_message_runs_b_chat_sender_b_tx_-50": {
+   "a_listen_txoff": [
+    88,
+    92,
+    89,
+    92
+   ],
+   "a_chat_silent_txon": [
+    93,
+    93,
+    92,
+    93
+   ]
+  },
+  "b_zmbox_send_chat_like_text_a_listen": "100 of 100",
+  "chat_bursts_recorded_on_a": {
+   "count": 30,
+   "span_samples": [
+    1864,
+    1865
+   ],
+   "other_events_over_3db": 0
+  },
+  "symbol_step_match_chat_vs_send_same_payload": [
+   0.989,
+   0.982,
+   0.941
+  ],
+  "wait_before_tx_start": {
+   "none": [
+    93,
+    94
+   ],
+   "68_ms": [
+    96,
+    95
+   ],
+   "140_ms": [
+    100,
+    100
+   ]
+  },
+  "full_chat_with_140ms_wait_a_tx_-30": [
+   {
+    "b_tx_db": -50,
+    "rounds": 100,
+    "a_to_b": 100,
+    "b_to_a": 100
+   },
+   {
+    "b_tx_db": -50,
+    "rounds": 100,
+    "a_to_b": 99,
+    "b_to_a": 99
+   },
+   {
+    "b_tx_db": -40,
+    "rounds": 60,
+    "a_to_b": 60,
+    "b_to_a": 60
+   },
+   {
+    "b_tx_db": -30,
+    "rounds": 60,
+    "a_to_b": 59,
+    "b_to_a": 53
+   }
+  ],
+  "zmbox_commit": "11409d8"
  }
 }

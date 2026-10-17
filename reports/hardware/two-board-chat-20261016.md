@@ -98,7 +98,7 @@ With board A only listening (TX off), board B's messages arrived 35 of 40 at -30
 at -50 dB, so at -20...-30 dB board A's receiver at 71 dB is overdriven. That is a property of
 the bench, not of the chat.
 
-What is left at the quiet setting is not explained. All lost lines failed before frame lock, and
+What is left at the quiet setting needed more work. All lost lines failed before frame lock, and
 no line ever failed the CRC. The night of 2026-10-16/17 and the morning after added longer runs and
 took the chat apart, one piece at a time (board B at -50 dB, board A at -30 dB):
 
@@ -116,12 +116,55 @@ took the chat apart, one piece at a time (board B at -50 dB, board A at -30 dB):
 Each piece loses 0-3 %, both boards in chat together 7-15 %. Neither the receiving board's own TX
 being on nor its own transmission explains it alone; the combination of a sender in chat and a
 receiver in chat looks worse (74 of 80), but with 60-80 messages per row the difference is weak
-evidence. The cause is open.
+evidence. The next section finds the cause.
 
 A 300-round chat in the night gave 271 and 225 of 300. It ran right after three longer runs that
 broke off when their SSH connections were reset after about 18 minutes, and whether their programs
 were still running on the boards during the chat is unknown, so that run is listed in the raw data
 but not used here. Runs since then are kept under 10 minutes.
+
+## Lines lost at the edge of a listening window (#70)
+
+Longer interleaved runs (board B at -50 dB, 100 messages each) settled the open question. Board B
+sending from `zmbox chat` reached board A 361 of 400 times when board A only listened (TX off) and
+371 of 400 when board A listened in chat with its TX on: the receiving side hardly matters. Board B
+sending with `zmbox send` reached board A 100 of 100, also with the payload text and sequence
+numbers of the chat. The sender in chat was the difference.
+
+Its bursts were not. Recorded on board A, all 30 chat bursts were 1864-1865 samples long with the
+same amplitude as the others, and nothing else was on the air (0.1 ms blocks more than 3 dB over
+the noise). With the same text and sequence number, the symbol-to-symbol phase steps of a chat
+burst matched those of a `zmbox send` burst to 0.94-0.99. The losses came in runs (65, 66, 67 in
+one run; 171-173 and 200-203 in another).
+
+What differed was the moment of sending. The chat repeats TX_START until the mailbox takes it,
+which happens when the listening attempt in flight ends, so every chat burst left at the end of the
+sender's 136 ms listening window. The explanation that fits: the receiver's window restarts on an
+incoming packet, so after an exchange both boards' windows start at nearly the same moment, and
+the next chat burst arrives near the end of the receiver's window and is lost. The receiver's
+windows were not observed directly. The test:
+
+| wait after RX_STOP before TX_START | received (board B from chat, board A listening) |
+|---|---:|
+| none | 93 of 100, 94 of 100 |
+| 68 ms | 96 of 100, 95 of 100 |
+| 140 ms (longer than any attempt) | 100 of 100, 100 of 100 |
+
+The 68 ms wait probably helped little because the attempt in flight often had more than 68 ms left.
+`zmbox chat` now waits 140 ms (11409d8; `ZMBOX_TX_DELAY_MS` overrides it). The full chat with it,
+board A at TX -30 dB:
+
+| board B TX | rounds | A -> B | B -> A |
+|---:|---:|---:|---:|
+| -30 dB | 60 | 59 | 53 |
+| -40 dB | 60 | 60 | 60 |
+| -50 dB | 100 | 100 | 100 |
+| -50 dB | 100 | 99 | 99 |
+
+No line corrupted or repeated, no CRC failure. The B -> A losses at -30 dB are the overdrive of
+board A described above. The receiver itself still loses a packet that arrives at the edge of a
+listening window; a sender that does not avoid that moment would see it. That part of #70 stays
+open.
 
 ## Limits
 

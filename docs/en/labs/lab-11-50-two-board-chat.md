@@ -6,15 +6,15 @@ Lab 11.49 sent messages one way: board A transmitted, board B's mailbox listened
 directions at once. Each board listens all the time, and whenever someone types a line it stops
 listening for a moment, sends the line and goes back to listening. The program is short, because
 the mailbox already does the hard part. What makes this lab worth doing is what the first chat
-showed: it delivered 7 lines out of 10 in each direction, and all three causes had been there in
-the earlier labs without showing. Each was hidden by something the one-way setup happened to do.
+showed: it delivered 7 lines out of 10 in each direction, and every cause had been there in the
+earlier labs without showing. Each was hidden by something the one-way setup happened to do.
 
 ## How `zmbox chat` works
 
 ```text
 start:        set up the radio once (LO, gains, DAC source); RX_LISTEN
 loop:         STATUS.RX_VALID?  -> print "<< text" if RX_META says CRC_OK; RX_ACK
-              a line on stdin?  -> RX_STOP
+              a line on stdin?  -> RX_STOP; wait 140 ms
                                    write TX_SEQUENCE, TX_LENGTH, TX_DATA
                                    TX_START, repeated until STATUS.TX_BUSY shows it was taken
                                    wait for RX_VALID: our own burst, heard through the board; discard it
@@ -24,8 +24,9 @@ loop:         STATUS.RX_VALID?  -> print "<< text" if RX_META says CRC_OK; RX_AC
 Three details come from the mailbox contract of Lab 11.49:
 
 - **TX_START is refused while the mailbox listens**, and RX_STOP does not cut short a listening
-  attempt that has already begun (up to 136 ms). So the program repeats TX_START until it is taken.
-  It watches TX_BUSY, not TX_DONE: TX_DONE stays set from the previous message.
+  attempt that has already begun (up to 136 ms). The program waits 140 ms, longer than any attempt,
+  and then repeats TX_START until it is taken. Why it waits instead of simply retrying is the last
+  finding below. It watches TX_BUSY, not TX_DONE: TX_DONE stays set from the previous message.
 - **A sending board hears itself.** TX_START sends and receives in the same attempt, so the board's
   own burst comes back through the leakage between TX and RX on the board. The chat throws that one
   away.
@@ -148,6 +149,32 @@ chip. The fix keeps the DAC-facing stream silent during a listening attempt. On 
 listening board now puts nothing on the air. With both `zmbox` fixes in place and TX -30 dB on
 both boards, the chat went from 20 of 30 lines in each direction to 30 and 25 of 30.
 
+### Lines lost at the edge of a listening window (issue #70)
+
+On the #69 image the chat still lost about one line in ten, again without a single CRC failure,
+while each piece of the chat on its own lost almost nothing. Taking it apart showed that only one
+thing mattered: whether the sender was `zmbox chat`. Board B sending from the chat reached a board
+that only listened 361 times out of 400; the same board sending with `zmbox send` reached it 99 or
+100 times out of 100. The bursts were not the difference. Recorded on board A, the chat's bursts
+were as long as the others (1864 samples) and carried the same symbols: their symbol-to-symbol
+phase steps matched those of `zmbox send` to 0.94-0.99. And the losses came in runs, lines 65, 66
+and 67 in one run, so something slowly varying was at work.
+
+The difference was the moment of sending. The chat stops listening and repeats TX_START until the
+mailbox takes it, which happens when the listening attempt in flight ends: every chat burst left
+at the end of the sender's 136 ms listening window. An explanation that fits the numbers: the
+receiver's window restarts when a packet arrives, so after an exchange both boards' windows start
+at nearly the same moment, and the next burst from the chat arrives near the end of the
+receiver's window, where a packet does not fit and is lost. Messages from `zmbox send` go out at a
+moment set by the program, not by a window. The receiver's windows were not observed directly.
+
+The test was cheap: wait 140 ms after RX_STOP, longer than any attempt, and only then start. The
+chat sender went from 93 and 94 of 100 to 100 of 100 twice. A 68 ms wait helped little (96 and 95),
+probably because the attempt in flight often had more than 68 ms left, so the burst still left at
+its end. `zmbox chat` now waits 140 ms; a line goes out 0.14 s later than it could, which nobody
+notices in a chat. The receiver itself still loses a packet that arrives at the edge of its window;
+that is the open part of #70.
+
 ### And the check the chat was built for (issue #67)
 
 The DAC FIFO mux of the course image used to write the FIFO only while a burst was going out.
@@ -160,43 +187,43 @@ That remainder is the TX LO leakage, one line 0.3 kHz from the LO.
 
 ## Results
 
-Both boards on `issue69-listen-silent`, board A at TX -30 dB:
+Both boards on `issue69-listen-silent`, `zmbox chat` with the 140 ms wait, board A at TX -30 dB:
 
 | board B TX | rounds | A -> B | B -> A |
 |---:|---:|---:|---:|
-| -20 dB | 30 | 29 | 24 |
-| -30 dB | 30 | 30 | 25 |
-| -40 dB | 30 | 30 | 28 |
-| -50 dB | 50 | 47 | 45 |
+| -30 dB | 60 | 59 | 53 |
+| -40 dB | 60 | 60 | 60 |
+| -50 dB | 100 | 100 | 100 |
+| -50 dB | 100 | 99 | 99 |
 
-A longer run at the default levels (board B at -50 dB), 100 rounds: 90 lines from A to B and 85
-from B to A. Each piece of the chat on its own loses less. A board that only listens with its TX
-off receives 59 of 60; a board that listens in chat with its TX on, 60 of 60; lines sent from
-`zmbox chat` to a board that only listens arrive 58 of 60; with both boards in chat and one of them
-silent, 74 of 80. Where the remaining losses come from is still open.
-
-No line ever arrived corrupted or twice. B -> A gets better as board B gets quieter, because on the
-course bench that path has no splitter and overdrives board A's receiver at 71 dB. With board A only
-listening, board B's messages arrived 35 of 40 at -30 dB and 40 of 40 at -50 dB. Hence the script's
-default of -50 dB for board B.
+No line ever arrived corrupted or twice, and no packet failed the CRC. On the way there, with the
+same image but without the wait, the chat delivered 90 and 85 lines of 100 at -50 dB, and at
+louder settings of board B fewer still from B to A. On the course bench the B -> A path has no
+splitter, and at 71 dB board A's receiver is overdriven when board B is loud: with board A only
+listening, board B's messages arrived 35 of 40 at -30 dB and 40 of 40 at -50 dB. Hence the
+script's default of -50 dB for board B.
 
 ## Exercises
 
 1. Why does `zmbox chat` repeat TX_START, and why does it check TX_BUSY rather than TX_DONE?
 2. A sending board receives its own message back. Where does that copy come from, and why is it
    harmless to throw it away?
-3. All three faults above were present during Lab 11.49, which delivered 498 of 500. For each, say
-   what in the one-way setup hid it.
+3. The first three faults above were present during Lab 11.49, which delivered 498 of 500. For
+   each, say what in the one-way setup hid it.
 4. A chat line holds at most 24 characters after the name. Where does that limit come from, and what
    would a longer message need?
+5. Lines sent from `zmbox chat` were lost about ten times as often as the same lines sent with
+   `zmbox send`, although the bursts on the air were the same. Why does a wait of 140 ms before
+   TX_START fix that, and what would a fix in the receiver have to do instead?
 
 <details markdown="1">
 <summary>Answers</summary>
 
 1. The mailbox refuses TX_START while it listens, and a listening attempt that has already begun
    runs to its end (up to 136 ms) even after RX_STOP. So the first TX_START may be refused, and the
-   program tries again until the mailbox takes it. TX_DONE stays set after the previous message, so
-   it cannot tell a new start from an old one; TX_BUSY rises only when this start was taken.
+   program tries again until the mailbox takes it (since the last finding it first waits 140 ms, so
+   the first try is normally taken). TX_DONE stays set after the previous message, so it cannot tell
+   a new start from an old one; TX_BUSY rises only when this start was taken.
 2. TX_START sends and receives in one attempt, and the board's receiver hears its own burst through
    the leakage between TX and RX on the board. The copy says nothing about whether the other board
    received the line, so it carries no information for the chat.
@@ -207,6 +234,13 @@ default of -50 dB for board B.
 4. Packet-v1 has 27 payload bytes (256 whitened bits per frame), and the chat spends three on
    "A: ". A longer message needs either a longer frame or several packets with a sequence number and
    reassembly on the receiving side, plus a decision about what to do when one of them is lost.
+5. Without the wait, the burst leaves when the sender's listening attempt ends, and the receiver's
+   window started at about the same moment, so the burst lands at the end of the receiver's window
+   and does not fit. After a wait longer than any attempt, the moment of sending is set by the typed
+   line, so it falls at a random point of the receiver's window, where it almost always fits. A fix
+   in the receiver would not end a listening attempt while a packet is coming in: when the window
+   runs out with the packet detector still reporting a packet, extend the window until the frame
+   is complete, or start the next attempt with that packet.
 
 </details>
 
@@ -221,6 +255,7 @@ default of -50 dB for board B.
 
 It shows two boards exchanging typed messages through the Lab 5.12 register contract in both
 directions, with the link layer in the fabric and no corrupted message. It does not show a
-reliable link: a few lines in a hundred are lost, there is no acknowledgement and no
-retransmission, and the cause of the remaining losses was not found. All numbers are from one board
-pair, one carrier, conducted paths.
+reliable link: there is no acknowledgement and no retransmission, the receiver still loses a packet
+that arrives at the edge of its listening window (the chat only avoids sending there), and a line
+in a hundred can still go missing. All numbers are from one board pair, one carrier, conducted
+paths.
