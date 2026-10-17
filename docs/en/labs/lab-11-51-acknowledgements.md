@@ -95,12 +95,26 @@ an acknowledgement of its own. A protocol picks what it can promise instead. Thi
 a line the sender reports as acknowledged has arrived, and that a lost line is never silent. It
 does not promise that "no acknowledgement" means "not delivered".
 
+## Both directions have to work
+
+The same comparison over a range of levels, board B always 21 dB below board A, 40 lines per point:
+
+![Lines delivered against the TX level, with and without acknowledgements](../../assets/lab11_51_arq_vs_level.png)
+
+Down to board A at -50 dB the acknowledgements deliver every line, where the plain chat loses up to
+half. One step lower, at -53/-74 dB, something new appears. Board B printed 26 of board A's 40
+lines, yet board A reported 36 of its lines as not acknowledged. The acknowledgements for board A's
+lines travel from B to A, and at that level the B -> A direction delivered 2 lines of 40 on its own.
+A protocol that relies on answers is only as good as the weaker of its two directions.
+
 ## Things to try
 
-- Type on both boards at the same moment on the lossy link. The modem is half duplex: while a board
-  sends and hears its own burst, it cannot receive. Both senders repeat every 0.6 s, so their
-  repeats can keep meeting. Count how often a line needs all 5 tries, and compare with lines typed
-  on one board only.
+- Type on both boards at the same moment. The modem is half duplex: while a board sends and hears
+  its own burst, it cannot receive, so the two first tries collide. On the course bench this cost
+  almost every line of board B one repeat, but no line was lost, and a random extra wait before
+  each repeat (`zmbox` adds up to 0.5 s; `ZMBOX_ARQ_BACKOFF=0` turns it off) made no measurable
+  difference: after the first collision the two boards are no longer in step.
+  `two_board_chat.py --arq --b-offset 0` runs this.
 - Change `ARQ_TRIES` or `ARQ_WAIT_S` in `zmbox.c`. Fewer tries lose more lines; a shorter wait sends
   repeats before the acknowledgement could have arrived (it needs at least the 140 ms wait of Lab
   11.50 plus the burst).
@@ -130,7 +144,8 @@ does not promise that "no acknowledgement" means "not delivered".
 4. Each board stops listening while it sends. If both start a line at about the same moment and
    repeat on the same 0.6 s rhythm, each repeat can fall where the other board is transmitting. The
    usual cure is a random back-off: wait a random time before each repeat, so the two rhythms drift
-   apart.
+   apart. On the course bench the rhythms drifted apart by themselves after the first collision, and
+   the back-off made no difference; on a busier channel it would.
 
 </details>
 
@@ -138,6 +153,8 @@ does not promise that "no acknowledgement" means "not delivered".
 
 - [`two-board-arq-20261017.md`](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/hardware/two-board-arq-20261017.md):
   the protocol, the one-way baseline and the lossy-link runs;
+- [`two-board-link-layer-20261017.md`](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/hardware/two-board-link-layer-20261017.md):
+  delivery against the level, both boards typing at once, fragments and speed;
 - [`two-board-chat-20261016.md`](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/hardware/two-board-chat-20261016.md):
   the chat without acknowledgements.
 
@@ -145,6 +162,9 @@ does not promise that "no acknowledgement" means "not delivered".
 
 It shows a link layer that turns a link losing about 40 % of its frames into one that delivers 199
 of 200 lines and reports the rest, with nothing changed in the fabric. It does not show a reliable
-link in the strict sense: "no acknowledgement" does not mean "lost", there is no back-off for two
-boards talking at once, and the losses on the bench were not split by cause. One board pair, one
+link in the strict sense: "no acknowledgement" does not mean "lost", it needs both directions to
+work, and the losses on the bench were not split by cause. One board pair, one
 carrier, conducted paths, two runs per row.
+
+[Lab 11.52](lab-11-52-fragments-and-speed.md) sends messages longer than one packet in
+acknowledged fragments and measures where the time of this stop-and-wait link goes.
