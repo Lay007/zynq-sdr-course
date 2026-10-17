@@ -35,9 +35,10 @@ Three details come from the mailbox contract of Lab 11.49:
 
 ## What you need
 
-- Two boards with the image `issue69-listen-silent` from the artifacts repository (sha256
-  `b763660c...`). Older mailbox images work for one-way messages but not for a chat; the third
-  finding below explains why.
+- Two boards with the image `issue70-listen-window` from the artifacts repository (sha256
+  `f89db5d1...`). The chat also runs on `issue69-listen-silent`, which the results below were taken
+  with; older mailbox images work for one-way messages but not for a chat (the third finding below
+  explains why).
 - Two conducted paths, one per direction. On the course bench: board A TX1 -> variable attenuator
   (30 dB) -> splitter -> board B RX1, and board B TX1 -> 30 dB -> board A RX1. 915 MHz, RX gain 71 dB
   on both boards.
@@ -172,8 +173,16 @@ The test was cheap: wait 140 ms after RX_STOP, longer than any attempt, and only
 chat sender went from 93 and 94 of 100 to 100 of 100 twice. A 68 ms wait helped little (96 and 95),
 probably because the attempt in flight often had more than 68 ms left, so the burst still left at
 its end. `zmbox chat` now waits 140 ms; a line goes out 0.14 s later than it could, which nobody
-notices in a chat. The receiver itself still loses a packet that arrives at the edge of its window;
-that is the open part of #70.
+notices in a chat.
+
+The receiver was fixed as well. A listening attempt used to end when its sampler had produced
+65535 symbols, whatever was arriving at that moment. Now the window is extended while a packet is
+coming in. A simulation that sends a message 200 and 40 symbols before the end of the window lost
+both with the old receiver and delivers both with the new one (`tb_message_modem_listen_edge`). On
+the boards, with the image `issue70-listen-window` and no wait at all (`ZMBOX_TX_DELAY_MS=0`), the
+chat delivered 100 of 100 lines in both directions, twice; the #69 image gave 92 and 84 in the same
+run. The 140 ms wait stays in `zmbox chat`: it costs nothing and protects boards that still run an
+older image.
 
 ### And the check the chat was built for (issue #67)
 
@@ -255,9 +264,8 @@ script's default of -50 dB for board B.
 
 It shows two boards exchanging typed messages through the Lab 5.12 register contract in both
 directions, with the link layer in the fabric and no corrupted message. It does not show a
-reliable link: there is no acknowledgement and no retransmission, the receiver still loses a packet
-that arrives at the edge of its listening window (the chat only avoids sending there), and a line
-in a hundred can still go missing. All numbers are from one board pair, one carrier, conducted
+reliable link: there is no acknowledgement and no retransmission, and a line in a hundred can still
+go missing. All numbers are from one board pair, one carrier, conducted
 paths.
 
 [Lab 11.51](lab-11-51-acknowledgements.md) adds acknowledgements and repeats to the chat, so that

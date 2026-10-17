@@ -162,9 +162,25 @@ board A at TX -30 dB:
 | -50 dB | 100 | 99 | 99 |
 
 No line corrupted or repeated, no CRC failure. The B -> A losses at -30 dB are the overdrive of
-board A described above. The receiver itself still loses a packet that arrives at the edge of a
-listening window; a sender that does not avoid that moment would see it. That part of #70 stays
-open.
+board A described above.
+
+### The receiver side (2026-10-17)
+
+The receiver itself lost a packet arriving at the edge of a listening window. Fixed in RTL
+(e68ded3): the samplers run without a limit in listen mode, and `qpsk_zynq_ber_top` ends a listening
+attempt after 65535 symbols only when no packet is coming in. `tb_message_modem_listen_edge` sends
+a message 200 and 40 symbols before the end of R's window: the old RTL delivered neither, the new
+one both. Image `issue70-listen-window` (md5 `bee0ba19`; default directives WNS -0.212 ns, the
+ExtraNetDelay_high variant WNS +0.164 ns, TNS 0, WHS +0.053 ns) on both boards, chat without the
+wait (`ZMBOX_TX_DELAY_MS=0`), board A -30 dB, board B -50 dB, 100 rounds:
+
+| image | A -> B | B -> A |
+|---|---:|---:|
+| `issue69-listen-silent` | 92 | 84 |
+| `issue70-listen-window` | 100 | 100 |
+| `issue70-listen-window`, repeat | 100 | 100 |
+
+With the default 140 ms wait on the new image: 99 and 99 of 100. #70 is closed.
 
 ## Limits
 

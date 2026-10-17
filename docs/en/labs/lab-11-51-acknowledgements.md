@@ -33,7 +33,8 @@ no ACK within 0.6 s: send the line again, at most 5 times
 
 ## What you need
 
-The bench of Lab 11.50: two boards with the image `issue69-listen-silent`, two conducted paths,
+The bench of Lab 11.50: two boards with the image `issue70-listen-window` (the results below were
+taken with `issue69-listen-silent`), two conducted paths,
 `/root/zmbox` on both boards built from `blocks/block_11_integrated_sdr_project/sw/zmbox.c`.
 Acknowledgements are a mode of the same program:
 

@@ -283,5 +283,47 @@
    }
   ],
   "zmbox_commit": "11409d8"
+ },
+ "issue70_receiver_fix_20261017": {
+  "rtl_commit": "e68ded3",
+  "image_md5": "bee0ba1988a0d11a96c40ed796d3bad6",
+  "simulation_tb_message_modem_listen_edge": {
+   "old_rtl": "neither message delivered (200 and 40 symbols before the window end)",
+   "new_rtl": "both delivered with CRC_OK"
+  },
+  "chat_runs_a_tx_-30_b_tx_-50": [
+   {
+    "image": "issue69-listen-silent",
+    "file": "chat100_delay0_img69.json",
+    "tx_delay_ms": 0.0,
+    "a_to_b": 92,
+    "b_to_a": 84,
+    "rounds": 100
+   },
+   {
+    "image": "issue70-listen-window",
+    "file": "chat100_delay0_img70.json",
+    "tx_delay_ms": 0.0,
+    "a_to_b": 100,
+    "b_to_a": 100,
+    "rounds": 100
+   },
+   {
+    "image": "issue70-listen-window",
+    "file": "chat100_delay0_img70_r2.json",
+    "tx_delay_ms": 0.0,
+    "a_to_b": 100,
+    "b_to_a": 100,
+    "rounds": 100
+   },
+   {
+    "image": "issue70-listen-window",
+    "file": "chat100_default_img70.json",
+    "tx_delay_ms": null,
+    "a_to_b": 99,
+    "b_to_a": 99,
+    "rounds": 100
+   }
+  ]
  }
 }
