@@ -17,6 +17,9 @@
  *
  *   board-a$ ./zmbox chat --name A        board-b$ ./zmbox chat --name B
  *
+ * With --arq (Lab 11.51) every line is acknowledged and repeated until it is, and a repeated line
+ * is printed once.
+ *
  * The program uses only the Lab 5.12 register contract: TX_SEQUENCE, TX_LENGTH, TX_DATA, TX_START,
  * then STATUS.RX_VALID, RX_SEQUENCE, RX_LENGTH, RX_META, RX_DATA, RX_ACK. Packet-v1 framing, CRC,
  * whitening, the burst and the reception all happen in the fabric (mailbox MODE = 1 inside the
@@ -320,32 +323,112 @@ static uint32_t take_rx(uint32_t *seq, uint32_t *meta, char *out)
     return rlen;
 }
 
-/* Chat: listen all the time; a typed line stops listening, goes out with TX_START (the board
- * also hears its own burst in that attempt, which is discarded), then listening resumes. */
-static int chat(const char *name, double tx_gain, int rx_gain, long lo)
+/* Send one frame from chat: stop listening, wait out the listening attempt in flight, TX_START,
+ * discard our own burst (heard through the board), listen again. Returns 1 if the mailbox took it. */
+static int send_frame(uint32_t seq, const uint8_t *data, int len)
+{
+    uint32_t rseq, meta;
+    char out[29];
+    mbw(MB_CONTROL, 8);                       /* RX_STOP */
+    uint8_t buf[32] = {0};
+    memcpy(buf, data, len);
+    mbw(MB_TX_SEQUENCE, seq & 0xFFFF);
+    mbw(MB_TX_LENGTH, (uint32_t)len);
+    for (int w = 0; w < 8; w++)
+        mbw(MB_TX_DATA0 + 4 * w, buf[4 * w] | (buf[4 * w + 1] << 8) | (buf[4 * w + 2] << 16) | ((uint32_t)buf[4 * w + 3] << 24));
+    /* Wait out the listening attempt in flight (at most 136 ms) before TX_START (#70). Sending
+     * as soon as the mailbox takes TX_START puts the burst at the end of our listening window,
+     * and the other board's window started at the same moment as ours (both restarted on the
+     * last exchange): the burst arrived at the very end of its window, and 7-9 % were lost.
+     * After a fixed wait the burst goes out at a moment set by the typed line instead. */
+    const char *dly = getenv("ZMBOX_TX_DELAY_MS");
+    usleep((useconds_t)((dly ? atof(dly) : 140.0) * 1000.0));
+    double t_end = now_s() + 1.0;
+    int started = 0;
+    while (now_s() < t_end && !started) {
+        mbw(MB_CONTROL, 1);
+        /* TX_DONE stays set from the previous message, so only TX_BUSY tells that this
+         * TX_START was taken; a send with its own reception lasts over a millisecond. */
+        for (int i = 0; i < 200 && !started; i++)
+            started = (mbr(MB_STATUS) & 0x1) != 0;
+        if (!started)
+            usleep(2000);
+    }
+    t_end = now_s() + 1.0;
+    while (started && now_s() < t_end && !(mbr(MB_STATUS) & 0x4))
+        usleep(500);
+    if (mbr(MB_STATUS) & 0x4)
+        take_rx(&rseq, &meta, out);           /* our own burst, heard on our own RX */
+    mbw(MB_CONTROL, 4);                       /* RX_LISTEN again */
+    return started;
+}
+
+#define ACK_BYTE 0x06                         /* payload of an acknowledgement: one ASCII ACK */
+#define ARQ_TRIES 5
+#define ARQ_WAIT_S 0.6
+
+static int last_rx_seq = -1;                  /* --arq: sequence of the last line printed */
+
+/* A frame that passed the CRC. Returns the sequence number if it is an acknowledgement, else -1.
+ * With arq, a data frame is acknowledged every time (our ACK may have been lost) but printed only
+ * if its sequence number is new. */
+static int handle_frame(uint32_t rseq, const char *out, uint32_t rlen, int arq)
+{
+    if (arq && rlen == 1 && (uint8_t)out[0] == ACK_BYTE)
+        return (int)rseq;
+    if (arq) {
+        uint8_t ack = ACK_BYTE;
+        send_frame(rseq, &ack, 1);
+        if ((int)rseq == last_rx_seq) {
+            if (getenv("ZMBOX_DEBUG"))
+                printf("-- duplicate seq %u acknowledged again\n", rseq);
+            fflush(stdout);
+            return -1;
+        }
+        last_rx_seq = (int)rseq;
+    }
+    printf("<< %s\n", out);
+    fflush(stdout);
+    return -1;
+}
+
+/* Poll the mailbox once: deliver what arrived. Returns an acknowledged sequence number or -1. */
+static int poll_rx(int arq)
+{
+    uint32_t rseq, meta;
+    char out[29];
+    if (!(mbr(MB_STATUS) & 0x4))
+        return -1;
+    uint32_t rlen = take_rx(&rseq, &meta, out);
+    if (meta & 1)
+        return handle_frame(rseq, out, rlen, arq);
+    if (getenv("ZMBOX_DEBUG")) {
+        printf("-- packet dropped, meta 0x%x seq %u at %.3f s\n", meta, rseq, now_s());
+        fflush(stdout);
+    }
+    return -1;
+}
+
+/* Chat: listen all the time; a typed line stops listening, goes out with TX_START (the board also
+ * hears its own burst in that attempt, which is discarded), then listening resumes. With arq
+ * (Lab 11.51) every line is acknowledged by the other board and sent again, up to ARQ_TRIES
+ * times, until the acknowledgement arrives; the receiver prints a repeated line only once. */
+static int chat(const char *name, double tx_gain, int rx_gain, long lo, int arq)
 {
     radio_setup(tx_gain, rx_gain, lo, 1);
     signal(SIGTERM, on_term);
     signal(SIGINT, on_term);
     mbw(MB_CONTROL, 2);
     mbw(MB_CONTROL, 4);                       /* RX_LISTEN */
-    printf("chat as %s: type a line (at most 27 bytes with the name) and press Enter; Ctrl-C ends\n", name);
+    printf("chat as %s%s: type a line (at most 27 bytes with the name) and press Enter; Ctrl-C ends\n", name,
+           arq ? ", with acknowledgements" : "");
     fflush(stdout);
-    int seq = 1;
-    char line[128], out[29];
+    /* A random first sequence number, so that a restarted chat is not taken for a repeat. */
+    uint32_t seq = arq ? (1u + ((uint32_t)(now_s() * 1000.0) & 0x7FFF)) : 1u;
+    char line[128];
     struct pollfd pfd = {.fd = 0, .events = POLLIN};
     while (!stop_requested) {
-        uint32_t st = mbr(MB_STATUS), rseq, meta;
-        if (st & 0x4) {
-            take_rx(&rseq, &meta, out);
-            if (meta & 1) {
-                printf("<< %s\n", out);
-                fflush(stdout);
-            } else if (getenv("ZMBOX_DEBUG")) {
-                printf("-- packet dropped, meta 0x%x seq %u at %.3f s\n", meta, rseq, now_s());
-                fflush(stdout);
-            }
-        }
+        poll_rx(arq);
         if (poll(&pfd, 1, 20) <= 0)
             continue;
         if (!fgets(line, sizeof line, stdin))
@@ -357,42 +440,33 @@ static int chat(const char *name, double tx_gain, int rx_gain, long lo)
         snprintf(msg, sizeof msg, "%.16s: %.120s", name, line);
         if (strlen(msg) > 27)
             msg[27] = 0;
-        mbw(MB_CONTROL, 8);                   /* RX_STOP */
-        uint8_t buf[64] = {0};
         int len = (int)strlen(msg);
-        memcpy(buf, msg, len);
-        mbw(MB_TX_SEQUENCE, (uint32_t)seq++);
-        mbw(MB_TX_LENGTH, (uint32_t)len);
-        for (int w = 0; w < 8; w++)
-            mbw(MB_TX_DATA0 + 4 * w, buf[4 * w] | (buf[4 * w + 1] << 8) | (buf[4 * w + 2] << 16) | ((uint32_t)buf[4 * w + 3] << 24));
-        /* The listening attempt in flight ends within its 136 ms window; TX_START is refused
-         * until then, so retry until the mailbox reports TX_BUSY or TX_DONE. */
-        double t_end = now_s() + 1.0;
-        int started = 0;
-        /* Wait out the listening attempt in flight (at most 136 ms) before TX_START (#70). Sending
-         * as soon as the mailbox takes TX_START puts the burst at the end of our listening window,
-         * and the other board's window started at the same moment as ours (both restarted on the
-         * last exchange): the burst arrived at the very end of its window, and 7-9 % were lost.
-         * After a fixed wait the burst goes out at a moment set by the typed line instead. */
-        const char *dly = getenv("ZMBOX_TX_DELAY_MS");
-        usleep((useconds_t)((dly ? atof(dly) : 140.0) * 1000.0));
-        while (now_s() < t_end && !started) {
-            mbw(MB_CONTROL, 1);
-            /* TX_DONE stays set from the previous message, so only TX_BUSY tells that this
-             * TX_START was taken; a send with its own reception lasts over a millisecond. */
-            for (int i = 0; i < 200 && !started; i++)
-                started = (mbr(MB_STATUS) & 0x1) != 0;
-            if (!started)
-                usleep(2000);
+        uint32_t s = seq++ & 0xFFFF;
+        if (!arq) {
+            int started = send_frame(s, (const uint8_t *)msg, len);
+            printf(">> %s%s\n", msg, started ? "" : "   (not sent: mailbox busy)");
+            fflush(stdout);
+            continue;
         }
-        t_end = now_s() + 1.0;
-        while (started && now_s() < t_end && !(mbr(MB_STATUS) & 0x4))
-            usleep(500);
-        if (mbr(MB_STATUS) & 0x4)
-            take_rx(&rseq, &meta, out);       /* our own burst, heard on our own RX */
-        printf(">> %s%s\n", msg, started ? "" : "   (not sent: mailbox busy)");
+        int acked = 0, tries = 0;
+        while (!acked && tries < ARQ_TRIES && !stop_requested) {
+            tries++;
+            send_frame(s, (const uint8_t *)msg, len);
+            double t_end = now_s() + ARQ_WAIT_S;
+            while (!acked && now_s() < t_end && !stop_requested) {
+                if (poll_rx(arq) == (int)s)
+                    acked = 1;
+                else
+                    usleep(2000);
+            }
+        }
+        if (acked)
+            printf(">> %s%s\n", msg, tries > 1 ? "   (acknowledged after a repeat)" : "");
+        else
+            printf(">> %s   (no acknowledgement after %d tries)\n", msg, tries);
+        if (getenv("ZMBOX_DEBUG"))
+            printf("-- seq %u tries %d acked %d\n", s, tries, acked);
         fflush(stdout);
-        mbw(MB_CONTROL, 4);                   /* RX_LISTEN again */
     }
     mbw(MB_CONTROL, 8);
     return 0;
@@ -427,7 +501,7 @@ int main(int argc, char **argv)
     if (argc < 2) {
         fprintf(stderr, "usage: zmbox send <text> [--seq N] [--count N] [--tx-gain dB] [--rx-gain dB] [--lo Hz] [--offset N] [--quiet]\n"
                         "       zmbox listen [--count N] [--timeout s] [--rx-gain dB] [--lo Hz]\n"
-                        "       zmbox chat [--name X] [--tx-gain dB] [--rx-gain dB] [--lo Hz]\n"
+                        "       zmbox chat [--name X] [--arq] [--tx-gain dB] [--rx-gain dB] [--lo Hz]\n"
                         "       zmbox stop\n");
         return 2;
     }
@@ -454,12 +528,16 @@ int main(int argc, char **argv)
     }
     if (!strcmp(argv[1], "chat")) {
         const char *name = "?";
-        for (int i = 2; i + 1 < argc; i++)
-            if (!strcmp(argv[i], "--name"))
+        int arq = 0;
+        for (int i = 2; i < argc; i++) {
+            if (!strcmp(argv[i], "--name") && i + 1 < argc)
                 name = argv[i + 1];
+            if (!strcmp(argv[i], "--arq"))
+                arq = 1;
+        }
         if (open_regs())
             return 2;
-        return chat(name, tx_gain, rx_gain < 0 ? 71 : rx_gain, lo);
+        return chat(name, tx_gain, rx_gain < 0 ? 71 : rx_gain, lo, arq);
     }
     if (!strcmp(argv[1], "listen")) {
         if (open_regs())

@@ -10,6 +10,9 @@ Each round board A types "a<k>", and --period seconds later board B types "b<k>"
 consoles are compared with what was typed: delivered lines in each direction, lines that arrived
 with a text nobody typed (wrong), and lines that arrived twice.
 
+--arq runs both chats with acknowledgements and repeats (Lab 11.51); the summary then also counts,
+per direction, the lines the sender reported as not acknowledged and the lines it had to repeat.
+
     python two_board_chat.py --rounds 100 --tx-gain-b -50 --json-out chat.json
 """
 from __future__ import annotations
@@ -53,6 +56,7 @@ def main() -> int:
     ap.add_argument("--tx-gain-b", type=float, default=-50.0,
                     help="the B -> A path of the course bench has no splitter; louder than -40 dB overdrives board A at 71 dB")
     ap.add_argument("--rx-gain", type=int, default=71)
+    ap.add_argument("--arq", action="store_true", help="zmbox chat --arq: acknowledgements and repeats (Lab 11.51)")
     ap.add_argument("--max-temp", type=float, default=78.0, help="refuse to start if board B is hotter (no fan)")
     ap.add_argument("--json-out", type=Path, required=True)
     args = ap.parse_args()
@@ -67,7 +71,8 @@ def main() -> int:
 
     def run(key, runner, who, name, gain, start):
         cmd = (f"cd /root && {typing_script(who, args.rounds, args.period, start)} | "
-               f"ZMBOX_DEBUG=1 ./zmbox chat --name {name} --tx-gain {gain:g} --rx-gain {args.rx_gain} 2>&1")
+               f"ZMBOX_DEBUG=1 ./zmbox chat --name {name}{' --arq' if args.arq else ''} --tx-gain {gain:g} "
+               f"--rx-gain {args.rx_gain} 2>&1")
         consoles[key] = L.sh(runner, cmd)
 
     threads = [threading.Thread(target=run, args=("a", ra, "a", "A", args.tx_gain_a, 3)),
@@ -86,6 +91,10 @@ def main() -> int:
                "b_to_a": count(consoles["a"], "B", "b", args.rounds),
                "crc_dropped": {"at_a": consoles["a"].count("packet dropped"), "at_b": consoles["b"].count("packet dropped")},
                "not_sent": consoles["a"].count("not sent") + consoles["b"].count("not sent"),
+               "arq": args.arq,
+               "not_acknowledged": {"by_b": consoles["a"].count("no acknowledgement"),
+                                    "by_a": consoles["b"].count("no acknowledgement")},
+               "repeated": {"a_lines": consoles["a"].count("after a repeat"), "b_lines": consoles["b"].count("after a repeat")},
                "board_b_zynq_c": [t_before, zynq_temp(rb)]}
     print(json.dumps({k: v for k, v in summary.items() if k not in ("a_to_b", "b_to_a")}))
     for d in ("a_to_b", "b_to_a"):
