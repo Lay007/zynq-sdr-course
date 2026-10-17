@@ -1,0 +1,4861 @@
+{
+ "date": "2026-10-17",
+ "image": "issue70-listen-window (md5 bee0ba19) on both boards",
+ "zmbox": "7742f13 (fragments, back-off, unbuffered stdin); the level sweep ran with fe321c7",
+ "level_sweep": [
+  {
+   "tx_a_db": -44,
+   "tx_b_db": -65,
+   "arq": false,
+   "rounds": 40,
+   "a_to_b": 39,
+   "b_to_a": 40,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 0,
+    "b_lines": 0
+   },
+   "board_b_c": 66.1
+  },
+  {
+   "tx_a_db": -44,
+   "tx_b_db": -65,
+   "arq": true,
+   "rounds": 40,
+   "a_to_b": 40,
+   "b_to_a": 40,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 0,
+    "b_lines": 1
+   },
+   "board_b_c": 66.2
+  },
+  {
+   "tx_a_db": -47,
+   "tx_b_db": -68,
+   "arq": false,
+   "rounds": 40,
+   "a_to_b": 39,
+   "b_to_a": 32,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 0,
+    "b_lines": 0
+   },
+   "board_b_c": 66.6
+  },
+  {
+   "tx_a_db": -47,
+   "tx_b_db": -68,
+   "arq": true,
+   "rounds": 40,
+   "a_to_b": 40,
+   "b_to_a": 40,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 10,
+    "b_lines": 9
+   },
+   "board_b_c": 65.9
+  },
+  {
+   "tx_a_db": -50,
+   "tx_b_db": -71,
+   "arq": false,
+   "rounds": 40,
+   "a_to_b": 28,
+   "b_to_a": 19,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 0,
+    "b_lines": 0
+   },
+   "board_b_c": 66.7
+  },
+  {
+   "tx_a_db": -50,
+   "tx_b_db": -71,
+   "arq": true,
+   "rounds": 40,
+   "a_to_b": 40,
+   "b_to_a": 40,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 1,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 20,
+    "b_lines": 19
+   },
+   "board_b_c": 65.5
+  },
+  {
+   "tx_a_db": -53,
+   "tx_b_db": -74,
+   "arq": false,
+   "rounds": 40,
+   "a_to_b": 15,
+   "b_to_a": 2,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 0,
+    "b_lines": 0
+   },
+   "board_b_c": 65.7
+  },
+  {
+   "tx_a_db": -53,
+   "tx_b_db": -74,
+   "arq": true,
+   "rounds": 40,
+   "a_to_b": 26,
+   "b_to_a": 20,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 36,
+    "by_a": 37
+   },
+   "repeated": {
+    "a_lines": 4,
+    "b_lines": 2
+   },
+   "board_b_c": 66.2
+  },
+  {
+   "tx_a_db": -56,
+   "tx_b_db": -77,
+   "arq": false,
+   "rounds": 40,
+   "a_to_b": 3,
+   "b_to_a": 0,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 0,
+    "b_lines": 0
+   },
+   "board_b_c": 65.2
+  },
+  {
+   "tx_a_db": -56,
+   "tx_b_db": -77,
+   "arq": true,
+   "rounds": 40,
+   "a_to_b": 2,
+   "b_to_a": 0,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 40,
+    "by_a": 40
+   },
+   "repeated": {
+    "a_lines": 0,
+    "b_lines": 0
+   },
+   "board_b_c": 64.5
+  }
+ ],
+ "simultaneous_typing": [
+  {
+   "file": "sim_default_nobo.json",
+   "rounds": 40,
+   "tx_a_db": -30.0,
+   "tx_b_db": -50.0,
+   "b_offset_s": 0.0,
+   "line_len": 0,
+   "backoff": false,
+   "tx_delay_ms": null,
+   "a_to_b": 40,
+   "b_to_a": 40,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 2,
+    "b_lines": 36
+   },
+   "sender_a_lines": [
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1024
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1024
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    }
+   ],
+   "sender_b_lines": [
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1032
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1036
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1040
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1044
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1028
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1032
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1036
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1040
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1044
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1771
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1032
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1036
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1040
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1044
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1028
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1032
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1036
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1040
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1030
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1034
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1036
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1040
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1030
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1034
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1038
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1042
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1046
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1030
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1034
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1038
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1040
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1770
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1783
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 296
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 296
+    }
+   ]
+  },
+  {
+   "file": "sim_default.json",
+   "rounds": 40,
+   "tx_a_db": -30.0,
+   "tx_b_db": -50.0,
+   "b_offset_s": 0.0,
+   "line_len": 0,
+   "backoff": true,
+   "tx_delay_ms": null,
+   "a_to_b": 40,
+   "b_to_a": 40,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 3,
+    "b_lines": 37
+   },
+   "sender_a_lines": [
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 281
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 281
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1477
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1235
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1405
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    }
+   ],
+   "sender_b_lines": [
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1073
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1258
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1082
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1206
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1229
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1194
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1096
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1223
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1428
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1069
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1274
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1258
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1061
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1104
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1310
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1113
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1399
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1321
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1527
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1189
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1173
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1117
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1101
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1428
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1310
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1053
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1498
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1361
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1304
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1070
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1515
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1399
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1463
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1307
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 2305
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 2268
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 2522
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 292
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 291
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 289
+    }
+   ]
+  },
+  {
+   "file": "sim47_r1_nobo.json",
+   "rounds": 40,
+   "tx_a_db": -47.0,
+   "tx_b_db": -68.0,
+   "b_offset_s": 0.0,
+   "line_len": 0,
+   "backoff": false,
+   "tx_delay_ms": null,
+   "a_to_b": 40,
+   "b_to_a": 40,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 6,
+    "b_lines": 36
+   },
+   "sender_a_lines": [
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1044
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1045
+    }
+   ],
+   "sender_b_lines": [
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1034
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1781
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1040
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1030
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1034
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1780
+    },
+    {
+     "tries": 4,
+     "acked": true,
+     "time_ms": 2528
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 4,
+     "acked": true,
+     "time_ms": 2518
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1034
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1038
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1786
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1788
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1030
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1034
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1038
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1042
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1046
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1030
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1777
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1038
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1042
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1789
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1030
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1034
+    },
+    {
+     "tries": 4,
+     "acked": true,
+     "time_ms": 2526
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1787
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1773
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1034
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1038
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1042
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1046
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1029
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1046
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    }
+   ]
+  },
+  {
+   "file": "sim47_r1.json",
+   "rounds": 40,
+   "tx_a_db": -47.0,
+   "tx_b_db": -68.0,
+   "b_offset_s": 0.0,
+   "line_len": 0,
+   "backoff": true,
+   "tx_delay_ms": null,
+   "a_to_b": 40,
+   "b_to_a": 40,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 8,
+    "b_lines": 37
+   },
+   "sender_a_lines": [
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1428
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1475
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 2493
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1177
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1438
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1397
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1467
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1185
+    }
+   ],
+   "sender_b_lines": [
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1415
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 2182
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1543
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1044
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1430
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1353
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1479
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1463
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1488
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1090
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1253
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1439
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1047
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1467
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1148
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 2017
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1077
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1202
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1266
+    },
+    {
+     "tries": 4,
+     "acked": true,
+     "time_ms": 3049
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1154
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1177
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 2025
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1446
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1491
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1435
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1438
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1162
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1146
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1270
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1235
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 2273
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1282
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1406
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 2244
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1917
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1359
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 294
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 294
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 294
+    }
+   ]
+  },
+  {
+   "file": "sim47_r2_nobo.json",
+   "rounds": 40,
+   "tx_a_db": -47.0,
+   "tx_b_db": -68.0,
+   "b_offset_s": 0.0,
+   "line_len": 0,
+   "backoff": false,
+   "tx_delay_ms": null,
+   "a_to_b": 40,
+   "b_to_a": 40,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 8,
+    "b_lines": 36
+   },
+   "sender_a_lines": [
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 281
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1024
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1045
+    }
+   ],
+   "sender_b_lines": [
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1776
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1038
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1040
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1030
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1034
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1038
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1042
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1030
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1034
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1038
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1042
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1773
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1034
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1036
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1042
+    },
+    {
+     "tries": 4,
+     "acked": true,
+     "time_ms": 2533
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1029
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1034
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1038
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1042
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1770
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1030
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1034
+    },
+    {
+     "tries": 4,
+     "acked": true,
+     "time_ms": 2524
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1785
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1046
+    },
+    {
+     "tries": 4,
+     "acked": true,
+     "time_ms": 2519
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1778
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1038
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1042
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1046
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1772
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1026
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    }
+   ]
+  },
+  {
+   "file": "sim47_r2.json",
+   "rounds": 40,
+   "tx_a_db": -47.0,
+   "tx_b_db": -68.0,
+   "b_offset_s": 0.0,
+   "line_len": 0,
+   "backoff": true,
+   "tx_delay_ms": null,
+   "a_to_b": 40,
+   "b_to_a": 40,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 7,
+    "b_lines": 34
+   },
+   "sender_a_lines": [
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1109
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 4,
+     "acked": true,
+     "time_ms": 3293
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 281
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1126
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 5,
+     "acked": true,
+     "time_ms": 4801
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1161
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 281
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 2119
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1507
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    }
+   ],
+   "sender_b_lines": [
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1092
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1421
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1040
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1206
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1289
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1314
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 2260
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1401
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1266
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1471
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1274
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1218
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1463
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1446
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1248
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 1976
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1121
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1365
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1090
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1314
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1418
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1361
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1426
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1430
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 2340
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1156
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1361
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1164
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 2235
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1154
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1339
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1370
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1227
+    },
+    {
+     "tries": 3,
+     "acked": true,
+     "time_ms": 2373
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    }
+   ]
+  }
+ ],
+ "fragments": [
+  {
+   "file": "frag100_default.json",
+   "rounds": 20,
+   "tx_a_db": -30.0,
+   "tx_b_db": -50.0,
+   "b_offset_s": 4.0,
+   "line_len": 100,
+   "backoff": true,
+   "tx_delay_ms": null,
+   "a_to_b": 20,
+   "b_to_a": 20,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 0,
+    "b_lines": 0
+   },
+   "sender_a_messages": [
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1449
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1452
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1454
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1435
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1458
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1460
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1420
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1462
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1443
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1424
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1466
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1447
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1449
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1470
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1471
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1472
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1412
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1454
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1433
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1435
+    }
+   ],
+   "sender_b_messages": [
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1422
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1433
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1422
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1433
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1422
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1433
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1441
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1431
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1420
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1449
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1439
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1429
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1418
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1427
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1435
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1425
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1433
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1422
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1431
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1420
+    }
+   ]
+  },
+  {
+   "file": "frag381_default.json",
+   "rounds": 10,
+   "tx_a_db": -30.0,
+   "tx_b_db": -50.0,
+   "b_offset_s": 10.0,
+   "line_len": 381,
+   "backoff": true,
+   "tx_delay_ms": null,
+   "a_to_b": 10,
+   "b_to_a": 10,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 0,
+    "b_lines": 0
+   },
+   "sender_a_messages": [
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4616
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4653
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4651
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4609
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4647
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4645
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4643
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4680
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4618
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4654
+    }
+   ],
+   "sender_b_messages": [
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4539
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4537
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4535
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4533
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4531
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4568
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4566
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4543
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4559
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4537
+    }
+   ]
+  },
+  {
+   "file": "frag100_lossy47.json",
+   "rounds": 20,
+   "tx_a_db": -47.0,
+   "tx_b_db": -68.0,
+   "b_offset_s": 6.0,
+   "line_len": 100,
+   "backoff": true,
+   "tx_delay_ms": null,
+   "a_to_b": 20,
+   "b_to_a": 20,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 0,
+    "b_lines": 0
+   },
+   "sender_a_messages": [
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 2,
+     "delivered": true,
+     "time_ms": 3156
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2207
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 2,
+     "delivered": true,
+     "time_ms": 3365
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2576
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1446
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1439
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2338
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1449
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1445
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1439
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1455
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2434
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 3,
+     "delivered": true,
+     "time_ms": 4254
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2464
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2679
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2571
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1441
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2195
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1466
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1441
+    }
+   ],
+   "sender_b_messages": [
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2356
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1418
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1443
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1449
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1435
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2586
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1429
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2339
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2648
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2675
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1417
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1443
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2234
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1418
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1425
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1429
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1435
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1418
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2589
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2415
+    }
+   ]
+  },
+  {
+   "file": "frag100_lossy50.json",
+   "rounds": 20,
+   "tx_a_db": -50.0,
+   "tx_b_db": -71.0,
+   "b_offset_s": 8.0,
+   "line_len": 100,
+   "backoff": true,
+   "tx_delay_ms": null,
+   "a_to_b": 16,
+   "b_to_a": 20,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 0,
+    "b_lines": 0
+   },
+   "sender_a_messages": [
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 6,
+     "delivered": true,
+     "time_ms": 6950
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 2,
+     "delivered": true,
+     "time_ms": 3670
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 10,
+     "delivered": true,
+     "time_ms": 10995
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 2,
+     "delivered": false,
+     "time_ms": 7296
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 4,
+     "delivered": true,
+     "time_ms": 6023
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 6,
+     "delivered": true,
+     "time_ms": 7898
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 8,
+     "delivered": true,
+     "time_ms": 9726
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 4,
+     "delivered": false,
+     "time_ms": 9657
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 4,
+     "delivered": true,
+     "time_ms": 5727
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 3,
+     "delivered": true,
+     "time_ms": 4839
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 2,
+     "delivered": false,
+     "time_ms": 6969
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 8,
+     "delivered": true,
+     "time_ms": 9003
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 4,
+     "delivered": false,
+     "time_ms": 10153
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 5,
+     "delivered": false,
+     "time_ms": 9612
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": false,
+     "time_ms": 5089
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 5,
+     "delivered": true,
+     "time_ms": 6446
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 5,
+     "delivered": true,
+     "time_ms": 6267
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 5,
+     "delivered": true,
+     "time_ms": 6291
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 14,
+     "delivered": true,
+     "time_ms": 14688
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 6,
+     "delivered": true,
+     "time_ms": 7493
+    }
+   ],
+   "sender_b_messages": [
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 6,
+     "delivered": true,
+     "time_ms": 7691
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 4,
+     "delivered": true,
+     "time_ms": 5427
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 4,
+     "delivered": true,
+     "time_ms": 5075
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 2200
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 4,
+     "delivered": true,
+     "time_ms": 5720
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1426
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 5,
+     "delivered": true,
+     "time_ms": 6667
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 2,
+     "delivered": true,
+     "time_ms": 3273
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 4,
+     "delivered": true,
+     "time_ms": 5733
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 4,
+     "delivered": true,
+     "time_ms": 5766
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 4,
+     "delivered": true,
+     "time_ms": 5099
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 3,
+     "delivered": true,
+     "time_ms": 4597
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 4,
+     "delivered": true,
+     "time_ms": 5282
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 4,
+     "delivered": true,
+     "time_ms": 5620
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 5,
+     "delivered": true,
+     "time_ms": 6774
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1418
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 1437
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 4,
+     "delivered": true,
+     "time_ms": 5637
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 9,
+     "delivered": true,
+     "time_ms": 9574
+    },
+    {
+     "bytes": 103,
+     "fragments": 5,
+     "repeats": 3,
+     "delivered": true,
+     "time_ms": 3819
+    }
+   ]
+  },
+  {
+   "file": "frag381_wait0.json",
+   "rounds": 10,
+   "tx_a_db": -30.0,
+   "tx_b_db": -50.0,
+   "b_offset_s": 6.0,
+   "line_len": 381,
+   "backoff": true,
+   "tx_delay_ms": 0.0,
+   "a_to_b": 10,
+   "b_to_a": 10,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 0,
+    "b_lines": 0
+   },
+   "sender_a_messages": [
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4372
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 5346
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4386
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4327
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4396
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4354
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4288
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4367
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4314
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4394
+    }
+   ],
+   "sender_b_messages": [
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4369
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4235
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4328
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 1,
+     "delivered": true,
+     "time_ms": 5365
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4376
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4337
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4278
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4368
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4327
+    },
+    {
+     "bytes": 384,
+     "fragments": 16,
+     "repeats": 0,
+     "delivered": true,
+     "time_ms": 4215
+    }
+   ]
+  }
+ ],
+ "latency": [
+  {
+   "file": "lat_wait140.json",
+   "rounds": 40,
+   "tx_a_db": -30.0,
+   "tx_b_db": -50.0,
+   "b_offset_s": 2.0,
+   "line_len": 0,
+   "backoff": true,
+   "tx_delay_ms": null,
+   "a_to_b": 40,
+   "b_to_a": 40,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 0,
+    "b_lines": 0
+   },
+   "sender_a_lines": [
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 298
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 292
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 294
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 287
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 296
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 289
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 298
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 291
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 294
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 287
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 296
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 289
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 298
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 291
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 293
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 287
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 296
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 289
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 298
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 291
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 294
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 287
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 294
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 290
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    }
+   ],
+   "sender_b_lines": [
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 293
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 291
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 289
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 287
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 298
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 296
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 294
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 291
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 289
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 287
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 298
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 296
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 293
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 291
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 289
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 287
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 302
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 298
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 296
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 293
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 291
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 290
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 287
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 285
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 283
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 300
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 298
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 296
+    }
+   ]
+  },
+  {
+   "file": "lat_wait0.json",
+   "rounds": 40,
+   "tx_a_db": -30.0,
+   "tx_b_db": -50.0,
+   "b_offset_s": 2.0,
+   "line_len": 0,
+   "backoff": true,
+   "tx_delay_ms": 0.0,
+   "a_to_b": 40,
+   "b_to_a": 40,
+   "wrong": 0,
+   "duplicates": 0,
+   "not_acknowledged": {
+    "by_b": 0,
+    "by_a": 0
+   },
+   "repeated": {
+    "a_lines": 0,
+    "b_lines": 1
+   },
+   "sender_a_lines": [
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 242
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 194
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 274
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 234
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 230
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 188
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 200
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 247
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 165
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 255
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 211
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 166
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 257
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 213
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 171
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 262
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 217
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 166
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 257
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 213
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 166
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 263
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 219
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 179
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 272
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 223
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 177
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 268
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 221
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 141
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 234
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 259
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 217
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 173
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 262
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 217
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 183
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 274
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 264
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 217
+    }
+   ],
+   "sender_b_lines": [
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 156
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 251
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 202
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 207
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 162
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 253
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 230
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 192
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 251
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 209
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 166
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 268
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 223
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 183
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 145
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 238
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 198
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 154
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 249
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 204
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 166
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 263
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 228
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 190
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 145
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 242
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 198
+    },
+    {
+     "tries": 2,
+     "acked": true,
+     "time_ms": 1249
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 213
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 173
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 204
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 169
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 263
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 223
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 179
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 150
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 244
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 236
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 198
+    },
+    {
+     "tries": 1,
+     "acked": true,
+     "time_ms": 156
+    }
+   ]
+  }
+ ]
+}

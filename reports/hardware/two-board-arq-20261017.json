@@ -468,5 +468,200 @@
    ]
   }
  ],
- "demo_console": "--- A\nchat as A, with acknowledgements: type a line (at most 27 bytes with the name) and press Enter; Ctrl-C ends\n>> A: hello, B here?\n<< B: yes, hearing you, A\n>> A: loud and clear   (no acknowledgement after 5 tries)\n<< B: what carrier?\n>> A: 915 MHz, conducted   (acknowledged after a repeat)\n<< B: nice. signing off\n>> A: bye   (acknowledged after a repeat)\n--- B\nchat as B, with acknowledgements: type a line (at most 27 bytes with the name) and press Enter; Ctrl-C ends\n<< A: hello, B here?\n>> B: yes, hearing you, A   (acknowledged after a repeat)\n>> B: what carrier?   (acknowledged after a repeat)\n<< A: 915 MHz, conducted\n>> B: nice. signing off\n<< A: bye\n"
+ "demo_console": "--- A\nchat as A, with acknowledgements: type a line (at most 27 bytes with the name) and press Enter; Ctrl-C ends\n>> A: hello, B here?\n<< B: yes, hearing you, A\n>> A: loud and clear   (no acknowledgement after 5 tries)\n<< B: what carrier?\n>> A: 915 MHz, conducted   (acknowledged after a repeat)\n<< B: nice. signing off\n>> A: bye   (acknowledged after a repeat)\n--- B\nchat as B, with acknowledgements: type a line (at most 27 bytes with the name) and press Enter; Ctrl-C ends\n<< A: hello, B here?\n>> B: yes, hearing you, A   (acknowledged after a repeat)\n>> B: what carrier?   (acknowledged after a repeat)\n<< A: 915 MHz, conducted\n>> B: nice. signing off\n<< A: bye\n",
+ "level_sweep": {
+  "note": "board B 21 dB below board A; 40 rounds per point and mode; zmbox fe321c7 (no random back-off)",
+  "points": [
+   {
+    "tx_a_db": -44,
+    "tx_b_db": -65,
+    "arq": false,
+    "rounds": 40,
+    "a_to_b": 39,
+    "b_to_a": 40,
+    "wrong": 0,
+    "duplicates": 0,
+    "not_acknowledged": {
+     "by_b": 0,
+     "by_a": 0
+    },
+    "repeated": {
+     "a_lines": 0,
+     "b_lines": 0
+    },
+    "board_b_c": 66.1
+   },
+   {
+    "tx_a_db": -44,
+    "tx_b_db": -65,
+    "arq": true,
+    "rounds": 40,
+    "a_to_b": 40,
+    "b_to_a": 40,
+    "wrong": 0,
+    "duplicates": 0,
+    "not_acknowledged": {
+     "by_b": 0,
+     "by_a": 0
+    },
+    "repeated": {
+     "a_lines": 0,
+     "b_lines": 1
+    },
+    "board_b_c": 66.2
+   },
+   {
+    "tx_a_db": -47,
+    "tx_b_db": -68,
+    "arq": false,
+    "rounds": 40,
+    "a_to_b": 39,
+    "b_to_a": 32,
+    "wrong": 0,
+    "duplicates": 0,
+    "not_acknowledged": {
+     "by_b": 0,
+     "by_a": 0
+    },
+    "repeated": {
+     "a_lines": 0,
+     "b_lines": 0
+    },
+    "board_b_c": 66.6
+   },
+   {
+    "tx_a_db": -47,
+    "tx_b_db": -68,
+    "arq": true,
+    "rounds": 40,
+    "a_to_b": 40,
+    "b_to_a": 40,
+    "wrong": 0,
+    "duplicates": 0,
+    "not_acknowledged": {
+     "by_b": 0,
+     "by_a": 0
+    },
+    "repeated": {
+     "a_lines": 10,
+     "b_lines": 9
+    },
+    "board_b_c": 65.9
+   },
+   {
+    "tx_a_db": -50,
+    "tx_b_db": -71,
+    "arq": false,
+    "rounds": 40,
+    "a_to_b": 28,
+    "b_to_a": 19,
+    "wrong": 0,
+    "duplicates": 0,
+    "not_acknowledged": {
+     "by_b": 0,
+     "by_a": 0
+    },
+    "repeated": {
+     "a_lines": 0,
+     "b_lines": 0
+    },
+    "board_b_c": 66.7
+   },
+   {
+    "tx_a_db": -50,
+    "tx_b_db": -71,
+    "arq": true,
+    "rounds": 40,
+    "a_to_b": 40,
+    "b_to_a": 40,
+    "wrong": 0,
+    "duplicates": 0,
+    "not_acknowledged": {
+     "by_b": 1,
+     "by_a": 0
+    },
+    "repeated": {
+     "a_lines": 20,
+     "b_lines": 19
+    },
+    "board_b_c": 65.5
+   },
+   {
+    "tx_a_db": -53,
+    "tx_b_db": -74,
+    "arq": false,
+    "rounds": 40,
+    "a_to_b": 15,
+    "b_to_a": 2,
+    "wrong": 0,
+    "duplicates": 0,
+    "not_acknowledged": {
+     "by_b": 0,
+     "by_a": 0
+    },
+    "repeated": {
+     "a_lines": 0,
+     "b_lines": 0
+    },
+    "board_b_c": 65.7
+   },
+   {
+    "tx_a_db": -53,
+    "tx_b_db": -74,
+    "arq": true,
+    "rounds": 40,
+    "a_to_b": 26,
+    "b_to_a": 20,
+    "wrong": 0,
+    "duplicates": 0,
+    "not_acknowledged": {
+     "by_b": 36,
+     "by_a": 37
+    },
+    "repeated": {
+     "a_lines": 4,
+     "b_lines": 2
+    },
+    "board_b_c": 66.2
+   },
+   {
+    "tx_a_db": -56,
+    "tx_b_db": -77,
+    "arq": false,
+    "rounds": 40,
+    "a_to_b": 3,
+    "b_to_a": 0,
+    "wrong": 0,
+    "duplicates": 0,
+    "not_acknowledged": {
+     "by_b": 0,
+     "by_a": 0
+    },
+    "repeated": {
+     "a_lines": 0,
+     "b_lines": 0
+    },
+    "board_b_c": 65.2
+   },
+   {
+    "tx_a_db": -56,
+    "tx_b_db": -77,
+    "arq": true,
+    "rounds": 40,
+    "a_to_b": 2,
+    "b_to_a": 0,
+    "wrong": 0,
+    "duplicates": 0,
+    "not_acknowledged": {
+     "by_b": 40,
+     "by_a": 40
+    },
+    "repeated": {
+     "a_lines": 0,
+     "b_lines": 0
+    },
+    "board_b_c": 64.5
+   }
+  ]
+ }
 }
