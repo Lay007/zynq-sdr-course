@@ -259,3 +259,6 @@ reliable link: there is no acknowledgement and no retransmission, the receiver s
 that arrives at the edge of its listening window (the chat only avoids sending there), and a line
 in a hundred can still go missing. All numbers are from one board pair, one carrier, conducted
 paths.
+
+[Lab 11.51](lab-11-51-acknowledgements.md) adds acknowledgements and repeats to the chat, so that
+a lost line is no longer lost silently.

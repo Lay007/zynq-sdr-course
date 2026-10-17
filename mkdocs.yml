@@ -351,6 +351,7 @@ nav:
           - "Лабораторная 11.48 — Приёмник, который ждёт пакет": ru/labs/lab-11-48-listening-receiver.md
           - "Лабораторная 11.49 — Mailbox разговаривает с модемом": ru/labs/lab-11-49-message-mailbox-modem.md
           - "Лабораторная 11.50 — Две платы переписываются через свои mailbox": ru/labs/lab-11-50-two-board-chat.md
+          - "Лабораторная 11.51 — Подтверждения: отправитель узнаёт, что потерялось": ru/labs/lab-11-51-acknowledgements.md
       - "Блок 11 — разборы случаев отладки":
           - "Обзор: восемь случаев отладки": ru/block11-case-studies.md
           - "Лабораторная 11.8 — Overlay gpreg BPSK для AD9361": ru/labs/lab-11-8-axi-gpreg-bpsk-overlay.md
@@ -544,6 +545,7 @@ nav:
           - "Lab 11.48 — A receiver that waits for the packet": en/labs/lab-11-48-listening-receiver.md
           - "Lab 11.49 — The mailbox talks to the modem": en/labs/lab-11-49-message-mailbox-modem.md
           - "Lab 11.50 — Two boards chat through their mailboxes": en/labs/lab-11-50-two-board-chat.md
+          - "Lab 11.51 — Acknowledgements: the sender learns what was lost": en/labs/lab-11-51-acknowledgements.md
       - "Block 11 — bring-up case studies":
           - "Overview: eight debugging cases": block11-case-studies.md
           - "Lab 11.8 — AD9361 gpreg BPSK overlay": en/labs/lab-11-8-axi-gpreg-bpsk-overlay.md
