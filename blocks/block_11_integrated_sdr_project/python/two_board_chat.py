@@ -29,23 +29,31 @@ from lab_11_47_single_board_selfota import zynq_temp
 RX_LINE = re.compile(r"^<< (.*)$", re.M)
 
 
-def typing_script(who: str, rounds: int, period: float, start: float) -> str:
-    """Shell commands that print who<k> every 2*period seconds, starting after `start` seconds."""
+def line_text(who: str, k: int, length: int) -> str:
+    """The k-th line a board types: who<k>, padded with digits to `length` characters (Lab 11.52)."""
+    base = f"{who}{k}"
+    if length <= len(base):
+        return base
+    return base + " " + ("0123456789" * 60)[: length - len(base) - 1]
+
+
+def typing_script(who: str, rounds: int, period: float, start: float, length: int = 0) -> str:
+    """Shell commands that print line k every 2*period seconds, starting after `start` seconds."""
     parts = [f"sleep {start:g}"]
     for k in range(rounds):
-        parts += [f"echo {who}{k}", f"sleep {2 * period:g}"]
+        parts += [f"echo '{line_text(who, k, length)}'", f"sleep {2 * period:g}"]
     parts.append("sleep 3")
     return "(" + "; ".join(parts) + ")"
 
 
-def count(console: str, name: str, who: str, rounds: int) -> dict:
+def count(console: str, name: str, who: str, rounds: int, length: int = 0) -> dict:
     """Lines from the other board as printed by `zmbox chat` on this one."""
     got = RX_LINE.findall(console)
-    expected = {f"{name}: {who}{k}" for k in range(rounds)}
+    expected = {f"{name}: {line_text(who, k, length)}": k for k in range(rounds)}
     ok = [g for g in got if g in expected]
     return {"delivered": len(set(ok)), "duplicates": len(ok) - len(set(ok)),
             "wrong": len([g for g in got if g not in expected]),
-            "missing": sorted(k for k in range(rounds) if f"{name}: {who}{k}" not in set(ok))}
+            "missing": sorted(k for t, k in expected.items() if t not in set(ok))}
 
 
 def main() -> int:
@@ -57,6 +65,11 @@ def main() -> int:
                     help="the B -> A path of the course bench has no splitter; louder than -40 dB overdrives board A at 71 dB")
     ap.add_argument("--rx-gain", type=int, default=71)
     ap.add_argument("--arq", action="store_true", help="zmbox chat --arq: acknowledgements and repeats (Lab 11.51)")
+    ap.add_argument("--b-offset", type=float, default=None,
+                    help="seconds between A's line and B's line (default --period; 0 = both type at the same moment)")
+    ap.add_argument("--line-len", type=int, default=0,
+                    help="pad every line to this many characters; with --arq longer lines go out in fragments (Lab 11.52)")
+    ap.add_argument("--no-backoff", action="store_true", help="ZMBOX_ARQ_BACKOFF=0: repeats without the random extra wait")
     ap.add_argument("--tx-delay-ms", type=float, default=None,
                     help="ZMBOX_TX_DELAY_MS for both chats (default 140 in zmbox; 0 sends as soon as TX_START is taken, issue #70)")
     ap.add_argument("--max-temp", type=float, default=78.0, help="refuse to start if board B is hotter (no fan)")
@@ -72,15 +85,18 @@ def main() -> int:
     consoles: dict[str, str] = {}
 
     delay_env = "" if args.tx_delay_ms is None else f"ZMBOX_TX_DELAY_MS={args.tx_delay_ms:g} "
+    if args.no_backoff:
+        delay_env += "ZMBOX_ARQ_BACKOFF=0 "
+    b_offset = args.period if args.b_offset is None else args.b_offset
 
     def run(key, runner, who, name, gain, start):
-        cmd = (f"cd /root && {typing_script(who, args.rounds, args.period, start)} | "
+        cmd = (f"cd /root && {typing_script(who, args.rounds, args.period, start, args.line_len)} | "
                f"ZMBOX_DEBUG=1 {delay_env}./zmbox chat --name {name}{' --arq' if args.arq else ''} --tx-gain {gain:g} "
                f"--rx-gain {args.rx_gain} 2>&1")
         consoles[key] = L.sh(runner, cmd)
 
     threads = [threading.Thread(target=run, args=("a", ra, "a", "A", args.tx_gain_a, 3)),
-               threading.Thread(target=run, args=("b", rb, "b", "B", args.tx_gain_b, 3 + args.period))]
+               threading.Thread(target=run, args=("b", rb, "b", "B", args.tx_gain_b, 3 + b_offset))]
     try:
         for t in threads:
             t.start()
@@ -91,8 +107,9 @@ def main() -> int:
             L.sh(r, "cd /root && ./zmbox stop")
     summary = {"rounds": args.rounds, "period_s": args.period, "tx_gain_a_db": args.tx_gain_a,
                "tx_gain_b_db": args.tx_gain_b, "rx_gain_db": args.rx_gain,
-               "a_to_b": count(consoles["b"], "A", "a", args.rounds),
-               "b_to_a": count(consoles["a"], "B", "b", args.rounds),
+               "b_offset_s": b_offset, "line_len": args.line_len, "backoff": not args.no_backoff,
+               "a_to_b": count(consoles["b"], "A", "a", args.rounds, args.line_len),
+               "b_to_a": count(consoles["a"], "B", "b", args.rounds, args.line_len),
                "crc_dropped": {"at_a": consoles["a"].count("packet dropped"), "at_b": consoles["b"].count("packet dropped")},
                "not_sent": consoles["a"].count("not sent") + consoles["b"].count("not sent"),
                "arq": args.arq,

@@ -18,7 +18,7 @@
  *   board-a$ ./zmbox chat --name A        board-b$ ./zmbox chat --name B
  *
  * With --arq (Lab 11.51) every line is acknowledged and repeated until it is, and a repeated line
- * is printed once.
+ * is printed once; a line longer than one packet goes out in acknowledged fragments (Lab 11.52).
  *
  * The program uses only the Lab 5.12 register contract: TX_SEQUENCE, TX_LENGTH, TX_DATA, TX_START,
  * then STATUS.RX_VALID, RX_SEQUENCE, RX_LENGTH, RX_META, RX_DATA, RX_ACK. Packet-v1 framing, CRC,
@@ -364,14 +364,52 @@ static int send_frame(uint32_t seq, const uint8_t *data, int len)
 }
 
 #define ACK_BYTE 0x06                         /* payload of an acknowledgement: one ASCII ACK */
+#define FRAG_BYTE 0x1E                        /* first payload byte of a fragment: ASCII RS */
+#define FRAG_TEXT 24                          /* text bytes per fragment (27 - 3 header bytes) */
+#define FRAG_MAX 16                           /* fragments per message: up to 384 bytes */
 #define ARQ_TRIES 5
 #define ARQ_WAIT_S 0.6
+#define ARQ_BACKOFF_S 0.5                     /* random extra wait before a repeat: 0 .. this */
 
-static int last_rx_seq = -1;                  /* --arq: sequence of the last line printed */
+static int last_rx_seq = -1;                  /* --arq: sequence of the last frame accepted */
+
+/* Reassembly of one fragmented message (Lab 11.52). */
+static int frag_id = -1, frag_count = 0, frag_have = 0;
+static char frag_text[FRAG_MAX][FRAG_TEXT + 1];
+static uint32_t frag_mask = 0;
+
+static void take_fragment(const char *out, uint32_t rlen)
+{
+    int id = (uint8_t)out[1], idx = ((uint8_t)out[2]) >> 4, count = (((uint8_t)out[2]) & 0x0F) + 1;
+    if (id != frag_id || count != frag_count) {   /* a new message: drop what was left of the old one */
+        if (frag_id >= 0 && frag_have != frag_count && getenv("ZMBOX_DEBUG"))
+            printf("-- message %d dropped with %d of %d fragments\n", frag_id, frag_have, frag_count);
+        frag_id = id;
+        frag_count = count;
+        frag_have = 0;
+        frag_mask = 0;
+    }
+    if (idx >= count || (frag_mask & (1u << idx)))
+        return;
+    int n = (int)rlen - 3;
+    if (n < 0 || n > FRAG_TEXT)
+        return;
+    memcpy(frag_text[idx], out + 3, (size_t)n);
+    frag_text[idx][n] = 0;
+    frag_mask |= 1u << idx;
+    if (++frag_have == frag_count) {
+        printf("<< ");
+        for (int k = 0; k < frag_count; k++)
+            printf("%s", frag_text[k]);
+        printf("\n");
+        fflush(stdout);
+        frag_id = -1;
+    }
+}
 
 /* A frame that passed the CRC. Returns the sequence number if it is an acknowledgement, else -1.
- * With arq, a data frame is acknowledged every time (our ACK may have been lost) but printed only
- * if its sequence number is new. */
+ * With arq, a data frame is acknowledged every time (our ACK may have been lost) but used only if its
+ * sequence number is new; a fragment goes to the reassembly, a whole line is printed. */
 static int handle_frame(uint32_t rseq, const char *out, uint32_t rlen, int arq)
 {
     if (arq && rlen == 1 && (uint8_t)out[0] == ACK_BYTE)
@@ -386,6 +424,10 @@ static int handle_frame(uint32_t rseq, const char *out, uint32_t rlen, int arq)
             return -1;
         }
         last_rx_seq = (int)rseq;
+        if (rlen >= 4 && (uint8_t)out[0] == FRAG_BYTE) {
+            take_fragment(out, rlen);
+            return -1;
+        }
     }
     printf("<< %s\n", out);
     fflush(stdout);
@@ -409,10 +451,36 @@ static int poll_rx(int arq)
     return -1;
 }
 
+/* Send one frame and wait for its acknowledgement, repeating up to ARQ_TRIES times. Before a repeat
+ * the wait gets a random extra of up to ARQ_BACKOFF_S (ZMBOX_ARQ_BACKOFF=0 turns that off), so that
+ * two boards that started at the same moment do not keep repeating into each other. Returns the
+ * number of tries if acknowledged, 0 if not; *rtt_ms gets the time from the first send to the ACK. */
+static int arq_send(uint32_t s, const uint8_t *data, int len, double *rtt_ms)
+{
+    const char *bo = getenv("ZMBOX_ARQ_BACKOFF");
+    int backoff = !(bo && !strcmp(bo, "0"));
+    double t0 = now_s();
+    for (int tries = 1; tries <= ARQ_TRIES && !stop_requested; tries++) {
+        send_frame(s, data, len);
+        double wait = ARQ_WAIT_S + (backoff ? ARQ_BACKOFF_S * (double)rand() / RAND_MAX : 0.0);
+        double t_end = now_s() + wait;
+        while (now_s() < t_end && !stop_requested) {
+            if (poll_rx(1) == (int)s) {
+                *rtt_ms = (now_s() - t0) * 1000.0;
+                return tries;
+            }
+            usleep(2000);
+        }
+    }
+    *rtt_ms = (now_s() - t0) * 1000.0;
+    return 0;
+}
+
 /* Chat: listen all the time; a typed line stops listening, goes out with TX_START (the board also
  * hears its own burst in that attempt, which is discarded), then listening resumes. With arq
  * (Lab 11.51) every line is acknowledged by the other board and sent again, up to ARQ_TRIES
- * times, until the acknowledgement arrives; the receiver prints a repeated line only once. */
+ * times, until the acknowledgement arrives; the receiver prints a repeated line only once. A line
+ * longer than one packet goes out in fragments, each acknowledged on its own (Lab 11.52). */
 static int chat(const char *name, double tx_gain, int rx_gain, long lo, int arq)
 {
     radio_setup(tx_gain, rx_gain, lo, 1);
@@ -420,12 +488,18 @@ static int chat(const char *name, double tx_gain, int rx_gain, long lo, int arq)
     signal(SIGINT, on_term);
     mbw(MB_CONTROL, 2);
     mbw(MB_CONTROL, 4);                       /* RX_LISTEN */
-    printf("chat as %s%s: type a line (at most 27 bytes with the name) and press Enter; Ctrl-C ends\n", name,
-           arq ? ", with acknowledgements" : "");
+    printf("chat as %s%s: type a line (%s) and press Enter; Ctrl-C ends\n", name,
+           arq ? ", with acknowledgements" : "",
+           arq ? "longer lines go out in fragments, up to 384 bytes" : "at most 27 bytes with the name");
     fflush(stdout);
     /* A random first sequence number, so that a restarted chat is not taken for a repeat. */
-    uint32_t seq = arq ? (1u + ((uint32_t)(now_s() * 1000.0) & 0x7FFF)) : 1u;
-    char line[128];
+    srand((unsigned)(now_s() * 1e6) ^ (unsigned)getpid());
+    uint32_t seq = arq ? (1u + ((uint32_t)rand() & 0x7FFF)) : 1u;
+    uint32_t msg_id = (uint32_t)rand() & 0xFF;
+    char line[512];
+    /* poll() watches the file descriptor, not the stdio buffer: a buffered stdin would swallow two
+     * queued lines in one read and hide the second from poll until more input came. */
+    setvbuf(stdin, NULL, _IONBF, 0);
     struct pollfd pfd = {.fd = 0, .events = POLLIN};
     while (!stop_requested) {
         poll_rx(arq);
@@ -436,36 +510,65 @@ static int chat(const char *name, double tx_gain, int rx_gain, long lo, int arq)
         line[strcspn(line, "\r\n")] = 0;
         if (!line[0])
             continue;
-        char msg[192];
-        snprintf(msg, sizeof msg, "%.16s: %.120s", name, line);
-        if (strlen(msg) > 27)
-            msg[27] = 0;
+        char msg[600];
+        snprintf(msg, sizeof msg, "%.16s: %.500s", name, line);
         int len = (int)strlen(msg);
-        uint32_t s = seq++ & 0xFFFF;
-        if (!arq) {
-            int started = send_frame(s, (const uint8_t *)msg, len);
-            printf(">> %s%s\n", msg, started ? "" : "   (not sent: mailbox busy)");
+        if (!arq || len <= 27) {
+            if (len > 27) {
+                msg[27] = 0;
+                len = 27;
+            }
+            uint32_t s = seq++ & 0xFFFF;
+            if (!arq) {
+                int started = send_frame(s, (const uint8_t *)msg, len);
+                printf(">> %s%s\n", msg, started ? "" : "   (not sent: mailbox busy)");
+                fflush(stdout);
+                continue;
+            }
+            double rtt;
+            int tries = arq_send(s, (const uint8_t *)msg, len, &rtt);
+            if (tries)
+                printf(">> %s%s\n", msg, tries > 1 ? "   (acknowledged after a repeat)" : "");
+            else
+                printf(">> %s   (no acknowledgement after %d tries)\n", msg, ARQ_TRIES);
+            if (getenv("ZMBOX_DEBUG"))
+                printf("-- seq %u tries %d acked %d time_ms %.0f\n", s, tries ? tries : ARQ_TRIES, tries != 0, rtt);
             fflush(stdout);
             continue;
         }
-        int acked = 0, tries = 0;
-        while (!acked && tries < ARQ_TRIES && !stop_requested) {
-            tries++;
-            send_frame(s, (const uint8_t *)msg, len);
-            double t_end = now_s() + ARQ_WAIT_S;
-            while (!acked && now_s() < t_end && !stop_requested) {
-                if (poll_rx(arq) == (int)s)
-                    acked = 1;
-                else
-                    usleep(2000);
-            }
+        /* Fragments: [FRAG_BYTE][message id][index << 4 | count - 1][up to FRAG_TEXT bytes]. */
+        int count = (len + FRAG_TEXT - 1) / FRAG_TEXT;
+        if (count > FRAG_MAX) {
+            count = FRAG_MAX;
+            len = FRAG_MAX * FRAG_TEXT;
+            msg[len] = 0;
         }
-        if (acked)
-            printf(">> %s%s\n", msg, tries > 1 ? "   (acknowledged after a repeat)" : "");
+        uint32_t id = msg_id++ & 0xFF;
+        int repeats = 0, failed = -1;
+        double t0 = now_s(), total = 0;
+        for (int k = 0; k < count && failed < 0 && !stop_requested; k++) {
+            uint8_t frag[27];
+            int n = len - k * FRAG_TEXT < FRAG_TEXT ? len - k * FRAG_TEXT : FRAG_TEXT;
+            frag[0] = FRAG_BYTE;
+            frag[1] = (uint8_t)id;
+            frag[2] = (uint8_t)((k << 4) | (count - 1));
+            memcpy(frag + 3, msg + k * FRAG_TEXT, (size_t)n);
+            double rtt;
+            int tries = arq_send(seq++ & 0xFFFF, frag, n + 3, &rtt);
+            if (!tries)
+                failed = k;
+            else
+                repeats += tries - 1;
+        }
+        total = (now_s() - t0) * 1000.0;
+        if (failed < 0)
+            printf(">> %s   (%d fragments%s)\n", msg, count,
+                   repeats ? ", acknowledged after repeats" : "");
         else
-            printf(">> %s   (no acknowledgement after %d tries)\n", msg, tries);
+            printf(">> %s   (not delivered: fragment %d of %d not acknowledged)\n", msg, failed + 1, count);
         if (getenv("ZMBOX_DEBUG"))
-            printf("-- seq %u tries %d acked %d\n", s, tries, acked);
+            printf("-- message %u bytes %d fragments %d repeats %d delivered %d time_ms %.0f\n", id, len, count,
+                   repeats, failed < 0, total);
         fflush(stdout);
     }
     mbw(MB_CONTROL, 8);
