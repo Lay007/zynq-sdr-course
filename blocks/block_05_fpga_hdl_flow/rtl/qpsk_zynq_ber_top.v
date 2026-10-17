@@ -65,6 +65,9 @@ module qpsk_zynq_ber_top #(
     // the frame it waits for. 1 = the sampler runs for up to 2^INDEX_W - 1 symbols (136 ms at
     // 480 kSym/s), so a packet that arrives any time in that window is found; the idle watchdog then
     // watches the sampler instead of the decisions, which the signal gate holds back in silence.
+    // The window does not cut a packet off (issue #70): the sampler runs without a limit, and the
+    // attempt ends after 2^INDEX_W - 1 symbols only once no packet is being received, so a packet
+    // that starts at the very end of the window is still received whole.
     input  wire                     listen_en,
     // 1 at start = this burst carries a message (issue #55, Lab 11.49): the transmitter sends the
     // burst head of Lab 11.48 and the frame preamble followed by msg_bits (256 whitened packet bits
@@ -134,6 +137,8 @@ wire ber_busy;
 wire ber_done;
 reg ber_abort = 1'b0;
 reg [RX_IDLE_TIMEOUT_W-1:0] rx_idle_counter = {RX_IDLE_TIMEOUT_W{1'b0}};
+// Listen mode: symbols sampled in this attempt, saturating (issue #70).
+reg [INDEX_W-1:0] listen_window = {INDEX_W{1'b0}};
 
 assign busy = src_busy || tx_busy || ber_busy;
 
@@ -346,6 +351,7 @@ always @(posedge clk) begin
         timed_out <= 1'b0;
         ber_abort <= 1'b0;
         rx_idle_counter <= {RX_IDLE_TIMEOUT_W{1'b0}};
+        listen_window <= {INDEX_W{1'b0}};
     end else begin
         done <= 1'b0;
         timed_out <= 1'b0;
@@ -353,9 +359,17 @@ always @(posedge clk) begin
 
         if (frame_start) begin
             rx_idle_counter <= {RX_IDLE_TIMEOUT_W{1'b0}};
+            listen_window <= {INDEX_W{1'b0}};
+        end else if (ber_busy && listen_en && listen_window == {INDEX_W{1'b1}}
+                     && !listen_open && received_symbols == {INDEX_W{1'b0}}) begin
+            // Listen window used up and no packet in progress: end the attempt as a timeout.
+            ber_abort <= 1'b1;
+            timed_out <= 1'b1;
         end else if (ber_busy) begin
-            // Listen mode: silence before the packet is expected, so the watchdog only ends the
-            // attempt once the sampler itself has stopped (its window is used up).
+            if (listen_en && debug_symbol_valid && listen_window != {INDEX_W{1'b1}})
+                listen_window <= listen_window + 1'b1;
+            // Listen mode: silence before the packet is expected, so the watchdog watches the sampler,
+            // which runs without a limit there; it only fires if the input samples stop.
             if (listen_en ? debug_symbol_valid : recovered_valid) begin
                 rx_idle_counter <= {RX_IDLE_TIMEOUT_W{1'b0}};
             end else if (rx_idle_counter == RX_IDLE_TIMEOUT_CYCLES - 1) begin

@@ -25,6 +25,9 @@ BRIDGE_DIR = ROOT / "hardware" / "7020_ad936x_sdr" / "hdl" / "course_bpsk_fmcomm
 class HdlTest:
     name: str
     sources: tuple[Path, ...]
+    # A bench that has to simulate whole listening windows (65535 symbols of two modems) runs for
+    # many minutes; it gets at least this much time whatever --timeout-s says.
+    min_timeout_s: float = 0.0
 
 
 def rtl(*names: str) -> tuple[Path, ...]:
@@ -220,6 +223,10 @@ TESTS = (
     HdlTest("tb_message_modem_listen",
             QPSK_BRIDGE + rtl("zynq_message_mailbox_axi_lite.v")
             + (BRIDGE_DIR / "bpsk_zynq_ber_bridge_bd.v", tb("tb_message_modem_listen.v"))),
+    HdlTest("tb_message_modem_listen_edge",
+            QPSK_BRIDGE + rtl("zynq_message_mailbox_axi_lite.v")
+            + (BRIDGE_DIR / "bpsk_zynq_ber_bridge_bd.v", tb("tb_message_modem_listen_edge.v")),
+            min_timeout_s=2400.0),
     HdlTest(
         "tb_bridge_rx_lclk_fifo",
         (BRIDGE_DIR / "bridge_rx_lclk_fifo.v", tb("tb_bridge_rx_lclk_fifo.v")),
@@ -405,7 +412,7 @@ def run_tests(*, generate: bool = True, names: list[str] | None = None, timeout_
                 [iverilog, "-g2012", "-o", str(output), *(str(path) for path in test.sources)],
                 timeout_s=timeout_s,
             )
-            run_sim([vvp, str(output)], cwd=workspace, name=test.name, timeout_s=timeout_s)
+            run_sim([vvp, str(output)], cwd=workspace, name=test.name, timeout_s=max(timeout_s, test.min_timeout_s))
     print(f"Canonical HDL smoke passed: {len(selected)} testbenches.")
 
 

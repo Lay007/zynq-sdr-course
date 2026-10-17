@@ -33,6 +33,7 @@ module qpsk_symbol_timing_recovery #(
     input  wire signed [W-1:0]      in_i,
     input  wire signed [W-1:0]      in_q,
     input  wire [INDEX_W-1:0]       start_offset,
+    // all ones = no limit (listen mode, issue #70): run until the parent ends the attempt
     input  wire [INDEX_W-1:0]       symbol_count,
     output reg                      out_valid,
     output reg signed [W-1:0]       out_i,
@@ -143,7 +144,7 @@ always @(posedge clk) begin
                 end
                 x_prev_i <= in_i;
                 x_prev_q <= in_q;
-            end else if (emitted < symbol_count) begin
+            end else if ((&symbol_count) || emitted < symbol_count) begin
                 if (nco < w_step) begin
                     if (parity == 1'b0) begin
                         if (!hold) begin
