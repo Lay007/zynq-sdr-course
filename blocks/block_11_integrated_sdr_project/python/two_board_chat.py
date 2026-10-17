@@ -57,6 +57,8 @@ def main() -> int:
                     help="the B -> A path of the course bench has no splitter; louder than -40 dB overdrives board A at 71 dB")
     ap.add_argument("--rx-gain", type=int, default=71)
     ap.add_argument("--arq", action="store_true", help="zmbox chat --arq: acknowledgements and repeats (Lab 11.51)")
+    ap.add_argument("--tx-delay-ms", type=float, default=None,
+                    help="ZMBOX_TX_DELAY_MS for both chats (default 140 in zmbox; 0 sends as soon as TX_START is taken, issue #70)")
     ap.add_argument("--max-temp", type=float, default=78.0, help="refuse to start if board B is hotter (no fan)")
     ap.add_argument("--json-out", type=Path, required=True)
     args = ap.parse_args()
@@ -69,9 +71,11 @@ def main() -> int:
         raise SystemExit(f"board B Zynq at {t_before:.1f} C, not starting")
     consoles: dict[str, str] = {}
 
+    delay_env = "" if args.tx_delay_ms is None else f"ZMBOX_TX_DELAY_MS={args.tx_delay_ms:g} "
+
     def run(key, runner, who, name, gain, start):
         cmd = (f"cd /root && {typing_script(who, args.rounds, args.period, start)} | "
-               f"ZMBOX_DEBUG=1 ./zmbox chat --name {name}{' --arq' if args.arq else ''} --tx-gain {gain:g} "
+               f"ZMBOX_DEBUG=1 {delay_env}./zmbox chat --name {name}{' --arq' if args.arq else ''} --tx-gain {gain:g} "
                f"--rx-gain {args.rx_gain} 2>&1")
         consoles[key] = L.sh(runner, cmd)
 
@@ -92,6 +96,7 @@ def main() -> int:
                "crc_dropped": {"at_a": consoles["a"].count("packet dropped"), "at_b": consoles["b"].count("packet dropped")},
                "not_sent": consoles["a"].count("not sent") + consoles["b"].count("not sent"),
                "arq": args.arq,
+               "tx_delay_ms": args.tx_delay_ms,
                "not_acknowledged": {"by_b": consoles["a"].count("no acknowledgement"),
                                     "by_a": consoles["b"].count("no acknowledgement")},
                "repeated": {"a_lines": consoles["a"].count("after a repeat"), "b_lines": consoles["b"].count("after a repeat")},
