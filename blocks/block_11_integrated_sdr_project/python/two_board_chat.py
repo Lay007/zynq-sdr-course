@@ -13,6 +13,9 @@ with a text nobody typed (wrong), and lines that arrived twice.
 --arq runs both chats with acknowledgements and repeats (Lab 11.51); the summary then also counts,
 per direction, the lines the sender reported as not acknowledged and the lines it had to repeat.
 
+Both chats run detached on the boards (board_detached.py) and start together on a signal file, so a
+reset SSH connection between the PC and a board does not end a long run.
+
     python two_board_chat.py --rounds 100 --tx-gain-b -50 --json-out chat.json
 """
 from __future__ import annotations
@@ -20,11 +23,22 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import threading
+import time
 from pathlib import Path
 
 import lab_11_30_two_board_cfo_validation as L
+from board_detached import board_sh, run_detached, wait_detached
 from lab_11_47_single_board_selfota import zynq_temp
+
+BOARD_A, BOARD_B = "192.168.40.1", "192.168.20.1"
+
+
+def board_temp(host: str) -> float:
+    r = L.runner_for(host, "root", "analog", 22, 30.0)
+    try:
+        return zynq_temp(r)
+    finally:
+        r.client.close()
 
 RX_LINE = re.compile(r"^<< (.*)$", re.M)
 
@@ -71,40 +85,43 @@ def main() -> int:
                     help="pad every line to this many characters; with --arq longer lines go out in fragments (Lab 11.52)")
     ap.add_argument("--no-backoff", action="store_true", help="ZMBOX_ARQ_BACKOFF=0: repeats without the random extra wait")
     ap.add_argument("--tx-delay-ms", type=float, default=None,
-                    help="ZMBOX_TX_DELAY_MS for both chats (default 140 in zmbox; 0 sends as soon as TX_START is taken, issue #70)")
+                    help="ZMBOX_TX_DELAY_MS for both chats (zmbox default: 140 ms, 0 on a mailbox of version "
+                         "0x00020001 or later, issue #71; 0 sends as soon as TX_START is taken)")
     ap.add_argument("--max-temp", type=float, default=78.0, help="refuse to start if board B is hotter (no fan)")
     ap.add_argument("--json-out", type=Path, required=True)
     args = ap.parse_args()
 
     timeout = 60.0 + args.rounds * 2 * args.period + 30
-    ra = L.runner_for("192.168.40.1", "root", "analog", 22, timeout)
-    rb = L.runner_for("192.168.20.1", "root", "analog", 22, timeout)
-    t_before = zynq_temp(rb)
+    t_before = board_temp(BOARD_B)
     if t_before >= args.max_temp:
         raise SystemExit(f"board B Zynq at {t_before:.1f} C, not starting")
-    consoles: dict[str, str] = {}
 
     delay_env = "" if args.tx_delay_ms is None else f"ZMBOX_TX_DELAY_MS={args.tx_delay_ms:g} "
     if args.no_backoff:
         delay_env += "ZMBOX_ARQ_BACKOFF=0 "
     b_offset = args.period if args.b_offset is None else args.b_offset
 
-    def run(key, runner, who, name, gain, start):
-        cmd = (f"cd /root && {typing_script(who, args.rounds, args.period, start, args.line_len)} | "
-               f"ZMBOX_DEBUG=1 {delay_env}./zmbox chat --name {name}{' --arq' if args.arq else ''} --tx-gain {gain:g} "
-               f"--rx-gain {args.rx_gain} 2>&1")
-        consoles[key] = L.sh(runner, cmd)
+    def chat_command(who, name, gain, start):
+        # wait for the go file, so that both boards start together
+        return (f"while [ ! -f /tmp/chat_go ]; do sleep 0.05; done; rm -f /tmp/chat_go; "
+                f"{typing_script(who, args.rounds, args.period, start, args.line_len)} | "
+                f"ZMBOX_DEBUG=1 {delay_env}./zmbox chat --name {name}{' --arq' if args.arq else ''} "
+                f"--tx-gain {gain:g} --rx-gain {args.rx_gain}")
 
-    threads = [threading.Thread(target=run, args=("a", ra, "a", "A", args.tx_gain_a, 3)),
-               threading.Thread(target=run, args=("b", rb, "b", "B", args.tx_gain_b, 3 + b_offset))]
+    consoles: dict[str, str] = {}
     try:
-        for t in threads:
-            t.start()
-        for t in threads:
-            t.join()
+        for host in (BOARD_A, BOARD_B):
+            board_sh(host, "rm -f /tmp/chat_go")
+        run_detached(BOARD_A, chat_command("a", "A", args.tx_gain_a, 3), "chat_a")
+        run_detached(BOARD_B, chat_command("b", "B", args.tx_gain_b, 3 + b_offset), "chat_b")
+        for host in (BOARD_A, BOARD_B):
+            board_sh(host, "touch /tmp/chat_go")
+        time.sleep(timeout - 60)
+        consoles["a"] = wait_detached(BOARD_A, "chat_a", timeout_s=180)
+        consoles["b"] = wait_detached(BOARD_B, "chat_b", timeout_s=180)
     finally:
-        for r in (ra, rb):
-            L.sh(r, "cd /root && ./zmbox stop")
+        for host in (BOARD_A, BOARD_B):
+            board_sh(host, "cd /root && ./zmbox stop")
     summary = {"rounds": args.rounds, "period_s": args.period, "tx_gain_a_db": args.tx_gain_a,
                "tx_gain_b_db": args.tx_gain_b, "rx_gain_db": args.rx_gain,
                "b_offset_s": b_offset, "line_len": args.line_len, "backoff": not args.no_backoff,
@@ -117,15 +134,13 @@ def main() -> int:
                "not_acknowledged": {"by_b": consoles["a"].count("no acknowledgement"),
                                     "by_a": consoles["b"].count("no acknowledgement")},
                "repeated": {"a_lines": consoles["a"].count("after a repeat"), "b_lines": consoles["b"].count("after a repeat")},
-               "board_b_zynq_c": [t_before, zynq_temp(rb)]}
+               "board_b_zynq_c": [t_before, board_temp(BOARD_B)]}
     print(json.dumps({k: v for k, v in summary.items() if k not in ("a_to_b", "b_to_a")}))
     for d in ("a_to_b", "b_to_a"):
         s = summary[d]
         print(f"{d}: delivered {s['delivered']} of {args.rounds}, wrong {s['wrong']}, duplicates {s['duplicates']}, missing {s['missing']}")
     args.json_out.write_text(json.dumps({"summary": summary, "console_a": consoles["a"], "console_b": consoles["b"]}, indent=1) + "\n",
                              encoding="utf-8")
-    ra.client.close()
-    rb.client.close()
     return 0
 
 
