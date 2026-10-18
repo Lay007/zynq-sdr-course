@@ -14,6 +14,10 @@
 //
 // After reset the modem expects the training symbol(s) first, both ways. The bench prints one
 // RESULT line with the symbol counts, the frame-error flags and the modem's CFO estimate.
+//
+// Without +OUT the bench checks itself (CI): it sends the training symbol and 4 random data symbols,
+// keeps the transmitter's samples, feeds them back to the receiver one every 12 clocks, and
+// requires every data bit pair back.
 module tb_ofdm_modem_file;
     parameter integer MODE = 0;
     parameter integer MODULATION = 0;
@@ -54,28 +58,92 @@ module tb_ofdm_modem_file;
         .s_axi_rdata(rdata), .s_axi_rresp(rresp), .s_axi_rvalid(rvalid), .s_axi_rready(1'b1)
     );
 
-    integer in_fd, out_fd, r, v, re, im, n_in = 0, n_out = 0, n_tx_symbols = 0, n_rx_symbols = 0, idle = 0;
+    integer in_fd, out_fd = 0, r, v, re, im, n_in = 0, n_out = 0, n_tx_symbols = 0, n_rx_symbols = 0, idle = 0;
+    integer k, errors = 0, seed = 7;
+    reg selfcheck = 1'b0;
     reg [1023:0] in_name, out_name;
+    reg [31:0] tx_mem [0:399];
+    reg [1:0] sent [0:191];
+    reg [1:0] got [0:191];
+    reg [191:0] seen;
 
+    // One always block for every counter: the self-check stores by n_out / n_rx_symbols before they move.
     always @(posedge clk) begin
+        if (rxo_valid && selfcheck && MODULATION == 0) begin
+            if (n_rx_symbols * 48 + rxo_data[7:2] < 192) begin
+                got[n_rx_symbols * 48 + rxo_data[7:2]] = rxo_data[1:0];
+                seen[n_rx_symbols * 48 + rxo_data[7:2]] = 1'b1;
+            end
+        end
         if (txo_valid) begin
-            $fwrite(out_fd, "%0d %0d\n", $signed(txo_data[15:0]), $signed(txo_data[31:16]));
+            if (!selfcheck) $fwrite(out_fd, "%0d %0d\n", $signed(txo_data[15:0]), $signed(txo_data[31:16]));
+            else if (n_out < 400) tx_mem[n_out] = txo_data;
             n_out = n_out + 1;
             if (txo_last) n_tx_symbols = n_tx_symbols + 1;
         end
-        if (rxo_valid) begin
+        if (rxo_valid && !selfcheck) begin
             if (MODULATION != 0)
                 $fwrite(out_fd, "%0d %0d\n", rxo_data[13:8], rxo_data[3:0]);
             else
                 $fwrite(out_fd, "%0d %0d\n", rxo_data[7:2], rxo_data[1:0]);
             n_out = n_out + 1;
-            if (rxo_last) n_rx_symbols = n_rx_symbols + 1;
         end
+        if (rxo_valid && rxo_last) n_rx_symbols = n_rx_symbols + 1;
     end
+
+    task automatic send_group(input [7:0] value);
+        begin
+            tx_data <= value;
+            tx_valid <= 1'b1;
+            @(posedge clk);
+            while (!tx_ready) @(posedge clk);
+            tx_valid <= 1'b0;
+        end
+    endtask
+
+    task automatic run_selfcheck;
+        reg [5:0] d;
+        begin
+            seen = 0;
+            for (k = 0; k < 48; k = k + 1) begin                  // training symbol (train_bits())
+                d = k;
+                send_group({6'd0, d[0] ^ d[3], d[1] ^ d[2] ^ d[4]});
+            end
+            for (k = 0; k < 192; k = k + 1) begin                 // 4 data symbols
+                sent[k] = $random(seed);
+                send_group({6'd0, sent[k]});
+            end
+            while (n_out < 400 && idle < 40000) begin @(posedge clk); idle = idle + 1; end
+            for (k = 0; k < 400; k = k + 1) begin
+                rx_data <= tx_mem[k];
+                rx_last <= ((k % 80) == 79);
+                rx_valid <= 1'b1;
+                @(posedge clk);
+                while (!rx_ready) @(posedge clk);
+                rx_valid <= 1'b0;
+                rx_last <= 1'b0;
+                repeat (11) @(posedge clk);
+            end
+            idle = 0;
+            while (n_rx_symbols < 4 && idle < 40000) begin @(posedge clk); idle = idle + 1; end
+            for (k = 0; k < 192; k = k + 1)
+                if (!seen[k] || got[k] !== sent[k]) errors = errors + 1;
+            if (n_out == 400 && n_rx_symbols == 4 && errors == 0 && !dut.tx_frame_error_sticky && !dut.rx_frame_error_sticky)
+                $display("PASS tb_ofdm_modem_file: 5 symbols out, 4 data symbols back, 192 bit pairs right");
+            else begin
+                $display("FAIL tb_ofdm_modem_file: tx samples %0d, rx symbols %0d, %0d wrong bit pairs", n_out, n_rx_symbols, errors);
+                $fatal(1);
+            end
+        end
+    endtask
 
     initial begin
         if (!$value$plusargs("OUT=%s", out_name)) begin
-            $display("FAIL: +OUT=<file> missing");
+            selfcheck = 1'b1;
+            repeat (5) @(posedge clk);
+            resetn = 1'b1;
+            repeat (5) @(posedge clk);
+            run_selfcheck();
             $finish;
         end
         out_fd = $fopen(out_name, "w");
