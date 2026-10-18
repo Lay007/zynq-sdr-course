@@ -1,0 +1,683 @@
+{
+ "date": "2026-10-19",
+ "kind": "simulation (Icarus Verilog, RTL receiver ofdm_axi_modem)",
+ "tool": "tools/ofdm_rf_link.py --frames 5 --data-symbols 10 --seed 3",
+ "cases": {
+  "clean_frac": {
+   "summary": {
+    "frames": 5,
+    "bits": 4800,
+    "bit_errors": 0,
+    "ber": 0.0,
+    "sync_errors": [
+     -1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "args": {
+     "frames": "5",
+     "data_symbols": "10",
+     "train_symbols": "1",
+     "fs": "2083000.0",
+     "snr_db": "35.0",
+     "cfo_hz": "0.0",
+     "fractional": "True",
+     "dc": "0.0",
+     "iq_gain_db": "0.0",
+     "iq_phase_deg": "0.0",
+     "rx_rms": "3700.0",
+     "backoff": "4",
+     "seed": "3",
+     "rx_npy": "None",
+     "json_out": "C:\\tmp\\test66\\ofdm_clean_frac.json"
+    }
+   },
+   "frames": [
+    {
+     "sync_error": -1,
+     "metric_peak": 1.0,
+     "cfo_est_hz": 17.2,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-112365"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 1.0,
+     "cfo_est_hz": -29.6,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-97155"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 1.0,
+     "cfo_est_hz": 21.3,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=80573"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 1.0,
+     "cfo_est_hz": 10.2,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-100099"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 1.0,
+     "cfo_est_hz": 0.9,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=50229"
+    }
+   ]
+  },
+  "cfo3k": {
+   "summary": {
+    "frames": 5,
+    "bits": 4800,
+    "bit_errors": 0,
+    "ber": 0.0,
+    "sync_errors": [
+     -1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "args": {
+     "frames": "5",
+     "data_symbols": "10",
+     "train_symbols": "1",
+     "fs": "2083000.0",
+     "snr_db": "25.0",
+     "cfo_hz": "3000.0",
+     "fractional": "True",
+     "dc": "0.0",
+     "iq_gain_db": "0.0",
+     "iq_phase_deg": "0.0",
+     "rx_rms": "3700.0",
+     "backoff": "4",
+     "seed": "3",
+     "rx_npy": "None",
+     "json_out": "C:\\tmp\\test66\\ofdm_cfo3k.json"
+    }
+   },
+   "frames": [
+    {
+     "sync_error": -1,
+     "metric_peak": 0.996,
+     "cfo_est_hz": 3199.7,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1678563"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.996,
+     "cfo_est_hz": 3108.3,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1640683"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.997,
+     "cfo_est_hz": 2992.7,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1461923"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.997,
+     "cfo_est_hz": 2973.0,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1645553"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.996,
+     "cfo_est_hz": 2948.6,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1477771"
+    }
+   ]
+  },
+  "cfo10k": {
+   "summary": {
+    "frames": 5,
+    "bits": 4800,
+    "bit_errors": 0,
+    "ber": 0.0,
+    "sync_errors": [
+     -1,
+     0,
+     0,
+     0,
+     -1
+    ],
+    "args": {
+     "frames": "5",
+     "data_symbols": "10",
+     "train_symbols": "1",
+     "fs": "2083000.0",
+     "snr_db": "25.0",
+     "cfo_hz": "10000.0",
+     "fractional": "True",
+     "dc": "0.0",
+     "iq_gain_db": "0.0",
+     "iq_phase_deg": "0.0",
+     "rx_rms": "3700.0",
+     "backoff": "4",
+     "seed": "3",
+     "rx_npy": "None",
+     "json_out": "C:\\tmp\\test66\\ofdm_cfo10k.json"
+    }
+   },
+   "frames": [
+    {
+     "sync_error": -1,
+     "metric_peak": 0.997,
+     "cfo_est_hz": 9785.5,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-5274827"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.996,
+     "cfo_est_hz": 10114.4,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-5261911"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.997,
+     "cfo_est_hz": 9902.0,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-5074127"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.997,
+     "cfo_est_hz": 9939.6,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-5253803"
+    },
+    {
+     "sync_error": -1,
+     "metric_peak": 0.996,
+     "cfo_est_hz": 10103.4,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-5053695"
+    }
+   ]
+  },
+  "cfo15k": {
+   "summary": {
+    "frames": 5,
+    "bits": 4800,
+    "bit_errors": 0,
+    "ber": 0.0,
+    "sync_errors": [
+     -1,
+     0,
+     0,
+     0,
+     -1
+    ],
+    "args": {
+     "frames": "5",
+     "data_symbols": "10",
+     "train_symbols": "1",
+     "fs": "2083000.0",
+     "snr_db": "25.0",
+     "cfo_hz": "15000.0",
+     "fractional": "True",
+     "dc": "0.0",
+     "iq_gain_db": "0.0",
+     "iq_phase_deg": "0.0",
+     "rx_rms": "3700.0",
+     "backoff": "4",
+     "seed": "3",
+     "rx_npy": "None",
+     "json_out": "C:\\tmp\\test66\\ofdm_cfo15k.json"
+    }
+   },
+   "frames": [
+    {
+     "sync_error": -1,
+     "metric_peak": 0.996,
+     "cfo_est_hz": 14791.3,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-7845051"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.997,
+     "cfo_est_hz": 15062.6,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-7821573"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.997,
+     "cfo_est_hz": 14892.8,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-7676965"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.997,
+     "cfo_est_hz": 14918.6,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-7840519"
+    },
+    {
+     "sync_error": -1,
+     "metric_peak": 0.996,
+     "cfo_est_hz": 15110.1,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-7671609"
+    }
+   ]
+  },
+  "cfo20k": {
+   "summary": {
+    "frames": 5,
+    "bits": 4800,
+    "bit_errors": 2378,
+    "ber": 0.49541666666666667,
+    "sync_errors": [
+     -1,
+     0,
+     0,
+     0,
+     -1
+    ],
+    "args": {
+     "frames": "5",
+     "data_symbols": "10",
+     "train_symbols": "1",
+     "fs": "2083000.0",
+     "snr_db": "25.0",
+     "cfo_hz": "20000.0",
+     "fractional": "True",
+     "dc": "0.0",
+     "iq_gain_db": "0.0",
+     "iq_phase_deg": "0.0",
+     "rx_rms": "3700.0",
+     "backoff": "4",
+     "seed": "3",
+     "rx_npy": "None",
+     "json_out": "C:\\tmp\\test66\\ofdm_cfo20k.json"
+    }
+   },
+   "frames": [
+    {
+     "sync_error": -1,
+     "metric_peak": 0.996,
+     "cfo_est_hz": 19851.6,
+     "bits": 960,
+     "bit_errors": 477,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=6350717"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.997,
+     "cfo_est_hz": 20006.0,
+     "bits": 960,
+     "bit_errors": 478,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=6376635"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.997,
+     "cfo_est_hz": 20070.3,
+     "bits": 960,
+     "bit_errors": 477,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=6559255"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.996,
+     "cfo_est_hz": 19954.6,
+     "bits": 960,
+     "bit_errors": 482,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=6359945"
+    },
+    {
+     "sync_error": -1,
+     "metric_peak": 0.996,
+     "cfo_est_hz": 20101.0,
+     "bits": 960,
+     "bit_errors": 464,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=6553073"
+    }
+   ]
+  },
+  "board_like": {
+   "summary": {
+    "frames": 5,
+    "bits": 4800,
+    "bit_errors": 0,
+    "ber": 0.0,
+    "sync_errors": [
+     -1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "args": {
+     "frames": "5",
+     "data_symbols": "10",
+     "train_symbols": "1",
+     "fs": "2083000.0",
+     "snr_db": "25.0",
+     "cfo_hz": "3000.0",
+     "fractional": "True",
+     "dc": "0.05",
+     "iq_gain_db": "0.3",
+     "iq_phase_deg": "2.0",
+     "rx_rms": "3700.0",
+     "backoff": "4",
+     "seed": "3",
+     "rx_npy": "None",
+     "json_out": "C:\\tmp\\test66\\ofdm_board_like.json"
+    }
+   },
+   "frames": [
+    {
+     "sync_error": -1,
+     "metric_peak": 0.996,
+     "cfo_est_hz": 3174.9,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1664661"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.996,
+     "cfo_est_hz": 3073.5,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1648595"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.996,
+     "cfo_est_hz": 3010.3,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1470153"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.997,
+     "cfo_est_hz": 2972.0,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1651989"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.996,
+     "cfo_est_hz": 2953.5,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1472281"
+    }
+   ]
+  },
+  "snr20": {
+   "summary": {
+    "frames": 5,
+    "bits": 4800,
+    "bit_errors": 0,
+    "ber": 0.0,
+    "sync_errors": [
+     -1,
+     0,
+     0,
+     0,
+     0
+    ],
+    "args": {
+     "frames": "5",
+     "data_symbols": "10",
+     "train_symbols": "1",
+     "fs": "2083000.0",
+     "snr_db": "20.0",
+     "cfo_hz": "3000.0",
+     "fractional": "True",
+     "dc": "0.0",
+     "iq_gain_db": "0.0",
+     "iq_phase_deg": "0.0",
+     "rx_rms": "3700.0",
+     "backoff": "4",
+     "seed": "3",
+     "rx_npy": "None",
+     "json_out": "C:\\tmp\\test66\\ofdm_snr20.json"
+    }
+   },
+   "frames": [
+    {
+     "sync_error": -1,
+     "metric_peak": 0.988,
+     "cfo_est_hz": 3357.4,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1686107"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.989,
+     "cfo_est_hz": 3187.9,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1639765"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.991,
+     "cfo_est_hz": 2984.9,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1460733"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.989,
+     "cfo_est_hz": 2951.0,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1649227"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.989,
+     "cfo_est_hz": 2909.9,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1462199"
+    }
+   ]
+  },
+  "snr15": {
+   "summary": {
+    "frames": 5,
+    "bits": 4800,
+    "bit_errors": 0,
+    "ber": 0.0,
+    "sync_errors": [
+     -1,
+     0,
+     0,
+     0,
+     1
+    ],
+    "args": {
+     "frames": "5",
+     "data_symbols": "10",
+     "train_symbols": "1",
+     "fs": "2083000.0",
+     "snr_db": "15.0",
+     "cfo_hz": "3000.0",
+     "fractional": "True",
+     "dc": "0.0",
+     "iq_gain_db": "0.0",
+     "iq_phase_deg": "0.0",
+     "rx_rms": "3700.0",
+     "backoff": "4",
+     "seed": "3",
+     "rx_npy": "None",
+     "json_out": "C:\\tmp\\test66\\ofdm_snr15.json"
+    }
+   },
+   "frames": [
+    {
+     "sync_error": -1,
+     "metric_peak": 0.965,
+     "cfo_est_hz": 3640.8,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1699541"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.965,
+     "cfo_est_hz": 3328.9,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1635693"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.973,
+     "cfo_est_hz": 2972.5,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1458073"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.967,
+     "cfo_est_hz": 2922.8,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1654077"
+    },
+    {
+     "sync_error": 1,
+     "metric_peak": 0.967,
+     "cfo_est_hz": 2857.2,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1494179"
+    }
+   ]
+  },
+  "snr10": {
+   "summary": {
+    "frames": 5,
+    "bits": 4800,
+    "bit_errors": 2,
+    "ber": 0.0004166666666666667,
+    "sync_errors": [
+     1,
+     0,
+     0,
+     1,
+     1
+    ],
+    "args": {
+     "frames": "5",
+     "data_symbols": "10",
+     "train_symbols": "1",
+     "fs": "2083000.0",
+     "snr_db": "10.0",
+     "cfo_hz": "3000.0",
+     "fractional": "True",
+     "dc": "0.0",
+     "iq_gain_db": "0.0",
+     "iq_phase_deg": "0.0",
+     "rx_rms": "3700.0",
+     "backoff": "4",
+     "seed": "3",
+     "rx_npy": "None",
+     "json_out": "C:\\tmp\\test66\\ofdm_snr10.json"
+    }
+   },
+   "frames": [
+    {
+     "sync_error": 1,
+     "metric_peak": 0.897,
+     "cfo_est_hz": 3864.9,
+     "bits": 960,
+     "bit_errors": 1,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1515487"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.896,
+     "cfo_est_hz": 3570.1,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1627279"
+    },
+    {
+     "sync_error": 0,
+     "metric_peak": 0.921,
+     "cfo_est_hz": 2935.2,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1455821"
+    },
+    {
+     "sync_error": 1,
+     "metric_peak": 0.9,
+     "cfo_est_hz": 2975.0,
+     "bits": 960,
+     "bit_errors": 0,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1636641"
+    },
+    {
+     "sync_error": 1,
+     "metric_peak": 0.904,
+     "cfo_est_hz": 2736.9,
+     "bits": 960,
+     "bit_errors": 1,
+     "rx_result": "RESULT mode=1 inputs=880 outputs=480 tx_symbols=0 rx_symbols=10 tx_frame_error=0 rx_frame_error=0 trained=1 cfo_theta=-1430861"
+    }
+   ]
+  }
+ },
+ "capture_path_check": {
+  "note": "--save-tx frame (20 data symbols), played 3 times cyclically, recording starting 1234 samples into the first frame, channel SNR 25 dB, CFO 4 kHz, fractional delay 0.37, DC, I/Q imbalance, 12-bit ints; then --rx-capture",
+  "result": {
+   "frame_start": 1972,
+   "expected": 1972,
+   "cfo_est_hz": 3886.0,
+   "bits": 1920,
+   "bit_errors": 0
+  }
+ }
+}
