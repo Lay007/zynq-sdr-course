@@ -62,10 +62,13 @@ def run_one(work: Path, rng: np.random.Generator, args) -> dict:
     model = F.detect(rx)
     row = {"true_first": true_start + O.N, "model_first": model[0] if model else None, "rtl": result[0]}
     sync = np.loadtxt(work / "sync.txt", dtype=np.int64, ndmin=2)
+    # Same number of frames as the model (none included), and the same samples handed over.
+    found = int(result[0].split("frames_found=")[1].split()[0])
+    row["rtl_matches_model"] = found == len(model)
     if model and sync.size:
         ref = rx[model[0]: model[0] + len(sync)]
-        row["rtl_matches_model"] = bool(len(ref) == len(sync) and np.array_equal(sync[:, 0], ref.real.astype(np.int64))
-                                        and np.array_equal(sync[:, 1], ref.imag.astype(np.int64)))
+        row["rtl_matches_model"] &= bool(len(ref) == len(sync) and np.array_equal(sync[:, 0], ref.real.astype(np.int64))
+                                         and np.array_equal(sync[:, 1], ref.imag.astype(np.int64)))
     txt = (work / "bits.txt").read_text().split()
     pairs = np.array(txt, dtype=np.int64).reshape(-1, 2) if txt else np.zeros((0, 2), dtype=np.int64)
     got = np.full(48 * args.data_symbols, -1)
