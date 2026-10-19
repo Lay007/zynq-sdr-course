@@ -36,14 +36,17 @@ MODE_EXPECTATIONS = {
     "bridge_txrx_mux": {"min_luts": 25000, "min_dsps": 100, "modem": True},
     "bridge_rx_only": {"min_luts": 20000, "min_dsps": 60, "modem": True},
     "gpreg_only": {"min_luts": 0, "min_dsps": 0, "modem": False},
+    # The OFDM image (issue #48): vendor shell + ofdm_radio_core (modem about 5.9k LUT / 32 DSP, frame
+    # search 0.8k LUT / 12 DSP in out-of-context runs), no BPSK/QPSK bridge.
+    "ofdm_txrx": {"min_luts": 18000, "min_dsps": 30, "modem": True},
 }
 
 
-def parse_utilization(path: Path) -> dict[str, int]:
-    """Pull the flat resource counts out of a Vivado utilization report."""
+def parse_utilization(path: Path) -> dict[str, float]:
+    """Pull the flat resource counts out of a Vivado utilization report (BRAM tiles may be x.5)."""
     wanted = {"Slice LUTs": "luts", "Slice Registers": "regs",
               "Block RAM Tile": "bram", "DSPs": "dsps"}
-    found: dict[str, int] = {}
+    found: dict[str, float] = {}
     for line in path.read_text(errors="ignore").splitlines():
         if not line.startswith("|"):
             continue
@@ -55,7 +58,10 @@ def parse_utilization(path: Path) -> dict[str, int]:
                 try:
                     found[key] = int(cells[2])
                 except ValueError:
-                    pass
+                    try:
+                        found[key] = float(cells[2])
+                    except ValueError:
+                        pass
     return found
 
 

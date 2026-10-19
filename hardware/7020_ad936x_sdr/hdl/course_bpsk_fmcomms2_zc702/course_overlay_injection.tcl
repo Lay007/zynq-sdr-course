@@ -21,9 +21,89 @@ proc course_disconnect_bd_pin {pin_path} {
   }
 }
 
+proc course_rx_sample_concat {name} {
+  # {valid, I, Q} from the vendor ADC FIFO's channel 1 (In0 = Q, In1 = I, In2 = valid).
+  set concat [create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 $name]
+  set_property -dict [list \
+    CONFIG.NUM_PORTS {3} \
+    CONFIG.IN0_WIDTH {16} \
+    CONFIG.IN1_WIDTH {16} \
+    CONFIG.IN2_WIDTH {1} \
+  ] $concat
+  ad_connect util_ad9361_adc_fifo/dout_data_1 $name/In0
+  ad_connect util_ad9361_adc_fifo/dout_data_0 $name/In1
+  ad_connect util_ad9361_adc_fifo/dout_valid_0 $name/In2
+}
+
+# Steer the DAC FIFO input through course_dac_fifo_source_mux (see that module for why the write
+# cadence comes from the FIFO's own request). The caller connects the mux's select/bus inputs.
+proc course_insert_dac_fifo_mux {} {
+  create_bd_cell -type module -reference course_dac_fifo_source_mux course_dac_fifo_source_mux
+  # Write cadence from the FIFO's own read request (issue #67), aligned with the unpacker's answer.
+  ad_connect util_ad9361_divclk/clk_out course_dac_fifo_source_mux/clk
+  ad_connect axi_ad9361_dac_fifo/din_valid_0 course_dac_fifo_source_mux/fifo_rd_req
+
+  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_data_0
+  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_data_1
+  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_data_2
+  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_data_3
+  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_unf
+  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_valid_in_0
+  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_valid_in_1
+  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_valid_in_2
+  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_valid_in_3
+
+  ad_connect util_ad9361_dac_upack/fifo_rd_data_0 course_dac_fifo_source_mux/vendor_data_0
+  ad_connect util_ad9361_dac_upack/fifo_rd_data_1 course_dac_fifo_source_mux/vendor_data_1
+  ad_connect util_ad9361_dac_upack/fifo_rd_data_2 course_dac_fifo_source_mux/vendor_data_2
+  ad_connect util_ad9361_dac_upack/fifo_rd_data_3 course_dac_fifo_source_mux/vendor_data_3
+  ad_connect util_ad9361_dac_upack/fifo_rd_valid course_dac_fifo_source_mux/vendor_valid
+  ad_connect util_ad9361_dac_upack/fifo_rd_underflow course_dac_fifo_source_mux/vendor_unf
+
+  ad_connect course_dac_fifo_source_mux/fifo_data_0 axi_ad9361_dac_fifo/din_data_0
+  ad_connect course_dac_fifo_source_mux/fifo_data_1 axi_ad9361_dac_fifo/din_data_1
+  ad_connect course_dac_fifo_source_mux/fifo_data_2 axi_ad9361_dac_fifo/din_data_2
+  ad_connect course_dac_fifo_source_mux/fifo_data_3 axi_ad9361_dac_fifo/din_data_3
+  ad_connect course_dac_fifo_source_mux/fifo_unf axi_ad9361_dac_fifo/din_unf
+  ad_connect course_dac_fifo_source_mux/fifo_valid axi_ad9361_dac_fifo/din_valid_in_0
+  ad_connect course_dac_fifo_source_mux/fifo_valid axi_ad9361_dac_fifo/din_valid_in_1
+  ad_connect course_dac_fifo_source_mux/fifo_valid axi_ad9361_dac_fifo/din_valid_in_2
+  ad_connect course_dac_fifo_source_mux/fifo_valid axi_ad9361_dac_fifo/din_valid_in_3
+}
+
+proc course_zero_constant {name width} {
+  ad_ip_instance xlconstant $name
+  ad_ip_parameter $name CONFIG.CONST_WIDTH $width
+  ad_ip_parameter $name CONFIG.CONST_VAL 0
+}
+
+# Issue #48: the OFDM image. Vendor shell + ofdm_radio_core (AXI-Lite at 0x79060000, 4 KB) on the
+# DAC FIFO mux and the ADC FIFO's channel 1. No BPSK/QPSK bridge: with it the device would need
+# about 222 of its 220 DSP48E1 (the bridge build uses 176).
+proc course_ofdm_apply_overlay {} {
+  create_bd_cell -type module -reference ofdm_radio_core ofdm_radio
+  ad_connect sys_cpu_clk ofdm_radio/s_axi_aclk
+  ad_connect sys_cpu_resetn ofdm_radio/s_axi_aresetn
+  ad_cpu_interconnect 0x79060000 ofdm_radio
+  ad_connect util_ad9361_divclk/clk_out ofdm_radio/sample_clk
+  ad_connect util_ad9361_divclk_reset/peripheral_aresetn ofdm_radio/sample_resetn
+
+  course_rx_sample_concat ofdm_rx_sample_concat
+  ad_connect ofdm_rx_sample_concat/dout ofdm_radio/rx_sample_bus
+
+  course_insert_dac_fifo_mux
+  ad_connect axi_ad9361_dac_fifo/din_valid_0 ofdm_radio/fifo_rd_req
+  ad_connect ofdm_radio/tx_select course_dac_fifo_source_mux/select_ofdm
+  ad_connect ofdm_radio/tx_sample_bus course_dac_fifo_source_mux/ofdm_tx_sample_bus
+  course_zero_constant course_const_zero1 1
+  course_zero_constant course_const_zero33 33
+  ad_connect course_const_zero1/dout course_dac_fifo_source_mux/select_bpsk
+  ad_connect course_const_zero33/dout course_dac_fifo_source_mux/bpsk_tx_sample_bus
+}
+
 proc course_bpsk_apply_overlay {overlay_mode} {
-  if {$overlay_mode ne "vendor_only" && $overlay_mode ne "gpreg_only" && $overlay_mode ne "bridge_rx_only" && $overlay_mode ne "bridge_txrx_mux"} {
-    error "Unsupported COURSE_OVERLAY_MODE '$overlay_mode'. Expected vendor_only, gpreg_only, bridge_rx_only or bridge_txrx_mux."
+  if {$overlay_mode ne "vendor_only" && $overlay_mode ne "gpreg_only" && $overlay_mode ne "bridge_rx_only" && $overlay_mode ne "bridge_txrx_mux" && $overlay_mode ne "ofdm_txrx"} {
+    error "Unsupported COURSE_OVERLAY_MODE '$overlay_mode'. Expected vendor_only, gpreg_only, bridge_rx_only, bridge_txrx_mux or ofdm_txrx."
   }
 
   # The recovered CLG400 Tcl shell is close to the working vendor snapshot,
@@ -46,6 +126,11 @@ proc course_bpsk_apply_overlay {overlay_mode} {
 
   if {$overlay_mode eq "vendor_only"} {
     puts "COURSE_OVERLAY_MODE=vendor_only: leaving the vendor shell unmodified."
+    return
+  }
+
+  if {$overlay_mode eq "ofdm_txrx"} {
+    course_ofdm_apply_overlay
     return
   }
 
@@ -114,16 +199,7 @@ proc course_bpsk_apply_overlay {overlay_mode} {
   ad_connect bpsk_bridge_bd/gp_rx_valid_count axi_gpreg_bpsk/up_gp_in_6
   ad_connect bpsk_bridge_bd/gp_capture_debug axi_gpreg_bpsk/up_gp_in_7
 
-  set bpsk_rx_sample_concat [create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 bpsk_rx_sample_concat]
-  set_property -dict [list \
-    CONFIG.NUM_PORTS {3} \
-    CONFIG.IN0_WIDTH {16} \
-    CONFIG.IN1_WIDTH {16} \
-    CONFIG.IN2_WIDTH {1} \
-  ] $bpsk_rx_sample_concat
-  ad_connect util_ad9361_adc_fifo/dout_data_1 bpsk_rx_sample_concat/In0
-  ad_connect util_ad9361_adc_fifo/dout_data_0 bpsk_rx_sample_concat/In1
-  ad_connect util_ad9361_adc_fifo/dout_valid_0 bpsk_rx_sample_concat/In2
+  course_rx_sample_concat bpsk_rx_sample_concat
   ad_connect bpsk_rx_sample_concat/dout bpsk_bridge_bd/rx_sample_bus
 
   if {$overlay_mode eq "bridge_rx_only"} {
@@ -133,37 +209,12 @@ proc course_bpsk_apply_overlay {overlay_mode} {
   # Final staged bridge mode for the first live RF discovery burst: keep the
   # vendor DMA/TX chain instantiated, but steer the DAC FIFO input over to the
   # BPSK bridge only while its burst path is active.
-  set course_dac_fifo_source_mux [create_bd_cell -type module -reference course_dac_fifo_source_mux course_dac_fifo_source_mux]
+  course_insert_dac_fifo_mux
   ad_connect bpsk_bridge_bd/tx_path_active course_dac_fifo_source_mux/select_bpsk
-  # Write cadence from the FIFO's own read request (issue #67), aligned with the unpacker's answer.
-  ad_connect util_ad9361_divclk/clk_out course_dac_fifo_source_mux/clk
-  ad_connect axi_ad9361_dac_fifo/din_valid_0 course_dac_fifo_source_mux/fifo_rd_req
   ad_connect bpsk_bridge_bd/tx_sample_bus course_dac_fifo_source_mux/bpsk_tx_sample_bus
-
-  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_data_0
-  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_data_1
-  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_data_2
-  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_data_3
-  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_unf
-  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_valid_in_0
-  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_valid_in_1
-  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_valid_in_2
-  course_disconnect_bd_pin axi_ad9361_dac_fifo/din_valid_in_3
-
-  ad_connect util_ad9361_dac_upack/fifo_rd_data_0 course_dac_fifo_source_mux/vendor_data_0
-  ad_connect util_ad9361_dac_upack/fifo_rd_data_1 course_dac_fifo_source_mux/vendor_data_1
-  ad_connect util_ad9361_dac_upack/fifo_rd_data_2 course_dac_fifo_source_mux/vendor_data_2
-  ad_connect util_ad9361_dac_upack/fifo_rd_data_3 course_dac_fifo_source_mux/vendor_data_3
-  ad_connect util_ad9361_dac_upack/fifo_rd_valid course_dac_fifo_source_mux/vendor_valid
-  ad_connect util_ad9361_dac_upack/fifo_rd_underflow course_dac_fifo_source_mux/vendor_unf
-
-  ad_connect course_dac_fifo_source_mux/fifo_data_0 axi_ad9361_dac_fifo/din_data_0
-  ad_connect course_dac_fifo_source_mux/fifo_data_1 axi_ad9361_dac_fifo/din_data_1
-  ad_connect course_dac_fifo_source_mux/fifo_data_2 axi_ad9361_dac_fifo/din_data_2
-  ad_connect course_dac_fifo_source_mux/fifo_data_3 axi_ad9361_dac_fifo/din_data_3
-  ad_connect course_dac_fifo_source_mux/fifo_unf axi_ad9361_dac_fifo/din_unf
-  ad_connect course_dac_fifo_source_mux/fifo_valid axi_ad9361_dac_fifo/din_valid_in_0
-  ad_connect course_dac_fifo_source_mux/fifo_valid axi_ad9361_dac_fifo/din_valid_in_1
-  ad_connect course_dac_fifo_source_mux/fifo_valid axi_ad9361_dac_fifo/din_valid_in_2
-  ad_connect course_dac_fifo_source_mux/fifo_valid axi_ad9361_dac_fifo/din_valid_in_3
+  # No OFDM core in this image (see course_ofdm_apply_overlay).
+  course_zero_constant course_const_zero1 1
+  course_zero_constant course_const_zero33 33
+  ad_connect course_const_zero1/dout course_dac_fifo_source_mux/select_ofdm
+  ad_connect course_const_zero33/dout course_dac_fifo_source_mux/ofdm_tx_sample_bus
 }

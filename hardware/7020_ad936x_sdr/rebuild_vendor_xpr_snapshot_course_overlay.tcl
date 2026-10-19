@@ -106,6 +106,20 @@ proc collect_bridge_overlay_sources {course_hdl_dir block5_rtl_dir} {
 }
 
 proc add_overlay_sources {overlay_mode course_hdl_dir block5_rtl_dir} {
+  if {$overlay_mode eq "ofdm_txrx"} {
+    # Issue #48: ofdm_radio_core and the Block 8 OFDM RTL it instantiates, plus the DAC FIFO mux.
+    set block8_rtl_dir [file normalize [file join $block5_rtl_dir ".." ".." "block_08_modulation_and_synchronization" "rtl"]]
+    set srcs [concat [lsort [glob -nocomplain [file join $block8_rtl_dir "ofdm_*.v"]]] \
+                [list [file join $course_hdl_dir "course_dac_fifo_source_mux.v"]]]
+    if {[llength $srcs] < 10} {
+      error "OFDM sources missing under $block8_rtl_dir"
+    }
+    foreach src $srcs {
+      ensure_path_exists $src "OFDM overlay source"
+      add_files -norecurse -fileset sources_1 $src
+    }
+    return
+  }
   if {$overlay_mode ne "bridge_rx_only" && $overlay_mode ne "bridge_txrx_mux"} {
     return
   }
@@ -149,6 +163,19 @@ if {[info exists ::env(COURSE_OVERLAY_MODE)]} {
   set overlay_mode $::env(COURSE_OVERLAY_MODE)
 }
 set skip_run [env_truthy "COURSE_SNAPSHOT_SKIP_RUN"]
+
+# The OFDM image builds in a work root of its own, so a build of one image never deletes the
+# reports of the other (the work root is emptied below).
+if {$overlay_mode eq "ofdm_txrx"} {
+  set work_root [file normalize [file join $repo_root "tmp" "vendor_xpr_course_overlay_ofdm"]]
+  set work_project_dir [file join $work_root "zc702"]
+  set work_xpr_path [file join $work_project_dir "zc702.xpr"]
+  set work_bd_path [file join \
+    $work_project_dir "zc702.srcs" "sources_1" "bd" "system" "system.bd"]
+  set work_bd_dir [file dirname $work_bd_path]
+  set work_wrapper_path [file join $work_bd_dir "hdl" "system_wrapper.v"]
+  set work_xsa_path [file join $work_project_dir "zc702.sdk" "system_top.xsa"]
+}
 
 puts "Snapshot overlay mode: $overlay_mode"
 puts "Skip synth/impl/export: $skip_run"
