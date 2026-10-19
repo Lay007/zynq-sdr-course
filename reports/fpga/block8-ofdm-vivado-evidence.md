@@ -33,6 +33,7 @@ one-clock teaching equalizer meets 100 MHz**:
 | `ofdm_axi_modem_fabric` (`BRAM_MEMORY = 0`) | 19628 | 7335 | 32 | 1.5 | +0.591 ns | about 106 MHz |
 | `ofdm_tx_cp16_path_qam16` (`MODULATION = 1`: 16-QAM mapper) | 888 | 360 | 4 | 1 | +1.686 ns | about 120 MHz |
 | `ofdm_axi_modem_qam16` (`MODULATION = 1`: 16-QAM mapper and slicer) | 5985 | 3233 | 32 | 3.5 | +0.692 ns | about 107 MHz |
+| `ofdm_frame_sync` (#48 stage 4b: Schmidl & Cox frame search in the sample stream, delay line, output FIFO) | 777 | 842 | 12 | 1 | +2.435 ns | about 132 MHz |
 
 The frequency estimate is `1 / (period - WNS)`; it describes the routed critical path, not a
 characterized maximum clock. Rows with a suffix are the same module with a parameter override.
@@ -121,6 +122,21 @@ Without it the same RTL, bit-exact with the same vectors, maps the memory to one
 `NORMALIZE = 0` Vivado kept the unused CORDIC engine (2 DSP48E1 for `abs(G)^2`) and its second read
 port moved the memory into LUT RAM (452 LUTs, 6 DSP, 0 BRAM). Gating the engine with the parameter
 restores 331 LUTs, 4 DSP and the block RAM.
+
+## Frame synchronization: one clock per sample was 16 ns too long
+
+The first `ofdm_frame_sync` did all the work for a sample in the clock it arrived: DC tracker,
+products with the sample 32 back, the running sums, the squares of the metric, the comparison and
+the plateau decision. In simulation that is the simplest form to check against the model; in
+Vivado it was 34 logic levels and 25.9 ns, WNS -16.063 ns with 5753 failing endpoints, and it took
+3355 LUTs and 7022 flip-flops, because the rings of x, p and e were cleared in the reset branch and
+so could not become RAM (the same trap as the equalizer above). The version in the table keeps the
+arithmetic and moves it into a pipeline: every recurrence (the DC estimate, each ring, each running
+sum) is one stage, the products and the squares get registers of their own, and the decision comes
+10 clocks after the sample. The rings are no longer reset; until a ring has been filled once its
+read counts as zero, which is what the model's sums over a not yet full window do. RTL and model
+still agree sample for sample in the chain runs (`tools/run_ofdm_sync_chain.py`), and the
+committed self-check passes.
 
 ## Port paths: a correction
 

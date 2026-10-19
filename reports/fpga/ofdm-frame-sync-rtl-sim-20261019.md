@@ -4,8 +4,8 @@ Stage 4a ([ofdm-rf-link-sync-sim-20261019.md](ofdm-rf-link-sync-sim-20261019.md)
 on the PC, in floating point, and handed the RTL receiver symbols that were already cut. On the
 board the frame has to be found in the fabric, in the continuous ADC stream. This stage writes that
 block, `rtl/ofdm_frame_sync.v`, and its bit-exact model `tools/ofdm_frame_sync_fixed.py`, and runs
-the block and the unchanged modem receiver together. **Simulation only: the block has not been
-synthesized, its resources and timing are unknown, and nothing ran on a board.**
+the block and the unchanged modem receiver together. **Simulation, plus an out-of-context Vivado
+implementation of the block alone; nothing ran on a board.**
 
 ## What the block does
 
@@ -73,6 +73,18 @@ stage 4a) used to print FAIL and still exit 0 when started without files, as `to
 starts every bench; it now runs a TX to RX loopback through the modem in that case and stops with
 an error if any bit pair differs. `tests/test_ofdm_frame_sync_fixed.py` checks the model. All 27
 OFDM benches pass (`python tools/run_ofdm_rtl.py`).
+
+## Vivado
+
+Out of context on `xc7z020clg400-2` at 100 MHz, ports timed with 0 ns delays
+([block8-ofdm-vivado-evidence.md](block8-ofdm-vivado-evidence.md)): 777 LUT, 842 FF, 12 DSP48E1,
+1 BRAM tile, WNS +2.435 ns. The first version, all arithmetic for a sample in one clock, had
+WNS -16.063 ns (34 logic levels) and 7022 flip-flops; the rings, cleared on reset, could not
+become RAM. The block is now a 10-clock pipeline with unreset rings that read as zero until
+filled, so it behaves as the model whenever samples are at least 11 clocks apart (the board: 48).
+`tools/run_ofdm_sync_chain.py` also compares the number of frames with the model now: at SNR 6 dB
+the model and the RTL both missed the same 2 of 3 frames, which the first version of the script
+reported as a mismatch.
 
 ## Not done
 
