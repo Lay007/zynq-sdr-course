@@ -86,9 +86,25 @@ filled, so it behaves as the model whenever samples are at least 11 clocks apart
 the model and the RTL both missed the same 2 of 3 frames, which the first version of the script
 reported as a mismatch.
 
+## The OFDM image (built, not run)
+
+`rtl/ofdm_radio_core.v` puts the modem and this block behind AXI4-Lite for the radio: a TX bit
+buffer, the preamble from a ROM, the modem's training and data symbols, a digital gain, and a
+dual-clock FIFO that hands the DAC FIFO one sample per request; on the RX side a dual-clock FIFO
+from the ADC, at most one sample every 16 clocks into the frame search, the modem's receiver for
+the first frame after RX_ARM, and an RX bit buffer. `tb_ofdm_radio_core.sv` sends two frames
+through DAC -> channel (delay, DC, noise, 12 bits) -> ADC at 2.083 MS/s and gets every bit back.
+
+It does not fit next to the BPSK/QPSK bridge: that build already uses 176 of the 220 DSP48E1 and
+75 % of the LUTs, and the OFDM core adds about 46 DSP. So it is an image of its own,
+`COURSE_OVERLAY_MODE=ofdm_txrx`: the vendor shell, the DAC FIFO mux (which now has a third input)
+and the core at 0x79060000. Vivado 2021.1: 21 261 LUT, 25 562 FF, 9.5 BRAM tiles, 74 DSP48E1,
+WNS +0.253 ns, WHS +0.042 ns, every net routed, no latches (artifact `bitstreams/ofdm-txrx-48`,
+md5 5de22b09). The board program is `sw/zofdm.c` (`loop` on one board, `tx` / `rx` on two).
+
 ## Not done
 
-The block is not in a bitstream. On the board it would sit between the ADC path and the modem
+Nothing of this has run on a board yet. On the board it would sit between the ADC path and the modem
 receiver, with a level normalization in front of it (E_MIN assumes the RX level of the bench) and a
 modem retrain on `frame_start`, so that every frame trains the equalizer again; none of this is
 written yet.
