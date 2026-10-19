@@ -5,7 +5,8 @@
 // gaps), the unpacker as util_upack2 does (fifo_rd_valid one clock after the request, only when
 // it has data). Checks: (1) DMA running: every vendor word is written, nothing else; (2) no DMA,
 // no burst: zeros are written at the request cadence; (3) a burst with no DMA: the modem's
-// samples, then zeros again, never the last burst sample held.
+// samples, then zeros again, never the last burst sample held; (5) the same for the OFDM core's
+// burst (issue #48), and the BPSK/QPSK bridge wins while both select.
 
 `timescale 1ns/1ps
 
@@ -20,6 +21,9 @@ reg         dma_on = 1'b0;
 reg         select = 1'b0;
 reg         bpsk_valid = 1'b0;
 reg  [15:0] bpsk_i = 0, bpsk_q = 0;
+reg         select_ofdm = 1'b0;
+reg         ofdm_valid = 1'b0;
+reg  [15:0] ofdm_i = 0, ofdm_q = 0;
 reg         vendor_valid = 1'b0;
 reg  [15:0] vendor_word = 16'h0100;
 wire [15:0] d0, d1, d2, d3;
@@ -30,6 +34,7 @@ course_dac_fifo_source_mux #(.W(W)) dut (
     .vendor_data_0(vendor_word), .vendor_data_1(~vendor_word), .vendor_data_2(vendor_word), .vendor_data_3(~vendor_word),
     .vendor_valid(vendor_valid), .vendor_unf(1'b0),
     .bpsk_tx_sample_bus({bpsk_valid, bpsk_i, bpsk_q}),
+    .select_ofdm(select_ofdm), .ofdm_tx_sample_bus({ofdm_valid, ofdm_i, ofdm_q}),
     .fifo_data_0(d0), .fifo_data_1(d1), .fifo_data_2(d2), .fifo_data_3(d3), .fifo_valid(fv), .fifo_unf(funf)
 );
 
@@ -46,12 +51,12 @@ always @(posedge clk) begin
     req <= (cyc % 16) != 15;
 end
 
-integer errors = 0, writes = 0, vendor_writes = 0, nonzero_idle = 0, burst_writes = 0, phase = 0;
+integer errors = 0, writes = 0, vendor_writes = 0, nonzero_idle = 0, burst_writes = 0, phase = 0, ofdm_writes = 0;
 reg req_q = 1'b0;
 always @(posedge clk) req_q <= req;
 always @(negedge clk) begin
     if (fv) writes = writes + 1;
-    if (fv !== (req_q | vendor_valid | (select & bpsk_valid))) begin
+    if (fv !== (req_q | vendor_valid | (select & bpsk_valid) | (!select & select_ofdm & ofdm_valid))) begin
         errors = errors + 1;
         $display("FAIL cadence at %0t: fifo_valid %0d req_d %0d", $time, fv, req_q);
     end
@@ -65,6 +70,13 @@ always @(negedge clk) begin
         3: if (fv && bpsk_valid && (d0 !== bpsk_i || d1 !== bpsk_q)) begin
                errors = errors + 1; $display("FAIL: burst sample not written");
            end else if (fv && bpsk_valid) burst_writes = burst_writes + 1;
+        5: if (fv && ofdm_valid && !select && (d0 !== ofdm_i || d1 !== ofdm_q || d2 !== ofdm_i || d3 !== ofdm_q)) begin
+               errors = errors + 1; $display("FAIL: OFDM sample not written");
+           end else if (fv && ofdm_valid && !select) ofdm_writes = ofdm_writes + 1;
+           else if (fv && select && bpsk_valid && d0 !== bpsk_i) begin
+               errors = errors + 1; $display("FAIL: the bridge lost to the OFDM core");
+           end
+        6: if (fv && (d0 !== 0 || d1 !== 0)) nonzero_idle = nonzero_idle + 1;
     endcase
 end
 
@@ -95,8 +107,25 @@ initial begin
     repeat (400) @(posedge clk);
     if (nonzero_idle != 0) begin errors = errors + 1; $display("FAIL: %0d non-zero words written while idle", nonzero_idle); end
     if (burst_writes < 190) begin errors = errors + 1; $display("FAIL: only %0d burst samples written", burst_writes); end
+    // (5) an OFDM burst, with the bridge selecting in the middle of it for 20 clocks
+    phase = 5; select_ofdm = 1;
+    for (k = 0; k < 200; k = k + 1) begin
+        @(posedge clk);
+        ofdm_valid <= 1; ofdm_i <= 16'h2000 + k; ofdm_q <= 16'h6000 - k;
+        if (k == 100) begin select = 1; bpsk_valid <= 1; bpsk_i <= 16'h0F0F; bpsk_q <= 16'h0F0F; end
+        if (k == 120) begin select = 0; bpsk_valid <= 0; end
+    end
+    @(posedge clk); ofdm_valid <= 0; ofdm_i <= 16'h7FFF; ofdm_q <= 16'h7FFF;
+    repeat (8) @(posedge clk);
+    select_ofdm = 0;
+    // (6) after it: zeros again
+    phase = 6; nonzero_idle = 0;
+    repeat (400) @(posedge clk);
+    if (nonzero_idle != 0) begin errors = errors + 1; $display("FAIL: %0d non-zero words after the OFDM burst", nonzero_idle); end
+    if (ofdm_writes < 160) begin errors = errors + 1; $display("FAIL: only %0d OFDM samples written", ofdm_writes); end
     if (errors == 0)
-        $display("PASS tb_course_dac_fifo_source_mux: DMA words %0d, burst samples %0d, idle writes are zeros", vendor_writes, burst_writes);
+        $display("PASS tb_course_dac_fifo_source_mux: DMA words %0d, burst samples %0d, OFDM samples %0d, idle writes are zeros",
+                 vendor_writes, burst_writes, ofdm_writes);
     else
         $display("FAIL tb_course_dac_fifo_source_mux: %0d errors", errors);
     $finish;
