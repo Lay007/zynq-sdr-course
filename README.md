@@ -77,10 +77,12 @@ The course can still be studied in simulation-only mode, because many labs have 
 
 ### Companion repositories
 
+- For C++ DSP kernels, numerical tests, CMake packaging, and reproducible benchmarks, see
+  **[cpp-dsp-showcase](https://github.com/Lay007/cpp-dsp-showcase)**.
 - For the next step beyond the Block 8 CSS/LoRa-like labs, see
-  **[zynq-lora-phy-positioning](https://github.com/Lay007/zynq-lora-phy-positioning)** —
-  a dedicated Zynq SDR project for LoRa PHY implementation, synchronization and
-  positioning experiments.
+  **[zynq-lora-phy](https://github.com/Lay007/zynq-lora-phy)** —
+  a dedicated Zynq SDR project for LoRa PHY implementation, synchronization,
+  hardware PER measurements, and positioning research.
 - Published bitstreams, boot sets and board backups live in the private
   `zynq-sdr-course-artifacts` repository. The source repository keeps manifests,
   measurements and rebuild instructions, but not large or board-specific binaries.
