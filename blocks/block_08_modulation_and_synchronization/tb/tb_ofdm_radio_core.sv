@@ -15,6 +15,10 @@ module tb_ofdm_radio_core;
     parameter integer STROBE = 1;
     parameter integer RX_PHASE = 0;
     parameter real CFO_HZ = 0.0;
+    parameter real CHANNEL_GAIN = 1.0;       // amplitude between the DAC word and the ADC
+    parameter integer CONFIG = 3;            // the core's CONFIG: [0] coarse CFO, [1] level
+    parameter integer SETTLE_SAMPLES = 0;    // ADC samples before the first frame (the DC tracker
+                                             // settles in a few 1024; on a board it runs all the time)
     localparam real FS = 1.0e9 / (2.0 * SCLK_HALF_NS * STROBE);
     localparam integer SYMBOLS = 4;
     localparam integer WORDS = 3 * SYMBOLS;
@@ -77,7 +81,7 @@ module tb_ofdm_radio_core;
             n_rx = n_rx + 1;
             ni = ($random(seed) % 3);
             nq = ($random(seed) % 3);
-            rx_bus <= {1'b1, 16'($rtoi(ri / 16.0) + 5 + ni), 16'($rtoi(rq / 16.0) - 3 + nq)};
+            rx_bus <= {1'b1, 16'($rtoi(ri * CHANNEL_GAIN / 16.0) + 5 + ni), 16'($rtoi(rq * CHANNEL_GAIN / 16.0) - 3 + nq)};
         end else begin
             rx_bus[32] <= 1'b0;
         end
@@ -107,7 +111,7 @@ module tb_ofdm_radio_core;
     endtask
 
     reg [31:0] sent [0:WORDS-1];
-    reg [31:0] v;
+    reg [31:0] v, theta_r, gain_r;
     integer k, frame, errors = 0, waited;
 
     task automatic fail(input [8*80-1:0] what);
@@ -128,7 +132,9 @@ module tb_ofdm_radio_core;
         axi_read(12'h000, v);
         if (v !== 32'h4F464452) fail("ID");
         axi_write(12'h010, SYMBOLS);
-        axi_write(12'h018, 3);                       // the ADC's 12 bits to about the modem's level
+        axi_write(12'h040, CONFIG);
+        if (!CONFIG[1]) axi_write(12'h018, 3);       // no level stage: the ADC's 12 bits to about the modem's level
+        while (n_rx < SETTLE_SAMPLES) @(posedge clk);
         for (frame = 0; frame < 2; frame = frame + 1) begin
             for (k = 0; k < WORDS; k = k + 1) begin
                 sent[k] = $random(seed);
@@ -165,8 +171,11 @@ module tb_ofdm_radio_core;
             if (v != 0) fail("frame search FIFO overflow");
             axi_read(12'h130, v);                    // the modem's CE_TRAINED
             if (v != 1) fail("modem not trained once");
+            axi_read(12'h044, theta_r);
+            axi_read(12'h048, gain_r);
             axi_read(12'h030, v);
-            $display("frame %0d: %0d samples queued, %0d played; modem CE_TRAINED 1", frame, v, n_tx_samples);
+            $display("frame %0d: %0d samples queued, %0d played; modem CE_TRAINED 1; preamble CFO %0.0f Hz (true %0.0f), gain 2^(%0d/2)",
+                     frame, v, n_tx_samples, $itor($signed(theta_r)) / 2097152.0 * FS, CFO_HZ, $signed(gain_r));
             if (v != 80 * (SYMBOLS + 2)) fail("TX sample count");
             n_tx_samples = 0;
         end

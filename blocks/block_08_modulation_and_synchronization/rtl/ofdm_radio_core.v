@@ -8,7 +8,8 @@
 //       DAC FIFO request (fifo_rd_req) in the sample domain, with tx_select high for the burst.
 //   RX: ADC samples (rx_sample_bus, sample domain) -> dual-clock FIFO -> at most one sample every
 //       RX_SPACING clocks -> <<< RX_SHIFT (the AD9361's 12 bits to Q1.15 at 4) -> ofdm_frame_sync ->
-//       the modem's receiver, for the first frame after RX_ARM -> RX buffer.
+//       ofdm_frame_conditioner (coarse CFO and level from the preamble) -> the modem's receiver, for
+//       the first frame after RX_ARM -> RX buffer.
 //
 // Everything but the sample-domain ends runs on s_axi_aclk (100 MHz on the board): the modem needs
 // 9-12 clocks per sample on average and ofdm_frame_sync 11 between samples to match its model
@@ -20,7 +21,7 @@
 //
 // AXI4-Lite (byte addresses, 32-bit):
 //   0x000 ID            "OFDR" (0x4F464452)
-//   0x004 VERSION       0x00010000
+//   0x004 VERSION       0x00020000 (1.0 had no conditioner)
 //   0x008 CONTROL (W)   [0] RX_ARM: reset the modem, the frame search and the RX buffer state, then
 //                           take the first frame found; [1] TX_START (ignored while TX is busy);
 //                       [2] RX_STOP; [8] clear the sticky flags
@@ -37,6 +38,10 @@
 //   0x034 TX_UNDERFLOWS DAC requests during a burst that found the FIFO empty
 //   0x038 RX_OVERFLOWS  ADC samples lost at the RX FIFO
 //   0x03C RX_SAMPLES    samples handed to the frame search since RX_ARM
+//   0x040 CONFIG        [0] coarse CFO from the preamble, [1] level normalization (both default 1;
+//                       ofdm_frame_conditioner)
+//   0x044 THETA         preamble angle of the last frame, 2^16 = one turn: CFO = THETA / 2^21 * fs
+//   0x048 GAIN_K        level gain of the last frame, 2^(GAIN_K / 2)
 //   0x100-0x13F         the modem's own registers (ofdm_axi_modem: CFO_THETA, CE_TRAINED, ...)
 //   0x400-0x7FF         TX buffer (write only)
 //   0x800-0xBFF         RX buffer (read only)
@@ -78,7 +83,7 @@ module ofdm_radio_core #(
 localparam integer MAX_SYMBOLS = DATA_WORDS / 3;
 localparam integer BA = $clog2(DATA_WORDS);
 localparam [31:0] CORE_ID = 32'h4F464452;
-localparam [31:0] CORE_VERSION = 32'h00010000;
+localparam [31:0] CORE_VERSION = 32'h00020000;
 
 wire clk = s_axi_aclk;
 wire rst = !s_axi_aresetn;
@@ -89,6 +94,7 @@ wire rst = !s_axi_aresetn;
 reg [7:0]  data_symbols = 8'd4;
 reg [15:0] tx_gain = 16'd9170;
 reg [3:0]  rx_shift = 4'd4;
+reg        cfg_cfo = 1'b1, cfg_agc = 1'b1;
 reg        tx_start_pulse = 1'b0, rx_arm_pulse = 1'b0, rx_stop_pulse = 1'b0, clear_pulse = 1'b0;
 reg [3:0]  modem_rst_count = 4'd0;
 wire       modem_resetn = s_axi_aresetn && (modem_rst_count == 0);
@@ -358,7 +364,7 @@ always @(posedge clk) begin
             spacing <= RX_SPACING - 1;
             sx_re <= sat24(sh_re);
             sx_im <= sat24(sh_im);
-            sx_valid <= rx_armed;
+            sx_valid <= 1'b1;              // always: the DC tracker of the search keeps learning between frames
         end
     end
 end
@@ -367,18 +373,37 @@ end
 wire        fs_valid, fs_last, fs_start;
 wire signed [15:0] fs_re, fs_im;
 wire [15:0] fs_found, fs_missed, fs_ovf;
+wire        est_valid;
+wire signed [35:0] est_re, est_im;
+wire [31:0] est_r;
+wire signed [15:0] est_dc_re, est_dc_im;
 reg  [7:0]  fed_syms = 0;
 wire        forward = rx_armed && !rx_fed;
+wire        cond_ready;
 ofdm_frame_sync frame_sync (
-    .clk(clk), .rst(rst || rx_arm_pulse), .frame_symbols(data_symbols + 1'b1),
+    .clk(clk), .rst(rst || rx_arm_pulse), .dc_rst(rst), .frame_symbols(data_symbols + 1'b1),
     .in_valid(sx_valid), .in_re(sx_re), .in_im(sx_im),
-    .out_valid(fs_valid), .out_ready(forward ? mr_ready : 1'b1),
+    .out_valid(fs_valid), .out_ready(forward ? cond_ready : 1'b1),
     .out_re(fs_re), .out_im(fs_im), .out_last(fs_last), .frame_start(fs_start),
-    .frames_found(fs_found), .frames_missed(fs_missed), .overflows(fs_ovf)
+    .frames_found(fs_found), .frames_missed(fs_missed), .overflows(fs_ovf),
+    .est_valid(est_valid), .est_re(est_re), .est_im(est_im), .est_r(est_r),
+    .est_dc_re(est_dc_re), .est_dc_im(est_dc_im)
 );
-assign mr_valid = fs_valid && forward;
-assign mr_data  = {fs_im, fs_re};
-assign mr_last  = fs_last;
+
+// coarse CFO and level from the preamble (CONFIG[0], CONFIG[1])
+wire signed [15:0] cond_re, cond_im, pre_theta;
+wire signed [5:0]  gain_k;
+wire        cond_busy;
+ofdm_frame_conditioner conditioner (
+    .clk(clk), .rst(rst || rx_arm_pulse), .cfo_en(cfg_cfo), .agc_en(cfg_agc),
+    .est_valid(est_valid), .est_re(est_re), .est_im(est_im), .est_r(est_r),
+    .est_dc_re(est_dc_re), .est_dc_im(est_dc_im),
+    .in_valid(fs_valid && forward), .in_ready(cond_ready), .in_re(fs_re), .in_im(fs_im),
+    .in_last(fs_last), .in_start(fs_start),
+    .out_valid(mr_valid), .out_ready(mr_ready), .out_re(cond_re), .out_im(cond_im), .out_last(mr_last),
+    .theta(pre_theta), .gain_k(gain_k), .busy(cond_busy)
+);
+assign mr_data = {cond_im, cond_re};
 
 // RX writer: a symbol's 48 groups (order 24..47, 0..23) into 96 bits, then 3 words
 reg [95:0] sym_bits = 0;
@@ -398,7 +423,7 @@ always @(posedge clk) begin
         rx_fed <= 1'b0;
         rx_samples <= 0;
     end else begin
-        if (sx_valid) rx_samples <= rx_samples + 1'b1;
+        if (sx_valid && rx_armed) rx_samples <= rx_samples + 1'b1;
         if (mr_valid && mr_ready && mr_last) begin
             fed_syms <= fed_syms + 1'b1;
             if (fed_syms + 1'b1 == data_symbols + 1'b1) rx_fed <= 1'b1;
@@ -485,6 +510,9 @@ function [31:0] reg_read(input [11:0] a);
         8'h34: reg_read = tx_underflows;
         8'h38: reg_read = rx_overflows;
         8'h3C: reg_read = rx_samples;
+        8'h40: reg_read = {30'd0, cfg_agc, cfg_cfo};
+        8'h44: reg_read = {{16{pre_theta[15]}}, pre_theta};
+        8'h48: reg_read = {{26{gain_k[5]}}, gain_k};
         default: reg_read = 32'd0;
         endcase
     end
@@ -512,6 +540,8 @@ always @(posedge clk) begin
         data_symbols <= 8'd4;
         tx_gain <= 16'd9170;
         rx_shift <= 4'd4;
+        cfg_cfo <= 1'b1;
+        cfg_agc <= 1'b1;
     end else begin
         case (a_state)
         A_IDLE: begin
@@ -539,6 +569,7 @@ always @(posedge clk) begin
                                              : (s_axi_wdata[7:0] > MAX_SYMBOLS) ? MAX_SYMBOLS[7:0] : s_axi_wdata[7:0];
                         8'h14: tx_gain <= s_axi_wdata[15:0];
                         8'h18: rx_shift <= (s_axi_wdata[3:0] > 4'd8) ? 4'd8 : s_axi_wdata[3:0];
+                        8'h40: begin cfg_cfo <= s_axi_wdata[0]; cfg_agc <= s_axi_wdata[1]; end
                         default: ;
                         endcase
                     end
