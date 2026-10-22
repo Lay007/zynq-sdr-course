@@ -6,7 +6,7 @@
 // The frame starts with a Schmidl & Cox preamble (CP + a 64-sample body of two equal halves, see
 // tools/ofdm_rf_link.py). Bit-exact model: tools/ofdm_frame_sync_fixed.py.
 //
-//   x       = DC-tracked input >> 4 (12 bits, as from the AD9361): m += (x - m) >> 8, x - m
+//   x       = DC-tracked input >> 4 (12 bits, as from the AD9361): m += (x - m) >> DC_K, x - m
 //   p[n]    = conj(x[n-32]) * x[n],     P = sum of the last 32 p
 //   e[n]    = |x[n]|^2,                  E = sum of the last 64 e,  R = E >> 1
 //   above   = R > E_MIN  and  4 * |P >> SHIFT|^2 > 3 * (R >> SHIFT)^2         (M > 0.75)
@@ -34,6 +34,12 @@
 // as 0, which is what the model's sums over a not yet full window do.
 module ofdm_frame_sync #(
     parameter integer E_MIN = 2000,
+    // DC tracker m += (x - m) >> DC_K with DC_F fraction bits (DC_F >= DC_K, or the estimate stops
+    // short by up to 2^(DC_K - DC_F) LSB). 1024 samples: a faster tracker (256) followed a subcarrier
+    // that a 28 kHz CFO had moved to 4.5 kHz, and the estimate it kept after the burst, decaying,
+    // looked periodic to the metric: a false frame in the silence (tb_ofdm_radio_core, -28 kHz).
+    parameter integer DC_K = 10,
+    parameter integer DC_F = 10,
     parameter integer SHIFT = 8,
     parameter integer MIN_RUN = 8,
     parameter integer BACKOFF = 4,
@@ -42,6 +48,7 @@ module ofdm_frame_sync #(
 ) (
     input  wire               clk,
     input  wire               rst,
+    input  wire               dc_rst,            // resets the DC tracker only (rst leaves it running)
     input  wire [7:0]         frame_symbols,     // symbols per frame after the preamble (training + data)
     input  wire               in_valid,
     input  wire signed [15:0] in_re,
@@ -54,7 +61,19 @@ module ofdm_frame_sync #(
     output wire               frame_start,       // with the first sample of a frame
     output reg  [15:0]        frames_found,
     output reg  [15:0]        frames_missed,     // plateaus that ended while a frame was going out
-    output reg  [15:0]        overflows          // samples lost because the output FIFO was full
+    output reg  [15:0]        overflows,         // samples lost because the output FIFO was full
+    // Preamble measurements of the frame just found, valid for one clock with each frames_found step:
+    // the sums of P >> SHIFT over the plateau (angle = 2*pi*32*CFO in cycles per sample) and R >> SHIFT
+    // at its last sample (32 * mean |x|^2 of the 12-bit samples, >> SHIFT). Used by
+    // ofdm_frame_conditioner; the detection does not depend on them.
+    output reg                est_valid,
+    output reg  signed [35:0] est_re,
+    output reg  signed [35:0] est_im,
+    output reg  [31:0]        est_r,
+    // and the DC tracker's estimate at that moment in the input's own units (Q1.15 of in_re/in_im):
+    // the output samples are not DC-tracked, and a coarse CFO correction would turn their DC into a tone
+    output reg  signed [15:0] est_dc_re,
+    output reg  signed [15:0] est_dc_im
 );
 
 localparam integer H = 32, N = 64, CP = 16;
@@ -67,11 +86,11 @@ localparam integer LATENCY = 10;                    // clocks from in_valid to t
 // ---------------------------------------------------------------------------------------------
 // Stage 1: DC tracker, 12-bit samples
 // ---------------------------------------------------------------------------------------------
-reg signed [27:0] m_re = 0, m_im = 0;              // DC estimate, 8 fraction bits
+reg signed [27:0] m_re = 0, m_im = 0;              // DC estimate, DC_F fraction bits
 wire signed [11:0] s_re = in_re >>> 4;
 wire signed [11:0] s_im = in_im >>> 4;
-wire signed [27:0] y_re = ($signed({{16{s_re[11]}}, s_re}) <<< 8) - m_re;
-wire signed [27:0] y_im = ($signed({{16{s_im[11]}}, s_im}) <<< 8) - m_im;
+wire signed [27:0] y_re = ($signed({{16{s_re[11]}}, s_re}) <<< DC_F) - m_re;
+wire signed [27:0] y_im = ($signed({{16{s_im[11]}}, s_im}) <<< DC_F) - m_im;
 
 reg [31:0] n = 0;                                   // index of the current input sample
 reg               v1 = 1'b0;
@@ -80,13 +99,15 @@ reg signed [XW-1:0] x1_re = 0, x1_im = 0;
 
 always @(posedge clk) begin
     v1 <= 1'b0;
-    if (rst) begin
+    if (dc_rst) begin
         m_re <= 0; m_im <= 0;
     end else if (in_valid) begin
-        m_re <= m_re + (y_re >>> 8);
-        m_im <= m_im + (y_im >>> 8);
-        x1_re <= y_re >>> 8;
-        x1_im <= y_im >>> 8;
+        m_re <= m_re + (y_re >>> DC_K);
+        m_im <= m_im + (y_im >>> DC_K);
+    end
+    if (!rst && in_valid) begin
+        x1_re <= y_re >>> DC_F;
+        x1_im <= y_im >>> DC_F;
         n1 <= n;
         v1 <= 1'b1;
     end
@@ -186,6 +207,11 @@ reg               big6 = 1'b0, big7 = 1'b0, big8 = 1'b0, big9 = 1'b0;
 reg signed [2*QW-1:0] sq7_re = 0, sq7_im = 0, sq7_r = 0, sq8_re = 0, sq8_im = 0, sq8_r = 0;
 reg        [2*QW+1:0] lhs9 = 0, rhs9 = 0;
 reg               above10 = 1'b0;
+reg signed [QW-1:0] qd_re [0:3];
+reg signed [QW-1:0] qd_im [0:3];
+reg signed [QW-1:0] qd_r  [0:3];
+reg signed [35:0] acc_re = 0, acc_im = 0;
+reg        [31:0] r_last = 0;
 
 always @(posedge clk) begin
     {v6, v7, v8, v9, v10} <= {v5, v6, v7, v8, v9};
@@ -206,6 +232,10 @@ always @(posedge clk) begin
     rhs9 <= {2'b00, sq8_r} + ({2'b00, sq8_r} << 1);
     big9 <= big8;
     above10 <= big9 && (lhs9 > rhs9);
+    // the same sample's P and R, carried to stage 10 for the preamble measurements
+    {qd_re[3], qd_re[2], qd_re[1], qd_re[0]} <= {qd_re[2], qd_re[1], qd_re[0], q_re};
+    {qd_im[3], qd_im[2], qd_im[1], qd_im[0]} <= {qd_im[2], qd_im[1], qd_im[0], q_im};
+    {qd_r[3], qd_r[2], qd_r[1], qd_r[0]} <= {qd_r[2], qd_r[1], qd_r[0], q_r};
 end
 
 // ---------------------------------------------------------------------------------------------
@@ -264,6 +294,7 @@ end
 
 always @(posedge clk) begin
     push <= 1'b0;
+    est_valid <= 1'b0;
     if (rst) begin
         n <= 0; in_run <= 1'b0; active <= 1'b0; frames_found <= 0; frames_missed <= 0;
     end else begin
@@ -273,8 +304,14 @@ always @(posedge clk) begin
                 if (!in_run) begin
                     in_run <= 1'b1;
                     run_start <= d;
+                    acc_re <= qd_re[3];
+                    acc_im <= qd_im[3];
+                end else begin
+                    acc_re <= acc_re + qd_re[3];
+                    acc_im <= acc_im + qd_im[3];
                 end
                 run_last <= d;
+                r_last <= qd_r[3];
             end else if (in_run) begin
                 in_run <= 1'b0;
                 if (run_last - run_start + 1 >= MIN_RUN) begin
@@ -287,6 +324,12 @@ always @(posedge clk) begin
                         total <= frame_symbols * 80;
                         pos <= 0;
                         frames_found <= frames_found + 1'b1;
+                        est_valid <= 1'b1;
+                        est_re <= acc_re;
+                        est_im <= acc_im;
+                        est_r <= r_last;
+                        est_dc_re <= m_re >>> (DC_F - 4);       // 12-bit units with DC_F fraction bits -> Q1.15
+                        est_dc_im <= m_im >>> (DC_F - 4);
                     end
                 end
             end

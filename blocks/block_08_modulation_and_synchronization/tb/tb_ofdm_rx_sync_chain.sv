@@ -33,7 +33,7 @@ module tb_ofdm_rx_sync_chain;
     wire [15:0]       found, missed, overflows;
 
     ofdm_frame_sync sync (
-        .clk(clk), .rst(rst), .frame_symbols(FRAME_SYMBOLS[7:0]),
+        .clk(clk), .rst(rst), .dc_rst(rst), .frame_symbols(FRAME_SYMBOLS[7:0]),
         .in_valid(in_valid), .in_re(in_re), .in_im(in_im),
         .out_valid(s_valid), .out_ready(rx_ready), .out_re(s_re), .out_im(s_im), .out_last(s_last),
         .frame_start(s_start), .frames_found(found), .frames_missed(missed), .overflows(overflows)

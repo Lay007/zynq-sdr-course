@@ -13,7 +13,8 @@ from test_ofdm_rf_link_sync import _burst  # noqa: E402
 
 
 def test_dc_tracker_removes_a_constant_offset():
-    y = F.dc_track(np.full(4000, 300, dtype=np.int64))
+    # more than 10 time constants of the tracker (2^DC_K samples)
+    y = F.dc_track(np.full(12 * 2 ** F.DC_K, 300, dtype=np.int64))
     assert abs(int(y[-1])) <= 1
 
 

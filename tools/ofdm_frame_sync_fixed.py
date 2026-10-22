@@ -22,7 +22,9 @@ import numpy as np
 H, N, CP = 32, 64, 16
 
 
-DC_K, DC_F = 8, 8
+# 1024 samples (was 256): the faster tracker followed a subcarrier that a 28 kHz CFO had moved close
+# to DC and left a decaying estimate after the burst, which the metric took for a frame.
+DC_K, DC_F = 10, 10
 
 
 def dc_track(v: np.ndarray) -> np.ndarray:
