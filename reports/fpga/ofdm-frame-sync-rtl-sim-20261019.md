@@ -94,6 +94,21 @@ dual-clock FIFO that hands the DAC FIFO one sample per request; on the RX side a
 from the ADC, at most one sample every 16 clocks into the frame search, the modem's receiver for
 the first frame after RX_ARM, and an RX bit buffer. `tb_ofdm_radio_core.sv` sends two frames
 through DAC -> channel (delay, DC, noise, 12 bits) -> ADC at 2.083 MS/s and gets every bit back.
+In CI its sample domain runs at the sample rate with a request on every clock. On the board that
+domain is the 62.5 MHz divided clock, and the DAC FIFO's requests and the ADC's strobes come once
+every few dozen clocks, independently of each other; the bench has parameters for that and for a
+carrier offset (2026-10-23):
+
+| sample clock, strobe | ADC strobe offset | CFO | result |
+|---|---:|---:|---|
+| 2.083 MHz, every clock (CI) | 0 | 0 | 2 frames, every bit right |
+| 62.5 MHz, every 30 clocks (2.083 MS/s) | 17 | 3 kHz | 2 frames, every bit right |
+| 62.5 MHz, every 30 clocks | 17 | 10 kHz | 2 frames, every bit right |
+| 62.5 MHz, every 16 clocks (3.9 MS/s) | 5 | 3 kHz | 2 frames, every bit right |
+| 62.5 MHz, every 30 clocks | 5 | 20 kHz | frame found, bits wrong: beyond the modem's CFO range (+-16.3 kHz at 2.083 MS/s), as in stage 4a |
+
+    iverilog -g2012 -s tb_ofdm_radio_core -P tb_ofdm_radio_core.SCLK_HALF_NS=8 -P tb_ofdm_radio_core.STROBE=30 \
+      -P tb_ofdm_radio_core.RX_PHASE=17 -P tb_ofdm_radio_core.CFO_HZ=3000.0 -o radio.vvp rtl/ofdm_*.v tb/tb_ofdm_radio_core.sv
 
 It does not fit next to the BPSK/QPSK bridge: that build already uses 176 of the 220 DSP48E1 and
 75 % of the LUTs, and the OFDM core adds about 46 DSP. So it is an image of its own,

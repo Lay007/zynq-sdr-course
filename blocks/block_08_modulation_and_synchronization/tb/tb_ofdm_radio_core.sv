@@ -1,13 +1,21 @@
 `timescale 1ns/1ps
 
 // Issue #48, stage 4b: ofdm_radio_core as on one board with TX1 cabled to RX1. 100 MHz control
-// clock, a sample clock at 2.083 MHz with one DAC request per clock (one sample per request, as
-// course_dac_fifo_source_mux writes the DAC FIFO), and a channel from the DAC words to the ADC: the
-// mux's selection, a delay, DC, a little noise and 12 bits. Through AXI4-Lite the bench writes the
-// TX buffer, arms the receiver, starts the transmitter and reads the RX buffer back, twice, with new
-// data and a new RX_ARM the second time. It checks every bit, one frame found per arm, no TX
-// underflow, no RX overflow, and reads the modem's CE_TRAINED through the core's window.
+// clock and a sample domain: by default (CI) a 2.083 MHz sample clock with a DAC request and an ADC
+// sample on every clock; with SCLK_HALF_NS = 8 and STROBE = 30 it is the board's 62.5 MHz divided
+// clock with a request and an ADC strobe once every 30 clocks (2.083 MS/s), RX_PHASE clocks apart.
+// The channel takes what course_dac_fifo_source_mux writes into the DAC FIFO (one clock after the
+// request), delays it, rotates it by CFO_HZ, adds DC and a little noise, and hands it to the ADC
+// side as 12 bits. Through AXI4-Lite the bench writes the TX buffer, arms the receiver, starts the
+// transmitter and reads the RX buffer back, twice, with new data and a new RX_ARM the second time.
+// It checks every bit, one frame found per arm, no TX underflow, no RX overflow, and reads the
+// modem's CE_TRAINED through the core's window.
 module tb_ofdm_radio_core;
+    parameter integer SCLK_HALF_NS = 240;
+    parameter integer STROBE = 1;
+    parameter integer RX_PHASE = 0;
+    parameter real CFO_HZ = 0.0;
+    localparam real FS = 1.0e9 / (2.0 * SCLK_HALF_NS * STROBE);
     localparam integer SYMBOLS = 4;
     localparam integer WORDS = 3 * SYMBOLS;
     localparam integer CHANNEL_DELAY = 37;
@@ -15,8 +23,14 @@ module tb_ofdm_radio_core;
     reg clk = 1'b0;
     always #5 clk = ~clk;
     reg sclk = 1'b0;
-    always #240 sclk = ~sclk;                // 2.083 MHz
+    always #(SCLK_HALF_NS) sclk = ~sclk;
     reg resetn = 1'b0, sresetn = 1'b0;
+    integer scount = 0;
+    always @(posedge sclk) scount <= (scount == STROBE - 1) ? 0 : scount + 1;
+    wire req = (scount == 0);
+    wire rx_strobe = (scount == RX_PHASE % STROBE);
+    reg  req_d = 1'b0;
+    always @(posedge sclk) req_d <= req;
 
     reg  [11:0] awaddr = 0, araddr = 0;
     reg         awvalid = 1'b0, wvalid = 1'b0, arvalid = 1'b0;
@@ -35,7 +49,7 @@ module tb_ofdm_radio_core;
         .s_axi_bresp(bresp), .s_axi_bvalid(bvalid), .s_axi_bready(1'b1),
         .s_axi_araddr(araddr), .s_axi_arvalid(arvalid), .s_axi_arready(arready),
         .s_axi_rdata(rdata), .s_axi_rresp(rresp), .s_axi_rvalid(rvalid), .s_axi_rready(1'b1),
-        .sample_clk(sclk), .sample_resetn(sresetn), .fifo_rd_req(1'b1),
+        .sample_clk(sclk), .sample_resetn(sresetn), .fifo_rd_req(req),
         .tx_select(tx_select), .tx_sample_bus(tx_bus), .rx_sample_bus(rx_bus)
     );
 
@@ -44,19 +58,29 @@ module tb_ofdm_radio_core;
     reg signed [15:0] dl_q [0:CHANNEL_DELAY-1];
     integer seed = 11, j, n_tx_samples = 0;
     reg signed [15:0] dac_i, dac_q;
-    integer ni, nq;
+    integer ni, nq, n_rx = 0;
+    real phi, ri, rq;
     initial for (j = 0; j < CHANNEL_DELAY; j = j + 1) begin dl_i[j] = 0; dl_q[j] = 0; end
     always @(posedge sclk) begin
-        dac_i = (tx_select && tx_bus[32]) ? $signed(tx_bus[31:16]) : 16'sd0;
-        dac_q = (tx_select && tx_bus[32]) ? $signed(tx_bus[15:0]) : 16'sd0;
-        if (tx_select && tx_bus[32]) n_tx_samples = n_tx_samples + 1;
-        for (j = CHANNEL_DELAY - 1; j > 0; j = j - 1) begin dl_i[j] = dl_i[j - 1]; dl_q[j] = dl_q[j - 1]; end
-        dl_i[0] = dac_i;
-        dl_q[0] = dac_q;
-        ni = ($random(seed) % 3);
-        nq = ($random(seed) % 3);
-        rx_bus <= {1'b1, 16'(($signed(dl_i[CHANNEL_DELAY - 1]) >>> 4) + 5 + ni),
-                         16'(($signed(dl_q[CHANNEL_DELAY - 1]) >>> 4) - 3 + nq)};
+        if (req_d) begin                      // the mux writes the DAC FIFO one clock after the request
+            dac_i = (tx_select && tx_bus[32]) ? $signed(tx_bus[31:16]) : 16'sd0;
+            dac_q = (tx_select && tx_bus[32]) ? $signed(tx_bus[15:0]) : 16'sd0;
+            if (tx_select && tx_bus[32]) n_tx_samples = n_tx_samples + 1;
+            for (j = CHANNEL_DELAY - 1; j > 0; j = j - 1) begin dl_i[j] = dl_i[j - 1]; dl_q[j] = dl_q[j - 1]; end
+            dl_i[0] = dac_i;
+            dl_q[0] = dac_q;
+        end
+        if (rx_strobe) begin
+            phi = 6.283185307179586 * CFO_HZ * n_rx / FS;
+            ri = $itor(dl_i[CHANNEL_DELAY - 1]) * $cos(phi) - $itor(dl_q[CHANNEL_DELAY - 1]) * $sin(phi);
+            rq = $itor(dl_i[CHANNEL_DELAY - 1]) * $sin(phi) + $itor(dl_q[CHANNEL_DELAY - 1]) * $cos(phi);
+            n_rx = n_rx + 1;
+            ni = ($random(seed) % 3);
+            nq = ($random(seed) % 3);
+            rx_bus <= {1'b1, 16'($rtoi(ri / 16.0) + 5 + ni), 16'($rtoi(rq / 16.0) - 3 + nq)};
+        end else begin
+            rx_bus[32] <= 1'b0;
+        end
     end
 
     task automatic axi_write(input [11:0] a, input [31:0] d);
