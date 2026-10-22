@@ -16,7 +16,9 @@
  * errors without any side channel; a frame whose word 0 is not a plausible number counts as lost.
  * Options: --rate (default 2083334, at most 6.25 MS/s for the core), --lo, --tx-gain (dB, AD9361),
  * --rx-gain (dB, manual), --core-gain (Q4.12 digital gain, default 9170 = +7 dB), --rx-shift
- * (0..8, default 4: the AD9361's 12 bits to Q1.15).
+ * (0..8, default 4: the AD9361's 12 bits to Q1.15), --config (core 2.x: 1 = coarse CFO from the
+ * preamble, 2 = level normalization, default 3 = both; with the level stage --rx-shift stays 4).
+ * The CFO printed is the preamble's coarse estimate plus the modem's residual.
  *
  * Build: arm-linux-gnueabihf-gcc -O2 -static -o zofdm zofdm.c
  */
@@ -52,6 +54,10 @@
 #define R_TX_UNDERFLOWS 0x034
 #define R_RX_OVERFLOWS 0x038
 #define R_RX_SAMPLES 0x03C
+#define R_VERSION 0x004
+#define R_CONFIG 0x040              /* core 2.x: [0] coarse CFO, [1] level */
+#define R_THETA 0x044
+#define R_GAIN_K 0x048
 #define R_MODEM 0x100
 #define R_TXBUF 0x400
 #define R_RXBUF 0x800
@@ -70,7 +76,8 @@ static volatile uint32_t *core, *dac;
 static char phy[128];
 static long rate = 2083334, lo = 915000000;
 static double tx_gain = -10.0;
-static int rx_gain = 71, core_gain = 9170, rx_shift = 4, symbols = 4, frames = 10;
+static int rx_gain = 71, core_gain = 9170, rx_shift = 4, symbols = 4, frames = 10, config = 3;
+static uint32_t core_version;
 static double timeout_s = 10.0, period_ms = 20.0;
 
 static uint32_t rd(uint32_t off) { return core[off / 4]; }
@@ -177,6 +184,7 @@ static int open_regs(void)
         fprintf(stderr, "no ofdm_radio_core at 0x%08x (id 0x%08x): is the OFDM image loaded?\n", OFDM_BASE, rd(R_ID));
         return -1;
     }
+    core_version = rd(R_VERSION);
     return 0;
 }
 
@@ -216,6 +224,8 @@ static void radio_setup(int transmit)
     wr(R_DATA_SYMBOLS, (uint32_t)symbols);
     wr(R_TX_GAIN, (uint32_t)core_gain);
     wr(R_RX_SHIFT, (uint32_t)rx_shift);
+    if (core_version >= 0x00020000u)
+        wr(R_CONFIG, (uint32_t)config);
     symbols = (int)rd(R_DATA_SYMBOLS);
 }
 
@@ -246,10 +256,25 @@ static int popcount32(uint32_t v)
     return c;
 }
 
+/* The carrier offset of the last frame: the preamble's coarse estimate (core 2.x, THETA, 2^16 = one
+ * turn over 32 samples) plus what the modem's CP correlation found after that correction. */
+static double coarse_cfo_hz(void)
+{
+    if (core_version < 0x00020000u)
+        return 0.0;
+    int32_t theta = (int32_t)rd(R_THETA);
+    return (double)theta / 2097152.0 * (double)rate;
+}
+
 static double cfo_hz(void)
 {
     int32_t theta = (int32_t)rd(M_CFO_THETA);
-    return -(double)theta / 16777216.0 / 64.0 * (double)rate;
+    return coarse_cfo_hz() - (double)theta / 16777216.0 / 64.0 * (double)rate;
+}
+
+static int gain_k(void)
+{
+    return core_version < 0x00020000u ? 0 : (int)(int32_t)rd(R_GAIN_K);
 }
 
 static void put_frame(uint32_t number)
@@ -297,10 +322,12 @@ static void regs(void)
         {R_RX_SYMBOLS, "RX_SYMBOLS"}, {R_TX_SAMPLES, "TX_SAMPLES"}, {R_TX_UNDERFLOWS, "TX_UNDERFLOWS"},
         {R_RX_OVERFLOWS, "RX_OVERFLOWS"}, {R_RX_SAMPLES, "RX_SAMPLES"}, {M_STATUS, "MODEM_STATUS"},
         {M_RX_SYMBOLS, "MODEM_RX_SYMBOLS"}, {M_CE_TRAINED, "MODEM_CE_TRAINED"}, {M_CFO_THETA, "MODEM_CFO_THETA"},
+        {R_VERSION, "VERSION"}, {R_CONFIG, "CONFIG"}, {R_THETA, "PREAMBLE_THETA"}, {R_GAIN_K, "GAIN_K"},
     };
     for (unsigned k = 0; k < sizeof r / sizeof r[0]; k++)
         printf("%-18s 0x%08x %u\n", r[k].name, rd(r[k].off), rd(r[k].off));
-    printf("CFO estimate       %.0f Hz (at %ld S/s)\n", cfo_hz(), rate);
+    printf("CFO estimate       %.0f Hz (preamble %.0f Hz, at %ld S/s), gain 2^(%d/2)\n", cfo_hz(), coarse_cfo_hz(),
+           rate, gain_k());
 }
 
 static int loop(void)
@@ -323,7 +350,8 @@ static int loop(void)
         } else {
             bits += 96L * symbols - 32;
             errors += e;
-            printf("frame %d: %d bit errors, CFO %.0f Hz, found %u\n", f, e, cfo_hz(), rd(R_FRAMES_FOUND));
+            printf("frame %d: %d bit errors, CFO %.0f Hz (preamble %.0f), gain 2^(%d/2), found %u\n", f, e,
+                   cfo_hz(), coarse_cfo_hz(), gain_k(), rd(R_FRAMES_FOUND));
         }
         usleep((useconds_t)(period_ms * 1000));
     }
@@ -360,7 +388,8 @@ static int rx(void)
         }
         uint32_t number;
         int e = check_frame((uint32_t)frames, &number);
-        double cfo = cfo_hz();
+        double cfo = cfo_hz(), coarse = coarse_cfo_hz();        /* RX_ARM clears them: read first */
+        int k = gain_k();
         wr(R_CONTROL, 0x101);                                  /* re-arm at once */
         if (e < 0) {
             garbled++;
@@ -369,7 +398,7 @@ static int rx(void)
             received++;
             bits += 96L * symbols - 32;
             errors += e;
-            printf("frame %u: %d bit errors, CFO %.0f Hz\n", number, e, cfo);
+            printf("frame %u: %d bit errors, CFO %.0f Hz (preamble %.0f), gain 2^(%d/2)\n", number, e, cfo, coarse, k);
         }
     }
     printf("RESULT expected=%d received=%d garbled=%d bits=%ld bit_errors=%ld symbols=%d rate=%ld lo=%ld rx_gain=%d\n",
@@ -401,6 +430,7 @@ int main(int argc, char **argv)
         else if (!strcmp(o, "--rx-gain")) rx_gain = atoi(v);
         else if (!strcmp(o, "--core-gain")) core_gain = atoi(v);
         else if (!strcmp(o, "--rx-shift")) rx_shift = atoi(v);
+        else if (!strcmp(o, "--config")) config = atoi(v);
         else if (!strcmp(o, "--timeout")) timeout_s = atof(v);
         else if (!strcmp(o, "--period-ms")) period_ms = atof(v);
         else {
