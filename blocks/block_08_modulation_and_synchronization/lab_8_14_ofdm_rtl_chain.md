@@ -104,7 +104,7 @@ PASS: ofdm_axi_modem (MODULATION=0, NORMALIZE=1, CFO 0 ppm) 120-degree channel r
 PASS: ofdm_axi_modem (MODULATION=1, NORMALIZE=1, CFO 5000 ppm) 120-degree channel recovered 960/960 bits in 5 symbols after 1 training symbol(s), BER=0; reset, retrain, registers and sticky errors checked
 ```
 
-Stage 3 below puts it in a block design with the PS and an AXI DMA and runs it on a board; the AD9361 interface is not connected yet.
+Stage 3 below puts it in a block design with the PS and an AXI DMA and runs it on a board; stage 4 connects it to the AD9361 through a frame search, in simulation and in a built image that has not run on a board yet.
 
 ## Pilots: what exists and what does not yet
 
@@ -643,8 +643,107 @@ Result on the course bench board ([report](https://github.com/Lay007/zynq-sdr-co
 - one run took about 480 us (about 16 Mbit/s), mostly the CPU re-arming S2MM for every symbol.
 
 The bitstream has no AD9361 path; it is a fabric loopback. Connecting the modem to the AD9361 needs
-a clock-domain crossing to the AD9361 interface clock and is the next step (stage 4: attenuated RF
-loopback).
+a clock-domain crossing to the AD9361 interface clock, and a way to find a frame in a continuous
+stream: stage 4.
+
+## Verification stage 4: the radio
+
+On a board the modem's receiver meets a continuous ADC stream: silence, then a frame at an unknown
+time, with an unknown carrier offset and level. The receiver itself expects symbols that are already
+cut, 80 samples each with `tlast` on the 80th, and the training symbol first. Stage 4 adds what sits
+in between, in the order a frame meets it:
+
+```mermaid
+flowchart LR
+    ADC[AD9361 RX, 12 bits] --> F1[dual-clock FIFO] --> SYNC["ofdm_frame_sync<br/>DC tracker, Schmidl & Cox,<br/>delay line"]
+    SYNC --> COND["ofdm_frame_conditioner<br/>DC, coarse CFO, level"] --> RX[modem receiver] --> RXB[(RX bits)]
+    TXB[(TX bits)] --> TX[preamble ROM + modem transmitter] --> F2[dual-clock FIFO] --> DAC[AD9361 TX]
+```
+
+**The frame.** A Schmidl and Cox preamble goes in front of the modem's training symbol: QPSK on
+the even used subcarriers only, so its 64-sample body is two equal halves (CP 16 + 64). It only
+finds the frame; it never reaches the modem.
+
+**Finding it** (`rtl/ofdm_frame_sync.v`, bit-exact model `tools/ofdm_frame_sync_fixed.py`). The
+metric is `M = |P|^2 / R^2`, with `P` the correlation of the two halves and `R` the mean energy of
+**both** halves. The textbook form normalizes by the second half only; on the first simulated frame
+its peak (594) sat at the end of the burst, where that half falls into silence. The fabric version
+avoids the division: `4 |P|^2 > 3 R^2` (M > 0.75). A run of at least 8 such samples is the plateau;
+its centre gives the first symbol, put 4 samples early inside the cyclic prefix (an early window only
+adds a phase slope that the equalizer removes, a late one mixes two symbols). A 128-sample delay line
+keeps that symbol available until the plateau has ended.
+
+Three things went wrong on the way, and each is now in a comment and a test:
+
+- A DC offset is perfectly "periodic": a burst followed by silence with 3 % DC gave a second, false
+  frame. A DC tracker (`m += (x - m) >> 10`) in front of the metric removes it.
+- The tracker first had a time constant of 256 samples. With a -28 kHz carrier offset subcarrier +1
+  lands at +4.5 kHz, the tracker followed part of it, and the estimate it kept after the burst,
+  decaying, looked periodic again. 1024 samples, and a tracker that runs all the time instead of
+  restarting with every RX_ARM, fixed it.
+- The modem's receiver is not ready for about 107 clocks after each symbol (its FFT is sequential),
+  and on average it needs 9-12 clocks per sample. A 16-sample output FIFO covers the pause, not the
+  average: in simulation 8 clocks per sample overflowed, 12 did not. The board gives 48.
+
+Written for one clock per sample, the search was 34 logic levels deep (WNS -16 ns at 100 MHz). It is
+now a 10-clock pipeline whose rings are not reset (so they map to distributed RAM) and read as zero
+until they have been filled once, which is what the model's sums over a not yet full window do.
+
+**Conditioning the frame** (`rtl/ofdm_frame_conditioner.v`). The plateau also measures the frame.
+The angle of `P` is `2 pi 32 eps` for a carrier offset of `eps` cycles per sample, so it tells the
+offset up to `+-1/64`: +-32.5 kHz at 2.083 MS/s, twice the range of the modem's own CP-based
+corrector. A 16-iteration CORDIC gives the angle, an NCO turns every sample of the frame back, and
+the modem corrects what is left. Turning the samples also turns their DC into a tone at `-CFO`,
+between the data subcarriers (bit errors at -28 kHz and -20 dB); so the tracker's DC estimate is
+subtracted first. `R` gives the level, and a gain of `2^(k/2)` (3 dB steps) brings every frame to an
+RMS of about 4096 whatever the radio's gain was.
+
+**Around it** (`rtl/ofdm_radio_core.v`): an AXI4-Lite core with a TX and an RX bit buffer, the
+preamble ROM, the modem, and dual-clock FIFOs to the sample domain, where the transmitter hands the
+DAC FIFO one sample per request and the receiver takes one ADC sample per strobe. The modem's own
+registers (CFO estimate, CE_TRAINED, sticky errors) are mapped at `0x100` of the core.
+
+**The image.** The core does not fit next to the BPSK/QPSK bridge: the bridge image uses 176 of
+the 220 DSP48E1 and 75 % of the LUTs, and the OFDM core needs about 46 more DSPs. So it is an image
+of its own, `COURSE_OVERLAY_MODE=ofdm_txrx`: the vendor shell, the DAC FIFO mux (with a third input)
+and the core at `0x79060000`.
+
+| | |
+|---|---|
+| Frame search alone (OOC, 100 MHz) | 889 LUT, 1115 FF, 12 DSP48E1, 1 BRAM, WNS +1.948 ns |
+| Conditioner alone (OOC, 100 MHz) | 1097 LUT, 467 FF, 7 DSP48E1, WNS +1.354 ns |
+| OFDM image (Vivado 2021.1) | 22 479 LUT, 26 290 FF, 9.5 BRAM, 81 DSP48E1, WNS +0.203 ns, WHS +0.035 ns, all nets routed, no latches (artifact `bitstreams/ofdm-txrx-48-v2`) |
+
+Simulation of the whole core (`tb_ofdm_radio_core.sv`, two frames each, every bit checked), with the
+board's sample domain (62.5 MHz, a DAC request and an ADC strobe every 30 clocks, 17 clocks apart):
+
+| channel | preamble CFO estimate | gain | result |
+|---|---:|---:|---|
+| CFO 3 kHz | 3012 / 3012 Hz | `2^(-2/2)` | every bit right |
+| CFO 20 kHz | 20005 / 20011 Hz | `2^(-2/2)` | every bit right |
+| CFO -28 kHz | -27992 / -27978 Hz | `2^(-2/2)` | every bit right |
+| CFO 3 kHz, -20 dB | 3014 / 3026 Hz | `2^(5/2)` | every bit right |
+| CFO 3 kHz, +5.6 dB | 3012 / 3008 Hz | `2^(-4/2)` | every bit right |
+| CFO -28 kHz, -20 dB (DC tracker settled first) | -27961 / -27927 Hz | `2^(5/2)` | every bit right |
+| CFO 20 kHz, coarse correction off | | | frame found, bits wrong: beyond the modem's +-16.3 kHz |
+
+### Running it on the board
+
+[`sw/zofdm.c`](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/sw/zofdm.c)
+(Vitis `arm-linux-gnueabihf-gcc -static`) drives the core: `loop` on one board with TX1 cabled to
+RX1, `tx` and `rx` on two boards, `regs`, `stop`. Word 0 of every frame is its number and the rest
+comes from a generator seeded by it, so the receiver counts bit errors without any side channel.
+`tools/run_ofdm_radio_board.py` runs it from the PC: it loads the image on board A at run time
+(board B's AD9361 does not survive a runtime PL load), steps through a ladder of TX gains, watches
+board B's temperature, collects every result line and warm-reboots board A back:
+
+```bash
+python tools/run_ofdm_radio_board.py loop --dry-run --tx-gains -30 -20 -10
+python tools/run_ofdm_radio_board.py loop --host 192.168.40.1 --tx-gains -30 -20 -10 --frames 100 \
+    --symbols 10 --json-out tmp/ofdm_loop.json
+```
+
+None of this has run on a board yet.
 
 ## What this lab does and does not prove
 
@@ -652,9 +751,9 @@ This closes, in simulation only, issue #48's Initial RTL scope (mapper, subcarri
 
 It does **not** claim:
 
-- Zynq system integration on the board: a block design with the PS, an AXI DMA and the modem in a fabric loopback builds, meets timing and runs on a board with 0 errors in 3 072 000 bits (stage 3 above), but nothing connects the modem to the AD9361 interface yet;
+- Zynq system integration on the board: a block design with the PS, an AXI DMA and the modem in a fabric loopback builds, meets timing and runs on a board with 0 errors in 3 072 000 bits (stage 3 above); the image that connects the modem to the AD9361 (stage 4) is built but has not run on a board;
 - a finished 16-QAM receiver: the AXI modem carries 16-QAM with the CFO corrector (`MODULATION = 1`) and noise runs exist (stage 2f), but the channel is estimated once per training (averaged over up to eight training symbols, which brings the loss against theory down from about 2-3 dB to about 1 dB with four) and is neither tracked nor smoothed across subcarriers, and every run is a simulation;
-- Verification stages 4-5 (safe attenuated AD9361/AD9363 cabled loopback, an independent SDR capture of the OFDM modem's own RF output);
+- Verification stages 4-5 on hardware (safe attenuated AD9361/AD9363 cabled loopback, an independent SDR capture of the OFDM modem's own RF output): stage 4 exists in simulation, with the board's sample domain, carrier offsets and levels, and as a built image only;
 - a board-level clock plan. The out-of-context Vivado 2021.1 implementation on `xc7z020clg400-2` ([report](https://github.com/Lay007/zynq-sdr-course/blob/main/reports/fpga/block8-ofdm-vivado-evidence.md)) routes every OFDM block, the pilot corrector and the AXI modem without DRC errors, with the port paths timed as well (0 ns input/output delay). Every clocked block except the one-clock equalizer meets 100 MHz: the TX path and FFT64 with WNS +1.64 / +1.73 ns (about 120 / 121 MHz), the corrector +0.57 ns, the zero-forcing channel equalizer +2.50 ns (+0.55 ns when it averages four training symbols), and the complete AXI modem with it and the CFO corrector +1.42 ns (5917 LUT, 3195 FF, 32 DSP48E1, 3.5 BRAM; the 16-QAM build +0.69 ns, 5985 LUT). That needed the pipelined IFFT/FFT schedule, which is now the default (`PIPELINED = 1`): the butterfly takes four clocks instead of one but accepts one butterfly per clock, so a transform computes in 222 clocks instead of 384. The one-cycle teaching baseline (`PIPELINED = 0`, or `+define+OFDM_IFFT_PIPELINED=0`) missed 100 MHz by about 10 ns (28 logic levels in one clock). The one-clock equalizer (`PIPELINED = 0`, the standalone default) misses by 1.08 ns once its input-port paths are timed; the corrector and the modem use its three-clock `PIPELINED = 1` form. The transforms' working memory is in block RAM by default (`BRAM_MEMORY = 1`: two 32-word banks chosen by the parity of the address, so a butterfly's two points never share a bank): 881 / 836 LUTs instead of 8151 / 7307 with fabric memory, at 229 instead of 222 compute clocks. `--fabric` and `+define+OFDM_IFFT_BRAM=0` select the fabric memory, and the one-cycle baseline always uses it.
 
 ## Exercises
@@ -688,7 +787,8 @@ Each exercise changes the equalizer coefficient on line `.coeff_re(16'sd0), .coe
 - [x] Every saturation/overflow counter asserted zero at the tested back-off.
 - [x] AXI4-Stream/AXI4-Lite packaging (`ofdm_axi_modem.v`, BER=0 under random backpressure, register map checked).
 - [x] Block design with PS and AXI DMA, modem in a fabric loopback, built to a bitstream and run on a board (0 errors in 3 072 000 bits).
-- [ ] AD9361 interface in the block design.
+- [x] AD9361 interface in an image of its own (`COURSE_OVERLAY_MODE=ofdm_txrx`; built, not yet run on a board).
+- [x] Frame search, coarse CFO and level from a preamble in RTL (simulation: CFO up to -28 kHz, levels from -20 to +5.6 dB, the board's sample domain).
 - [x] Pilot phase tracker in RTL, bit-exact with its fixed-point model (49 symbols).
 - [x] Tracker coefficient wired into the equalizer (same-symbol correction, BER=0 through 120 and -150 degree channels).
 - [x] Per-subcarrier channel estimation from a training symbol (bit-exact; BER=0 through a 3-path channel, also with a 2000 ppm CFO).

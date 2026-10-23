@@ -97,7 +97,7 @@ through DAC -> channel (delay, DC, noise, 12 bits) -> ADC at 2.083 MS/s and gets
 In CI its sample domain runs at the sample rate with a request on every clock. On the board that
 domain is the 62.5 MHz divided clock, and the DAC FIFO's requests and the ADC's strobes come once
 every few dozen clocks, independently of each other; the bench has parameters for that and for a
-carrier offset (2026-10-23):
+carrier offset (2026-10-23, core 1.0, before the conditioner below):
 
 | sample clock, strobe | ADC strobe offset | CFO | result |
 |---|---:|---:|---|
@@ -117,9 +117,48 @@ and the core at 0x79060000. Vivado 2021.1: 21 261 LUT, 25 562 FF, 9.5 BRAM tiles
 WNS +0.253 ns, WHS +0.042 ns, every net routed, no latches (artifact `bitstreams/ofdm-txrx-48`,
 md5 5de22b09). The board program is `sw/zofdm.c` (`loop` on one board, `tx` / `rx` on two).
 
+## Core 2.0: coarse CFO and level from the preamble (2026-10-23)
+
+`rtl/ofdm_frame_conditioner.v` sits between the frame search and the modem. The search now hands
+out what it measured on the plateau: the sum of `P` (its angle is `2 pi 32 eps`), `R`, and its DC
+estimate. The conditioner subtracts the DC, turns the frame back by the CFO from the angle (a
+16-iteration CORDIC and an NCO; range `+-fs/64`, +-32.5 kHz at 2.083 MS/s, twice the modem's own),
+and scales it by `2^(k/2)` to an RMS of about 4096. The modem corrects what is left, and RX_ARM
+resets it, so every frame trains the equalizer again. CONFIG (0x040) switches both stages off;
+THETA (0x044) and GAIN_K (0x048) show what the last frame measured.
+
+Three problems showed up only in the whole chain:
+
+1. At -28 kHz a second, false frame appeared in the silence. Subcarrier +1 lands at +4.5 kHz; the
+   256-sample DC tracker followed part of it, and its decaying estimate after the burst looked
+   periodic to the metric. The tracker is now 1024 samples (`DC_K = DC_F = 10`, model too).
+2. At -28 kHz and -20 dB together, bit errors: turning the frame turns its DC into a tone at `-CFO`,
+   between the data subcarriers. The DC estimate is subtracted before the rotation.
+3. Still single errors, on one subcarrier: the tracker restarted with every RX_ARM and had learnt
+   12 % of the DC in the 137 samples before the frame. It now runs all the time (`dc_rst` separate
+   from `rst`); the bench gives it time to settle first (`SETTLE_SAMPLES`), as a running board does.
+
+Results (`tb_ofdm_radio_core.sv`, the board's sample domain, two frames each, every bit checked):
+
+| channel | preamble CFO estimate | gain | result |
+|---|---:|---:|---|
+| CFO 3 kHz | 3012 / 3012 Hz | `2^(-2/2)` | every bit right |
+| CFO 20 kHz | 20005 / 20011 Hz | `2^(-2/2)` | every bit right |
+| CFO -28 kHz | -27992 / -27978 Hz | `2^(-2/2)` | every bit right |
+| CFO 3 kHz, -20 dB | 3014 / 3026 Hz | `2^(5/2)` | every bit right |
+| CFO 3 kHz, +5.6 dB | 3012 / 3008 Hz | `2^(-4/2)` | every bit right |
+| CFO -28 kHz, -20 dB, `SETTLE_SAMPLES=4096` | -27961 / -27927 Hz | `2^(5/2)` | every bit right |
+| CFO 20 kHz, CONFIG = 2 (coarse stage off) | | | frame found, bits wrong |
+
+`tools/run_ofdm_rtl.py` runs three of them in CI (3 kHz, -28 kHz, -20 dB); the combined case needs
+about three minutes of settling and is run by hand. Vivado OOC: the search 889 LUT, 1115 FF, 12 DSP,
+1 BRAM, +1.948 ns; the conditioner 1097 LUT, 467 FF, 7 DSP, +1.354 ns (after two timing fixes, see
+[block8-ofdm-vivado-evidence.md](block8-ofdm-vivado-evidence.md)). The OFDM image with core 2.0:
+22 479 LUT, 26 290 FF, 9.5 BRAM tiles, 81 DSP48E1, WNS +0.203 ns, WHS +0.035 ns, every net routed,
+no latches, the core at 0x79060000-0x79060FFF (artifact `bitstreams/ofdm-txrx-48-v2`, md5 021489af;
+`ofdm-txrx-48` is superseded).
+
 ## Not done
 
-Nothing of this has run on a board yet. On the board it would sit between the ADC path and the modem
-receiver, with a level normalization in front of it (E_MIN assumes the RX level of the bench) and a
-modem retrain on `frame_start`, so that every frame trains the equalizer again; none of this is
-written yet.
+Nothing of this has run on a board yet. `tools/run_ofdm_radio_board.py` is ready for the bench
+(`--dry-run` shows the plan).

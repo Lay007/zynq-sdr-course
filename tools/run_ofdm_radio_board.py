@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Issue #48 stage 4b on the bench: OFDM frames through the radio with the OFDM image (ofdm-txrx-48).
+"""Issue #48 stage 4b on the bench: OFDM frames through the radio with the OFDM image (ofdm-txrx-48-v2).
 
 Two modes, both driving blocks/block_08_modulation_and_synchronization/sw/zofdm.c on the boards:
 
@@ -18,7 +18,7 @@ the run. Board B has no fan: its Zynq temperature is read before and after, and 
 --max-temp-c. Results (every RESULT line of zofdm, the registers, temperatures) go to --json-out.
 
     python tools/run_ofdm_radio_board.py loop --host 192.168.40.1 \
-        --bit ../zynq-sdr-course-artifacts/bitstreams/ofdm-txrx-48/system_top.bit \
+        --bit ../zynq-sdr-course-artifacts/bitstreams/ofdm-txrx-48-v2/system_top.bit \
         --tx-gains -30 -20 -10 --rx-shifts 4 5 --frames 100 --symbols 10 --json-out tmp/ofdm_loop.json
     python tools/run_ofdm_radio_board.py two-board --tx-host 192.168.40.1 --rx-host 192.168.20.1 \
         --hot-load-tx --bit ... --frames 200 --symbols 10 --json-out tmp/ofdm_ab.json
@@ -236,7 +236,7 @@ def main() -> int:
     ap.add_argument("--tx-host", default="192.168.40.1")
     ap.add_argument("--rx-host", default="192.168.20.1")
     ap.add_argument("--hot-load-tx", action="store_true", help="two-board: load the image on the TX board (A only)")
-    ap.add_argument("--bit", type=Path, default=ROOT.parent / "zynq-sdr-course-artifacts" / "bitstreams" / "ofdm-txrx-48" / "system_top.bit")
+    ap.add_argument("--bit", type=Path, default=ROOT.parent / "zynq-sdr-course-artifacts" / "bitstreams" / "ofdm-txrx-48-v2" / "system_top.bit")
     ap.add_argument("--binary", type=Path, default=Path(r"C:\tmp\ofdm_sw\zofdm"))
     ap.add_argument("--frames", type=int, default=100)
     ap.add_argument("--symbols", type=int, default=10)
