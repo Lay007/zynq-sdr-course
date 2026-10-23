@@ -38,6 +38,28 @@ def test_does_not_reject_normal_body_reference_to_claude() -> None:
     assert find_forbidden_trailers(message) == ()
 
 
+def test_rejects_other_ai_coauthors_and_generator_signatures() -> None:
+    for line in (
+        "Co-authored-by: ChatGPT <noreply@openai.com>",
+        "Co-authored-by: Codex <codex@openai.com>",
+        "Co-authored-by: Copilot <copilot@github.com>",
+        "\U0001f916 Generated with [Claude Code](https://claude.com/claude-code)",
+        "Generated with AI",
+    ):
+        assert find_forbidden_trailers(f"Update course\n\n{line}\n") == (line,), line
+
+
+def test_accepts_human_and_bot_coauthors_and_ordinary_generated_files() -> None:
+    message = (
+        "Bump numpy\n\n"
+        "Generated with tools/generate_ofdm_sin_rom.py.\n"
+        "Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>\n"
+        "Co-authored-by: Alexander <laymob@gmail.com>\n"
+    )
+
+    assert find_forbidden_trailers(message) == ()
+
+
 def test_reports_multiple_forbidden_trailers() -> None:
     message = (
         "Update course\n\n"
