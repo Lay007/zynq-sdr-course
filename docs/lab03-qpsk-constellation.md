@@ -49,4 +49,4 @@ flowchart LR
 
 ## Engineering takeaway
 
-Constellation is a compact representation of multiple impairments at once. It is one of the most powerful diagnostic tools in SDR.
+A constellation shows several impairments at once: noise spreads the clusters, a carrier offset rotates them, IQ imbalance turns them into an ellipse, clipping distorts them. That is why it is usually the first plot to look at when a link misbehaves.

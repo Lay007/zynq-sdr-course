@@ -139,7 +139,7 @@ air the limit is **−50 dB**: do not raise power to "see the signal", and do no
 an antenna. Both boards are quieted on exit; board B's stock `rc.user` re-arms a 71 MHz
 transmitter on every boot, which the shared plumbing kills before anything else.
 
-## What this unlocks
+## What comes next
 
 The estimator is validated end to end on silicon across its full operating range, which was the
 precondition for wiring it into the fabric receiver. `qpsk_rx_bit_recovery_chain` can instantiate it

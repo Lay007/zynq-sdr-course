@@ -1,7 +1,6 @@
-# Block 12 / Блок 12
+# Block 12
+
+Russian version: [README_ru.md](README_ru.md). Full English overview: [README_en.md](README_en.md).
 
 `block_12_final_projects` contains the materials for **Final Projects**.
-`block_12_final_projects` содержит материалы блока **«Итоговые проекты»**.
 
-- [Русский](README_ru.md)
-- [English](README_en.md)

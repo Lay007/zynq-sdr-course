@@ -1,7 +1,6 @@
-# Block 4 / Блок 4
+# Block 4
+
+Russian version: [README_ru.md](README_ru.md). Full English overview: [README_en.md](README_en.md).
 
 `block_04_simulink_and_fixed_point` contains the materials for **Simulink and Fixed-Point Preparation**.
-`block_04_simulink_and_fixed_point` содержит материалы блока **«Simulink и fixed-point подготовка»**.
 
-- [Русский](README_ru.md)
-- [English](README_en.md)

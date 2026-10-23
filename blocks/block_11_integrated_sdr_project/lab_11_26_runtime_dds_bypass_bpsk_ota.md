@@ -598,7 +598,7 @@ The clean next step is to add **preamble-correlation frame-sync** to `bpsk_ber_c
 (detect the frame start and align the comparison) instead of relying on a fixed `start_offset`;
 the on-chip BER counter will then read ~0 as well.
 
-### Frame-sync fix: on-chip BER = 0 achieved
+### Frame-sync fix: 0 errors in the 281-bit frame on the chip
 
 `bpsk_ber_counter` already had a sliding preamble correlator, but its lock window was only
 `LOCK_PREAMBLE_BITS = 4`, i.e. it matched `frame_bits[0..3] = 0,0,0,0`. Because the preamble

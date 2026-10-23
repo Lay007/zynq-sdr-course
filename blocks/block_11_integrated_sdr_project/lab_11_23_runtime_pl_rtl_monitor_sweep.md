@@ -61,7 +61,7 @@ lab_11_23_runtime_pl_rtl_monitor_sweep.py \
 
 | BER trend | Interpretation |
 |---|---|
-| BER = 0 at most points | OTA link is robust; TX power is sufficient |
+| 0 errors in the 281-bit frame at most points | the link has margin at those attenuations; TX power is sufficient |
 | BER rises sharply at high TX attenuation | link budget limit found |
 | BER non-zero even at lowest TX attenuation | RRC filter or timing recovery issue |
 

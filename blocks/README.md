@@ -1,10 +1,8 @@
-# Blocks / Блоки
+# Blocks
+
+Russian version: [README_ru.md](README_ru.md). English overview: [README_en.md](README_en.md).
 
 This directory contains the materials for all course blocks.
-В этой папке собраны материалы всех блоков курса.
-
-- [Русский](README_ru.md)
-- [English](README_en.md)
 
 ## Structure
 - `block_01_intro_sdr`

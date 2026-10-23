@@ -782,23 +782,23 @@ Each exercise changes the equalizer coefficient on line `.coeff_re(16'sd0), .coe
 ## Report checklist
 
 - [x] Float vs. fixed-point bit-exact match (shared committed vectors).
-- [x] Self-checking RTL digital loopback, BER=0, reproducible.
-- [x] Self-checking RTL equalized loopback through a real complex channel, BER=0, reproducible.
+- [x] Self-checking RTL digital loopback, 0 errors in 96 bits, reproducible.
+- [x] Self-checking RTL equalized loopback through a real complex channel, 0 errors in 96 bits, reproducible.
 - [x] Every saturation/overflow counter asserted zero at the tested back-off.
-- [x] AXI4-Stream/AXI4-Lite packaging (`ofdm_axi_modem.v`, BER=0 under random backpressure, register map checked).
+- [x] AXI4-Stream/AXI4-Lite packaging (`ofdm_axi_modem.v`, 0 errors in 480 QPSK and 960 16-QAM bits under random backpressure, register map checked).
 - [x] Block design with PS and AXI DMA, modem in a fabric loopback, built to a bitstream and run on a board (0 errors in 3 072 000 bits).
 - [x] AD9361 interface in an image of its own (`COURSE_OVERLAY_MODE=ofdm_txrx`; built, not yet run on a board).
 - [x] Frame search, coarse CFO and level from a preamble in RTL (simulation: CFO up to -28 kHz, levels from -20 to +5.6 dB, the board's sample domain).
 - [x] Pilot phase tracker in RTL, bit-exact with its fixed-point model (49 symbols).
-- [x] Tracker coefficient wired into the equalizer (same-symbol correction, BER=0 through 120 and -150 degree channels).
-- [x] Per-subcarrier channel estimation from a training symbol (bit-exact; BER=0 through a 3-path channel, also with a 2000 ppm CFO).
+- [x] Tracker coefficient wired into the equalizer (same-symbol correction, 0 errors in 192 bits each through 120 and -150 degree channels).
+- [x] Per-subcarrier channel estimation from a training symbol (bit-exact; 0 errors in 384 bits through a 3-path channel, and in 768 bits per point up to a 2000 ppm CFO).
 - [ ] PL/fabric loopback on Zynq.
 - [ ] Safe attenuated AD9361/AD9363 cabled loopback with attenuation/gain metadata.
 - [x] Resource and timing report from Vivado OOC implementation, port paths included (all blocks routed; all clocked blocks except the one-clock equalizer meet 100 MHz).
 - [x] Pipelined butterfly and schedule: TX/FFT meet 100 MHz, 222 compute clocks; both schedules pass every OFDM testbench.
 - [x] Block-RAM working memory for the transforms (two parity banks; about a ninth of the LUTs, more timing margin; every testbench passes in both memory modes).
 - [x] Zero-forcing channel equalizer with a CORDIC `1/abs(G)^2` (bit-exact; grid spread 0.4 % through a 3-path channel; meets 100 MHz) and the channel equalizer in the AXI modem.
-- [x] 16-QAM and time-domain CFO correction end to end and in the AXI modem (BER=0 up to 7700 ppm; meets 100 MHz).
+- [x] 16-QAM and time-domain CFO correction end to end and in the AXI modem (0 errors in 1152 bits per point up to 7700 ppm; meets 100 MHz).
 - [x] BER against Es/N0 with AWGN, compared with theory (simulation; about 2-3 dB lost to the single training symbol).
 - [x] Channel estimate averaged over several training symbols (`TRAIN_SYMBOLS`, bit-exact with the model; the training loss drops from about 3 / 1.9 dB to about 1 / 0.6 dB with four symbols). Smoothing across subcarriers and channel tracking remain open.
 - [x] TX level, PAPR and guard-band spectrum measured on the RTL output, with a 12-bit DAC back-off sweep (simulation; the RF spectrum needs the board).

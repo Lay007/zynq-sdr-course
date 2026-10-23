@@ -1,7 +1,6 @@
-# Block 1 / Блок 1
+# Block 1
+
+Russian version: [README_ru.md](README_ru.md). Full English overview: [README_en.md](README_en.md).
 
 `block_01_intro_sdr` contains the materials for **Introduction to SDR, Tools, and First Signal Reception**.
-`block_01_intro_sdr` содержит материалы блока **«Введение в SDR, инструменты и первый приём сигнала»**.
 
-- [Русский](README_ru.md)
-- [English](README_en.md)

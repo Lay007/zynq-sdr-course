@@ -1,7 +1,6 @@
-# Block 8 / Блок 8
+# Block 8
+
+Russian version: [README_ru.md](README_ru.md). Full English overview: [README_en.md](README_en.md).
 
 `block_08_modulation_and_synchronization` contains the materials for **Modulation and Synchronization**.
-`block_08_modulation_and_synchronization` содержит материалы блока **«Модуляция и синхронизация»**.
 
-- [Русский](README_ru.md)
-- [English](README_en.md)

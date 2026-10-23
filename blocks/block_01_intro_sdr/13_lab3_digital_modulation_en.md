@@ -43,7 +43,7 @@ flowchart TB
 ### BPSK
 - 1 bit per symbol;
 - phase 0 or π;
-- robust to noise.
+- the two points are as far apart as the power allows, so at the same Eb/N0 no PSK scheme has a lower BER (QPSK matches it per bit).
 
 ### QPSK
 - 2 bits per symbol;

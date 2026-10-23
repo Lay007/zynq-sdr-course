@@ -98,14 +98,14 @@ running hardware, comparing the on-chip FPGA receiver in AD9361 **digital loopba
 The internal loopback isolates the *modem*: two tight clusters at I = ±1, Q ≈ 0, no carrier.
 Over the air the *radio channel* spreads the clusters with noise and rotates them with the
 carrier frequency offset (Lab 8.1 / 8.2 seen on real hardware), yet at close range it still
-decodes at BER 0. The visual gap between the two constellations *is* the RF channel. Full
+decodes the 281-bit frame without an error. The visual gap between the two constellations *is* the RF channel. Full
 walkthrough, numbers and reproduction: **[Lab 8.15: Real-hardware BPSK metrics](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_15_real_hardware_bpsk_metrics.md)**.
 
 ## QPSK: two bits per symbol, impairments & BER
 
 QPSK is two independent BPSK axes (Gray-coded: low bit → I, high bit → Q), so it doubles the
 bit rate at the same bandwidth. A synthesizable QPSK modem reusing the shared upsampler / RRC /
-sampler recovers a full frame at **BER = 0** in HDL loopback; a channel simulation then shows
+sampler recovers a full frame, **0 errors in 280 bits**, in HDL loopback; a channel simulation then shows
 what the two impairments of this block do to it:
 
 ![Gray QPSK constellation under impairments](https://lay007.github.io/zynq-sdr-course/assets/qpsk_constellation_impairments.png)
@@ -132,7 +132,7 @@ tracks the CFO ramp:
 The one twist BPSK does not have: the loop locks to one of four `k·90°` rotations, so the
 constellation looks perfect but the bit labelling may be rotated (the **90° ambiguity**). The
 same **known preamble** the modem uses for frame sync resolves it, turning the noisy BER back
-into a flat **BER = 0** across the whole CFO sweep. Full walkthrough:
+into a flat line of **0 errors in 37 936 bits per point** across the whole CFO sweep (BER below about 1e-4 per point). Full walkthrough:
 **[Lab 8.9: QPSK carrier recovery](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_9_qpsk_carrier_recovery.md)**.
 
 ## QPSK on real hardware: board loopback vs over the air
@@ -154,7 +154,7 @@ search, an RRC matched filter, preamble frame-sync, and a four-way 90° quadrant
 | BER | 0 (0/280) | 0 (0/280) |
 
 Four razor-tight dots in loopback (the *modem* isolated) become four noise-spread, carrier-rotated clouds
-over the air (the *radio channel*), yet both decode at **BER = 0** through the same synchronization chain
+over the air (the *radio channel*), yet both decode with **0 errors in 280 bits** through the same synchronization chain
 the simulations model. The visual gap between the two constellations *is* the RF channel: exactly the
 BPSK story of Lab 8.15, now at two bits per symbol.
 
