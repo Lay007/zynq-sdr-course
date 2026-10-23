@@ -48,11 +48,11 @@ block_08_modulation_and_synchronization/
 └── reports/
 ```
 
-- `assets/` — reference data and helper materials;
-- `images/` — diagrams, screenshots, and photos;
-- `kicad/` — schematics and electrical notes;
-- `simulink/`, `matlab/`, `python/`, `cpp/`, `gnuradio/` — models and analysis tools;
-- `reports/` — reports and report templates.
+- `assets/`: reference data and helper materials;
+- `images/`: diagrams, screenshots, and photos;
+- `kicad/`: schematics and electrical notes;
+- `simulink/`, `matlab/`, `python/`, `cpp/`, `gnuradio/`: models and analysis tools;
+- `reports/`: reports and report templates.
 
 ## Recommended work order
 1. assemble a basic digital link.
@@ -64,10 +64,10 @@ block_08_modulation_and_synchronization/
 
 | Route | Labs | Engineering result |
 |---|---|---|
-| QPSK modem | [8.8 — impairments and BER](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-8-qpsk-modem-impairments/) → [8.9 — carrier recovery](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-9-qpsk-carrier-recovery/) | Gray mapping, BER and CFO/phase recovery |
-| OFDM | [8.5 — mini link](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-5-ofdm-mini-link/) → [8.10 — PAPR and clipping](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-10-ofdm-papr-clipping/) | End-to-end link plus implementation back-off and spectral-regrowth trade-offs |
-| Waveform comparison | [8.11 — 16-QAM](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-11-16qam-tradeoffs/) → [8.12 — GFSK](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-12-gfsk-bt-ber/) → [8.13 — DSSS](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-13-dsss-processing-gain/) | Spectral efficiency, envelope, synchronization and FPGA-cost trade-offs |
-| CSS | [8.20 — waveform](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-20-css-waveform/) → [8.21 — dechirp/FFT](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-21-css-dechirp-fft/) → [8.22 — packet sync/PER](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-22-css-packet-sync-per/) | Chirp mapping, FFT-bin detection, packet acquisition and PER |
+| QPSK modem | [8.8: impairments and BER](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-8-qpsk-modem-impairments/) → [8.9: carrier recovery](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-9-qpsk-carrier-recovery/) | Gray mapping, BER and CFO/phase recovery |
+| OFDM | [8.5: mini link](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-5-ofdm-mini-link/) → [8.10: PAPR and clipping](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-10-ofdm-papr-clipping/) | End-to-end link plus implementation back-off and spectral-regrowth trade-offs |
+| Waveform comparison | [8.11: 16-QAM](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-11-16qam-tradeoffs/) → [8.12: GFSK](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-12-gfsk-bt-ber/) → [8.13: DSSS](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-13-dsss-processing-gain/) | Spectral efficiency, envelope, synchronization and FPGA-cost trade-offs |
+| CSS | [8.20: waveform](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-20-css-waveform/) → [8.21: dechirp/FFT](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-21-css-dechirp-fft/) → [8.22: packet sync/PER](https://lay007.github.io/zynq-sdr-course/en/labs/lab-8-22-css-packet-sync-per/) | Chirp mapping, FFT-bin detection, packet acquisition and PER |
 
 The numbering groups related extensions intentionally: `8.8–8.9` continue QPSK, `8.10` extends OFDM, and `8.20–8.22` form the CSS track.
 
@@ -77,16 +77,16 @@ separate from the complete LoRa PHY in the companion project.
 The [AXI integration guide](css_axi_integration.md) defines its stream packets,
 AXI-Lite registers, IRQ, and remaining board-level work.
 
-## Real hardware BPSK — spectrum, constellation & SNR/EVM
+## Real hardware BPSK: spectrum, constellation & SNR/EVM
 
 Real measured BPSK from the course board (Zynq-7020 + AD9361): the same three quantities you
-compute in theory — **power spectrum**, **constellation**, and **SNR / EVM** — taken from the
+compute in theory (**power spectrum**, **constellation**, and **SNR / EVM**) taken from the
 running hardware, comparing the on-chip FPGA receiver in AD9361 **digital loopback** with an
 **independent RTL-SDR over the air**.
 
-![Board PL RX — spectrum and constellation (AD9361 digital loopback)](https://lay007.github.io/zynq-sdr-course/assets/hw_bpsk_board_spectrum_constellation.png)
+![Board PL RX: spectrum and constellation (AD9361 digital loopback)](https://lay007.github.io/zynq-sdr-course/assets/hw_bpsk_board_spectrum_constellation.png)
 
-![RTL-SDR — over-the-air BPSK constellation](https://lay007.github.io/zynq-sdr-course/assets/hw_bpsk_rtl_ota_constellation.png)
+![RTL-SDR: over-the-air BPSK constellation](https://lay007.github.io/zynq-sdr-course/assets/hw_bpsk_rtl_ota_constellation.png)
 
 | Metric | Board PL RX (digital loopback) | RTL-SDR (over the air, ~10 cm) |
 |---|---|---|
@@ -95,13 +95,13 @@ running hardware, comparing the on-chip FPGA receiver in AD9361 **digital loopba
 | Carrier frequency offset | 0 (digital, no carrier) | ≈ +2.7 kHz |
 | BER | 0 | 0 |
 
-The internal loopback isolates the *modem* — two tight clusters at I = ±1, Q ≈ 0, no carrier.
+The internal loopback isolates the *modem*: two tight clusters at I = ±1, Q ≈ 0, no carrier.
 Over the air the *radio channel* spreads the clusters with noise and rotates them with the
 carrier frequency offset (Lab 8.1 / 8.2 seen on real hardware), yet at close range it still
 decodes at BER 0. The visual gap between the two constellations *is* the RF channel. Full
-walkthrough, numbers and reproduction: **[Lab 8.15 — Real-hardware BPSK metrics](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_15_real_hardware_bpsk_metrics.md)**.
+walkthrough, numbers and reproduction: **[Lab 8.15: Real-hardware BPSK metrics](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_15_real_hardware_bpsk_metrics.md)**.
 
-## QPSK — two bits per symbol, impairments & BER
+## QPSK: two bits per symbol, impairments & BER
 
 QPSK is two independent BPSK axes (Gray-coded: low bit → I, high bit → Q), so it doubles the
 bit rate at the same bandwidth. A synthesizable QPSK modem reusing the shared upsampler / RRC /
@@ -117,13 +117,13 @@ until a carrier-recovery loop de-rotates it (Lab 8.1 / 8.2).
 ![Gray QPSK BER vs Eb/N0](https://lay007.github.io/zynq-sdr-course/assets/qpsk_ber_vs_ebn0.png)
 
 Being two orthogonal BPSK axes, Gray QPSK has the same per-bit BER as BPSK,
-`Q(√(2·Eb/N0))` — the simulation matches theory across 0–10 dB. Full walkthrough:
-**[Lab 8.8 — QPSK modem, impairments and BER](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_8_qpsk_modem_and_impairments.md)**.
+`Q(√(2·Eb/N0))`: the simulation matches theory across 0–10 dB. Full walkthrough:
+**[Lab 8.8: QPSK modem, impairments and BER](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_8_qpsk_modem_and_impairments.md)**.
 
-## QPSK carrier recovery — de-rotating the CFO ring
+## QPSK carrier recovery: de-rotating the CFO ring
 
 The CFO ring above is undecodable (BER ≈ 0.5) until a **carrier-recovery loop** de-rotates it.
-A decision-directed **Costas loop** (NCO + PI loop filter + QPSK phase-error detector — the
+A decision-directed **Costas loop** (NCO + PI loop filter + QPSK phase-error detector. The
 frequency-domain twin of the Gardner timing loop) drives the ring back onto the four points and
 tracks the CFO ramp:
 
@@ -131,20 +131,20 @@ tracks the CFO ramp:
 
 The one twist BPSK does not have: the loop locks to one of four `k·90°` rotations, so the
 constellation looks perfect but the bit labelling may be rotated (the **90° ambiguity**). The
-same **known preamble** the modem uses for frame sync resolves it — turning the noisy BER back
+same **known preamble** the modem uses for frame sync resolves it, turning the noisy BER back
 into a flat **BER = 0** across the whole CFO sweep. Full walkthrough:
-**[Lab 8.9 — QPSK carrier recovery](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_9_qpsk_carrier_recovery.md)**.
+**[Lab 8.9: QPSK carrier recovery](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_9_qpsk_carrier_recovery.md)**.
 
-## QPSK on real hardware — board loopback vs over the air
+## QPSK on real hardware: board loopback vs over the air
 
 The same three quantities as the BPSK measurement above, now for QPSK: the board's own PL receiver in
-**fabric loopback** (the modem isolated — no RF, no carrier) versus an **independent RTL-SDR over the
+**fabric loopback** (the modem isolated. No RF, no carrier) versus an **independent RTL-SDR over the
 air**. The host demodulator does exactly what this block teaches: coarse + fine carrier-frequency-offset
 search, an RRC matched filter, preamble frame-sync, and a four-way 90° quadrant resolve.
 
-![Board PL RX — QPSK constellation (PL fabric loopback)](https://lay007.github.io/zynq-sdr-course/assets/hw_qpsk_board_loopback_constellation.png)
+![Board PL RX: QPSK constellation (PL fabric loopback)](https://lay007.github.io/zynq-sdr-course/assets/hw_qpsk_board_loopback_constellation.png)
 
-![RTL-SDR — over-the-air QPSK constellation](https://lay007.github.io/zynq-sdr-course/assets/hw_qpsk_rtl_ota_constellation.png)
+![RTL-SDR: over-the-air QPSK constellation](https://lay007.github.io/zynq-sdr-course/assets/hw_qpsk_rtl_ota_constellation.png)
 
 | Metric | Board PL RX (fabric loopback) | RTL-SDR (over the air, ~1–2 cm) |
 |---|---|---|
@@ -155,7 +155,7 @@ search, an RRC matched filter, preamble frame-sync, and a four-way 90° quadrant
 
 Four razor-tight dots in loopback (the *modem* isolated) become four noise-spread, carrier-rotated clouds
 over the air (the *radio channel*), yet both decode at **BER = 0** through the same synchronization chain
-the simulations model. The visual gap between the two constellations *is* the RF channel — exactly the
+the simulations model. The visual gap between the two constellations *is* the RF channel: exactly the
 BPSK story of Lab 8.15, now at two bits per symbol.
 
 ## Next step

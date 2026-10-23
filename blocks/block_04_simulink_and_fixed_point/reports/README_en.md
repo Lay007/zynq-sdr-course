@@ -1,4 +1,4 @@
-# Reports — Block 4
+# Reports: Block 4
 
 ## Purpose
 This folder should contain reports, exported plots, parameter tables, and supporting materials for the block “Simulink and Fixed-Point Preparation”.

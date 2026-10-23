@@ -80,23 +80,23 @@ across how many independent runs (compare
 
 ## Verification gates
 
-1. **G0 — plan:** requirements, targets and the pass/fail table skeleton are committed.
-2. **G1 — model:** the reference model meets the targets in simulation.
-3. **G2 — implementation:** the implementation agrees with the model within a stated tolerance.
-4. **G3 — setup:** the RF setup is documented and safe; a sanity capture (a known tone) confirms the
+1. **G0. Plan:** requirements, targets and the pass/fail table skeleton are committed.
+2. **G1. Model:** the reference model meets the targets in simulation.
+3. **G2. Implementation:** the implementation agrees with the model within a stated tolerance.
+4. **G3. Setup:** the RF setup is documented and safe; a sanity capture (a known tone) confirms the
    frequency axis and the channel order.
-5. **G4 — measurement:** the dataset is recorded with metadata and checksum; quality checks (DC,
+5. **G4. Measurement:** the dataset is recorded with metadata and checksum; quality checks (DC,
    clipping) pass or their failure is explained.
-6. **G5 — analysis:** metrics are computed with stated definitions and filled into the table.
-7. **G6 — reproduction:** a clean checkout validates the metrics from the stored artifacts.
+6. **G5. Analysis:** metrics are computed with stated definitions and filled into the table.
+7. **G6. Reproduction:** a clean checkout validates the metrics from the stored artifacts.
 
 ## Reference implementation (Block 11)
 
-[Lab 11.4 — Final Measurement Report](/zynq-sdr-course/en/labs/lab-11-4-final-measurement-report/)
+[Lab 11.4: Final Measurement Report](/zynq-sdr-course/en/labs/lab-11-4-final-measurement-report/)
 is a completed instance of exactly this deliverable: a full, hardware-validated SDR measurement report
 for the two-board QPSK link (architecture, setup, filled pass/fail table, honest limitations,
-reproducibility). Use it as a worked exemplar of the structure and the standard of evidence — the
-figures, metric units, attached metadata and reproducible commands — not as the project you must copy.
+reproducibility). Use it as a worked exemplar of the structure and the standard of evidence (the
+figures, metric units, attached metadata and reproducible commands) not as the project you must copy.
 
 ## Final acceptance checklist
 

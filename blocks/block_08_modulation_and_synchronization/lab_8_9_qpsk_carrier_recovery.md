@@ -6,7 +6,7 @@
 **carrier frequency offset (CFO)** rotates every QPSK symbol by a growing phase, smearing the
 four constellation points into a **ring** that the hard decision cannot read (BER ≈ 0.5). This
 lab closes it with a **carrier-recovery loop** that de-rotates the ring back into four points,
-and shows the one twist that BPSK does not have — a residual **90° phase ambiguity**.
+and shows the one twist that BPSK does not have: a residual **90° phase ambiguity**.
 
 ## The loop
 
@@ -25,21 +25,21 @@ freq += ki·e                         # integral term tracks the CFO
 
 The phase-error detector `e` is zero when `y` sits on a QPSK point and pushes `θ` toward the
 nearest one otherwise, so the loop drives the ring onto the constellation grid. The integral
-term `freq` accumulates into a constant slope that **matches the CFO ramp** — the bottom-left
+term `freq` accumulates into a constant slope that **matches the CFO ramp**: the bottom-left
 panel below shows the NCO phase climbing along exactly that ramp.
 
 ![QPSK carrier recovery](/zynq-sdr-course/assets/qpsk_carrier_recovery.png)
 
-- **Received (ring)** — QPSK + CFO, BER ≈ 0.5, undecodable.
-- **After Costas + preamble de-rotation** — four clean clouds; CFO gone.
-- **NCO phase** — locks onto the CFO ramp within about a hundred symbols at the plotted offset of 0.01 cycles/symbol (larger offsets take longer, see below).
-- **BER vs CFO** — without recovery BER pins at chance for any non-zero CFO; with the loop it
+- **Received (ring)**: QPSK + CFO, BER ≈ 0.5, undecodable.
+- **After Costas + preamble de-rotation**: four clean clouds; CFO gone.
+- **NCO phase**: locks onto the CFO ramp within about a hundred symbols at the plotted offset of 0.01 cycles/symbol (larger offsets take longer, see below).
+- **BER vs CFO**: without recovery BER pins at chance for any non-zero CFO; with the loop it
   stays at 0 across the whole sweep.
 
 ## The 90° ambiguity
 
 A QPSK Costas loop error detector is happy on *any* of the four constellation points, so it
-locks to one of four `k·90°` rotations — and which one is arbitrary. The ring becomes four
+locks to one of four `k·90°` rotations, and which one is arbitrary. The ring becomes four
 clean points, but the absolute I/Q labelling may be rotated, scrambling the bits (BER 0.25–0.5)
 even though the *constellation* looks perfect. This is why a raw Costas BER-vs-CFO curve jumps
 around.
@@ -49,7 +49,7 @@ The fix is the same **known preamble / unique word** the BPSK modem already uses
 [Block 11](/zynq-sdr-course/en/blocks/11-integrated-sdr-project/)): try the four rotations, keep the
 one that matches the preamble. That is what turns the noisy curve into the flat **BER = 0** line
 above. The script uses 32 known symbols as that preamble and scores BER only on the symbols after
-it. (Differential QPSK encoding is the alternative — it removes the ambiguity without a
+it. (Differential QPSK encoding is the alternative: it removes the ambiguity without a
 preamble, at a ~2× BER penalty.)
 
 ## Reproduce

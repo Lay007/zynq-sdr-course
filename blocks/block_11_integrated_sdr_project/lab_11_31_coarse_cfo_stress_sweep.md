@@ -3,10 +3,9 @@
 ## Objective
 
 [Lab 11.30](/zynq-sdr-course/en/labs/lab-11-30-two-board-cfo-validation/) proved the `qpsk_coarse_cfo.v` estimator on a
-live two-board link — but the two AD9361s happened to sit only ~0.3 ppm apart, an inter-board
+live two-board link, but the two AD9361s happened to sit only ~0.3 ppm apart, an inter-board
 carrier offset of about **−290 Hz**. That is *inside* a Costas loop's few-hundred-hertz pull-in,
-so the estimator's whole reason for existing — acquiring the **tens of kHz** a Costas loop cannot
-— was never actually exercised on silicon. A passing run at −290 Hz does not tell you the
+so the estimator's whole reason for existing (acquiring the **tens of kHz** a Costas loop cannot) was never actually exercised on silicon. A passing run at −290 Hz does not tell you the
 estimate is right at −40 kHz.
 
 This lab injects a **controlled** offset. Board A transmits the same cyclic QPSK at `carrier + Δ`
@@ -17,7 +16,7 @@ while board B receives at `carrier`, so the recovered signal carries a known Δ 
 2. the fixed-point RTL arithmetic **agrees with the float reference** at every offset, not just
    near zero;
 3. beyond ±60 kHz the estimate **folds (aliases)** by 120 kHz, exactly as `4·ω ∈ (−π, π]`
-   predicts — the design's ambiguity boundary, demonstrated rather than asserted.
+   predicts: the design's ambiguity boundary, demonstrated rather than asserted.
 
 ## Why ±60 kHz
 
@@ -31,7 +30,7 @@ turn, so `4·ω` must stay inside `(−π, π]`:
 ```
 
 Below 60 kHz the estimate is the true CFO. Above it, `4·ω` wraps, and the reported frequency folds
-back by `2·60 = 120 kHz` — an alias, not an error. This lab drives the estimator straight through
+back by `2·60 = 120 kHz`: an alias, not an error. This lab drives the estimator straight through
 that boundary so the fold is visible in the data.
 
 ## Setup
@@ -44,8 +43,8 @@ board A  ──  cyclic QPSK out of the DAC via DMA, TX_LO = carrier + Δ
 board B  ──  RX_LO = carrier (fixed) ──▶ raw IQ capture ──▶ SSH ──▶ host estimator
 ```
 
-The CFO is injected purely by **detuning board A's transmit LO** — the waveform, the sample rate
-and board B's receive LO never change — so the recovered offset is Δ plus the boards' intrinsic
+The CFO is injected purely by **detuning board A's transmit LO** (the waveform, the sample rate
+and board B's receive LO never change) so the recovered offset is Δ plus the boards' intrinsic
 difference, and nothing else. The lab reuses Lab 11.30's transmitter and receiver plumbing
 verbatim (`reset_tx_dma`, detached streaming, DAC-source readback, one contiguous capture); see
 that lab for the traps those guard against.
@@ -66,7 +65,7 @@ float reference and the **shipped HDL's integer arithmetic**, not between two fl
 
 Measured 2026-07-18, 915 MHz base, board A TX −30 dB into a 30 dB attenuator, board B RX 50 dB.
 Intrinsic offset at `dTX=0`: **−238 Hz**. It drifts run to run with temperature and reference
-tolerance — −194, −238 and −288 Hz across three cold boots — which is exactly why the estimator
+tolerance (−194, −238 and −288 Hz across three cold boots) which is exactly why the estimator
 exists; the injected Δ is what the table is keyed on.
 
 | dTX | measured CFO | std | expected (folded) | error | EVM | float-vs-fixed | note |
@@ -89,24 +88,23 @@ exists; the injected Δ is what the table is keyed on.
 Reading the table:
 
 - **Tracking.** From −50 kHz to +55 kHz the measured CFO follows the injected offset with a few
-  hundred hertz of error — well inside a Costas loop's pull-in. That is exactly the division of
+  hundred hertz of error: well inside a Costas loop's pull-in. That is exactly the division of
   labour the two-stage receiver is built on: coarse removes the bulk, the loop closes the residual.
-- **The fold.** At +70 kHz the estimate does not read +70 kHz and it is not wrong — it reads
+- **The fold.** At +70 kHz the estimate does not read +70 kHz and it is not wrong: it reads
   −50.2 kHz, precisely `70 − 120`. −70 kHz folds to +49.8 kHz the same way. The boundary row at
   +60 kHz is the hinge: `4·ω` sits just short of `π`, EVM drops back to single digits because the
   derotated constellation is nearly aligned, and one hair further wraps it. Right *on* the
-  singularity a burst's windows split between +60 and −60 kHz — the same point on the 4·ω circle —
-  so the per-window estimates are combined with a **circular mean** (in the 4·ω domain), not a plain
+  singularity a burst's windows split between +60 and −60 kHz (the same point on the 4·ω circle) so the per-window estimates are combined with a **circular mean** (in the 4·ω domain), not a plain
   average that would land on the meaningless midpoint. Away from the boundary the two agree to under
   a hertz; only this row depends on it.
 - **Float vs fixed.** The RTL's integer arithmetic stays within **~4.5 Hz** of the float reference
-  across the entire range — the fixed-point truncation is not what limits the estimate; the finite
+  across the entire range: the fixed-point truncation is not what limits the estimate; the finite
   measurement window is (note how `std` tracks EVM, both worst near ±30 kHz where the raw
   constellation spins fastest within a window).
 
 The mid-sweep EVM values are high **by construction**: EVM here is measured on the raw recovered
 symbols *before* the Costas loop removes the residual, so a large injected CFO smears the
-constellation. It is a witness that a real offset is present, not a link-quality figure — the
+constellation. It is a witness that a real offset is present, not a link-quality figure: the
 downstream loop is what turns these into decodable symbols (and did, at BER 0, in Lab 11.30).
 
 ## Self-test (no radio)
@@ -130,14 +128,14 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_31_coarse_cfo_stress
 
 Both boards must be flashed with the bench image (per-board `README-bench.txt` on each SD card).
 The sweep is unattended and self-cleaning: it retunes, streams, captures and quiets board A between
-every Δ, and forces both boards to −89.75 dB on exit — including after a failure. Results are
+every Δ, and forces both boards to −89.75 dB on exit, including after a failure. Results are
 written to `coarse_cfo_stress_sweep.json` alongside the printed table.
 
 ## RF safety
 
 This is a **conducted** lab: board A's TX1 reaches board B's RX1 through a cable and a 30 dB
 attenuator, and nothing radiates. The default −30 dB TX is safe behind that attenuator. Over the
-air the limit is **−50 dB** — do not raise power to "see the signal", and do not run this sweep on
+air the limit is **−50 dB**: do not raise power to "see the signal", and do not run this sweep on
 an antenna. Both boards are quieted on exit; board B's stock `rc.user` re-arms a 71 MHz
 transmitter on every boot, which the shared plumbing kills before anything else.
 
@@ -146,21 +144,21 @@ transmitter on every boot, which the shared plumbing kills before anything else.
 The estimator is validated end to end on silicon across its full operating range, which was the
 precondition for wiring it into the fabric receiver. `qpsk_rx_bit_recovery_chain` can instantiate it
 ahead of the Costas loop behind a `coarse_cfo_en` bit, `qpsk_zynq_ber_top` exposes that bit, and the
-gpreg bridge drives it from **`gp_ctrl[13]`** — so the offset can be stripped in fabric at runtime
+gpreg bridge drives it from **`gp_ctrl[13]`**, so the offset can be stripped in fabric at runtime
 with a single register write. The [Block 05 smoke suite](/zynq-sdr-course/verification/hdl_smoke/) covers the whole
 path from the bridge down, and the estimator decodes a 25 kHz injected offset to BER 0.
 
 **Timing now closes.** The naive integration missed the fast (8 ns) divide-select clock badly
 (-13.9 ns): the 4th-power multiply-accumulate and the derotate LUT-plus-multiply are each ~11-14 ns
 of cascaded DSPs, and synthesis/phys-opt hid intermediate registers a name-based multicycle could
-not reach. Both chains are now **pipelined** — every stage is a single multiply, registered on
+not reach. Both chains are now **pipelined** (every stage is a single multiply, registered on
 `in_valid`, with a fill counter that skips the pipeline-fill transients and a `GUARD`-deep delay
-line that keeps the burst aligned — and the accumulate/derotate multicycles reach the DSP data
+line that keeps the burst aligned) and the accumulate/derotate multicycles reach the DSP data
 inputs. With `COARSE_ENABLE=1` (set in the bridge) the estimator is in the shipped bitstream and no
 longer limits timing: the 16 ns operating clock meets at **+7.997 ns**, and the only residual is a
 pre-existing matched-filter path at -0.003 ns on the 8 ns clock (the design's inherent divide-select
 margin; the coarse-out baseline itself sits at -0.035 ns). `cfo_omega` is unchanged, since a
 constant CFO gives `4·ω` regardless of the window position. The `COARSE_ENABLE` parameter stays
 (default 0) so the loopback/OTA labs can still compile the estimator out. The remaining step is the
-two-board run with `gp_ctrl[13]=1` — the receiver acquiring the real inter-board CFO **in fabric**
+two-board run with `gp_ctrl[13]=1`: the receiver acquiring the real inter-board CFO **in fabric**
 rather than on the host.

@@ -23,7 +23,7 @@ the round-trip for iterative FPGA experiments drops from minutes to seconds.
 | Path | Purpose |
 |---|---|
 | `blocks/block_11_integrated_sdr_project/python/lab_11_16_runtime_rx_common_reinit_probe.py` | load overlay, attempt host capture, force `rx_common` re-init, attempt capture again, report |
-| `blocks/block_11_integrated_sdr_project/python/runtime_rx_common.py` | `force_rx_common_ctrl_request()` — sends the board-side re-init sequence over SSH |
+| `blocks/block_11_integrated_sdr_project/python/runtime_rx_common.py` | `force_rx_common_ctrl_request()`: sends the board-side re-init sequence over SSH |
 
 ## What the script does
 
@@ -55,7 +55,7 @@ to the stock-shell baseline. Pass `--no-reboot` to skip the reboot.
 |---|---|
 | `libiio` succeeds | `rx_common` re-init is sufficient; no reboot needed for iterative tests |
 | `libiio` still fails | the DMA starvation is deeper than the `rx_common` register; board reboot required |
-| partial recovery | `iio_readdev` works but `libiio` does not — buffer-level difference, investigate `iio_buffer_size` |
+| partial recovery | `iio_readdev` works but `libiio` does not: buffer-level difference, investigate `iio_buffer_size` |
 
 ## Live result on 2026-06-23
 

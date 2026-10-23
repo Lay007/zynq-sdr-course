@@ -1,11 +1,11 @@
 # Board PL RX BPSK capture (AD9361 digital loopback)
 
-`board_pl_rx_loopback_capture.npz` — real samples the Zynq-7020 PL BPSK receiver saw during
+`board_pl_rx_loopback_capture.npz`: real samples the Zynq-7020 PL BPSK receiver saw during
 one burst, read back from the in-fabric debug tap (Block 11) in AD9361 digital loopback.
 
-- `i`, `q` — `capture_in_i/q`, signed ADC counts, sample rate 3.84 MHz, SPS = 8 (BPSK, so
+- `i`, `q`: `capture_in_i/q`, signed ADC counts, sample rate 3.84 MHz, SPS = 8 (BPSK, so
   `q ≈ 0`). 2400 samples covering the 281-symbol frame plus RRC tails.
-- `tx_i`, `tx_q` — the core's recovered decision sample (`symbol_i_debug`) captured in the
+- `tx_i`, `tx_q`: the core's recovered decision sample (`symbol_i_debug`) captured in the
   same run; not used by the figure script.
 
 Used by [Lab 8.15](../../blocks/block_08_modulation_and_synchronization/lab_8_15_real_hardware_bpsk_metrics.md)

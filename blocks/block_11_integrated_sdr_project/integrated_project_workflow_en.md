@@ -1,4 +1,4 @@
-# Block 11 — integrated SDR project workflow
+# Block 11: integrated SDR project workflow
 
 This block combines the whole course into one engineering project: signal model, fixed-point, RTL/FPGA, RF settings, IQ recording, synchronization, metrics and final report.
 

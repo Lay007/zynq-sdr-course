@@ -47,7 +47,7 @@ Expected output:
 Do this **before** treating the board as a black-box SDR appliance:
 
 1. [Zynq: where PS ends and PL begins](zynq-ps-pl-architecture.md)
-2. [Lab 5.12 — PS↔PL message mailbox](en/labs/lab-5-12-zynq-ps-pl-mailbox.md)
+2. [Lab 5.12: PS↔PL message mailbox](en/labs/lab-5-12-zynq-ps-pl-mailbox.md)
 3. Run the no-board console contract:
 
 ```bash

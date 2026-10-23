@@ -65,7 +65,7 @@ lab_11_23_runtime_pl_rtl_monitor_sweep.py \
 | BER rises sharply at high TX attenuation | link budget limit found |
 | BER non-zero even at lowest TX attenuation | RRC filter or timing recovery issue |
 
-## Live result on 2026-06-23 — corrected
+## Live result on 2026-06-23: corrected
 
 > **Correction.** An earlier version of this section said that the sweep "confirmed BER = 0 for TX
 > attenuation values down to −60 dB" with EVM 52–60 %. The committed sweep output does not support

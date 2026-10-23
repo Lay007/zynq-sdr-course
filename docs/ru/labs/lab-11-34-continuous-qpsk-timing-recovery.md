@@ -120,7 +120,7 @@ Board B чисто загрузилась с него, AD9361 инициализ
 
 ## Результат живого A/B
 
-Board A работала как vendor cyclic-DMA TX, board B — как course RX. Кабельный тракт:
+Board A работала как vendor cyclic-DMA TX, board B: как course RX. Кабельный тракт:
 915 МГц, 30 dB attenuator, TX −30 dB, RX +50 dB. Оба режима проверялись на одном bitstream
 с одинаковыми CFO, offsets и числом повторов; no-lock оставался в знаменателе.
 

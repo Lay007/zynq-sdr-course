@@ -12,7 +12,7 @@ offline BER analysis in Lab 11.20.
 The ZynqSDR's own PL RX path is stalled at `rx_valid_count = 0` under the
 runtime overlay. The RTL-SDR provides a completely independent receive chain
 that is not affected by the course FPGA overlay state, so it can confirm whether
-the ZynqSDR TX signal is actually radiated — independently of any PL RX issue.
+the ZynqSDR TX signal is actually radiated: independently of any PL RX issue.
 
 ## Hardware setup
 

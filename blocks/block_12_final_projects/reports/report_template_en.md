@@ -1,4 +1,4 @@
-# Report Template — Block 12. Final Projects
+# Report Template: Block 12. Final Projects
 
 ## 1. Work title
 State the exact laboratory work, demonstration, or mini-project.

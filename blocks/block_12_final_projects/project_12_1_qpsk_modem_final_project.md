@@ -44,9 +44,9 @@ by the equipment you actually control; do not claim evidence from a higher track
 
 | Track | Minimum implementation | Required evidence |
 |---|---|---|
-| A — offline replay | Python/MATLAB/GNU Radio model over a fixed IQ dataset | dataset manifest + checksum, before/after constellation, BER/SER/EVM JSON |
-| B — RTL/FPGA | fixed-point model plus HDL modem or synchronization block | bit-exact vectors, HDL regression, latency/resource/timing report |
-| C — measured RF | Track A or B plus a controlled transmitter/receiver path | bench diagram, RF-safe settings, raw or summarized measurement artifact, repeated-run statistics |
+| A: offline replay | Python/MATLAB/GNU Radio model over a fixed IQ dataset | dataset manifest + checksum, before/after constellation, BER/SER/EVM JSON |
+| B: RTL/FPGA | fixed-point model plus HDL modem or synchronization block | bit-exact vectors, HDL regression, latency/resource/timing report |
+| C: measured RF | Track A or B plus a controlled transmitter/receiver path | bench diagram, RF-safe settings, raw or summarized measurement artifact, repeated-run statistics |
 
 Hardware is not a shortcut around replay. Track C still needs an offline-readable artifact or a
 machine-readable summary that lets another engineer verify the reported arithmetic.
@@ -73,15 +73,15 @@ Example question: “At `Eb/N0 = 8 dB`, does the selected carrier/timing recover
 
 Advance only when the current gate has a saved artifact:
 
-1. **G0 — contract:** proposal, parameter table, architecture and acceptance gate are committed.
-2. **G1 — reference:** an impairment-free model recovers the known payload at BER/SER 0.
-3. **G2 — sensitivity:** CFO, phase, timing and noise are swept independently; the baseline failure
+1. **G0. Contract:** proposal, parameter table, architecture and acceptance gate are committed.
+2. **G1. Reference:** an impairment-free model recovers the known payload at BER/SER 0.
+3. **G2. Sensitivity:** CFO, phase, timing and noise are swept independently; the baseline failure
    is visible in a plot or metrics table.
-4. **G3 — synchronization:** the improved chain is compared against the frozen baseline on identical
+4. **G3. Synchronization:** the improved chain is compared against the frozen baseline on identical
    inputs. A paired or deterministic replay is preferred to unrelated runs.
-5. **G4 — implementation:** fixed-point/HDL or hardware evidence agrees with the model within a stated
+5. **G4. Implementation:** fixed-point/HDL or hardware evidence agrees with the model within a stated
    tolerance. FPGA work must report both functionality and routed timing.
-6. **G5 — reproduction:** a clean checkout can run the documented command and regenerate or validate
+6. **G5. Reproduction:** a clean checkout can run the documented command and regenerate or validate
    the final metrics JSON.
 
 Failed hypotheses belong in the report when they change the diagnosis. Do not delete an honest
@@ -168,12 +168,11 @@ The project meets / does not meet the success criteria because ______.
 ## Reference implementation (Block 11)
 
 You do not have to start from a blank page: Block 11 carries a completed, hardware-validated instance
-of exactly this project — an in-fabric QPSK modem on the Zynq-7020 + AD9361, closed on a two-board
+of exactly this project. An in-fabric QPSK modem on the Zynq-7020 + AD9361, closed on a two-board
 915 MHz RF link. Treat it as a worked exemplar of what "meets the criteria" looks like, not as the
 answer you must copy; your own track, impairment model and targets are still yours to define.
 
-- **Final measurement report:** [Lab 11.4](/zynq-sdr-course/en/labs/lab-11-4-final-measurement-report/)
-  — architecture, setup, pass/fail table, reproducibility.
+- **Final measurement report:** [Lab 11.4](/zynq-sdr-course/en/labs/lab-11-4-final-measurement-report/). Architecture, setup, pass/fail table, reproducibility.
 - **Synchronization chain:** DC blocker → matched RRC → feedforward phase pick → Gardner timing →
   coarse CFO → Costas carrier recovery → hard decision → differential decoder → quadrant-resolving BER
   counter. The debugging story behind each stage is in Labs 11.41 (DC-blocker/bit-189), 11.42
@@ -185,5 +184,5 @@ answer you must copy; your own track, impairment model and targets are still you
   absolute/differential A/B, and `docs/assets/lab1145_diff_long_preamble_live.json` records the final
   800-frame long-preamble run.
 
-A good 12.1 submission does not need this depth — but it does need the same discipline: a stated
+A good 12.1 submission does not need this depth, but it does need the same discipline: a stated
 success criterion, an honest measurement, and a reproducible command that regenerates the metric.

@@ -21,8 +21,8 @@ A NanoVNA is a small-signal instrument. Do not connect it to a Zynq/AD936x trans
 
 A VNA measures complex S-parameters. For this lab two quantities are enough:
 
-- `S11` — input reflection. It is used to estimate matching, VSWR and the point on the Smith chart.
-- `S21` — forward transmission through a two-port network. It is used to measure the frequency response of a filter, cable, attenuator or thru path.
+- `S11`: input reflection. It is used to estimate matching, VSWR and the point on the Smith chart.
+- `S21`: forward transmission through a two-port network. It is used to measure the frequency response of a filter, cable, attenuator or thru path.
 
 The SDR connection is direct: poor matching and unexpected `S21` notches may look like poor SNR, although the root cause is in the RF path, cable, adapter or filter rather than in DSP.
 
@@ -66,7 +66,7 @@ Important: if the cable, adapter or frequency range is changed after calibration
 8. Save a screenshot or CSV/Touchstone file for each measurement.
 9. Fill the result table and decide which board elements are useful as educational references for SDR measurements.
 
-## Extension A — cable loss and TDR
+## Extension A: cable loss and TDR
 
 This extension is useful before long Block 11 loopback experiments.
 
@@ -77,7 +77,7 @@ This extension is useful before long Block 11 loopback experiments.
 5. Open TDR in NanoVNA-Saver and estimate cable length/discontinuities.
 6. In the report, state where cable loss can no longer be ignored in the link budget.
 
-## Extension B — L/C/resonance in practice
+## Extension B: L/C/resonance in practice
 
 This extension connects Block 10 with filters, matching and parasitic effects.
 

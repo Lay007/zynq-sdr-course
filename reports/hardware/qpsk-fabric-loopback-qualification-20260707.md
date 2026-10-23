@@ -1,4 +1,4 @@
-# QPSK PL fabric-loopback qualification — 2026-07-07
+# QPSK PL fabric-loopback qualification: 2026-07-07
 
 ## Result
 

@@ -16,7 +16,7 @@ loopback simulation never asks: *is there a packet starting here at all?* Answer
 eagerly and noise triggers false detections that waste the decoder and corrupt
 statistics; answer too cautiously and you miss real packets. The standard tool is a
 **matched filter against a known preamble**, normalised so that the score does not
-depend on the (unknown, varying) signal amplitude — that is what the AGC step and the
+depend on the (unknown, varying) signal amplitude: that is what the AGC step and the
 energy normalisation in `detection_metric()` are for. The peak *position* then
 doubles as the coarse frame timing that every later synchronisation stage (Block 8)
 starts from, so a detector that fires in roughly the right place is not good enough.

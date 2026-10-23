@@ -1,4 +1,4 @@
-# Reports — Block 11
+# Reports: Block 11
 
 ## Purpose
 This folder should contain reports, exported plots, parameter tables, and supporting materials for the block “Integrated SDR Project”.

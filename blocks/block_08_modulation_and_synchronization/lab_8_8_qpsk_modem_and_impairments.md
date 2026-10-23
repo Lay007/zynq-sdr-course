@@ -3,8 +3,8 @@
 ## Goal
 
 Extend the BPSK path to **QPSK** (two bits per symbol, four constellation points) and
-study how the two classic impairments of this block — **noise** and a **carrier frequency
-offset (CFO)** — hit the constellation and the bit-error rate. Two layers:
+study how the two classic impairments of this block (**noise** and a **carrier frequency
+offset (CFO)**) hit the constellation and the bit-error rate. Two layers:
 
 1. a synthesizable **QPSK modem** that recovers a full frame at **BER = 0** in an ideal
    HDL loopback (the RTL you would put on the FPGA), and
@@ -15,8 +15,8 @@ offset (CFO)** — hit the constellation and the bit-error rate. Two layers:
 
 QPSK is just **two independent BPSK axes**: the low bit drives I, the high bit drives Q
 (Gray-coded, so one bit flip moves to an adjacent corner). So the modem reuses the shared
-complex-I/Q blocks of the BPSK chain unchanged — `bpsk_upsampler_8x`, `bpsk_rrc_tx_fir`,
-`bpsk_rrc_rx_fir`, `bpsk_symbol_timing_sampler` — and only the mapper / decision / framing
+complex-I/Q blocks of the BPSK chain unchanged (`bpsk_upsampler_8x`, `bpsk_rrc_tx_fir`,
+`bpsk_rrc_rx_fir`, `bpsk_symbol_timing_sampler`) and only the mapper / decision / framing
 are QPSK-specific:
 
 ```text
@@ -28,16 +28,16 @@ dibit source -> qpsk_symbol_mapper -> upsampler -> RRC TX  ── loopback ─�
 it recovers all **140 QPSK symbols (280 bits) at BER = 0** (start_offset = 62). Run it via
 the Block-5 HDL smoke (`python tools/run_block5_hdl_smoke.py`, target `tb_qpsk_zynq_ber_top`). Per
 symbol QPSK carries 2 bits, so at the same symbol rate/bandwidth as BPSK it doubles the bit
-rate — that is the whole point of QPSK.
+rate: that is the whole point of QPSK.
 
 ## Impairments: what noise and CFO do to the constellation
 
 ![QPSK constellation under impairments](/zynq-sdr-course/assets/qpsk_constellation_impairments.png)
 
-- **Ideal** — four clean points at (±1, ±1)/√2.
-- **AWGN 10 dB** — four tight clouds; decisions still trivially correct.
-- **AWGN 4 dB** — clouds spread and start to cross the I/Q axes → bit errors appear.
-- **CFO (uncorrected)** — a frequency offset rotates every symbol by a growing phase, so the
+- **Ideal**: four clean points at (±1, ±1)/√2.
+- **AWGN 10 dB**: four tight clouds; decisions still trivially correct.
+- **AWGN 4 dB**: clouds spread and start to cross the I/Q axes → bit errors appear.
+- **CFO (uncorrected)**: a frequency offset rotates every symbol by a growing phase, so the
   four points smear into a **ring**: without carrier recovery QPSK is undecodable. This is
   the phase/frequency problem of [Lab 8.1](/zynq-sdr-course/en/labs/lab-8-1-cfo-estimation-correction/) /
   [Lab 8.2](/zynq-sdr-course/en/labs/lab-8-2-phase-offset-correction/), and de-rotating that ring is exactly what a
@@ -94,9 +94,9 @@ python blocks/block_08_modulation_and_synchronization/python/qpsk_impairments_be
 
 ## Next steps
 
-- **Carrier recovery** — a decision-directed Costas loop de-rotates the CFO ring back into four
+- **Carrier recovery**: a decision-directed Costas loop de-rotates the CFO ring back into four
   points (and resolves the residual 90° ambiguity with the preamble): done in
-  **[Lab 8.9 — QPSK carrier recovery](/zynq-sdr-course/en/labs/lab-8-9-qpsk-carrier-recovery/)**.
+  **[Lab 8.9: QPSK carrier recovery](/zynq-sdr-course/en/labs/lab-8-9-qpsk-carrier-recovery/)**.
 - **Hardware**: the QPSK modem now runs in the runtime AD9361 bridge and decodes at BER = 0 in
   digital loopback ([Lab 11.27](/zynq-sdr-course/en/labs/lab-11-27-runtime-qpsk-digital-loopback/), which uses the
   same DAC-mux / ADC-tap / gpreg plane as the BPSK bridge in

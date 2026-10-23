@@ -1,4 +1,4 @@
-# Contents — Block 11. Integrated SDR Project
+# Contents: Block 11. Integrated SDR Project
 
 ## Theory track
 1. integrated-project decomposition

@@ -1,4 +1,4 @@
-# Reports — Block 5
+# Reports: Block 5
 
 ## Purpose
 This folder should contain reports, exported plots, parameter tables, and supporting materials for the block “HDL/FPGA Flow and Xilinx Tools”.

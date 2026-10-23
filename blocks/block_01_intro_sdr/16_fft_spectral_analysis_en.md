@@ -25,9 +25,9 @@ Resolution depends on FFT length and sampling rate.
 
 Where:
 
-- `Fs` — sampling rate;
-- `Nfft` — FFT size;
-- `Δf` — bin spacing.
+- `Fs`: sampling rate;
+- `Nfft`: FFT size;
+- `Δf`: bin spacing.
 
 Example from page 09: at `Fs = 2.4 MHz` and `Nfft = 4096`, `Δf = 585.9 Hz`, so a 200 kHz tone is reported at 199 804.7 Hz, the nearest bin. With `Nfft = 65536` the bin is 36.6 Hz and the peak lands at 199 987.8 Hz. A longer FFT resolves frequency more finely, but it also needs a longer, stable recording.
 

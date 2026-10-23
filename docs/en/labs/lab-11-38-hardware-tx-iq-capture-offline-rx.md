@@ -45,7 +45,7 @@ The same capture can then be processed repeatedly by MATLAB/Python, a fixed-poin
 
 ## Two receiver options
 
-### Option A — second ZynqSDR
+### Option A: second ZynqSDR
 
 ```text
 AD936x RX → IIO capture → .ci16 + .json
@@ -58,7 +58,7 @@ Advantages:
 - easy comparison with the eventual real-time Zynq RX;
 - capture sample rate can be selected for the reference model.
 
-### Option B — RTL-SDR
+### Option B: RTL-SDR
 
 ```text
 RTL-SDR → rtl_sdr / compatible recorder → .cu8 + .json
@@ -106,7 +106,7 @@ The metadata must include:
 
 An IQ file without matching metadata is not considered reproducible lab evidence.
 
-## Stage 1 — hardware transmitter
+## Stage 1: hardware transmitter
 
 Reuse the existing course QPSK TX datapath. Do not create a new PHY for this lab.
 
@@ -114,7 +114,7 @@ For the first PASS, transmit a repeated fixed frame with a known payload. Once t
 
 Before recording, verify TX center frequency, sample rate, TX gain, safe conducted attenuation and the absence of RX overload.
 
-## Stage 2 — IQ recording
+## Stage 2: IQ recording
 
 Record a segment long enough to contain several frames plus idle samples before and after them.
 
@@ -122,7 +122,7 @@ Do not manually crop the capture to a perfect packet. The offline receiver shoul
 
 For RTL-SDR, record the actual `sample_rate_hz`; it may differ from both the TX rate and the internal model rate.
 
-## Stage 3 — input normalization
+## Stage 3: input normalization
 
 The offline model begins with an explicit format adapter:
 
@@ -198,9 +198,9 @@ BER + EVM + CFO + sync metric JSON
 
 For the 480 kSym/s QPSK baseline, the fourth-power coarse estimator has an unambiguous acquisition interval of approximately ±60 kHz. A real RTL-SDR capture outside that interval needs better RF tuning or a future wider-range coarse-CFO stage; do not hide that limitation by manually rotating the final constellation.
 
-The current v1 receiver decodes the committed **140-symbol / 280-bit known course frame**, and the 256 payload bits recovered after the preamble are also decoded as a Lab 11.46 packet-v1 frame (length, sequence, CRC-16/CCITT, UTF-8 payload). `--packet-self-test` proves that round trip end to end, offline: it encodes a real packet-v1 frame, pushes it through the same resample → DC removal → RRC → timing/CFO acquisition → frame sync chain as any other capture, and checks that the decoded packet matches what was sent, `crc_ok=True` included. That is still an offline/no-hardware proof — the reference-RX counterpart of the RTL `tb_qpsk_packet_digital_loopback` regression, not a hardware capture.
+The current v1 receiver decodes the committed **140-symbol / 280-bit known course frame**, and the 256 payload bits recovered after the preamble are also decoded as a Lab 11.46 packet-v1 frame (length, sequence, CRC-16/CCITT, UTF-8 payload). `--packet-self-test` proves that round trip end to end, offline: it encodes a real packet-v1 frame, pushes it through the same resample → DC removal → RRC → timing/CFO acquisition → frame sync chain as any other capture, and checks that the decoded packet matches what was sent, `crc_ok=True` included. That is still an offline/no-hardware proof: the reference-RX counterpart of the RTL `tb_qpsk_packet_digital_loopback` regression, not a hardware capture.
 
-## Stage 4 — reference RX pipeline and diagnostics
+## Stage 4: reference RX pipeline and diagnostics
 
 Recommended order:
 
@@ -253,7 +253,7 @@ matched-filter-timing.png
 
 The plotter deliberately calls the same format adapter, rational resampler, RRC, CFO estimator and frame-acquisition code as the numeric receiver. The plots therefore expose the receiver rather than forming a second, easier analysis path. CI checks that all five PNGs are generated from an uncropped synthetic/reference capture.
 
-## Stage 5 — message decoding
+## Stage 5: message decoding
 
 The Lab 11.46 application packet is already wired into this receiver: every `analyse_reference_capture`/`analyse_capture_file` result carries a `packet` field decoded from the 256 payload bits.
 
@@ -281,7 +281,7 @@ payload: "Hello from board A"
 
 `crc_ok` reports exactly what the captured payload was, nothing more: a capture that does not carry a packet-v1 frame (for example the committed course reference pattern used by `--self-test`) legitimately decodes with `crc_ok=false`. Only a real capture with `crc_ok=true` is packet-level hardware evidence.
 
-## Stage 6 — compare the two RX devices
+## Stage 6: compare the two RX devices
 
 If both ZynqSDR B and RTL-SDR are available, record the same TX waveform with both receivers under conditions that are as similar as practical.
 
@@ -336,4 +336,4 @@ A CI/self-test PASS of `lab_11_38_offline_qpsk_rx.py` and its diagnostic plotter
 
 ## Next step
 
-After this lab passes, continue to Lab 11.45 (differential QPSK and a longer preamble), then to [Lab 11.46 — a message from one Zynq console to another](lab-11-46-two-board-console-message.md), gradually replacing the offline reference receiver with second-board hardware blocks.
+After this lab passes, continue to Lab 11.45 (differential QPSK and a longer preamble), then to [Lab 11.46: a message from one Zynq console to another](lab-11-46-two-board-console-message.md), gradually replacing the offline reference receiver with second-board hardware blocks.

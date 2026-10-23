@@ -14,9 +14,9 @@ The lab answers a practical integration question:
 
 ## Why this lab matters
 
-When a design is split across three worlds — a float model that defines the
+When a design is split across three worlds (a float model that defines the
 algorithm, a fixed-point model that predicts the hardware, and the RTL that *is* the
-hardware — the single most valuable question is "do they agree, and if not, by how
+hardware) the single most valuable question is "do they agree, and if not, by how
 much and why?". A mismatch you find here costs a minute; the same mismatch found on
 the board costs a bitstream build and a debugging session. The comparison also
 teaches what each model is *for*: the float model is the reference the fixed-point
@@ -73,7 +73,7 @@ Two different kinds of "agreement" appear here, and they should not be confused:
   hard pass/fail check.
 - **Float vs RTL differs by up to 0.375 LSB.** This is not an error: the float
   model does not round, so it differs from any integer implementation by
-  quantization — less than one LSB here. This is a tolerance check
+  quantization. Less than one LSB here. This is a tolerance check
   (`pass_float_within_1_lsb`), not an equality check.
 
 The resource/latency table is an *architecture-discussion estimate* (the script

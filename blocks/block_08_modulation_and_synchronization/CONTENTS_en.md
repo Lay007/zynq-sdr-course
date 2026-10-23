@@ -1,4 +1,4 @@
-# Contents — Block 8. Modulation and Synchronization
+# Contents: Block 8. Modulation and Synchronization
 
 ## Theory track
 1. BPSK, QPSK, and basic constellations

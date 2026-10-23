@@ -18,7 +18,7 @@ A floating-point Python model tells you what the algorithm *should* do. An FPGA
 does not have floats: every wire has a fixed number of bits, every multiplier
 produces a wider result that must be rounded back, and every sum can overflow.
 The fixed-point stage is where "the maths works" turns into "the hardware will
-work" — or into a subtle bug that only shows up on the board. This lab makes the
+work", or into a subtle bug that only shows up on the board. This lab makes the
 translation in one controlled place: the same BPSK frame goes through a
 floating-point chain and a Q1.15 chain, and you compare them number by number
 before any RTL is written. If the fixed-point model disagrees with the float
@@ -141,12 +141,12 @@ Read these together:
   a 39-bit accumulator reproduce the transmit pulse shaping to well below 16-bit
   resolution. The transmit side has no headroom problem (both TX saturation counters
   are `0`).
-- **Payload BER is zero for both float and fixed** — the fixed-point receive path
+- **Payload BER is zero for both float and fixed**: the fixed-point receive path
   still decodes the frame.
 - **The RX saturation counter is not zero.** `rx_filter_saturation_count` in
   `lab43_bpsk_fixed_point_metrics.json` is `1663`: at the receive matched filter the
   Q1.15 output clips on 1663 samples. BER stays zero, so this is a *warning*, not a
-  failure — but it is exactly the kind of finding this lab exists to surface. The
+  failure, but it is exactly the kind of finding this lab exists to surface. The
   fix belongs in the RTL design: give the receive filter output extra headroom (or
   scale the input down) instead of silently clipping.
 - **Do not read "fixed EVM (1.53 %) is lower than float EVM (2.15 %)" as an

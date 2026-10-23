@@ -1,4 +1,4 @@
-# Reports — Block 7
+# Reports: Block 7
 
 ## Purpose
 This folder should contain reports, exported plots, parameter tables, and supporting materials for the block “Transmit and Receive Chains”.

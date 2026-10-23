@@ -25,12 +25,12 @@ It removes the artificial separation between DSP and hardware by showing how pow
 - linking the schematic to an SDR lab experiment.
 
 ## Block labs
-- Lab 10.1 — Passive RC filter.
-- Lab 10.2 — Simple attenuator pad.
-- Lab 10.3 — RF measurement safety checklist.
-- Lab 10.4 — KiCad schematic mini-project.
-- Lab 10.5 — NanoVNA and RF Demo Kit: `S11`/`S21`, VSWR and Smith chart.
-- Lab 10.6 — Digital RF attenuator: step, range and linearity check.
+- Lab 10.1: Passive RC filter.
+- Lab 10.2: Simple attenuator pad.
+- Lab 10.3: RF measurement safety checklist.
+- Lab 10.4: KiCad schematic mini-project.
+- Lab 10.5. NanoVNA and RF Demo Kit: `S11`/`S21`, VSWR and Smith chart.
+- Lab 10.6. Digital RF attenuator: step, range and linearity check.
 
 ## Tooling for the block
 The main toolset is: KiCad, multimeter, breadboard, MATLAB / Simulink, NanoVNA, RF Demo Kit, fixed and digital attenuators, 50-ohm cables and loads.
@@ -61,11 +61,11 @@ block_10_kicad_and_basic_electronics/
 └── reports/
 ```
 
-- `assets/` — reference data and helper materials;
-- `images/` — diagrams, screenshots, and photos;
-- `kicad/` — schematics and electrical notes;
-- `simulink/`, `matlab/`, `python/`, `cpp/`, `gnuradio/` — models and analysis tools;
-- `reports/` — reports and report templates.
+- `assets/`: reference data and helper materials;
+- `images/`: diagrams, screenshots, and photos;
+- `kicad/`: schematics and electrical notes;
+- `simulink/`, `matlab/`, `python/`, `cpp/`, `gnuradio/`: models and analysis tools;
+- `reports/`: reports and report templates.
 
 ## Recommended work order
 1. review schematic structure and symbols;

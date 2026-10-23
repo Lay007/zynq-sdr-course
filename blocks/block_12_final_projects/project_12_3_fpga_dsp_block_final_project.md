@@ -62,18 +62,18 @@ you are claiming and why.
 
 ## Verification gates
 
-1. **G0 — contract:** the proposal, number formats and interface are written down and committed.
-2. **G1 — reference:** the fixed-point model matches the float model within the stated tolerance on
+1. **G0. Contract:** the proposal, number formats and interface are written down and committed.
+2. **G1. Reference:** the fixed-point model matches the float model within the stated tolerance on
    impulse, constant, tone and random inputs.
-3. **G2 — vectors:** deterministic input and expected-output vector files are generated from the
+3. **G2. Vectors:** deterministic input and expected-output vector files are generated from the
    model, not written by hand.
-4. **G3 — RTL:** the self-checking testbench compares every output sample with the expected
+4. **G3. RTL:** the self-checking testbench compares every output sample with the expected
    vector and ends with an unambiguous `PASS` line; a deliberately broken run fails.
-5. **G4 — corner cases:** saturation, reset in the middle of a stream, and (for streaming blocks)
+5. **G4. Corner cases:** saturation, reset in the middle of a stream, and (for streaming blocks)
    downstream backpressure each have a directed test.
-6. **G5 — implementation evidence:** utilization, latency and, if the tool is available, routed
+6. **G5. Implementation evidence:** utilization, latency and, if the tool is available, routed
    timing are reported; if Vivado is not available to you, say so instead of estimating.
-7. **G6 — reproduction:** a clean checkout runs the documented commands and gets the same result.
+7. **G6. Reproduction:** a clean checkout runs the documented commands and gets the same result.
 
 ## Design pitfalls to test for explicitly
 

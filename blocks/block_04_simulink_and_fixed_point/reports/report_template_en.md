@@ -1,4 +1,4 @@
-# Report Template — Block 4. Simulink and Fixed-Point Preparation
+# Report Template: Block 4. Simulink and Fixed-Point Preparation
 
 ## 1. Work title
 State the exact laboratory work, demonstration, or mini-project.

@@ -1,4 +1,4 @@
-# Block 9 — IQ recording and analysis workflow
+# Block 9: IQ recording and analysis workflow
 
 This block connects RF experiments to real IQ capture files. The main goal is reproducibility: record the file format, sample rate, center frequency, gain settings, I/Q ordering, endian format, duration and processing settings.
 

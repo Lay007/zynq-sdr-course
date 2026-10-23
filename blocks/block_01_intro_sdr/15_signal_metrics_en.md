@@ -5,10 +5,10 @@ Learn how to evaluate SDR experiments quantitatively, not only visually.
 
 Main metrics:
 
-- **FFT / spectrum** — frequency-domain representation;
-- **SNR** — signal-to-noise ratio;
-- **EVM** — error vector magnitude;
-- **BER** — bit error rate.
+- **FFT / spectrum**: frequency-domain representation;
+- **SNR**: signal-to-noise ratio;
+- **EVM**: error vector magnitude;
+- **BER**: bit error rate.
 
 ## 1. Why metrics matter
 In SDR it is not enough to say “the signal is visible”. An engineering answer is needed:

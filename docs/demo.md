@@ -52,37 +52,37 @@ Model → FPGA/RF → external receiver → IQ recording → offline metrics
 !!! note "Metrics close the engineering loop"
     EVM and BER connect visual signal quality with quantitative receiver performance. This is the transition from observation to validation.
 
-## Lab 1 — Tone FFT
+## Lab 1: Tone FFT
 
 ![Lab 1 FFT](assets/lab01_fft.png)
 
 **Interpretation:** the tone should appear as a narrow spectral peak at the expected frequency offset. The parameter box documents the sampling rate, FFT size, and window.
 
-## Lab 2 — AM vs FM Spectrum
+## Lab 2: AM vs FM Spectrum
 
 ![Lab 2 AM vs FM](assets/lab02_am_vs_fm.png)
 
 **Interpretation:** AM produces a carrier with sidebands, while FM spreads energy over a wider bandwidth depending on frequency deviation.
 
-## Lab 3 — QPSK Constellation
+## Lab 3: QPSK Constellation
 
 ![Lab 3 QPSK](assets/lab03_constellation.png)
 
 **Interpretation:** constellation points reveal noise and phase error. The ideal reference markers help compare the received cloud against the expected QPSK positions.
 
-## Lab 4 — Synchronization Impact
+## Lab 4: Synchronization Impact
 
 ![Lab 4 Sync](assets/lab04_sync_constellation.png)
 
 **Interpretation:** CFO correction stabilizes the constellation. Before correction, the cloud rotates; after correction, symbol clusters become much clearer.
 
-## Lab 5 — EVM vs Impairments
+## Lab 5: EVM vs Impairments
 
 ![Lab 5 EVM](assets/lab05_evm.png)
 
 **Interpretation:** EVM allows different impairments to be compared on a single quantitative scale.
 
-## Lab 6 — BER Performance
+## Lab 6: BER Performance
 
 ![Lab 6 BER](assets/lab06_ber.png)
 

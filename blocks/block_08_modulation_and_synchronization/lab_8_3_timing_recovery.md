@@ -84,9 +84,9 @@ flowchart LR
     INT -->|on-time symbol| DEC[Decisions]
 ```
 
-**Gardner timing-error detector (TED).** Working at two samples per symbol — the
+**Gardner timing-error detector (TED).** Working at two samples per symbol (the
 on-time sample `y_on[k]` and the mid-point sample `y_mid[k]` halfway to the previous
-symbol — the error is
+symbol) the error is
 
 ```text
 e[k] = Re{ y_mid[k] · ( y_on[k] − y_on[k−1] )* }
@@ -97,7 +97,7 @@ zero-crossing) and changes sign with the direction of the timing error. Cruciall
 does **not** need the carrier phase to be corrected, so timing and carrier loops can
 run independently. For binary signalling the amplitude-independent **sign-Gardner**
 form `e[k] = sgn(y_mid[k])·sgn(y_on[k]−y_on[k−1])` keeps the loop gain constant
-regardless of AGC / signal level — convenient for fixed-point and FPGA.
+regardless of AGC / signal level: convenient for fixed-point and FPGA.
 
 **Interpolator.** Because the wanted instant rarely lands on an input sample, an
 interpolator evaluates the stream at a fractional offset `mu ∈ [0,1)`. A linear
@@ -120,7 +120,7 @@ decision-directed alternative that needs only one sample per symbol but is more
 sensitive to residual carrier phase.
 
 This is exactly the loop implemented (and verified bit-exactly across float Python,
-fixed-point Python, MATLAB, Simulink and synthesizable Verilog) in Block 5 — see
+fixed-point Python, MATLAB, Simulink and synthesizable Verilog) in Block 5: see
 `blocks/block_05_fpga_hdl_flow/lab_5_8_bpsk_rx_bit_recovery.md` (the *Timing-recovery
 extension*) and `rtl/bpsk_symbol_timing_recovery.v`. There, gating only the fixed
 phase search of this lab leaves a ~40 % BER floor on a drifted AD9361 burst, while the

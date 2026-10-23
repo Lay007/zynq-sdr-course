@@ -58,7 +58,7 @@ and SSH latency.
 |---|---|
 | Some `start_offset` values give `rx_valid_count > 0` | pipeline latency changed; use the working value in subsequent labs |
 | All `start_offset` values give `rx_valid_count = 0` | latency is not the issue; DMA starvation is deeper |
-| `rx_valid_count > 0` but `received_bits = 0` | framer clocking works but bit alignment is off — check `rx_decision_mode` |
+| `rx_valid_count > 0` but `received_bits = 0` | framer clocking works but bit alignment is off: check `rx_decision_mode` |
 
 ## Live result on 2026-06-23
 

@@ -43,37 +43,37 @@ lab06_end_to_end_ber.png
 
 ## Recommended plot set per lab
 
-### Lab 1 — tone
+### Lab 1: tone
 - time-domain IQ preview;
 - FFT spectrum;
 - HDSDR screenshot;
 - peak-frequency estimate.
 
-### Lab 2 — AM/FM
+### Lab 2: AM/FM
 - AM spectrum;
 - FM spectrum;
 - recovered message;
 - occupied bandwidth estimate.
 
-### Lab 3 — BPSK/QPSK
+### Lab 3: BPSK/QPSK
 - constellation diagram;
 - pulse-shaped waveform;
 - spectrum;
 - BER summary.
 
-### Lab 4 — synchronization
+### Lab 4: synchronization
 - constellation before CFO correction;
 - constellation after CFO correction;
 - timing recovery result;
 - BER before/after synchronization.
 
-### Lab 5 — impairments
+### Lab 5: impairments
 - clean signal baseline;
 - noisy constellation;
 - clipped spectrum;
 - EVM/BER comparison.
 
-### Lab 6 — end-to-end
+### Lab 6: end-to-end
 - full-chain diagram;
 - received spectrum;
 - final constellation;

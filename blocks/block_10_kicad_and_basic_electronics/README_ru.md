@@ -25,12 +25,12 @@
 - связка схемы с лабораторным SDR-экспериментом.
 
 ## Лабораторные работы блока
-- Lab 10.1 — Passive RC filter.
-- Lab 10.2 — Simple attenuator pad.
-- Lab 10.3 — RF measurement safety checklist.
-- Lab 10.4 — KiCad schematic mini-project.
-- Lab 10.5 — NanoVNA и RF Demo Kit: `S11`/`S21`, КСВН и диаграмма Смита.
-- Lab 10.6 — Цифровой RF-аттенюатор: проверка шага, диапазона и линейности.
+- Lab 10.1: Passive RC filter.
+- Lab 10.2: Simple attenuator pad.
+- Lab 10.3: RF measurement safety checklist.
+- Lab 10.4: KiCad schematic mini-project.
+- Lab 10.5 это NanoVNA и RF Demo Kit: `S11`/`S21`, КСВН и диаграмма Смита.
+- Lab 10.6 это Цифровой RF-аттенюатор: проверка шага, диапазона и линейности.
 
 ## Инструменты блока
 Основной набор инструментов: KiCad, мультиметр, макетная плата, MATLAB / Simulink, NanoVNA, RF Demo Kit, фиксированные и цифровые аттенюаторы, 50-омные кабели и нагрузки.
@@ -61,11 +61,11 @@ block_10_kicad_and_basic_electronics/
 └── reports/
 ```
 
-- `assets/` — справочные данные и вспомогательные материалы;
-- `images/` — диаграммы, скриншоты и фотографии;
-- `kicad/` — схемы и электрические пояснения;
-- `simulink/`, `matlab/`, `python/`, `cpp/`, `gnuradio/` — модели и инструменты анализа;
-- `reports/` — отчёты и шаблоны оформления.
+- `assets/`: справочные данные и вспомогательные материалы;
+- `images/`: диаграммы, скриншоты и фотографии;
+- `kicad/`: схемы и электрические пояснения;
+- `simulink/`, `matlab/`, `python/`, `cpp/`, `gnuradio/`: модели и инструменты анализа;
+- `reports/`: отчёты и шаблоны оформления.
 
 ## Рекомендуемый порядок работы
 1. разобрать структуру схемы и обозначения;

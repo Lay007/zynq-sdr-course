@@ -1,4 +1,4 @@
-# Contents — Block 2. Signals, Spectrum, Sampling, and I/Q
+# Contents: Block 2. Signals, Spectrum, Sampling, and I/Q
 
 ## Theory track
 1. continuous and discrete signals

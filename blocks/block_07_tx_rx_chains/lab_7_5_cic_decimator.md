@@ -8,7 +8,7 @@ signal location and alias rejection using Python.
 
 This lab bridges the fixed-point arithmetic studied in Block 4 with the
 hardware receiver chain of Block 7. CIC filters are the standard first-stage
-decimator in FPGA SDR designs because they require no multipliers — only
+decimator in FPGA SDR designs because they require no multipliers: only
 integrators and combs implemented with adders and delay registers.
 
 ## Background
@@ -22,7 +22,7 @@ H(z) = [(1 - z^{-RM}) / (1 - z^{-1})]^N
 
 Key properties:
 
-- no multipliers required — hardware-efficient;
+- no multipliers required: hardware-efficient;
 - bit growth per stage: `log2(R·M)` bits;
 - passband droop near the edge of the pass band;
 - aliases from higher Nyquist zones may fold into the passband.

@@ -132,7 +132,7 @@ Symbol selection used the known matched-filter start offset and one sample every
 This provides the first executable HDL BER anchor before moving to framed Zynq TX/RX integration.
 ```
 
-## Timing-recovery extension (Lab 5.8b) — what comes next
+## Timing-recovery extension (Lab 5.8b): what comes next
 
 The fixed-phase decimator above assumes exactly 8 samples per symbol. On a real
 AD9361 sample path that assumption can be off by a fraction of a percent, so the
@@ -143,7 +143,7 @@ coherent loopback (no carrier offset). The course therefore adds a drop-in
 - a decrementing modulo-1 NCO at 2 strobes/symbol, a linear interpolator
   (`mu ≈ nco<<2`), a **sign-Gardner** timing-error detector
   `e = sgn(y_mid)·sgn(y_on[k]−y_on[k−1])` (amplitude-independent), and a PI loop
-  filter with power-of-two gains (`k1 = 1/256`, `k2 = 1/4096`) — no multipliers in
+  filter with power-of-two gains (`k1 = 1/256`, `k2 = 1/4096`): no multipliers in
   the loop.
 
 Reference models and RTL, all bit-exact with each other:
@@ -163,7 +163,7 @@ Reference models and RTL, all bit-exact with each other:
 (0 = this lab's fixed-phase sampler, 1 = the Gardner loop). The Block 11 runtime
 bridge keeps 0: on its short, gap-free loopback burst the loop mis-tracks and does worse
 than the fixed phase, so the loop is meant for genuinely drifted streams. Running `python/bpsk_timing_recovery_model.py` prints the
-float / fixed-point / fixed-phase BER table on a drifted burst — both
+float / fixed-point / fixed-phase BER table on a drifted burst: both
 timing-recovery models reach BER 0 where the fixed-phase decimator does not.
 
 ### Implementing the loop at 100 MHz

@@ -1,4 +1,4 @@
-# Block 7 — TX/RX chain workflow
+# Block 7: TX/RX chain workflow
 
 This block combines earlier course results into a complete transmit/receive chain: baseband generation, DUC, RF frontend, channel, DDC, filtering, decimation and metric estimation.
 

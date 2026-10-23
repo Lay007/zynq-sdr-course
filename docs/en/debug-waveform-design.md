@@ -20,7 +20,7 @@ A debug signal should be not only payload,
 but also a diagnostic instrument.
 ```
 
-For the course, it is therefore useful to have a dedicated **debug waveform format** — a training frame that can be transmitted through Zynq/AD9363 and observed through RTL-SDR/HDSDR or another independent receiver chain.
+For the course, it is therefore useful to have a dedicated **debug waveform format**: a training frame that can be transmitted through Zynq/AD9363 and observed through RTL-SDR/HDSDR or another independent receiver chain.
 
 ## Recommended debug frame format
 

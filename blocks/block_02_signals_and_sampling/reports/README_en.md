@@ -1,4 +1,4 @@
-# Reports — Block 2
+# Reports: Block 2
 
 ## Purpose
 This folder should contain reports, exported plots, parameter tables, and supporting materials for the block “Signals, Spectrum, Sampling, and I/Q”.

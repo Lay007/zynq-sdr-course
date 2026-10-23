@@ -2,7 +2,7 @@
 
 ## Idea
 
-Aliasing is not simply an error — it is a predictable mapping of frequencies
+Aliasing is not simply an error: it is a predictable mapping of frequencies
 from higher Nyquist zones into the baseband.
 
 ```mermaid

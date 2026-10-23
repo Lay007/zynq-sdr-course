@@ -89,12 +89,12 @@ stationary through the frame.
 
 ### Minimum figures (artifacts)
 
-- architecture diagram — above;
-- TX/RX frequency plan — Setup table;
-- FFT / constellation — `docs/assets/lab1132_two_board_fabric_coarse_cfo.png` and the capture-tap
+- architecture diagram: above;
+- TX/RX frequency plan: Setup table;
+- FFT / constellation: `docs/assets/lab1132_two_board_fabric_coarse_cfo.png` and the capture-tap
   readers (`capture_tap_symbol_margin.py`);
-- BER summary — `docs/assets/lab1142_ber_floor_live.json`, `lab1145_diff_long_preamble_live.json`;
-- reproducibility — the `lab_11_30…11_45` scripts.
+- BER summary: `docs/assets/lab1142_ber_floor_live.json`, `lab1145_diff_long_preamble_live.json`;
+- reproducibility: the `lab_11_30…11_45` scripts.
 
 ## Pass/fail table
 
@@ -107,7 +107,7 @@ stationary through the frame.
 | BER (fabric loopback) | ≈ 0 | < 5.34×10⁻⁷ over 5.6 M bits | PASS |
 | clipping fraction | 0 | TX at 0.70×full-scale; RX not railed | PASS |
 
-## Discussion — limitations and error sources
+## Discussion: limitations and error sources
 
 - **Differential penalty.** Differential QPSK costs the inherent ~3 dB (each symbol error → two bit
   errors), seen as a residual intermittent single-bit rate that keeps the clean-frame count at

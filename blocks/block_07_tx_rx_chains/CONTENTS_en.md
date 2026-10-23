@@ -1,4 +1,4 @@
-# Contents — Block 7. Transmit and Receive Chains
+# Contents: Block 7. Transmit and Receive Chains
 
 ## Theory track
 1. transmit-chain structure

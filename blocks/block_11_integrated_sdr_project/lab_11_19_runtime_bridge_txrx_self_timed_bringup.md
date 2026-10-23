@@ -10,7 +10,7 @@ active simultaneously.
 Previous labs used `bridge_rx_only` (PL RX only) with the stock host TX as a
 witness. This lab returns to the full bidirectional overlay and uses a
 self-timed mode where the PL TX starts first, waits a fixed settle time, then
-RX polling begins — mimicking a hardware timing controller.
+RX polling begins, mimicking a hardware timing controller.
 
 ## Why self-timed mode
 
@@ -75,7 +75,7 @@ save JSON evidence
 
 Self-timed runs consistently showed `tx_valid_count > 0` (PL TX is live) but
 `rx_valid_count = 0` regardless of `tx_settle_ms` values up to 500 ms. This
-confirmed that TX priming is not the limiting factor — the RX starvation is
+confirmed that TX priming is not the limiting factor: the RX starvation is
 independent of how long TX has been running before RX polling starts.
 
 This result, combined with the evidence from Labs 11.15–11.18, shifted the

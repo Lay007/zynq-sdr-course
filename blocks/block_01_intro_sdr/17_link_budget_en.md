@@ -11,10 +11,10 @@ Prx = Ptx + Gtx + Grx - Lpath - Lcables
 
 Where (all in decibels):
 
-- `Ptx` — transmitter output power, dBm;
-- `Gtx`, `Grx` — gains of the transmit and receive **antennas**, dBi (not the receiver's amplifier gain);
-- `Lpath` — propagation loss between the antennas;
-- `Lcables` — cable, connector and attenuator losses.
+- `Ptx`: transmitter output power, dBm;
+- `Gtx`, `Grx`: gains of the transmit and receive **antennas**, dBi (not the receiver's amplifier gain);
+- `Lpath`: propagation loss between the antennas;
+- `Lcables`: cable, connector and attenuator losses.
 
 In free space the path loss is
 

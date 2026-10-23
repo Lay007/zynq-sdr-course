@@ -20,7 +20,7 @@ Block 11 is the integrated SDR project track. Its goal is to connect the referen
 | Runtime QPSK fabric loopback | measured | CDC-fixed payload: 4/4 boot sessions and 13/13 attempts at offset 62 reached BER=0; selected ExtraTiming payload: 10/10 attempts reached BER=0 for 140 symbols / 280 bits. |
 | Integrated FPGA implementation | measured signoff candidate | Hardware-correlated snapshot is fully routed; strategy sweep selected `Performance_ExtraTimingOpt` with WNS +0.096 ns, TNS 0 and 0 failing endpoints. |
 | External QPSK RTL-SDR path | measured cross-session | Three independent OTA sessions detect 90/90 bursts with 0/25,200 bit errors, median EVM 19.04%, median CFO +1.969 kHz and no clipping. |
-| Final two-board differential QPSK link | reviewed | Board A → 30 dB → board B in-fabric RX. Differential coding plus a 24-symbol preamble remove every whole-burst rotation failure (gross 0) at payload BER 4.45×10⁻⁴ over 800 frames; fabric loopback stays at BER < 5.34×10⁻⁷ over 5.6 M bits. The shipped differential image closes timing at WNS +0.036 ns — a separate build from the WNS +0.096 ns canonical strategy sweep above. Lab 11.4 is the final measurement report; Labs 11.41–11.45 carry the investigation. |
+| Final two-board differential QPSK link | reviewed | Board A → 30 dB → board B in-fabric RX. Differential coding plus a 24-symbol preamble remove every whole-burst rotation failure (gross 0) at payload BER 4.45×10⁻⁴ over 800 frames; fabric loopback stays at BER < 5.34×10⁻⁷ over 5.6 M bits. The shipped differential image closes timing at WNS +0.036 ns: a separate build from the WNS +0.096 ns canonical strategy sweep above. Lab 11.4 is the final measurement report; Labs 11.41–11.45 carry the investigation. |
 
 ## Status alignment note
 

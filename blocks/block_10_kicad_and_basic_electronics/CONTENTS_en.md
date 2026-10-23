@@ -1,4 +1,4 @@
-# Contents — Block 10. KiCad and Basic Electronics
+# Contents: Block 10. KiCad and Basic Electronics
 
 ## Theory track
 1. KiCad interface and project structure
@@ -27,8 +27,8 @@
 5. How do `S11`/`S21` measurements help find a problem before running an AD9363 loopback?
 
 ## NanoVNA/RF labs
-- Lab 10.5 — NanoVNA and RF Demo Kit: `S11`/`S21`, VSWR, and Smith chart.
-- Lab 10.6 — Digital RF attenuator: step, range, and linearity check.
+- Lab 10.5. NanoVNA and RF Demo Kit: `S11`/`S21`, VSWR, and Smith chart.
+- Lab 10.6. Digital RF attenuator: step, range, and linearity check.
 
 ## Expected block outputs
 - schematic or schematic fragment;

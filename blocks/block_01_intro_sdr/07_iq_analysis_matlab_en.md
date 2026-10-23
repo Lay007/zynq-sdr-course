@@ -64,8 +64,8 @@ Read the raw file into an array.
 ### Step 2. Form the complex signal
 Combine I and Q into a complex vector:
 
-- I — real part;
-- Q — imaginary part.
+- I: real part;
+- Q: imaginary part.
 
 ### Step 3. Normalize if needed
 Bring the values to a convenient range.

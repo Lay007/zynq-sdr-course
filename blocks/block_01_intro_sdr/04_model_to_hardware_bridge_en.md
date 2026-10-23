@@ -154,7 +154,7 @@ In later blocks the same logic will be extended to:
 - hardware implementation of more complex DSP chains;
 - circuit-design support around the experiment.
 
-But the foundation is laid here — on a simple but complete route.
+But the foundation is laid here: on a simple but complete route.
 
 ## 12. Conclusions
 After studying this section, the student should understand:

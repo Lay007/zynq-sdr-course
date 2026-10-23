@@ -129,7 +129,7 @@ python tools/run_block5_hdl_smoke.py --test tb_bpsk_zynq_ber_axi_lite
 
 ## Упражнения
 
-Каждое упражнение ниже — намеренная мутация RTL в одну строку. Внесите её, запустите testbench, прочитайте сообщения и верните файл (`git checkout -- <file>`). Приведённые выводы получены на Icarus Verilog 12.0.
+Каждое упражнение ниже: намеренная мутация RTL в одну строку. Внесите её, запустите testbench, прочитайте сообщения и верните файл (`git checkout -- <file>`). Приведённые выводы получены на Icarus Verilog 12.0.
 
 1. Сделайте `done` несбрасываемым: в `bpsk_zynq_ber_axi_lite.v` замените `if (wstrb_latched[0] && wdata_latched[2]) begin` на `if (1'b0) begin`. Testbench сообщает `ERROR: done sticky bit did not clear`. На железе программа, опрашивающая `done`, считала бы каждый следующий прогон уже завершённым.
 2. Поменяйте местами биты `busy` и `done` при чтении статуса (`{29'd0, core_busy, done_sticky, 1'b0}`). Testbench сообщает `ERROR: busy bit was never observed during the AXI-Lite controlled run`. Тракт данных не тронут, и проект бы синтезировался, поэтому такую ошибку ловит только проверка карты регистров.
@@ -140,7 +140,7 @@ python tools/run_block5_hdl_smoke.py --test tb_bpsk_zynq_ber_axi_lite
 
 1. Наблюдаемый вывод приведён в упражнении: бит `done`, который нельзя сбросить, делает каждый следующий прогон уже завершённым.
 2. Наблюдаемый вывод приведён в упражнении: ошибка карты регистров не трогает тракт данных и ловится только проверкой карты регистров.
-3. Набросок (`rd32`/`wr32` — 32-битные обращения по адресу `base + offset`):
+3. Набросок (`rd32`/`wr32` это 32-битные обращения по адресу `base + offset`):
 
     ```c
     int run_frame(uintptr_t base, unsigned timeout_ms) {

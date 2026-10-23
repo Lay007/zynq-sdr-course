@@ -1,4 +1,4 @@
-# Report Template — Block 10. KiCad and Basic Electronics
+# Report Template: Block 10. KiCad and Basic Electronics
 
 ## 1. Work title
 State the exact laboratory work, demonstration, or mini-project.

@@ -26,7 +26,7 @@
 
 ## Добавленный host-side probe
 
-В папку добавлен `lab_6_3_probe_iio_context.py` — короткий host-side probe
+В папку добавлен `lab_6_3_probe_iio_context.py`: короткий host-side probe
 для network IIO target, например `ip:192.168.40.1`.
 
 Пример:

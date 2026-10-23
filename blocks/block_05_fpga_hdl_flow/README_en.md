@@ -48,11 +48,11 @@ block_05_fpga_hdl_flow/
 └── reports/
 ```
 
-- `assets/` — reference data and helper materials;
-- `images/` — diagrams, screenshots, and photos;
-- `kicad/` — schematics and electrical notes;
-- `simulink/`, `matlab/`, `python/`, `cpp/`, `gnuradio/` — models and analysis tools;
-- `reports/` — reports and report templates.
+- `assets/`: reference data and helper materials;
+- `images/`: diagrams, screenshots, and photos;
+- `kicad/`: schematics and electrical notes;
+- `simulink/`, `matlab/`, `python/`, `cpp/`, `gnuradio/`: models and analysis tools;
+- `reports/`: reports and report templates.
 
 ## Recommended work order
 1. prepare an HDL-friendly model.

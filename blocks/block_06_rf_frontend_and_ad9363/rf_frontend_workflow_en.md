@@ -1,4 +1,4 @@
-# Block 6 — RF frontend workflow
+# Block 6: RF frontend workflow
 
 This block moves the student from digital DSP/FPGA processing to a real RF bench: frequency plan, levels, bandwidth, gain, safe connection and external signal observation.
 
@@ -64,13 +64,13 @@ silence → lead-in tone → preamble → sync word → header → training → 
 
 Minimum TX modes worth supporting:
 
-- pure tone — find the transmission and verify the frequency plan;
-- preamble only — verify correlation-based search;
-- repeated sync word — verify bit/byte order;
-- PRBS packet — compute BER;
-- amplitude sweep — find overload and tune gain/attenuator;
-- frequency sweep — verify NCO sign, I/Q and frequency axis;
-- two-tone/multitone — verify linearity, bandwidth and spurs.
+- pure tone: find the transmission and verify the frequency plan;
+- preamble only: verify correlation-based search;
+- repeated sync word: verify bit/byte order;
+- PRBS packet: compute BER;
+- amplitude sweep: find overload and tune gain/attenuator;
+- frequency sweep: verify NCO sign, I/Q and frequency axis;
+- two-tone/multitone: verify linearity, bandwidth and spurs.
 
 Detailed guide: [Debug Waveform Design for SDR Hardware Bring-up](../debug-waveform-design.md).
 

@@ -1,4 +1,4 @@
-# Report Template — Block 7. Transmit and Receive Chains
+# Report Template: Block 7. Transmit and Receive Chains
 
 ## 1. Work title
 State the exact laboratory work, demonstration, or mini-project.

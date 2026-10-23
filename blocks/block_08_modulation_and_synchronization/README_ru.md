@@ -48,11 +48,11 @@ block_08_modulation_and_synchronization/
 └── reports/
 ```
 
-- `assets/` — справочные данные и вспомогательные материалы;
-- `images/` — диаграммы, скриншоты и фотографии;
-- `kicad/` — схемы и электрические пояснения;
-- `simulink/`, `matlab/`, `python/`, `cpp/`, `gnuradio/` — модели и инструменты анализа;
-- `reports/` — отчёты и шаблоны оформления.
+- `assets/`: справочные данные и вспомогательные материалы;
+- `images/`: диаграммы, скриншоты и фотографии;
+- `kicad/`: схемы и электрические пояснения;
+- `simulink/`, `matlab/`, `python/`, `cpp/`, `gnuradio/`: модели и инструменты анализа;
+- `reports/`: отчёты и шаблоны оформления.
 
 ## Рекомендуемый порядок работы
 1. собрать базовый цифровой линк.
@@ -64,10 +64,10 @@ block_08_modulation_and_synchronization/
 
 | Маршрут | Лабораторные | Инженерный результат |
 |---|---|---|
-| QPSK-модем | [8.8 — искажения и BER](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-8-qpsk-modem-impairments/) → [8.9 — восстановление несущей](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-9-qpsk-carrier-recovery/) | Gray mapping, BER и коррекция CFO/фазы |
-| OFDM | [8.5 — mini-link](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-5-ofdm-mini-link/) → [8.10 — PAPR и clipping](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-10-ofdm-papr-clipping/) | Сквозной канал, цифровой back-off и спектральное расширение |
-| Сравнение сигналов | [8.11 — 16-QAM](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-11-16qam-tradeoffs/) → [8.12 — GFSK](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-12-gfsk-bt-ber/) → [8.13 — DSSS](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-13-dsss-processing-gain/) | Спектральная эффективность, огибающая, синхронизация и FPGA-cost |
-| CSS | [8.20 — chirp-сигнал](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-20-css-waveform/) → [8.21 — dechirp/FFT](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-21-css-dechirp-fft/) → [8.22 — packet sync/PER](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-22-css-packet-sync-per/) | Chirp mapping, FFT-bin detection, пакетный захват и PER |
+| QPSK-модем | [8.8: искажения и BER](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-8-qpsk-modem-impairments/) → [8.9: восстановление несущей](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-9-qpsk-carrier-recovery/) | Gray mapping, BER и коррекция CFO/фазы |
+| OFDM | [8.5: mini-link](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-5-ofdm-mini-link/) → [8.10: PAPR и clipping](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-10-ofdm-papr-clipping/) | Сквозной канал, цифровой back-off и спектральное расширение |
+| Сравнение сигналов | [8.11: 16-QAM](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-11-16qam-tradeoffs/) → [8.12: GFSK](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-12-gfsk-bt-ber/) → [8.13: DSSS](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-13-dsss-processing-gain/) | Спектральная эффективность, огибающая, синхронизация и FPGA-cost |
+| CSS | [8.20: chirp-сигнал](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-20-css-waveform/) → [8.21: dechirp/FFT](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-21-css-dechirp-fft/) → [8.22: packet sync/PER](https://lay007.github.io/zynq-sdr-course/ru/labs/lab-8-22-css-packet-sync-per/) | Chirp mapping, FFT-bin detection, пакетный захват и PER |
 
 Нумерация группирует расширения намеренно: `8.8–8.9` продолжают QPSK, `8.10` расширяет OFDM, а `8.20–8.22` образуют CSS-маршрут.
 
@@ -77,16 +77,16 @@ LoRa PHY в сопутствующем проекте.
 [Руководство по AXI-интеграции](css_axi_integration_ru.md) задаёт потоковые
 пакеты, регистры AXI-Lite, IRQ и оставшуюся работу на уровне платы.
 
-## Реальный BPSK на железе — спектр, созвездие и SNR/EVM
+## Реальный BPSK на железе: спектр, созвездие и SNR/EVM
 
 Реально измеренный BPSK с курсовой платы (Zynq-7020 + AD9361): те же три величины, что вы
-считаете в теории — **спектр мощности**, **созвездие** и **SNR / EVM** — но снятые с работающего
+считаете в теории это **спектр мощности**, **созвездие** и **SNR / EVM**, но снятые с работающего
 железа, со сравнением двух точек наблюдения одного передатчика: встроенного FPGA-приёмника в
 **цифровом loopback** AD9361 и **независимого RTL-SDR по эфиру**.
 
-![Плата PL RX — спектр и созвездие (цифровой loopback AD9361)](https://lay007.github.io/zynq-sdr-course/assets/hw_bpsk_board_spectrum_constellation.png)
+![Плата PL RX: спектр и созвездие (цифровой loopback AD9361)](https://lay007.github.io/zynq-sdr-course/assets/hw_bpsk_board_spectrum_constellation.png)
 
-![RTL-SDR — эфирное BPSK-созвездие](https://lay007.github.io/zynq-sdr-course/assets/hw_bpsk_rtl_ota_constellation.png)
+![RTL-SDR: эфирное BPSK-созвездие](https://lay007.github.io/zynq-sdr-course/assets/hw_bpsk_rtl_ota_constellation.png)
 
 | Метрика | Плата PL RX (цифровой loopback) | RTL-SDR (эфир, ~10 см) |
 |---|---|---|
@@ -95,15 +95,15 @@ LoRa PHY в сопутствующем проекте.
 | Смещение несущей | 0 (цифра, несущей нет) | ≈ +2.7 кГц |
 | BER | 0 | 0 |
 
-Внутренний loopback изолирует *модем* — два плотных кластера на I = ±1, Q ≈ 0, несущей нет. По
+Внутренний loopback изолирует *модем*: два плотных кластера на I = ±1, Q ≈ 0, несущей нет. По
 эфиру *радиоканал* размывает кластеры шумом и поворачивает их из-за смещения несущей (Lab 8.1 /
 8.2 на реальном железе), но на близком расстоянии всё равно декодит с BER 0. Визуальный разрыв
-между двумя созвездиями — это и есть РЧ-канал. Полный разбор, цифры и воспроизведение:
-**[Lab 8.15 — Реальные BPSK-метрики на железе](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_15_real_hardware_bpsk_metrics.md)**.
+между двумя созвездиями это и есть РЧ-канал. Полный разбор, цифры и воспроизведение:
+**[Lab 8.15: Реальные BPSK-метрики на железе](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_15_real_hardware_bpsk_metrics.md)**.
 
-## QPSK — два бита на символ, impairments и BER
+## QPSK: два бита на символ, impairments и BER
 
-QPSK — это две независимые BPSK-оси (Gray: младший бит → I, старший → Q), поэтому вдвое
+QPSK это две независимые BPSK-оси (Gray: младший бит → I, старший → Q), поэтому вдвое
 поднимает битовую скорость при той же полосе. Синтезируемый QPSK-модем, переиспользующий общие
 upsampler / RRC / sampler, восстанавливает полный кадр с **BER = 0** в HDL-loopback; симуляция
 канала показывает, что делают с ним два impairment'а этого блока:
@@ -117,34 +117,33 @@ upsampler / RRC / sampler, восстанавливает полный кадр 
 ![BER Gray QPSK vs Eb/N0](https://lay007.github.io/zynq-sdr-course/assets/qpsk_ber_vs_ebn0.png)
 
 Как две ортогональные BPSK-оси, Gray QPSK имеет тот же по-битовый BER, что и BPSK,
-`Q(√(2·Eb/N0))` — симуляция ложится на теорию на 0–10 дБ. Полный разбор:
-**[Lab 8.8 — QPSK-модем, impairments и BER](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_8_qpsk_modem_and_impairments.md)**.
+`Q(√(2·Eb/N0))`: симуляция ложится на теорию на 0–10 дБ. Полный разбор:
+**[Lab 8.8: QPSK-модем, impairments и BER](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_8_qpsk_modem_and_impairments.md)**.
 
-## Carrier recovery для QPSK — де-ротация CFO-кольца
+## Carrier recovery для QPSK: де-ротация CFO-кольца
 
 CFO-кольцо выше недекодируемо (BER ≈ 0.5), пока его не де-ротирует **петля carrier-recovery**.
-Decision-directed **петля Костаса** (NCO + PI-фильтр петли + QPSK-детектор фазовой ошибки —
-частотный двойник петли Гарднера) заводит кольцо обратно на четыре точки и трекает CFO-рамп:
+Decision-directed **петля Костаса** (NCO + PI-фильтр петли + QPSK-детектор фазовой ошибки, частотный двойник петли Гарднера) заводит кольцо обратно на четыре точки и трекает CFO-рамп:
 
 ![Carrier recovery для QPSK](https://lay007.github.io/zynq-sdr-course/assets/qpsk_carrier_recovery.png)
 
 Единственное отличие от BPSK: петля стабилизируется на одном из четырёх поворотов `k·90°`,
 поэтому созвездие выглядит идеально, но раскладка битов может быть повёрнута (**неоднозначность
-90°**). Её снимает та же **известная преамбула**, которой модем ловит начало кадра, — и «шумный»
+90°**). Её снимает та же **известная преамбула**, которой модем ловит начало кадра, и «шумный»
 BER превращается в ровный **BER = 0** на всём диапазоне CFO. Полный разбор:
-**[Lab 8.9 — Carrier recovery для QPSK](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_9_qpsk_carrier_recovery.md)**.
+**[Lab 8.9: Carrier recovery для QPSK](https://github.com/Lay007/zynq-sdr-course/blob/main/blocks/block_08_modulation_and_synchronization/lab_8_9_qpsk_carrier_recovery.md)**.
 
-## QPSK на реальном железе — loopback платы vs эфир
+## QPSK на реальном железе: loopback платы vs эфир
 
 Те же три величины, что в BPSK-измерении выше, теперь для QPSK: собственный PL-приёмник платы в
-**fabric loopback** (модем изолирован — без РЧ и несущей) против **независимого RTL-SDR по эфиру**.
+**fabric loopback** (модем изолирован без РЧ и несущей) против **независимого RTL-SDR по эфиру**.
 Хост-демодулятор делает ровно то, чему учит этот блок: грубый + точный поиск смещения несущей,
 согласованный RRC-фильтр, кадровую синхронизацию по преамбуле и снятие 90°-неоднозначности перебором
 четырёх поворотов.
 
-![Плата PL RX — QPSK-созвездие (PL fabric loopback)](https://lay007.github.io/zynq-sdr-course/assets/hw_qpsk_board_loopback_constellation.png)
+![Плата PL RX: QPSK-созвездие (PL fabric loopback)](https://lay007.github.io/zynq-sdr-course/assets/hw_qpsk_board_loopback_constellation.png)
 
-![RTL-SDR — эфирное QPSK-созвездие](https://lay007.github.io/zynq-sdr-course/assets/hw_qpsk_rtl_ota_constellation.png)
+![RTL-SDR: эфирное QPSK-созвездие](https://lay007.github.io/zynq-sdr-course/assets/hw_qpsk_rtl_ota_constellation.png)
 
 | Метрика | Плата PL RX (fabric loopback) | RTL-SDR (эфир, ~1–2 см) |
 |---|---|---|
@@ -155,7 +154,7 @@ BER превращается в ровный **BER = 0** на всём диап�
 
 Четыре тугие точки в loopback (изолированный *модем*) превращаются в четыре размытых шумом и повёрнутых
 несущей облака по эфиру (*радиоканал*), но обе картинки декодятся с **BER = 0** той же цепочкой
-синхронизации, что моделируют симуляции. Визуальный зазор между созвездиями — это и есть РЧ-канал:
+синхронизации, что моделируют симуляции. Визуальный зазор между созвездиями это и есть РЧ-канал:
 ровно та же BPSK-история из Lab 8.15, теперь по два бита на символ.
 
 ## Следующий шаг

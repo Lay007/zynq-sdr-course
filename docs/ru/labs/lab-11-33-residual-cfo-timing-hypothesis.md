@@ -54,7 +54,6 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_33_residual_cfo_timi
 
 ## Решение
 
-Оставляем настройку Costas, отвергаем усложнённый feedforward picker. Следующий эксперимент —
-настоящий непрерывный QPSK timing-recovery loop с раздельными acquisition/tracking режимами,
+Оставляем настройку Costas, отвергаем усложнённый feedforward picker. Следующий эксперимент: настоящий непрерывный QPSK timing-recovery loop с раздельными acquisition/tracking режимами,
 а затем длинная двухплатная BER-серия. Главный урок: simulation pass и timing closure обязательны,
 но право вето остаётся у физического A/B.

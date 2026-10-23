@@ -67,7 +67,7 @@ A single best BER=0 attempt is evidence that the datapath works, not that it is 
 - short conclusion separating functional success from repeatability;
 - optional RTL-SDR spectrum witness when an antenna or cabled path is added later.
 
-## Measured result — 2026-07-07
+## Measured result: 2026-07-07
 
 The CDC-fixed, timing-clean QPSK payload reached BER=0 at `start_offset=62`. Four independent stock→runtime→stock sessions passed, and all 13 attempts at the selected offset recovered 140 symbols / 280 bits with zero errors. Every session returned to stock successfully.
 

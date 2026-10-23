@@ -40,7 +40,7 @@ Lab 11.46 turns them into one system:
 Before this lab, understand:
 
 1. [Zynq: where PS ends and PL begins](../../zynq-ps-pl-architecture.md);
-2. [Lab 5.12 — PS↔PL message mailbox](lab-5-12-zynq-ps-pl-mailbox.md);
+2. [Lab 5.12: PS↔PL message mailbox](lab-5-12-zynq-ps-pl-mailbox.md);
 3. the existing two-board QPSK path and the Lab 11.45 result.
 
 ## What is reused
@@ -108,7 +108,7 @@ For the first board implementation, packet assembly and the final CRC decision m
 
 That boundary is deliberately educational: it demonstrates a real PS/PL partition instead of moving the entire application into FPGA fabric.
 
-## Stage 1 — software contract without RF
+## Stage 1: software contract without RF
 
 Run:
 
@@ -118,7 +118,7 @@ python tools/zynq_message_console.py --mock demo "Hello Zynq" --sequence 17
 
 This is not RF simulation. It validates only the software-visible mailbox contract.
 
-## Stage 2 — one-board PS↔PL hardware echo
+## Stage 2: one-board PS↔PL hardware echo
 
 Implement the AXI-Lite mailbox and prove:
 
@@ -137,7 +137,7 @@ and the same payload read back from the RX mailbox.
 
 The physical address must come from the actual Vivado Address Editor map.
 
-## Stage 3 — digital modem loopback
+## Stage 3: digital modem loopback
 
 Replace the PL echo with the packet serializer plus the existing QPSK digital loopback:
 
@@ -179,7 +179,7 @@ ready/valid transfer. A producer holds payload stable while `valid=1` and
 This result does **not** prove AXI/Vivado integration, FPGA synthesis/timing,
 RF transport, or a two-board link.
 
-## Stage 4 — two boards
+## Stage 4: two boards
 
 Start with a safe conducted connection and the required attenuation; move to OTA only when appropriate.
 

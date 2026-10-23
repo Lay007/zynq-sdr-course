@@ -26,7 +26,7 @@ where `Fmax` is the highest frequency component present in the signal.
 
 ## Aliasing
 
-When the condition is violated, aliasing occurs — spectral overlap caused by
+When the condition is violated, aliasing occurs: spectral overlap caused by
 undersampling.
 
 ```mermaid

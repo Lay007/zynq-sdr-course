@@ -106,6 +106,29 @@ INCLUDE_LINE = re.compile(r'^--8<-- "([^"]+)"', re.MULTILINE)
 EXERCISES = re.compile(r"^#{2,3} (Exercises|Упражнения)\s*$", re.MULTILINE)
 
 
+EM_DASH = "—"
+
+
+def test_no_em_dash_in_prose():
+    """The writing rules allow the em dash only in quoted material: code, and the lab H1 form above.
+
+    Prose uses a colon, a comma, parentheses or a new sentence instead (Russian 'X — это Y' reads 'X это Y').
+    """
+    pages = course_pages() + sorted((ROOT / "reports").rglob("*.md")) + sorted(ROOT.glob("*.md"))
+    found = []
+    for path in pages:
+        inside = False
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if line.strip().startswith("```"):
+                inside = not inside
+                continue
+            if inside or EM_DASH not in line or LAB_H1.match(line):
+                continue
+            if EM_DASH in re.sub(r"`[^`]*`", "", line):
+                found.append(f"{path.relative_to(ROOT)}:{number}")
+    assert not found, f"em dash in prose (see publications ai-guidelines): {found[:20]} ... {len(found)} in all"
+
+
 def test_exercises_have_answers():
     """Labs of Blocks 2-8 with an exercise list carry checked answers in a <details> block."""
     missing = []

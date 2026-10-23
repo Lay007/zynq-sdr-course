@@ -3,10 +3,10 @@
 ## Goal
 
 Eliminate the residual whole-burst rotation failures that survived the lock-tolerance fix, and beat
-the absolute `tol=1` image on BER — without giving up a clean two-board link.
+the absolute `tol=1` image on BER: without giving up a clean two-board link.
 
 Prerequisites: [Lab 11.42](/zynq-sdr-course/en/labs/lab-11-42-ber-floor-lock-tolerance/) (the false-lock fix that left a
-~1% rotation floor) and Lab 11.43 — the differential codec `lab_11_43_dqpsk_model.py` — that removes the
+~1% rotation floor) and Lab 11.43 (the differential codec `lab_11_43_dqpsk_model.py`) that removes the
 rotation ambiguity at the source).
 
 ## The arc
@@ -14,15 +14,15 @@ rotation ambiguity at the source).
 1. **The floor is a whole-burst 90° rotation** the frame sync occasionally mis-resolves. `tol=1`
    removed the spurious-lock half; a carrier-marginal half (~1%) remained.
 2. **Differential QPSK removes the ambiguity**: the info is the phase *difference* between
-   consecutive symbols, so a constant rotation cancels. The codec is proven correct — in a coherent
+   consecutive symbols, so a constant rotation cancels. The codec is proven correct: in a coherent
    fabric loopback with Gardner it decodes at **BER 0**, and it is rotation-invariant offline and in
    RTL.
 3. **But on the two-board link it errs at one early-payload symbol** (a cluster at payload index 5 =
-   symbol 14). Every isolating test refuted the obvious causes — not the codec (loopback is perfect),
+   symbol 14). Every isolating test refuted the obvious causes: not the codec (loopback is perfect),
    not the frame data (offline is perfect), not a 180° transition, not the CFO magnitude.
 4. **The cause is adaptive-loop transients.** Differential decoding reads the phase difference between
-   consecutive symbols, so *any* RX loop still adapting in the early payload — the Costas carrier, the
-   DC blocker's running-average convergence, the Gardner timing — perturbs it. The coherent loopback
+   consecutive symbols, so *any* RX loop still adapting in the early payload (the Costas carrier, the
+   DC blocker's running-average convergence, the Gardner timing) perturbs it. The coherent loopback
    is clean precisely because those loops are off. Turning the DC blocker off on the two-board link
    halves the cluster; that was the confirming test.
 
@@ -30,11 +30,11 @@ rotation ambiguity at the source).
 
 The loops acquire during a window that **outlasts the 12-symbol preamble**. From
 `tb_qpsk_costas_acq_window`: the freeze gate opens ~16 symbols before the frame, the acquisition runs
-`ACQ_SYMBOLS=32`, and the frame sync locks at symbol 31 — i.e. the loops are still slewing ~4 symbols
+`ACQ_SYMBOLS=32`, and the frame sync locks at symbol 31. I.e. the loops are still slewing ~4 symbols
 *into* the payload. In absolute QPSK that is invisible (once locked, each symbol is right); in
 differential it corrupts exactly those early-payload symbols.
 
-The clean fix is not to freeze the loops (architecturally impractical — they sit upstream of frame
+The clean fix is not to freeze the loops (architecturally impractical. They sit upstream of frame
 detection in a continuous, variable-latency stream), but to **start the payload later**: a longer
 preamble. And because the frame length and preamble offset are *runtime* parameters
 (`symbol_count`, `preamble_count`) and the ROM already holds 512 bits, this needs **no bitstream
@@ -57,16 +57,16 @@ mod 4).
 | clean frames | 98.9% | 96.9–98.8% |
 | rotation-invariant | no | **yes** |
 
-**The rotation floor is gone — gross is 0 across every run** — and BER drops an order of magnitude
+**The rotation floor is gone: gross is 0 across every run**, and BER drops an order of magnitude
 because no burst decodes at ~46% any more. The clean-frame rate is comparable: a residual intermittent
 single-bit cluster (now near payload index 19) remains, which is the inherent ~3 dB differential
 penalty, not a rotation failure.
 
 Machine-readable evidence is preserved in two stages:
 
-- `docs/assets/lab1144_diff_qpsk_live.json` — the 400+400-frame absolute/differential A/B that removes
+- `docs/assets/lab1144_diff_qpsk_live.json`: the 400+400-frame absolute/differential A/B that removes
   gross rotations but exposes the early-payload differential transient;
-- `docs/assets/lab1145_diff_long_preamble_live.json` — the final 800-frame, 24-symbol-preamble run
+- `docs/assets/lab1145_diff_long_preamble_live.json`: the final 800-frame, 24-symbol-preamble run
   with zero gross rotations and payload BER `4.45×10⁻⁴`.
 
 Longer still is worse: a 32-symbol preamble dropped the lock rate (the frame plus its
@@ -77,6 +77,6 @@ Longer still is worse: a 32-symbol preamble dropped the lock rate (the frame plu
 Two fixes were on the table for the differential transient. Freezing the adaptive loops after the
 preamble is the textbook answer, but it is architecturally impractical here: the loops are upstream of
 frame detection, the two-board stream is continuous (no signal-present boundary), and the frame
-latency varies — so there is no timely "preamble done" signal to hand them. Lengthening the preamble
+latency varies, so there is no timely "preamble done" signal to hand them. Lengthening the preamble
 achieves the same end (the payload starts settled) with a runtime parameter and no new logic. The
 cheaper fix was not the smaller idea; it was the one that fit the architecture.

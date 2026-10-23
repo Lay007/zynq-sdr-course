@@ -38,10 +38,10 @@ A fully digital radio does not exist: the physical world remains analog. Any SDR
 
 A convenient view is:
 
-- **before the ADC** — analog part of the receiver;
-- **after the ADC** — digital receive processing;
-- **before the DAC** — digital part of the transmitter;
-- **after the DAC** — analog transmit chain.
+- **before the ADC**: analog part of the receiver;
+- **after the ADC**: digital receive processing;
+- **before the DAC**: digital part of the transmitter;
+- **after the DAC**: analog transmit chain.
 
 That is why an SDR engineer should understand not only DSP, but also the basics of circuit design, RF chains, power, matching, and measurements.
 
@@ -64,8 +64,8 @@ This forms the correct engineering mindset: a signal should be understood not on
 ## 5. What an I/Q signal is
 In SDR, signals are often represented in **complex form**:
 
-- **I** — in-phase component;
-- **Q** — quadrature component.
+- **I**: in-phase component;
+- **Q**: quadrature component.
 
 These are two mutually related components of one signal shifted by 90 degrees in phase.
 

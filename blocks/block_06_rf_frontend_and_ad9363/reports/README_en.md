@@ -1,4 +1,4 @@
-# Reports — Block 6
+# Reports: Block 6
 
 ## Purpose
 This folder should contain reports, exported plots, parameter tables, and supporting materials for the block “RF Frontend and AD9363”.

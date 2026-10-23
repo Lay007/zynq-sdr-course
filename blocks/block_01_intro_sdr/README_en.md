@@ -18,7 +18,7 @@ The block uses the following concept:
 
 **The Zynq7020 + AD9363 SDR board generates a test signal, RTL-SDR receives it, HDSDR displays the spectrum, and the recorded IQ data are analyzed in MATLAB, Simulink, Python, C++, and GNU Radio.**
 
-Before the controlled experiment with the SDR board, the student can complete **Lab 1.0 — First RF Observation with RTL-SDR**. It shows a real spectrum/waterfall view, creates the first IQ recording, and prepares the student for the engineering route of the course.
+Before the controlled experiment with the SDR board, the student can complete **Lab 1.0: First RF Observation with RTL-SDR**. It shows a real spectrum/waterfall view, creates the first IQ recording, and prepares the student for the engineering route of the course.
 
 KiCad is also introduced as a tool for reading schematics, documenting educational connections, and preparing for later analog and digital circuit labs.
 

@@ -35,7 +35,7 @@
 
 <div class="course-card">
 <h3>Маршруты обучения</h3>
-<p>Какие лабораторные проходить и в каком порядке — с одним ноутбуком, с RTL-SDR или с платой Zynq.</p>
+<p>Какие лабораторные проходить и в каком порядке с одним ноутбуком, с RTL-SDR или с платой Zynq.</p>
 <a href="lab-track.md">Открыть →</a>
 </div>
 
@@ -69,15 +69,15 @@
 
 | Блок | Тема |
 |---:|---|
-| 1 | [Введение в SDR](blocks/01-intro.md) — инструменты, сигналы и первые приёмные эксперименты |
-| 2 | [Сигналы и дискретизация](blocks/02-signals-and-sampling.md) — спектр, aliasing, complex baseband и IQ |
-| 3 | [Основы DSP](blocks/03-dsp-basics.md) — FFT, FIR, окна, цифровое смешение и decimation |
-| 4 | [Simulink и fixed-point](blocks/04-simulink-and-fixed-point.md) — числовые форматы, масштабирование и квантование |
-| 5 | [FPGA / HDL Flow](blocks/05-fpga-hdl-flow.md) — потоковые интерфейсы, Verilog и testbench |
-| 6 | [Радиотракт и AD9363](blocks/06-rf-frontend-and-ad9363.md) — частотный план, усиления и настройки AD9363 |
-| 7 | [Тракты TX/RX](blocks/07-tx-rx-chains.md) — DUC, DDC, loopback и packet-level метрики |
-| 8 | [Модуляция и синхронизация](blocks/08-modulation-and-synchronization.md) — CFO, фаза, тайминг, EVM и BER |
-| 9 | [Инструменты записи и анализа](blocks/09-recording-and-analysis-tools.md) — metadata, форматы, replay и контроль качества |
-| 10 | [KiCad и базовая электроника](blocks/10-kicad-and-basic-electronics.md) — аттенюаторы, фильтры и RF safety |
-| 11 | [Интегрированный SDR-проект](blocks/11-integrated-sdr-project.md) — модель, реализация, запись и отчёт |
-| 12 | [Итоговые проекты](blocks/12-final-projects.md) — portfolio-ready инженерные результаты |
+| 1 | [Введение в SDR](blocks/01-intro.md): инструменты, сигналы и первые приёмные эксперименты |
+| 2 | [Сигналы и дискретизация](blocks/02-signals-and-sampling.md): спектр, aliasing, complex baseband и IQ |
+| 3 | [Основы DSP](blocks/03-dsp-basics.md): FFT, FIR, окна, цифровое смешение и decimation |
+| 4 | [Simulink и fixed-point](blocks/04-simulink-and-fixed-point.md): числовые форматы, масштабирование и квантование |
+| 5 | [FPGA / HDL Flow](blocks/05-fpga-hdl-flow.md): потоковые интерфейсы, Verilog и testbench |
+| 6 | [Радиотракт и AD9363](blocks/06-rf-frontend-and-ad9363.md): частотный план, усиления и настройки AD9363 |
+| 7 | [Тракты TX/RX](blocks/07-tx-rx-chains.md): DUC, DDC, loopback и packet-level метрики |
+| 8 | [Модуляция и синхронизация](blocks/08-modulation-and-synchronization.md): CFO, фаза, тайминг, EVM и BER |
+| 9 | [Инструменты записи и анализа](blocks/09-recording-and-analysis-tools.md): metadata, форматы, replay и контроль качества |
+| 10 | [KiCad и базовая электроника](blocks/10-kicad-and-basic-electronics.md): аттенюаторы, фильтры и RF safety |
+| 11 | [Интегрированный SDR-проект](blocks/11-integrated-sdr-project.md): модель, реализация, запись и отчёт |
+| 12 | [Итоговые проекты](blocks/12-final-projects.md): portfolio-ready инженерные результаты |

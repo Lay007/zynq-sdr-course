@@ -79,10 +79,10 @@ zynq_message_mailbox_vivado_wrapper.v
 
 На Zynq Processing System нужны:
 
-- `M_AXI_GP0` — enabled;
-- `FCLK_CLK0` — enabled;
+- `M_AXI_GP0`: enabled;
+- `FCLK_CLK0`: enabled;
 - для первого опыта удобно использовать `100 MHz`;
-- `FCLK_RESET0_N` — вывести в PL reset path.
+- `FCLK_RESET0_N`: вывести в PL reset path.
 
 Частота 100 MHz здесь не требование mailbox-алгоритма. Это простой учебный baseline, совпадающий с metadata wrapper. Если известная рабочая board configuration использует другую частоту, зафиксируйте её и синхронно поправьте interface metadata.
 
@@ -130,7 +130,7 @@ MAILBOX_BASE = 0x........
 range        = ..........
 ```
 
-**Не используйте адрес из этой страницы:** курс намеренно не фиксирует его. Источник истины — Address Editor конкретной сборки.
+**Не используйте адрес из этой страницы:** курс намеренно не фиксирует его. Источник истины: Address Editor конкретной сборки.
 
 Software использует offsets `0x00…0xAC` внутри назначенного range.
 
@@ -191,8 +191,8 @@ RX sequence=1 bytes=8 crc=OK payload="Hello PL"
 
 ## 10. Что студент должен уметь объяснить после PASS
 
-1. Почему Python-программа выполняется в PS, а mailbox state machine — в PL?
-2. Почему `MAILBOX_BASE` — physical address, а `0x70` — offset RX data внутри IP?
+1. Почему Python-программа выполняется в PS, а mailbox state machine в PL?
+2. Почему `MAILBOX_BASE`: physical address, а `0x70`: offset RX data внутри IP?
 3. Зачем нужен SmartConnect/Interconnect?
 4. Что означает `M_AXI_GP0` с точки зрения направления master/slave?
 5. Почему в этой версии нет CDC?

@@ -1,4 +1,4 @@
-# Report Template — Block 9. Recording and Analysis Tools
+# Report Template: Block 9. Recording and Analysis Tools
 
 ## 1. Work title
 State the exact laboratory work, demonstration, or mini-project.

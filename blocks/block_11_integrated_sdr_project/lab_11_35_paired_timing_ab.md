@@ -148,7 +148,7 @@ zero-CFO run gives:
 |---|---:|---:|---:|---:|
 | Full-frame lock | 247/400 (61.75%) | 354/400 (88.50%) | +26.75 pp | +21.11…+32.39 pp |
 | BER=0 attempt | 108/400 (27.00%) | 11/400 (2.75%) | -24.25 pp | -28.84…-19.66 pp |
-| Aggregate BER in full frames | 0.130682 | 0.067645 | — | — |
+| Aggregate BER in full frames | 0.130682 | 0.067645 | - | - |
 
 The rotation-invariant detector greatly improves acquisition and halves aggregate BER, but it
 does **not** remove the exact-zero-frame collapse. The carrier-phase diagnosis therefore
@@ -197,8 +197,8 @@ IIO devices. The focused CFO=0 instrumentation run contains 160 interleaved pair
 |---|---:|---:|---:|---:|
 | Full-frame lock | 98/160 (61.25%) | 146/160 (91.25%) | +30.00 pp | +21.00…+39.00 pp |
 | BER=0 attempt | 44/160 (27.50%) | 4/160 (2.50%) | -25.00 pp | -32.57…-17.43 pp |
-| Aggregate BER in full frames | 0.109803 | 0.068224 | — | — |
-| Aggregate payload BER | 0.117985 | 0.073523 | — | — |
+| Aggregate BER in full frames | 0.109803 | 0.068224 | - | - |
+| Aggregate payload BER | 0.117985 | 0.073523 | - | - |
 
 The split answers the diagnostic question:
 
@@ -226,14 +226,14 @@ and another blind PI-gain sweep are not justified by this result.
 ## Payload error-position telemetry: implemented, timing-clean, live still pending
 
 The predeclared diagnostic is now in the RTL and host and has a timing-clean bitstream. It has
-**not yet run on the bench** — the stand is powered down at the time of writing, so this section
+**not yet run on the bench**: the stand is powered down at the time of writing, so this section
 separates what is implemented and simulated from what is measured.
 
-**RTL and host — implemented.** With `gp_ctrl[4]=1` and `gp_ctrl[15]=1` the existing register map
+**RTL and host. Implemented.** With `gp_ctrl[4]=1` and `gp_ctrl[15]=1` the existing register map
 carries positional telemetry with no block-design or address-map change, over the 280-bit frame
 (24-bit preamble, 256-bit payload, four 64-bit payload quarters):
 
-- `gp_tx_valid_count` = `{quarter3, quarter2, quarter1, quarter0}` — four saturating 8-bit
+- `gp_tx_valid_count` = `{quarter3, quarter2, quarter1, quarter0}`: four saturating 8-bit
   payload-quarter error counters;
 - `gp_rx_valid_count` = `{last_payload_error_index[15:0], first_payload_error_index[15:0]}`, where
   `0xFFFF` means "no error".
@@ -243,7 +243,7 @@ first/last sentinels; the host returns `payload_error_position` and aggregates a
 four segment sums, and first/last-index statistics. `FIXED_MODE` and `GARDNER_MODE` set
 `gp_ctrl[15]`.
 
-**Simulation and regression — passing.** Canonical HDL smoke 34/34; the targeted QPSK
+**Simulation and regression, passing.** Canonical HDL smoke 34/34; the targeted QPSK
 digital-loopback and paired-timing Python tests pass. The RRC transmit FIR was *pipelined rather
 than constrained*: its real critical path (delay line → symmetric pair-add → a
 placement-materialized DSP input register) does not admit a multicycle exception, because the
@@ -251,12 +251,12 @@ internal fabric loopback can present `valid` every cycle, so a false exception w
 continuous case. The symmetric pre-adds and centre tap are now registered ahead of the multipliers
 (FIR latency 9 instead of 8), and the transform is bit-exact over 2,312 vectors.
 
-**Timing-clean build — obtained.** With the FIR path pipelined, the new worst path is not in the
+**Timing-clean build: obtained.** With the FIR path pipelined, the new worst path is not in the
 modem at all but in the diagnostic capture peak detector
 (`capture_nonzero_seen_* → capture_peak_abs_sample_reg[*]/CE`), a route-heavy telemetry path. A
 fresh main-seed implementation closed at `WNS=-0.145 ns`; an `ExtraNetDelay_high` placement from the
 vendor post-opt snapshot took it to `WNS=-0.076 ns`; one allowed `AggressiveExplore` post-route
-`phys_opt_design` on that routed checkpoint — no RTL or constraint change — closed it:
+`phys_opt_design` on that routed checkpoint (no RTL or constraint change) closed it:
 
 - `WNS=+0.020 ns`, `TNS=0.000 ns` (0 failing endpoints);
 - `WHS=+0.039 ns`, `THS=0.000 ns` (0 failing endpoints);
@@ -270,13 +270,13 @@ detector remains available if a larger, placement-independent margin is wanted. 
 pre-telemetry image (`SHA-256 29fb47e0…`, the 160-pair source above) is now **stale** for the
 position experiment and must not be reused.
 
-**Live position experiment — measured, and neither predeclared hypothesis was right.**
+**Live position experiment: measured, and neither predeclared hypothesis was right.**
 
 One guard had to be added first. `gp_ctrl[15]` multiplexes two registers that a *pre-telemetry*
 image still drives with their old meaning (a TX sample counter and an RX valid counter), and the
 host decoded them unconditionally. Probed against the old image, a clean frame
 (`payload_errors=0`) reported `segment_errors=[224,4,0,48]`, `first=1843`, `last=0`, and frames
-with 121 and 2 payload errors reported the *same* segment counts — a campaign run in that state
+with 121 and 2 payload errors reported the *same* segment counts: a campaign run in that state
 would have produced confident nonsense. `decode_payload_error_position()` now validates against the
 frame's own payload error count (the quarter counters cannot saturate, so the four counts must sum
 exactly to `payload_errors`, and indices must satisfy `0 ≤ first ≤ last < 256` or both be
@@ -290,8 +290,8 @@ The measured run is 160 interleaved pairs at CFO = 0 on the timing-clean image
 |---|---:|---:|---:|---:|
 | Full-frame lock | 87/160 (54.38%) | 133/160 (83.13%) | +28.75 pp | +20.17…+37.33 pp |
 | BER=0 attempt | 36/160 (22.50%) | 3/160 (1.88%) | −20.62 pp | −27.38…−13.87 pp |
-| Aggregate BER in full frames | 0.106568 | 0.068018 | — | — |
-| Aggregate payload BER | 0.113820 | 0.073132 | — | — |
+| Aggregate BER in full frames | 0.106568 | 0.068018 | - | - |
+| Aggregate payload BER | 0.113820 | 0.073132 | - | - |
 
 The quarter counters do not show the predicted shapes. Neither sampler ramps monotonically toward
 the end of the payload, and neither is flat:
@@ -313,7 +313,7 @@ itself:
 | Error index | 173, then **189 × 6** | 2, 2, then **189 × 31** |
 
 **37 of 40 single-bit misses sit at exactly payload bit 189**, independently for both samplers.
-That index is frame bit 213, i.e. the **Q axis of QPSK symbol 106** — the last symbol of a
+That index is frame bit 213, i.e. the **Q axis of QPSK symbol 106**: the last symbol of a
 four-symbol Q run before a sign change. Consistently, the aggregate `first_error_index` never
 exceeds 189 for either sampler, and the error span covers bit 189 in 90% of fixed dirty frames and
 98% of Gardner dirty frames. Frames are effectively bimodal: either completely clean, or wrong at
@@ -324,24 +324,23 @@ uniform decision-margin loss (not flat). It is one symbol decided at the boundar
 strength of the evidence differs by claim: the single-bit localization is direct, while the
 90/98% figures are span coverage (`first ≤ 189 ≤ last`) and therefore weaker.
 
-**The obvious mechanism was then tested and refuted.** The natural explanation — ISI from that
+**The obvious mechanism was then tested and refuted.** The natural explanation (ISI from that
 run-then-transition pattern leaving symbol 106's Q sample near zero, with the Gardner instant
-pushing it across — is computable offline, because the frame and the course RRC are both
+pushing it across) is computable offline, because the frame and the course RRC are both
 deterministic. A matched RRC pair is Nyquist, so at the ideal instant every decision carries full
 margin (verified: all 280 bits correct, min |Q| 0.972 of nominal, symbol 106 at 0.976 against a
-frame median of 0.998 — unremarkable). ISI only appears once the sampler moves, so the meaningful
+frame median of 0.998. Unremarkable). ISI only appears once the sampler moves, so the meaningful
 ranking is which bit flips at the smallest perturbation:
 
 | Perturbation | First payload bits to flip | Bit 189 |
 |---|---|---|
 | Timing offset | 70, 22, 68, 135, 137 at 2.69–2.71 samples (≈0.34 symbol) | never flips inside ±0.5 symbol (rank 121 of the 124 that flip at all) |
-| Carrier phase | 74, 244, 24, 28, 251 at 43.60–43.85° | 44.15° — rank 14 of 256, i.e. unremarkable |
+| Carrier phase | 74, 244, 24, 28, 251 at 43.60–43.85° | 44.15°: rank 14 of 256, i.e. unremarkable |
 | Timing × phase grid | 89 (19 points), 68 (17), 24, 88, 137 are the sole failing bit | **0 grid points** |
 
 Carrier phase does not discriminate at all: every one of the 256 payload bits flips inside a
 roughly 43.6–45° band around QPSK's theoretical boundary, so no bit is singled out by phase and
-bit 189 sits unremarkably inside that band. Timing does discriminate, and it exonerates bit 189 —
-it survives to the half-symbol boundary while bits 70, 22 and 68 flip at a third of a symbol. Most
+bit 189 sits unremarkably inside that band. Timing does discriminate, and it exonerates bit 189: it survives to the half-symbol boundary while bits 70, 22 and 68 flip at a third of a symbol. Most
 decisive is the combined grid: bit 189 is the sole failing bit at **zero** grid points, while bits
 89 and 68 are the sole failure at 19 and 17. Live, that same bit takes 37 of 40 single-bit misses.
 The transmitted waveform under timing and carrier error therefore does **not** explain the
@@ -365,7 +364,7 @@ precisely the "see what the analog chain delivers versus the known-perfect TX" h
 traps are worth recording, because both produced confident nonsense first:
 
 - the frame lands at a *varying* offset inside the buffer (measured starts 844, 917, 2649, 2876), so
-  a short readout window simply misses it — the whole 4096 samples must be read, and a 1536-sample
+  a short readout window simply misses it: the whole 4096 samples must be read, and a 1536-sample
   window produced `|corr| ≈ 2` "alignments" with absurd multi-kHz frequency fits;
 - estimating CFO per alignment candidate *before* correlating is worse than correlating first and
   then fitting the phase line: over 140 symbols the 4th-power estimate is noisy enough to destroy
@@ -382,13 +381,13 @@ burst whose on-chip telemetry reported exactly one payload error at bit 189:
 | clean burst | start 917 | 11.66 | −301.9 Hz | 0 | +0.674 (rank 37/140) |
 | clean burst | start 2649 | 11.65 | −299.1 Hz | 0 | +0.710 (rank 75/140) |
 
-Symbol 106's Q decision is healthy in every instance — always positive, between +0.67 and +1.16,
+Symbol 106's Q decision is healthy in every instance: always positive, between +0.67 and +1.16,
 sitting mid-to-upper in the frame's margin ranking (median ≈ +0.71). Even in the one instance where
 the host decoder does make two errors, symbol 106 is not among them. The signal the AD9361 delivered
 therefore contains no marginal decision at that symbol.
 
-The honest caveat is that the host decoder is idealised — data-aided alignment plus a linear phase
-fit — and therefore more capable than the causal on-chip Costas and fixed sampler, so the chip can
+The honest caveat is that the host decoder is idealised (data-aided alignment plus a linear phase
+fit) and therefore more capable than the causal on-chip Costas and fixed sampler, so the chip can
 certainly err where this decoder does not. But a merely weaker receiver should fail at the *weakest*
 decisions, and those are other symbols entirely. A healthy, mid-ranked decision being reported as
 the single error points at the receiver's own processing, or at how the error index is attributed,
@@ -400,7 +399,7 @@ index itself rests on the RF-path numbers it is being used to interpret.
 
 Two cheap invariance checks close the analog branch entirely. Frame alignment does not move it: in
 the 160-pair campaign the single-bit error sits at index 189 at **all eight** start offsets (Gardner
-0–7, fixed at 0, 5 and 7). Neither does the carrier — re-running 100 Gardner bursts at each of three
+0–7, fixed at 0, 5 and 7). Neither does the carrier, re-running 100 Gardner bursts at each of three
 frequencies leaves the distribution untouched:
 
 | Carrier | Locked | Dirty | Single-bit frames | Indices | Bit 189 share |
@@ -411,8 +410,7 @@ frequencies leaves the distribution untouched:
 
 Changing the carrier changes the LO, the DC offset, the filter response and the AGC operating point
 while leaving the frame data and the bit indexing untouched, and the failure is indifferent to all
-of it. Together with the capture measurement — a healthy, mid-ranked decision margin at that symbol
-— the analog path, the channel and the frame alignment are all excluded. The defect is locked to the
+of it. Together with the capture measurement (a healthy, mid-ranked decision margin at that symbol) the analog path, the channel and the frame alignment are all excluded. The defect is locked to the
 data or to the index, which leaves exactly one fork: either the on-chip decoder genuinely gets bit
 189 wrong for a deterministic reason, or the reported index is not the bit that actually failed.
 
@@ -420,7 +418,7 @@ data or to the index, which leaves exactly one fork: either the on-chip decoder 
 
 That fork was unanswerable rather than merely unanswered: the bridge hard-wires its recovered-bit
 debug to zero in QPSK mode, so the QPSK path had no decoded-bit visibility at all. `gp_ctrl[16]` now
-exports it — every recovered dibit shifts into a 288-bit register that freezes when the burst
+exports it: every recovered dibit shifts into a 288-bit register that freezes when the burst
 completes, read back as nine words plus a bit count (see `decoded_bit_readout.py` and
 `lab_11_40_resolve_decoded_bit_index.py`).
 
@@ -428,7 +426,7 @@ Two implementation choices are load-bearing. A shift register rather than an add
 because an address decode in the `sample_clk` domain was unaffordable at a +0.020 ns margin. And a
 freeze at the *end* of the burst rather than a capture from its start, because the sampler emits
 `RX_SAMPLE_MARGIN`=256 extra symbols and the frame-sync finds the frame somewhere inside that
-stream — the first 288 bits are pre-frame noise.
+stream: the first 288 bits are pre-frame noise.
 
 The comparison also needs care. The BER counter does **not** compare raw dibits to the ROM: it runs
 two frame-sync branches (A emits `{d0,d1}`, B the 90° de-rotation `{d1,~d0}`) and each resolves its
@@ -438,12 +436,12 @@ signature of a wrong comparison rather than a broken decoder); trying all four r
 3/10 into 10/10, and all four occurred in practice (A ×3, A+invert ×2, B ×1, B+invert ×4).
 
 The result is unambiguous. Across **10 of 10** bursts whose telemetry reported a single payload
-error at index 189, the decoded frame disagrees with the ROM at exactly one bit — frame bit 213,
-which is payload bit 189 — and at no other bit. Three clean frames disagree nowhere.
+error at index 189, the decoded frame disagrees with the ROM at exactly one bit (frame bit 213,
+which is payload bit 189) and at no other bit. Three clean frames disagree nowhere.
 
 **The position telemetry is correct, and the receiver really does produce a wrong bit at symbol
 106's Q axis.** Note the index bases differ by the preamble length: the alignment returns FRAME bit
-indices, so frame bit 213 *is* payload bit 189 — comparing the two directly once produced a verdict
+indices, so frame bit 213 *is* payload bit 189, comparing the two directly once produced a verdict
 exactly opposite to the data.
 
 This also reinterprets the earlier promotion decision. The clean-frame gate that rejects Gardner is
@@ -463,8 +461,8 @@ remains the accepted baseline.
 
 Position telemetry has now answered the question it was built for, and the answer was neither
 predeclared option. The systematic one-bit misses are not spread across the payload and do not
-accumulate toward its end: 37 of 40 single-bit frames fail at exactly payload bit 189 — the Q axis
-of QPSK symbol 106 — for both samplers independently, and frames are bimodal between fully clean
+accumulate toward its end: 37 of 40 single-bit frames fail at exactly payload bit 189 (the Q axis
+of QPSK symbol 106) for both samplers independently, and frames are bimodal between fully clean
 and wrong-at-189. Within-frame drift and uniform decision-margin loss are both rejected; the target
 is one symbol decided at the boundary.
 
@@ -476,19 +474,18 @@ produce clean frames" is more precisely "Gardner cannot get symbol 106 right".
 The obvious mechanism has already been tested and withdrawn: offline, on the deterministic frame and
 RRC, bit 189 never flips inside ±0.5 symbol of timing error (while bits 70, 22 and 68 flip at a
 third of a symbol), and it is the sole failing bit at zero points of a timing × phase grid where
-bits 89 and 68 fail at 19 and 17 points. Carrier phase discriminates nothing — all 256 payload bits
+bits 89 and 68 fail at 19 and 17 points. Carrier phase discriminates nothing: all 256 payload bits
 flip within a ~43.6–45° band around QPSK's boundary. The transmitted waveform under timing and
 carrier error does not explain the live result.
 
 The remaining fork has since been closed by reading the decoder's own output (`gp_ctrl[16]`): across
-10 of 10 flagged bursts the decoded frame differs from the ROM at exactly frame bit 213 — payload
-bit 189 — and nowhere else, while clean frames differ nowhere. The position telemetry is correct and
+10 of 10 flagged bursts the decoded frame differs from the ROM at exactly frame bit 213 (payload
+bit 189) and nowhere else, while clean frames differ nowhere. The position telemetry is correct and
 the receiver genuinely produces a wrong bit at symbol 106's Q axis.
 
 So the target is now narrow and reproducible: a deterministic wrong decision on one symbol whose
 delivered margin is healthy, invariant to start offset and carrier, with the frame ROM, BER counter
-and index encoding all exonerated. What remains is the path between a good sample and a bad decision
-— Costas, the sampler, the hard decision. Still no PI-gain sweep is justified: the defect is
+and index encoding all exonerated. What remains is the path between a good sample and a bad decision: Costas, the sampler, the hard decision. Still no PI-gain sweep is justified: the defect is
 deterministic, and a deterministic defect has a cause rather than a tuning.
 
 Carried by the timing-clean image `SHA-256 2d7ed04d…` (`WNS=+0.020 ns`); the host now refuses to

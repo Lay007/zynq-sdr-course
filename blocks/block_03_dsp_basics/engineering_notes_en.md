@@ -1,4 +1,4 @@
-# Block 3 — DSP engineering notes
+# Block 3: DSP engineering notes
 
 This page complements the Block 3 labs and connects basic DSP operations to a real SDR architecture: IQ streaming, FPGA implementation, RF chain and measurements.
 

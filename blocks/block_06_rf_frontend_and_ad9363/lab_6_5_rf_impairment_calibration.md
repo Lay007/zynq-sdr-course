@@ -81,7 +81,7 @@ How to read these numbers:
   estimate is `IRR ≈ 10·log10(4 / (ε² + φ²))` with amplitude error `ε ≈ 0.22`
   (1.7 dB) and phase error `φ ≈ 0.11 rad` (6.5°), which gives about 18–19 dB. In
   practice this means a strong signal at +180 kHz also shows up at −180 kHz only
-  ~19 dB lower — enough to fake an interferer.
+  ~19 dB lower: enough to fake an interferer.
 - **DC offset and LO leakage collapse together** because in a zero-IF receiver both
   sit at exactly 0 Hz; removing the complex mean removes both.
 - **The "after" numbers are unrealistically good** (78.8 dB image rejection,

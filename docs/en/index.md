@@ -69,15 +69,15 @@ This is the English learning path: the same course pipeline as the [main page](.
 
 | Block | Topic |
 |---:|---|
-| 1 | [Introduction to SDR](blocks/01-intro.md) — tools, signals and first reception concepts |
-| 2 | [Signals and Sampling](blocks/02-signals-and-sampling.md) — spectrum, aliasing, complex baseband and IQ |
-| 3 | [DSP Basics](blocks/03-dsp-basics.md) — FFT, FIR, windows, mixing and decimation |
-| 4 | [Simulink and Fixed-Point](blocks/04-simulink-and-fixed-point.md) — numeric formats, scaling and quantization |
-| 5 | [FPGA / HDL Flow](blocks/05-fpga-hdl-flow.md) — streaming interfaces, Verilog and testbenches |
-| 6 | [RF Frontend and AD9363](blocks/06-rf-frontend-and-ad9363.md) — frequency plans, gain staging and AD9363 settings |
-| 7 | [TX/RX Chains](blocks/07-tx-rx-chains.md) — DUC, DDC, loopback and packet-level metrics |
-| 8 | [Modulation and Synchronization](blocks/08-modulation-and-synchronization.md) — CFO, phase, timing, EVM and BER |
-| 9 | [Recording and Analysis Tools](blocks/09-recording-and-analysis-tools.md) — metadata, formats, replay and quality checks |
-| 10 | [KiCad and Basic Electronics](blocks/10-kicad-and-basic-electronics.md) — attenuators, filters and RF safety |
-| 11 | [Integrated SDR Project](blocks/11-integrated-sdr-project.md) — model, implementation, capture and report |
-| 12 | [Final Projects](blocks/12-final-projects.md) — portfolio-ready SDR engineering outcomes |
+| 1 | [Introduction to SDR](blocks/01-intro.md): tools, signals and first reception concepts |
+| 2 | [Signals and Sampling](blocks/02-signals-and-sampling.md): spectrum, aliasing, complex baseband and IQ |
+| 3 | [DSP Basics](blocks/03-dsp-basics.md): FFT, FIR, windows, mixing and decimation |
+| 4 | [Simulink and Fixed-Point](blocks/04-simulink-and-fixed-point.md): numeric formats, scaling and quantization |
+| 5 | [FPGA / HDL Flow](blocks/05-fpga-hdl-flow.md), streaming interfaces, Verilog and testbenches |
+| 6 | [RF Frontend and AD9363](blocks/06-rf-frontend-and-ad9363.md): frequency plans, gain staging and AD9363 settings |
+| 7 | [TX/RX Chains](blocks/07-tx-rx-chains.md): DUC, DDC, loopback and packet-level metrics |
+| 8 | [Modulation and Synchronization](blocks/08-modulation-and-synchronization.md): CFO, phase, timing, EVM and BER |
+| 9 | [Recording and Analysis Tools](blocks/09-recording-and-analysis-tools.md): metadata, formats, replay and quality checks |
+| 10 | [KiCad and Basic Electronics](blocks/10-kicad-and-basic-electronics.md): attenuators, filters and RF safety |
+| 11 | [Integrated SDR Project](blocks/11-integrated-sdr-project.md): model, implementation, capture and report |
+| 12 | [Final Projects](blocks/12-final-projects.md): portfolio-ready SDR engineering outcomes |

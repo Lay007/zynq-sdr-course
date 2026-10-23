@@ -1,4 +1,4 @@
-# Contents — Block 6. RF Frontend and AD9363
+# Contents: Block 6. RF Frontend and AD9363
 
 ## Theory track
 1. RX and TX chain structure

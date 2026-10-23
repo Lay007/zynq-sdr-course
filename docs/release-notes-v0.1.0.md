@@ -1,4 +1,4 @@
-# Release notes — v0.1.0
+# Release notes: v0.1.0
 
 > **Status:** release candidate prepared. The `v0.1.0` tag and GitHub Release have not been
 > published yet; the release must point at a commit that passes the checklist below.

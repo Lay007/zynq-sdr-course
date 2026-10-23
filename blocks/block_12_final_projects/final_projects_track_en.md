@@ -1,4 +1,4 @@
-# Block 12 — final project track
+# Block 12: final project track
 
 Block 12 turns the course into a set of final engineering assignments. Each project should include architecture, reproducible execution, data/metadata, metrics and a report.
 

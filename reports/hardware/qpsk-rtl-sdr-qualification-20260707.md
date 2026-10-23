@@ -1,4 +1,4 @@
-# QPSK Zynq-to-RTL-SDR OTA qualification — 2026-07-07
+# QPSK Zynq-to-RTL-SDR OTA qualification: 2026-07-07
 
 ## Result
 

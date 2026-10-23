@@ -1,4 +1,4 @@
-# Report Template — Block 3. DSP Basics
+# Report Template: Block 3. DSP Basics
 
 ## 1. Work title
 State the exact laboratory work, demonstration, or mini-project.

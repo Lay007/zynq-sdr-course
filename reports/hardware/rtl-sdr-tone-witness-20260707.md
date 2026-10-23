@@ -1,4 +1,4 @@
-# ZynqSDR to RTL-SDR tone witness — 2026-07-07
+# ZynqSDR to RTL-SDR tone witness: 2026-07-07
 
 A low-power antenna-to-antenna smoke test verified that both connected RF devices and the capture workflow operate together.
 

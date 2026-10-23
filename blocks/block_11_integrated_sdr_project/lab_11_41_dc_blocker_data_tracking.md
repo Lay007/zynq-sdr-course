@@ -3,7 +3,7 @@
 ## Goal
 
 Find why the receiver deterministically produces a wrong bit at payload index 189, when every
-measurement of the delivered signal at that symbol says it is healthy — and fix it.
+measurement of the delivered signal at that symbol says it is healthy, and fix it.
 
 Prerequisites: [Lab 11.35](/zynq-sdr-course/en/labs/lab-11-35-paired-timing-ab/), which localised the failure and proved
 the reported index is correct.
@@ -11,14 +11,14 @@ the reported index is correct.
 ## Where the previous five labs went wrong
 
 The state at the end of Lab 11.35 was a genuine paradox. The decoded-bit readout had established
-that the chip really does get payload bit 189 wrong — 10 of 10 flagged frames disagree with the ROM
+that the chip really does get payload bit 189 wrong: 10 of 10 flagged frames disagree with the ROM
 at exactly frame bit 213 and nowhere else. Yet the capture tap said the decision margin at that
 symbol was healthy, the offline model said the transmitted waveform never makes that bit fail first,
 and the failure was invariant to start offset and to carrier.
 
 The resolution is not in any of those measurements. It is in what they measured.
 
-> The capture tap records `core_rx` — the **input** of the receive chain. The DC blocker is the
+> The capture tap records `core_rx`: the **input** of the receive chain. The DC blocker is the
 > first block after it. Every "the signal there is healthy" result was blind to the DC blocker by
 > construction, not by accident.
 
@@ -32,9 +32,9 @@ Once the suspect is named, the facts that had no other explanation all follow at
 
 | Observation | Why the DC blocker explains it |
 |---|---|
-| invariant to carrier phase and frequency (910/915/920 MHz alike) | the filter is linear and identical on I and Q, so `dcb(x·e^{jθ}) = dcb(x)·e^{jθ}` — its distortion rotates **with** the signal |
+| invariant to carrier phase and frequency (910/915/920 MHz alike) | the filter is linear and identical on I and Q, so `dcb(x·e^{jθ}) = dcb(x)·e^{jθ}`: its distortion rotates **with** the signal |
 | fabric loopback decodes the same frame at BER 0 | `gp_ctrl[9]` enables the blocker only on the RF path; the loopback runs with it off |
-| capture tap shows a healthy margin at symbol 106 | it is healthy there — the damage happens downstream |
+| capture tap shows a healthy margin at symbol 106 | it is healthy there: the damage happens downstream |
 | deterministic, frame after frame | the distortion is a function of the frame data, which is fixed |
 | invariant to `start_offset` | the transmitter replays cyclically, so the estimate is in cyclic steady state |
 
@@ -58,8 +58,8 @@ python dc_blocker_margin.py
 | Configuration | margin at bit 189 | rank in frame |
 |---|---|---|
 | no blocker, DC-free input (the fabric loopback, and the ideal) | +0.976 | 17 of 256 |
-| **fixed K=6 — the configuration that fails** | **+0.336** | **1 of 256** |
-| running average, K_MAX=10 — the current module | +0.913 | 23 of 256 |
+| **fixed K=6: the configuration that fails** | **+0.336** | **1 of 256** |
+| running average, K_MAX=10: the current module | +0.913 | 23 of 256 |
 
 The blocker removes two thirds of the margin and turns an unremarkable 17th-ranked decision into the
 **weakest of all 256**, at 0.336 against a median of 0.99.
@@ -79,7 +79,7 @@ at three indices and no others:
 All three sit in the predicted weak tail, ordered by how often they failed. Nothing else about the
 frame distinguishes those three bits.
 
-The module's own comment had carried the warning all along — *"K=4 still tracks the modulation and
+The module's own comment had carried the warning all along: *"K=4 still tracks the modulation and
 errs; K>=6 is clean"*. "Clean" had been validated on one high-SNR capture, where a 0.336 margin still
 decodes at zero errors. The two-board link had less to spare. The comment described the failure mode
 exactly; what was wrong was the assumption that 6 was far from the edge.
@@ -88,16 +88,16 @@ exactly; what was wrong was the assumption that 6 was far from the edge.
 
 The blocker is reset every frame (`qpsk_rx_bit_recovery_chain` wires `.rst(rst || frame_start)`), so
 it must converge from zero inside each burst. That rules out simply making K larger. The obvious
-answer is the pattern `qpsk_costas` already uses: acquire fast, then gear down — `K_ACQ` until
+answer is the pattern `qpsk_costas` already uses: acquire fast, then gear down. `K_ACQ` until
 converged, then `K_TRACK`.
 
 It passes a synthetic bench and restores bit 189. It also regresses
 `tb_qpsk_timing_recovery_retained`, a bench built on a real two-board capture.
 
-The reason is worth keeping. In that capture the true DC is tiny — the mean over all 2600 samples is
+The reason is worth keeping. In that capture the true DC is tiny: the mean over all 2600 samples is
 4.5+1.1j against an rms of 377. But the mean of the **first 192 samples** is 79+44j. Over a short
 window the modulation's own local imbalance is the dominant term, so the acquisition window measures
-the wrong DC — and gearing down then freezes that error into a slowly-decaying offset across the
+the wrong DC, and gearing down then freezes that error into a slowly-decaying offset across the
 whole frame.
 
 > A fast wrong estimate is self-correcting. A slow wrong estimate is not.
@@ -109,7 +109,7 @@ caught it; neither the model nor the synthetic stimulus did.
 
 The estimate is now a **running average of every sample since reset**: `K` grows as `floor(log2 n)`
 up to `K_MAX`, and only then becomes a leaky integrator with tau = 2^K_MAX. While K grows this is
-exactly the mean of all n samples so far — the best estimate available at every instant, with the
+exactly the mean of all n samples so far: the best estimate available at every instant, with the
 modulation averaging down as the window widens. There is no arbitrary transition instant and no
 ripple to freeze.
 
@@ -128,14 +128,14 @@ algorithm rather than against an ideal, so the comparison is with the code that 
 numeric checks:
 
 - the injected DC still goes (residual 0 of 5000 injected);
-- steady-state data tracking is at least 4× smaller — measured **15.8×**, against 2⁴ = 16× from
+- steady-state data tracking is at least 4× smaller: measured **15.8×**, against 2⁴ = 16× from
   theory, and that agreement is itself evidence the mechanism is understood;
 - the estimate beats the original over the **first frame** too. That check exists specifically so the
   gear-at-a-fixed-count regression cannot return silently.
 
 On the retained two-board capture the clean sampler phases go from **1 of 8 to 3 of 8**.
 
-### One test was relaxed — deliberately
+### One test was relaxed: deliberately
 
 `tb_qpsk_phase_picker` asserted that its two real captures decode cleanly at exactly the same set of
 sampler offsets. After the fix both masks **widened**, and the extra marginal offsets appeared
@@ -143,7 +143,7 @@ asymmetrically: four for one capture, three for the other.
 
 Both captures improved; only the equality broke. Mask equality was a brittle proxy that held only
 while both sat at the same margin. The picker's actual contract is to remove the dependence on
-arrival phase — the two must be clean on a **common** set, centred on offset 0 — and that is what is
+arrival phase (the two must be clean on a **common** set, centred on offset 0) and that is what is
 asserted now. The check that the masks *disagree* with the picker bypassed is untouched; without it
 the bench would prove nothing.
 
@@ -165,7 +165,7 @@ Bit 189 disappeared from the single-bit histogram entirely, and the production G
 3% to 92% clean frames. The prediction held: the DC blocker was the cause.
 
 The residual single-bit errors are now scattered (Gardner: one each at bits 1, 9, 28, two at bit 2)
-rather than piled on one index — ordinary noise, not a deterministic defect. The fixed-phase sampler
+rather than piled on one index. Ordinary noise, not a deterministic defect. The fixed-phase sampler
 shows a small cluster at bit 88, but that is the non-production path with the known SPS=8.06 timing
 drift that motivated the Gardner loop ([Lab 11.34](/zynq-sdr-course/en/labs/lab-11-34-continuous-qpsk-timing-recovery/)), not
 a DC-blocker effect. Result: `docs/assets/lab1141_dc_blocker_live_validation.json`.
@@ -202,8 +202,8 @@ path, for which the blocker exists, was not re-measured on silicon.
 ## What this lab is really about
 
 Five labs were spent measuring the right quantity in the wrong place. The instrument was correct, the
-readings were correct, and the conclusion drawn from them — "the signal is healthy, so the fault must
-be in the decision logic" — was wrong, because the sentence omitted *where*.
+readings were correct, and the conclusion drawn from them ("the signal is healthy, so the fault must
+be in the decision logic") was wrong, because the sentence omitted *where*.
 
 When a measurement and a symptom contradict each other, the schematic between the probe and the
 symptom is a suspect too.

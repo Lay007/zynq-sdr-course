@@ -83,7 +83,7 @@ and appears in `TX_DATA[0]` as the little-endian word:
 
 This gives the course a concrete place to discuss endianness on a real PS/PL interface.
 
-## Part A — run without hardware
+## Part A: run without hardware
 
 Use:
 
@@ -100,7 +100,7 @@ RX sequence=17 bytes=10 crc=OK payload="Hello Zynq"
 
 The goal is to understand the software-visible contract before opening Vivado.
 
-## Part B — first hardware implementation
+## Part B: first hardware implementation
 
 Minimal Vivado design:
 
@@ -224,7 +224,7 @@ RX sequence=17 bytes=18 crc=OK payload="Hello from board A"
 - A second message before `RX_ACK` kept the first and set `RX_OVERFLOW` (status `0xE`); `RX_ACK`
   cleared it (status `0x2`).
 
-## Part C — move to the radio link
+## Part C: move to the radio link
 
 After the hardware echo, the software API stays unchanged. Only the PL path between TX and RX changes:
 

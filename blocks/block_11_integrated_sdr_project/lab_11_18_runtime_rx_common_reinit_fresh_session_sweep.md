@@ -2,8 +2,7 @@
 
 ## Objective
 
-Test whether starting each overlay iteration in a completely fresh SSH session
-— rather than reusing persistent connections — changes the `rx_valid_count`
+Test whether starting each overlay iteration in a completely fresh SSH session (rather than reusing persistent connections) changes the `rx_valid_count`
 result, and sweep several combinations of `start_offset` and `rx_common_ctrl`
 value in that fresh-session mode.
 

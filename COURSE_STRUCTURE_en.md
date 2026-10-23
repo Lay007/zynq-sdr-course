@@ -35,40 +35,40 @@ flowchart TB
 
 ## Blocks
 
-### Block 1 — Introduction and first reception
+### Block 1: Introduction and first reception
 Defines the setup, introduces HDSDR/RTL-SDR and performs the first RF experiment.
 
-### Block 2 — Signals and sampling
+### Block 2: Signals and sampling
 Explains spectrum, complex representation and aliasing with practical examples.
 
-### Block 3 — DSP basics
+### Block 3: DSP basics
 Covers FFT, filtering and frequency estimation as SDR building blocks.
 
-### Block 4 — Simulink and fixed-point
+### Block 4: Simulink and fixed-point
 Transforms floating-point models into hardware-ready representations.
 
-### Block 5 — FPGA / HDL flow
+### Block 5: FPGA / HDL flow
 Introduces HDL, FPGA pipelines and SoC integration.
 
-### Block 6 — RF frontend
+### Block 6: RF frontend
 Connects digital samples to RF hardware behavior and measurement constraints.
 
-### Block 7 — TX/RX chains
+### Block 7: TX/RX chains
 Builds full SDR transmit and receive chains.
 
-### Block 8 — Modulation and synchronization
+### Block 8: Modulation and synchronization
 Adds digital modulation and recovery algorithms.
 
-### Block 9 — Recording and analysis
+### Block 9: Recording and analysis
 Standardizes IQ recording and multi-tool analysis.
 
-### Block 10 — KiCad and circuits
+### Block 10: KiCad and circuits
 Introduces circuit design as part of SDR experiments.
 
-### Block 11 — Integrated project
+### Block 11: Integrated project
 Combines all layers into a full SDR system.
 
-### Block 12 — Final projects
+### Block 12: Final projects
 Defines independent project paths.
 
 ## Recommended cadence

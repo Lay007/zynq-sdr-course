@@ -54,11 +54,11 @@ As a result of building the flowgraph, the student should observe:
 ## 6. Why GNU Radio is useful in this course
 GNU Radio complements the other tools well:
 
-- **HDSDR** — fast observation of a real signal;
-- **MATLAB / Simulink** — modeling and system-level analysis;
-- **Python** — automation;
-- **C++** — high-performance implementation;
-- **GNU Radio** — quick assembly and visual debugging of SDR chains.
+- **HDSDR**: fast observation of a real signal;
+- **MATLAB / Simulink**: modeling and system-level analysis;
+- **Python**: automation;
+- **C++**: high-performance implementation;
+- **GNU Radio**: quick assembly and visual debugging of SDR chains.
 
 Thus the student gets used immediately to the fact that the same signal can be studied with different engineering tools.
 

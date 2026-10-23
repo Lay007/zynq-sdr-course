@@ -17,7 +17,7 @@ Linux/Python в PS
 1. какой код выполняется ARM-процессором;
 2. какая логика реализуется в FPGA fabric;
 3. как PS видит PL-регистры в адресном пространстве;
-4. почему control plane и sample datapath — разные интерфейсы.
+4. почему control plane и sample datapath: разные интерфейсы.
 
 Перед работой прочитайте [Zynq: где заканчивается PS и начинается PL](/zynq-sdr-course/ru/zynq-ps-pl-architecture/).
 
@@ -83,7 +83,7 @@ byte → 32-bit register → AXI write → PL state → AXI read → byte
 
 Это полезное место, чтобы впервые обсудить endianness на реальном PS/PL интерфейсе.
 
-## Часть A — выполнить без платы
+## Часть A: выполнить без платы
 
 В репозитории используется:
 
@@ -98,9 +98,9 @@ TX sequence=17 bytes=10 payload="Hello Zynq"
 RX sequence=17 bytes=10 crc=OK payload="Hello Zynq"
 ```
 
-Задача этой части — понять software-visible protocol до Vivado.
+Задача этой части: понять software-visible protocol до Vivado.
 
-## Часть B — первая аппаратная реализация
+## Часть B: первая аппаратная реализация
 
 Минимальный Vivado design:
 
@@ -119,7 +119,7 @@ PS/PL mailbox AXI-Lite IP
 - один общий AXI clock для первого опыта;
 - reset от стандартной processor-system-reset схемы;
 - адрес mailbox назначается через Vivado Address Editor;
-- адрес **не копируется из инструкции вслепую** — он записывается в отчёт из конкретной сборки.
+- адрес **не копируется из инструкции вслепую**: он записывается в отчёт из конкретной сборки.
 
 На этом этапе PL может делать простой hardware echo: после `TX_START` копировать TX mailbox в RX mailbox и устанавливать `RX_VALID`.
 
@@ -133,7 +133,7 @@ PS → AXI → PL → AXI → PS
 
 ### Конкретная Vivado-процедура (собрана в Vivado 2021.1; на плату не загружалась)
 
-RTL-часть этого шага закоммичена и проверяется в CI (`zynq_message_mailbox_axi_lite.v`, `zynq_message_mailbox_vivado_wrapper.v`, `tb_zynq_message_mailbox_axi_lite.sv`, workflow `block5_ps_pl_mailbox.yml`). Процедура Block Design ниже выполнена целиком 2026-09-24 в Vivado 2021.1 — до bitstream и XSA — одной командой:
+RTL-часть этого шага закоммичена и проверяется в CI (`zynq_message_mailbox_axi_lite.v`, `zynq_message_mailbox_vivado_wrapper.v`, `tb_zynq_message_mailbox_axi_lite.sv`, workflow `block5_ps_pl_mailbox.yml`). Процедура Block Design ниже выполнена целиком 2026-09-24 в Vivado 2021.1 (до bitstream и XSA) одной командой:
 
 ```bash
 python tools/build_block5_mailbox_bd.py --build-dir C:/tmp/mb
@@ -193,13 +193,13 @@ puts "[get_property OFFSET $seg] [get_property RANGE $seg]"
 
 Что показало выполнение рецепта:
 
-- **Без шага 6 mailbox получает всё окно `M_AXI_GP0` в 1 ГБ** (range `0x40000000`). Ограничение 4K — не косметика.
+- **Без шага 6 mailbox получает всё окно `M_AXI_GP0` в 1 ГБ** (range `0x40000000`). Ограничение 4K: не косметика.
 - `apply_board_preset "1"` требует board-файл Vivado, которого у этой платы нет; настройки платы должны браться из её собственного hardware handoff.
 - В эталонном образе платы `M_AXI_GP0` выключен, а `FCLK_CLK0` равен 50 МГц, поэтому их нужно включать поверх настроек платы.
-- 10 из 876 параметров платы — производные, только для чтения (тактовые частоты шин `*_FREQMHZ` и `PCW_NUM_F2P_INTR_INPUTS`); Vivado отвергает их с CRITICAL WARNING, и это ожидаемо.
+- 10 из 876 параметров платы: производные, только для чтения (тактовые частоты шин `*_FREQMHZ` и `PCW_NUM_F2P_INTR_INPUTS`); Vivado отвергает их с CRITICAL WARNING, и это ожидаемо.
 - При четырёх параллельных заданиях на машине с 16 ГБ синтез IP упёрся в нехватку памяти; по одному заданию сборка завершается.
 
-`0x40000000` — просто начало окна `M_AXI_GP0`, поэтому Vivado его и выбрал. Это всё равно факт конкретной сборки: записывайте адрес, который сообщит ваша сборка, а не этот.
+`0x40000000`: просто начало окна `M_AXI_GP0`, поэтому Vivado его и выбрал. Это всё равно факт конкретной сборки: записывайте адрес, который сообщит ваша сборка, а не этот.
 
 ### На плате (14.10.2026)
 
@@ -224,7 +224,7 @@ RX sequence=17 bytes=18 crc=OK payload="Hello from board A"
 - Второе сообщение до `RX_ACK` сохранило первое и выставило `RX_OVERFLOW` (статус `0xE`);
   `RX_ACK` его снял (статус `0x2`).
 
-## Часть C — переход к радиолинии
+## Часть C: переход к радиолинии
 
 После hardware echo software API не меняется. Меняется только PL между TX и RX mailbox:
 
@@ -261,7 +261,7 @@ RX mailbox
 
 ## Вопросы для отчёта
 
-1. Почему mapper/RRC лучше оставить в PL, а `printf()` — в PS?
+1. Почему mapper/RRC лучше оставить в PL, а `printf()` в PS?
 2. Почему нельзя использовать AXI-Lite для непрерывного IQ-потока?
 3. Что произойдёт, если PS читает RX payload, а PL одновременно его перезаписывает?
 4. Зачем нужен `RX_ACK`?

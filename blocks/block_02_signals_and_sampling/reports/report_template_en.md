@@ -1,4 +1,4 @@
-# Report Template — Block 2. Signals, Spectrum, Sampling, and I/Q
+# Report Template: Block 2. Signals, Spectrum, Sampling, and I/Q
 
 ## 1. Work title
 State the exact laboratory work, demonstration, or mini-project.

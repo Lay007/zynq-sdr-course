@@ -5,7 +5,7 @@
 Analyze a real or synthetic IQ capture with complete metadata and produce an engineering-quality report.
 
 The point of this project is not to make a pretty spectrum. It is to show that another
-engineer, given only your files, can reach the same numbers and the same conclusion — and to
+engineer, given only your files, can reach the same numbers and the same conclusion, and to
 show that you know which of those numbers can be trusted and which cannot.
 
 ## Why this project matters
@@ -77,15 +77,15 @@ Before you look at results, write half a page:
 
 ## Verification gates
 
-1. **G0 — metadata:** the manifest passes `python tools/check_dataset_manifests.py` and states format,
+1. **G0. Metadata:** the manifest passes `python tools/check_dataset_manifests.py` and states format,
    sample rate, centre frequency, channel order, provenance and checksum.
-2. **G1 — read-back:** the reader recovers the documented number of samples and the checksum
+2. **G1. Read-back:** the reader recovers the documented number of samples and the checksum
    matches; the first samples look like what the format says they should.
-3. **G2 — sanity:** the spectrum peak is where the metadata says it should be, or the difference is
+3. **G2. Sanity:** the spectrum peak is where the metadata says it should be, or the difference is
    explained (swapped I/Q mirrors the spectrum; a wrong sample rate scales the axis).
-4. **G3 — quality:** DC offset, clipping fraction and SNR are computed with stated definitions and
+4. **G3. Quality:** DC offset, clipping fraction and SNR are computed with stated definitions and
    compared against the frozen thresholds.
-5. **G4 — reproduction:** a clean checkout regenerates the plots and metrics JSON with one command.
+5. **G4. Reproduction:** a clean checkout regenerates the plots and metrics JSON with one command.
 
 ## Analysis pitfalls to check for explicitly
 

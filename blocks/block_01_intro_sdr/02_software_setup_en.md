@@ -6,16 +6,16 @@ To prepare the software environment for the first block of the course and unders
 ## 1. General approach
 Several software tools are used in the course. They are needed not “for quantity”, but because each one solves a specific engineering task:
 
-- **Python** — the course's reference language: every lab script, figure and metric is produced by it;
-- **RTL-SDR** — an inexpensive external receiver for the first experiments;
-- **spectrum viewer** (HDSDR, SDR#, SDR++ or GQRX) — fast observation of spectrum and waterfall;
-- **MATLAB / Simulink** — an optional parallel route for modeling and fixed-point preparation;
-- **C/C++** — high-performance utilities and signal-processing tools;
-- **GNU Radio** — visual assembly of SDR chains;
-- **Icarus Verilog** — simulation of the course RTL from Block 5 on;
-- **Vivado / Vitis** — the route toward implementation on the Xilinx platform;
-- **KiCad** — reading schematics and preparing the hardware side of the course;
-- **VS Code** — the main working environment of the project.
+- **Python**. The course's reference language: every lab script, figure and metric is produced by it;
+- **RTL-SDR**: an inexpensive external receiver for the first experiments;
+- **spectrum viewer** (HDSDR, SDR#, SDR++ or GQRX): fast observation of spectrum and waterfall;
+- **MATLAB / Simulink**: an optional parallel route for modeling and fixed-point preparation;
+- **C/C++**: high-performance utilities and signal-processing tools;
+- **GNU Radio**: visual assembly of SDR chains;
+- **Icarus Verilog**: simulation of the course RTL from Block 5 on;
+- **Vivado / Vitis**: the route toward implementation on the Xilinx platform;
+- **KiCad**: reading schematics and preparing the hardware side of the course;
+- **VS Code**: the main working environment of the project.
 
 ## 2. Minimum software set to get started
 For the first laboratory work it is enough to install:

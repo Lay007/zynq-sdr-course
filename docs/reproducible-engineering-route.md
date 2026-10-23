@@ -31,11 +31,11 @@ This course instead tries to connect all layers into one consistent workflow.
 
 ## Recommended student workflow
 
-### Stage 1 — Reference model
+### Stage 1: Reference model
 
 Build the cleanest possible software reference.
 
-### Stage 2 — Quantization and fixed-point
+### Stage 2: Quantization and fixed-point
 
 Introduce implementation constraints:
 
@@ -44,15 +44,15 @@ Introduce implementation constraints:
 - saturation;
 - overflow visibility.
 
-### Stage 3 — HDL / FPGA
+### Stage 3: HDL / FPGA
 
 Translate stable DSP blocks into streaming RTL.
 
-### Stage 4 — RF experiment
+### Stage 4: RF experiment
 
 Transmit and receive a real waveform.
 
-### Stage 5 — Measurement
+### Stage 5: Measurement
 
 Evaluate:
 
@@ -62,7 +62,7 @@ Evaluate:
 - BER;
 - synchronization quality.
 
-### Stage 6 — Engineering report
+### Stage 6: Engineering report
 
 Document:
 

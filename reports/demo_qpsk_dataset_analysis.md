@@ -61,7 +61,7 @@ The repository now has two complementary data classes:
 1. **Real RTL-SDR off-air captures**  
    Useful for real-world observation and metadata discipline.
 
-2. **Published synthetic deterministic QPSK fixture** — useful for direct replay plus CI-safe, legally clean and fully reproducible analysis.
+2. **Published synthetic deterministic QPSK fixture**: useful for direct replay plus CI-safe, legally clean and fully reproducible analysis.
 
 This improves Block 9 and gives a stable IQ source for future EVM, CFO and synchronization examples.
 

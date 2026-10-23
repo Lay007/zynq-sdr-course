@@ -1,4 +1,4 @@
-# Report Template — Block 6. RF Frontend and AD9363
+# Report Template: Block 6. RF Frontend and AD9363
 
 ## 1. Work title
 State the exact laboratory work, demonstration, or mini-project.

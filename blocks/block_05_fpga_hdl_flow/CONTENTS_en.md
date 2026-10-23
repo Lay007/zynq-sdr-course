@@ -1,4 +1,4 @@
-# Contents — Block 5. HDL/FPGA Flow and Xilinx Tools
+# Contents: Block 5. HDL/FPGA Flow and Xilinx Tools
 
 ## Theory track
 1. HDL-friendly model constraints

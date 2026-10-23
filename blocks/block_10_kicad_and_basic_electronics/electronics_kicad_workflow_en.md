@@ -1,4 +1,4 @@
-# Block 10 — basic electronics and KiCad workflow
+# Block 10: basic electronics and KiCad workflow
 
 This block connects the SDR course to practical electronics: passive networks, attenuators, safe levels, simple filters and schematic documentation in KiCad.
 

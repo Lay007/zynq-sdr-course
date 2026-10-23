@@ -41,7 +41,7 @@ Since 2026-09-24 the analyzer also prints **receiver scoring** for every burst: 
 
 The exact BER, FER, EVM, SNR-from-EVM, CFO, clipping and confidence-interval formulas are defined in `docs/digital-link-metrics.md`. In particular, `snr_from_evm_db = -20 log10(EVM_RMS)` is a diagnostic noise-dominant estimate, not calibrated RF SNR.
 
-## Measured multi-burst result — 2026-07-07
+## Measured multi-burst result: 2026-07-07
 
 | Metric | -55 dB run | -50 dB run |
 |---|---:|---:|
@@ -65,7 +65,7 @@ The two scorings agree at `-50 dB`. At `-55 dB` the receiver scoring finds more 
 
 See `reports/hardware/qpsk-rtl-sdr-qualification-20260707.md` for plots, evidence files and limitations.
 
-## Cross-session qualification — 2026-07-07
+## Cross-session qualification: 2026-07-07
 
 Three additional independent stock→runtime→stock sessions used the same payload and `-50 dB` operating point. Each session commanded 30 bursts.
 

@@ -1,4 +1,4 @@
-# Report Template — Block 8. Modulation and Synchronization
+# Report Template: Block 8. Modulation and Synchronization
 
 ## 1. Work title
 State the exact laboratory work, demonstration, or mini-project.

@@ -5,8 +5,8 @@ Move from a single test tone to simple modulated signals and show how the SDR st
 
 This laboratory work is based on two fundamental modulation types:
 
-- **AM** — amplitude modulation;
-- **FM** — frequency modulation.
+- **AM**: amplitude modulation;
+- **FM**: frequency modulation.
 
 The goal is not only to see a signal in the spectrum, but also to connect the mathematical model, modulation parameters, RF observation, and offline analysis.
 
@@ -73,7 +73,7 @@ The report must document:
 | `gain_rx` | RTL-SDR gain |
 | `format` | IQ recording format |
 
-## 5. Part A — AM modulation
+## 5. Part A: AM modulation
 ### Tasks
 1. Generate a low-frequency message signal.
 2. Generate an AM signal on the SDR board or in the reference model.
@@ -92,7 +92,7 @@ For AM, the student should observe:
 - spectral changes when the message frequency changes;
 - sideband-level changes when the modulation index changes.
 
-## 6. Part B — FM modulation
+## 6. Part B: FM modulation
 ### Tasks
 1. Generate a low-frequency message signal.
 2. Configure the frequency deviation.

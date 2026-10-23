@@ -24,7 +24,7 @@ flowchart TB
 
 ## Why this matters
 
-An SDR file contains no magic — just a sequence of I/Q samples. If the I and Q
+An SDR file contains no magic: just a sequence of I/Q samples. If the I and Q
 channels are swapped, or if the sign of Q is inverted, the spectrum will appear
 mirrored in frequency.
 

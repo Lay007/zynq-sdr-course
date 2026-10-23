@@ -1,4 +1,4 @@
-# Reports — Block 9
+# Reports: Block 9
 
 ## Purpose
 This folder should contain reports, exported plots, parameter tables, and supporting materials for the block “Recording and Analysis Tools”.

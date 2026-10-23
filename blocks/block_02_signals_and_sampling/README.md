@@ -1,9 +1,9 @@
-# Block 2 / Блок 2 — Signals, Spectrum, Sampling and I/Q
+# Block 2 / Блок 2: Signals, Spectrum, Sampling and I/Q
 
 `block_02_signals_and_sampling` is the signal-interpretation block of the course.
 It teaches how to turn a waveform or IQ file into correctly interpreted engineering data.
 
-`block_02_signals_and_sampling` — это блок интерпретации сигналов.
+`block_02_signals_and_sampling` это блок интерпретации сигналов.
 Он учит превращать временную форму или IQ-файл в корректные инженерные данные.
 
 ![Block 2 Pipeline](assets/block02_pipeline.svg)

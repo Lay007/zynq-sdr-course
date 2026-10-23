@@ -27,13 +27,13 @@ This track sits between the early signal theory blocks and the hardware-oriented
 
 | Course block | Added DSP depth |
 |---|---|
-| Block 02 — Signals and sampling | Explicit aliasing, sample-rate and bandwidth constraints. |
-| Block 03 — DSP basics | FFT complexity, convolution/correlation and windows. |
-| Block 04 — Simulink and fixed-point | Scaling, quantization and bit-growth experiments. |
-| Block 05 — FPGA / HDL flow | RTL-friendly structures, latency and resource estimates. |
-| Block 07 — TX/RX chains | Resampling, DDC/DUC staging and CIC decimation. |
-| Block 08 — Synchronization | Correlation-based detection and metric-driven validation. |
-| Block 09 — Recording and analysis | Spectrum quality, frequency-axis correctness and IQ metadata. |
+| Block 02: Signals and sampling | Explicit aliasing, sample-rate and bandwidth constraints. |
+| Block 03: DSP basics | FFT complexity, convolution/correlation and windows. |
+| Block 04: Simulink and fixed-point | Scaling, quantization and bit-growth experiments. |
+| Block 05: FPGA / HDL flow | RTL-friendly structures, latency and resource estimates. |
+| Block 07: TX/RX chains | Resampling, DDC/DUC staging and CIC decimation. |
+| Block 08: Synchronization | Correlation-based detection and metric-driven validation. |
+| Block 09, Recording and analysis | Spectrum quality, frequency-axis correctness and IQ metadata. |
 
 ## Required engineering outputs
 

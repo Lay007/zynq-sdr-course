@@ -1,9 +1,9 @@
-# Block 3 / Блок 3 — DSP Basics
+# Block 3 / Блок 3: DSP Basics
 
 `block_03_dsp_basics` is the active signal-processing block of the course.
 It moves from interpreting IQ data to transforming it with FFT windows, filters, digital mixing, multirate operations and metrics.
 
-`block_03_dsp_basics` — это блок активной DSP-обработки.
+`block_03_dsp_basics` это блок активной DSP-обработки.
 Он переводит студента от интерпретации IQ-данных к их изменению с помощью FFT-окон, фильтров, цифрового переноса частоты, multirate-операций и метрик.
 
 ![Block 3 Pipeline](assets/block03_pipeline.svg)

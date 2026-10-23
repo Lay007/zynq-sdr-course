@@ -1,4 +1,4 @@
-# AD9361 conducted loopback — 2026-07-15
+# AD9361 conducted loopback: 2026-07-15
 
 ## Result
 

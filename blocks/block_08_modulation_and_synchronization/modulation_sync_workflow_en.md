@@ -1,4 +1,4 @@
-# Block 8 — modulation and synchronization workflow
+# Block 8: modulation and synchronization workflow
 
 This block turns the TX/RX chain from Block 7 into a digital data link: modulation, frequency/phase/timing mismatch, error estimation, correction and BER/EVM validation.
 

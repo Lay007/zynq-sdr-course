@@ -1,4 +1,4 @@
-# Reports — Block 10
+# Reports: Block 10
 
 ## Purpose
 This folder should contain reports, exported plots, parameter tables, and supporting materials for the block “KiCad and Basic Electronics”.

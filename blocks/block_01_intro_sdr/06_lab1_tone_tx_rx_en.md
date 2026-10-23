@@ -87,7 +87,7 @@ The report should include:
 
 - carrier frequency;
 - tone frequency;
-- chosen link method — over-the-air or cable;
+- chosen link method: over-the-air or cable;
 - additional path elements.
 
 ## 8. Configuring RTL-SDR and HDSDR

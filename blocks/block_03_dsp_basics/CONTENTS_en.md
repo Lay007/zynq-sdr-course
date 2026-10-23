@@ -1,4 +1,4 @@
-# Contents — Block 3. DSP Basics
+# Contents: Block 3. DSP Basics
 
 ## Theory track
 1. FFT and spectrum interpretation

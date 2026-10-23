@@ -1,4 +1,4 @@
-# Block 4 — float → fixed-point → HDL workflow
+# Block 4: float → fixed-point → HDL workflow
 
 Block 4 teaches the student to stop treating a DSP algorithm as an infinitely precise mathematical formula and start seeing hardware constraints: word length, scaling, overflow, latency and implementation cost.
 

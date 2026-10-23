@@ -1,4 +1,4 @@
-# AD9361 conducted gain and overload table — 2026-07-15
+# AD9361 conducted gain and overload table: 2026-07-15
 
 ## Result
 

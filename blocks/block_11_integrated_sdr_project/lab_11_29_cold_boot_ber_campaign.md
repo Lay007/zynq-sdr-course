@@ -13,7 +13,7 @@ Each run:
 
 1. cold-boots the board (soft reboot by default: Linux + AD9361 re-init + overlay reload from
    stock; or a true power cycle, see below);
-2. reloads our bitstream and checks the gpreg core id `0x4250534B` — a load-failure detector;
+2. reloads our bitstream and checks the gpreg core id `0x4250534B`: a load-failure detector;
 3. sprays `--frames` frames through the **fabric loopback** (`gp_ctrl[6]`: TX looped into RX
    inside the PL, no AD9361, no RF, bit-deterministic) for BPSK (281 bits/frame) and QPSK
    (280 bits/frame), counting received frames, clean frames, and bit errors.
@@ -25,11 +25,11 @@ count.
 
 ## Statistics (no third-party dependency)
 
-- **Run rates** (loaded, all-clean) — Wilson score interval, plus Clopper–Pearson when `scipy`
+- **Run rates** (loaded, all-clean): Wilson score interval, plus Clopper–Pearson when `scipy`
   is importable.
-- **BER with zero errors in `m` bits** — one-sided upper bound `1 − 0.05^(1/m) ≈ 3/m` (rule of
+- **BER with zero errors in `m` bits**: one-sided upper bound `1 − 0.05^(1/m) ≈ 3/m` (rule of
   three). Reported as `BER < X`, never `BER = 0`.
-- **FER** (frames with ≥1 error / returned frames) — Wilson interval.
+- **FER** (frames with ≥1 error / returned frames): Wilson interval.
 
 The JSON summary is rewritten **after every run**, so a stopped or killed campaign still leaves
 a complete, honest partial result.
@@ -46,7 +46,7 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_29_cold_boot_ber_cam
 
 ### True power cycle
 
-The default "cold boot" is a soft reboot — what can be scripted without switchable power. With
+The default "cold boot" is a soft reboot: what can be scripted without switchable power. With
 a controllable supply, pass a command that cycles the board's power and the campaign runs it in
 place of the soft reboot, then waits for the board to return:
 
@@ -59,8 +59,8 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_29_cold_boot_ber_cam
 
 | | loaded | all-clean | bits | errors | BER (95% upper) |
 |---|---|---|---|---|---|
-| BPSK fabric | — | — | 2,810,000 | 0 | < 1.07 × 10⁻⁶ |
-| QPSK fabric | — | — | 2,800,000 | 0 | < 1.07 × 10⁻⁶ |
+| BPSK fabric | - | - | 2,810,000 | 0 | < 1.07 × 10⁻⁶ |
+| QPSK fabric | - | - | 2,800,000 | 0 | < 1.07 × 10⁻⁶ |
 | **combined** | **50/50** | **50/50** | **5,610,000** | **0** | **< 5.34 × 10⁻⁷** |
 
 - Run-clean rate 50/50, Wilson 95% **[0.929, 1.0]**; zero load/boot failures.
@@ -73,13 +73,13 @@ BER bound over 5.6 M deterministic bits.
 
 Companion tool `tools/timing_directive_sweep.tcl` checks whether the shipped timing closure is
 a property of the design or of one lucky placement. Vivado 2021.1 has no numeric placement
-seed, so it sweeps the placement *directive* (a stronger test — it swaps the algorithm):
+seed, so it sweeps the placement *directive* (a stronger test. It swaps the algorithm):
 
 ```bash
 /g/Xilinx/Vivado/2021.1/bin/vivado.bat -mode batch -notrace -source tools/timing_directive_sweep.tcl
 ```
 
-Result — **ROBUST**, all five strategies met timing:
+Result. **ROBUST**, all five strategies met timing:
 
 | directive | WNS (ns) | TNS |
 |---|---|---|
@@ -89,11 +89,11 @@ Result — **ROBUST**, all five strategies met timing:
 | ExtraNetDelay_high | +0.171 | 0 |
 | ExtraPostPlacementOpt | +0.122 | 0 |
 
-Worst across genuinely different placements is +0.017 ns (WLDriven) — positive, and the margin
+Worst across genuinely different placements is +0.017 ns (WLDriven): positive, and the margin
 to watch as the RTL grows. The sweep leaves `impl_1` on the last directive; re-run the normal
 build to restore the shipped Explore placement.
 
 ## RF safety
 
-Fabric loopback never configures or raises TX — the board stays at the stock −89.75 dB
+Fabric loopback never configures or raises TX: the board stays at the stock −89.75 dB
 throughout, and the campaign reboots to stock at the end. Nothing radiates.

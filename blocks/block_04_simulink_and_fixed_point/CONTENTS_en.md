@@ -1,4 +1,4 @@
-# Contents — Block 4. Simulink and Fixed-Point Preparation
+# Contents: Block 4. Simulink and Fixed-Point Preparation
 
 ## Theory track
 1. chain modeling in Simulink

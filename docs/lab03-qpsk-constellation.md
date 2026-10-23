@@ -1,4 +1,4 @@
-# Lab 3 — QPSK → Constellation → Impairments
+# Lab 3: QPSK → Constellation → Impairments
 
 Lab 3 introduces digital modulation and visualization through constellation diagrams.
 

@@ -1,4 +1,4 @@
-# Contents — Block 12. Final Projects
+# Contents: Block 12. Final Projects
 
 ## Theory track
 1. topic selection and success criteria

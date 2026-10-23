@@ -55,14 +55,14 @@ flowchart LR
 
 For the SDR chain in this course, it is useful to specify these taps early:
 
-1. `tap_input_iq` — input stream after source/DMA/generator.
-2. `tap_nco_iq` — NCO sine/cosine before mixing.
-3. `tap_mixer_out_iq` — complex multiply result.
-4. `tap_fir_out_iq` — pulse-shaping or matched-filter output.
-5. `tap_rate_out_iq` — stream after interpolation/decimation/CIC.
-6. `tap_frame_sync` — preamble/frame detection.
-7. `tap_metric` — correlation metric, power estimate or RSSI-like estimate.
-8. `tap_output_iq` — last digital stream before the RF frontend or after RX DSP.
+1. `tap_input_iq`: input stream after source/DMA/generator.
+2. `tap_nco_iq`: NCO sine/cosine before mixing.
+3. `tap_mixer_out_iq`: complex multiply result.
+4. `tap_fir_out_iq`: pulse-shaping or matched-filter output.
+5. `tap_rate_out_iq`: stream after interpolation/decimation/CIC.
+6. `tap_frame_sync`: preamble/frame detection.
+7. `tap_metric`: correlation metric, power estimate or RSSI-like estimate.
+8. `tap_output_iq`: last digital stream before the RF frontend or after RX DSP.
 
 Not every tap has to be physically routed at the same time. The important part is that the specification explains **which points can be connected to ILA, DMA snapshot or a debug mux**.
 

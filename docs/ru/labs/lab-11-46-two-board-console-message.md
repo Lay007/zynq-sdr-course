@@ -32,7 +32,7 @@ Lab 11.46 связывает их в одну систему:
 
 - PS отвечает за пользовательский интерфейс и packet-level software;
 - PL отвечает за детерминированный bit/symbol/sample datapath;
-- AXI — реальная граница между ними;
+- AXI: реальная граница между ними;
 - AD936x переносит уже не тестовый паттерн как самоцель, а понятное сообщение.
 
 ## Предпосылки
@@ -40,7 +40,7 @@ Lab 11.46 связывает их в одну систему:
 Перед этой лабораторной должны быть понятны:
 
 1. [Zynq: где заканчивается PS и начинается PL](../../ru/zynq-ps-pl-architecture.md);
-2. [Lab 5.12 — PS↔PL message mailbox](lab-5-12-zynq-ps-pl-mailbox.md);
+2. [Lab 5.12: PS↔PL message mailbox](lab-5-12-zynq-ps-pl-mailbox.md);
 3. существующий двухплатный QPSK тракт и результат Lab 11.45.
 
 ## Что переиспользуем
@@ -64,13 +64,13 @@ PS message bytes → packet serializer → [existing modem] → packet decoder �
 
 ## Ограничение первой версии
 
-Существующий рабочий кадр использует **256 payload bits = 32 bytes**. Поэтому первая radio-версия передаёт один фиксированный 32-байтный payload пакета; сообщение пользователя в нём — до 27 bytes (см. Packet payload v1).
+Существующий рабочий кадр использует **256 payload bits = 32 bytes**. Поэтому первая radio-версия передаёт один фиксированный 32-байтный payload пакета; сообщение пользователя в нём до 27 bytes (см. Packet payload v1).
 
 Это намеренное ограничение baseline, а не недостаток mailbox:
 
 - PS/PL mailbox хранит до 64 bytes;
 - v1 radio bridge использует один существующий 32-byte QPSK payload;
-- fragmentation/multiple frames — отдельное расширение после первого PASS.
+- fragmentation/multiple frames: отдельное расширение после первого PASS.
 
 `Hello from board A` помещается в один кадр.
 
@@ -85,7 +85,7 @@ bytes 3..29 : UTF-8/application bytes, zero padded
 bytes 30..31: CRC-16/CCITT over bytes 0..29
 ```
 
-То есть максимальное пользовательское сообщение v1 — **27 bytes**. Этого достаточно для учебного demo и оставляет packet metadata/CRC внутри уже существующего payload размера.
+То есть максимальное пользовательское сообщение v1: **27 bytes**. Этого достаточно для учебного demo и оставляет packet metadata/CRC внутри уже существующего payload размера.
 
 Численные соглашения зафиксированы явно:
 
@@ -108,7 +108,7 @@ Mailbox уже упаковывает байты little-endian в 32-битны�
 
 Это специально подчёркивает архитектурное разделение, а не переносит всю систему в FPGA.
 
-## Этап 1 — software contract без RF
+## Этап 1: software contract без RF
 
 Убедиться, что студент понимает mailbox:
 
@@ -118,7 +118,7 @@ python tools/zynq_message_console.py --mock demo "Hello Zynq" --sequence 17
 
 Это не RF simulation. Здесь проверяется только PS-visible interface.
 
-## Этап 2 — одна плата, hardware PS↔PL echo
+## Этап 2: одна плата, hardware PS↔PL echo
 
 Собрать mailbox AXI-Lite IP и доказать:
 
@@ -137,7 +137,7 @@ TX sequence=1 bytes=8 payload="Hello PL"
 
 Физический адрес берётся из Vivado Address Editor конкретной сборки.
 
-## Этап 3 — цифровой modem loopback
+## Этап 3: цифровой modem loopback
 
 Заменить PL echo на packet serializer + существующий QPSK digital loopback:
 
@@ -149,13 +149,13 @@ PS → mailbox → packet bytes → QPSK TX → digital loopback → QPSK RX →
 
 В репозитории теперь есть исполняемый baseline этапа 3:
 
-- `qpsk_packet_v1.py` — независимый Python reference для packet/CRC;
-- `qpsk_packet_v1_codec.v` — синтезируемый ready/valid packet codec;
-- `qpsk_packet_frame_bridge.v` — добавляет существующую 24-битную преамбулу и
+- `qpsk_packet_v1.py`: независимый Python reference для packet/CRC;
+- `qpsk_packet_v1_codec.v`: синтезируемый ready/valid packet codec;
+- `qpsk_packet_frame_bridge.v`: добавляет существующую 24-битную преамбулу и
   собирает нормализованные 256 payload bits после существующего frame sync;
-- `qpsk_packet_digital_loopback.v` — переиспользует существующие mapper, RRC TX,
+- `qpsk_packet_digital_loopback.v`: переиспользует существующие mapper, RRC TX,
   matched filter, timing sampler, hard decision и quadrant-resolving frame sync;
-- `tb_qpsk_packet_digital_loopback.sv` — передаёт `"Hello from board A"`,
+- `tb_qpsk_packet_digital_loopback.sv`: передаёт `"Hello from board A"`,
   sequence `17` и требует тот же payload с `CRC=OK`.
 
 Запуск сфокусированной регрессии:
@@ -179,7 +179,7 @@ ready/valid transfer. Producer удерживает payload стабильным
 Этот результат **не доказывает** AXI/Vivado integration, FPGA synthesis/timing,
 RF transport или двухплатный link.
 
-## Этап 4 — две платы
+## Этап 4: две платы
 
 Начать с безопасного кабельного соединения и требуемого затухания, затем при необходимости перейти к OTA.
 
@@ -263,7 +263,7 @@ board-a$ ./zmsg stop
 - RX CRC result;
 - число повторов;
 - packet success rate;
-- при ошибке — raw 32-byte payload или hex dump, а не только «не работает».
+- при ошибке: raw 32-byte payload или hex dump, а не только «не работает».
 
 ## Минимальная кампания
 

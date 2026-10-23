@@ -44,21 +44,21 @@ A lab is complete only when it contains:
 
 ## Priority backlog
 
-### P0 — make the course easy to evaluate
+### P0: make the course easy to evaluate
 
 - Add a single page that explains how to reproduce all figures.
 - Add a lab report template.
 - Add a common measurement-metadata format for IQ recordings.
 - Add a course completion matrix: model, code, plots, HDL notes, measurement notes.
 
-### P1 — make it engineering-heavy
+### P1: make it engineering-heavy
 
 - Add fixed-point error tables for FIR, mixer, NCO and decimator labs.
 - Add streaming FPGA diagrams for each DSP block.
 - Verify the selected board-qualified vendor-snapshot timing margin across repeat builds/seeds.
 - Extend the current Verilog testbench strategy toward integrated AXI/DMA-level verification.
 
-### P2 — make it publication/portfolio-ready
+### P2: make it publication/portfolio-ready
 
 - Add final project scenarios.
 - Add example report screenshots.

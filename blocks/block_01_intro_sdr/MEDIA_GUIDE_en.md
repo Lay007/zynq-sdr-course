@@ -1,4 +1,4 @@
-# MEDIA GUIDE — How to Add Photos, Schematics, and Animation
+# MEDIA GUIDE: How to Add Photos, Schematics, and Animation
 
 ## Recommended folder structure
 ```text

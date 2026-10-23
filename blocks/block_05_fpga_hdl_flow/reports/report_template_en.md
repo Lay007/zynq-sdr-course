@@ -1,4 +1,4 @@
-# Report Template — Block 5. HDL/FPGA Flow and Xilinx Tools
+# Report Template: Block 5. HDL/FPGA Flow and Xilinx Tools
 
 ## 1. Work title
 State the exact laboratory work, demonstration, or mini-project.

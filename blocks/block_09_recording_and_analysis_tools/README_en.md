@@ -48,11 +48,11 @@ block_09_recording_and_analysis_tools/
 └── reports/
 ```
 
-- `assets/` — reference data and helper materials;
-- `images/` — diagrams, screenshots, and photos;
-- `kicad/` — schematics and electrical notes;
-- `simulink/`, `matlab/`, `python/`, `cpp/`, `gnuradio/` — models and analysis tools;
-- `reports/` — reports and report templates.
+- `assets/`: reference data and helper materials;
+- `images/`: diagrams, screenshots, and photos;
+- `kicad/`: schematics and electrical notes;
+- `simulink/`, `matlab/`, `python/`, `cpp/`, `gnuradio/`: models and analysis tools;
+- `reports/`: reports and report templates.
 
 ## Recommended work order
 1. document the data formats in use.

@@ -2,8 +2,8 @@
 
 A Zynq device combines two different computing environments on one chip:
 
-- **PS (Processing System)** — ARM processors, memory, Linux/no-OS, drivers and application software;
-- **PL (Programmable Logic)** — FPGA fabric for deterministic streaming datapaths.
+- **PS (Processing System)**: ARM processors, memory, Linux/no-OS, drivers and application software;
+- **PL (Programmable Logic)**: FPGA fabric for deterministic streaming datapaths.
 
 For SDR work it is not enough to write an HDL block. A student should understand **which functions belong in PS, which belong in PL, and which interface should cross the boundary**.
 
@@ -36,15 +36,15 @@ The boundary is not absolute. CRC, framing, or buffering can live on either side
 
 ## Three interfaces students should not confuse
 
-### AXI4-Lite — control plane
+### AXI4-Lite: control plane
 
 Good for `start`, `status`, configuration words, counters, and a small mailbox. Software sees ordinary 32-bit memory-mapped registers.
 
-### AXI4-Stream — datapath
+### AXI4-Stream: datapath
 
 Good for continuous data such as IQ samples. The key concepts are `valid/ready`, latency, backpressure and frame boundaries.
 
-### DMA — memory-to-stream bridge
+### DMA: memory-to-stream bridge
 
 DMA becomes useful when the data volume is too large for register-by-register access. It should not be the student's first PS/PL experiment because it can hide the simpler architectural ideas behind a large Vivado block design.
 
@@ -110,4 +110,4 @@ The important lesson is that FPGA fabric is not “where all code should go”. 
 
 ## Next step
 
-Continue with **Lab 5.12 — PS↔PL message mailbox**. In Block 11 the same software interface will be reused for a two-board message over the existing QPSK PHY.
+Continue with **Lab 5.12: PS↔PL message mailbox**. In Block 11 the same software interface will be reused for a two-board message over the existing QPSK PHY.

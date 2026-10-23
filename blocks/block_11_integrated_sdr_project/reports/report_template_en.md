@@ -1,4 +1,4 @@
-# Report Template — Block 11. Integrated SDR Project
+# Report Template: Block 11. Integrated SDR Project
 
 ## 1. Work title
 State the exact laboratory work, demonstration, or mini-project.

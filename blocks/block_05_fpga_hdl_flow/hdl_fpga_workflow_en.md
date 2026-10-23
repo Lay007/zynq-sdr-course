@@ -1,4 +1,4 @@
-# Block 5 — HDL/FPGA workflow
+# Block 5: HDL/FPGA workflow
 
 This block turns fixed-point DSP from Block 4 into a hardware architecture: streaming interfaces, testbenches, RTL structure, resource estimation and Vivado integration.
 

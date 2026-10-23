@@ -5,7 +5,7 @@ This section connects the mathematical signal model with its physical implementa
 
 Key idea:
 
-**the same signal must be understandable at every level — from Simulink to RF emission.**
+**the same signal must be understandable at every level: from Simulink to RF emission.**
 
 ## Overall chain
 

@@ -15,7 +15,7 @@ Lab 11.13 показала, что RX-захват на хосте работа�
 | Путь | Назначение |
 |---|---|
 | `blocks/block_11_integrated_sdr_project/python/lab_11_16_runtime_rx_common_reinit_probe.py` | загрузить overlay, попытаться захватить на хосте, принудительно повторно инициализировать `rx_common`, снова попытаться захватить, составить отчёт |
-| `blocks/block_11_integrated_sdr_project/python/runtime_rx_common.py` | `force_rx_common_ctrl_request()` — отправляет по SSH последовательность повторной инициализации на стороне платы |
+| `blocks/block_11_integrated_sdr_project/python/runtime_rx_common.py` | `force_rx_common_ctrl_request()`: отправляет по SSH последовательность повторной инициализации на стороне платы |
 
 ## Что делает скрипт
 
@@ -45,7 +45,7 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_16_runtime_rx_common
 |---|---|
 | `libiio` успешен | повторной инициализации `rx_common` достаточно; для итеративных тестов перезагрузка не нужна |
 | `libiio` по-прежнему отказывает | нехватка данных DMA глубже, чем регистр `rx_common`; требуется перезагрузка платы |
-| частичное восстановление | `iio_readdev` работает, а `libiio` нет — разница на уровне буфера, исследуйте `iio_buffer_size` |
+| частичное восстановление | `iio_readdev` работает, а `libiio` нет: разница на уровне буфера, исследуйте `iio_buffer_size` |
 
 ## Живой результат 2026-06-23
 

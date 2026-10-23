@@ -20,7 +20,7 @@ Using the stock host TX as a witness eliminates the second ambiguity.
   a constant and only the RX datapath from the AD9361 is wired into the PL BPSK
   chain, removing PL TX as a variable.
 - `host TX`: the stock AD9361 DMA TX path driven directly from the Linux host
-  over network IIO — the same cyclic-BPSK burst used in Lab 11.14.
+  over network IIO. The same cyclic-BPSK burst used in Lab 11.14.
 - `gpreg RX counters`: `rx_valid_count` and `received_bits` inside `axi_gpreg`
   at `0x79040000`; non-zero means the PL framer actually processed symbols.
 - `rx_common re-init`: an optional write to the AD9361 RX common control
@@ -69,7 +69,7 @@ The script:
 
 | `rx_valid_count` after TX | Meaning |
 |---|---|
-| remains 0 | PL RX chain is not receiving samples — overlay or DMAC issue |
+| remains 0 | PL RX chain is not receiving samples: overlay or DMAC issue |
 | increments | PL RX chain is alive; previous failure was PL TX starvation |
 
 If `rx_valid_count` stays zero even with a confirmed host TX burst, the blocker
@@ -82,7 +82,7 @@ The `bridge_rx_only` witness run showed `rx_valid_count = 0` after both a plain
 overlay reload and after an `rx_common` re-init attempt, while the host stock TX
 was confirmed to be transmitting the BPSK cyclic burst. This proved that the PL
 RX path itself does not receive samples from the AD9361 under the runtime
-overlay — irrespective of what generates the RF signal.
+overlay: irrespective of what generates the RF signal.
 
 Next step: investigate whether the AD9361 → PL sample bus (LVDS or parallel)
 is properly re-armed after a hot `fpga_manager` reload.

@@ -72,7 +72,7 @@ The WSL/Icarus regressions prove the cycle counts below. Rates use the constrain
 | Final accepted input to `done` | 16,644 | 166.440 us |
 | First accepted input to `done` | 16,771 | 167.710 us |
 | Symbol initiation interval | 16,772 | 5,962.318 symbols/s |
-| Sustained accepted-sample rate | — | 763,176.723 samples/s |
+| Sustained accepted-sample rate | - | 763,176.723 samples/s |
 
 The sustained rate assumes 128 consecutive accepted samples followed by the
 mandatory processing interval. Samples cannot be accepted continuously while

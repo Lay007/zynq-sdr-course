@@ -1,4 +1,4 @@
-# Contents — Block 9. Recording and Analysis Tools
+# Contents: Block 9. Recording and Analysis Tools
 
 ## Theory track
 1. IQ file formats and metadata

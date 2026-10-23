@@ -5,7 +5,7 @@
 Run the same RTL-SDR external monitoring approach as Lab 11.21, but with the
 ZynqSDR operating under the **runtime course overlay** (`bridge_txrx_mux`)
 instead of the stock shell. The goal is to confirm whether the PL BPSK TX path
-actually radiates an RF signal even when `rx_valid_count = 0` — which would
+actually radiates an RF signal even when `rx_valid_count = 0`, which would
 isolate the failure to the RX side only.
 
 ## Engineering question
@@ -62,12 +62,12 @@ the PL bring-up sequence. Thread synchronization is via a `threading.Event`:
 the capture thread records from the moment `burst_start` is asserted until the
 event is set at the end of `--capture-duration-s`.
 
-## Live result on 2026-06-23 — corrected
+## Live result on 2026-06-23: corrected
 
 > **Correction.** An earlier version of this section said that the offline analysis "detected the BPSK
 > preamble and measured BER = 0 / EVM ≈ 56 %" and concluded that "the PL BPSK TX path radiates correctly".
 > The committed analysis output does not support that. The capture of the runtime PL run scores
-> **105 bit errors out of 281 (BER 0.37)**, EVM ≈ 820 %, and a preamble correlation of 0.13 — the
+> **105 bit errors out of 281 (BER 0.37)**, EVM ≈ 820 %, and a preamble correlation of 0.13: the
 > signature of no BPSK signal at all ([metrics](/zynq-sdr-course/assets/lab1120_lab11_22_runtime_pl_rtl_monitor_live_20260624_runtime_pl_a_live_20260624_runtime_pl_a_metrics.json)).
 
 What the run did show is the gpreg pattern `tx_valid_count > 0`, `rx_valid_count = 0`. The counters

@@ -3,7 +3,7 @@
 ## Goal
 
 With the DC blocker fixed ([Lab 11.41](/zynq-sdr-course/en/labs/lab-11-41-dc-blocker-data-tracking/)) the two-board Gardner
-link is ~92% clean. Find what the remaining ~6–8% of frames are, and close it — or prove it cannot be
+link is ~92% clean. Find what the remaining ~6–8% of frames are, and close it, or prove it cannot be
 closed without an RTL change.
 
 ## The failures are bimodal
@@ -12,8 +12,8 @@ The first move is not to tune anything; it is to look at what the dirty frames a
 the locked frames by payload-error count:
 
 - **~92%** decode perfectly;
-- **~2–3%** carry a single wrong bit — ordinary channel noise, scattered across random indices;
-- **~2–3%** carry **~117 of 256 bits wrong** — 46%.
+- **~2–3%** carry a single wrong bit: ordinary channel noise, scattered across random indices;
+- **~2–3%** carry **~117 of 256 bits wrong**: 46%.
 
 46% is not marginal SNR. A frame that is genuinely near the noise floor loses a handful of bits, not
 half of them. Half the bits wrong is a **discrete event**: the whole burst decoded in the wrong
@@ -23,7 +23,7 @@ constellation rotation. The two error populations need separate explanations; av
 ## Where the gross errors sit
 
 A 90° rotation and a mid-frame carrier slip both produce ~50% BER, so the error *count* cannot tell
-them apart. Their *position* can, and the `gp_ctrl[15]` telemetry reports it — which quarter fails
+them apart. Their *position* can, and the `gp_ctrl[15]` telemetry reports it, which quarter fails
 first, and the index of the first error. Measured over the gross frames:
 
 - quarter 0 is clean in only ~1 of 17 gross frames;
@@ -41,7 +41,7 @@ killed by data:
 
 | Hypothesis | Lever | Result |
 |---|---|---|
-| inter-board CFO confuses acquisition | coarse CFO `gp_ctrl[13]` | **worse** — gross 5% → 16%, lock 100% → 84% |
+| inter-board CFO confuses acquisition | coarse CFO `gp_ctrl[13]` | **worse**: gross 5% → 16%, lock 100% → 84% |
 | per-burst re-acquisition from reset | `costas_hold_phase` `gp_ctrl[11]` | no effect (3.0% → 3.3%) |
 | a bad sampling phase | sweep `start_offset` 0–7 | flat; the earlier apparent correlation was noise |
 | not enough SNR | TX −38…−22 dBm | **U-shaped**, minimum ~3% at −30 (noise below, compression above) |
@@ -70,19 +70,19 @@ python blocks/block_11_integrated_sdr_project/python/lab_11_42_ber_floor_lock_to
    LOCK_ERR_TOL=0: per-position 6.0e-8 -> per-burst 8.3e-6
 ```
 
-At the shipped `LOCK_ERR_TOL=3` that is **~2% per burst** — a **false lock**, and it matches the
+At the shipped `LOCK_ERR_TOL=3` that is **~2% per burst**: a **false lock**, and it matches the
 measured floor. The gross failures are branch A sliding over the noisy part of the burst and locking
 on a chance window before the true frame arrives.
 
 ## The fix, and why it does not cost lock rate
 
 Tighten `LOCK_ERR_TOL` to 1: the chance window drops ~100× to ~0.02% per burst. The obvious worry is
-the other side of the trade — a *true* preamble carrying a couple of noise errors would now fail to
+the other side of the trade: a *true* preamble carrying a couple of noise errors would now fail to
 lock and the burst would be lost. Two things make that safe here:
 
 - the true preamble matches near-perfectly (the clean bursts have zero preamble errors), so it locks
   with room to spare at tol=1;
-- verified in simulation on the real self-OTA captures — both `tb_qpsk_rx_costas` and, crucially,
+- verified in simulation on the real self-OTA captures: both `tb_qpsk_rx_costas` and, crucially,
   `tb_qpsk_costas_stress` (which prepends **3000 noise samples** before the frame, exactly the
   false-lock scenario) decode at **BER 0/280** with `LOCK_ERR_TOL=1`. The tightened lock rejects the
   noise and still acquires the true frame.
@@ -106,28 +106,28 @@ The floor fell ~3–4× and the clean rate rose from ~92% to ~99%. The five lost
 trade: a burst whose true preamble carried ≥2 noise errors is now *rejected* rather than mis-decoded,
 and a lost frame contributes zero errors where a gross frame contributed ~117.
 
-**But the arithmetic promised ~100×, and hardware delivered ~4×** — so the model was incomplete, and it
+**But the arithmetic promised ~100×, and hardware delivered ~4×**, so the model was incomplete, and it
 is worth saying why rather than rounding it away. The ~2% *spurious sliding-lock* component did drop
 as predicted (to ~0.02%); what remains is a **different** wrong-rotation mechanism that `LOCK_ERR_TOL`
 cannot touch. Two candidates were checked:
 
-- **preamble self-similarity under rotation** — refuted offline: the 24-bit preamble mismatches its
+- **preamble self-similarity under rotation**. Refuted offline: the 24-bit preamble mismatches its
   90° and 270° rotations by exactly 12/24 and its 180° by 24/24, i.e. no easier-than-random wrong
   lock;
-- **carrier-marginal bursts** — the residual rate wandered 0.3%→1.0% between runs, tracking the slow
+- **carrier-marginal bursts**: the residual rate wandered 0.3%→1.0% between runs, tracking the slow
   inter-board CFO phase drift, which points at bursts where Costas settles near a 45° boundary and the
   preamble locks on the correct rotation but the payload rotates. That is a genuine acquisition event,
   not a false lock, and tightening the correlation does nothing to it.
 
 So the honest result is a solid, well-understood **~4× reduction to a ~1% floor**, not the 100× a
-single-mechanism model suggested. Pushing below ~1% would need a different tool — differential
-encoding or a payload-consistency gate — not another turn of the lock tolerance. Result:
+single-mechanism model suggested. Pushing below ~1% would need a different tool (differential
+encoding or a payload-consistency gate) not another turn of the lock tolerance. Result:
 `docs/assets/lab1142_ber_floor_live.json`.
 
 ## What this lab is really about
 
 The DC-blocker bug was one block trusting a measurement taken in the wrong place. This one is one
-comment trusting an assumption at a single point — "the wrong branch can't lock" — that held at the
+comment trusting an assumption at a single point ("the wrong branch can't lock") that held at the
 true frame position and failed everywhere else the correlator looked. Both were closed the same way:
 stop averaging, split the failure population, and follow the one that carries the signal. Here the
 arithmetic of a sliding correlator predicted the exact floor before a single knob was turned.

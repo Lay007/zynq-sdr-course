@@ -29,15 +29,15 @@ reference model
 
 ## Suggested student experiment
 
-### Step 1 — Generate waveform
+### Step 1: Generate waveform
 
 Create a clean reference waveform in software.
 
-### Step 2 — Run FPGA chain
+### Step 2: Run FPGA chain
 
 Transmit the waveform using the SDR platform.
 
-### Step 3 — Observe spectrum
+### Step 3: Observe spectrum
 
 Verify:
 
@@ -46,7 +46,7 @@ Verify:
 - spurious components;
 - gain configuration.
 
-### Step 4 — Record IQ samples
+### Step 4: Record IQ samples
 
 Store IQ captures together with:
 
@@ -55,7 +55,7 @@ Store IQ captures together with:
 - gain settings;
 - capture timestamp.
 
-### Step 5 — Analyze recording
+### Step 5: Analyze recording
 
 Evaluate:
 

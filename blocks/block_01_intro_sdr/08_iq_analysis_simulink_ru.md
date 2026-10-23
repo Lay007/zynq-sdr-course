@@ -38,7 +38,7 @@
 ## 4. Рекомендуемая структура модели
 Примерная структура блоков:
 
-- **Binary File Reader** (сырые файлы с чередованием I/Q) или **From Multimedia File** (WAV-записи) — оба из DSP System Toolbox
+- **Binary File Reader** (сырые файлы с чередованием I/Q) или **From Multimedia File** (WAV-записи): оба из DSP System Toolbox
 - **Data Type Conversion**
 - **Demux / Selector**
 - **Real-Imag to Complex**

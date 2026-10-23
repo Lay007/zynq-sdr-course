@@ -1,4 +1,4 @@
-# Lab 2 — AM/FM → Spectrum → Bandwidth
+# Lab 2: AM/FM → Spectrum → Bandwidth
 
 Lab 2 extends the tone experiment into classical analog modulation. The goal is not only to generate AM/FM signals, but to compare model expectations with measured spectrum and bandwidth.
 

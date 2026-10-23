@@ -80,7 +80,7 @@ layout      = I[0] Q[0] I[1] Q[1] ...
 | EVM | record and compare against the matched baseline; no universal pass threshold is used until amplitude/timing normalization is calibrated |
 | Frame detected | yes |
 
-## Re-scored captures — 2026-09-24
+## Re-scored captures: 2026-09-24
 
 Both 2026-06-24 captures whose WAVs are available locally, analysed with the current script:
 

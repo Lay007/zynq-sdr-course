@@ -1,4 +1,4 @@
-# Lab 1 — Tone → RF → IQ → Analysis
+# Lab 1: Tone → RF → IQ → Analysis
 
 This showcase is the first complete engineering loop of the course. A simple tone is intentionally used because it makes every mistake visible: wrong sample rate, gain overload, frequency offset, clipping, image components and incorrect IQ interpretation.
 

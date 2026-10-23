@@ -163,12 +163,12 @@ The minimal report should include:
 
 This lab prepares the following course topics:
 
-- Lab 1.1 — controlled Zynq DDS tone: Zynq7020 + AD9363 → RTL-SDR → WAV IQ → offline spectrum analysis;
-- Block 2 — sampling, spectrum, aliasing, and sample-rate selection;
-- Block 3 — FFT, windows, FIR, digital mixing, and decimation;
-- Block 5 — RTL implementation of DSP blocks;
-- Block 6 — RF frontend, gain, frequency plan, and overload;
-- Block 9 — IQ file format, metadata, and reproducible analysis.
+- Lab 1.1. Controlled Zynq DDS tone: Zynq7020 + AD9363 → RTL-SDR → WAV IQ → offline spectrum analysis;
+- Block 2: sampling, spectrum, aliasing, and sample-rate selection;
+- Block 3: FFT, windows, FIR, digital mixing, and decimation;
+- Block 5: RTL implementation of DSP blocks;
+- Block 6: RF frontend, gain, frequency plan, and overload;
+- Block 9: IQ file format, metadata, and reproducible analysis.
 
 ## Practical outcome
 
