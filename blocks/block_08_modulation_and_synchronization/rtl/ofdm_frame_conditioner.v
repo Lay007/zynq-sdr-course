@@ -77,15 +77,38 @@ function integer msb32(input [31:0] v);
             if (v[b]) msb32 = b;
     end
 endfunction
-integer m;
-reg [31:0] r_norm;
 integer k_calc;
+reg [31:0] r_norm;
+
+// Level, over three clocks (once per frame; in one clock the priority encoder, the normalizing
+// shift and the subtraction were 15 logic levels): R registered, its top bit found, then k.
+reg        lv1 = 1'b0, lv2 = 1'b0, lz1 = 1'b0;
+reg [31:0] r1 = 0, r2 = 0;
+reg signed [6:0] m2 = 0;
+always @(posedge clk) begin
+    lv1 <= est_valid && agc_en;
+    lz1 <= est_valid && !agc_en;
+    r1 <= est_r;
+    lv2 <= lv1;
+    r2 <= r1;
+    m2 <= msb32(r1);
+    if (rst || lz1) begin
+        gain_k <= 0;
+    end else if (lv2) begin
+        if (m2 < 0) begin
+            gain_k <= 0;
+        end else begin
+            r_norm = (m2 >= 3) ? (r2 >> (m2 - 3)) : (r2 << (3 - m2));     // 1mmm, top 4 bits
+            k_calc = TARGET_LOG2 - (m2 + SHIFT + ((r_norm[2:0] >= 3'd3) ? 1 : 0));
+            gain_k <= (k_calc > 16) ? 6'sd16 : (k_calc < -16) ? -6'sd16 : k_calc[5:0];
+        end
+    end
+end
 
 always @(posedge clk) begin
     if (rst) begin
         busy <= 1'b0;
         theta <= 0;
-        gain_k <= 0;
     end else if (est_valid) begin
         // CFO: bring the vector into the right half plane, then iterate
         if (est_re < 0) begin
@@ -96,15 +119,6 @@ always @(posedge clk) begin
         ci <= 0;
         busy <= cfo_en;
         if (!cfo_en) theta <= 0;
-        // level
-        m = msb32(est_r);
-        if (!agc_en || m < 0) begin
-            gain_k <= 0;
-        end else begin
-            r_norm = (m >= 3) ? (est_r >> (m - 3)) : (est_r << (3 - m));     // 1mmm, top 4 bits
-            k_calc = TARGET_LOG2 - (m + SHIFT + ((r_norm[2:0] >= 3'd3) ? 1 : 0));
-            gain_k <= (k_calc > 16) ? 6'sd16 : (k_calc < -16) ? -6'sd16 : k_calc[5:0];
-        end
     end else if (busy) begin
         if (cy >= 0) begin
             cx <= cx + (cy >>> ci);
@@ -165,13 +179,23 @@ reg signed [16:0] y2_re = 0, y2_im = 0;
 // stage 3: times the gain mantissa (1 or sqrt(2), Q2.14)
 reg               v3 = 1'b0, l3 = 1'b0;
 reg signed [33:0] g3_re = 0, g3_im = 0;
-// stage 4: shifted, saturated
-reg               v4 = 1'b0, l4 = 1'b0;
+// stages 4-6: rounding constant added, shifted, saturated. The gain changes once per frame, long
+// before the frame's samples, so the shift and the rounding constant are registers of their own:
+// computed from gain_k in the same clock as the product, the path ran gain_k -> rounding constant
+// -> DSP -> 34-bit variable shift -> saturation in one clock (Vivado OOC: +0.002 ns).
+reg               v4 = 1'b0, l4 = 1'b0, v5 = 1'b0, l5 = 1'b0, v6 = 1'b0, l6 = 1'b0;
+reg signed [33:0] a4_re = 0, a4_im = 0, s5_re = 0, s5_im = 0;
 reg signed [15:0] o_re = 0, o_im = 0;
 
 wire signed [5:0] k_half = gain_k >>> 1;                   // floor(k / 2)
-wire        [15:0] mant = gain_k[0] ? 16'd23170 : 16'd16384;
-wire signed [6:0]  rsh = 7'sd14 - k_half;                  // right shift after the Q2.14 product
+reg        [15:0] mant = 16'd16384;
+reg        [4:0]  rsh = 5'd14;                             // right shift after the Q2.14 product: 6..22
+reg signed [33:0] rnd = 34'sd8192;                         // 2^(rsh - 1)
+always @(posedge clk) begin
+    mant <= gain_k[0] ? 16'd23170 : 16'd16384;
+    rsh <= 5'd14 - k_half[4:0];
+    rnd <= 34'sd1 <<< (5'd13 - k_half[4:0]);
+end
 
 function [15:0] sat(input signed [33:0] v);
     begin
@@ -181,12 +205,9 @@ function [15:0] sat(input signed [33:0] v);
     end
 endfunction
 
-wire signed [33:0] r_round_re = g3_re + ((rsh > 0) ? (34'sd1 <<< (rsh - 1)) : 34'sd0);
-wire signed [33:0] r_round_im = g3_im + ((rsh > 0) ? (34'sd1 <<< (rsh - 1)) : 34'sd0);
-
 always @(posedge clk) begin
     if (rst) begin
-        {v0, v1, v2, v3, v4} <= 5'd0;
+        {v0, v1, v2, v3, v4, v5, v6} <= 7'd0;
         nco <= 0;
     end else if (en) begin
         // stage 0
@@ -219,16 +240,24 @@ always @(posedge clk) begin
         v3 <= v2; l3 <= l2;
         g3_re <= y2_re * $signed({1'b0, mant});
         g3_im <= y2_im * $signed({1'b0, mant});
-        // stage 4
+        // stage 4: + rounding constant
         v4 <= v3; l4 <= l3;
-        o_re <= (rsh > 0) ? sat(r_round_re >>> rsh) : sat(g3_re <<< (-rsh));
-        o_im <= (rsh > 0) ? sat(r_round_im >>> rsh) : sat(g3_im <<< (-rsh));
+        a4_re <= g3_re + rnd;
+        a4_im <= g3_im + rnd;
+        // stage 5: shift (rsh is 6..22, always to the right)
+        v5 <= v4; l5 <= l4;
+        s5_re <= a4_re >>> rsh;
+        s5_im <= a4_im >>> rsh;
+        // stage 6: saturate
+        v6 <= v5; l6 <= l5;
+        o_re <= sat(s5_re);
+        o_im <= sat(s5_im);
     end
 end
 
-assign out_valid = v4;
+assign out_valid = v6;
 assign out_re = o_re;
 assign out_im = o_im;
-assign out_last = l4;
+assign out_last = l6;
 
 endmodule
