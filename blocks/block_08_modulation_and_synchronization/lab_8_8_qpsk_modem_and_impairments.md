@@ -6,7 +6,7 @@ Extend the BPSK path to **QPSK** (two bits per symbol, four constellation points
 study how the two classic impairments of this block (**noise** and a **carrier frequency
 offset (CFO)**) hit the constellation and the bit-error rate. Two layers:
 
-1. a synthesizable **QPSK modem** that recovers a full frame at **BER = 0** in an ideal
+1. a synthesizable **QPSK modem** that recovers a full frame, **0 errors in 280 bits**, in an ideal
    HDL loopback (the RTL you would put on the FPGA), and
 2. a **channel/impairment simulation** that adds AWGN and CFO and plots the BER-vs-Eb/N0
    curve against theory.

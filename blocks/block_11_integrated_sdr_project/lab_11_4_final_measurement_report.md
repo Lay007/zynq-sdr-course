@@ -9,7 +9,7 @@ Zynq-7020 + AD9361, validated on a two-board over-cable RF link.
 
 > Does the project provide enough evidence that the SDR chain works as intended?
 
-**Yes.** A synthesized PL modem recovers a known frame at BER 0 on every cold boot through the fabric
+**Yes.** A synthesized PL modem recovers a known frame without an error on 50 of 50 cold boots through the fabric
 loopback, and on a two-board RF link it decodes a continuously transmitted frame with no catastrophic
 (whole-burst) failures and a payload BER of ~4×10⁻⁴. The evidence is deterministic, statistical, and
 reproducible from committed scripts.
@@ -20,8 +20,8 @@ A deterministic QPSK burst is generated in the PL (frame ROM → differential en
 transmitted by board A over a contained SMA cable + 30 dB attenuator at 915 MHz, and received by
 board B, whose in-fabric RX chain (DC blocker → matched filter → feedforward phase pick → Gardner
 timing recovery → coarse CFO → Costas carrier recovery → hard decision → differential decoder →
-quadrant-resolving BER counter) recovers the frame and scores it on-chip. The link closes at BER 0 in
-the coherent fabric loopback and at ~4×10⁻⁴ over the two independent-reference RF front ends, with the
+quadrant-resolving BER counter) recovers the frame and scores it on-chip. The link closes with 0 errors in
+5.6 M bits (BER < 5.34×10⁻⁷) in the coherent fabric loopback and at ~4×10⁻⁴ over the two independent-reference RF front ends, with the
 whole-burst rotation failures eliminated by differential coding plus a lengthened preamble.
 
 ## Architecture
