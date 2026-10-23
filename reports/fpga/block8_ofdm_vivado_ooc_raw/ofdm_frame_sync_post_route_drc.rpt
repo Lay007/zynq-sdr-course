@@ -52,13 +52,13 @@ Related violations: <none>
 
 RTSTAT-10#1 Warning
 No routable loads
-35 net(s) have no routable loads. The problem bus(es) and/or net(s) are fifo_reg_0_15_0_5/DOA0, fifo_reg_0_15_0_5/DOA1, fifo_reg_0_15_12_17/DOA0,
+164 net(s) have no routable loads. The problem bus(es) and/or net(s) are fifo_reg_0_15_0_5/DOA0, fifo_reg_0_15_0_5/DOA1, fifo_reg_0_15_12_17/DOA0,
 fifo_reg_0_15_12_17/DOA1, fifo_reg_0_15_12_17/DOB0,
 fifo_reg_0_15_18_23/DOA0, fifo_reg_0_15_18_23/DOA1,
 fifo_reg_0_15_24_29/DOA0, fifo_reg_0_15_24_29/DOA1,
 fifo_reg_0_15_30_33/DOA0, fifo_reg_0_15_30_33/DOA1,
 fifo_reg_0_15_30_33/DOB0, fifo_reg_0_15_6_11/DOA0, fifo_reg_0_15_6_11/DOA1,
-fifo_reg_0_15_6_11/DOB0 (the first 15 of 35 listed).
+fifo_reg_0_15_6_11/DOB0 (the first 15 of 41 listed).
 Related violations: <none>
 
 ZPS7-1#1 Warning

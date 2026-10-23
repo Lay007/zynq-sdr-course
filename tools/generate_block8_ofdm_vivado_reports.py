@@ -32,6 +32,7 @@ TOPS: tuple[tuple[str, str | None], ...] = (
     ("ofdm_qpsk_demapper", None),
     ("ofdm_axi_modem", "aclk"),
     ("ofdm_frame_sync", "clk"),
+    ("ofdm_frame_conditioner", "clk"),
 )
 
 # Extra configurations: (report name, top module, clock port, parameter overrides)

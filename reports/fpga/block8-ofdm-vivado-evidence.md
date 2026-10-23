@@ -33,7 +33,8 @@ one-clock teaching equalizer meets 100 MHz**:
 | `ofdm_axi_modem_fabric` (`BRAM_MEMORY = 0`) | 19628 | 7335 | 32 | 1.5 | +0.591 ns | about 106 MHz |
 | `ofdm_tx_cp16_path_qam16` (`MODULATION = 1`: 16-QAM mapper) | 888 | 360 | 4 | 1 | +1.686 ns | about 120 MHz |
 | `ofdm_axi_modem_qam16` (`MODULATION = 1`: 16-QAM mapper and slicer) | 5985 | 3233 | 32 | 3.5 | +0.692 ns | about 107 MHz |
-| `ofdm_frame_sync` (#48 stage 4b: Schmidl & Cox frame search in the sample stream, delay line, output FIFO) | 777 | 842 | 12 | 1 | +2.435 ns | about 132 MHz |
+| `ofdm_frame_sync` (#48 stage 4b: Schmidl & Cox frame search in the sample stream, delay line, output FIFO, preamble measurements) | 889 | 1115 | 12 | 1 | +1.948 ns | about 124 MHz |
+| `ofdm_frame_conditioner` (#48: DC subtraction, coarse CFO from the preamble with a CORDIC and an NCO, level gain) | 1097 | 467 | 7 | 0 | +1.354 ns | about 116 MHz |
 
 The frequency estimate is `1 / (period - WNS)`; it describes the routed critical path, not a
 characterized maximum clock. Rows with a suffix are the same module with a parameter override.
@@ -136,7 +137,17 @@ sum) is one stage, the products and the squares get registers of their own, and 
 10 clocks after the sample. The rings are no longer reset; until a ring has been filled once its
 read counts as zero, which is what the model's sums over a not yet full window do. RTL and model
 still agree sample for sample in the chain runs (`tools/run_ofdm_sync_chain.py`), and the
-committed self-check passes.
+committed self-check passes. The pipelined search was 777 LUTs, 842 flip-flops and +2.435 ns; the
+row above is the later version that also hands out the preamble measurements (the sum of P over the
+plateau, R and the DC estimate) and has the slower DC tracker. Its worst path is now the write
+enable of the energy ring, one LUT and 92 % routing.
+
+`ofdm_frame_conditioner` uses those measurements. Its first build met 100 MHz by 0.002 ns: the
+gain, set once per frame, fed the rounding constant, Vivado folded the rounding addition into the
+DSP, and the 34-bit variable shift and the saturation followed in the same clock. With the shift
+and the rounding constant held in registers and addition, shift and saturation one clock each:
++0.517 ns. The next worst path was the level calculation itself (priority encoder, normalizing
+shift, subtraction: 15 levels), which also runs once per frame; spread over three clocks: +1.354 ns.
 
 ## Port paths: a correction
 
