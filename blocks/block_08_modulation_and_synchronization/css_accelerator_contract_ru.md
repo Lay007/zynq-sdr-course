@@ -106,7 +106,7 @@ block design с PS7. OOC-отчёты фиксируют текущую заде
 
 Полный LoRa-совместимый коррелятор с передискретизацией и двумя FFT, пакетный тракт,
 timestamp, ToA/TDoA и интеграция с Zynq относятся к проекту
-[`zynq-lora-phy-positioning`](https://github.com/Lay007/zynq-lora-phy-positioning).
+[`zynq-lora-phy`](https://github.com/Lay007/zynq-lora-phy).
 См. [ADR 0002](../../docs/adr/0002-css-lora-project-boundary.md) и
 [ADR 0003](../../docs/adr/0003-css-accelerator-axi-boundary_ru.md). Эти два тракта
 нельзя сравнивать без учёта различий в назначении и масштабировании входных данных.

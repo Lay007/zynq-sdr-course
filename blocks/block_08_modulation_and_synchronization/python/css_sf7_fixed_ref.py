@@ -15,7 +15,7 @@ sample. It carries three layers:
 
 This is deliberately an educational SF7 baseline with one complex DFT MAC per
 cycle. The production-oriented SF5..SF12 two-FFT correlator, packet PHY and ToA
-path live in the companion ``zynq-lora-phy-positioning`` repository.
+path live in the companion ``zynq-lora-phy`` repository.
 """
 
 from __future__ import annotations

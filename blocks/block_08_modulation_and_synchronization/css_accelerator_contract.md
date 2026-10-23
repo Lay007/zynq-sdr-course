@@ -103,7 +103,7 @@ post-synthesis timing, and post-route timing without claiming board completion.
 
 The complete LoRa-compatible, oversampled two-FFT correlator and the packet,
 timestamp, ToA/TDoA and Zynq integration paths belong to
-[`zynq-lora-phy-positioning`](https://github.com/Lay007/zynq-lora-phy-positioning).
+[`zynq-lora-phy`](https://github.com/Lay007/zynq-lora-phy).
 See [ADR 0002](../../docs/adr/0002-css-lora-project-boundary.md) and
 [ADR 0003](../../docs/adr/0003-css-accelerator-axi-boundary.md). The two paths
 must not be compared without accounting for their different goals and input

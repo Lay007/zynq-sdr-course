@@ -80,7 +80,7 @@ The course can still be studied in simulation-only mode, because many labs have 
 - For C++ DSP kernels, numerical tests, CMake packaging, and reproducible benchmarks, see
   **[cpp-dsp-showcase](https://github.com/Lay007/cpp-dsp-showcase)**.
 - For the next step beyond the Block 8 CSS/LoRa-like labs, see
-  **[zynq-lora-phy](https://github.com/Lay007/zynq-lora-phy)** —
+  **[zynq-lora-phy](https://github.com/Lay007/zynq-lora-phy)**:
   a dedicated Zynq SDR project for LoRa PHY implementation, synchronization,
   hardware PER measurements, and positioning research.
 - Published bitstreams, boot sets and board backups live in the private
@@ -104,6 +104,17 @@ The course can still be studied in simulation-only mode, because many labs have 
 
 ---
 
+## Requirements
+
+| What | Needed for | Notes |
+|---|---|---|
+| Python 3.12 or newer | everything | CI runs Python 3.12 on Ubuntu; the course is also used on Windows 11 with Python 3.14. Pinned packages in `requirements.txt`. |
+| Git LFS | the recorded IQ captures and datasets | `git lfs install`, then `git lfs pull`. Without it the captures are only small text pointer files. |
+| Icarus Verilog 12 (`iverilog`, `vvp`) | every HDL testbench (`tasks.py hdl`, `tools/run_ofdm_rtl.py`) | Not needed for the Python labs. |
+| Vivado 2021.1 | out-of-context reports and board images (Blocks 5, 8, 11) | Not needed for simulation. The board images are built by `hardware/7020_ad936x_sdr/rebuild_vendor_xpr_snapshot_course_overlay.tcl`. |
+| MATLAB / Simulink | the optional `.slx` models of Block 4 | Every lab that mentions MATLAB also runs in Python. |
+| An RTL-SDR, then a Zynq-7020 + AD9363/AD9361 board | the hardware routes | Start without them: [learning routes](LAB_TRACK_en.md) A (laptop only) to D (bench instruments). |
+
 ## Quick start
 
 ```bash
@@ -113,6 +124,8 @@ python tools/tasks.py install
 python tools/tasks.py docs
 python tools/tasks.py labs
 ```
+
+What success looks like: `tasks.py docs` ends with MkDocs reporting the site built (strict mode fails on a broken link), and `tasks.py labs` runs 20 representative labs in about a minute and a half; every line reads `...: PASS` and the last lines name the summary files in `docs/assets/`. A `FAIL` line names the lab to open.
 
 Run the broader local smoke check:
 
@@ -146,24 +159,39 @@ Useful commands:
 
 Curated local board starting point:
 
-- [`hardware/7020_ad936x_sdr/README.md`](hardware/7020_ad936x_sdr/README.md) - imported Zynq-7020 + AD936x board bundle for bring-up work.
+- [`hardware/7020_ad936x_sdr/README.md`](hardware/7020_ad936x_sdr/README.md): imported Zynq-7020 + AD936x board bundle for bring-up work.
+
+The OFDM testbenches are not part of `tasks.py hdl`: run `python tools/run_ofdm_rtl.py` (it ends with `OFDM RTL (...): N testbenches and M parameter variant(s) passed`).
+
+## Common problems
+
+| Symptom | Cause and fix |
+|---|---|
+| `iverilog` or `vvp` not found | Install Icarus Verilog and put it on `PATH`; only the HDL checks need it. |
+| A lab that reads a recorded capture fails on the file format, or the file is a few hundred bytes | It is a Git LFS pointer, not the capture: `git lfs install && git lfs pull`. |
+| `mkdocs build --strict` stops with a warning | A page links to a file or anchor that does not exist; the warning names both. |
+| Vivado fails with `couldn't read file ... No error` or a crash in synthesis | Out of memory. Run one Vivado at a time with `-jobs 1`; on a 16 GB machine two parallel builds fail this way. |
+| A Russian page looks garbled in a Windows console | The files are UTF-8; read them with `Get-Content -Encoding utf8` or an editor. |
+| Board problems (no TX, a carrier between bursts, an AD9361 that stops after a runtime bitstream load) | See the [hardware evidence index](docs/hardware-evidence-index.md) and the Block 11 labs; each problem met on the bench has its own page. |
 
 ---
 
 ## Recommended learning path
 
-1. **Intro to SDR** — tools, signals and first reception concepts.
-2. **Signals and sampling** — spectrum, aliasing, complex baseband and IQ.
-3. **DSP basics** — FFT, FIR, windows, mixing and decimation.
-4. **Fixed-point workflow** — numeric formats, scaling and quantization.
-5. **FPGA / HDL flow** — streaming interfaces, Verilog and testbenches.
-6. **RF frontend** — frequency plans, gain staging and AD9363 settings.
-7. **TX/RX chains** — DUC, DDC, loopback and packet-level metrics.
-8. **Synchronization** — CFO, phase, timing, EVM and BER.
-9. **IQ recording and analysis** — metadata, formats, replay and quality checks.
-10. **Electronics and KiCad** — attenuators, filters and RF safety.
-11. **Integrated SDR project** — model, implementation, capture and report.
-12. **Final projects** — portfolio-ready SDR engineering outcomes.
+1. **Intro to SDR**: tools, signals and first reception concepts.
+2. **Signals and sampling**: spectrum, aliasing, complex baseband and IQ.
+3. **DSP basics**: FFT, FIR, windows, mixing and decimation.
+4. **Fixed-point workflow**: numeric formats, scaling and quantization.
+5. **FPGA / HDL flow**: streaming interfaces, Verilog and testbenches.
+6. **RF frontend**: frequency plans, gain staging and AD9363 settings.
+7. **TX/RX chains**: DUC, DDC, loopback and packet-level metrics.
+8. **Synchronization**: CFO, phase, timing, EVM and BER.
+9. **IQ recording and analysis**: metadata, formats, replay and quality checks.
+10. **Electronics and KiCad**: attenuators, filters and RF safety.
+11. **Integrated SDR project**: model, implementation, capture and report.
+12. **Final projects**: a project of your own, from proposal to measured report.
+
+Which labs need which hardware, and in what order: [learning routes](LAB_TRACK_en.md).
 
 ---
 
@@ -183,6 +211,8 @@ Curated local board starting point:
 | [Course status](docs/status.md) | Readiness matrix, gaps and next improvements |
 | [Reproducibility guide](docs/reproducibility-guide.md) | How to rebuild results and generated artifacts |
 | [Real data policy](docs/real-data-policy.md) | How to handle IQ data without repository bloat |
+| [Learning routes](LAB_TRACK_en.md) | Routes A-D: laptop only, + RTL-SDR, + Zynq board, + bench instruments |
+| [Writing a lab](docs/contributing-labs.md) | Page structure, checks and conventions for new labs |
 
 ---
 
@@ -210,7 +240,9 @@ The repository already contains:
 - dataset manifest consistency checking for Git LFS-backed captures;
 - experiment manifests;
 - report templates and final-project structure;
-- a complete in-fabric QPSK modem on Zynq-7020 + AD9361, closed on a two-board 915 MHz RF link (zero whole-burst rotation failures, payload BER ~4×10⁻⁴) with a final measurement report (Lab 11.4).
+- a complete in-fabric QPSK modem on Zynq-7020 + AD9361, closed on a two-board 915 MHz RF link (zero whole-burst rotation failures, payload BER ~4×10⁻⁴) with a final measurement report (Lab 11.4);
+- on top of it, a PS/PL message mailbox, a two-board chat, acknowledgements and long messages in fragments (Labs 11.49-11.52);
+- an OFDM modem in RTL, bit-exact with its fixed-point models, run on a board behind an AXI DMA in a fabric loopback (0 errors in 3 072 000 bits, Lab 8.14). Its radio stage (frame search, coarse CFO and level from a preamble) exists in simulation and as a built image; it has not run on a board yet.
 
 The remaining proof points are optional hardening rather than blockers:
 

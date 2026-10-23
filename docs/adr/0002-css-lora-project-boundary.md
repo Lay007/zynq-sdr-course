@@ -7,7 +7,7 @@ Accepted — 2026-08-25
 ## Context
 
 The course and the companion
-[`zynq-lora-phy-positioning`](https://github.com/Lay007/zynq-lora-phy-positioning)
+[`zynq-lora-phy`](https://github.com/Lay007/zynq-lora-phy)
 repository both contain chirp processing. Uncoordinated development had produced
 two different dechirp arithmetic contracts inside the course and risked copying a
 large generated LoRa correlator into an educational code path.
@@ -23,7 +23,7 @@ The repositories have different canonical responsibilities:
 
 - `zynq-sdr-course` owns the generic CSS learning route: waveform, dechirp, a
   compact SF7 sequential detector, bit-exact Python vectors and self-checking RTL;
-- `zynq-lora-phy-positioning` owns the complete LoRa implementation: SF5–SF12,
+- `zynq-lora-phy` owns the complete LoRa implementation: SF5–SF12,
   oversampled two-FFT correlation, packet coding/framing, synchronization,
   timestamp metadata, ToA/TDoA and hardware acceptance;
 - the course may explain or link the production architecture, but does not copy
