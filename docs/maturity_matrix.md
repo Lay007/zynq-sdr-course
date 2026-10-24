@@ -10,8 +10,8 @@ This page summarizes the maturity of the 12-block course track. The detailed sta
 | `executable` | Scripts, tests, generated figures or reproducible checks exist. |
 | `measured` | Real hardware or real IQ evidence exists. |
 | `draft` | Structure exists, but the block still needs stronger examples or reports. |
-| `portfolio-target` | The block is close to a complete reviewer-facing result but still needs final packaging. |
-| `portfolio-ready` | The block has a complete, reviewer-facing result with reproducible artifacts and honest limitations. |
+| `complete-target` | The block is close to a complete result but still needs final measurements or packaging. |
+| `complete` | The block has a complete result with reproducible artifacts and stated limitations. |
 
 ## Block-level maturity
 
@@ -27,12 +27,12 @@ This page summarizes the maturity of the 12-block course track. The detailed sta
 | 08 | Modulation and synchronization | executable | CFO, phase, timing, BER/EVM demos, OFDM mini-link | Add impairment sweeps and dashboard-style metric summaries. |
 | 09 | Recording and analysis tools | executable | CI16/CU8/CF32 readers, WAV IQ path, QPSK replay analysis | Keep dataset manifests and analyzer thresholds synchronized. |
 | 10 | KiCad and basic electronics | draft | RF safety, attenuator and schematic templates | Add measured bench photos and exported KiCad artifacts. |
-| 11 | Integrated SDR project | measured / portfolio-ready | The in-fabric QPSK modem is closed on a two-board 915 MHz RF link: differential coding plus a 24-symbol preamble remove every whole-burst rotation failure (gross 0) at payload BER ~4×10⁻⁴, with fabric loopback BER < 5.34×10⁻⁷ over 5.6 M bits. Lab 11.4 is the final measurement report; Labs 11.41–11.45 carry the DC-blocker, false-lock and differential investigation. | The residual differential single-bit rate is the inherent ~3 dB penalty, not a rotation failure; repeat-build/seed timing robustness and longer BER-vs-attenuation statistics remain optional next steps. |
-| 12 | Final projects | measured / portfolio-target | Filled report with internal and external QPSK evidence | Add repeatable cabled/OTA measurement statistics on a stable capture backend. |
+| 11 | Integrated SDR project | measured / complete | The in-fabric QPSK modem is closed on a two-board 915 MHz RF link: differential coding plus a 24-symbol preamble remove every whole-burst rotation failure (gross 0) at payload BER ~4×10⁻⁴, with fabric loopback BER < 5.34×10⁻⁷ over 5.6 M bits. Lab 11.4 is the final measurement report; Labs 11.41–11.45 carry the DC-blocker, false-lock and differential investigation. | The residual differential single-bit rate is the inherent ~3 dB penalty, not a rotation failure; repeat-build/seed timing robustness and longer BER-vs-attenuation statistics remain optional next steps. |
+| 12 | Final projects | measured / complete-target | Filled report with internal and external QPSK evidence | Add repeatable cabled/OTA measurement statistics on a stable capture backend. |
 
 ## Review rule
 
-A block should not be promoted to `portfolio-target` unless a reviewer can see:
+A block should not be promoted to `complete-target` unless a reviewer can see:
 
 1. the engineering goal;
 2. executable or measurable evidence;

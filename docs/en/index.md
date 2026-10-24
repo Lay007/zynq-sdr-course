@@ -80,4 +80,4 @@ This is the English learning path: the same course pipeline as the [main page](.
 | 9 | [Recording and Analysis Tools](blocks/09-recording-and-analysis-tools.md): metadata, formats, replay and quality checks |
 | 10 | [KiCad and Basic Electronics](blocks/10-kicad-and-basic-electronics.md): attenuators, filters and RF safety |
 | 11 | [Integrated SDR Project](blocks/11-integrated-sdr-project.md): model, implementation, capture and report |
-| 12 | [Final Projects](blocks/12-final-projects.md): portfolio-ready SDR engineering outcomes |
+| 12 | [Final Projects](blocks/12-final-projects.md): a project of your own, from proposal to measured report |

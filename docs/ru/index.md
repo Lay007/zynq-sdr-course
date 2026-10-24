@@ -80,4 +80,4 @@
 | 9 | [Инструменты записи и анализа](blocks/09-recording-and-analysis-tools.md): metadata, форматы, replay и контроль качества |
 | 10 | [KiCad и базовая электроника](blocks/10-kicad-and-basic-electronics.md): аттенюаторы, фильтры и RF safety |
 | 11 | [Интегрированный SDR-проект](blocks/11-integrated-sdr-project.md): модель, реализация, запись и отчёт |
-| 12 | [Итоговые проекты](blocks/12-final-projects.md): portfolio-ready инженерные результаты |
+| 12 | [Итоговые проекты](blocks/12-final-projects.md): собственный проект, от предложения до отчёта с измерениями |

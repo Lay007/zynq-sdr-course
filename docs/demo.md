@@ -103,4 +103,4 @@ This repository is designed as an engineering learning system, not only a collec
 - spectra and constellations with measurable metrics;
 - GitHub documentation with reproducible CI-generated artifacts.
 
-That combination makes the project useful as a course, a portfolio artifact, and a foundation for future research-oriented SDR work.
+That combination makes the project useful as a course and as a foundation for future research-oriented SDR work.

@@ -1,6 +1,6 @@
 # Flagship Reviewer Report
 
-This report is the compact portfolio entry point for `zynq-sdr-course`. It turns the current repository evidence into a single reviewer-friendly story: what has been implemented, how it is checked, what is still hardware-pending, and how to reproduce the main quality gates.
+This report is the compact reviewer entry point for `zynq-sdr-course`. It turns the current repository evidence into a single reviewer-friendly story: what has been implemented, how it is checked, what is still hardware-pending, and how to reproduce the main quality gates.
 
 ## Executive summary
 
@@ -18,7 +18,7 @@ This is the main reviewer claim: the course teaches students to treat SDR work a
 
 | Area | Current evidence | Why it matters |
 |---|---|---|
-| Course structure | `README.md`, `docs/course-map.md`, `docs/student-path.md`, `docs/reviewer-path.md` | A reviewer can quickly understand the learning route and the portfolio intent. |
+| Course structure | `README.md`, `docs/course-map.md`, `docs/student-path.md`, `docs/reviewer-path.md` | A reviewer can quickly understand the learning route and where the evidence lives. |
 | DSP foundations | Block 3 labs, generated plots, reproducible scripts | FFT, FIR, windows, mixing, decimation and analysis are introduced as executable material. |
 | Fixed-point bridge | Block 4 labs and fixed-point workflow notes | Students see why scaling, saturation and quantization matter before RTL. |
 | HDL / FPGA flow | Block 5 labs, Verilog smoke tests and FPGA reports | The course does not stop at floating-point models; selected blocks have hardware-facing checks. |
@@ -99,6 +99,6 @@ python tools/run_local_ci.py --quick
 
 ## Reviewer conclusion
 
-The repository is already useful as a public engineering portfolio and as a teaching workspace. Its strongest value is the discipline it demonstrates: every SDR result is expected to connect a model, an implementation, a measurement or dataset, a metric, and a written conclusion.
+The repository is already useful as a teaching workspace. Its strongest value is the discipline it demonstrates: every SDR result is expected to connect a model, an implementation, a measurement or dataset, a metric, and a written conclusion.
 
 The next maturity step is to promote one board-level result into a complete final report with a small clean dataset, preview plots, BER/EVM/SNR table, hardware settings and exact reproduction commands.

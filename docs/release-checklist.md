@@ -67,7 +67,7 @@ Before tagging the release, prepare a compact reviewer path:
 Suggested release summary:
 
 ```text
-v0.1.0 introduces a bilingual DSP/FPGA/SDR course that connects theory, modeling, fixed-point design, HDL simulation, data capture and engineering analysis. The release includes CI-backed executable labs, dataset discipline, evidence pages and a hardware-validated portfolio-ready model-to-measurement report.
+v0.1.0 introduces a bilingual DSP/FPGA/SDR course that connects theory, modeling, fixed-point design, HDL simulation, data capture and engineering analysis. The release includes CI-backed executable labs, dataset discipline, evidence pages and a hardware-validated model-to-measurement report.
 ```
 
 ## 7. Final checks

@@ -26,14 +26,6 @@ theory -> DSP model -> fixed-point design -> HDL/FPGA -> Zynq/AD9363 -> RF path 
 
 The repository is designed not only as a set of learning notes, but as a reproducible engineering workspace. It combines documentation, executable labs, HDL smoke checks, IQ metadata discipline, measurement templates and final-project structure.
 
-### Engineering collaboration
-
-The same workflow is applicable to focused R&D and consulting work around SDR,
-DSP, fixed-point design, MATLAB/Simulink-to-RTL transitions, Zynq/AD936x
-integration, test vectors, and RF/IQ measurement methodology. For project
-collaboration, see the [engineering portfolio](https://lay007.github.io/) or
-[GitHub profile](https://github.com/Lay007).
-
 ---
 
 ## Who is this course for?
@@ -44,7 +36,7 @@ This course is useful for:
 - engineers moving from MATLAB/Python models to hardware-oriented implementation;
 - FPGA developers who want a signal-processing project with real measurement context;
 - instructors building a practical SDR/FPGA lab track;
-- reviewers or recruiters evaluating DSP/FPGA engineering capability.
+- reviewers checking the engineering behind the results ([reviewer path](docs/reviewer-path.md)).
 
 ---
 
@@ -252,17 +244,11 @@ The remaining proof points are optional hardening rather than blockers:
 
 ---
 
-## Portfolio value
+## Author
 
-This repository demonstrates practical competence in:
-
-- DSP algorithm design;
-- fixed-point implementation thinking;
-- FPGA/HDL verification;
-- SDR system architecture;
-- RF measurement discipline;
-- reproducible engineering documentation;
-- CI-assisted educational workflow.
+Alexander Lyubko. Questions about the course, and R&D work on SDR, DSP, fixed-point design,
+MATLAB/Simulink-to-RTL and Zynq/AD936x integration: [engineering portfolio](https://lay007.github.io/),
+[GitHub](https://github.com/Lay007), [LinkedIn](https://ru.linkedin.com/in/alexander-lyubko-dsp).
 
 ---
 

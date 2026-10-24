@@ -28,7 +28,7 @@ This matrix helps track whether the course is only documented or truly reproduci
 | 09 | IQ recording and analysis | L5 | metadata, file formats and replay path |
 | 10 | Electronics and KiCad | L3 | safety checklist and schematic tasks |
 | 11 | Integrated SDR project | L5 | report template and validation path |
-| 12 | Final projects | L5 | portfolio-ready project outputs |
+| 12 | Final projects | L5 | own projects, from proposal to measured report |
 
 ## Improvement priorities
 

@@ -47,7 +47,7 @@ The earlier version of this page described an old blocker with high error rate a
 
 ## Done criteria
 
-Block 11 should become `Portfolio-ready` only when it has a clean command path, manifest-backed data, configuration notes, plots, BER/EVM/SNR metrics, a short conclusion and an explicit limitations section.
+Block 11 should become `Complete` only when it has a clean command path, manifest-backed data, configuration notes, plots, BER/EVM/SNR metrics, a short conclusion and an explicit limitations section.
 
 ## Related pages
 

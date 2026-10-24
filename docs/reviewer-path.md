@@ -14,7 +14,7 @@ Open these pages in order:
 4. [Hardware checklist](hardware-checklist.md)
 5. [End-to-end SDR demo roadmap](end-to-end-demo.md)
 6. [Reviewer acceptance checklist](reviewer-checklist.md)
-7. [Portfolio view](portfolio-view.md)
+7. [Hardware evidence index](hardware-evidence-index.md)
 
 ## What each page proves
 
@@ -26,7 +26,7 @@ Open these pages in order:
 | [Hardware checklist](hardware-checklist.md) | hardware work is treated as a disciplined measurement task |
 | [End-to-end SDR demo roadmap](end-to-end-demo.md) | the project aims for complete model-to-measurement closure |
 | [Reviewer acceptance checklist](reviewer-checklist.md) | pass/fail criteria are stated explicitly instead of being implied |
-| [Portfolio view](portfolio-view.md) | the repository is intentionally positioned as a serious engineering artifact |
+| [Hardware evidence index](hardware-evidence-index.md) | each hardware claim points to its measurement, with the bits or frames behind it |
 
 ## Fast reviewer verdict
 
@@ -35,7 +35,7 @@ The repository is already strong if you can confirm these points:
 1. Documentation and engineering route are connected.
 2. At least some labs are executable or CI-backed.
 3. Hardware work is described with safety and metadata discipline.
-4. The project is useful both as a course and as a portfolio artifact.
+4. Hardware results state how much was measured (bits, frames, boots) and what was not.
 
 ## If you have 2 minutes only
 
@@ -44,6 +44,6 @@ Open:
 1. [Demo dashboard](demo-dashboard.md)
 2. [Course status](status.md)
 3. [Reviewer acceptance checklist](reviewer-checklist.md)
-4. [Portfolio view](portfolio-view.md)
+4. [Hardware evidence index](hardware-evidence-index.md)
 
-That is the shortest path to evaluate maturity, evidence and presentation quality.
+That is the shortest path to evaluate maturity and evidence.

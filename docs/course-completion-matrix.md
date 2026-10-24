@@ -31,7 +31,7 @@ This matrix shows what each course block should contain before it can be conside
 ## Interpretation notes
 
 - Block 11 is closed: the in-fabric QPSK modem runs over a two-board 915 MHz RF link. Lab 11.35's payload telemetry localized the single-bit misses to payload; Labs 11.41–11.45 then traced and removed the causes: the DC blocker tracking the modulation, a frame-sync false lock, and finally the four-branch rotation ambiguity itself, removed by differential coding plus a 24-symbol preamble. The final link has zero whole-burst rotation failures and payload BER ~4×10⁻⁴ (fabric loopback BER < 5.34×10⁻⁷ over 5.6 M bits); Lab 11.4 is the final measurement report. The residual differential single-bit rate is the inherent ~3 dB penalty, not an open rotation failure.
-- Block 12 now has a filled dual-modem report with internal and cross-session external RF evidence. It remains below portfolio-ready until controlled-path and longer-duration statistics are measured on a stable capture backend.
+- Block 12 now has a filled dual-modem report with internal and cross-session external RF evidence. It remains below complete until controlled-path and longer-duration statistics are measured on a stable capture backend.
 - Blocks 05 and 09 are the strongest automation anchors today: they combine reusable checks, generated artifacts and CI coverage.
 
 ## Lab-level quality gates
@@ -63,7 +63,7 @@ This matrix shows what each course block should contain before it can be conside
 - Publish or externally archive the measured QPSK raw WAV beside the existing manifest, plots and metrics.
 - Extend the selected-frame RF result to per-burst success rates and BER/EVM distributions.
 
-### Batch C: final portfolio layer
+### Batch C: final report layer
 
 - Extend the filled implementation report with external burst success-rate evidence.
 - Add a publication-cleared RF dataset with BER/EVM/SNR figures.

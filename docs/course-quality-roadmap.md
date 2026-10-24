@@ -26,7 +26,7 @@ flowchart LR
 | RF practice | Frequency plan, gain plan, bandwidth plan, measurement setup | Add to hardware labs |
 | Measurements | IQ format, metadata, FFT/SNR/EVM/BER method | Use one common reporting style |
 | CI | MkDocs build, link check, figure generation | Keep green on every PR |
-| Final project | Integrated SDR chain with report template | Make portfolio-ready |
+| Final project | Integrated SDR chain with report template | Finish with measured reports |
 
 ## Definition of done for a lab
 
@@ -58,7 +58,7 @@ A lab is complete only when it contains:
 - Verify the selected board-qualified vendor-snapshot timing margin across repeat builds/seeds.
 - Extend the current Verilog testbench strategy toward integrated AXI/DMA-level verification.
 
-### P2: make it publication/portfolio-ready
+### P2: make it ready for publication
 
 - Add final project scenarios.
 - Add example report screenshots.

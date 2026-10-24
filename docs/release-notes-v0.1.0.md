@@ -20,7 +20,7 @@ The course is intentionally not only a collection of notes. It is structured as 
 - MkDocs + Material site structure.
 - Russian and English learning paths.
 - Main README entry points for English and Russian readers.
-- Visual course map, portfolio view and system-level route pages.
+- Visual course map, hardware evidence index and system-level route pages.
 - Course readiness, completion, evidence and reproducibility pages.
 
 ### DSP foundation

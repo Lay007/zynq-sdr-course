@@ -41,7 +41,7 @@ For a quick review of the course quality, read these pages first:
 3. Block 8 end-to-end synchronization chain.
 4. Block 9 IQ recording and analysis workflow.
 5. Block 11 integrated SDR project workflow.
-6. Portfolio view.
+6. Hardware evidence index.
 
 ## Executable path
 
