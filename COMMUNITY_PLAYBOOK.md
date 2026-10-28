@@ -2,28 +2,24 @@
 
 This is a maintainer checklist for enabling GitHub collaboration features. These features are independent of the MkDocs site and should not duplicate validated lab material.
 
-## Discussions: enable and welcome
+## Discussions: first community conversations
 
-Current setup task: open **Settings → General → Features → Discussions**, enable it and prepare an initial welcome post. Suggested categories:
+**Verified on 2026-10-28:** Discussions is enabled in repository settings. Category names, the welcome post and pin status have not been independently verified.
 
-- **Q&A:** installation, labs, DSP/FPGA/RF concepts and reproducibility questions.
-- **Ideas:** proposed labs, alternate hardware routes and curriculum improvements.
-- **Show and tell:** learner captures, plots, board bring-up notes and independently reproduced experiments.
-- **Announcements:** curated releases, newly validated experiments and course milestones (maintainer posts).
+Configure or confirm these categories in the GitHub interface:
 
-Suggested welcome discussion (pin it):
+- **Q&A** for installation, labs, DSP/FPGA/RF concepts and reproducibility questions; configure as a question-answer category.
+- **Ideas** for new labs, alternate hardware routes and curriculum proposals.
+- **Show and tell** for learner captures, plots, board bring-up notes and independently reproduced experiments.
+- **Announcements** for verified releases, new measured experiments and course milestones (maintainer posts).
 
-> **Welcome to the Zynq SDR Course community**
->
-> This is a place to ask questions about DSP, fixed-point design, Verilog, Zynq/AD936x and reproducible RF experiments. Start with the [course](https://lay007.github.io/zynq-sdr-course/), [Wiki](https://github.com/Lay007/zynq-sdr-course/wiki) and [FAQ](https://github.com/Lay007/zynq-sdr-course/wiki/FAQ). When asking for help, share your lab, revision, tool versions, expected/observed result and relevant logs. Do not post keys, private data or proprietary IQ recordings.
->
-> Use Issues for reproducible bugs or concrete implementation tasks, and Discussions for questions, design choices and results. Hardware reports must state whether they are synthetic, RTL, FPGA-tested or RF-measured.
+The first recommended discussion is the prepared [Welcome to the Zynq SDR Course community](community/WELCOME_DISCUSSION.md). Publish it in Announcements and pin it after the actual category is created. Verify the live post URL before adding a link to it.
 
-Once Discussions is enabled, add its direct link to the README and SUPPORT.md; verify it loads before publishing the link.
+The repository [README](README.md) and [SUPPORT.md](SUPPORT.md) link directly to [Discussions](https://github.com/Lay007/zynq-sdr-course/discussions). Answer general questions there and convert only reproducible defects or agreed tasks into Issues. Keep verified procedures and measurement evidence in MkDocs.
 
 ## Projects: one board, not several
 
-Create a GitHub Project named **Zynq SDR Course: Roadmap**, owned by `Lay007`, make it public and link it to this repository. Use three views:
+Create or verify a public GitHub Project named **Zynq SDR Course: Roadmap**, owned by `Lay007`, and link it to this repository. The repository's `has_projects=true` flag does not prove that a public Project v2 board exists. Use three views:
 
 1. **Board**, grouped by Status: Backlog, Ready, In progress, Verification, Done.
 2. **Table**, showing status, priority, area, assignee and linked issue.
@@ -31,14 +27,19 @@ Create a GitHub Project named **Zynq SDR Course: Roadmap**, owned by `Lay007`, m
 
 Suggested fields: `Priority` (P1/P2/P3), `Area` (DSP, HDL/FPGA, Hardware/RF, Docs/Course, Infrastructure), `Validation` (Model, RTL, FPGA, RF, Documentation). Do not over-configure initially.
 
-Seed it with *existing* issues rather than duplicating them:
+Seed the board with *existing* issues rather than duplicating them. Suggested **initial triage** below is not a claim about current progress. Start each item in Backlog unless the maintainer confirms its actual status.
 
-- [#48](https://github.com/Lay007/zynq-sdr-course/issues/48): OFDM RTL and RF validation.
-- [#66](https://github.com/Lay007/zynq-sdr-course/issues/66): QPSK RX DC blocker.
-- [#71](https://github.com/Lay007/zynq-sdr-course/issues/71): mailbox RX_STOP latency.
-- [#72](https://github.com/Lay007/zynq-sdr-course/issues/72): two-board chat OTA bench.
-- [#29](https://github.com/Lay007/zynq-sdr-course/issues/29): AD936x gain/overload evidence.
-- [#37](https://github.com/Lay007/zynq-sdr-course/issues/37): NanoVNA evidence and Lab 10 navigation.
+| Issue | Area | Suggested priority | Validation needed |
+| --- | --- | --- | --- |
+| [#66](https://github.com/Lay007/zynq-sdr-course/issues/66), QPSK RX DC blocker | HDL/FPGA | P1 | RTL + RF measurements |
+| [#48](https://github.com/Lay007/zynq-sdr-course/issues/48), OFDM RTL to RF | HDL/FPGA | P2 | RTL, FPGA, then RF |
+| [#71](https://github.com/Lay007/zynq-sdr-course/issues/71), mailbox RX_STOP | HDL/FPGA | P2 | FPGA timing and link-layer measurements |
+| [#72](https://github.com/Lay007/zynq-sdr-course/issues/72), two-board OTA chat | Hardware/RF | P2 | Safe, permitted RF experiment |
+| [#29](https://github.com/Lay007/zynq-sdr-course/issues/29), gain/overload table | Hardware/RF | P2 | Repeatable RF measurement |
+| [#37](https://github.com/Lay007/zynq-sdr-course/issues/37), NanoVNA evidence | Docs/Course | P3 | Measurement artifacts and documentation |
+| [#77](https://github.com/Lay007/zynq-sdr-course/issues/77), community setup | Infrastructure | P2 | Links and configuration verified in GitHub UI |
+
+When publishing the Project, capture its exact public URL and add it to both READMEs. Do not invent a Project number. Avoid adding due dates without a real schedule. A first board with 5 workflow statuses is more useful than many custom views.
 
 Project status is workflow progress, not evidence of validation: an item moves to Done only when its acceptance criteria and required verification have been met.
 

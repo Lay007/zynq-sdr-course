@@ -2,6 +2,7 @@
 
 [![MkDocs](https://img.shields.io/badge/site-MkDocs%20Material-informational)](https://lay007.github.io/zynq-sdr-course/)
 [![Wiki](https://img.shields.io/badge/engineering-Wiki-informational)](https://github.com/Lay007/zynq-sdr-course/wiki)
+[![Discussions](https://img.shields.io/badge/community-Discussions-blue)](https://github.com/Lay007/zynq-sdr-course/discussions)
 [![Full Course Smoke](https://github.com/Lay007/zynq-sdr-course/actions/workflows/full_course_smoke.yml/badge.svg)](https://github.com/Lay007/zynq-sdr-course/actions/workflows/full_course_smoke.yml)
 [![Block 5 HDL](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block5_hdl.yml/badge.svg)](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block5_hdl.yml)
 [![Block 8 Sync](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block8_sync.yml/badge.svg)](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block8_sync.yml)
@@ -200,6 +201,17 @@ The OFDM testbenches are not part of `tasks.py hdl`: run `python tools/run_ofdm_
 12. **Final projects**: a project of your own, from proposal to measured report.
 
 Which labs need which hardware, and in what order: [learning routes](LAB_TRACK_en.md).
+
+---
+
+## Community and roadmap
+
+- **[Discussions](https://github.com/Lay007/zynq-sdr-course/discussions):** ask questions about labs, DSP, fixed-point, HDL and SDR hardware; share experiments or propose new ideas.
+- **[Issues](https://github.com/Lay007/zynq-sdr-course/issues):** report reproducible defects and track concrete engineering work.
+- **[Roadmap setup](https://github.com/Lay007/zynq-sdr-course/issues/77):** follow the setup of a public GitHub Project based on existing issues. A public Project URL will be added after it has been verified.
+- **[Support](SUPPORT.md):** choose the right place to ask a question or report a problem.
+
+The [Wiki](https://github.com/Lay007/zynq-sdr-course/wiki) is a quick reference; lab instructions and validated measurements remain on the [course website](https://lay007.github.io/zynq-sdr-course/).
 
 ---
 

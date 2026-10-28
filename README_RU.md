@@ -2,6 +2,7 @@
 
 [![MkDocs](https://img.shields.io/badge/site-MkDocs%20Material-informational)](https://lay007.github.io/zynq-sdr-course/)
 [![Wiki](https://img.shields.io/badge/engineering-Wiki-informational)](https://github.com/Lay007/zynq-sdr-course/wiki)
+[![Discussions](https://img.shields.io/badge/community-Discussions-blue)](https://github.com/Lay007/zynq-sdr-course/discussions)
 [![Full Course Smoke](https://github.com/Lay007/zynq-sdr-course/actions/workflows/full_course_smoke.yml/badge.svg)](https://github.com/Lay007/zynq-sdr-course/actions/workflows/full_course_smoke.yml)
 [![Block 5 HDL](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block5_hdl.yml/badge.svg)](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block5_hdl.yml)
 [![Block 8 Sync](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block8_sync.yml/badge.svg)](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block8_sync.yml)
@@ -201,6 +202,17 @@ OFDM-стенды не входят в `tasks.py hdl`: их запускает `
 12. **Итоговые проекты**: собственный проект, от предложения до отчёта с измерениями.
 
 Какие лабораторные требуют какого оборудования и в каком порядке их проходить: [маршруты обучения](LAB_TRACK_ru.md).
+
+---
+
+## Сообщество и план развития
+
+- **[Discussions](https://github.com/Lay007/zynq-sdr-course/discussions):** вопросы по лабораторным работам, DSP, fixed-point, HDL, SDR, предложения и результаты экспериментов.
+- **[Issues](https://github.com/Lay007/zynq-sdr-course/issues):** воспроизводимые ошибки и конкретные инженерные задачи.
+- **[Roadmap setup](https://github.com/Lay007/zynq-sdr-course/issues/77):** создание публичной доски GitHub Project на основе уже открытых задач. Прямую ссылку на доску добавим после подтверждения её адреса.
+- **[Support](SUPPORT.md):** как выбрать правильное место для вопроса или сообщения об ошибке.
+
+[Wiki](https://github.com/Lay007/zynq-sdr-course/wiki) служит кратким справочником, а [сайт курса](https://lay007.github.io/zynq-sdr-course/) остаётся основным источником лабораторных работ и подтверждённых результатов.
 
 ---
 
