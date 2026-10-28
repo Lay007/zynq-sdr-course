@@ -1,7 +1,5 @@
 # Welcome to the Zynq SDR Course community
 
-> **GitHub Discussions draft.** Publish this text in the repository's Announcements category and pin the discussion. This source file does not create a GitHub Discussion.
-
 The [Zynq SDR Course](https://lay007.github.io/zynq-sdr-course/) is about taking a signal-processing idea from a mathematical model to a reproducible result in code, FPGA and, where appropriate, RF hardware.
 
 This is a place to ask engineering questions, discuss design choices and share experiments with other learners and developers.
