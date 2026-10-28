@@ -37,6 +37,11 @@ __pycache__/
 .venv/
 venv/
 
+# Local credentials; keep a sanitized example available for documentation.
+.env
+.env.*
+!.env.example
+
 # MATLAB / Simulink
 *.asv
 *.autosave
