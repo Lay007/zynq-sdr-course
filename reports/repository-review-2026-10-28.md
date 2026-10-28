@@ -17,7 +17,7 @@ This is a targeted engineering audit with broad inventory and selected deep revi
 - `git ls-remote origin HEAD refs/heads/main` and `git fetch origin` established the current remote base, [`6e43ebf`](https://github.com/Lay007/zynq-sdr-course/commit/6e43ebf2de792e78632654fc6dfe37091c7235a0).
 - Audit branch: `audit/repository-review-2026-10-28`, created from `origin/main`; local `main` was not advanced or edited.
 - Reviewed preceding changes: `e9c2019` (Discussions entry points), `a296c0b` (welcome draft), `6e43ebf` (Project link), `69c1f25` (prose formatting), `432a78b` (Wiki diagrams/FAQ).
-- Host: Windows, Python 3.14.0, Icarus Verilog and `vvp` on PATH, authenticated GitHub CLI. MATLAB R2025a is installed but was not invoked. CI uses Python 3.12 on Ubuntu.
+- Host: Windows, Python 3.14.0, Icarus Verilog and `vvp` on PATH, authenticated GitHub CLI. `vvp -V` reports runtime `12.0 (devel) (s20150603-1539-g2693dd32b)`. MATLAB R2025a is installed but was not invoked. CI uses Python 3.12 on Ubuntu.
 
 `git ls-files` at the base contains 3,583 tracked files: 875 under `blocks/`, 879 under `docs/`, 1,081 under `hardware/`, 421 under `reports/`, 75 under `tools/`, 74 under `tests/`, 51 under `datasets/` and 25 under `experiments/`. Source inventory: 281 Python, 466 Verilog, 40 SystemVerilog, 57 C, two C++, 14 MATLAB and two Simulink files. These totals include imported hardware sources; they are not counts of independently validated course implementations.
 
@@ -43,7 +43,7 @@ Ignored local caches, Vivado products and scratch directories exist. They are no
 | Streaming/control | `axis_iq_passthrough.v`, its bench, mailbox RX_STOP/version handling, `zmbox.c`, OFDM FIFO/radio integration and DMA example | Reset/handshake/latency and CDC source review plus simulations; no new physical timing evidence |
 | Measurement chain | QPSK final report, DMA fabric-loopback report, DC A/B measurements, gain/overload and link-layer reports | Consistency review of existing records |
 | GitHub | Repository metadata, seven issues and their comment threads (latest progress prioritized), Actions runs/logs, public Project HTML, Discussions GraphQL, separate Wiki Git clone, security API responses | Read-only live service checks; Issue #77 status text corrected separately |
-| Security/data | Tracked filenames, selected credential signatures in text files below 2 MB, Git LFS inventory and dataset/experiment validators | Limited source scan and metadata validation; not a full-history secret or dependency vulnerability audit |
+| Security/data | Tracked filenames, selected credential signatures in tracked `.py/.json/.yml/.yaml/.md/.txt/.sh/.c/.cpp` files below 2 MB, Git LFS inventory and dataset/experiment validators | Limited source scan and metadata validation; not a full-history secret or dependency vulnerability audit |
 
 The review does not establish correctness of every algorithm, all parameter values, every reset phase, vendor IP, all clock constraints or all RU/EN prose. It does not establish regulatory permission for the proposed OTA experiment in #72.
 
@@ -66,6 +66,7 @@ Priority meanings: P0 critical, P1 serious, P2 technical improvement or remainin
 | R11 | P2 | [Gain-step report](hardware/ad9361-gain-steps-20261014.md) shows frequency-dependent nonmonotonic RX steps; [overload report](hardware/ad9361-two-board-overload-20261013.md) records relative limits. Absolute path S21 is still missing; NanoVNA tasks in #37 remain partly unfulfilled. | Open, #29 and #37 In Progress. Calibrate the protected path and publish a filled measurement report. |
 | R12 | P3 | `docs/ci-matrix.md` named nonexistent `generate_ieee_plots.yml`, omitted existing CSS/OFDM/mailbox/attribution workflows and described quick preflight as equivalent to Python Quality. | Fixed: actual workflow names/coverage and explicit differences between task runners, Actions and quick preflight. |
 | R13 | P2 | `SECURITY.md` excludes private `.env` files from publication, but base `git check-ignore --no-index .env .env.local` returned no matches. Accidental staging had no ignore guard. | Fixed: ignore `.env` and `.env.*`, while allowing a sanitized `.env.example`; verified with `git check-ignore`. No credential file was created or read. |
+| R14 | P2 | PR #78 starts the same Block 5 smoke command in Full Course Smoke (job `123050317459`), Block 5 HDL (`123050316241`) and HDL Canonical Vector CI (`123050316100`) on the same head. The three jobs consume separate runner time for overlapping regressions. | Open: consolidate execution/artifact handling in a separate CI change while preserving required checks and parameter coverage. This audit does not remove gates. |
 
 No missing local targets were found in the original README/Wiki entry-point scan or the newly included report/community directory scan. The link work adds missing validation coverage; it is not a claim that broken published URLs were repaired. External links, all Markdown anchors and Mermaid rendering were not exhaustively validated.
 
@@ -121,7 +122,7 @@ The evidence table links the actual [Lab 11.4 final measurement report](../block
 
 ## 7. Testing and CI/CD assessment
 
-Existing Actions use explicit permissions, scoped triggers and pinned Python requirements. Dedicated Block 5, canonical HDL and full-course smoke jobs overlap intentionally in baseline coverage. OFDM also has explicit transform/parameter variants. This audit documents the overlap rather than removing safety coverage without timing/cost evidence.
+Existing Actions use explicit permissions, scoped triggers and pinned direct Python requirements. Dedicated Block 5, canonical HDL and full-course smoke jobs overlap in baseline coverage. Their duplicate execution on PR #78 was confirmed from live job steps (R14). OFDM also has explicit transform/parameter variants. This audit documents the overlap rather than removing coverage without a separate review of durations, artifacts and required-check configuration.
 
 At the reviewed base, these runs were successful: [Pages 40742243011](https://github.com/Lay007/zynq-sdr-course/actions/runs/40742243011), [Docs Assets 40742242810](https://github.com/Lay007/zynq-sdr-course/actions/runs/40742242810), [Experiment Manifests 40742242665](https://github.com/Lay007/zynq-sdr-course/actions/runs/40742242665), [Attribution 40742242808](https://github.com/Lay007/zynq-sdr-course/actions/runs/40742242808) and [Generate Plots 40742242697](https://github.com/Lay007/zynq-sdr-course/actions/runs/40742242697). The most recent Full Course Smoke in the inspected 30-run window was [40681433161](https://github.com/Lay007/zynq-sdr-course/actions/runs/40681433161), successful at `432a78b`. The Python Quality failure at that revision is explained in R3; later green jobs must not be presented as a successful rerun of it.
 
@@ -137,13 +138,30 @@ Per-workflow latest-run queries through `gh api` additionally confirmed:
 
 These are prior branch/path-specific runs, not checks of the audit commit. The GitHub connector did not support the workflow-name run-list endpoints, so those reads used the authenticated CLI.
 
+At PR #78 source commit `a6b4d84`, all seven triggered workflows passed:
+
+| PR workflow | Successful run |
+| --- | --- |
+| Python Quality | [40754677303](https://github.com/Lay007/zynq-sdr-course/actions/runs/40754677303) |
+| Docs Assets Check, including the new formatting gate | [40754677324](https://github.com/Lay007/zynq-sdr-course/actions/runs/40754677324) |
+| Commit Attribution Check | [40754677233](https://github.com/Lay007/zynq-sdr-course/actions/runs/40754677233) |
+| Experiment Manifests Check | [40754677247](https://github.com/Lay007/zynq-sdr-course/actions/runs/40754677247) |
+| HDL Canonical Vector CI | [40754677225](https://github.com/Lay007/zynq-sdr-course/actions/runs/40754677225), 47 testbenches |
+| Full Course Smoke | [40754677302](https://github.com/Lay007/zynq-sdr-course/actions/runs/40754677302), strict docs, representative labs and Block 5 HDL |
+| Block 5 HDL | [40754677260](https://github.com/Lay007/zynq-sdr-course/actions/runs/40754677260) |
+
 ### Tests passed
 
 | Command | Observed outcome |
 | --- | --- |
-| `python tools/tasks.py docs` | PASS, strict MkDocs build, 88.42 s at the base; informational site-absolute-link messages remain |
-| `python tools/tasks.py labs` | PASS, all 20 representative labs; generated summaries and metrics validated |
+| `python tools/tasks.py docs` | PASS, strict build: 88.42 s at the base and 78.09 s with pinned packages after the edits; informational site-absolute-link messages remain |
+| `python tools/tasks.py labs` | PASS, all 20 representative labs in both environments; pinned command wall time 144.06 s; generated summaries and metrics validated |
+| `python tools/tasks.py hdl` | PASS, 47 Block 5 testbenches and 8 CSS testbenches on Windows |
+| `python tools/run_ofdm_rtl.py` | PASS with pinned Python, 28 testbenches and 3 radio parameter variants; pipelined block-RAM transforms, simulation only |
+| `python tools/run_local_ci.py --quick` | PASS, exit 0: Ruff, lab IDs, pytest (381 passed / 1 skipped), all 47 Block 5 and 8 CSS benches, then 28 OFDM benches plus 3 variants |
 | `python -m pytest -q` | PASS, 377 passed / 1 skipped before the four new checker tests; one existing Windows pytest-cache warning |
+| `python -m pytest -q -p no:cacheprovider` | PASS in the pinned environment: 381 passed / 1 skipped, pytest-reported runtime 280.64 s |
+| `python -m pip check` | PASS in the isolated pinned environment, no broken requirements |
 | `python -m pytest -q tests/test_docs_formatting.py tests/test_markdown_assets.py -p no:cacheprovider` | PASS, 11 tests after the source/documentation fixes |
 | `python -m ruff check blocks tools tests` | PASS |
 | `python tools/check_markdown_assets.py` | PASS, including the newly covered reports/Wiki/community |
@@ -152,18 +170,25 @@ These are prior branch/path-specific runs, not checks of the audit commit. The G
 | `python tools/check_doc_commands.py` | PASS |
 | `python tools/check_dataset_manifests.py` | PASS, 33 dataset manifests |
 | `python tools/check_experiment_manifests.py` | PASS, 24 experiment manifests |
-| `python tools/check_commit_attribution.py --range origin/main..HEAD` | PASS for the first five audit commits |
-| `git diff --check` | PASS |
+| `python tools/check_commit_attribution.py --range origin/main..HEAD` | PASS for all seven audit commits |
+| `git diff --check origin/main..HEAD` | PASS across the complete audit change |
+| CI matrix inventory comparison | PASS, all 21 existing workflow filenames appear in `docs/ci-matrix.md` |
 | Directed DC-estimator Icarus run | PASS, observed estimate 30 for `[120,0,0]`; non-comment source tokens also match the base |
 | `git check-ignore --no-index .env .env.local` | Both private environment names now ignored; `.env.example` separately confirmed trackable |
 
 Initial runs used the installed environment: NumPy 2.5.3, Matplotlib 3.11.2, MkDocs 1.6.1, Material 9.7.6, PyYAML 6.0.3, pytest 9.1.0, Ruff 0.16.7 and Paramiko 4.0.0. This differs from the direct pins, so it must not be described as a pinned-environment validation.
 
-The draft checkpoint still has `python tools/tasks.py hdl` and `python tools/run_local_ci.py --quick` running. Quick preflight has passed Ruff, the registry and pytest (381 passed / 1 skipped), and is in its HDL phase. A separate isolated environment is being installed from `requirements-dev.txt` for final Python/lab/docs validation. These in-progress runs are not counted as completed successes; final outcomes will replace this checkpoint before delivery.
+The separate isolated environment was installed from `requirements-dev.txt` without changing global packages. Final direct versions: NumPy 2.5.4, Matplotlib 3.11.2, MkDocs 1.6.1, Material 9.7.7, PyYAML 6.0.3, pytest 9.1.1, Ruff 0.17.1 and Paramiko 5.1.0. Full pytest, representative labs, strict docs, Ruff, link/navigation/ID/command checks and `pip check` all passed there. Cache-provider suppression in the pinned pytest run avoids the pre-existing Windows cache warning without deleting user caches.
+
+All listed local runs completed successfully. The required `tasks.py hdl` and `run_local_ci.py --quick` commands were both executed to completion, despite their overlapping Block 5/CSS coverage. The second long-window mailbox run passed in 2205.72 s. No in-progress run is counted as a completed result.
+
+The RTL runs emit existing Icarus time-unit/array-sensitivity warnings. PASS means the runner and self-checking benches completed successfully; it does not mean a warning-free HDL lint or a hardware timing check.
 
 ### Tests failed
 
 The deliberate pre-fix checker regression run produced three failures and one pass, demonstrating the missing scanner/Wiki coverage. The first patched test run also exposed Windows path separators in test expectations; those expectations were corrected to use `Path.relative_to`. The final status belongs to the subsequent runs, not these diagnostic failures.
+
+No validation failure remains in the final audit runs.
 
 ### Tests skipped
 
@@ -228,9 +253,14 @@ The tracked-filename/signature scan found no candidate private keys or supported
 
 GitHub [Issue #77](https://github.com/Lay007/zynq-sdr-course/issues/77) was updated with the verified progress snapshot and remains open. The original body was re-read before replacement to check for concurrent changes. No other issue is closed, no Project item moved, no Discussion posted, no Wiki published and no merge into `main` performed.
 
+The review is delivered through [PR #78](https://github.com/Lay007/zynq-sdr-course/pull/78). The initial HTTPS push was rejected because the OAuth token lacked `workflow` scope for the CI-file change. The existing SSH access succeeded with batch mode and strict host-key checking; no credential permission was expanded and no force push was used.
+
+Seven focused commits separate environment-file hygiene, documentation checks, bilingual entry points, community guidance, DC-estimator comments, the review report and final validation results. All fourteen changed files are listed above. The working branch targets `main`; the original local `main` remains at `69c1f25`.
+
 ## 10. Remaining risks
 
 - Timing margins belong to specific integrated images; some reported variants have small positive slack or a failed default build. A passing unit simulation does not qualify another seed or image.
+- The long-window mailbox bench took 2370.13 s in the first local Windows run against its 2400 s minimum timeout; the same bench took 473.34 s in the PR's canonical Linux CI run. The local runtime margin is small. These are simulator wall times, not FPGA latency or throughput measurements; runtime optimization/budget review belongs in a separate test-infrastructure change.
 - The QPSK DC estimator still interacts with payload statistics and level transients. Its correction must preserve existing retained-capture and self-reception cases.
 - OFDM RF, RX_STOP board behavior and absolute RF calibration remain separate incomplete acceptance gates.
 - Some board images and measured raw captures reside outside the public repository. Synthetic LFS replay improves software reproducibility but cannot replace measured raw evidence.
