@@ -187,6 +187,12 @@ Which labs need which hardware, and in what order: [learning routes](LAB_TRACK_e
 
 ---
 
+## Engineering Wiki
+
+The task-oriented [engineering Wiki source pages](wiki/README.md) cover getting started, hardware, the DSP-to-FPGA workflow and troubleshooting without duplicating the [full MkDocs course](https://lay007.github.io/zynq-sdr-course/). Once the first GitHub Wiki Home page is initialized, maintainers can publish the curated pages with `python tools/publish_wiki.py`. The Wiki is a navigation layer, not the source of truth for measurements.
+
+---
+
 ## Key documentation pages
 
 | Page | Why open it |
