@@ -27,6 +27,7 @@
 | Understand the signal path from DSP model to FPGA and RF | [Architecture Wiki](https://github.com/Lay007/zynq-sdr-course/wiki/Architecture), [DSP to FPGA](https://github.com/Lay007/zynq-sdr-course/wiki/DSP-to-FPGA) |
 | Bring up Zynq/AD936x or diagnose a failure | [Hardware Wiki](https://github.com/Lay007/zynq-sdr-course/wiki/Hardware), [Troubleshooting](https://github.com/Lay007/zynq-sdr-course/wiki/Troubleshooting) |
 | Review evidence instead of just reading claims | [Reviewer path](docs/reviewer-path.md), [hardware evidence index](docs/hardware-evidence-index.md) |
+| Teach the course or add a lab | [Instructor guide](docs/instructor-guide.md), [Contributing](CONTRIBUTING.md) |
 | Ask a question or contribute | [FAQ](https://github.com/Lay007/zynq-sdr-course/wiki/FAQ), [Support](SUPPORT.md), [Contributing](CONTRIBUTING.md) |
 
 **Evidence convention:** model/synthetic, RTL-tested, FPGA-tested and RF-measured results are different levels of validation. Check the linked report and its limitations before relying on a metric.
@@ -42,18 +43,6 @@ theory -> DSP model -> fixed-point design -> HDL/FPGA -> Zynq/AD9363 -> RF path 
 ```
 
 The repository is designed not only as a set of learning notes, but as a reproducible engineering workspace. It combines documentation, executable labs, HDL smoke checks, IQ metadata discipline, measurement templates and final-project structure.
-
----
-
-## Who is this course for?
-
-This course is useful for:
-
-- students learning DSP, SDR and FPGA design;
-- engineers moving from MATLAB/Python models to hardware-oriented implementation;
-- FPGA developers who want a signal-processing project with real measurement context;
-- instructors building a practical SDR/FPGA lab track;
-- reviewers checking the engineering behind the results ([reviewer path](docs/reviewer-path.md)).
 
 ---
 
@@ -78,7 +67,7 @@ This course is useful for:
 The hardware-oriented part of the course is built around:
 
 - **Xilinx Zynq-7020** class boards;
-- **AD9363 / ADRV-compatible RF frontend modules**;
+- **AD9363 / AD9361 RF frontends**, subject to the exact board and image;
 - **RTL-SDR** as an independent observation receiver;
 - controlled RF paths with attenuation, metadata and safety notes.
 
@@ -121,7 +110,7 @@ The course can still be studied in simulation-only mode, because many labs have 
 | Git LFS | the recorded IQ captures and datasets | `git lfs install`, then `git lfs pull`. Without it the captures are only small text pointer files. |
 | Icarus Verilog 12 (`iverilog`, `vvp`) | every HDL testbench (`tasks.py hdl`, `tools/run_ofdm_rtl.py`) | Not needed for the Python labs. |
 | Vivado 2021.1 | out-of-context reports and board images (Blocks 5, 8, 11) | Not needed for simulation. The board images are built by `hardware/7020_ad936x_sdr/rebuild_vendor_xpr_snapshot_course_overlay.tcl`. |
-| MATLAB / Simulink | the optional `.slx` models of Block 4 | Every lab that mentions MATLAB also runs in Python. |
+| MATLAB / Simulink | the optional `.slx` models of Block 4 | Python covers the baseline route; running `.slx` models requires MATLAB/Simulink and the toolboxes listed by the lab. |
 | An RTL-SDR, then a Zynq-7020 + AD9363/AD9361 board | the hardware routes | Start without them: [learning routes](LAB_TRACK_en.md) A (laptop only) to D (bench instruments). |
 
 ## Quick start
@@ -134,7 +123,7 @@ python tools/tasks.py docs
 python tools/tasks.py labs
 ```
 
-What success looks like: `tasks.py docs` ends with MkDocs reporting the site built (strict mode fails on a broken link), and `tasks.py labs` runs 20 representative labs in about a minute and a half; every line reads `...: PASS` and the last lines name the summary files in `docs/assets/`. A `FAIL` line names the lab to open.
+Success means that the strict MkDocs build completes and all 20 representative labs report `PASS`. The final lines name the summary files in `docs/assets/`. Runtime depends on the workstation. Strict mode checks configured documentation warnings; it does not check external URL availability.
 
 Run the broader local smoke check:
 
@@ -179,7 +168,7 @@ The OFDM testbenches are not part of `tasks.py hdl`: run `python tools/run_ofdm_
 | `iverilog` or `vvp` not found | Install Icarus Verilog and put it on `PATH`; only the HDL checks need it. |
 | A lab that reads a recorded capture fails on the file format, or the file is a few hundred bytes | It is a Git LFS pointer, not the capture: `git lfs install && git lfs pull`. |
 | `mkdocs build --strict` stops with a warning | A page links to a file or anchor that does not exist; the warning names both. |
-| Vivado fails with `couldn't read file ... No error` or a crash in synthesis | Out of memory. Run one Vivado at a time with `-jobs 1`; on a 16 GB machine two parallel builds fail this way. |
+| Vivado fails with `couldn't read file ... No error` or a crash in synthesis | Inspect the first error and memory use. The course bench encountered memory exhaustion with parallel builds; retry one build with `-jobs 1` and retain the log. |
 | A Russian page looks garbled in a Windows console | The files are UTF-8; read them with `Get-Content -Encoding utf8` or an editor. |
 | Board problems (no TX, a carrier between bursts, an AD9361 that stops after a runtime bitstream load) | See the [hardware evidence index](docs/hardware-evidence-index.md) and the Block 11 labs; each problem met on the bench has its own page. |
 
@@ -213,11 +202,7 @@ Which labs need which hardware, and in what order: [learning routes](LAB_TRACK_e
 
 The [Wiki](https://github.com/Lay007/zynq-sdr-course/wiki) is a quick reference; lab instructions and validated measurements remain on the [course website](https://lay007.github.io/zynq-sdr-course/).
 
----
-
-## Engineering Wiki
-
-The published [Engineering Wiki](https://github.com/Lay007/zynq-sdr-course/wiki) offers quick reference pages, architecture diagrams, a FAQ and troubleshooting routes. The [MkDocs course](https://lay007.github.io/zynq-sdr-course/) remains authoritative for lessons, procedures and measured evidence. Maintainers edit [Wiki sources](wiki/README.md) in the main repository, then publish them separately with `python tools/publish_wiki.py`.
+Maintainers edit [tracked Wiki sources](wiki/README.md) and publish them separately after review. See the [community maintenance checklist](COMMUNITY_PLAYBOOK.md) for the current GitHub setup.
 
 ---
 
@@ -242,39 +227,19 @@ The published [Engineering Wiki](https://github.com/Lay007/zynq-sdr-course/wiki)
 
 ---
 
-## Engineering philosophy
+## Evidence and limitations
 
-The central idea of the course is:
+Evidence belongs to a particular experiment and image. These reports document earlier measurements; local Python/RTL checks do not repeat them.
 
-```text
-Model -> Implementation -> Measurement -> Decision
-```
+| Component | Available evidence | Limit |
+| --- | --- | --- |
+| DSP and fixed-point | Deterministic models and [regressions](docs/ci-matrix.md) | Model checks do not establish FPGA or RF behavior |
+| Two-board QPSK | [Lab 11.4 final report](blocks/block_11_integrated_sdr_project/lab_11_4_final_measurement_report.md): 915 MHz, zero whole-burst rotations, payload BER about 4×10⁻⁴ | Configuration-specific result; residual DC-blocker losses remain in [#66](https://github.com/Lay007/zynq-sdr-course/issues/66) |
+| Mailbox and chat | [Link-layer measurements](reports/hardware/two-board-link-layer-20261017.md), Labs 11.49-11.52 | The new RX_STOP implementation in [#71](https://github.com/Lay007/zynq-sdr-course/issues/71) still needs board validation |
+| OFDM | [AXI DMA fabric loopback](reports/hardware/ofdm-dma-fabric-loopback-20261014.md): 0 errors in 3,072,000 bits | Radio stage simulated and built; RF validation in [#48](https://github.com/Lay007/zynq-sdr-course/issues/48) remains open |
+| IQ datasets | [Manifests](docs/iq-dataset-manifest.md) and [data policy](docs/real-data-policy.md) distinguish measured captures from synthetic QPSK replay | Some measured raw captures and board images are not publicly available |
 
-A result is considered mature only when it is connected to evidence: generated plots, metrics, HDL simulation, dataset metadata, RF safety notes or a reproducible engineering report.
-
----
-
-## Current maturity focus
-
-The repository already contains:
-
-- bilingual MkDocs documentation;
-- executable DSP and synchronization labs;
-- HDL smoke checks for FPGA-facing examples;
-- IQ recording and analysis workflows;
-- real passive RTL-SDR air captures from the first SDR++ bring-up session, stored through Git LFS with manifests;
-- dataset manifest consistency checking for Git LFS-backed captures;
-- experiment manifests;
-- report templates and final-project structure;
-- a complete in-fabric QPSK modem on Zynq-7020 + AD9361, closed on a two-board 915 MHz RF link (zero whole-burst rotation failures, payload BER ~4×10⁻⁴) with a final measurement report (Lab 11.4);
-- on top of it, a PS/PL message mailbox, a two-board chat, acknowledgements and long messages in fragments (Labs 11.49-11.52);
-- an OFDM modem in RTL, bit-exact with its fixed-point models, run on a board behind an AXI DMA in a fabric loopback (0 errors in 3 072 000 bits, Lab 8.14). Its radio stage (frame search, coarse CFO and level from a preamble) exists in simulation and as a built image; it has not run on a board yet.
-
-The remaining proof points are optional hardening rather than blockers:
-
-- repeat-build/seed timing robustness for the selected board-qualified integrated bitstream;
-- publication review or external archival for the measured raw QPSK IQ WAV; the synthetic 64 KiB zero-BER replay fixture is already public through Git LFS;
-- longer-duration RTL-SDR QPSK statistics.
+Remaining work includes OFDM RF validation, board measurements of RX_STOP, RF-path calibration and repeat-build timing robustness. See [course status](docs/status.md), the [hardware evidence index](docs/hardware-evidence-index.md) and the [2026-10-28 engineering review](reports/repository-review-2026-10-28.md).
 
 ---
 
