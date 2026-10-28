@@ -1,6 +1,7 @@
 # Курс SDR на Zynq
 
-[![MkDocs](https://img.shields.io/badge/site-MkDocs%20Material-informational)](mkdocs.yml)
+[![MkDocs](https://img.shields.io/badge/site-MkDocs%20Material-informational)](https://lay007.github.io/zynq-sdr-course/)
+[![Wiki](https://img.shields.io/badge/engineering-Wiki-informational)](https://github.com/Lay007/zynq-sdr-course/wiki)
 [![Full Course Smoke](https://github.com/Lay007/zynq-sdr-course/actions/workflows/full_course_smoke.yml/badge.svg)](https://github.com/Lay007/zynq-sdr-course/actions/workflows/full_course_smoke.yml)
 [![Block 5 HDL](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block5_hdl.yml/badge.svg)](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block5_hdl.yml)
 [![Block 8 Sync](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block8_sync.yml/badge.svg)](https://github.com/Lay007/zynq-sdr-course/actions/workflows/block8_sync.yml)
@@ -13,6 +14,21 @@
 **English version:** [README.md](README.md)
 
 ![Zynq SDR Course Pipeline](docs/assets/course_pipeline.svg)
+
+---
+
+## С чего начать
+
+| Задача | Куда перейти |
+| --- | --- |
+| Последовательно изучить курс | [Сайт курса](https://lay007.github.io/zynq-sdr-course/), [маршрут студента](docs/student-path.md) |
+| Установить инструменты и выбрать аппаратную базу | [Маршруты обучения](LAB_TRACK_ru.md), [Getting Started Wiki](https://github.com/Lay007/zynq-sdr-course/wiki/Getting-Started) |
+| Разобраться с переходом от DSP-модели к FPGA и радиотракту | [Architecture Wiki](https://github.com/Lay007/zynq-sdr-course/wiki/Architecture), [DSP to FPGA](https://github.com/Lay007/zynq-sdr-course/wiki/DSP-to-FPGA) |
+| Запустить Zynq/AD936x или найти причину ошибки | [Hardware Wiki](https://github.com/Lay007/zynq-sdr-course/wiki/Hardware), [Troubleshooting](https://github.com/Lay007/zynq-sdr-course/wiki/Troubleshooting) |
+| Посмотреть подтверждённые результаты | [Путь для ревью](docs/reviewer-path.md), [индекс измерений](docs/hardware-evidence-index.md) |
+| Задать вопрос или предложить улучшение | [FAQ](https://github.com/Lay007/zynq-sdr-course/wiki/FAQ), [Поддержка](SUPPORT.md), [Как помочь](CONTRIBUTING.md) |
+
+**О результатах:** моделирование, RTL-тест, проверка на FPGA и RF-измерение подтверждают разные вещи. Для численных результатов ориентируйтесь на отчёт и его ограничения.
 
 ---
 
@@ -190,7 +206,7 @@ OFDM-стенды не входят в `tasks.py hdl`: их запускает `
 
 ## Инженерная Wiki
 
-Краткие справочные страницы по установке, оборудованию, DSP → FPGA и поиску неисправностей находятся в [`wiki/`](wiki/README.md). Полный учебный курс и проверенные результаты остаются в [MkDocs](https://lay007.github.io/zynq-sdr-course/). После создания первой страницы GitHub Wiki её можно опубликовать командой `python tools/publish_wiki.py`.
+Опубликованная [Engineering Wiki](https://github.com/Lay007/zynq-sdr-course/wiki) содержит краткие справочные материалы, архитектурные схемы, FAQ и поиск неисправностей. [MkDocs](https://lay007.github.io/zynq-sdr-course/) остаётся основным источником лабораторных работ и измеренных результатов. Исходники Wiki хранятся в [`wiki/`](wiki/README.md), обновление выполняется командой `python tools/publish_wiki.py`.
 
 ---
 

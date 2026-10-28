@@ -2,6 +2,10 @@
 
 Thank you for improving the Zynq SDR Course. This repository is structured as a bilingual engineering course, so every contribution should improve clarity, reproducibility, safety or measurement value.
 
+## Where to ask questions
+
+For learning questions, see [Support](SUPPORT.md), the [Engineering Wiki](https://github.com/Lay007/zynq-sdr-course/wiki) and its FAQ. Use Issues for reproducible defects or concrete improvements; once Discussions is enabled, use it for Q&A and open-ended design discussions. Report sensitive security issues privately through [SECURITY.md](SECURITY.md).
+
 ## Before contributing
 
 Run the local smoke path when possible:

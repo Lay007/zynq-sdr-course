@@ -8,7 +8,7 @@ This repository is maintained as a public DSP/FPGA/SDR engineering course. Secur
 
 Please do not open a public issue for suspected vulnerabilities, accidental secret exposure, private data leaks or unsafe RF procedures.
 
-Report privately through the contact channel listed in the profile README and include:
+If GitHub private vulnerability reporting is enabled, use **Security and quality → Report a vulnerability** in this repository. Otherwise contact the maintainer privately through the channel linked from the GitHub profile. Never publish credentials or an exploit report in a public issue. Include:
 
 - affected file, lab or workflow;
 - reproduction steps;
