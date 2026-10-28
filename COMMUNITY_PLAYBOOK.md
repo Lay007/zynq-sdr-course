@@ -23,7 +23,7 @@ Once Discussions is enabled, add its direct link to the README and SUPPORT.md; v
 
 ## Projects: one board, not several
 
-Create a GitHub Project named **Zynq SDR Course — Roadmap**, owned by `Lay007`, make it public and link it to this repository. Use three views:
+Create a GitHub Project named **Zynq SDR Course: Roadmap**, owned by `Lay007`, make it public and link it to this repository. Use three views:
 
 1. **Board**, grouped by Status: Backlog, Ready, In progress, Verification, Done.
 2. **Table**, showing status, priority, area, assignee and linked issue.
