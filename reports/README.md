@@ -13,6 +13,11 @@ This directory stores report templates and lightweight report examples that are 
 | Path | Purpose |
 |---|---|
 | `fpga/` | FPGA utilization, timing, latency and throughput summaries |
+| `hardware/` | Recorded board/RF experiments and their JSON evidence |
+
+## Repository reviews
+
+- [Engineering review, 2026-10-28](repository-review-2026-10-28.md): inventory, verification scope, findings, GitHub configuration and follow-up proposals.
 
 ## Current curated FPGA reports
 
