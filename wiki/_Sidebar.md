@@ -2,9 +2,11 @@
 
 - [Home](Home)
 - [Getting Started](Getting-Started)
+- [Architecture](Architecture)
 - [Hardware](Hardware)
 - [DSP to FPGA](DSP-to-FPGA)
 - [Troubleshooting](Troubleshooting)
+- [FAQ](FAQ)
 
 **Course references**
 

@@ -28,6 +28,26 @@ Start from the **first failing layer**. Fixing a later symptom can conceal the o
 
 Record the precise stage at which the result changes. Do not label a simulation result as an RF validation.
 
+## Case: QPSK works in the FPGA but fails over the RF link
+
+Start from a known-good HDL vector and **record the first new failing stage**.
+
+| Observation | Next check |
+| --- | --- |
+| RTL vector mismatch | Alignment, bit ordering, word widths, rounding/saturation and ready/valid timing |
+| Fabric loopback passes, no RF energy seen | Loaded bitstream, clocks, source enable, TX port, gain settings and external receiver |
+| RF energy present, no frame lock | Frequency plan, sample rate, preamble correlation, input levels and CFO |
+| Frame lock found, payload BER high | Residual CFO/phase, sampling/timing recovery, I/Q polarity, DC blocking and AGC transients |
+| Only some bursts fail | Capture the full burst distribution and inspect per-burst diagnostics; do not report only the best frame |
+
+For the project-specific QPSK DC blocker defect and its evidence, see [issue #66](https://github.com/Lay007/zynq-sdr-course/issues/66). For safe RF configuration and measurement definitions use the [RF safety guide](https://github.com/Lay007/zynq-sdr-course/blob/main/docs/rf-safety.md) and [digital-link metrics](https://github.com/Lay007/zynq-sdr-course/blob/main/docs/digital-link-metrics.md). A diagnosis is a hypothesis until verified against a reproducible capture or run.
+
+## Case: PS/PL path responds but payload data is wrong
+
+Check the AXI4-Lite control contract independently from the streaming data contract. Inspect register offsets, endianness, reset sequencing, the sample buffer size, DMA ownership, `tvalid`/`tready` and hardware/software version matching. A working control mailbox alone does not validate the IQ sample path.
+
+See [PS/PL architecture](https://github.com/Lay007/zynq-sdr-course/blob/main/docs/zynq-ps-pl-architecture.md) and [mailbox bring-up](https://github.com/Lay007/zynq-sdr-course/blob/main/docs/zynq-ps-pl-mailbox-vivado-bringup.md).
+
 ## Collect a useful issue report
 
 ```text

@@ -10,8 +10,10 @@ A task-oriented reference for engineers and students working with SDR, DSP, fixe
 | --- | --- |
 | Set up a laptop and run the first labs | [Getting Started](Getting-Started) |
 | Identify boards, receivers, safe RF paths and bring-up checks | [Hardware](Hardware) |
+| Understand PS/PL and SDR signal paths | [Architecture](Architecture) |
 | Move a DSP model through fixed-point and HDL to the board | [DSP to FPGA](DSP-to-FPGA) |
 | Diagnose an installation, simulation, timing or RF problem | [Troubleshooting](Troubleshooting) |
+| Find answers to common student questions | [FAQ](FAQ) |
 | Follow the complete learning sequence | [Student path](https://github.com/Lay007/zynq-sdr-course/blob/main/docs/student-path.md) |
 | Review measured results and their limitations | [Hardware evidence index](https://github.com/Lay007/zynq-sdr-course/blob/main/docs/hardware-evidence-index.md) |
 
@@ -40,4 +42,4 @@ See [Learning routes](https://github.com/Lay007/zynq-sdr-course/blob/main/LAB_TR
 - Store reviewable Wiki sources in the main repository's [`wiki/` directory](https://github.com/Lay007/zynq-sdr-course/tree/main/wiki).
 - For corrections to course content, use the normal repository pull-request workflow.
 
-[Repository](https://github.com/Lay007/zynq-sdr-course) · [Course website](https://lay007.github.io/zynq-sdr-course/) · [Contributing](https://github.com/Lay007/zynq-sdr-course/blob/main/CONTRIBUTING.md)
+[Repository](https://github.com/Lay007/zynq-sdr-course) · [Course website](https://lay007.github.io/zynq-sdr-course/) · [Support](https://github.com/Lay007/zynq-sdr-course/blob/main/SUPPORT.md) · [Contributing](https://github.com/Lay007/zynq-sdr-course/blob/main/CONTRIBUTING.md)

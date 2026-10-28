@@ -6,17 +6,16 @@ This directory holds the version-controlled source for the project's GitHub Wiki
 
 - `Home.md`
 - `Getting-Started.md`
+- `Architecture.md`
 - `Hardware.md`
 - `DSP-to-FPGA.md`
 - `Troubleshooting.md`
+- `FAQ.md`
 - `_Sidebar.md`
 
 ## Publishing
 
-GitHub stores each Wiki in a separate Git repository, so changes under this directory do **not** automatically appear in the Wiki. Before the first publication:
-
-1. Open https://github.com/Lay007/zynq-sdr-course/wiki and create an initial `Home` page using the GitHub interface.
-2. On a computer with Git and authenticated GitHub push access, run from the main repository root:
+GitHub stores each Wiki in a separate Git repository, so changes under this directory do **not** automatically appear in the Wiki. The Wiki has already been initialized. To publish a reviewed update, run this command from the main repository root on a computer with Git and authenticated GitHub push access:
 
 ```bash
 python tools/publish_wiki.py

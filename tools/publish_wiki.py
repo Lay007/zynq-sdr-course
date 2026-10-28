@@ -12,9 +12,11 @@ WIKI_URL = f"https://github.com/{REPOSITORY}.wiki.git"
 PAGE_NAMES = (
     "Home.md",
     "Getting-Started.md",
+    "Architecture.md",
     "Hardware.md",
     "DSP-to-FPGA.md",
     "Troubleshooting.md",
+    "FAQ.md",
     "_Sidebar.md",
 )
 
