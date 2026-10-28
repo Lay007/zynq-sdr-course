@@ -15,9 +15,9 @@
 // bit-identical (pass-through) at the same latency.
 //
 // K is a direct trade: too small and the estimate follows the modulation instead of the
-// DC, too large and it cannot converge inside a burst -- and the chain resets this block
-// every frame (qpsk_rx_bit_recovery_chain wires .rst(rst || frame_start)), so it really
-// does have to converge from zero each time. No single fixed K can be both.
+// DC, too large and it cannot converge inside a burst. The earlier per-frame reset
+// configuration required convergence from zero each time. The current board top keeps
+// the estimate across frames through rst_dc, as described below.
 //
 // The original fixed K=6 (tau = 64 samples = 8 symbols) converges fine and was validated at
 // BER=0 on a real self-OTA capture, but it is short enough to track the data: a run of
@@ -37,12 +37,11 @@
 // slowly-decaying offset across the whole frame. A fast wrong estimate is self-correcting;
 // a slow wrong estimate is not.
 //
-// So instead the estimate is a running average over everything seen since reset, which
-// only later turns into a leaky one: K grows as floor(log2(n)) up to K_MAX. While K grows
-// this is exactly the mean of all n samples so far -- the best estimate available at every
-// instant, with the modulation averaging down as the window grows -- and once K reaches
-// K_MAX it settles into a leaky integrator with tau = 2^K_MAX that can still follow a
-// drifting LO. There is no arbitrary transition instant and no ripple to freeze.
+// Instead the estimate uses a power-of-two approximation to a running average:
+// K grows as floor(log2(n)) up to K_MAX, and the update weight is 1/2^K rather than 1/n.
+// It is not the exact arithmetic mean (after inputs 120, 0, 0 the estimate is 30, not 40).
+// The effective averaging window grows with acquisition; once K reaches K_MAX the block
+// becomes a leaky integrator with tau = 2^K_MAX that can still follow a drifting LO.
 //
 // acc holds mean << K, so each time K increments the stored estimate is re-scaled by one
 // left shift to represent the same mean. Miss that and the estimate halves at every step.
@@ -82,8 +81,8 @@ reg [KW-1:0]        k;
 reg [NW-1:0]        n_count;                // samples already averaged
 reg [NW-1:0]        thresh;                 // 1, 3, 7, ... : n_count value at which K steps
 
-// K steps exactly when the sample count reaches the next power of two, which is what makes
-// the recursion below equal the running mean of all samples so far.
+// K steps when the sample count reaches the next power of two, approximating the
+// reciprocal sample-count weight without a divider.
 wire step = in_valid && (k < K_MAX) && (n_count == thresh);
 wire [KW-1:0]        k_cur   = step ? (k + 1'b1) : k;
 wire signed [AW-1:0] acc_i_c = step ? (acc_i <<< 1) : acc_i;   // re-scale for the new K
@@ -107,8 +106,8 @@ always @(posedge clk) begin
     end else begin
         out_valid <= in_valid;
         if (in_valid) begin
-            // acc += in - (acc >>> K): with K = floor(log2(n)) this is the running mean,
-            // and at K = K_MAX it is a leaky integrator. Operands are signed and so
+            // acc += in - (acc >>> K): an approximate running mean during acquisition,
+            // then a fixed-weight leaky integrator at K_MAX. Operands are signed and so
             // sign-extend to the accumulator width.
             acc_i <= acc_i_c + in_i - dc_i;
             acc_q <= acc_q_c + in_q - dc_q;

@@ -114,7 +114,9 @@ def test_no_em_dash_in_prose():
 
     Prose uses a colon, a comma, parentheses or a new sentence instead (Russian 'X — это Y' reads 'X это Y').
     """
-    pages = course_pages() + sorted((ROOT / "reports").rglob("*.md")) + sorted(ROOT.glob("*.md"))
+    pages = course_pages() + sorted(ROOT.glob("*.md"))
+    for directory in ("reports", "wiki", "community"):
+        pages += sorted((ROOT / directory).rglob("*.md"))
     found = []
     for path in pages:
         inside = False
