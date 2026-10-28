@@ -38,6 +38,9 @@ jobs:
       - name: Check local Markdown assets
         run: python tools/check_markdown_assets.py
 
+      - name: Check documentation formatting
+        run: python -m pytest -q tests/test_docs_formatting.py
+
       - name: Check lab navigation coverage
         run: python tools/check_lab_navigation.py
 

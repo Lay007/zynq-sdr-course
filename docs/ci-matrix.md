@@ -7,20 +7,26 @@ This page documents what each GitHub Actions workflow validates and which artifa
 | Workflow | Trigger focus | Main checks | Main artifacts |
 |---|---|---|---|
 | `full_course_smoke.yml` | broad course changes | MkDocs strict build, representative Python labs, Block 5 HDL smoke | reproducibility summary, selected plots |
-| `python_quality.yml` | Python changes | formatting/linting and Python quality gates | PASS/FAIL logs |
+| `python_quality.yml` | block/tool/test/config changes | Ruff lint and full pytest suite | PASS/FAIL logs |
 | `block4_labs.yml` | fixed-point lab block | Lab 4.1 and 4.2 executable Python models | fixed-point FIR/mixer figures |
 | `block5_hdl.yml` | HDL/FPGA block | Icarus Verilog compilation and self-checking testbenches | VCD files, PASS/FAIL logs |
 | `hdl-canonical-ci.yml` | canonical HDL vectors | generated vectors and HDL smoke path | canonical vector logs |
+| `block5_ps_pl_mailbox.yml` | mailbox RTL and wrapper | AXI-Lite echo and board-address wrapper regressions | PASS/FAIL logs |
+| `block8_css_rtl.yml` | CSS RTL and fixed-point reference | regenerated SF7 vectors and self-checking detector benches | PASS/FAIL logs |
+| `block8_ofdm_rtl.yml` | OFDM RTL and vectors | TX benches, 16-QAM metrics, all benches with baseline/fabric transform variants | PASS/FAIL logs |
+| `block8_ofdm_rx_fft.yml` | FFT RTL and vectors | scaled 64-point receive FFT | PASS/FAIL logs |
+| `block8_ofdm_rx_chain.yml` | OFDM receive chain | extraction, tracking, equalization and AXI modem variants | PASS/FAIL logs |
 | `block6_rf_analysis.yml` | RF frontend lab block | Lab 6.4 synthetic RF analysis | spectrum/time plots, metrics JSON |
 | `block7_tx_rx.yml` | TX/RX chain block | Lab 7.2 and 7.3 executable models | frequency-plan/spectrum plots, loopback metrics |
 | `block8_sync.yml` | synchronization labs | CFO, phase, timing and end-to-end sync models | constellation plots, EVM/BER metrics |
 | `block9_recording_analysis.yml` | IQ recording labs | CI16 reader and multi-format IQ reader | spectrum plots, metrics JSON, synthetic captures |
 | `qpsk_demo_analysis.yml` | generated QPSK replay dataset | deterministic dataset generation, analyzer run and metric thresholds | constellation SVG, spectrum SVG, analysis summary JSON |
 | `dataset_manifests.yml` | dataset metadata | dataset manifest parsing, Git LFS pointer and checksum rules | manifest validation report |
-| `docs-assets-check.yml` | markdown asset integrity | local markdown asset links | PASS/FAIL report |
+| `docs-assets-check.yml` | every push/PR to main | course/report/Wiki/community links, documentation formatting, lab navigation/IDs and documented commands | PASS/FAIL report |
 | `experiment-manifests-check.yml` | manifest consistency | YAML structure and required fields in `experiments/*.yaml` | PASS/FAIL report |
 | `pages.yml` / docs deploy | documentation | MkDocs site build and GitHub Pages deploy | published course site |
-| `generate_ieee_plots.yml` | demo figures | generated IEEE-style plots | `docs/assets/*.png` |
+| `generate_plots.yml` | demo figures | generated IEEE-style plots | `docs/assets/*.png` |
+| `commit-attribution-check.yml` | commit metadata | attribution policy checks | PASS/FAIL logs |
 
 ## Full Course Smoke
 
@@ -33,7 +39,7 @@ Checks:
 - Block 5 HDL smoke tests with Icarus Verilog;
 - reproducibility summary artifacts.
 
-Local equivalent:
+Local superset (also runs the Block 8 CSS regressions):
 
 ```bash
 python tools/tasks.py smoke
@@ -43,17 +49,22 @@ python tools/tasks.py smoke
 
 Purpose: catch basic Python regressions before the broader course smoke path.
 
-Checks typically include:
+Checks include:
 
 - Ruff configuration from `pyproject.toml`;
 - pytest coverage for repository-level utilities and regression checks;
-- import/runtime sanity for course helpers when they are included in the test set.
+- the documentation-formatting tests included in the full pytest suite.
 
-Local equivalent:
+Local equivalent for this workflow:
 
 ```bash
-python tools/run_local_ci.py --quick
+python -m ruff check blocks tools tests
+python -m pytest -q
 ```
+
+`python tools/run_local_ci.py --quick` is broader: it adds the lab ID registry, Block 5 HDL, CSS RTL and all default OFDM benches with three radio parameter variants. It skips only the documentation and representative-lab rebuilds; HDL simulation can take many minutes. It does not cover every parameter variant in the separate Actions workflows.
+
+Markdown-only changes do not trigger `python_quality.yml`. The Docs Assets Check therefore runs `tests/test_docs_formatting.py` explicitly so a prose regression cannot bypass that gate.
 
 ## Block 4 Labs
 
@@ -194,7 +205,9 @@ Purpose: fail fast on broken local markdown asset links.
 Checks:
 
 - run `tools/check_markdown_assets.py`;
-- verify referenced local assets exist.
+- verify referenced local assets exist, including reports, community drafts and extensionless Wiki page links;
+- run `tests/test_docs_formatting.py`;
+- check lab navigation, canonical lab IDs and documented Python commands.
 
 ## Experiment Manifests Check
 

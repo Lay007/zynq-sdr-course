@@ -1,4 +1,4 @@
-# Zynq SDR Course — Engineering Wiki
+# Zynq SDR Course: Engineering Wiki
 
 A task-oriented reference for engineers and students working with SDR, DSP, fixed-point arithmetic, Verilog, Zynq-7020 and AD936x hardware.
 

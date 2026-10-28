@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Check local Markdown asset links used by the MkDocs site.
+"""Check local Markdown links and snippet assets in repository documentation.
 
 The checker is intentionally conservative:
-- it scans `docs/**/*.md`, `blocks/**/*.md`, `templates/**/*.md`,
-  `experiments/**/*.md` and root-level `*.md` files;
+- it scans course docs, blocks, templates, experiments, reports, Wiki sources,
+  community drafts and root-level Markdown files;
 - it validates image links, explicit file links, and `--8<--` snippet includes;
 - it ignores external URLs, anchors, mail links and site-absolute MkDocs URLs;
 - it ignores directory-style MkDocs links such as `demo/` because MkDocs resolves them.
@@ -21,6 +21,9 @@ DOCS = ROOT / "docs"
 BLOCKS = ROOT / "blocks"
 TEMPLATES = ROOT / "templates"
 EXPERIMENTS = ROOT / "experiments"
+REPORTS = ROOT / "reports"
+WIKI = ROOT / "wiki"
+COMMUNITY = ROOT / "community"
 SITE_PREFIX = "/zynq-sdr-course/"
 
 MARKDOWN_LINK_RE = re.compile(r"(!?)\[[^\]]*\]\(([^)]+)\)")
@@ -55,14 +58,14 @@ FILE_SUFFIXES = {
 
 def iter_markdown_files() -> list[Path]:
     files: set[Path] = set()
-    for directory in (DOCS, BLOCKS, TEMPLATES, EXPERIMENTS):
+    for directory in (DOCS, BLOCKS, TEMPLATES, EXPERIMENTS, REPORTS, WIKI, COMMUNITY):
         if directory.exists():
             files.update(directory.rglob("*.md"))
     files.update(path for path in ROOT.glob("*.md") if path.is_file())
     return sorted(files)
 
 
-def normalize_link(raw: str) -> str | None:
+def normalize_link(raw: str, *, wiki_page: bool = False) -> str | None:
     link = raw.strip().split()[0].strip("'\"")
     if not link or link.startswith(IGNORE_PREFIXES):
         return None
@@ -87,6 +90,10 @@ def normalize_link(raw: str) -> str | None:
     # through the nav and permalink configuration.
     suffix = Path(path).suffix.lower()
     if not suffix:
+        # GitHub Wiki page links omit .md; MkDocs permalink handling does not
+        # apply to these separately published sources.
+        if wiki_page:
+            return path + ".md"
         return None
     if suffix not in FILE_SUFFIXES:
         return None
@@ -119,7 +126,7 @@ def check_file(md_file: Path) -> list[str]:
 
     errors: list[str] = []
     for raw in raw_links:
-        path = normalize_link(raw)
+        path = normalize_link(raw, wiki_page=md_file.is_relative_to(WIKI))
         if path is None:
             continue
 
