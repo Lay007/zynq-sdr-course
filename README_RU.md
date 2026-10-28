@@ -209,7 +209,7 @@ OFDM-стенды не входят в `tasks.py hdl`: их запускает `
 
 - **[Discussions](https://github.com/Lay007/zynq-sdr-course/discussions):** вопросы по лабораторным работам, DSP, fixed-point, HDL, SDR, предложения и результаты экспериментов.
 - **[Issues](https://github.com/Lay007/zynq-sdr-course/issues):** воспроизводимые ошибки и конкретные инженерные задачи.
-- **[Roadmap setup](https://github.com/Lay007/zynq-sdr-course/issues/77):** создание публичной доски GitHub Project на основе уже открытых задач. Прямую ссылку на доску добавим после подтверждения её адреса.
+- **[Roadmap проекта](https://github.com/users/Lay007/projects/1):** открытые инженерные задачи, ход разработки и этапы проверки. В доске используются существующие GitHub Issues; настройка сообщества отслеживается в [#77](https://github.com/Lay007/zynq-sdr-course/issues/77).
 - **[Support](SUPPORT.md):** как выбрать правильное место для вопроса или сообщения об ошибке.
 
 [Wiki](https://github.com/Lay007/zynq-sdr-course/wiki) служит кратким справочником, а [сайт курса](https://lay007.github.io/zynq-sdr-course/) остаётся основным источником лабораторных работ и подтверждённых результатов.

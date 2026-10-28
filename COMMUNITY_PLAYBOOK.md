@@ -19,7 +19,7 @@ The repository [README](README.md) and [SUPPORT.md](SUPPORT.md) link directly to
 
 ## Projects: one board, not several
 
-Create or verify a public GitHub Project named **Zynq SDR Course: Roadmap**, owned by `Lay007`, and link it to this repository. The repository's `has_projects=true` flag does not prove that a public Project v2 board exists. Use three views:
+The maintainer has created **[Zynq SDR Course: Roadmap](https://github.com/users/Lay007/projects/1)** under `Lay007` and imported seven existing issues (#29, #37, #48, #66, #71, #72, #77), as confirmed by a GitHub UI screenshot. The exact Project URL was supplied on 2026-10-28. **Public visibility has not been independently verified**; confirm it without signing in before marking publication complete. Use three views:
 
 1. **Board**, grouped by Status: Backlog, Ready, In progress, Verification, Done.
 2. **Table**, showing status, priority, area, assignee and linked issue.

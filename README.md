@@ -208,7 +208,7 @@ Which labs need which hardware, and in what order: [learning routes](LAB_TRACK_e
 
 - **[Discussions](https://github.com/Lay007/zynq-sdr-course/discussions):** ask questions about labs, DSP, fixed-point, HDL and SDR hardware; share experiments or propose new ideas.
 - **[Issues](https://github.com/Lay007/zynq-sdr-course/issues):** report reproducible defects and track concrete engineering work.
-- **[Roadmap setup](https://github.com/Lay007/zynq-sdr-course/issues/77):** follow the setup of a public GitHub Project based on existing issues. A public Project URL will be added after it has been verified.
+- **[Project Roadmap](https://github.com/users/Lay007/projects/1):** follow the development backlog, progress and verification stages. The board uses the existing GitHub Issues; see [#77](https://github.com/Lay007/zynq-sdr-course/issues/77) for community setup.
 - **[Support](SUPPORT.md):** choose the right place to ask a question or report a problem.
 
 The [Wiki](https://github.com/Lay007/zynq-sdr-course/wiki) is a quick reference; lab instructions and validated measurements remain on the [course website](https://lay007.github.io/zynq-sdr-course/).
