@@ -44,7 +44,7 @@ It may be a Git LFS pointer rather than the recording. Run `git lfs install` and
 
 ## Where should I ask a question or report a problem?
 
-Read [Support](https://github.com/Lay007/zynq-sdr-course/blob/main/SUPPORT.md) first. General learning questions belong in Discussions **once enabled**; use an Issue for a reproducible defect or a specific improvement. Do not publish credentials, private IQ captures or sensitive vulnerabilities.
+Read [Support](https://github.com/Lay007/zynq-sdr-course/blob/main/SUPPORT.md) first. General learning questions belong in [Discussions](https://github.com/Lay007/zynq-sdr-course/discussions); use an Issue for a reproducible defect or a specific improvement. Do not publish credentials, private IQ captures or sensitive vulnerabilities.
 
 ## Can I add a new laboratory exercise?
 
