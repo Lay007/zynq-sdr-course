@@ -140,6 +140,8 @@ python tools/run_local_ci.py
 
 Useful commands:
 
+For an isolated environment and PowerShell commands, see the [reproducibility guide](docs/reproducibility-guide.md). `--quick` still includes long HDL simulations; use `--software-only` for checks without Icarus.
+
 | Command | Purpose |
 |---|---|
 | `python tools/tasks.py install` | Install Python dependencies |
@@ -151,6 +153,8 @@ Useful commands:
 | `python tools/tasks.py smoke` | Run docs + labs + HDL checks |
 | `python tools/run_local_ci.py` | Run lint + pytest + docs + labs + canonical HDL smoke |
 | `python tools/run_local_ci.py --quick` | Run lint + pytest + canonical HDL smoke |
+| `python tools/run_local_ci.py --software-only` | Run lint + lab ID registry + pytest without Icarus |
+| `python tools/run_local_ci.py --hdl-only` | Run Block 5, CSS and OFDM simulations; requires Icarus |
 | `python tools/check_lab_id_registry.py` | Validate canonical ownership of late Block 11 lab IDs |
 | `python tools/check_dataset_manifests.py` | Validate dataset manifests and Git LFS pointer checksums |
 | `python tools/tasks.py clean` | Remove generated local artifacts |

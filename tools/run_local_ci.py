@@ -26,12 +26,19 @@ def run_hdl() -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument(
         "--quick",
         action="store_true",
         help="Skip MkDocs/lab rebuilds and run only lint, pytest and HDL smoke.",
     )
+    modes.add_argument("--software-only", action="store_true", help="Run lint, registry and pytest without HDL or rebuilds.")
+    modes.add_argument("--hdl-only", action="store_true", help="Run Block 5, CSS and OFDM simulation only; requires Icarus.")
     args = parser.parse_args()
+
+    if args.hdl_only:
+        run_hdl()
+        return 0
 
     run([sys.executable, "-m", "ruff", "check", "blocks", "tools", "tests"])
     run([sys.executable, "tools/check_lab_id_registry.py"])
@@ -49,11 +56,12 @@ def main() -> int:
         ]
     )
 
-    if not args.quick:
+    if not (args.quick or args.software_only):
         run([sys.executable, "-m", "mkdocs", "build", "--strict"])
         run([sys.executable, "tools/run_all_labs.py"])
 
-    run_hdl()
+    if not args.software_only:
+        run_hdl()
     return 0
 
 

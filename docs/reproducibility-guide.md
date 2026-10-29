@@ -4,25 +4,49 @@ This guide explains how to rebuild the documentation, regenerate figures and kee
 
 ## Local documentation build
 
-Install the documentation dependencies:
+The CI baseline is Python 3.12. Create an isolated environment from the repository
+root with your chosen Python interpreter:
 
 ```bash
 python -m venv .venv
+```
+
+On Linux or macOS:
+
+```bash
 source .venv/bin/activate
-pip install mkdocs mkdocs-material pymdown-extensions
+python -m pip install -r requirements-dev.txt
+python tools/tasks.py docs
 ```
 
-Build the site strictly:
+On Windows PowerShell, call the environment's interpreter directly. Activation
+and execution-policy changes are not required:
 
-```bash
-mkdocs build --strict
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe tools/tasks.py docs
 ```
 
-Preview locally:
+The commands below use `python` from the activated environment. In PowerShell,
+replace it with `.\.venv\Scripts\python.exe`. Dependencies come from the same
+pinned requirements as CI. A successful docs check ends with `Documentation
+built`; strict mode reports configured documentation warnings as failures.
 
-```bash
-mkdocs serve
-```
+Preview locally with `python tools/tasks.py serve`.
+
+## Choose local checks
+
+| Command | Scope | Required tools |
+|---|---|---|
+| `python tools/run_local_ci.py --software-only` | Ruff, lab ID registry and pytest; no HDL simulation | Development requirements |
+| `python tools/tasks.py docs` | Strict MkDocs build | Development requirements |
+| `python tools/run_local_ci.py --hdl-only` | Canonical Block 5, CSS and default OFDM regressions | Development requirements, `iverilog` and `vvp` |
+| `python tools/run_local_ci.py` | Software checks, docs, representative labs and HDL | All of the above |
+
+`--quick` retains its earlier behavior: software checks and HDL, without docs or
+lab rebuilds. It can take many minutes. The modes are mutually exclusive. None
+of these checks connects to a board; RF acceptance follows the measured-work
+criteria in the [completion table](v1-completion-gates.md).
 
 For a focused Block 5 regression with persistent diagnostic files:
 

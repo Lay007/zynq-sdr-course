@@ -68,7 +68,9 @@ python -m ruff check blocks tools tests
 python -m pytest -q
 ```
 
-`python tools/run_local_ci.py --quick` is broader: it adds the lab ID registry, Block 5 HDL, CSS RTL and all default OFDM benches with three radio parameter variants. It skips only the documentation and representative-lab rebuilds; HDL simulation can take many minutes. It does not cover every parameter variant in the separate Actions workflows.
+`python tools/run_local_ci.py --software-only` runs lint, the lab ID registry and pytest without Icarus. `--hdl-only` runs Block 5, CSS and OFDM simulation without the software checks. These modes are mutually exclusive.
+
+`python tools/run_local_ci.py --quick` retains its existing broader scope: it adds the lab ID registry, Block 5 HDL, CSS RTL and all default OFDM benches with three radio parameter variants. It skips only the documentation and representative-lab rebuilds; HDL simulation can take many minutes. It does not cover every parameter variant in the separate Actions workflows.
 
 Markdown-only changes do not trigger `python_quality.yml`. The Docs Assets Check therefore runs `tests/test_docs_formatting.py` explicitly so a prose regression cannot bypass that gate.
 

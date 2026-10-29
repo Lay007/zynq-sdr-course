@@ -152,6 +152,8 @@ python tools/run_local_ci.py
 | `python tools/tasks.py smoke` | Выполнить проверку docs + labs + HDL |
 | `python tools/run_local_ci.py` | Выполнить lint + pytest + docs + labs + canonical HDL smoke |
 | `python tools/run_local_ci.py --quick` | Выполнить lint + pytest + canonical HDL smoke |
+| `python tools/run_local_ci.py --software-only` | Выполнить lint + проверку ID лабораторных + pytest без Icarus |
+| `python tools/run_local_ci.py --hdl-only` | Запустить симуляции блоков 5, CSS и OFDM; нужен Icarus |
 | `python tools/check_lab_id_registry.py` | Проверить владельцев ID поздних лабораторных Block 11 |
 | `python tools/check_dataset_manifests.py` | Проверить dataset manifests и SHA256 в Git LFS pointer-файлах |
 | `python tools/tasks.py clean` | Удалить локальные сгенерированные артефакты |
@@ -161,6 +163,8 @@ python tools/run_local_ci.py
 - [`hardware/7020_ad936x_sdr/README.md`](hardware/7020_ad936x_sdr/README.md): импортированный стартовый комплект для платы Zynq-7020 + AD936x.
 
 OFDM-стенды не входят в `tasks.py hdl`: их запускает `python tools/run_ofdm_rtl.py` (последняя строка: `OFDM RTL (...): N testbenches and M parameter variant(s) passed`).
+
+Настройка изолированного окружения и команды для PowerShell: [руководство воспроизводимости](docs/reproducibility-guide.md). Режим `--quick` по-прежнему включает долгие HDL-симуляции; для проверок без Icarus используйте `--software-only`.
 
 ## Частые проблемы
 
