@@ -2,7 +2,7 @@
 
 Use this checklist before publishing a public release of `zynq-sdr-course`.
 
-For the later v1.0 target, use the [five open completion gates](v1-completion-gates.md).
+For the later v1.0 target, use the [acceptance progress and remaining completion gates](v1-completion-gates.md).
 They separate executable software/RTL evidence from the remaining bench work.
 
 ## 1. Documentation build

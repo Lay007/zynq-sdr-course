@@ -64,6 +64,7 @@ to read as case studies.
 
 - [Hardware evidence index](hardware-evidence-index.md)
 - [Hardware validation backlog](hardware-validation-backlog.md)
+- [v1.0 acceptance progress and remaining gates](v1-completion-gates.md)
 - [Block 11 hardware bring-up summary](block11-hardware-bringup-summary.md)
 - [Reviewer acceptance checklist](reviewer-checklist.md)
 - [Course quality roadmap](course-quality-roadmap.md)
