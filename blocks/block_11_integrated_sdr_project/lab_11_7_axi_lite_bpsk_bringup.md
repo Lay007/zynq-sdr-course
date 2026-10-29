@@ -46,6 +46,12 @@ Expected local behavior:
 
 ## Real board run
 
+The `ssh-devmem` backend requires the board's verified host key in
+`~/.ssh/known_hosts`; unknown or changed keys are rejected. `--ssh-timeout-s`
+limits each connection phase and each command (default 10 seconds). See the
+[SSH setup and timeout notes](https://lay007.github.io/zynq-sdr-course/reproducibility-guide/#ssh-board-commands)
+before using a re-imaged board or a longer capture.
+
 On the Zynq Linux image, run as `root` or through `sudo`. Use the actual AXI-Lite base address from Vivado Address Editor, exported headers, or board handoff notes.
 
 You can inspect an exported Vivado handoff file directly from this repository:

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import mmap
 import os
 import shlex
@@ -203,6 +204,8 @@ class ParamikoCommandRunner:
         key_path: Path | None,
         timeout_s: float,
     ) -> None:
+        if not math.isfinite(timeout_s) or timeout_s <= 0:
+            raise ValueError("SSH timeout must be a finite positive number")
         try:
             import paramiko
         except ImportError as exc:  # pragma: no cover - exercised only when missing locally
@@ -211,13 +214,17 @@ class ParamikoCommandRunner:
             ) from exc
 
         self._paramiko = paramiko
+        self.timeout_s = timeout_s
         self.client = paramiko.SSHClient()
-        self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        self.client.load_system_host_keys()
+        self.client.set_missing_host_key_policy(paramiko.RejectPolicy())
         connect_kwargs: dict[str, object] = {
             "hostname": host,
             "username": user,
             "port": port,
             "timeout": timeout_s,
+            "banner_timeout": timeout_s,
+            "auth_timeout": timeout_s,
         }
         if key_path is not None:
             connect_kwargs["key_filename"] = str(key_path)
@@ -226,17 +233,42 @@ class ParamikoCommandRunner:
             connect_kwargs["look_for_keys"] = False
             connect_kwargs["allow_agent"] = False
 
-        self.client.connect(**connect_kwargs)
+        try:
+            self.client.connect(**connect_kwargs)
+        except Exception:
+            self.client.close()
+            raise
 
     def __call__(self, command: str) -> tuple[int, str, str]:
         sentinel = "__CODEX_RC__:"
         wrapped = shlex.quote(f"{command}; rc=$?; printf '{sentinel}%d\\n' \"$rc\"")
-        stdin, stdout, stderr = self.client.exec_command(f"sh -lc {wrapped}")
-        del stdin
-        stdout_text = stdout.read().decode("utf-8", errors="replace")
-        stderr_text = stderr.read().decode("utf-8", errors="replace")
+        deadline = time.monotonic() + self.timeout_s
+        stdin, stdout, stderr = self.client.exec_command(f"sh -lc {wrapped}", timeout=self.timeout_s)
+        channel = stdout.channel
+        out_chunks: list[bytes] = []
+        err_chunks: list[bytes] = []
+        try:
+            stdin.close()
+            # Drain both streams so a full stderr window cannot block stdout or the exit status.
+            # The deadline bounds total runtime even when the remote command keeps producing data.
+            while True:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise TimeoutError(f"SSH command exceeded {self.timeout_s:g} seconds")
+                if channel.recv_ready():
+                    out_chunks.append(channel.recv(65536))
+                if channel.recv_stderr_ready():
+                    err_chunks.append(channel.recv_stderr(65536))
+                if channel.exit_status_ready() and not (channel.recv_ready() or channel.recv_stderr_ready()):
+                    returncode = channel.recv_exit_status()
+                    break
+                if not (channel.recv_ready() or channel.recv_stderr_ready()):
+                    time.sleep(min(0.01, remaining))
+        finally:
+            channel.close()
+        stdout_text = b"".join(out_chunks).decode("utf-8", errors="replace")
+        stderr_text = b"".join(err_chunks).decode("utf-8", errors="replace")
         lines = stdout_text.splitlines()
-        returncode = stdout.channel.recv_exit_status()
         for index in range(len(lines) - 1, -1, -1):
             if lines[index].startswith(sentinel):
                 returncode = int(lines[index].split(":", 1)[1])
@@ -565,7 +597,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ssh-password", default=os.environ.get("ZYNQ_SSH_PASSWORD"))
     parser.add_argument("--ssh-port", type=int, default=int(os.environ.get("ZYNQ_SSH_PORT", "22")))
     parser.add_argument("--ssh-key-path", type=Path, default=None)
-    parser.add_argument("--ssh-timeout-s", type=float, default=10.0)
+    parser.add_argument("--ssh-timeout-s", type=float, default=10.0,
+                        help="SSH connection phase and per-command deadline in seconds; host key must be in ~/.ssh/known_hosts.")
     parser.add_argument("--ssh-devmem-bin", default="/sbin/devmem")
     parser.add_argument(
         "--mock-busy-reads",

@@ -2,6 +2,11 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import MagicMock
+
+import paramiko
+import pytest
 
 
 MODULE_DIR = Path(__file__).resolve().parents[1] / "blocks" / "block_11_integrated_sdr_project" / "python"
@@ -16,6 +21,7 @@ from lab_11_7_axi_lite_bpsk_bringup import (  # noqa: E402
     parse_devmem_read_output,
     run_bringup,
     SshDevMemRegisterIo,
+    ParamikoCommandRunner,
 )
 
 
@@ -133,3 +139,70 @@ def test_ssh_devmem_backend_surfaces_bus_error() -> None:
         assert "0x43C0001C" in str(exc)
     else:  # pragma: no cover - defensive
         raise AssertionError("Expected ssh-devmem bus-error failure.")
+
+
+def ssh_runner(monkeypatch):
+    client = MagicMock()
+    monkeypatch.setattr(paramiko, "SSHClient", lambda: client)
+    runner = ParamikoCommandRunner(host="board.test", user="root", password=None,
+                                  port=22, key_path=None, timeout_s=1)
+    return runner, client
+
+
+def test_ssh_runner_loads_known_hosts_and_rejects_unknown_keys(monkeypatch):
+    runner, client = ssh_runner(monkeypatch)
+    client.load_system_host_keys.assert_called_once_with()
+    assert isinstance(client.set_missing_host_key_policy.call_args.args[0], paramiko.RejectPolicy)
+    runner.close()
+
+
+class CommandChannel:
+    def __init__(self, *, never_exits=False):
+        self.stdout = [b"output\n__CODEX_RC__:3\n"]
+        self.stderr = [b"error detail\n"]
+        self.never_exits = never_exits
+        self.closed = False
+
+    def recv_ready(self):
+        return bool(self.stdout)
+
+    def recv_stderr_ready(self):
+        return bool(self.stderr)
+
+    def recv(self, size):
+        return self.stdout.pop(0)
+
+    def recv_stderr(self, size):
+        return self.stderr.pop(0)
+
+    def exit_status_ready(self):
+        return not self.never_exits and not (self.stdout or self.stderr)
+
+    def recv_exit_status(self):
+        return 0
+
+    def close(self):
+        self.closed = True
+
+
+def test_ssh_runner_drains_both_streams_and_preserves_remote_status(monkeypatch):
+    runner, client = ssh_runner(monkeypatch)
+    channel = CommandChannel()
+    client.exec_command.return_value = (MagicMock(), SimpleNamespace(channel=channel), MagicMock())
+    assert runner("false") == (3, "output\n", "error detail\n")
+    assert client.exec_command.call_args.kwargs["timeout"] == 1
+    assert channel.closed
+
+
+def test_ssh_runner_bounds_a_command_that_never_exits(monkeypatch):
+    import lab_11_7_axi_lite_bpsk_bringup as module
+
+    runner, client = ssh_runner(monkeypatch)
+    channel = CommandChannel(never_exits=True)
+    client.exec_command.return_value = (MagicMock(), SimpleNamespace(channel=channel), MagicMock())
+    ticks = iter([0.0, 0.2, 1.1])
+    monkeypatch.setattr(module.time, "monotonic", lambda: next(ticks))
+    monkeypatch.setattr(module.time, "sleep", lambda _: None)
+    with pytest.raises(TimeoutError, match="SSH command"):
+        runner("sleep 1000")
+    assert channel.closed

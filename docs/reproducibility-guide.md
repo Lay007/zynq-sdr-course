@@ -39,6 +39,21 @@ use a separate output directory for each run when comparing results.
 `make clean` delegates to `python tools/tasks.py clean`. Both preserve tracked
 evidence and inputs, including the documented `iq_passthrough_vectors.txt`.
 
+## SSH board commands
+
+The shared Paramiko runner loads `~/.ssh/known_hosts` and rejects unknown or
+changed board keys. Verify the board's host-key fingerprint over a trusted path
+(for example, the serial console), then register that key using your normal SSH
+client before running the labs. A re-imaged board may need its verified key
+updated. Blindly accepting `ssh-keyscan` output does not verify its identity.
+
+The runner's `timeout_s` limits each connection phase and the total runtime of
+each command. Lab 11.7 exposes it as `--ssh-timeout-s` (default 10 seconds).
+Increase the caller's timeout for an intentionally longer capture or wait.
+Timeout closes the SSH channel; it does not guarantee that the remote process
+has stopped or that RF state has been restored. Use the lab's documented board
+cleanup procedure after an interrupted experiment.
+
 ## Figure generation
 
 The repository uses IEEE-style generated figures. The expected workflow is:
