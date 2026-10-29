@@ -24,6 +24,18 @@ Preview locally:
 mkdocs serve
 ```
 
+For a focused Block 5 regression with persistent diagnostic files:
+
+```bash
+python tools/run_block5_hdl_smoke.py --test tb_iq_passthrough --artifacts-dir build/hdl/block5
+```
+
+Each test writes compile and simulation stdout/stderr logs to its own directory.
+VCD files produced by that test are copied before the temporary workspace is
+removed, including on a failed simulation or timeout. CI uploads this directory
+even if a test fails. Existing files in the chosen directory are not cleaned;
+use a separate output directory for each run when comparing results.
+
 `make clean` delegates to `python tools/tasks.py clean`. Both preserve tracked
 evidence and inputs, including the documented `iq_passthrough_vectors.txt`.
 

@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "blocks/block_05_fpga_hdl_flow/**"
+      - "hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/*.v"
       - "tools/run_block5_hdl_smoke.sh"
       - "tools/run_block5_hdl_smoke.py"
       - "requirements.txt"
@@ -12,6 +13,7 @@ on:
   pull_request:
     paths:
       - "blocks/block_05_fpga_hdl_flow/**"
+      - "hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/*.v"
       - "tools/run_block5_hdl_smoke.sh"
       - "tools/run_block5_hdl_smoke.py"
       - "requirements.txt"
@@ -48,7 +50,7 @@ jobs:
 
       - name: Run Block 5 HDL smoke suite
         shell: bash
-        run: bash tools/run_block5_hdl_smoke.sh
+        run: bash tools/run_block5_hdl_smoke.sh --artifacts-dir build/hdl/block5
 
       - name: Upload HDL CI artifacts
         if: always()
@@ -56,8 +58,7 @@ jobs:
         with:
           name: hdl-canonical-artifacts
           path: |
-            blocks/block_05_fpga_hdl_flow/tb/*.out
-            blocks/block_05_fpga_hdl_flow/tb/*.vcd
+            build/hdl/block5/
             blocks/block_05_fpga_hdl_flow/tb/*_vectors.txt
             blocks/block_05_fpga_hdl_flow/tb/*_bits.txt
             blocks/block_05_fpga_hdl_flow/tb/*_meta.txt

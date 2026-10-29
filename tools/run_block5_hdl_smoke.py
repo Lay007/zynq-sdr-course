@@ -318,9 +318,27 @@ STATIC_SIM_INPUTS = (
 )
 
 
-def run(command: list[str], *, cwd: Path = ROOT, timeout_s: float | None = None) -> None:
+def save_logs(directory: Path, stage: str, stdout: str | bytes | None, stderr: str | bytes | None) -> None:
+    directory.mkdir(parents=True, exist_ok=True)
+    for stream, value in (("stdout", stdout), ("stderr", stderr)):
+        text = value.decode(errors="replace") if isinstance(value, bytes) else (value or "")
+        (directory / f"{stage}.{stream}.log").write_text(text, encoding="utf-8")
+
+
+def run(command: list[str], *, cwd: Path = ROOT, timeout_s: float | None = None, log_dir: Path | None = None) -> None:
     print(f">>> {' '.join(command)}", flush=True)
-    subprocess.run(command, cwd=cwd, check=True, timeout=timeout_s)
+    if log_dir is None:
+        subprocess.run(command, cwd=cwd, check=True, timeout=timeout_s)
+        return
+    try:
+        result = subprocess.run(command, cwd=cwd, check=False, timeout=timeout_s, capture_output=True, text=True)
+    except subprocess.TimeoutExpired as exc:
+        save_logs(log_dir, "compile", exc.stdout, exc.stderr)
+        raise
+    save_logs(log_dir, "compile", result.stdout, result.stderr)
+    sys.stdout.write(result.stdout)
+    sys.stderr.write(result.stderr)
+    result.check_returncode()
 
 
 # vvp exits 0 even when a testbench $displays a failure and $finishes normally, so a check on the
@@ -330,19 +348,31 @@ def run(command: list[str], *, cwd: Path = ROOT, timeout_s: float | None = None)
 _FAIL_RE = re.compile(r"\bFAIL\b")
 
 
-def run_sim(command: list[str], *, cwd: Path, name: str, timeout_s: float) -> None:
+def run_sim(command: list[str], *, cwd: Path, name: str, timeout_s: float, artifacts_dir: Path | None = None) -> None:
     print(f">>> {' '.join(command)}", flush=True)
     started = time.monotonic()
+    previous = {path: path.stat().st_mtime_ns for path in cwd.rglob("*.vcd")} if artifacts_dir else {}
     try:
         result = subprocess.run(
             command, cwd=cwd, check=False, capture_output=True, text=True, timeout=timeout_s
         )
     except subprocess.TimeoutExpired as exc:
+        if artifacts_dir:
+            save_logs(artifacts_dir / name, "simulation", exc.stdout, exc.stderr)
         if exc.stdout:
             sys.stdout.write(exc.stdout if isinstance(exc.stdout, str) else exc.stdout.decode(errors="replace"))
         if exc.stderr:
             sys.stderr.write(exc.stderr if isinstance(exc.stderr, str) else exc.stderr.decode(errors="replace"))
         raise RuntimeError(f"{name}: simulation exceeded {timeout_s:g} seconds") from exc
+    finally:
+        if artifacts_dir:
+            for path in cwd.rglob("*.vcd"):
+                if previous.get(path) != path.stat().st_mtime_ns:
+                    target = artifacts_dir / name / path.relative_to(cwd)
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(path, target)
+    if artifacts_dir:
+        save_logs(artifacts_dir / name, "simulation", result.stdout, result.stderr)
     sys.stdout.write(result.stdout)
     if result.stderr:
         sys.stderr.write(result.stderr)
@@ -392,12 +422,15 @@ def select_tests(names: list[str] | None) -> tuple[HdlTest, ...]:
     return tuple(by_name[name] for name in names)
 
 
-def run_tests(*, generate: bool = True, names: list[str] | None = None, timeout_s: float = 180.0) -> None:
+def run_tests(*, generate: bool = True, names: list[str] | None = None, timeout_s: float = 180.0,
+              artifacts_dir: Path | None = None) -> None:
     iverilog = require_tool("iverilog")
     vvp = require_tool("vvp")
     if generate:
         generate_vectors()
     require_generated_inputs()
+    if artifacts_dir is not None:
+        artifacts_dir = (ROOT / artifacts_dir).resolve()
     with tempfile.TemporaryDirectory(prefix="zynq-sdr-hdl-") as temporary_dir:
         workspace = Path(temporary_dir)
         populate_simulation_workspace(workspace)
@@ -411,8 +444,10 @@ def run_tests(*, generate: bool = True, names: list[str] | None = None, timeout_
             run(
                 [iverilog, "-g2012", "-o", str(output), *(str(path) for path in test.sources)],
                 timeout_s=timeout_s,
+                log_dir=artifacts_dir / test.name if artifacts_dir else None,
             )
-            run_sim([vvp, str(output)], cwd=workspace, name=test.name, timeout_s=max(timeout_s, test.min_timeout_s))
+            run_sim([vvp, str(output)], cwd=workspace, name=test.name,
+                    timeout_s=max(timeout_s, test.min_timeout_s), artifacts_dir=artifacts_dir)
     print(f"Canonical HDL smoke passed: {len(selected)} testbenches.")
 
 
@@ -437,8 +472,9 @@ def main() -> int:
         default=600.0,
         help="Per-compile and per-simulation timeout in seconds (default: 600).",
     )
+    parser.add_argument("--artifacts-dir", type=Path, help="Keep per-test compile/simulation logs and VCD files outside the temporary workspace.")
     args = parser.parse_args()
-    run_tests(generate=not args.no_generate, names=args.tests, timeout_s=args.timeout_s)
+    run_tests(generate=not args.no_generate, names=args.tests, timeout_s=args.timeout_s, artifacts_dir=args.artifacts_dir)
     return 0
 
 

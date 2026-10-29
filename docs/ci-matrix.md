@@ -30,6 +30,12 @@ This page documents what each GitHub Actions workflow validates and which artifa
 
 ## Full Course Smoke
 
+The three workflows that invoke the canonical Block 5 runner include its board
+wrapper sources under `hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/`
+in their path filters. They export per-test logs and VCD files to
+`build/hdl/block5/` before the runner removes its temporary workspace, and upload
+that directory on failure as well as success.
+
 Purpose: verify that the repository still works as an integrated engineering course.
 
 Checks:

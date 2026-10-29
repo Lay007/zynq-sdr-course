@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths:
       - "blocks/**"
+      - "hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/*.v"
       - "docs/**"
       - "tools/**"
       - "mkdocs.yml"
@@ -14,6 +15,7 @@ on:
   pull_request:
     paths:
       - "blocks/**"
+      - "hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/*.v"
       - "docs/**"
       - "tools/**"
       - "mkdocs.yml"
@@ -68,7 +70,7 @@ jobs:
 
       - name: Run Block 5 HDL smoke suite
         shell: bash
-        run: bash tools/run_block5_hdl_smoke.sh
+        run: bash tools/run_block5_hdl_smoke.sh --artifacts-dir build/hdl/block5
 
       - name: Validate summary artifacts
         shell: bash
@@ -87,10 +89,12 @@ jobs:
           done
 
       - name: Upload smoke artifacts
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: full-course-smoke-artifacts
           path: |
+            build/hdl/block5/
             docs/assets/course_reproducibility_summary.json
             docs/assets/course_reproducibility_summary.md
             docs/assets/lab64_synthetic_rf_capture_fft.png

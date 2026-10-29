@@ -5,6 +5,7 @@ on:
     branches: [ main ]
     paths:
       - "blocks/block_05_fpga_hdl_flow/**"
+      - "hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/*.v"
       - "tools/run_block5_hdl_smoke.sh"
       - "tools/run_block5_hdl_smoke.py"
       - "requirements.txt"
@@ -13,6 +14,7 @@ on:
   pull_request:
     paths:
       - "blocks/block_05_fpga_hdl_flow/**"
+      - "hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/*.v"
       - "tools/run_block5_hdl_smoke.sh"
       - "tools/run_block5_hdl_smoke.py"
       - "requirements.txt"
@@ -49,15 +51,12 @@ jobs:
 
       - name: Run Block 5 HDL smoke suite
         shell: bash
-        run: bash tools/run_block5_hdl_smoke.sh
+        run: bash tools/run_block5_hdl_smoke.sh --artifacts-dir build/hdl/block5
 
       - name: Upload VCD waveforms
+        if: always()
         uses: actions/upload-artifact@v7
         with:
           name: block5-hdl-waveforms
-          path: |
-            tb_iq_passthrough.vcd
-            tb_fir_iq_4tap.vcd
-            tb_nco_mixer_iq.vcd
-            tb_axis_iq_passthrough.vcd
+          path: build/hdl/block5/
           if-no-files-found: warn
