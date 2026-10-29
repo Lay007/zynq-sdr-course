@@ -24,6 +24,9 @@ Preview locally:
 mkdocs serve
 ```
 
+`make clean` delegates to `python tools/tasks.py clean`. Both preserve tracked
+evidence and inputs, including the documented `iq_passthrough_vectors.txt`.
+
 ## Figure generation
 
 The repository uses IEEE-style generated figures. The expected workflow is:

@@ -58,3 +58,9 @@ def test_install_dev_uses_the_development_requirements(monkeypatch) -> None:
     assert commands == [
         [sys.executable, "-m", "pip", "install", "-r", "requirements-dev.txt"]
     ]
+
+
+def test_make_clean_delegates_to_the_tracked_file_safe_runner():
+    makefile = (ROOT / "Makefile").read_text(encoding="utf-8")
+    recipe = makefile.split("\nclean:\n", 1)[1].strip()
+    assert recipe == "$(PYTHON) tools/tasks.py clean"

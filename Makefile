@@ -31,9 +31,4 @@ lint:
 smoke: docs labs hdl
 
 clean:
-	rm -rf site
-	rm -f blocks/block_05_fpga_hdl_flow/tb/*.out
-	rm -f blocks/block_05_fpga_hdl_flow/tb/*.vcd
-	rm -f tb_*.out
-	rm -f tb_*.vcd
-	rm -f blocks/block_05_fpga_hdl_flow/tb/*_vectors.txt
+	$(PYTHON) tools/tasks.py clean
