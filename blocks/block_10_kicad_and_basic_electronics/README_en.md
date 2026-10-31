@@ -31,13 +31,15 @@ It removes the artificial separation between DSP and hardware by showing how pow
 - Lab 10.4: KiCad schematic mini-project.
 - Lab 10.5. NanoVNA and RF Demo Kit: `S11`/`S21`, VSWR and Smith chart.
 - Lab 10.6. Digital RF attenuator: step, range and linearity check.
+- [Lab 10.7](/zynq-sdr-course/en/labs/lab-10-7-spi-tft-interface-pcb/): SPI TFT adapter schematic, PCB design, manufacturing and verification.
+- [Lab 10.8](/zynq-sdr-course/en/labs/lab-10-8-3d-printed-sdr-enclosure/): parametric CAD enclosure for ZynqSDR, 3D printing and assembly.
 
 ## Practical extension: SPI TFT interface
 
-Apply this block's electrical principles when documenting the LCD wiring, measuring GPIO levels, validating any HV/LV translator and checking solder continuity. LCD integration with spectrum and metrics is covered in optional [Lab 11.53](/zynq-sdr-course/en/labs/lab-11-53-local-spi-display/). The current physical wiring has not yet been validated on hardware.
+Apply this block's electrical principles when documenting the LCD wiring, measuring GPIO levels, validating any HV/LV translator and checking solder continuity. Continue with [Lab 10.7](/zynq-sdr-course/en/labs/lab-10-7-spi-tft-interface-pcb/) for the adapter PCB and [Lab 10.8](/zynq-sdr-course/en/labs/lab-10-8-3d-printed-sdr-enclosure/) for the screen enclosure. LCD integration with spectrum and metrics is covered in optional [Lab 11.53](/zynq-sdr-course/en/labs/lab-11-53-local-spi-display/). The current physical wiring has not yet been validated on hardware.
 
 ## Tooling for the block
-The main toolset is: KiCad, multimeter, breadboard, MATLAB / Simulink, NanoVNA, RF Demo Kit, fixed and digital attenuators, 50-ohm cables and loads.
+The main toolset is: KiCad, multimeter, breadboard, MATLAB / Simulink, NanoVNA, RF Demo Kit, fixed and digital attenuators, 50-ohm cables and loads. Optional Labs 10.7–10.8 add FreeCAD or OpenSCAD, a slicer and a 3D printer for physical fabrication.
 
 ## Expected outputs
 - schematic or schematic fragment;
