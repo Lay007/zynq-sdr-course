@@ -29,8 +29,8 @@
 ## Лабораторные работы NanoVNA/RF
 - Lab 10.5 это NanoVNA и RF Demo Kit: `S11`/`S21`, КСВН и диаграмма Смита.
 - Lab 10.6 это Цифровой RF-аттенюатор: проверка шага, диапазона и линейности.
-- [Lab 10.7](/zynq-sdr-course/ru/labs/lab-10-7-spi-tft-interface-pcb/) — переходная PCB для SPI-дисплея: KiCad и проверка электрических уровней.
-- [Lab 10.8](/zynq-sdr-course/ru/labs/lab-10-8-3d-printed-sdr-enclosure/) — корпус SDR с TFT: измерения, параметрический CAD, 3D-печать, сборка.
+- [Lab 10.7](/zynq-sdr-course/ru/labs/lab-10-7-spi-tft-interface-pcb/): переходная PCB для SPI-дисплея: KiCad и проверка электрических уровней.
+- [Lab 10.8](/zynq-sdr-course/ru/labs/lab-10-8-3d-printed-sdr-enclosure/): корпус SDR с TFT: измерения, параметрический CAD, 3D-печать, сборка.
 
 ## Выходные материалы блока
 - схема или её фрагмент;
