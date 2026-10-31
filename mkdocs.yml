@@ -327,6 +327,8 @@ nav:
           - "Лабораторная 10.4 — Мини-проект схемы в KiCad": ru/labs/lab-10-4-kicad-schematic-mini-project.md
           - "Лабораторная 10.5 — NanoVNA и RF Demo Kit": ru/labs/lab-10-5-nanovna-rf-demo-kit.md
           - "Лабораторная 10.6 — Характеризация цифрового RF-аттенюатора": ru/labs/lab-10-6-digital-attenuator-characterization.md
+          - "Лабораторная 10.7 — Плата подключения SPI TFT в KiCad": ru/labs/lab-10-7-spi-tft-interface-pcb.md
+          - "Лабораторная 10.8 — Корпус ZynqSDR: CAD и 3D-печать": ru/labs/lab-10-8-3d-printed-sdr-enclosure.md
       - "Блок 11 — основной путь":
           - "Лабораторная 11.1 — Требования проекта и системная архитектура": ru/labs/lab-11-1-project-requirements-and-architecture.md
           - "Лабораторная 11.2 — Сквозной пакет симуляции": ru/labs/lab-11-2-end-to-end-simulation-package.md
@@ -352,6 +354,7 @@ nav:
           - "Лабораторная 11.50 — Две платы переписываются через свои mailbox": ru/labs/lab-11-50-two-board-chat.md
           - "Лабораторная 11.51 — Подтверждения: отправитель узнаёт, что потерялось": ru/labs/lab-11-51-acknowledgements.md
           - "Лабораторная 11.52 — Длинные сообщения и почему канал такой медленный": ru/labs/lab-11-52-fragments-and-speed.md
+          - "Лабораторная 11.53 — Локальный SPI-дисплей SDR-приёмника": ru/labs/lab-11-53-local-spi-display.md
       - "Блок 11 — разборы случаев отладки":
           - "Обзор: восемь случаев отладки": ru/block11-case-studies.md
           - "Лабораторная 11.8 — Overlay gpreg BPSK для AD9361": ru/labs/lab-11-8-axi-gpreg-bpsk-overlay.md
@@ -522,6 +525,8 @@ nav:
           - "Lab 10.4 — KiCad schematic mini-project": en/labs/lab-10-4-kicad-schematic-mini-project.md
           - "Lab 10.5 — NanoVNA and RF Demo Kit": en/labs/lab-10-5-nanovna-rf-demo-kit.md
           - "Lab 10.6 — Digital RF attenuator characterization": en/labs/lab-10-6-digital-attenuator-characterization.md
+          - "Lab 10.7 — ZynqSDR SPI TFT interface PCB": en/labs/lab-10-7-spi-tft-interface-pcb.md
+          - "Lab 10.8 — CAD and 3D-printed SDR enclosure": en/labs/lab-10-8-3d-printed-sdr-enclosure.md
       - "Block 11 — core path":
           - "Lab 11.1 — Project requirements and architecture": en/labs/lab-11-1-project-requirements-and-architecture.md
           - "Lab 11.2 — End-to-end simulation package": en/labs/lab-11-2-end-to-end-simulation-package.md
@@ -547,6 +552,7 @@ nav:
           - "Lab 11.50 — Two boards chat through their mailboxes": en/labs/lab-11-50-two-board-chat.md
           - "Lab 11.51 — Acknowledgements: the sender learns what was lost": en/labs/lab-11-51-acknowledgements.md
           - "Lab 11.52 — Long messages, and why the link is so slow": en/labs/lab-11-52-fragments-and-speed.md
+          - "Lab 11.53 — Local SPI display for an SDR receiver": en/labs/lab-11-53-local-spi-display.md
       - "Block 11 — bring-up case studies":
           - "Overview: eight debugging cases": block11-case-studies.md
           - "Lab 11.8 — AD9361 gpreg BPSK overlay": en/labs/lab-11-8-axi-gpreg-bpsk-overlay.md
