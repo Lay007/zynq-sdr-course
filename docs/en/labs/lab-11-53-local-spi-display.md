@@ -58,6 +58,12 @@ If a pin mapping or voltage cannot be confirmed, stop rather than guessing. Init
 4. Add CFO, SNR, EVM, BER and sync status **only** when those values are available from the active receiver. Missing values must show “N/A”, not zero.
 5. Label uncalibrated spectra dBFS or relative scale, never dBm without documented RF gain/path calibration.
 
+## Stage 4 (optional): interface PCB and finished enclosure
+
+Once a temporary TFT connection has been electrically verified, design an adapter PCB in [Lab 10.7](lab-10-7-spi-tft-interface-pcb.md) and a printable enclosure in [Lab 10.8](lab-10-8-3d-printed-sdr-enclosure.md). Reconcile PCB, connector and mounting coordinates before fabrication. After assembly, re-test TFT, Linux/IIO and AD9361, measure thermal behaviour, and compare receiver noise/spurs with display refresh and backlight enabled versus disabled. A printed plastic enclosure is not an RF shield.
+
+The base Lab 11.53 can be completed without a fabricated PCB or printer. CAD and manufacturing files alone do not establish a tested physical instrument.
+
 ## Acceptance and report
 
 | Check | Evidence |
