@@ -32,6 +32,10 @@ It removes the artificial separation between DSP and hardware by showing how pow
 - Lab 10.5. NanoVNA and RF Demo Kit: `S11`/`S21`, VSWR and Smith chart.
 - Lab 10.6. Digital RF attenuator: step, range and linearity check.
 
+## Practical extension: SPI TFT interface
+
+Apply this block's electrical principles when documenting the LCD wiring, measuring GPIO levels, validating any HV/LV translator and checking solder continuity. LCD integration with spectrum and metrics is covered in optional [Lab 11.53](/zynq-sdr-course/en/labs/lab-11-53-local-spi-display/). The current physical wiring has not yet been validated on hardware.
+
 ## Tooling for the block
 The main toolset is: KiCad, multimeter, breadboard, MATLAB / Simulink, NanoVNA, RF Demo Kit, fixed and digital attenuators, 50-ohm cables and loads.
 
