@@ -93,6 +93,8 @@ MATLAB / Simulink везде необязательны: лабораторны�
 - [Лабораторная 10.2](/zynq-sdr-course/ru/labs/lab-10-2-attenuator-pad/): Простой аттенюатор
 - [Лабораторная 10.3](/zynq-sdr-course/ru/labs/lab-10-3-rf-measurement-safety-checklist/): Checklist безопасности RF-измерений
 - [Лабораторная 10.4](/zynq-sdr-course/ru/labs/lab-10-4-kicad-schematic-mini-project/): Мини-проект схемы в KiCad
+- [Лабораторная 10.7](/zynq-sdr-course/ru/labs/lab-10-7-spi-tft-interface-pcb/): переходная плата дисплея в KiCad (проект + опциональная сборка)
+- [Лабораторная 10.8](/zynq-sdr-course/ru/labs/lab-10-8-3d-printed-sdr-enclosure/): CAD и 3D-печать корпуса SDR (проект + опциональная печать)
 - [Лабораторная 11.1](/zynq-sdr-course/ru/labs/lab-11-1-project-requirements-and-architecture/): Требования проекта и системная архитектура
 - [Лабораторная 11.2](/zynq-sdr-course/ru/labs/lab-11-2-end-to-end-simulation-package/): Сквозной пакет симуляции
 - [Лабораторная 11.3](/zynq-sdr-course/ru/labs/lab-11-3-fpga-rf-integration-checklist/): Чек-лист интеграции FPGA/RF
