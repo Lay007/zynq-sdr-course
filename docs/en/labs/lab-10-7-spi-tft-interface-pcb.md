@@ -9,6 +9,7 @@ Replace the temporary wire harness between a Zynq-7020 + AD9361 and a 2.8-inch 2
 ## Establish the inputs
 
 Record from **the actual hardware**, not a similar board:
+
 - pinout and bank voltages of accessible Zynq PS/PL GPIOs; their Linux/FPGA routing;
 - TFT connector pin order: VCC, GND, LCD_CS, DC, RESET, SCK, SDI/MOSI and LED; optional MISO, TOUCH_CS, TOUCH_IRQ and SD_CS;
 - LCD power and I/O requirements, backlight current and intended driving circuit;
