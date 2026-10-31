@@ -93,6 +93,8 @@ MATLAB / Simulink are optional throughout: the labs that mention them also run i
 - [Lab 10.2](/zynq-sdr-course/en/labs/lab-10-2-attenuator-pad/): Simple Attenuator Pad
 - [Lab 10.3](/zynq-sdr-course/en/labs/lab-10-3-rf-measurement-safety-checklist/): RF Measurement Safety Checklist
 - [Lab 10.4](/zynq-sdr-course/en/labs/lab-10-4-kicad-schematic-mini-project/): KiCad Schematic Mini-Project
+- [Lab 10.7](/zynq-sdr-course/en/labs/lab-10-7-spi-tft-interface-pcb/): SPI TFT interface PCB design (optional fabrication)
+- [Lab 10.8](/zynq-sdr-course/en/labs/lab-10-8-3d-printed-sdr-enclosure/): enclosure CAD and 3D printing (optional fabrication)
 - [Lab 11.1](/zynq-sdr-course/en/labs/lab-11-1-project-requirements-and-architecture/): Project Requirements and System Architecture
 - [Lab 11.2](/zynq-sdr-course/en/labs/lab-11-2-end-to-end-simulation-package/): End-to-End Simulation Package
 - [Lab 11.3](/zynq-sdr-course/en/labs/lab-11-3-fpga-rf-integration-checklist/): FPGA/RF Integration Checklist
