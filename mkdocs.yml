@@ -327,6 +327,8 @@ nav:
           - "Лабораторная 10.4 — Мини-проект схемы в KiCad": ru/labs/lab-10-4-kicad-schematic-mini-project.md
           - "Лабораторная 10.5 — NanoVNA и RF Demo Kit": ru/labs/lab-10-5-nanovna-rf-demo-kit.md
           - "Лабораторная 10.6 — Характеризация цифрового RF-аттенюатора": ru/labs/lab-10-6-digital-attenuator-characterization.md
+          - "Лабораторная 10.7 — Плата подключения SPI TFT в KiCad": ru/labs/lab-10-7-spi-tft-interface-pcb.md
+          - "Лабораторная 10.8 — Корпус ZynqSDR: CAD и 3D-печать": ru/labs/lab-10-8-3d-printed-sdr-enclosure.md
       - "Блок 11 — основной путь":
           - "Лабораторная 11.1 — Требования проекта и системная архитектура": ru/labs/lab-11-1-project-requirements-and-architecture.md
           - "Лабораторная 11.2 — Сквозной пакет симуляции": ru/labs/lab-11-2-end-to-end-simulation-package.md
@@ -523,6 +525,8 @@ nav:
           - "Lab 10.4 — KiCad schematic mini-project": en/labs/lab-10-4-kicad-schematic-mini-project.md
           - "Lab 10.5 — NanoVNA and RF Demo Kit": en/labs/lab-10-5-nanovna-rf-demo-kit.md
           - "Lab 10.6 — Digital RF attenuator characterization": en/labs/lab-10-6-digital-attenuator-characterization.md
+          - "Lab 10.7 — ZynqSDR SPI TFT interface PCB": en/labs/lab-10-7-spi-tft-interface-pcb.md
+          - "Lab 10.8 — CAD and 3D-printed SDR enclosure": en/labs/lab-10-8-3d-printed-sdr-enclosure.md
       - "Block 11 — core path":
           - "Lab 11.1 — Project requirements and architecture": en/labs/lab-11-1-project-requirements-and-architecture.md
           - "Lab 11.2 — End-to-end simulation package": en/labs/lab-11-2-end-to-end-simulation-package.md
