@@ -29,6 +29,8 @@
 ## NanoVNA/RF labs
 - Lab 10.5. NanoVNA and RF Demo Kit: `S11`/`S21`, VSWR, and Smith chart.
 - Lab 10.6. Digital RF attenuator: step, range, and linearity check.
+- [Lab 10.7](/zynq-sdr-course/en/labs/lab-10-7-spi-tft-interface-pcb/) — SPI TFT adapter PCB: KiCad and voltage-level validation.
+- [Lab 10.8](/zynq-sdr-course/en/labs/lab-10-8-3d-printed-sdr-enclosure/) — SDR/TFT enclosure: measurement, parametric CAD, printing and assembly.
 
 ## Expected block outputs
 - schematic or schematic fragment;
