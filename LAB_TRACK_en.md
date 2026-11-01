@@ -93,6 +93,8 @@ MATLAB / Simulink are optional throughout: the labs that mention them also run i
 - [Lab 10.2](/zynq-sdr-course/en/labs/lab-10-2-attenuator-pad/): Simple Attenuator Pad
 - [Lab 10.3](/zynq-sdr-course/en/labs/lab-10-3-rf-measurement-safety-checklist/): RF Measurement Safety Checklist
 - [Lab 10.4](/zynq-sdr-course/en/labs/lab-10-4-kicad-schematic-mini-project/): KiCad Schematic Mini-Project
+- [Lab 10.7](/zynq-sdr-course/en/labs/lab-10-7-spi-tft-interface-pcb/): SPI TFT interface PCB design (optional fabrication)
+- [Lab 10.8](/zynq-sdr-course/en/labs/lab-10-8-3d-printed-sdr-enclosure/): enclosure CAD and 3D printing (optional fabrication)
 - [Lab 11.1](/zynq-sdr-course/en/labs/lab-11-1-project-requirements-and-architecture/): Project Requirements and System Architecture
 - [Lab 11.2](/zynq-sdr-course/en/labs/lab-11-2-end-to-end-simulation-package/): End-to-End Simulation Package
 - [Lab 11.3](/zynq-sdr-course/en/labs/lab-11-3-fpga-rf-integration-checklist/): FPGA/RF Integration Checklist
@@ -141,6 +143,7 @@ Then the integrated project of Block 11, the core path from a PS-controlled mode
 - [Lab 11.38](/zynq-sdr-course/en/labs/lab-11-38-hardware-tx-iq-capture-offline-rx/): ZynqSDR TX → IQ capture → offline receiver
 - [Lab 11.45](/zynq-sdr-course/en/labs/lab-11-45-differential-long-preamble/). Differential QPSK + a longer preamble: the rotation floor, gone
 - [Lab 11.46](/zynq-sdr-course/en/labs/lab-11-46-two-board-console-message/): A message from one Zynq console to another
+- [Lab 11.53](/zynq-sdr-course/en/labs/lab-11-53-local-spi-display/): local SPI spectrum and receiver-metrics display (optional; wiring not yet validated)
 - [Project 12.4](/zynq-sdr-course/en/labs/project-12-4-full-sdr-measurement-report/): Full SDR Measurement Report
 
 The other Block 11 labs (11.8–11.26, 11.33, 11.35, 11.41, 11.42) are the bring-up history of that path: each records one failure, how it was found and how it was fixed. Read them as case studies once the core path is clear: [Block 11 bring-up case studies](/zynq-sdr-course/block11-case-studies/) summarises each one as symptom, cause and lesson.
