@@ -16,9 +16,16 @@ This checklist turns the course hardware path into a repeatable engineering proc
 | Check | Expected result |
 |---|---|
 | Zynq board powers up reliably | no brownout or thermal issue |
-| AD9363 module is detected | RF frontend is visible to control software |
+| AD936x frontend is detected (AD9361 on the ZynqSDR course boards) | RF frontend is visible to control software |
 | Reference clock is documented | frequency calculations are reproducible |
 | Gain defaults are known | repeatable RF experiments |
+
+Before changing FPGA images or boot media, identify the installed firmware profile and
+its board-specific recovery method. See [ADR 0004: ZynqSDR Pluto-compatible
+and FPGA firmware profiles](adr/0004-zynqsdr-firmware-profiles.md) and
+[validation issue #81](https://github.com/Lay007/zynq-sdr-course/issues/81).
+A historical boot set is not proof of a currently bootable recovery image;
+perform read-only identity checks before any image change.
 
 ## 3. RF safety and signal path
 
