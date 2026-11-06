@@ -1,0 +1,7 @@
+{
+  "uri": "synthetic:offline",
+  "context_name": "synthetic-fixture",
+  "context_description": "Structure example only; no observed board or RF results",
+  "context_attrs": {},
+  "devices": []
+}
