@@ -14,7 +14,7 @@ This exercise is a new student-facing route alongside the existing labs. It star
 
 ## Where it fits
 
-[Block 3.2: FIR](ru/labs/lab-3-2-fir-low-pass.md) → [Block 4.1: fixed-point FIR](ru/labs/lab-4-1-fixed-point-fir.md) → [Block 5: FPGA](ru/blocks/05-hdl-fpga-flow.md).
+[Block 3.2: FIR](ru/labs/lab-3-2-fir-low-pass.md) → [Block 4.1: fixed-point FIR](ru/labs/lab-4-1-fixed-point-fir.md) → [Block 5: FPGA](ru/blocks/05-fpga-hdl-flow.md).
 
 The exercise is self-contained and needs only Python 3.12+. MATLAB, Simulink and Zynq are **not** prerequisites for the local grader.
 
