@@ -2,7 +2,7 @@
 
 **Level:** intermediate · **Mode:** offline/simulation · **Hardware:** none · **Stages:** 3 · **Evidence:** local grader output
 
-Existing course links: [Lab 3.2](../../docs/ru/labs/lab-3-2-fir-low-pass.md) (FIR fundamentals), [Lab 4.1](../../docs/ru/labs/lab-4-1-fixed-point-fir.md) (fixed point), and [Block 5](../../docs/ru/blocks/05-hdl-fpga-flow.md) (FPGA path).
+Existing course links: [Lab 3.2](../../docs/ru/labs/lab-3-2-fir-low-pass.md) (FIR fundamentals), [Lab 4.1](../../docs/ru/labs/lab-4-1-fixed-point-fir.md) (fixed point), and [Block 5](../../docs/ru/blocks/05-fpga-hdl-flow.md) (FPGA path).
 
 ## Problem
 
