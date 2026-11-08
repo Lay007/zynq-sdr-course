@@ -41,6 +41,7 @@ Preserve existing deep links and lab numbers. Do not migrate the long block docu
 | P1 | [Debugging challenges #85](https://github.com/Lay007/zynq-sdr-course/issues/85) | Wrong CFO sign, IQ mirror, overflow, AXI handshake caught by regression tests |
 | P1 | [Visual UX #86](https://github.com/Lay007/zynq-sdr-course/issues/86) | Actual light/dark desktop/mobile screenshots, accessible interactive figures |
 | P2 | [Learner tutor #87](https://github.com/Lay007/zynq-sdr-course/issues/87) | Works with Codex/Claude, does not give away answers; manual route still works |
+| P2 | [Applied AI for SDR #89](https://github.com/Lay007/zynq-sdr-course/issues/89) | Compare classical DSP and small learned models on independent IQ splits and measured failure cases |
 
 ## First UI acceptance gate
 
