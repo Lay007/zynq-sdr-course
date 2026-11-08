@@ -26,6 +26,8 @@ and FPGA firmware profiles](adr/0004-zynqsdr-firmware-profiles.md) and
 [validation issue #81](https://github.com/Lay007/zynq-sdr-course/issues/81).
 A historical boot set is not proof of a currently bootable recovery image;
 perform read-only identity checks before any image change.
+Use the [firmware profile validation procedure](en/firmware-profile-validation.md)
+([RU](ru/firmware-profile-validation.md)) for the offline inventory and staged bench gates.
 
 ## 3. RF safety and signal path
 

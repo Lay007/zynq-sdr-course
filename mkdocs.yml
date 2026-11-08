@@ -192,6 +192,7 @@ nav:
       - "Рубрика оценки итоговых проектов": ru/final-project-grading-rubric.md
       - "Проектирование debug-сигналов": ru/debug-waveform-design.md
       - "Аппаратная отладка по проекту": ru/hardware-debug-by-design.md
+      - "Проверка профилей прошивки": ru/firmware-profile-validation.md
       - "Блоки курса":
           - "01. Введение в SDR": ru/blocks/01-intro.md
           - "01A. Темы и обзорные лабораторные блока 1":
@@ -390,6 +391,7 @@ nav:
       - "Media guide": en/media-guide.md
       - "Debug waveform design": en/debug-waveform-design.md
       - "Hardware debug by design": en/hardware-debug-by-design.md
+      - "Firmware profile validation": en/firmware-profile-validation.md
       - "Course blocks":
           - "01. Intro to SDR": en/blocks/01-intro.md
           - "01A. Block 1 topics and overview labs":
