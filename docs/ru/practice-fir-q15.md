@@ -14,7 +14,7 @@
 
 ## Связь с курсом
 
-[Лабораторная 3.2: FIR](labs/lab-3-2-fir-low-pass.md) → [Лабораторная 4.1: fixed-point FIR](labs/lab-4-1-fixed-point-fir.md) → [Блок 5: FPGA](blocks/05-hdl-fpga-flow.md).
+[Лабораторная 3.2: FIR](labs/lab-3-2-fir-low-pass.md) → [Лабораторная 4.1: fixed-point FIR](labs/lab-4-1-fixed-point-fir.md) → [Блок 5: FPGA](blocks/05-fpga-hdl-flow.md).
 
 Достаточно Python 3.12+. Для локальной проверки не требуются MATLAB, Simulink и ZynqSDR.
 
