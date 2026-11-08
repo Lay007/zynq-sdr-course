@@ -6,6 +6,7 @@ on:
     paths:
       - "blocks/**"
       - "tools/**"
+      - "practice/**"
       - "tests/**"
       - "pyproject.toml"
       - "requirements.txt"
@@ -15,6 +16,7 @@ on:
     paths:
       - "blocks/**"
       - "tools/**"
+      - "practice/**"
       - "tests/**"
       - "pyproject.toml"
       - "requirements.txt"
@@ -24,6 +26,10 @@ on:
 
 permissions:
   contents: read
+
+concurrency:
+  group: python-quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   quality:
@@ -46,6 +52,12 @@ jobs:
 
       - name: Run ruff
         run: python -m ruff check blocks tools tests
+
+      - name: Lint optional practice exercises
+        run: |
+          if [ -d practice ]; then
+            python -m ruff check practice
+          fi
 
       - name: Run pytest
         run: python -m pytest -q
