@@ -26,7 +26,7 @@ test:
 	$(PYTHON) -m pytest -q
 
 lint:
-	$(PYTHON) -m ruff check blocks tools tests
+	$(PYTHON) -m ruff check blocks tools tests $(if $(wildcard practice),practice)
 
 smoke: docs labs hdl
 
