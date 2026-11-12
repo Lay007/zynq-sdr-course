@@ -9,7 +9,10 @@ TOOLS_DIR = ROOT / "tools"
 if str(TOOLS_DIR) not in sys.path:
     sys.path.insert(0, str(TOOLS_DIR))
 
-from check_commit_attribution import find_forbidden_trailers  # noqa: E402
+from check_commit_attribution import (  # noqa: E402
+    find_forbidden_identities,
+    find_forbidden_trailers,
+)
 
 
 def test_accepts_regular_commit_message() -> None:
@@ -68,3 +71,22 @@ def test_reports_multiple_forbidden_trailers() -> None:
     )
 
     assert len(find_forbidden_trailers(message)) == 2
+
+def test_rejects_ai_author_and_committer_identifiers() -> None:
+    findings = find_forbidden_identities(
+        "Human", "human@example.org",
+        "OpenAI Codex", "noreply@openai.com",
+    )
+    assert "committer name: OpenAI Codex" in findings
+    assert "committer email: noreply@openai.com" in findings
+
+
+def test_accepts_legitimate_github_and_dependabot_identities() -> None:
+    assert find_forbidden_identities(
+        "Alexander", "35570696+Lay007@users.noreply.github.com",
+        "GitHub", "noreply@github.com",
+    ) == ()
+    assert find_forbidden_identities(
+        "dependabot[bot]", "49699333+dependabot[bot]@users.noreply.github.com",
+        "GitHub", "noreply@github.com",
+    ) == ()

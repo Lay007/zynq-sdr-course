@@ -35,5 +35,5 @@ jobs:
           fi
           echo "revision_range=$revision_range" >> "$GITHUB_OUTPUT"
 
-      - name: Reject Claude co-author trailers
+      - name: Reject AI author, committer and co-author attribution
         run: python tools/check_commit_attribution.py --range '${{ steps.range.outputs.revision_range }}'
