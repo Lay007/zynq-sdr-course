@@ -109,6 +109,8 @@ nav:
       - "Model → FPGA → RF → Measurement": model-to-measurement.md
       - "Reproducible engineering route": reproducible-engineering-route.md
       - "Hardware experiment roadmap": hardware-experiment-roadmap.md
+      - "OpenWiFi engineering track (EN)": en/openwifi-engineering-track.md
+      - "OpenWiFi: инженерный трек (RU)": ru/openwifi-engineering-track.md
       - "SDR platform teardown template": sdr-platform-teardown-template.md
       - "Hardware checklist": hardware-checklist.md
       - "Hardware bring-up checklist": hardware-bringup-checklist.md

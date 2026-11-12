@@ -67,3 +67,7 @@ signal theory -> DSP model -> fixed-point constraints -> RTL verification -> RF 
 ```
 
 This is the same route used in practical SDR prototyping and measurement-driven digital communication projects.
+
+## Optional advanced engineering track: OpenWiFi
+
+The 12-block foundation remains unchanged. The planned [OpenWiFi PHY/MAC engineering track](en/openwifi-engineering-track.md) ([RU](ru/openwifi-engineering-track.md)) extends OFDM models into packet decoding, FPGA lower MAC, Linux `mac80211`, board porting and measured network performance. This is **a proposal**, not a verified OpenWiFi implementation on the course's physical ZynqSDR boards; see [ADR 0005](adr/0005-openwifi-engineering-track.md) and [issue #92](https://github.com/Lay007/zynq-sdr-course/issues/92).
