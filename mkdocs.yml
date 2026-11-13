@@ -105,6 +105,10 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - "Practice / Практика":
+      - "FIR → Q1.15 (EN)": practice-fir-q15.md
+      - "Практика FIR → Q1.15": ru/practice-fir-q15.md
+      - "Learning experience roadmap": learning-experience-roadmap.md
   - System:
       - "Model → FPGA → RF → Measurement": model-to-measurement.md
       - "Reproducible engineering route": reproducible-engineering-route.md

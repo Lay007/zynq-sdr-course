@@ -1,0 +1,68 @@
+# Практика: FIR → Q1.15
+
+<div class="practice-intro" markdown="1">
+
+**Напиши алгоритм самостоятельно, запусти проверки и объясни ошибки.**
+
+Это дополнительный учебный маршрут к существующим лабораторным работам. Сначала реализуется обычный FIR, затем перевод в фиксированную точку и проверка целочисленного результата.
+
+<div class="practice-meta">
+<span>ЗАДАНИЕ · FIR-Q15</span><span>УРОВЕНЬ · СРЕДНИЙ</span><span>РЕЖИМ · OFFLINE</span><span>ПЛАТА · НЕ НУЖНА</span>
+</div>
+
+</div>
+
+## Связь с курсом
+
+[Лабораторная 3.2: FIR](labs/lab-3-2-fir-low-pass.md) → [Лабораторная 4.1: fixed-point FIR](labs/lab-4-1-fixed-point-fir.md) → [Блок 5: FPGA](blocks/05-fpga-hdl-flow.md).
+
+Достаточно Python 3.12+. Для локальной проверки не требуются MATLAB, Simulink и ZynqSDR.
+
+<div class="practice-stage-grid" markdown="1">
+
+<div class="practice-stage" markdown="1">
+
+**01 / Модель**
+
+Реализовать причинный FIR. Проверить импульсную характеристику, порядок коэффициентов, отрицательные значения.
+
+</div>
+
+<div class="practice-stage" markdown="1">
+
+**02 / Числовой формат**
+
+Реализовать Q1.15: округление к ближайшему чётному и ограничение диапазона int16.
+
+</div>
+
+<div class="practice-stage" markdown="1">
+
+**03 / Верификация**
+
+Реализовать целочисленную свёртку с широким аккумулятором, конечным округлением и насыщением.
+
+</div>
+
+</div>
+
+## Как выполнять
+
+Из корня репозитория:
+
+```bash
+python practice/fir-q15/check.py --init work/fir-q15
+python practice/fir-q15/check.py --stage 1 --path work/fir-q15
+python practice/fir-q15/check.py --stage 2 --path work/fir-q15
+python practice/fir-q15/check.py --stage 3 --path work/fir-q15
+```
+
+Заготовка специально не проходит тесты. Проверка этапа N включает все предыдущие этапы. При ошибке сначала сформулируй гипотезу, затем используй [поэтапные подсказки](https://github.com/Lay007/zynq-sdr-course/blob/main/practice/fir-q15/hints.md).
+
+[Исходные файлы задания на GitHub](https://github.com/Lay007/zynq-sdr-course/tree/main/practice/fir-q15).
+
+## Что подтверждено?
+
+Успешный результат относится только к программной модели. Он не подтверждает bit-exact RTL, работу AXI-Stream, прохождение timing или реальные RF-измерения. В отчёте укажи формат Q1.15, правила округления и переполнения, выполненную команду, результат и ограничения.
+
+Далее используй существующие лабораторные FPGA и аппаратные эксперименты. План развития интерфейса: [Learning Experience Roadmap](../learning-experience-roadmap.md).

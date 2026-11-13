@@ -7,9 +7,9 @@
 This site is the main course workspace. It connects theory, MATLAB/Simulink modeling, fixed-point DSP, FPGA implementation, AD9363 RF hardware, RTL-SDR reception, IQ recording and reproducible analysis.
 
 <div class="hero-actions">
-<a class="hero-button" href="model-to-measurement/">Start with the system pipeline</a>
-<a class="hero-button secondary" href="en/lab-track/">Choose a learning route</a>
-<a class="hero-button secondary" href="demo/">View IEEE-style figures</a>
+<a class="hero-button" href="student-path/">Start learning</a>
+<a class="hero-button secondary" href="practice-fir-q15/">Try the FIR/Q15 practice pilot</a>
+<a class="hero-button secondary" href="hardware-evidence-index/">Measured evidence</a>
 <a class="hero-button secondary" href="ru/">Русская версия</a>
 <a class="hero-button secondary" href="en/">English version</a>
 </div>
@@ -94,6 +94,8 @@ These pages turn the repository into a more complete engineering course workspac
 | [Course status](status.md) | Gives the short engineering readiness board for the full course |
 | [Course readiness matrix](course-readiness-matrix.md) | Tracks whether each block is documented, runnable, plotted and measurable |
 | [Student path](student-path.md) | Gives the shortest reliable learner route through the material |
+| [Interactive practice pilot](practice-fir-q15.md) | FIR to Q15 staged implementation with local tests, no SDR hardware needed |
+| [Learning experience roadmap](learning-experience-roadmap.md) | Accessible UI, diagnostic challenges, figures and learner tutor backlog |
 | [Reviewer path](reviewer-path.md) | Gives a fast evidence-oriented repository walkthrough |
 | [Instructor guide](instructor-guide.md) | Explains how to use the repository as a teaching workspace |
 | [Hardware checklist](hardware-checklist.md) | Aggregates hardware readiness, RF safety, metadata and reporting links |

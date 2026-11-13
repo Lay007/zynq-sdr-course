@@ -139,3 +139,48 @@
   font-weight: 700;
   letter-spacing: 0.01em;
 }
+
+/* Student-practice metadata and stage layout. Uses Material theme tokens. */
+.practice-intro {
+  padding: 1.5rem;
+  margin: 0 0 1.5rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-left: 0.2rem solid var(--md-accent-fg-color);
+  border-radius: 0.7rem;
+  background: var(--md-code-bg-color);
+}
+.practice-intro > p:first-of-type { margin-top: 0; }
+.practice-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 1rem;
+}
+.practice-meta span {
+  display: inline-block;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.25rem;
+  background: var(--md-default-bg-color);
+  font-family: var(--md-code-font-family);
+  font-size: 0.66rem;
+  overflow-wrap: anywhere;
+}
+.practice-stage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0.8rem;
+  margin: 1.2rem 0;
+}
+.practice-stage {
+  padding: 1rem;
+  border-radius: 0.65rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  background: var(--md-default-bg-color);
+}
+.practice-stage p:first-child { margin-top: 0; }
+.practice-stage p:last-child { margin-bottom: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .course-card, .figure-strip img, .hero-button { transition: none; }
+  .course-card:hover, .figure-strip img:hover, .hero-button:hover { transform: none; }
+}

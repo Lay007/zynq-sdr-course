@@ -1,0 +1,17 @@
+{
+  "id": "fir-q15",
+  "title": "Causal FIR from float to Q1.15",
+  "status": "pilot",
+  "level": "intermediate",
+  "mode": "simulation-only",
+  "hardware_required": false,
+  "language": "python",
+  "prerequisites": ["Block 3: FIR", "Block 4: fixed-point arithmetic"],
+  "stages": [
+    {"id": 1, "title": "Causal floating-point FIR"},
+    {"id": 2, "title": "Q1.15 quantization"},
+    {"id": 3, "title": "Q1.15 integer FIR"}
+  ],
+  "source_labs": ["3.2", "4.1"],
+  "grading": "local deterministic software checks, not certification"
+}
