@@ -34,7 +34,8 @@ Open:
 
 1. [DSP → FPGA Bridge](dsp-to-fpga.md)
 2. [CIC fixed-point FPGA bridge](cic-fixed-point-fpga-bridge.md)
-3. Block 04 and Block 05 labs through Lab 5.11
+3. [FIR Q1.15 student practice](practice-fir-q15.md): implement the algorithm, then run cumulative checks
+4. Block 04 and Block 05 labs through Lab 5.11
 
 Expected output:
 

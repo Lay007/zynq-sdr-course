@@ -7,7 +7,8 @@
 Это русский учебный маршрут: тот же сквозной пайплайн курса, что и на [главной странице](../index.md), но с навигацией по блокам.
 
 <div class="hero-actions">
-<a class="hero-button" href="../model-to-measurement/">Начать со сквозного пайплайна</a>
+<a class="hero-button" href="../student-path/">Начать обучение</a>
+<a class="hero-button secondary" href="practice-fir-q15/">Практика FIR/Q15</a>
 <a class="hero-button secondary" href="status.md">Статус курса</a>
 <a class="hero-button secondary" href="../en/">English version</a>
 </div>
@@ -24,6 +25,9 @@
 </div>
 
 ## Быстрая навигация
+
+[Диагностическая практика](diagnostic-challenges.md): найдите и исправьте ошибки
+CFO, IQ, Q15 и AXI с локальными измерениями и проверками, без RF-оборудования.
 
 <div class="card-grid">
 

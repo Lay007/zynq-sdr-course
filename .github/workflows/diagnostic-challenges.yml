@@ -1,0 +1,48 @@
+name: Diagnostic challenges
+
+on:
+  push:
+    paths:
+      - "practice/diagnostics/**"
+      - "tests/test_diagnostic_challenges.py"
+      - "blocks/block_08_modulation_and_synchronization/python/lab_8_1_cfo_estimation_correction.py"
+      - "blocks/block_05_fpga_hdl_flow/rtl/axis_iq_passthrough.v"
+      - "requirements*.txt"
+      - ".github/workflows/diagnostic-challenges.yml"
+  pull_request:
+    paths:
+      - "practice/diagnostics/**"
+      - "tests/test_diagnostic_challenges.py"
+      - "blocks/block_08_modulation_and_synchronization/python/lab_8_1_cfo_estimation_correction.py"
+      - "blocks/block_05_fpga_hdl_flow/rtl/axis_iq_passthrough.v"
+      - "requirements*.txt"
+      - ".github/workflows/diagnostic-challenges.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  controls:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install -r requirements-dev.txt
+          sudo apt-get update
+          sudo apt-get install -y iverilog
+      - name: Check grader and workspace behavior
+        run: python -m pytest tests/test_diagnostic_challenges.py -q
+      - name: Require references to pass and every mutant to fail
+        run: python practice/diagnostics/check.py self-test --with-rtl --output build/diagnostics-controls.json
+      - name: Upload diagnostic metrics
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: diagnostic-controls
+          path: build/diagnostics-controls.json
+          if-no-files-found: warn

@@ -7,7 +7,8 @@
 This is the English learning path: the same course pipeline as the [main page](../index.md), navigated block by block.
 
 <div class="hero-actions">
-<a class="hero-button" href="../model-to-measurement/">Start with the system pipeline</a>
+<a class="hero-button" href="../student-path/">Start learning</a>
+<a class="hero-button secondary" href="../practice-fir-q15/">Try FIR/Q15 practice</a>
 <a class="hero-button secondary" href="../status.md">Course status</a>
 <a class="hero-button secondary" href="../ru/">Русская версия</a>
 </div>
@@ -24,6 +25,9 @@ This is the English learning path: the same course pipeline as the [main page](.
 </div>
 
 ## Quick navigation
+
+[Diagnostic practice](diagnostic-challenges.md): find and fix CFO, IQ, Q15 and AXI
+defects using local measurements and regression checks, without RF hardware.
 
 <div class="card-grid">
 

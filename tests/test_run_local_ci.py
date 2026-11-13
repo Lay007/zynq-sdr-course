@@ -21,5 +21,6 @@ def test_preflight_modes_select_the_expected_checks(monkeypatch, mode, hdl, docs
     flattened = [" ".join(command) for command in calls]
     assert any("run_block5_hdl_smoke.py" in call for call in flattened) == hdl
     assert any("run_ofdm_rtl.py" in call for call in flattened) == hdl
+    assert any("--rtl-only" in call for call in flattened) == hdl
     assert any("mkdocs" in call for call in flattened) == docs
     assert any("pytest" in command for command in calls) == (mode != "--hdl-only")

@@ -8,6 +8,7 @@ This page documents what each GitHub Actions workflow validates and which artifa
 |---|---|---|---|
 | `full_course_smoke.yml` | broad course changes | MkDocs strict build, representative Python labs, Block 5 HDL smoke | reproducibility summary, selected plots |
 | `python_quality.yml` | block/tool/test/config changes | Ruff lint and full pytest suite | PASS/FAIL logs |
+| `diagnostic-challenges.yml` | diagnostic exercises, grader and reused CFO/AXI references | four passing references, ten rejected Python/RTL mutants, workspace/grader regressions | diagnostic metrics JSON and simulator logs |
 | `block4_labs.yml` | fixed-point lab block | Lab 4.1 and 4.2 executable Python models | fixed-point FIR/mixer figures |
 | `block5_hdl.yml` | HDL/FPGA block | Icarus Verilog compilation and self-checking testbenches | VCD files, PASS/FAIL logs |
 | `hdl-canonical-ci.yml` | canonical HDL vectors | generated vectors and HDL smoke path | canonical vector logs |
@@ -68,7 +69,7 @@ python -m ruff check blocks tools tests
 python -m pytest -q
 ```
 
-`python tools/run_local_ci.py --software-only` runs lint, the lab ID registry and pytest without Icarus. `--hdl-only` runs Block 5, CSS and OFDM simulation without the software checks. These modes are mutually exclusive.
+`python tools/run_local_ci.py --software-only` runs lint (including practice), the lab ID registry and pytest without requiring Icarus. `--hdl-only` runs Block 5, CSS, OFDM and the diagnostic AXI controls without the software checks. These modes are mutually exclusive.
 
 `python tools/run_local_ci.py --quick` retains its existing broader scope: it adds the lab ID registry, Block 5 HDL, CSS RTL and all default OFDM benches with three radio parameter variants. It skips only the documentation and representative-lab rebuilds; HDL simulation can take many minutes. It does not cover every parameter variant in the separate Actions workflows.
 

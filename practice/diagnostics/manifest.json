@@ -1,0 +1,13 @@
+{
+  "id": "diagnostics",
+  "evidence": "synthetic software and RTL simulation only",
+  "seed": 85,
+  "hardware_required": false,
+  "pages": {"en": "docs/en/diagnostic-challenges.md", "ru": "docs/ru/diagnostic-challenges.md"},
+  "cases": [
+    {"id": "cfo", "block": 8, "prerequisites": ["8.1"], "tools": ["Python", "NumPy", "Matplotlib"], "function": "correct_cfo"},
+    {"id": "iq", "block": 2, "prerequisites": ["2.1", "9.1"], "tools": ["Python", "NumPy"], "function": "decode_iq"},
+    {"id": "fir", "block": 4, "prerequisites": ["4.1", "5.2"], "tools": ["Python", "NumPy"], "function": "fir_q15"},
+    {"id": "axis", "block": 5, "prerequisites": ["5.4"], "tools": ["Python", "Icarus Verilog", "vvp"], "module": "axis_iq_passthrough"}
+  ]
+}

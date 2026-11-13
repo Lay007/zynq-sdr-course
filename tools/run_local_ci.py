@@ -22,6 +22,7 @@ def run_hdl() -> None:
     run([sys.executable, "tools/run_block5_hdl_smoke.py"])
     run([sys.executable, "tools/run_block8_css_rtl.py"])
     run([sys.executable, "tools/run_ofdm_rtl.py"])
+    run([sys.executable, "practice/diagnostics/check.py", "self-test", "--rtl-only"])
 
 
 def main() -> int:
@@ -41,6 +42,7 @@ def main() -> int:
         return 0
 
     run([sys.executable, "-m", "ruff", "check", "blocks", "tools", "tests"])
+    run([sys.executable, "-m", "ruff", "check", "practice"])
     run([sys.executable, "tools/check_lab_id_registry.py"])
     # Keep pytest's numbered temporary directories inside the repository. On
     # Windows the shared user temp root can retain a locked ``pytest-current``
