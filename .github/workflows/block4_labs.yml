@@ -44,6 +44,9 @@ jobs:
       - name: Run Lab 4.2 fixed-point digital mixer
         run: python blocks/block_04_simulink_and_fixed_point/python/lab_4_2_fixed_point_digital_mixer.py
 
+      - name: Run Lab 4.5 FIR word-length sweep
+        run: python blocks/block_04_simulink_and_fixed_point/python/lab_4_5_fir_word_lengths.py --output build/lab45
+
       - name: Validate generated figures
         shell: bash
         run: |
@@ -55,6 +58,9 @@ jobs:
             docs/assets/lab42_fixed_point_mixer_spectrum.png
             docs/assets/lab42_fixed_point_mixer_error.png
             docs/assets/lab42_nco_frequency_resolution.png
+            build/lab45/lab45_fir_word_lengths.json
+            build/lab45/lab45_fir_word_lengths.png
+            build/lab45/lab45_fir_word_lengths_ru.png
           )
 
           for file in "${expected[@]}"; do
@@ -76,4 +82,7 @@ jobs:
             docs/assets/lab42_fixed_point_mixer_spectrum.png
             docs/assets/lab42_fixed_point_mixer_error.png
             docs/assets/lab42_nco_frequency_resolution.png
+            build/lab45/lab45_fir_word_lengths.json
+            build/lab45/lab45_fir_word_lengths.png
+            build/lab45/lab45_fir_word_lengths_ru.png
           if-no-files-found: error

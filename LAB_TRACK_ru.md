@@ -46,6 +46,7 @@ MATLAB / Simulink везде необязательны: лабораторны�
 - [Лабораторная 4.2](/zynq-sdr-course/ru/labs/lab-4-2-fixed-point-digital-mixer/): Цифровой смеситель в fixed-point арифметике
 - [Лабораторная 4.3](/zynq-sdr-course/ru/labs/lab-4-3-bpsk-fixed-point-chain/): BPSK-цепочка в фиксированной точке
 - [Лабораторная 4.4](/zynq-sdr-course/ru/labs/lab-4-4-bpsk-simulink-and-ber/): BPSK-цепочка в Simulink и идеальная кривая BER от SNR
+- [Лабораторная 4.5](/zynq-sdr-course/ru/labs/lab-4-5-fir-word-lengths/): Точность, переполнение и разрядность FIR
 
 **A4. Тракты TX/RX, модуляция и синхронизация**
 
@@ -80,6 +81,9 @@ MATLAB / Simulink везде необязательны: лабораторны�
 - [Лабораторная 5.3](/zynq-sdr-course/ru/labs/lab-5-3-nco-mixer-rtl/): RTL-смеситель IQ на основе NCO
 - [Лабораторная 5.4](/zynq-sdr-course/ru/labs/lab-5-4-axis-wrapper/): Обёртка AXI-Stream для IQ-потока
 - [Лабораторная 5.5](/zynq-sdr-course/ru/labs/lab-5-5-float-fixed-rtl-comparison/): Сравнение float, fixed-point и RTL
+- [Лабораторная 5.13](/zynq-sdr-course/ru/labs/lab-5-13-fir-architectures/): Сравнение пропускной способности, задержки и ресурсов FIR
+- [Лабораторная 5.14](/zynq-sdr-course/ru/labs/lab-5-14-nco-fft-architectures/): Сравнение спектров NCO и расписаний БПФ
+- [Лабораторная 5.15](/zynq-sdr-course/ru/labs/lab-5-15-lms-equalizer/): Обучение и проверка двухотводного LMS-эквалайзера
 - [Лабораторная 5.6](/zynq-sdr-course/ru/labs/lab-5-6-bpsk-rrc-tx-fir-rtl/): RTL FIR формирующего RRC-фильтра BPSK TX
 - [Лабораторная 5.7](/zynq-sdr-course/ru/labs/lab-5-7-bpsk-upsampler-8x/): BPSK-повышающий дискретизатор символов 8x
 - [Лабораторная 5.8](/zynq-sdr-course/ru/labs/lab-5-8-bpsk-rx-bit-recovery/): Согласованный фильтр BPSK RX и восстановление бит

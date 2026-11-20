@@ -11,6 +11,11 @@ on:
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_fft64_sequential.sv"
       - "verification/vectors/block08_ofdm_fft_bin1_expected.mem"
       - "verification/vectors/block08_ofdm_ifft_bin1_expected.mem"
+      - "blocks/block_05_fpga_hdl_flow/rtl/nco_phase_architectures.sv"
+      - "blocks/block_05_fpga_hdl_flow/tb/tb_nco_phase_architectures.sv"
+      - "tools/run_dsp_architectures.py"
+      - "tools/ofdm_*fft_fixed.py"
+      - "requirements*.txt"
       - ".github/workflows/block8_ofdm_rx_fft.yml"
   pull_request:
     paths:
@@ -21,6 +26,11 @@ on:
       - "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_fft64_sequential.sv"
       - "verification/vectors/block08_ofdm_fft_bin1_expected.mem"
       - "verification/vectors/block08_ofdm_ifft_bin1_expected.mem"
+      - "blocks/block_05_fpga_hdl_flow/rtl/nco_phase_architectures.sv"
+      - "blocks/block_05_fpga_hdl_flow/tb/tb_nco_phase_architectures.sv"
+      - "tools/run_dsp_architectures.py"
+      - "tools/ofdm_*fft_fixed.py"
+      - "requirements*.txt"
       - ".github/workflows/block8_ofdm_rx_fft.yml"
   workflow_dispatch:
 
@@ -37,20 +47,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install course dependencies
+        run: python -m pip install -r requirements.txt
+
       - name: Install Icarus Verilog
         run: |
           sudo apt-get update
           sudo apt-get install -y iverilog
 
-      - name: Compile and run scaled FFT regression
-        run: |
-          set -euo pipefail
-          iverilog -g2012 -Wall \
-            -s tb_ofdm_fft64_sequential \
-            -o /tmp/tb_ofdm_fft64_sequential.vvp \
-            blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v \
-            blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v \
-            blocks/block_08_modulation_and_synchronization/rtl/ofdm_iq_bank_ram.v \
-            blocks/block_08_modulation_and_synchronization/rtl/ofdm_fft64_sequential.v \
-            blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_fft64_sequential.sv
-          vvp /tmp/tb_ofdm_fft64_sequential.vvp
+      - name: Compare FFT schedules and NCO converters
+        run: python tools/run_dsp_architectures.py --output build/hdl/dsp-architectures
+
+      - name: Upload simulation evidence
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: dsp-architecture-simulations
+          path: |
+            build/hdl/dsp-architectures/*.json
+            build/hdl/dsp-architectures/*.log
+            build/hdl/dsp-architectures/*_trace.txt

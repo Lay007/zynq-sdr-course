@@ -1,0 +1,136 @@
+{
+  "post_route_ooc": {
+    "tool_version": "Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020",
+    "device": "7z020clg400-2",
+    "clock_period_ns": 10.0
+  },
+  "nco": {
+    "phase_bits": 32,
+    "amplitude_fs": 0.875,
+    "lut_address_bits": 10,
+    "quarter_wave_entries": 257,
+    "cordic_steps": 16,
+    "tone_samples": 4096,
+    "tone_bin": 197,
+    "initial_phase_code": 324508639,
+    "phase_increment_code": 206569472,
+    "variants": {
+      "nco_lut": {
+        "compared_phases": 4108,
+        "latency_clocks": 1,
+        "ii_clocks": 1,
+        "max_phase_error_deg": 0.35171176902950196,
+        "rms_complex_error_fs": 0.0030470245256405248,
+        "sfdr_dbc": 59.28723529423171,
+        "largest_spur_bin": -827,
+        "post_route_ooc": {
+          "slice_luts": 239,
+          "slice_flip_flops": 33,
+          "dsp48e1": 0,
+          "bram_tiles": 0.0,
+          "wns_ns": 5.071,
+          "tns_ns": 0.0,
+          "whs_ns": -0.223,
+          "ths_ns": -8.117,
+          "routed_nets": 268
+        }
+      },
+      "nco_cordic": {
+        "compared_phases": 4108,
+        "latency_clocks": 17,
+        "ii_clocks": 17,
+        "max_phase_error_deg": 0.0027699049218789305,
+        "rms_complex_error_fs": 1.9780263606442437e-05,
+        "sfdr_dbc": 105.89815825069431,
+        "largest_spur_bin": 625,
+        "post_route_ooc": {
+          "slice_luts": 233,
+          "slice_flip_flops": 118,
+          "dsp48e1": 0,
+          "bram_tiles": 0.0,
+          "wns_ns": 3.701,
+          "tns_ns": 0.0,
+          "whs_ns": -0.266,
+          "ths_ns": -19.472,
+          "routed_nets": 292
+        }
+      }
+    },
+    "quarter_wave_rom_sha256_lf": "290eae7619e9d75f92f5cabcc2d274d2bdf73d8e8e4c2da7a60bc3a1704ba825"
+  },
+  "fft": {
+    "scaling": "FFT(x)/64",
+    "sample_format": "signed Q1.15",
+    "max_component_error_lsb_vs_numpy": 1.7531164565494919,
+    "rms_complex_error_lsb_vs_numpy": 0.5891044059057365,
+    "variants": {
+      "fft_base": {
+        "compared_bins_per_run": 128,
+        "first_input_to_first_bin_clocks": 448,
+        "last_input_to_first_bin_clocks": 385,
+        "frame_ii_clocks": 512,
+        "post_route_ooc": {
+          "slice_luts": 8986,
+          "slice_flip_flops": 2247,
+          "dsp48e1": 4,
+          "bram_tiles": 0.0,
+          "wns_ns": -11.261,
+          "tns_ns": -3317.585,
+          "whs_ns": -0.266,
+          "ths_ns": -15.614,
+          "routed_nets": 8752
+        }
+      },
+      "fft_fabric": {
+        "compared_bins_per_run": 128,
+        "first_input_to_first_bin_clocks": 286,
+        "last_input_to_first_bin_clocks": 223,
+        "frame_ii_clocks": 350,
+        "post_route_ooc": {
+          "slice_luts": 7834,
+          "slice_flip_flops": 2387,
+          "dsp48e1": 4,
+          "bram_tiles": 0.0,
+          "wns_ns": 0.748,
+          "tns_ns": 0.0,
+          "whs_ns": -0.266,
+          "ths_ns": -117.883,
+          "routed_nets": 8109
+        }
+      },
+      "fft_bram": {
+        "compared_bins_per_run": 128,
+        "first_input_to_first_bin_clocks": 293,
+        "last_input_to_first_bin_clocks": 230,
+        "frame_ii_clocks": 357,
+        "post_route_ooc": {
+          "slice_luts": 909,
+          "slice_flip_flops": 319,
+          "dsp48e1": 4,
+          "bram_tiles": 1.0,
+          "wns_ns": 2.099,
+          "tns_ns": 0.0,
+          "whs_ns": -0.266,
+          "ths_ns": -20.164,
+          "routed_nets": 1386
+        }
+      }
+    }
+  },
+  "source_sha256_lf": {
+    "blocks/block_05_fpga_hdl_flow/rtl/nco_phase_architectures.sv": "77dcb7cea2b8232ce08355dba05e3942839b5ac54b0c08dc5dc5576072927ab6",
+    "blocks/block_05_fpga_hdl_flow/tb/tb_nco_phase_architectures.sv": "322d4f481cc66f368da456a8a6031d134addd3f1cfbe4f1a765b3f11c46b11dc",
+    "blocks/block_08_modulation_and_synchronization/tb/tb_ofdm_fft64_sequential.sv": "b7a8669bcf76269c8a8de6cb1617ce12d0811c394472a938ac31806f5a9c2b07",
+    "tools/run_dsp_architectures.py": "ad1ff2d26eb45a9919fa5075289a4913fbc71bf9201396525454a52743b337ee",
+    "tools/vivado_dsp_architectures.tcl": "8ae6fb668a7a84d890b2916ed356c138cd369e250273b5c459fd30afc28c0304",
+    "tools/fir_architectures_ooc.xdc": "214fc459360c1d6d89b2a7b06a4eefd5766c485f57657a7f305635dedae03656",
+    "tools/ofdm_fft_fixed.py": "3bd373a618c22d7ff6081ef342463c0bc595066a4e479c358846ad95da92373c",
+    "tools/ofdm_ifft_fixed.py": "e8f4c5606d4faed6ddac41874b6b02aed2e999644d68cb378dc5d233edc8802c",
+    "blocks/block_08_modulation_and_synchronization/rtl/ofdm_fft64_sequential.v": "03638dc112be2fff6bcf45d4697803846e6471bbd1aa6e67f3047393d2c76732",
+    "blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft64_sequential.v": "0d5fdea2a191796213e6d32a4e933bba98feb84dd05d5a2065026c0fa860120d",
+    "blocks/block_08_modulation_and_synchronization/rtl/ofdm_ifft_butterfly.v": "5b547578da7db9137f0be17e6b57ca0db104a6c03680d21d8c8cda4458cabfe9",
+    "blocks/block_08_modulation_and_synchronization/rtl/ofdm_iq_bank_ram.v": "326489bf24545a72b5c687cb1bb06bf9650cb2bd3f58f66a1ef506af777d6437",
+    "verification/vectors/block08_ofdm_ifft_bin1_expected.mem": "91624cecde0f87c8f57c193ad0bd12cd6b0901fabf6041560b848c3ef5ca9d41",
+    "verification/vectors/block08_ofdm_fft_bin1_expected.mem": "ad8e98c38d4d3f32f3e2f93d4e67035d2292a34d43c2d443860543b53a119c0c"
+  }
+}
