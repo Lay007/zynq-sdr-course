@@ -55,6 +55,11 @@ vivado -mode batch -source ../../tools/vivado_dsp_architectures.tcl -tclargs nco
 cd ../dsp-fft-final
 vivado -mode batch -source ../../tools/vivado_dsp_architectures.tcl -tclargs fft reports
 cd ../..
+```
+
+Из корня репозитория соберите результаты симуляции и реализации.
+
+```bash
 python tools/summarize_dsp_architectures.py build/dsp-architecture-sim build/dsp-nco-ooc/reports build/dsp-fft-final/reports build/dsp-summary
 ```
 

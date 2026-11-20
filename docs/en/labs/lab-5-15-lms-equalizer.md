@@ -45,6 +45,11 @@ mkdir -p build/lms-ooc-final
 cd build/lms-ooc-final
 vivado -mode batch -source ../../tools/vivado_lms_equalizer.tcl -tclargs reports
 cd ../..
+```
+
+From the repository root, combine the simulation and implementation results.
+
+```bash
 python tools/run_lms_equalizer.py --rtl --reports build/lms-ooc-final/reports --output build/lms-evidence
 ```
 

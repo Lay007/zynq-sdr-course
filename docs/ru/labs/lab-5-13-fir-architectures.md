@@ -37,6 +37,11 @@ mkdir -p build/fir-architectures-routed
 cd build/fir-architectures-routed
 vivado -mode batch -source ../../tools/vivado_fir_architectures.tcl -tclargs reports
 cd ../..
+```
+
+Из корня репозитория соберите результаты симуляции и реализации.
+
+```bash
 python tools/summarize_fir_architectures.py build/fir-architectures-routed/reports build/fir-architectures-sim build/fir-architectures-summary
 ```
 
