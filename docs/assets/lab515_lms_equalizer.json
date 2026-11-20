@@ -1,0 +1,83 @@
+{
+  "evidence": "synthetic real BPSK model at one sample per symbol",
+  "seed": 9415,
+  "symbol_amplitude_fs": 0.5,
+  "symbols": 4096,
+  "channel_taps": [
+    0.8,
+    0.62
+  ],
+  "noise_std_fs": 0.045,
+  "training_symbols": 1536,
+  "evaluation_symbols": 2560,
+  "mu": 0.0625,
+  "input_clip_samples": 0,
+  "training_weight_clip_samples": 0,
+  "stress_clip_flags": {
+    "positive": 158,
+    "negative": 158
+  },
+  "float_frozen_weights": [
+    0.9784054851816295,
+    -0.4925542750133212
+  ],
+  "fixed_frozen_weights": [
+    0.97821044921875,
+    -0.492431640625
+  ],
+  "evaluation": {
+    "raw": {
+      "samples": 2560,
+      "mse_fs_squared": 0.10963402450541153,
+      "normalized_rms_error_percent": 66.2220581091864,
+      "bit_errors": 24,
+      "ber": 0.009375
+    },
+    "float_lms": {
+      "samples": 2560,
+      "mse_fs_squared": 0.05120968251351987,
+      "normalized_rms_error_percent": 45.25911290050651,
+      "bit_errors": 2,
+      "ber": 0.00078125
+    },
+    "fixed_lms": {
+      "samples": 2560,
+      "mse_fs_squared": 0.05121190908030258,
+      "normalized_rms_error_percent": 45.260096809575025,
+      "bit_errors": 2,
+      "ber": 0.00078125
+    }
+  },
+  "model_tool_versions": {
+    "python": "3.12.3",
+    "numpy": "1.26.4",
+    "matplotlib": "3.6.3"
+  },
+  "rtl_simulation": {
+    "tool_version": "Icarus Verilog version 12.0 (stable) ()",
+    "cycles": 5257,
+    "valid_samples": 5122,
+    "weight_saturation_flags": 316
+  },
+  "post_route_ooc": {
+    "tool_version": "Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020",
+    "device": "7z020clg400-2",
+    "clock_period_ns": 10.0,
+    "slice_luts": 161,
+    "slice_flip_flops": 69,
+    "dsp48e1": 4,
+    "bram_tiles": 0.0,
+    "wns_ns": -6.75,
+    "tns_ns": -489.12,
+    "whs_ns": -0.266,
+    "ths_ns": -14.606,
+    "routed_nets": 277
+  },
+  "source_sha256_lf": {
+    "tools/run_lms_equalizer.py": "f5bd9719d279842e7cbd73c45e5aecafd2e77840916eaf612f2d49e4c15f4833",
+    "blocks/block_05_fpga_hdl_flow/rtl/lms_equalizer_2tap.sv": "fcff2e6b72053aac8a29a2e92b9f282ef624a1b0f8d6b4e636c7e7ad631ef478",
+    "blocks/block_05_fpga_hdl_flow/tb/tb_lms_equalizer_2tap.sv": "2543a28dbc98572e2800a4452735e103154d088c28c0a7ef220dcee5b6bc9eb2",
+    "tools/fir_architectures_ooc.xdc": "214fc459360c1d6d89b2a7b06a4eefd5766c485f57657a7f305635dedae03656",
+    "tools/vivado_lms_equalizer.tcl": "b44c0a15601e2828932aa8171de9f7f199fed02ce7594108a7bbb9c700be1677"
+  }
+}

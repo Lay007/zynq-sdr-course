@@ -10,6 +10,8 @@ This repository is a bilingual, evidence-oriented SDR/DSP/FPGA course, not a gen
 - For HDL changes, check reset and handshake timing, signedness, scaling, latency, clock-domain crossings and deterministic test vectors.
 - For RF-facing material, document gain, frequency plan, receiver safety, attenuation and IQ metadata. Do not recommend unverified direct TX-to-RX connections.
 - Public code comments, commit messages, Wiki content and new issue/PR text are in English; maintain RU/EN course pages consistently when changing course content.
+- Use Russian captions, titles, axis labels and legends for figures on Russian course pages. Generate both language variants from the same data when a figure contains text.
+- Retain the FPGA abbreviation `LUT` in Russian text and figures.
 - Comments should explain *what* was changed and *why*, not narrate routine code line-by-line. Avoid boilerplate and inflated claims.
 - Do not put secrets, private IQ captures or unpublished board artifacts into the public repository.
 - Never add an AI co-author trailer or claim that a tool validated hardware unless it actually did.

@@ -7,6 +7,9 @@ on:
       - "hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/*.v"
       - "tools/run_block5_hdl_smoke.sh"
       - "tools/run_block5_hdl_smoke.py"
+      - "tools/run_fir_architectures.py"
+      - "tools/run_lms_equalizer.py"
+      - "tools/summarize_fir_architectures.py"
       - "requirements.txt"
       - "requirements-dev.txt"
       - ".github/workflows/hdl-canonical-ci.yml"
@@ -16,6 +19,9 @@ on:
       - "hardware/7020_ad936x_sdr/hdl/course_bpsk_fmcomms2_zc702/*.v"
       - "tools/run_block5_hdl_smoke.sh"
       - "tools/run_block5_hdl_smoke.py"
+      - "tools/run_fir_architectures.py"
+      - "tools/run_lms_equalizer.py"
+      - "tools/summarize_fir_architectures.py"
       - "requirements.txt"
       - "requirements-dev.txt"
       - ".github/workflows/hdl-canonical-ci.yml"
@@ -52,6 +58,12 @@ jobs:
         shell: bash
         run: bash tools/run_block5_hdl_smoke.sh --artifacts-dir build/hdl/block5
 
+      - name: Compare FIR architecture variants
+        run: python tools/run_fir_architectures.py --artifacts-dir build/hdl/fir-architectures
+
+      - name: Check the LMS equalizer against fixed-point vectors
+        run: python tools/run_lms_equalizer.py --rtl --output build/hdl/lms
+
       - name: Upload HDL CI artifacts
         if: always()
         uses: actions/upload-artifact@v7
@@ -59,6 +71,9 @@ jobs:
           name: hdl-canonical-artifacts
           path: |
             build/hdl/block5/
+            build/hdl/fir-architectures/*.txt
+            build/hdl/lms/*.log
+            build/hdl/lms/*.json
             blocks/block_05_fpga_hdl_flow/tb/*_vectors.txt
             blocks/block_05_fpga_hdl_flow/tb/*_bits.txt
             blocks/block_05_fpga_hdl_flow/tb/*_meta.txt

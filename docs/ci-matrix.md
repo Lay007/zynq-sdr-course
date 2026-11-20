@@ -11,11 +11,11 @@ This page documents what each GitHub Actions workflow validates and which artifa
 | `diagnostic-challenges.yml` | diagnostic exercises, grader and reused CFO/AXI references | four passing references, ten rejected Python/RTL mutants, workspace/grader regressions | diagnostic metrics JSON and simulator logs |
 | `block4_labs.yml` | fixed-point lab block | Lab 4.1 and 4.2 executable Python models | fixed-point FIR/mixer figures |
 | `block5_hdl.yml` | HDL/FPGA block | Icarus Verilog compilation and self-checking testbenches | VCD files, PASS/FAIL logs |
-| `hdl-canonical-ci.yml` | canonical HDL vectors | generated vectors and HDL smoke path | canonical vector logs |
+| `hdl-canonical-ci.yml` | canonical HDL vectors | generated vectors, HDL smoke, FIR variants and fixed-point LMS comparison | simulation logs and LMS metrics |
 | `block5_ps_pl_mailbox.yml` | mailbox RTL and wrapper | AXI-Lite echo and board-address wrapper regressions | PASS/FAIL logs |
 | `block8_css_rtl.yml` | CSS RTL and fixed-point reference | regenerated SF7 vectors and self-checking detector benches | PASS/FAIL logs |
 | `block8_ofdm_rtl.yml` | OFDM RTL and vectors | TX benches, 16-QAM metrics, all benches with baseline/fabric transform variants | PASS/FAIL logs |
-| `block8_ofdm_rx_fft.yml` | FFT RTL and vectors | scaled 64-point receive FFT | PASS/FAIL logs |
+| `block8_ofdm_rx_fft.yml` | FFT and NCO RTL, vectors and integer models | three scaled 64-point FFT schedules and two NCO converters | simulator logs, metrics and NCO traces |
 | `block8_ofdm_rx_chain.yml` | OFDM receive chain | extraction, tracking, equalization and AXI modem variants | PASS/FAIL logs |
 | `block6_rf_analysis.yml` | RF frontend lab block | Lab 6.4 synthetic RF analysis | spectrum/time plots, metrics JSON |
 | `block7_tx_rx.yml` | TX/RX chain block | Lab 7.2 and 7.3 executable models | frequency-plan/spectrum plots, loopback metrics |

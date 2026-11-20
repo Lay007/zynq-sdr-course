@@ -270,6 +270,7 @@ nav:
           - "Лабораторная 4.2 — Цифровой смеситель в fixed-point арифметике": ru/labs/lab-4-2-fixed-point-digital-mixer.md
           - "Лабораторная 4.3 — BPSK-цепочка в фиксированной точке": ru/labs/lab-4-3-bpsk-fixed-point-chain.md
           - "Лабораторная 4.4 — BPSK-цепочка в Simulink и идеальная кривая BER от SNR": ru/labs/lab-4-4-bpsk-simulink-and-ber.md
+          - "Лабораторная 4.5 — Выбор разрядности FIR": ru/labs/lab-4-5-fir-word-lengths.md
       - "Лабораторные блока 5":
           - "Лабораторная 5.1 — Потоковый интерфейс и тестбенч": ru/labs/lab-5-1-streaming-interface-and-testbench.md
           - "Лабораторная 5.2 — Отображение FIR-фильтра в RTL": ru/labs/lab-5-2-fir-rtl-mapping.md
@@ -284,6 +285,9 @@ nav:
           - "Лабораторная 5.11 — Обёртка управления AXI-Lite для BPSK BER верхнего уровня": ru/labs/lab-5-11-bpsk-axi-lite-control.md
           - "Zynq — где заканчивается PS и начинается PL": ru/zynq-ps-pl-architecture.md
           - "Лабораторная 5.12 — Почтовый ящик сообщений PS↔PL: первый осмысленный мост Zynq": ru/labs/lab-5-12-zynq-ps-pl-mailbox.md
+          - "Лабораторная 5.13 — Сравнение архитектур FIR": ru/labs/lab-5-13-fir-architectures.md
+          - "Лабораторная 5.14 — Архитектуры NCO и БПФ": ru/labs/lab-5-14-nco-fft-architectures.md
+          - "Лабораторная 5.15 — Двухотводный LMS-эквалайзер": ru/labs/lab-5-15-lms-equalizer.md
           - "Vivado — запуск PS/PL mailbox на плате": ru/zynq-ps-pl-mailbox-vivado-bringup.md
       - "Лабораторные блока 6":
           - "Лабораторная 6.1 — Частотный план RF-эксперимента": ru/labs/lab-6-1-frequency-plan.md
@@ -469,6 +473,7 @@ nav:
           - "Lab 4.2 — Fixed-point digital mixer": en/labs/lab-4-2-fixed-point-digital-mixer.md
           - "Lab 4.3 — BPSK fixed-point chain": en/labs/lab-4-3-bpsk-fixed-point-chain.md
           - "Lab 4.4 — BPSK Simulink chain and ideal BER vs SNR": en/labs/lab-4-4-bpsk-simulink-and-ber.md
+          - "Lab 4.5 — FIR word-length sweep": en/labs/lab-4-5-fir-word-lengths.md
       - "Block 5 labs":
           - "Lab 5.1 — Streaming interface and testbench": en/labs/lab-5-1-streaming-interface-and-testbench.md
           - "Lab 5.2 — FIR RTL mapping": en/labs/lab-5-2-fir-rtl-mapping.md
@@ -483,6 +488,9 @@ nav:
           - "Lab 5.11 — AXI-Lite control wrapper for the BPSK BER top-level": en/labs/lab-5-11-bpsk-axi-lite-control.md
           - "Zynq — where PS ends and PL begins": zynq-ps-pl-architecture.md
           - "Lab 5.12 — Zynq PS/PL AXI-Lite mailbox": en/labs/lab-5-12-zynq-ps-pl-mailbox.md
+          - "Lab 5.13 — FIR architecture trade-offs": en/labs/lab-5-13-fir-architectures.md
+          - "Lab 5.14 — NCO and FFT architectures": en/labs/lab-5-14-nco-fft-architectures.md
+          - "Lab 5.15 — Two-tap LMS equalizer": en/labs/lab-5-15-lms-equalizer.md
           - "Vivado — bring up the PS/PL mailbox on hardware": zynq-ps-pl-mailbox-vivado-bringup.md
       - "Block 6 labs":
           - "Lab 6.1 — RF frequency plan": en/labs/lab-6-1-frequency-plan.md

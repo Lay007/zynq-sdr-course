@@ -20,6 +20,9 @@ def test_preflight_modes_select_the_expected_checks(monkeypatch, mode, hdl, docs
     assert module.main() == 0
     flattened = [" ".join(command) for command in calls]
     assert any("run_block5_hdl_smoke.py" in call for call in flattened) == hdl
+    assert any("run_fir_architectures.py" in call for call in flattened) == hdl
+    assert any("run_dsp_architectures.py" in call for call in flattened) == hdl
+    assert any("run_lms_equalizer.py --rtl" in call for call in flattened) == hdl
     assert any("run_ofdm_rtl.py" in call for call in flattened) == hdl
     assert any("--rtl-only" in call for call in flattened) == hdl
     assert any("mkdocs" in call for call in flattened) == docs

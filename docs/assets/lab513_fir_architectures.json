@@ -1,0 +1,67 @@
+{
+  "rtl_simulation": {
+    "seed": 94
+  },
+  "post_route_ooc": {
+    "tool_version": "Vivado v.2020.1 (win64) Build 2902540 Wed May 27 19:54:49 MDT 2020",
+    "device": "7z020clg400-2",
+    "clock_period_ns": 10.0
+  },
+  "variants": {
+    "parallel": {
+      "compared_iq_samples": 474,
+      "latency_clocks": 1,
+      "initiation_interval_clocks": 1,
+      "stalled_input_cycles": 0,
+      "scheduled_msps_at_target_clock": 100.0,
+      "slice_luts": 72,
+      "slice_flip_flops": 65,
+      "dsp48e1": 10,
+      "bram_tiles": 0.0,
+      "wns_ns": 0.066,
+      "tns_ns": 0.0,
+      "whs_ns": -0.262,
+      "ths_ns": -38.765,
+      "routed_nets": 439
+    },
+    "folded": {
+      "compared_iq_samples": 474,
+      "latency_clocks": 5,
+      "initiation_interval_clocks": 5,
+      "stalled_input_cycles": 1740,
+      "scheduled_msps_at_target_clock": 20.0,
+      "slice_luts": 109,
+      "slice_flip_flops": 164,
+      "dsp48e1": 2,
+      "bram_tiles": 0.0,
+      "wns_ns": 0.24,
+      "tns_ns": 0.0,
+      "whs_ns": -0.419,
+      "ths_ns": -23.886,
+      "routed_nets": 313
+    },
+    "pipelined": {
+      "compared_iq_samples": 474,
+      "latency_clocks": 3,
+      "initiation_interval_clocks": 1,
+      "stalled_input_cycles": 0,
+      "scheduled_msps_at_target_clock": 100.0,
+      "slice_luts": 56,
+      "slice_flip_flops": 67,
+      "dsp48e1": 10,
+      "bram_tiles": 0.0,
+      "wns_ns": 3.64,
+      "tns_ns": 0.0,
+      "whs_ns": -0.276,
+      "ths_ns": -37.984,
+      "routed_nets": 441
+    }
+  },
+  "source_sha256": {
+    "blocks/block_05_fpga_hdl_flow/rtl/fir_iq_architectures.sv": "9f709f513312a89399b800ea3203bd3f3ce9f401949b21b66e3c2244cd7653fc",
+    "blocks/block_05_fpga_hdl_flow/tb/tb_fir_iq_architectures.sv": "d79aac831ec4982fa65a380dbe89dce4645b4a006a3c6ece23069f9367a5051f",
+    "tools/run_fir_architectures.py": "3f146ee8d8bb20e32aa45de5ba87c6e20a609ec009228c0c59759abbd088f263",
+    "tools/vivado_fir_architectures.tcl": "06870589311955cd4fae504035576423b6591dbe312a04d27b6b55319d418961",
+    "tools/fir_architectures_ooc.xdc": "214fc459360c1d6d89b2a7b06a4eefd5766c485f57657a7f305635dedae03656"
+  }
+}

@@ -19,6 +19,9 @@ def run(cmd: list[str]) -> None:
 
 
 def run_hdl() -> None:
+    run([sys.executable, "tools/run_fir_architectures.py"])
+    run([sys.executable, "tools/run_dsp_architectures.py"])
+    run([sys.executable, "tools/run_lms_equalizer.py", "--rtl"])
     run([sys.executable, "tools/run_block5_hdl_smoke.py"])
     run([sys.executable, "tools/run_block8_css_rtl.py"])
     run([sys.executable, "tools/run_ofdm_rtl.py"])

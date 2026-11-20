@@ -46,6 +46,7 @@ MATLAB / Simulink are optional throughout: the labs that mention them also run i
 - [Lab 4.2](/zynq-sdr-course/en/labs/lab-4-2-fixed-point-digital-mixer/): Fixed-Point Digital Mixer
 - [Lab 4.3](/zynq-sdr-course/en/labs/lab-4-3-bpsk-fixed-point-chain/): BPSK fixed-point chain
 - [Lab 4.4](/zynq-sdr-course/en/labs/lab-4-4-bpsk-simulink-and-ber/): BPSK Simulink chain and ideal BER vs SNR
+- [Lab 4.5](/zynq-sdr-course/en/labs/lab-4-5-fir-word-lengths/): FIR accuracy, overflow and word length
 
 **A4. TX/RX chains, modulation and synchronization**
 
@@ -80,6 +81,9 @@ MATLAB / Simulink are optional throughout: the labs that mention them also run i
 - [Lab 5.3](/zynq-sdr-course/en/labs/lab-5-3-nco-mixer-rtl/): Fixed-Point NCO Mixer RTL
 - [Lab 5.4](/zynq-sdr-course/en/labs/lab-5-4-axis-wrapper/): AXI-Stream Wrapper
 - [Lab 5.5](/zynq-sdr-course/en/labs/lab-5-5-float-fixed-rtl-comparison/): Float vs fixed-point vs RTL comparison
+- [Lab 5.13](/zynq-sdr-course/en/labs/lab-5-13-fir-architectures/): Compare FIR throughput, latency and FPGA resources
+- [Lab 5.14](/zynq-sdr-course/en/labs/lab-5-14-nco-fft-architectures/): Compare NCO spectra and FFT schedules
+- [Lab 5.15](/zynq-sdr-course/en/labs/lab-5-15-lms-equalizer/): Train and verify a two-tap LMS equalizer
 - [Lab 5.6](/zynq-sdr-course/en/labs/lab-5-6-bpsk-rrc-tx-fir-rtl/): BPSK RRC TX FIR RTL
 - [Lab 5.7](/zynq-sdr-course/en/labs/lab-5-7-bpsk-upsampler-8x/): BPSK 8x symbol upsampler
 - [Lab 5.8](/zynq-sdr-course/en/labs/lab-5-8-bpsk-rx-bit-recovery/): BPSK RX matched filter and bit recovery
