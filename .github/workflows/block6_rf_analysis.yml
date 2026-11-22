@@ -69,3 +69,39 @@ jobs:
             docs/assets/lab64_synthetic_rf_capture_time.png
             docs/assets/lab64_synthetic_rf_capture_metrics.json
           if-no-files-found: error
+
+  lab612-overload-monitor:
+    name: Lab 6.12 event analysis and Icarus RTL test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install test dependencies
+        run: |
+          python -m pip install pytest
+          sudo apt-get update
+          sudo apt-get install -y iverilog
+
+      - name: Test synthetic event analyzer
+        run: |
+          python blocks/block_06_rf_frontend_and_ad9363/python/lab_6_12_analyze_events.py --self-test
+          python -m pytest -q tests/test_block6_agc_overload_events.py
+
+      - name: Test AXI-Lite overload monitor
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=blocks/block_06_rf_frontend_and_ad9363
+          mkdir -p build/lab612
+          iverilog -g2012 -s tb_ad9361_overload_monitor_axi -Wall -o build/lab612/tb \
+            "$root/rtl/ad9361_overload_monitor.v" \
+            "$root/rtl/ad9361_overload_monitor_axi.v" \
+            "$root/tb/tb_ad9361_overload_monitor_axi.sv"
+          vvp build/lab612/tb
