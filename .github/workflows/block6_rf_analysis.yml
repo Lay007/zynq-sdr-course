@@ -92,7 +92,7 @@ jobs:
       - name: Test synthetic event analyzer
         run: |
           python blocks/block_06_rf_frontend_and_ad9363/python/lab_6_12_analyze_events.py --self-test
-          python -m pytest -q tests/test_block6_agc_overload_events.py
+          # Dedicated pytest suite runs in Python Quality, which prepares shared course fixtures.
 
       - name: Test AXI-Lite overload monitor
         shell: bash
