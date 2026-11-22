@@ -83,4 +83,4 @@ After finishing this block, the student should be ready to reuse its results as 
 
 ## Lab 6.12: two-board AGC overload diagnosis
 
-The two-ZynqSDR bench measures AD9361 LMT/ADC overload events and receiver AGC behavior. The base path uses IIO and existing step/BER captures; the optional PL path adds CTRL_OUT edge counters and AXI-Lite readback (board-pin routing must be verified first). See [Lab 6.12](lab_6_12_agc_overload_monitor_en.md).
+The two-ZynqSDR bench measures AD9361 LMT/ADC overload events and receiver AGC behavior. The base path uses IIO and existing step/BER captures; the optional PL path adds CTRL_OUT edge counters and AXI-Lite readback (board-pin routing must be verified first). See [Lab 6.12](/zynq-sdr-course/en/labs/lab-6-12-agc-overload-monitor/).
