@@ -1,0 +1,1 @@
+--8<-- "blocks/block_06_rf_frontend_and_ad9363/lab_6_12_agc_overload_monitor_ru.md"

@@ -301,6 +301,7 @@ nav:
           - "Лабораторная 6.9 — Сравнение приёмников RTL-SDR и AD936x": ru/labs/lab-6-9-receiver-comparison.md
           - "Лабораторная 6.10 — Анализ фазового разрыва при переключении AGC/LNA": ru/labs/lab-6-10-agc-phase-transition.md
           - "Лабораторная 6.11 — Калибровка мощности dBm / dBFS": ru/labs/lab-6-11-tx-power-calibration.md
+          - "Лабораторная 6.12 — Детекторы перегрузки AD9361 и АРУ": ru/labs/lab-6-12-agc-overload-monitor.md
       - "Лабораторные блока 7":
           - "Лабораторная 7.1 — Архитектура TX/RX-тракта": ru/labs/lab-7-1-tx-rx-chain-architecture.md
           - "Лабораторная 7.2 — Частотный перенос DUC/DDC": ru/labs/lab-7-2-duc-ddc-frequency-translation.md
@@ -504,6 +505,7 @@ nav:
           - "Lab 6.9 — RTL-SDR vs AD936x receiver comparison": en/labs/lab-6-9-receiver-comparison.md
           - "Lab 6.10 — AGC/LNA phase-discontinuity analysis": en/labs/lab-6-10-agc-phase-transition.md
           - "Lab 6.11 — dBm vs dBFS power calibration": en/labs/lab-6-11-tx-power-calibration.md
+          - "Lab 6.12 — AD9361 overload detectors and AGC response": en/labs/lab-6-12-agc-overload-monitor.md
       - "Block 7 labs":
           - "Lab 7.1 — TX/RX chain architecture": en/labs/lab-7-1-tx-rx-chain-architecture.md
           - "Lab 7.2 — DUC/DDC frequency translation": en/labs/lab-7-2-duc-ddc-frequency-translation.md

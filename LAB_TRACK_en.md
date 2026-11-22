@@ -129,6 +129,7 @@ Everything on routes A and B, plus the board itself:
 - [Lab 6.9](/zynq-sdr-course/en/labs/lab-6-9-receiver-comparison/): RTL-SDR vs AD936x receiver quality and ADC resolution
 - [Lab 6.10](/zynq-sdr-course/en/labs/lab-6-10-agc-phase-transition/): AGC/LNA Gain-Transition Phase-Discontinuity Analysis
 - [Lab 6.11](/zynq-sdr-course/en/labs/lab-6-11-tx-power-calibration/): dBm vs dBFS power calibration
+- [Lab 6.12](/zynq-sdr-course/en/labs/lab-6-12-agc-overload-monitor/): two-board AD9361 overload monitoring and AGC response
 - [Lab 5.11](/zynq-sdr-course/en/labs/lab-5-11-bpsk-axi-lite-control/): AXI-Lite control wrapper for the BPSK BER top-level
 - [Lab 5.12](/zynq-sdr-course/en/labs/lab-5-12-zynq-ps-pl-mailbox/). PS↔PL message mailbox: the first meaningful Zynq bridge
 - [Lab 8.15](/zynq-sdr-course/en/labs/lab-8-15-real-hardware-bpsk-metrics/). Real-hardware BPSK: spectrum, constellation and SNR/EVM

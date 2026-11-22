@@ -129,6 +129,7 @@ MATLAB / Simulink везде необязательны: лабораторны�
 - [Лабораторная 6.9](/zynq-sdr-course/ru/labs/lab-6-9-receiver-comparison/) это Сравнение RTL-SDR и AD936x: качество приёма и разрядность АЦП
 - [Лабораторная 6.10](/zynq-sdr-course/ru/labs/lab-6-10-agc-phase-transition/): Анализ фазового разрыва при переключении AGC/LNA
 - [Лабораторная 6.11](/zynq-sdr-course/ru/labs/lab-6-11-tx-power-calibration/): Калибровка мощности dBm и dBFS
+- [Лабораторная 6.12](/zynq-sdr-course/ru/labs/lab-6-12-agc-overload-monitor/): детекторы перегрузки AD9361 и АРУ на двух ZynqSDR
 - [Лабораторная 5.11](/zynq-sdr-course/ru/labs/lab-5-11-bpsk-axi-lite-control/): Обёртка управления AXI-Lite для BPSK BER верхнего уровня
 - [Лабораторная 5.12](/zynq-sdr-course/ru/labs/lab-5-12-zynq-ps-pl-mailbox/) это Почтовый ящик сообщений PS↔PL: первый осмысленный мост Zynq
 - [Лабораторная 8.15](/zynq-sdr-course/ru/labs/lab-8-15-real-hardware-bpsk-metrics/) это BPSK на реальном железе: спектр, созвездие и SNR/EVM
